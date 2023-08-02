@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Serendipity</string>
+    <string name="home_menu_search">Search</string>
+    <string name="home_menu_shuffle">Shuffle</string>
+    <string name="home_menu_settings">Settings</string>
+    <string name="home_menu_refresh">Refresh Library</string>
+    <string name="navigation_menu_home">Home</string>
+    <string name="navigation_menu_playlist">Playlist</string>
+    <string name="navigation_menu_settings">Settings</string>
+    <string name="category_songs">Songs</string>
+    <string name="category_albums">Albums</string>
+    <string name="category_artists">Artists</string>
+    <string name="category_genres">Genres</string>
+    <string name="category_playlists">Playlists</string>
+    <string name="unknown_artist">Unknown artist</string>
+</resources>
