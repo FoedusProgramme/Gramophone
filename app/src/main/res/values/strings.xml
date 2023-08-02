@@ -14,4 +14,9 @@
     <string name="category_playlists">Playlists</string>
     <string name="unknown_artist">Unknown artist</string>
     <string name="category_dates">Dates</string>
+    <string name="song">Song</string>
+    <string name="songs">Songs</string>
+    <string name="sort_by_name">Name</string>
+    <string name="sort_by_artist">Artist</string>
+    <string name="sort_by_album">Album</string>
 </resources>
