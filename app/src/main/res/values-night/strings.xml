@@ -1,0 +1,8 @@
+<resources>
+    <!-- Dynamic pointers -->
+    <drawable name="album_art">@drawable/ic_album_filled</drawable>
+    <drawable name="artist_art">@drawable/ic_groups_filled</drawable>
+    <drawable name="genres_art">@drawable/ic_genres_filled</drawable>
+    <drawable name="settings_art">@drawable/ic_settings_filled</drawable>
+    <drawable name="dates_art">@drawable/ic_schedule_filled</drawable>
+</resources>
