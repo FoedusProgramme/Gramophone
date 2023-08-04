@@ -46,4 +46,7 @@
     <drawable name="genres_art">@drawable/ic_genres</drawable>
     <drawable name="settings_art">@drawable/ic_settings</drawable>
     <drawable name="dates_art">@drawable/ic_schedule</drawable>
+    <drawable name="pause_art">@drawable/ic_pause</drawable>
+    <drawable name="next_art">@drawable/ic_skip_next</drawable>
+    <drawable name="play_art">@drawable/ic_play_arrow</drawable>
 </resources>

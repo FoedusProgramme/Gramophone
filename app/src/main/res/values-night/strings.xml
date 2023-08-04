@@ -5,4 +5,7 @@
     <drawable name="genres_art">@drawable/ic_genres_filled</drawable>
     <drawable name="settings_art">@drawable/ic_settings_filled</drawable>
     <drawable name="dates_art">@drawable/ic_schedule_filled</drawable>
+    <drawable name="pause_art">@drawable/ic_pause_filled</drawable>
+    <drawable name="next_art">@drawable/ic_skip_next_filled</drawable>
+    <drawable name="play_art">@drawable/ic_play_arrow_filled</drawable>
 </resources>
