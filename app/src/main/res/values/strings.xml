@@ -36,6 +36,9 @@
     <string name="items">Items</string>
     <string name="genre">Genre</string>
     <string name="genres">Genres</string>
+    <string name="home_menu_equalizer">Equalizer</string>
+    <string name="no_equalizer">Equalizer not found!</string>
+    <string name="refreshed_songs">Refreshed %1$s songs</string>
 
     <!-- Dynamic pointers -->
     <drawable name="album_art">@drawable/ic_album</drawable>
