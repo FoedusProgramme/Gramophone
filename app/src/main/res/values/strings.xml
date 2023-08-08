@@ -49,4 +49,7 @@
     <drawable name="pause_art">@drawable/ic_pause</drawable>
     <drawable name="next_art">@drawable/ic_skip_next</drawable>
     <drawable name="play_art">@drawable/ic_play_arrow</drawable>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="search">Search</string>
 </resources>
