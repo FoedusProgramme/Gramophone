@@ -52,4 +52,8 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="search">Search</string>
+    <string name="settings_app_name">App name</string>
+    <string name="settings_category_info">Info</string>
+    <string name="settings_contributors">Contributors</string>
+    <string name="settings_contributors_detail" translatable="false">AkaneTan</string>
 </resources>
