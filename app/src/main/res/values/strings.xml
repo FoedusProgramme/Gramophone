@@ -39,6 +39,14 @@
     <string name="home_menu_equalizer">Equalizer</string>
     <string name="no_equalizer">Equalizer not found!</string>
     <string name="refreshed_songs">Refreshed %1$s songs</string>
+    <string name="search">Search</string>
+    <string name="settings_app_name">App name</string>
+    <string name="settings_category_info">Info</string>
+    <string name="settings_contributors">Contributors</string>
+
+    <!-- Not translatable -->
+    <string name="default_time" translatable="false">0:00</string>
+    <string name="settings_contributors_detail" translatable="false">AkaneTan</string>
 
     <!-- Dynamic pointers -->
     <drawable name="album_art">@drawable/ic_album</drawable>
@@ -49,11 +57,6 @@
     <drawable name="pause_art">@drawable/ic_pause</drawable>
     <drawable name="next_art">@drawable/ic_skip_next</drawable>
     <drawable name="play_art">@drawable/ic_play_arrow</drawable>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="search">Search</string>
-    <string name="settings_app_name">App name</string>
-    <string name="settings_category_info">Info</string>
-    <string name="settings_contributors">Contributors</string>
-    <string name="settings_contributors_detail" translatable="false">AkaneTan</string>
+    <drawable name="previous_art">@drawable/ic_skip_previous</drawable>
+
 </resources>

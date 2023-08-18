@@ -8,4 +8,5 @@
     <drawable name="pause_art">@drawable/ic_pause_filled</drawable>
     <drawable name="next_art">@drawable/ic_skip_next_filled</drawable>
     <drawable name="play_art">@drawable/ic_play_arrow_filled</drawable>
+    <drawable name="previous_art">@drawable/ic_skip_previous_filled</drawable>
 </resources>
