@@ -58,5 +58,6 @@
     <drawable name="next_art">@drawable/ic_skip_next</drawable>
     <drawable name="play_art">@drawable/ic_play_arrow</drawable>
     <drawable name="previous_art">@drawable/ic_skip_previous</drawable>
+    <drawable name="subtitles_art">@drawable/ic_subtitles</drawable>
 
 </resources>
