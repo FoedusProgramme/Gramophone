@@ -43,6 +43,11 @@
     <string name="settings_app_name">App name</string>
     <string name="settings_category_info">Info</string>
     <string name="settings_contributors">Contributors</string>
+    <string name="play_next">Play next</string>
+    <string name="go_to_album">Go to album</string>
+    <string name="go_to_artist">Go to artist</string>
+    <string name="details">Details</string>
+    <string name="share">Share</string>
 
     <!-- Not translatable -->
     <string name="default_time" translatable="false">0:00</string>
