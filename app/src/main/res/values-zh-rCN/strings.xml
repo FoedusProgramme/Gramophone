@@ -41,7 +41,7 @@
     <string name="refreshed_songs">刷新了 %1$s 首歌曲。</string>
     <string name="search">搜索</string>
     <string name="settings_app_name">应用名称</string>
-    <string name="settings_category_info">分类</string>
+    <string name="settings_category_info">信息</string>
     <string name="settings_contributors">源码贡献者</string>
     <string name="play_next">添加至下一曲</string>
     <string name="go_to_album">专辑..</string>
