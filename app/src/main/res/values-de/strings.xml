@@ -1,0 +1,55 @@
+<resources>
+    <!-- Translatable -->
+    <string name="home_menu_search">Suche</string>
+    <string name="home_menu_shuffle">Shuffle</string>
+    <string name="home_menu_settings">Einstellungen</string>
+    <string name="home_menu_refresh">Aktualisieren</string>
+    <string name="navigation_menu_home">Start</string>
+    <string name="navigation_menu_playlist">Wiedergabeliste</string>
+    <string name="navigation_menu_settings">Einstellungen</string>
+    <string name="category_songs">Titel</string>
+    <string name="category_albums">Alben</string>
+    <string name="category_artists">Interpreten</string>
+    <string name="category_genres">Genres</string>
+    <string name="category_playlists">Wiedergabelisten</string>
+    <string name="unknown_artist">Unbekannter Interpret</string>
+    <string name="category_dates">Daten</string>
+    <string name="song">Titel</string>
+    <string name="songs">Titel</string>
+    <string name="album">Album</string>
+    <string name="albums">Alben</string>
+    <string name="artist">Interpret</string>
+    <string name="artists">Interpreten</string>
+    <string name="sort_by_size">Größe</string>
+    <string name="sort_by_name">Name</string>
+    <string name="sort_by_artist">Artist</string>
+    <string name="sort_by_album">Album</string>
+    <string name="categories">Kategorien</string>
+    <string name="operations">Aktionen</string>
+    <string name="snackbar_refresh_completed">Aktualisierung abgeschlossen.</string>
+    <string name="dismiss">Ablehnen</string>
+    <string name="navigation">Navigation</string>
+    <string name="unknown_genre">Unbekanntes Genre</string>
+    <string name="unknown_year">Unbekanntes Jahr</string>
+    <string name="item">Eintrag</string>
+    <string name="items">Einträge</string>
+    <string name="genre">Genre</string>
+    <string name="genres">Genres</string>
+    <string name="home_menu_equalizer">Equalizer</string>
+    <string name="no_equalizer">Equalizer nicht gefunden!</string>
+    <string name="refreshed_songs">%1$s Titel aktualisiert</string>
+    <string name="search">Suche</string>
+    <string name="settings_app_name">App-Name</string>
+    <string name="settings_category_info">Info</string>
+    <string name="settings_contributors">Mitwirkende</string>
+    <string name="play_next">Als Nächstes abspielen</string>
+    <string name="go_to_album">Zum Album wechseln</string>
+    <string name="go_to_artist">Zum Interpreten wechseln</string>
+    <string name="details">Details</string>
+    <string name="share">Teilen</string>
+
+    <!-- Not translatable -->
+    <string name="unknown_version">Unbekante Version</string>
+    <string name="settings_version">Version</string>
+
+</resources>
