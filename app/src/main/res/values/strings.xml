@@ -57,6 +57,7 @@
     <string name="settings_contributors_detail" translatable="false">AkaneTan, 123Duo3</string>
     <string name="unknown_version">Unknown version</string>
     <string name="settings_version">Version</string>
+    <string name="album_artist">Album artist</string>
 
     <!-- Dynamic pointers -->
     <drawable name="album_art">@drawable/ic_album</drawable>
