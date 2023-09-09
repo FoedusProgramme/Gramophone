@@ -50,6 +50,7 @@
     <string name="share">Share</string>
     <string name="shuffle">Shuffle</string>
     <string name="repeat_mode">Repeat mode</string>
+    <string name="close">Close</string>
 
     <!-- Not translatable -->
     <string name="default_time" translatable="false">0:00</string>
