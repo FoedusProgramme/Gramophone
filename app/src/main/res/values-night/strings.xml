@@ -12,5 +12,6 @@
     <drawable name="subtitles_art">@drawable/ic_subtitles_filled</drawable>
     <drawable name="timer_art">@drawable/ic_timer_filled</drawable>
     <drawable name="widgets_art">@drawable/ic_widgets_filled</drawable>
+    <drawable name="bug_art">@drawable/ic_sentiment_very_dissatisfied_filled</drawable>
 
 </resources>

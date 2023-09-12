@@ -54,6 +54,7 @@
     <string name="repeat_mode">Repeat mode</string>
     <string name="close">Close</string>
     <string name="unknown_playlist">Unknown playlist</string>
+    <string name="gramophone_crashed">Gramophone crashed.</string>
 
     <!-- Not translatable -->
     <string name="default_time" translatable="false">0:00</string>
@@ -75,5 +76,6 @@
     <drawable name="subtitles_art">@drawable/ic_subtitles</drawable>
     <drawable name="timer_art">@drawable/ic_timer</drawable>
     <drawable name="widgets_art">@drawable/ic_widgets</drawable>
+    <drawable name="bug_art">@drawable/ic_sentiment_very_dissatisfied</drawable>
 
 </resources>
