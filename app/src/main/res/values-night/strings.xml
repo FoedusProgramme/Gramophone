@@ -11,5 +11,6 @@
     <drawable name="previous_art">@drawable/ic_skip_previous_filled</drawable>
     <drawable name="subtitles_art">@drawable/ic_subtitles_filled</drawable>
     <drawable name="timer_art">@drawable/ic_timer_filled</drawable>
+    <drawable name="widgets_art">@drawable/ic_widgets_filled</drawable>
 
 </resources>

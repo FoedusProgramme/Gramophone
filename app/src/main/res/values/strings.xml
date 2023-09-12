@@ -57,7 +57,7 @@
 
     <!-- Not translatable -->
     <string name="default_time" translatable="false">0:00</string>
-    <string name="settings_contributors_detail" translatable="false">AkaneTan, 123Duo3</string>
+    <string name="settings_contributors_detail" translatable="false">AkaneTan, 123Duo3, nift4</string>
     <string name="unknown_version">Unknown version</string>
     <string name="settings_version">Version</string>
     <string name="album_artist">Album artist</string>
@@ -74,5 +74,6 @@
     <drawable name="previous_art">@drawable/ic_skip_previous</drawable>
     <drawable name="subtitles_art">@drawable/ic_subtitles</drawable>
     <drawable name="timer_art">@drawable/ic_timer</drawable>
+    <drawable name="widgets_art">@drawable/ic_widgets</drawable>
 
 </resources>
