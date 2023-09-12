@@ -21,6 +21,8 @@
     <string name="albums">Albums</string>
     <string name="artist">Artist</string>
     <string name="artists">Artists</string>
+    <string name="playlist">Playlist</string>
+    <string name="playlists">Playlists</string>
     <string name="sort_by_size">Size</string>
     <string name="sort_by_name">Name</string>
     <string name="sort_by_artist">Artist</string>
@@ -51,6 +53,7 @@
     <string name="shuffle">Shuffle</string>
     <string name="repeat_mode">Repeat mode</string>
     <string name="close">Close</string>
+    <string name="unknown_playlist">Unknown playlist</string>
 
     <!-- Not translatable -->
     <string name="default_time" translatable="false">0:00</string>
