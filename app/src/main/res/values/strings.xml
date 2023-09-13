@@ -58,13 +58,13 @@
     <string name="settings_category_appearance">Appearance</string>
     <string name="settings_dark_mode">Force dark mode</string>
     <string name="settings_dark_mode_summary">Enable dark mode for gramophone.</string>
+    <string name="album_artist">Album artist</string>
+    <string name="unknown_version">Unknown version</string>
+    <string name="settings_version">Version</string>
 
     <!-- Not translatable -->
     <string name="default_time" translatable="false">0:00</string>
     <string name="settings_contributors_detail" translatable="false">AkaneTan, 123Duo3, nift4</string>
-    <string name="unknown_version">Unknown version</string>
-    <string name="settings_version">Version</string>
-    <string name="album_artist">Album artist</string>
 
     <!-- Dynamic pointers -->
     <drawable name="album_art">@drawable/ic_album</drawable>
@@ -80,5 +80,6 @@
     <drawable name="timer_art">@drawable/ic_timer</drawable>
     <drawable name="widgets_art">@drawable/ic_widgets</drawable>
     <drawable name="bug_art">@drawable/ic_sentiment_very_dissatisfied</drawable>
+    <drawable name="daynight_art">@drawable/ic_light_mode</drawable>
 
 </resources>
