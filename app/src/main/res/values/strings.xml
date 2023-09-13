@@ -55,6 +55,9 @@
     <string name="close">Close</string>
     <string name="unknown_playlist">Unknown playlist</string>
     <string name="gramophone_crashed">Gramophone crashed.</string>
+    <string name="settings_category_appearance">Appearance</string>
+    <string name="settings_dark_mode">Force dark mode</string>
+    <string name="settings_dark_mode_summary">Enable dark mode for gramophone.</string>
 
     <!-- Not translatable -->
     <string name="default_time" translatable="false">0:00</string>
