@@ -1,6 +1,6 @@
 <resources>
     <!-- Translatable -->
-    <string name="app_name">Gramophone</string>
+    <string name="app_name" translatable="false">Gramophone</string>
     <string name="home_menu_search">Search</string>
     <string name="home_menu_shuffle">Shuffle</string>
     <string name="home_menu_settings">Settings</string>
