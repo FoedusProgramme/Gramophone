@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!-- Translatable -->
+  <string name="app_name" translatable="false">Gramophone</string>
+  <string name="home_menu_search">検索</string>
+  <string name="home_menu_shuffle">シャッフル</string>
+  <string name="home_menu_settings">設定</string>
+  <string name="home_menu_refresh">更新</string>
+  <string name="navigation_menu_home">ホーム</string>
+  <string name="navigation_menu_playlist">プレイリスト</string>
+  <string name="navigation_menu_settings">設定</string>
+  <string name="category_songs">曲</string>
+  <string name="category_albums">アルバム</string>
+  <string name="category_artists">アーティスト</string>
+  <string name="category_genres">ジャンル</string>
+  <string name="category_playlists">プレイリスト</string>
+  <string name="unknown_artist">不明なアーティスト</string>
+  <string name="category_dates">日付</string>
+  <string name="song">曲</string>
+  <string name="songs">曲</string>
+  <string name="album">アルバム</string>
+  <string name="albums">アルバム</string>
+  <string name="artist">アーティスト</string>
+  <string name="artists">アーティスト</string>
+  <string name="playlist">プレイリスト</string>
+  <string name="playlists">プレイリスト</string>
+  <string name="sort_by_size">サイズ</string>
+  <string name="sort_by_name">名前</string>
+  <string name="sort_by_artist">アーティスト</string>
+  <string name="sort_by_album">アルバム</string>
+  <string name="categories">カテゴリー</string>
+  <string name="operations">操作</string>
+  <string name="snackbar_refresh_completed">更新が完了しました。</string>
+  <string name="dismiss">破棄</string>
+  <string name="navigation">ナビゲーション</string>
+  <string name="unknown_genre">不明なジャンル</string>
+  <string name="unknown_year">不明な年号</string>
+  <string name="item">アイテム</string>
+  <string name="items">アイテム</string>
+  <string name="genre">ジャンル</string>
+  <string name="genres">ジャンル</string>
+  <string name="home_menu_equalizer">イコライザー</string>
+  <string name="no_equalizer">イコライザーがありません!</string>
+  <string name="refreshed_songs">%1$s 件の曲を更新しました</string>
+  <string name="search">検索</string>
+  <string name="settings_app_name">アプリ名</string>
+  <string name="settings_category_info">情報</string>
+  <string name="settings_contributors">貢献者</string>
+  <string name="play_next">次に再生</string>
+  <string name="go_to_album">アルバムを開く</string>
+  <string name="go_to_artist">アーティストを開く</string>
+  <string name="details">詳細</string>
+  <string name="share">共有</string>
+  <string name="shuffle">シャッフル</string>
+  <string name="repeat_mode">リピートモード</string>
+  <string name="close">閉じる</string>
+  <string name="unknown_playlist">不明なプレイリスト</string>
+  <string name="gramophone_crashed">Gramophone がクラッシュしました。</string>
+  <string name="settings_category_appearance">外観</string>
+  <string name="settings_dark_mode">ダークモードを強制する</string>
+  <string name="settings_dark_mode_summary">Gramophone でダークモードを有効化します。</string>
+  <string name="album_artist">アルバムのアーティスト</string>
+  <string name="unknown_version">不明なバージョン</string>
+  <string name="settings_version">バージョン</string>
+  <!-- Not translatable -->
+  <string name="default_time" translatable="false">0:00</string>
+  <string name="settings_contributors_detail" translatable="false">AkaneTan, 123Duo3, nift4, Re*Index.(ot_inc)</string>
+  <!-- Dynamic pointers -->
+  <drawable name="album_art">@drawable/ic_album</drawable>
+  <drawable name="artist_art">@drawable/ic_groups</drawable>
+  <drawable name="genres_art">@drawable/ic_genres</drawable>
+  <drawable name="settings_art">@drawable/ic_settings</drawable>
+  <drawable name="dates_art">@drawable/ic_schedule</drawable>
+  <drawable name="pause_art">@drawable/ic_pause</drawable>
+  <drawable name="next_art">@drawable/ic_skip_next</drawable>
+  <drawable name="play_art">@drawable/ic_play_arrow</drawable>
+  <drawable name="previous_art">@drawable/ic_skip_previous</drawable>
+  <drawable name="subtitles_art">@drawable/ic_subtitles</drawable>
+  <drawable name="timer_art">@drawable/ic_timer</drawable>
+  <drawable name="widgets_art">@drawable/ic_widgets</drawable>
+  <drawable name="bug_art">@drawable/ic_sentiment_very_dissatisfied</drawable>
+  <drawable name="daynight_art">@drawable/ic_light_mode</drawable>
+</resources>
