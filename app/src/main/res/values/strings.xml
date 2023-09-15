@@ -68,6 +68,7 @@
     <string name="settings_category_behavior">Behavior</string>
     <string name="settings_mediastore_filter_summary">Filter songs are shorter than user configured seconds. (Require rescan)</string>
     <string name="settings_mediastore_filter">MediaStore filter</string>
+    <string name="settings_repository">Repository</string>
 
     <!-- Dynamic pointers -->
     <drawable name="album_art">@drawable/ic_album</drawable>
