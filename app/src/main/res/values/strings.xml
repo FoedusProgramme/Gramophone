@@ -65,6 +65,9 @@
     <!-- Not translatable -->
     <string name="default_time" translatable="false">0:00</string>
     <string name="settings_contributors_detail" translatable="false">AkaneTan, 123Duo3, nift4</string>
+    <string name="settings_category_behavior">Behavior</string>
+    <string name="settings_mediastore_filter_summary">Filter songs are shorter than user configured seconds. (Require rescan)</string>
+    <string name="settings_mediastore_filter">MediaStore filter</string>
 
     <!-- Dynamic pointers -->
     <drawable name="album_art">@drawable/ic_album</drawable>
@@ -81,5 +84,6 @@
     <drawable name="widgets_art">@drawable/ic_widgets</drawable>
     <drawable name="bug_art">@drawable/ic_sentiment_very_dissatisfied</drawable>
     <drawable name="daynight_art">@drawable/ic_light_mode</drawable>
+    <drawable name="filter_art">@drawable/ic_filter_alt</drawable>
 
 </resources>
