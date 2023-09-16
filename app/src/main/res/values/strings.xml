@@ -61,6 +61,9 @@
     <string name="album_artist">Album artist</string>
     <string name="unknown_version">Unknown version</string>
     <string name="settings_version">Version</string>
+    <string name="dialog_title">Title</string>
+    <string name="dialog_duration">Duration</string>
+    <string name="dialog_artist">Artist</string>
 
     <!-- Not translatable -->
     <string name="default_time" translatable="false">0:00</string>
@@ -69,6 +72,14 @@
     <string name="settings_mediastore_filter_summary">Filter songs are shorter than user configured seconds. (Require rescan)</string>
     <string name="settings_mediastore_filter">MediaStore filter</string>
     <string name="settings_repository">Repository</string>
+    <string name="dialog_album">Album</string>
+    <string name="dialog_mime_type">Mime Type</string>
+    <string name="dialog_genre">Genre</string>
+    <string name="dialog_album_artist">Album artist</string>
+    <string name="dialog_track_number">Track number</string>
+    <string name="dialog_year">Year</string>
+    <string name="dialog_path">Path</string>
+    <string name="dialog_information">Information</string>
 
     <!-- Dynamic pointers -->
     <drawable name="album_art">@drawable/ic_album</drawable>
