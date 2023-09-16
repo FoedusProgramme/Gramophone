@@ -22,7 +22,7 @@
     <string name="artists">Interpreten</string>
     <string name="sort_by_size">Größe</string>
     <string name="sort_by_name">Name</string>
-    <string name="sort_by_artist">Artist</string>
+    <string name="sort_by_artist">Interpret</string>
     <string name="sort_by_album">Album</string>
     <string name="categories">Kategorien</string>
     <string name="operations">Aktionen</string>
@@ -47,8 +47,15 @@
     <string name="go_to_artist">Zum Interpreten wechseln</string>
     <string name="details">Details</string>
     <string name="share">Teilen</string>
-
-    <!-- Not translatable -->
+    <string name="shuffle">Shuffle</string>
+    <string name="repeat_mode">Wiederholungsmodus</string>
+    <string name="close">Schließen</string>
+    <string name="unknown_playlist">Unbekannte Wiedergabeliste</string>
+    <string name="gramophone_crashed">Gramophone ist abgestürzt.</string>
+    <string name="settings_category_appearance">Aussehen</string>
+    <string name="settings_dark_mode">Dunklen Modus erzwingen</string>
+    <string name="settings_dark_mode_summary">Aktiviert den dunklen Modus für Gramophone.</string>
+    <string name="album_artist">Interpret des Albums</string>
     <string name="unknown_version">Unbekante Version</string>
     <string name="settings_version">Version</string>
 
