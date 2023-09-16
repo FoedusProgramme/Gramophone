@@ -78,6 +78,7 @@
     <string name="dialog_information">Information</string>
     <string name="unknown_album">Unknown album</string>
     <string name="recently_added">Recently added</string>
+    <string name="folders">Folders</string>
 
     <!-- Not translatable -->
     <string name="default_time" translatable="false">0:00</string>
@@ -99,5 +100,6 @@
     <drawable name="bug_art">@drawable/ic_sentiment_very_dissatisfied</drawable>
     <drawable name="daynight_art">@drawable/ic_light_mode</drawable>
     <drawable name="filter_art">@drawable/ic_filter_alt</drawable>
+    <drawable name="folder_art">@drawable/ic_folder</drawable>
 
 </resources>
