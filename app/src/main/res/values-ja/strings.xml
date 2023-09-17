@@ -35,7 +35,7 @@
   <string name="categories">カテゴリー</string>
   <string name="operations">操作</string>
   <string name="snackbar_refresh_completed">更新が完了しました。</string>
-  <string name="dismiss">破棄</string>
+  <string name="dismiss">OK</string>
   <string name="navigation">ナビゲーション</string>
   <string name="unknown_genre">不明なジャンル</string>
   <string name="unknown_year">不明な年号</string>
