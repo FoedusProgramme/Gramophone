@@ -64,10 +64,6 @@
     <string name="dialog_title">Title</string>
     <string name="dialog_duration">Duration</string>
     <string name="dialog_artist">Artist</string>
-
-    <!-- Not translatable -->
-    <string name="default_time" translatable="false">0:00</string>
-    <string name="settings_contributors_detail" translatable="false">AkaneTan, 123Duo3, nift4</string>
     <string name="settings_category_behavior">Behavior</string>
     <string name="settings_mediastore_filter_summary">Filter songs are shorter than user configured seconds. (Require rescan)</string>
     <string name="settings_mediastore_filter">MediaStore filter</string>
@@ -80,6 +76,11 @@
     <string name="dialog_year">Year</string>
     <string name="dialog_path">Path</string>
     <string name="dialog_information">Information</string>
+    <string name="unknown_album">Unknown album</string>
+
+    <!-- Not translatable -->
+    <string name="default_time" translatable="false">0:00</string>
+    <string name="settings_contributors_detail" translatable="false">AkaneTan, 123Duo3, nift4</string>
 
     <!-- Dynamic pointers -->
     <drawable name="album_art">@drawable/ic_album</drawable>
