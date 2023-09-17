@@ -16,14 +16,14 @@
   <string name="category_playlists">プレイリスト</string>
   <string name="unknown_artist">不明なアーティスト</string>
   <string name="category_dates">日付</string>
-  <string name="song">曲</string>
-  <string name="songs">曲</string>
-  <string name="album">アルバム</string>
-  <string name="albums">アルバム</string>
-  <string name="artist">アーティスト</string>
-  <string name="artists">アーティスト</string>
-  <string name="playlist">プレイリスト</string>
-  <string name="playlists">プレイリスト</string>
+  <string name="song">件の曲</string>
+  <string name="songs">件の曲</string>
+  <string name="album">件のアルバム</string>
+  <string name="albums">件のアルバム</string>
+  <string name="artist">件のアーティスト</string>
+  <string name="artists">件のアーティスト</string>
+  <string name="playlist">件のプレイリスト</string>
+  <string name="playlists">件のプレイリスト</string>
   <string name="sort_by_size">サイズ</string>
   <string name="sort_by_name">名前</string>
   <string name="sort_by_artist">アーティスト</string>
@@ -35,10 +35,10 @@
   <string name="navigation">ナビゲーション</string>
   <string name="unknown_genre">不明なジャンル</string>
   <string name="unknown_year">不明な年号</string>
-  <string name="item">アイテム</string>
-  <string name="items">アイテム</string>
-  <string name="genre">ジャンル</string>
-  <string name="genres">ジャンル</string>
+  <string name="item">件のアイテム</string>
+  <string name="items">件のアイテム</string>
+  <string name="genre">件のジャンル</string>
+  <string name="genres">件のジャンル</string>
   <string name="home_menu_equalizer">イコライザー</string>
   <string name="no_equalizer">イコライザーがありません!</string>
   <string name="refreshed_songs">%1$s 件の曲を更新しました</string>
@@ -69,19 +69,4 @@
   <!-- Not translatable -->
   <string name="default_time" translatable="false">0:00</string>
   <string name="settings_contributors_detail" translatable="false">AkaneTan, 123Duo3, nift4, Re*Index.(ot_inc)</string>
-  <!-- Dynamic pointers -->
-  <drawable name="album_art">@drawable/ic_album</drawable>
-  <drawable name="artist_art">@drawable/ic_groups</drawable>
-  <drawable name="genres_art">@drawable/ic_genres</drawable>
-  <drawable name="settings_art">@drawable/ic_settings</drawable>
-  <drawable name="dates_art">@drawable/ic_schedule</drawable>
-  <drawable name="pause_art">@drawable/ic_pause</drawable>
-  <drawable name="next_art">@drawable/ic_skip_next</drawable>
-  <drawable name="play_art">@drawable/ic_play_arrow</drawable>
-  <drawable name="previous_art">@drawable/ic_skip_previous</drawable>
-  <drawable name="subtitles_art">@drawable/ic_subtitles</drawable>
-  <drawable name="timer_art">@drawable/ic_timer</drawable>
-  <drawable name="widgets_art">@drawable/ic_widgets</drawable>
-  <drawable name="bug_art">@drawable/ic_sentiment_very_dissatisfied</drawable>
-  <drawable name="daynight_art">@drawable/ic_light_mode</drawable>
 </resources>
