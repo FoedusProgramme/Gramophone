@@ -83,6 +83,7 @@
     <!-- Not translatable -->
     <string name="default_time" translatable="false">0:00</string>
     <string name="settings_contributors_detail" translatable="false">AkaneTan, 123Duo3, nift4</string>
+    <string name="upper_folder">..</string>
 
     <!-- Dynamic pointers -->
     <drawable name="album_art">@drawable/ic_album</drawable>
