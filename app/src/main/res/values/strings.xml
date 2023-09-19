@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <!-- Translatable -->
     <string name="app_name" translatable="false">Gramophone</string>
     <string name="home_menu_search">Search</string>
