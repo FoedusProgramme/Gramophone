@@ -79,6 +79,7 @@
     <string name="unknown_album">Unknown album</string>
     <string name="recently_added">Recently added</string>
     <string name="folders">Folders</string>
+    <string name="settings_app_theme">App theme</string>
 
     <!-- Not translatable -->
     <string name="default_time" translatable="false">0:00</string>
