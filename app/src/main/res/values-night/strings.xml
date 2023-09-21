@@ -1,6 +1,6 @@
 <resources>
     <!-- Dynamic pointers -->
-    <drawable name="album_art">@drawable/ic_album_filled</drawable>
+    <!-- <drawable name="album_art">@drawable/ic_album_filled</drawable>
     <drawable name="artist_art">@drawable/ic_groups_filled</drawable>
     <drawable name="genres_art">@drawable/ic_genres_filled</drawable>
     <drawable name="settings_art">@drawable/ic_settings_filled</drawable>
@@ -15,6 +15,6 @@
     <drawable name="bug_art">@drawable/ic_sentiment_very_dissatisfied_filled</drawable>
     <drawable name="daynight_art">@drawable/ic_dark_mode</drawable>
     <drawable name="filter_art">@drawable/ic_filter_alt_filled</drawable>
-    <drawable name="folder_art">@drawable/ic_folder_filled</drawable>
+    <drawable name="folder_art">@drawable/ic_folder_filled</drawable> -->
 
 </resources>
