@@ -1,6 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <!-- Translatable -->
-    <string name="app_name" translatable="false">Gramophone</string>
     <string name="home_menu_search">Search</string>
     <string name="home_menu_shuffle">Shuffle</string>
     <string name="home_menu_settings">Settings</string>
@@ -15,14 +14,29 @@
     <string name="category_playlists">Playlists</string>
     <string name="unknown_artist">Unknown artist</string>
     <string name="category_dates">Dates</string>
-    <string name="song">Song</string>
-    <string name="songs">Songs</string>
-    <string name="album">Album</string>
-    <string name="albums">Albums</string>
-    <string name="artist">Artist</string>
-    <string name="artists">Artists</string>
-    <string name="playlist">Playlist</string>
-    <string name="playlists">Playlists</string>
+    <plurals name="songs">
+        <item quantity="one">%d Song</item>
+        <item quantity="other">%d Songs</item>
+    </plurals>
+    <plurals name="albums">
+        <item quantity="one">%d Album</item>
+        <item quantity="other">%d Albums</item>
+    </plurals>
+    <plurals name="artists">
+        <item quantity="one">%d Artist</item>
+        <item quantity="other">%d Artists</item>
+    </plurals>
+    <plurals name="playlists">
+        <item quantity="one">%d Playlist</item>
+        <item quantity="other">%d Playlists</item>
+    </plurals>
+    <plurals name="items">
+        <item quantity="one">%d Item</item>
+        <item quantity="other">%d Items</item>
+    </plurals>
+    <string name="follow_system">Follow system</string>
+    <string name="dark">Dark</string>
+    <string name="light">Light</string>
     <string name="sort_by_size">Size</string>
     <string name="sort_by_name">Name</string>
     <string name="sort_by_artist">Artist</string>
@@ -34,8 +48,6 @@
     <string name="navigation">Navigation</string>
     <string name="unknown_genre">Unknown genre</string>
     <string name="unknown_year">Unknown year</string>
-    <string name="item">Item</string>
-    <string name="items">Items</string>
     <string name="genre">Genre</string>
     <string name="genres">Genres</string>
     <string name="home_menu_equalizer">Equalizer</string>
@@ -82,26 +94,9 @@
     <string name="settings_app_theme">App theme</string>
 
     <!-- Not translatable -->
+    <string name="app_name" translatable="false">Gramophone</string>
     <string name="default_time" translatable="false">0:00</string>
     <string name="settings_contributors_detail" translatable="false">AkaneTan, 123Duo3, nift4</string>
-    <string name="upper_folder">..</string>
-
-    <!-- Dynamic pointers -->
-    <drawable name="album_art">@drawable/ic_album</drawable>
-    <drawable name="artist_art">@drawable/ic_groups</drawable>
-    <drawable name="genres_art">@drawable/ic_genres</drawable>
-    <drawable name="settings_art">@drawable/ic_settings</drawable>
-    <drawable name="dates_art">@drawable/ic_schedule</drawable>
-    <drawable name="pause_art">@drawable/ic_pause</drawable>
-    <drawable name="next_art">@drawable/ic_skip_next</drawable>
-    <drawable name="play_art">@drawable/ic_play_arrow</drawable>
-    <drawable name="previous_art">@drawable/ic_skip_previous</drawable>
-    <drawable name="subtitles_art">@drawable/ic_subtitles</drawable>
-    <drawable name="timer_art">@drawable/ic_timer</drawable>
-    <drawable name="widgets_art">@drawable/ic_widgets</drawable>
-    <drawable name="bug_art">@drawable/ic_sentiment_very_dissatisfied</drawable>
-    <drawable name="daynight_art">@drawable/ic_light_mode</drawable>
-    <drawable name="filter_art">@drawable/ic_filter_alt</drawable>
-    <drawable name="folder_art">@drawable/ic_folder</drawable>
+    <string name="upper_folder" translatable="false">..</string>
 
 </resources>
