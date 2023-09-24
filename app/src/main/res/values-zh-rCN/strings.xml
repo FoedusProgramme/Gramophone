@@ -14,14 +14,6 @@
     <string name="category_playlists">播放列表</string>
     <string name="unknown_artist">未知艺术家</string>
     <string name="category_dates">日期</string>
-    <string name="song">歌曲</string>
-    <string name="songs">歌曲</string>
-    <string name="album">专辑</string>
-    <string name="albums">专辑</string>
-    <string name="artist">艺术家</string>
-    <string name="artists">艺术家</string>
-    <string name="playlist">播放列表</string>
-    <string name="playlists">播放列表</string>
     <string name="sort_by_size">大小</string>
     <string name="sort_by_name">名称</string>
     <string name="sort_by_artist">艺术家</string>
@@ -33,8 +25,6 @@
     <string name="navigation">导航</string>
     <string name="unknown_genre">未知主题</string>
     <string name="unknown_year">未知年份</string>
-    <string name="item">个项目</string>
-    <string name="items">个项目</string>
     <string name="genre">主题</string>
     <string name="genres">主题</string>
     <string name="home_menu_equalizer">均衡器</string>

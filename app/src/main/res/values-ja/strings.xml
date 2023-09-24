@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="album">個のアルバム</string>
     <string name="album_artist">アルバムのアーティスト</string>
-    <string name="albums">個のアルバム</string>
     <string name="app_name">Gramophone</string>
-    <string name="artist">個のアーティスト</string>
-    <string name="artists">個のアーティスト</string>
     <string name="categories">カテゴリー</string>
     <string name="category_albums">アルバム</string>
     <string name="category_artists">アーティスト</string>
@@ -39,8 +35,6 @@
     <string name="home_menu_search">検索</string>
     <string name="home_menu_settings">設定</string>
     <string name="home_menu_shuffle">シャッフル</string>
-    <string name="item">個のアイテム</string>
-    <string name="items">個のアイテム</string>
     <string name="navigation">ナビゲーション</string>
     <string name="navigation_menu_home">ホーム</string>
     <string name="navigation_menu_playlist">プレイリスト</string>
@@ -48,8 +42,6 @@
     <string name="no_equalizer">イコライザーがありません!</string>
     <string name="operations">操作</string>
     <string name="play_next">次に再生</string>
-    <string name="playlist">個のプレイリスト</string>
-    <string name="playlists">個のプレイリスト</string>
     <string name="recently_added">最近追加をした曲</string>
     <string name="refreshed_songs">%1$s 件の曲を更新しました</string>
     <string name="repeat_mode">リピートモード</string>
@@ -69,8 +61,6 @@
     <string name="share">共有</string>
     <string name="shuffle">シャッフル</string>
     <string name="snackbar_refresh_completed">更新が完了しました。</string>
-    <string name="song">個の曲</string>
-    <string name="songs">個の曲</string>
     <string name="sort_by_album">アルバム</string>
     <string name="sort_by_artist">アーティスト</string>
     <string name="sort_by_name">名前</string>
