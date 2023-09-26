@@ -98,5 +98,6 @@
     <string name="default_time" translatable="false">0:00</string>
     <string name="settings_contributors_detail" translatable="false">AkaneTan, 123Duo3, nift4</string>
     <string name="upper_folder" translatable="false">..</string>
+	<string name="natural_order">Natural order</string>
 
 </resources>
