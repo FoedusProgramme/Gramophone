@@ -11,6 +11,9 @@
     <string name="category_playlists">播放列表</string>
     <string name="unknown_artist">未知艺术家</string>
     <string name="category_dates">日期</string>
+    <string name="follow_system">跟随系统</string>
+    <string name="dark">深色</string>
+    <string name="light">亮色</string>
     <string name="sort_by_size">大小</string>
     <string name="sort_by_name">名称</string>
     <string name="sort_by_artist">艺术家</string>
@@ -24,7 +27,7 @@
     <string name="search">搜索</string>
     <string name="settings_app_name">应用名称</string>
     <string name="settings_category_info">信息</string>
-    <string name="settings_contributors">源码贡献者</string>
+    <string name="settings_contributors">贡献者</string>
     <string name="play_next">添加至下一曲</string>
     <string name="go_to_album">专辑..</string>
     <string name="go_to_artist">艺术家..</string>
@@ -33,8 +36,47 @@
     <string name="repeat_mode">循环模式</string>
 	<string name="unknown_playlist">未知播放列表</string>
     <string name="gramophone_crashed">Gramophone 崩溃了。</string>
-    <string name="settings_category_appearance">外表</string>
+    <string name="settings_category_appearance">外观</string>
 	<string name="album_artist">专辑艺术家</string>
     <string name="unknown_version">未知版本</string>
     <string name="settings_version">版本</string>
+    <string name="dialog_title">标题</string>
+    <string name="dialog_artist">艺术家</string>
+    <string name="settings_category_behavior">行为</string>
+    <string name="settings_mediastore_filter_summary">过滤短于用户所配置的最小时长（单位：秒）的歌曲。（需要重新扫描）</string>
+    <string name="settings_mediastore_filter">媒体库过滤器</string>
+    <string name="settings_repository">仓库地址</string>
+    <string name="dialog_album">专辑</string>
+    <string name="dialog_genre">流派</string>
+    <string name="dialog_album_artist">专辑艺术家</string>
+    <string name="dialog_track_number">音轨号</string>
+    <string name="dialog_year">年份</string>
+    <string name="dialog_path">路径</string>
+    <string name="dialog_information">歌曲信息</string>
+    <string name="unknown_album">未知专辑</string>
+    <string name="recently_added">最近添加</string>
+    <string name="folders">文件夹</string>
+    <string name="settings_app_theme">应用主题</string>
+    <string name="natural_order">自然排序</string>
+
+    <plurals name="songs">
+        <item quantity="one">%d 首歌曲</item>
+        <item quantity="other">%d 首歌曲</item>
+    </plurals>
+    <plurals name="albums">
+        <item quantity="one">%d 张专辑</item>
+        <item quantity="other">%d 张专辑</item>
+    </plurals>
+    <plurals name="artists">
+        <item quantity="one">%d 位艺术家</item>
+        <item quantity="other">%d 位艺术家</item>
+    </plurals>
+    <plurals name="playlists">
+        <item quantity="one">%d 个播放列表</item>
+        <item quantity="other">%d 个播放列表</item>
+    </plurals>
+    <plurals name="items">
+        <item quantity="one">%d 个条目</item>
+        <item quantity="other">%d 个条目</item>
+    </plurals>
 </resources>
