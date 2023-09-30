@@ -84,5 +84,8 @@
     <string name="settings_contributors_detail" translatable="false">AkaneTan, 123Duo3, nift4</string>
     <string name="upper_folder" translatable="false">..</string>
 	<string name="natural_order">Natural order</string>
+	<string name="grid">Grid</string>
+    <string name="list">List</string>
+    <string name="layout">Display...</string>
 
 </resources>
