@@ -43,7 +43,7 @@
     <string name="dismiss">OK</string>
     <string name="unknown_genre">不明なジャンル</string>
     <string name="unknown_year">不明な年号</string>
-    <string name="refreshed_songs">%1$s 件の曲を更新しました。</string>
+    <string name="refreshed_songs">%1$s 個の曲を更新しました。</string>
     <string name="search">検索</string>
     <string name="settings_app_name">アプリ名</string>
     <string name="settings_category_info">情報</string>
