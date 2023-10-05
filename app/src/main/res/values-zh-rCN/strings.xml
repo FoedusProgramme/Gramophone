@@ -79,4 +79,9 @@
         <item quantity="one">%d 个条目</item>
         <item quantity="other">%d 个条目</item>
     </plurals>
+    <string name="grid">网格</string>
+    <string name="list">列表</string>
+    <string name="layout">显示...</string>
+    <string name="home_menu_equalizer">均衡器</string>
+    <string name="equalizer_not_found">均衡器未找到!</string>
 </resources>

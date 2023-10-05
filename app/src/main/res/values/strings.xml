@@ -87,5 +87,7 @@
 	<string name="grid">Grid</string>
     <string name="list">List</string>
     <string name="layout">Display...</string>
+    <string name="home_menu_equalizer">Equalizer</string>
+    <string name="equalizer_not_found">Equalizer not found!</string>
 
 </resources>
