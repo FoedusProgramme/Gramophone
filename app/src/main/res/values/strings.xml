@@ -89,5 +89,6 @@
     <string name="layout">Display...</string>
     <string name="home_menu_equalizer">Equalizer</string>
     <string name="equalizer_not_found">Equalizer not found!</string>
+	<string name="compact_list">List (compact)</string>
 
 </resources>
