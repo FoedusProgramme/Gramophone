@@ -1,0 +1,1 @@
+<p><i>Gramophone</i> is a media3 music player with up-to-date md3 phonograph designs.</p><p><br><b>Features</b></p><ul><li>Up-to-date material 3 design</li><li>Monet themed icon on Android 12+</li><li>View and play your favorite music</li><li>Search your favourite music</li><li>Web streaming (coming soon!)</li><li>Manage & Add your playlist</li></ul>
