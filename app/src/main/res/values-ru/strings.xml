@@ -1,0 +1,99 @@
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <!-- Translatable -->
+    <string name="home_menu_search">"Поиск"</string>
+    <string name="home_menu_shuffle">"Перемешать"</string>
+    <string name="home_menu_settings">"Настройки"</string>
+    <string name="home_menu_refresh">"Пересканировать"</string>
+	<string name="category_songs">"Треки"</string>
+    <string name="category_albums">"Альбомы"</string>
+    <string name="category_artists">"Исполнители"</string>
+    <string name="category_genres">"Жанры"</string>
+    <string name="category_playlists">"Плейлисты"</string>
+    <string name="unknown_artist">"Неизвестный исполнитель"</string>
+    <string name="category_dates">"Даты"</string>
+    <plurals name="songs">
+        <item quantity="one">"%d трек"</item>
+        <item quantity="few">"%d трека"</item>
+        <item quantity="other">"%d треков"</item>
+    </plurals>
+    <plurals name="albums">
+        <item quantity="one">"%d альбом"</item>
+        <item quantity="few">"%d альбома"</item>
+        <item quantity="other">"%d альбомов"</item>
+    </plurals>
+    <plurals name="artists">
+        <item quantity="one">"%d исполнитель"</item>
+        <item quantity="few">"%d исполнителя"</item>
+        <item quantity="other">"%d исполнителей"</item>
+    </plurals>
+    <plurals name="playlists">
+        <item quantity="one">"%d плейлист"</item>
+        <item quantity="few">"%d плейлиста"</item>
+        <item quantity="other">"%d плейлистов"</item>
+    </plurals>
+    <plurals name="items">
+        <item quantity="one">"%d элемент"</item>
+        <item quantity="few">"%d элемента"</item>
+        <item quantity="other">"%d элементов"</item>
+    </plurals>
+    <string name="follow_system">"Системная"</string>
+    <string name="dark">"Тёмная"</string>
+    <string name="light">"Светлая"</string>
+    <string name="sort_by_size">"По размеру"</string>
+    <string name="sort_by_name">"По имени"</string>
+    <string name="sort_by_artist">"По исполнителю"</string>
+    <string name="sort_by_album">"По альбому"</string>
+    <string name="categories">"Категории"</string>
+    <string name="operations">"Действия"</string>
+	<string name="dismiss">"Отмена"</string>
+	<string name="unknown_genre">"Неизвестный жанр"</string>
+    <string name="unknown_year">"Неизвестный год"</string>
+	<string name="refreshed_songs">"Добавленные %1$s треки"</string>
+    <string name="search">"Поиск"</string>
+    <string name="settings_app_name">"Название приложения"</string>
+    <string name="settings_category_info">"Информация"</string>
+    <string name="settings_contributors">"Участники разработки"</string>
+    <string name="play_next">"Играть далее"</string>
+    <string name="go_to_album">"Перейти к альбому"</string>
+    <string name="go_to_artist">"Перейти к исполнителю"</string>
+    <string name="details">"Сведения"</string>
+	<string name="shuffle">"Перемешать"</string>
+    <string name="repeat_mode">"Режим повтора"</string>
+	<string name="unknown_playlist">"Неизвестный плейлист"</string>
+    <string name="gramophone_crashed">"Gramophone вылетел."</string>
+    <string name="settings_category_appearance">"Внешний вид"</string>
+	<string name="album_artist">"Исполнитель альбома"</string>
+    <string name="unknown_version">"Неизвестная версия"</string>
+    <string name="settings_version">"Версия"</string>
+    <string name="dialog_title">"Название"</string>
+	<string name="dialog_artist">"Исполнитель"</string>
+    <string name="settings_category_behavior">"Поведение"</string>
+    <string name="settings_mediastore_filter_summary">"Скрывает треки, короче указанных секунд. (Требуется пересканирование)"</string>
+    <string name="settings_mediastore_filter">"Фильтр фонотеки"</string>
+    <string name="settings_repository">"Репозиторий"</string>
+    <string name="dialog_album">"Альбом"</string>
+	<string name="dialog_genre">"Жанр"</string>
+    <string name="dialog_album_artist">"Исполнитель альбома"</string>
+    <string name="dialog_track_number">"Номер трека"</string>
+    <string name="dialog_year">"Год"</string>
+    <string name="dialog_path">"Путь"</string>
+    <string name="dialog_information">"Информация"</string>
+    <string name="unknown_album">"Неизвестный альбом"</string>
+    <string name="recently_added">"Недавно добавленные"</string>
+    <string name="folders">"Папки"</string>
+    <string name="settings_app_theme">"Тема оформления"</string>
+
+    <!-- Not translatable -->
+    <string name="app_name" translatable="false">Gramophone</string>
+    <string name="default_time" translatable="false">0:00</string>
+    <string name="settings_contributors_detail" translatable="false">AkaneTan, 123Duo3, nift4</string>
+    <string name="upper_folder" translatable="false">..</string>
+	<string name="natural_order">Natural order</string>
+	<string name="grid">Grid</string>
+    <string name="list">List</string>
+    <string name="layout">Display...</string>
+    <string name="home_menu_equalizer">Equalizer</string>
+    <string name="equalizer_not_found">Equalizer not found!</string>
+	<string name="compact_list">List (compact)</string>
+
+</resources>
