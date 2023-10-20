@@ -90,5 +90,6 @@
     <string name="home_menu_equalizer">Equalizer</string>
     <string name="equalizer_not_found">Equalizer not found!</string>
 	<string name="compact_list">List (compact)</string>
+    <string name="check_for_updates">Check our channel for updates!</string>
 
 </resources>
