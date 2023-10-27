@@ -84,4 +84,5 @@
     <string name="grid">グリッド</string>
     <string name="list">リスト</string>
     <string name="compact_list">リスト (コンパクト)</string>
+    <string name="check_for_updates">アップデートはチャンネルをチェックしてください！</string>
 </resources>
