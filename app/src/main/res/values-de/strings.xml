@@ -1,10 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Translatable -->
     <string name="home_menu_search">Suche</string>
     <string name="home_menu_shuffle">Shuffle</string>
     <string name="home_menu_settings">Einstellungen</string>
     <string name="home_menu_refresh">Aktualisieren</string>
-	<string name="category_songs">Titel</string>
+    <string name="category_songs">Titel</string>
     <string name="category_albums">Alben</string>
     <string name="category_artists">Interpreten</string>
     <string name="category_genres">Genres</string>
@@ -17,10 +18,10 @@
     <string name="sort_by_album">Album</string>
     <string name="categories">Kategorien</string>
     <string name="operations">Aktionen</string>
-	<string name="dismiss">Ablehnen</string>
-	<string name="unknown_genre">Unbekanntes Genre</string>
+    <string name="dismiss">Ablehnen</string>
+    <string name="unknown_genre">Unbekanntes Genre</string>
     <string name="unknown_year">Unbekanntes Jahr</string>
-	<string name="refreshed_songs">%1$s Titel aktualisiert</string>
+    <string name="refreshed_songs">%1$s Titel aktualisiert</string>
     <string name="search">Suche</string>
     <string name="settings_app_name">App-Name</string>
     <string name="settings_category_info">Info</string>
@@ -29,13 +30,60 @@
     <string name="go_to_album">Zum Album wechseln</string>
     <string name="go_to_artist">Zum Interpreten wechseln</string>
     <string name="details">Details</string>
-	<string name="shuffle">Shuffle</string>
+    <string name="shuffle">Shuffle</string>
     <string name="repeat_mode">Wiederholungsmodus</string>
-	<string name="unknown_playlist">Unbekannte Wiedergabeliste</string>
+    <string name="unknown_playlist">Unbekannte Wiedergabeliste</string>
     <string name="gramophone_crashed">Gramophone ist abgestürzt.</string>
     <string name="settings_category_appearance">Aussehen</string>
-	<string name="album_artist">Interpret des Albums</string>
+    <string name="album_artist">Interpret des Albums</string>
     <string name="unknown_version">Unbekante Version</string>
     <string name="settings_version">Version</string>
-
+    <string name="settings_category_behavior">Verhalten</string>
+    <string name="unknown_album">Unbekanntes Album</string>
+    <string name="dialog_title">Titel</string>
+    <string name="settings_repository">Repository</string>
+    <string name="settings_mediastore_filter">MediaStore-Filter</string>
+    <string name="settings_app_theme">Farbschema</string>
+    <string name="compact_list">Liste (kompakt)</string>
+    <string name="dialog_album_artist">Interpret des Albums</string>
+    <plurals name="playlists">
+        <item quantity="one">%d Wiedergabeliste</item>
+        <item quantity="other">%d Wiedergabelisten</item>
+    </plurals>
+    <string name="equalizer_not_found">Klangregelung nicht gefunden!</string>
+    <plurals name="items">
+        <item quantity="one">%d Element</item>
+        <item quantity="other">%d Elemente</item>
+    </plurals>
+    <string name="natural_order">Natürliche Sortierung</string>
+    <string name="light">Hell</string>
+    <string name="dialog_information">Informationen</string>
+    <string name="dialog_track_number">Titelnummer</string>
+    <string name="folders">Ordner</string>
+    <plurals name="artists">
+        <item quantity="one">%d Künstler/in</item>
+        <item quantity="other">%d Künstler/innen</item>
+    </plurals>
+    <string name="settings_mediastore_filter_summary">Filterlieder sind kürzer als benutzerkonfigurierte Sekunden. (Scan benötigt)</string>
+    <plurals name="albums">
+        <item quantity="one">%d Album</item>
+        <item quantity="other">%d Alben</item>
+    </plurals>
+    <string name="dialog_year">Jahr</string>
+    <string name="dialog_artist">Künstler/in</string>
+    <string name="dialog_album">Album</string>
+    <string name="home_menu_equalizer">Klangregelung</string>
+    <string name="dialog_path">Pfad</string>
+    <string name="dark">Dunkel</string>
+    <string name="check_for_updates">Überprüfen Sie unseren Kanal für Neuigkeiten!</string>
+    <string name="follow_system">System folgen</string>
+    <string name="list">Liste</string>
+    <string name="grid">Raster</string>
+    <plurals name="songs">
+        <item quantity="one">%d Titel</item>
+        <item quantity="other">%d Titel</item>
+    </plurals>
+    <string name="recently_added">Kürzlich hinzugefügt</string>
+    <string name="dialog_genre">Genre</string>
+    <string name="layout">Anzeige …</string>
 </resources>
