@@ -4,7 +4,7 @@
     <string name="home_menu_shuffle">随机</string>
     <string name="home_menu_settings">设置</string>
     <string name="home_menu_refresh">刷新</string>
-	<string name="category_songs">歌曲</string>
+    <string name="category_songs">歌曲</string>
     <string name="category_albums">专辑</string>
     <string name="category_artists">艺术家</string>
     <string name="category_genres">主题</string>
@@ -20,10 +20,10 @@
     <string name="sort_by_album">专辑</string>
     <string name="categories">分类</string>
     <string name="operations">操作</string>
-	<string name="dismiss">关闭</string>
-	<string name="unknown_genre">未知主题</string>
+    <string name="dismiss">关闭</string>
+    <string name="unknown_genre">未知主题</string>
     <string name="unknown_year">未知年份</string>
-	<string name="refreshed_songs">刷新了 %1$s 首歌曲。</string>
+    <string name="refreshed_songs">刷新了 %1$s 首歌曲。</string>
     <string name="search">搜索</string>
     <string name="settings_app_name">应用名称</string>
     <string name="settings_category_info">信息</string>
@@ -32,12 +32,12 @@
     <string name="go_to_album">专辑..</string>
     <string name="go_to_artist">艺术家..</string>
     <string name="details">详细</string>
-	<string name="shuffle">随机</string>
+    <string name="shuffle">随机</string>
     <string name="repeat_mode">循环模式</string>
-	<string name="unknown_playlist">未知播放列表</string>
+    <string name="unknown_playlist">未知播放列表</string>
     <string name="gramophone_crashed">Gramophone 崩溃了。</string>
     <string name="settings_category_appearance">外观</string>
-	<string name="album_artist">专辑艺术家</string>
+    <string name="album_artist">专辑艺术家</string>
     <string name="unknown_version">未知版本</string>
     <string name="settings_version">版本</string>
     <string name="dialog_title">标题</string>
@@ -58,7 +58,6 @@
     <string name="folders">文件夹</string>
     <string name="settings_app_theme">应用主题</string>
     <string name="natural_order">自然排序</string>
-
     <plurals name="songs">
         <item quantity="one">%d 首歌曲</item>
         <item quantity="other">%d 首歌曲</item>
@@ -84,4 +83,6 @@
     <string name="layout">显示...</string>
     <string name="home_menu_equalizer">均衡器</string>
     <string name="equalizer_not_found">均衡器未找到!</string>
+    <string name="compact_list">列表 (紧凑)</string>
+    <string name="check_for_updates">查看我们的频道来获取更新!</string>
 </resources>
