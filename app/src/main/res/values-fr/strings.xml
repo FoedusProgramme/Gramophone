@@ -81,4 +81,5 @@
     <string name="layout">Affichage…</string>
     <string name="play_next">Écouter après</string>
     <string name="repeat_mode">Mode répétition</string>
+    <string name="dialog_track_number">Numéro de piste</string>
 </resources>
