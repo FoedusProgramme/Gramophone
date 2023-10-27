@@ -1,2 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="dismiss">Rejeter</string>
+    <string name="categories">Catégories</string>
+    <string name="settings_category_behavior">Comportement</string>
+    <string name="operations">Opérations</string>
+    <string name="go_to_album">Voir l’album</string>
+    <string name="category_dates">Dates</string>
+    <string name="sort_by_size">Taille</string>
+    <string name="dialog_title">Titre</string>
+    <string name="settings_repository">Dépôt</string>
+    <string name="sort_by_artist">Artiste</string>
+    <string name="settings_mediastore_filter">Filtre MediaStore</string>
+    <string name="category_songs">Chansons</string>
+    <string name="settings_app_theme">Thèrme de l’appli</string>
+    <string name="compact_list">Liste (compacte)</string>
+    <string name="dialog_album_artist">Artiste de l’album</string>
+    <plurals name="playlists">
+        <item quantity="one">%d liste de lecture</item>
+        <item quantity="many">%d listes de lecture</item>
+        <item quantity="other">%d listes de lecture</item>
+    </plurals>
+    <string name="equalizer_not_found">Égaliseur introuvable !</string>
+    <plurals name="items">
+        <item quantity="one">%d élément</item>
+        <item quantity="many">%d éléments</item>
+        <item quantity="other">%d éléments</item>
+    </plurals>
+    <string name="home_menu_shuffle">Aléatoire</string>
+    <string name="category_genres">Genres</string>
+    <string name="natural_order">Ordre naturel</string>
+    <string name="light">Clair</string>
+    <string name="settings_app_name">Nom de l’appli</string>
+    <string name="settings_category_info">Infos</string>
+    <string name="dialog_information">Informations</string>
+    <string name="gramophone_crashed">Gramophone a planté.</string>
+    <string name="folders">Dossiers</string>
+    <plurals name="artists">
+        <item quantity="one">%d artiste</item>
+        <item quantity="many">%d artistes</item>
+        <item quantity="other">%d artistes</item>
+    </plurals>
+    <string name="settings_mediastore_filter_summary">Les chansons filtrées sont plus courtes que les secondes configurées par l\'utilisateur. (Nouveau scan nécessaire)</string>
+    <plurals name="albums">
+        <item quantity="one">%d album</item>
+        <item quantity="many">%d albums</item>
+        <item quantity="other">%d albums</item>
+    </plurals>
+    <string name="dialog_artist">Artiste</string>
+    <string name="home_menu_settings">Paramètres</string>
+    <string name="home_menu_refresh">Actualiser</string>
+    <string name="settings_contributors">Contributeurs</string>
+    <string name="settings_category_appearance">Apparence</string>
+    <string name="dialog_album">Album</string>
+    <string name="details">Détails</string>
+    <string name="home_menu_equalizer">Égaliseur</string>
+    <string name="dialog_path">Chemin</string>
+    <string name="album_artist">Artiste de l’album</string>
+    <string name="sort_by_album">Album</string>
+    <string name="category_albums">Albums</string>
+    <string name="refreshed_songs">%1$s chansons actualisées</string>
+    <string name="dark">Sombre</string>
+    <string name="sort_by_name">Nom</string>
+    <string name="check_for_updates">Vérifiez notre chaîne pour les mises à jour !</string>
+    <string name="shuffle">Aléatoire</string>
+    <string name="category_playlists">Listes de lecture</string>
+    <string name="follow_system">Suivre le système</string>
+    <string name="list">Liste</string>
+    <string name="search">Recherche</string>
+    <string name="grid">Grille</string>
+    <plurals name="songs">
+        <item quantity="one">%d chanson</item>
+        <item quantity="many">%d chansons</item>
+        <item quantity="other">%d chansons</item>
+    </plurals>
+    <string name="recently_added">Récemment ajouté</string>
+    <string name="dialog_genre">Genre</string>
+    <string name="category_artists">Artistes</string>
+    <string name="go_to_artist">Voir l’artiste</string>
+    <string name="home_menu_search">Recherche</string>
+    <string name="layout">Affichage…</string>
+    <string name="play_next">Écouter après</string>
+    <string name="repeat_mode">Mode répétition</string>
+</resources>
