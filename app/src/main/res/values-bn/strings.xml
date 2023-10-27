@@ -1,2 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="dismiss">সরিয়ে দাউ</string>
+    <string name="categories">বিভাগগুলো</string>
+    <string name="settings_category_behavior">ব্যাবহার</string>
+    <string name="category_dates">তারিখগুলো</string>
+    <string name="sort_by_artist">শিল্পী</string>
+    <string name="settings_app_theme">অ্যাপটির থিম</string>
+    <string name="dialog_album_artist">অ্যালবামের শিল্পী</string>
+    <string name="settings_app_name">অ্যাপটির নাম</string>
+    <plurals name="artists">
+        <item quantity="one">শিল্পী</item>
+        <item quantity="other">শিল্পীগুলু</item>
+    </plurals>
+    <plurals name="albums">
+        <item quantity="one">অ্যালবাম</item>
+        <item quantity="other">অ্যালবামগুলো</item>
+    </plurals>
+    <string name="dialog_artist">শিল্পী</string>
+    <string name="settings_contributors">অবদানকারীগণ</string>
+    <string name="settings_category_appearance">বাহিরীরুপ</string>
+    <string name="dialog_album">অ্যালবাম</string>
+    <string name="details">ব্যাখ্যাসমূহ</string>
+    <string name="album_artist">অ্যালবামের শিল্পী</string>
+    <string name="sort_by_album">অ্যালবাম</string>
+    <string name="category_albums">অ্যালবামগুলু</string>
+    <string name="dark">অন্ধকার</string>
+    <string name="check_for_updates">আমাদের চ্যানেল এ গিয়ে দেখো আপডেট এর জন্য!</string>
+    <string name="category_artists">শিল্পীগুচ্ছ</string>
+</resources>
