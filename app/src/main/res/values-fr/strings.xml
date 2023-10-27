@@ -82,4 +82,12 @@
     <string name="play_next">Écouter après</string>
     <string name="repeat_mode">Mode répétition</string>
     <string name="dialog_track_number">Numéro de piste</string>
+    <string name="unknown_album">Album inconnu</string>
+    <string name="unknown_playlist">Liste de lecture inconnue</string>
+    <string name="dialog_year">Année</string>
+    <string name="settings_version">Version</string>
+    <string name="unknown_genre">Genre inconnu</string>
+    <string name="unknown_year">Année inconnue</string>
+    <string name="unknown_version">Version inconnue</string>
+    <string name="unknown_artist">Artiste inconnu</string>
 </resources>
