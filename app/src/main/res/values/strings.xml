@@ -91,4 +91,6 @@
     <string name="equalizer_not_found">Equalizer not found!</string>
     <string name="compact_list">List (compact)</string>
     <string name="check_for_updates">Check our channel for updates!</string>
+    <string name="settings_float_output">Enable audio float output</string>
+    <string name="settings_float_output_summary">Keep this off if you want EQ working normally. (Need app restart)</string>
 </resources>
