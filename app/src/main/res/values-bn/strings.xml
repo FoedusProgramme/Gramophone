@@ -9,12 +9,12 @@
     <string name="dialog_album_artist">অ্যালবামের শিল্পী</string>
     <string name="settings_app_name">অ্যাপটির নাম</string>
     <plurals name="artists">
-        <item quantity="one">শিল্পী</item>
-        <item quantity="other">শিল্পীগুলু</item>
+        <item quantity="one">%d শিল্পী</item>
+        <item quantity="other">%d শিল্পীগুলো</item>
     </plurals>
     <plurals name="albums">
-        <item quantity="one">অ্যালবাম</item>
-        <item quantity="other">অ্যালবামগুলো</item>
+        <item quantity="one">%d অ্যালবাম</item>
+        <item quantity="other">%d অ্যালবামগুলো</item>
     </plurals>
     <string name="dialog_artist">শিল্পী</string>
     <string name="settings_contributors">অবদানকারীগণ</string>
@@ -24,7 +24,67 @@
     <string name="album_artist">অ্যালবামের শিল্পী</string>
     <string name="sort_by_album">অ্যালবাম</string>
     <string name="category_albums">অ্যালবামগুলু</string>
-    <string name="dark">অন্ধকার</string>
+    <string name="dark">কালো</string>
     <string name="check_for_updates">আমাদের চ্যানেল এ গিয়ে দেখো আপডেট এর জন্য!</string>
     <string name="category_artists">শিল্পীগুচ্ছ</string>
+    <string name="operations">কাজসমূহ</string>
+    <string name="go_to_album">অ্যালবাম এ যান</string>
+    <string name="unknown_album">অচেনা অ্যালবাম</string>
+    <string name="sort_by_size">দৈর্ঘ্য</string>
+    <string name="dialog_title">শিরনাম</string>
+    <string name="settings_repository">রেপোজিটোরি</string>
+    <string name="settings_mediastore_filter">MediaStore ফিল্টার</string>
+    <string name="category_songs">গানগুলো</string>
+    <string name="compact_list">সারি (কম্প্যাক্ট অবস্থা)</string>
+    <plurals name="playlists">
+        <item quantity="one">%d টি চালনাসারি</item>
+        <item quantity="other">%d টি চলনসারিগুলো</item>
+    </plurals>
+    <string name="equalizer_not_found">ইকুয়ালাইজার পাওয়া যায়নি!</string>
+    <plurals name="items">
+        <item quantity="one">%d টি বস্তু</item>
+        <item quantity="other">%d টি বস্তু</item>
+    </plurals>
+    <string name="home_menu_shuffle">শাফেল</string>
+    <string name="category_genres">গানের জাতগুলি</string>
+    <string name="natural_order">প্রাকৃতিক সারি</string>
+    <string name="light">সাদা</string>
+    <string name="settings_category_info">বর্ণনা</string>
+    <string name="dialog_information">তথ্য</string>
+    <string name="gramophone_crashed">Gramophone crash হয়ে গেছে।</string>
+    <string name="dialog_track_number">গানের নম্বর</string>
+    <string name="folders">ফোল্ডারগুলো</string>
+    <string name="settings_mediastore_filter_summary">গানগুলো কে ফিল্টার করুন যা ইউজার ব্যাবস্থাপনার চেয়ে ছোট (rescan জরুরি)</string>
+    <string name="unknown_playlist">অচেনা গানের সারি</string>
+    <string name="dialog_year">বছর</string>
+    <string name="home_menu_settings">সেটিংস</string>
+    <string name="home_menu_refresh">রিফ্রেশ</string>
+    <string name="home_menu_equalizer">ইকুয়ালাইজার</string>
+    <string name="dialog_path">ঠিকানা</string>
+    <string name="settings_version">ভার্সন</string>
+    <string name="refreshed_songs">রিফ্রেশ করা হয়েছে %1$s গানগুলোকে</string>
+    <string name="sort_by_name">নাম</string>
+    <string name="shuffle">শাফেল</string>
+    <string name="category_playlists">চালনা সারি</string>
+    <string name="follow_system">সিস্টেমকে অনুসরণ করুন</string>
+    <string name="list">সারি</string>
+    <string name="search">অনুসন্ধান করুন</string>
+    <string name="grid">গ্রিড</string>
+    <plurals name="songs">
+        <item quantity="one">%d টি গান</item>
+        <item quantity="other">%d টা গান</item>
+    </plurals>
+    <string name="recently_added">সম্প্রতিকাল যোগ করা হয়েছে</string>
+    <string name="dialog_genre">গানের জাত</string>
+    <string name="unknown_genre">গানের জাত</string>
+    <string name="go_to_artist">শিল্পীগণ এর মেনুতে যান</string>
+    <string name="settings_float_output">চালু করুন audio float এর আউটপুট</string>
+    <string name="unknown_year">অচেনা বছর</string>
+    <string name="home_menu_search">অনুসন্ধান করুন</string>
+    <string name="layout">ডিসপ্লে</string>
+    <string name="play_next">পরেরটা চালাও</string>
+    <string name="settings_float_output_summary">এটা বন্ধ রাখো যদি EQ চাও স্বাভাবিকভাবে চলতে (অ্যাপটি রিস্টার্ট এর প্রয়োজন আছে)</string>
+    <string name="unknown_version">অচেনা ভার্সন</string>
+    <string name="unknown_artist">অচেনা শিল্পী</string>
+    <string name="repeat_mode">রিপিট সুইচ</string>
 </resources>
