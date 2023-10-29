@@ -19,24 +19,24 @@
     <string name="unknown_playlist">不明なプレイリスト</string>
     <string name="equalizer_not_found">イコライザーがありません！</string>
     <plurals name="songs">
-    <item quantity="one">%d 個の曲</item>
-    <item quantity="other">%d 個の曲</item>
+        <item quantity="one">%d 個の曲</item>
+        <item quantity="other">%d 個の曲</item>
     </plurals>
     <plurals name="albums">
-    <item quantity="one">%d 個のアルバム</item>
-    <item quantity="other">%d 個のアルバム</item>
+        <item quantity="one">%d 個のアルバム</item>
+        <item quantity="other">%d 個のアルバム</item>
     </plurals>
     <plurals name="artists">
-    <item quantity="one">%d 件のアーティスト</item>
-    <item quantity="other">%d 件のアーティスト</item>
+        <item quantity="one">%d 件のアーティスト</item>
+        <item quantity="other">%d 件のアーティスト</item>
     </plurals>
     <plurals name="playlists">
-    <item quantity="one">%d 個のプレイリスト</item>
-    <item quantity="other">%d 個のプレイリスト</item>
+        <item quantity="one">%d 個のプレイリスト</item>
+        <item quantity="other">%d 個のプレイリスト</item>
     </plurals>
     <plurals name="items">
-    <item quantity="one">%d 個のアイテム</item>
-    <item quantity="other">%d 個のアイテム</item>
+        <item quantity="one">%d 個のアイテム</item>
+        <item quantity="other">%d 個のアイテム</item>
     </plurals>
     <string name="follow_system">システムに従う</string>
     <string name="dark">ダーク</string>
@@ -48,7 +48,7 @@
     <string name="categories">カテゴリー</string>
     <string name="operations">操作</string>
     <string name="dismiss">OK</string>
-    <string name="refreshed_songs">%1$s 個の曲を更新しました。</string>
+    <string name="refreshed_songs">%1$s 個の曲を更新しました</string>
     <string name="search">検索</string>
     <string name="play_next">次に再生</string>
     <string name="go_to_album">アルバムを開く</string>
@@ -85,4 +85,6 @@
     <string name="list">リスト</string>
     <string name="compact_list">リスト (コンパクト)</string>
     <string name="check_for_updates">アップデートはチャンネルをチェックしてください！</string>
+    <string name="settings_float_output">オーディオの float 出力を有効化</string>
+    <string name="settings_float_output_summary">イコライザーを正常に動作させたい場合はこの設定を OFF にしたままにしてください。(アプリの再起動が必要です)</string>
 </resources>
