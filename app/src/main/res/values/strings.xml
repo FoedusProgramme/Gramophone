@@ -93,4 +93,6 @@
     <string name="check_for_updates">Check our channel for updates!</string>
     <string name="settings_float_output">Enable audio float output</string>
     <string name="settings_float_output_summary">Keep this off if you want EQ working normally. (Need app restart)</string>
+    <string name="settings_default_progress_bar">Enable default progress bar</string>
+    <string name="settings_default_progress_bar_summary">Enable old styled progress bar</string>
 </resources>
