@@ -4,7 +4,7 @@
     <string name="home_menu_shuffle">"Перемешать"</string>
     <string name="home_menu_settings">"Настройки"</string>
     <string name="home_menu_refresh">"Пересканировать"</string>
-	<string name="category_songs">"Треки"</string>
+    <string name="category_songs">"Треки"</string>
     <string name="category_albums">"Альбомы"</string>
     <string name="category_artists">"Исполнители"</string>
     <string name="category_genres">"Жанры"</string>
@@ -45,10 +45,10 @@
     <string name="sort_by_album">"По альбому"</string>
     <string name="categories">"Категории"</string>
     <string name="operations">"Действия"</string>
-	<string name="dismiss">"Отмена"</string>
-	<string name="unknown_genre">"Неизвестный жанр"</string>
+    <string name="dismiss">"Отмена"</string>
+    <string name="unknown_genre">"Неизвестный жанр"</string>
     <string name="unknown_year">"Неизвестный год"</string>
-	<string name="refreshed_songs">"Добавленные %1$s треки"</string>
+    <string name="refreshed_songs">"Добавленные %1$s треки"</string>
     <string name="search">"Поиск"</string>
     <string name="settings_app_name">"Название приложения"</string>
     <string name="settings_category_info">"Информация"</string>
@@ -57,22 +57,22 @@
     <string name="go_to_album">"Перейти к альбому"</string>
     <string name="go_to_artist">"Перейти к исполнителю"</string>
     <string name="details">"Сведения"</string>
-	<string name="shuffle">"Перемешать"</string>
+    <string name="shuffle">"Перемешать"</string>
     <string name="repeat_mode">"Режим повтора"</string>
-	<string name="unknown_playlist">"Неизвестный плейлист"</string>
+    <string name="unknown_playlist">"Неизвестный плейлист"</string>
     <string name="gramophone_crashed">"Gramophone вылетел."</string>
     <string name="settings_category_appearance">"Внешний вид"</string>
-	<string name="album_artist">"Исполнитель альбома"</string>
+    <string name="album_artist">"Исполнитель альбома"</string>
     <string name="unknown_version">"Неизвестная версия"</string>
     <string name="settings_version">"Версия"</string>
     <string name="dialog_title">"Название"</string>
-	<string name="dialog_artist">"Исполнитель"</string>
+    <string name="dialog_artist">"Исполнитель"</string>
     <string name="settings_category_behavior">"Поведение"</string>
     <string name="settings_mediastore_filter_summary">"Скрывает треки, короче указанных секунд. (Требуется пересканирование)"</string>
     <string name="settings_mediastore_filter">"Фильтр фонотеки"</string>
     <string name="settings_repository">"Репозиторий"</string>
     <string name="dialog_album">"Альбом"</string>
-	<string name="dialog_genre">"Жанр"</string>
+    <string name="dialog_genre">"Жанр"</string>
     <string name="dialog_album_artist">"Исполнитель альбома"</string>
     <string name="dialog_track_number">"Номер трека"</string>
     <string name="dialog_year">"Год"</string>
@@ -88,12 +88,12 @@
     <string name="default_time" translatable="false">0:00</string>
     <string name="settings_contributors_detail" translatable="false">AkaneTan, 123Duo3, nift4</string>
     <string name="upper_folder" translatable="false">..</string>
-	<string name="natural_order">Natural order</string>
-	<string name="grid">Grid</string>
+    <string name="natural_order">Natural order</string>
+    <string name="grid">Grid</string>
     <string name="list">List</string>
     <string name="layout">Display...</string>
     <string name="home_menu_equalizer">Equalizer</string>
     <string name="equalizer_not_found">Equalizer not found!</string>
-	<string name="compact_list">List (compact)</string>
+    <string name="compact_list">List (compact)</string>
 
 </resources>
