@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <!-- Translatable -->
+    <string name="app_name">Gramophone</string>
     <string name="home_menu_search">Search</string>
     <string name="home_menu_shuffle">Shuffle</string>
     <string name="home_menu_settings">Settings</string>
@@ -78,11 +79,6 @@
     <string name="recently_added">Recently added</string>
     <string name="folders">Folders</string>
     <string name="settings_app_theme">App theme</string>
-    <!-- Not translatable -->
-    <string name="app_name" translatable="false">Gramophone</string>
-    <string name="default_time" translatable="false">0:00</string>
-    <string name="settings_contributors_detail" translatable="false">AkaneTan, 123Duo3, nift4</string>
-    <string name="upper_folder" translatable="false">..</string>
     <string name="natural_order">Natural order</string>
     <string name="grid">Grid</string>
     <string name="list">List</string>
@@ -95,4 +91,10 @@
     <string name="settings_float_output_summary">Keep this off if you want EQ working normally. (Need app restart)</string>
     <string name="settings_default_progress_bar">Enable default progress bar</string>
     <string name="settings_default_progress_bar_summary">Enable old styled progress bar</string>
+    <string name="home_menu_about">About</string>
+    <string name="opensource_info">Open-sourced under GPL-3.0\nCopyright © Akane Foundation 2023</string>
+    <!-- Not translatable -->
+    <string name="default_time" translatable="false">0:00</string>
+    <string name="settings_contributors_detail" translatable="false">AkaneTan, 123Duo3, nift4</string>
+    <string name="upper_folder" translatable="false">..</string>
 </resources>

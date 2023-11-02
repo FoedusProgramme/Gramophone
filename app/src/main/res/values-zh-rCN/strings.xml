@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">留声机</string>
     <string name="home_menu_search">搜索</string>
     <string name="home_menu_shuffle">随机</string>
     <string name="home_menu_settings">设置</string>
