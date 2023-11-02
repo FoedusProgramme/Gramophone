@@ -85,11 +85,11 @@
     <string name="list">リスト</string>
     <string name="compact_list">リスト (コンパクト)</string>
     <string name="check_for_updates">アップデートはチャンネルをチェックしてください！</string>
-    <string name="settings_float_output">オーディオの float 出力を有効化する</string>
+    <string name="settings_float_output">オーディオの float 出力を有効化</string>
     <string name="settings_float_output_summary">イコライザーを正常に動作させたい場合はこの設定を OFF にしたままにしてください。(アプリの再起動が必要です)</string>
-    <string name="settings_default_progress_bar">デフォルトのプログレスバーを有効化する</string>
+    <string name="settings_default_progress_bar">デフォルトのプログレスバーを有効化</string>
     <string name="opensource_info">Open-sourced under GPL-3.0
 \nCopyright © Akane Foundation 2023</string>
     <string name="home_menu_about">アプリについて</string>
-    <string name="settings_default_progress_bar_summary">古いスタイルのプログレスバーを有効化します</string>
+    <string name="settings_default_progress_bar_summary">古いスタイルのプログレスバーを有効化します。</string>
 </resources>
