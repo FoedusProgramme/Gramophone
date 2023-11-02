@@ -87,4 +87,5 @@
     <string name="check_for_updates">アップデートはチャンネルをチェックしてください！</string>
     <string name="settings_float_output">オーディオの float 出力を有効化</string>
     <string name="settings_float_output_summary">イコライザーを正常に動作させたい場合はこの設定を OFF にしたままにしてください。(アプリの再起動が必要です)</string>
+    <string name="settings_default_progress_bar">デフォルトのプログレスバーを有効化する</string>
 </resources>
