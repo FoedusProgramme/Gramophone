@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <!-- Translatable -->
-    <string name="app_name">Gramophone</string>
     <string name="home_menu_search">Search</string>
     <string name="home_menu_shuffle">Shuffle</string>
     <string name="home_menu_settings">Settings</string>
@@ -94,6 +93,7 @@
     <string name="home_menu_about">About</string>
     <string name="opensource_info">Open-sourced under GPL-3.0\nCopyright © Akane Foundation 2023</string>
     <!-- Not translatable -->
+    <string name="app_name" translatable="false">Gramophone</string>
     <string name="default_time" translatable="false">0:00</string>
     <string name="settings_contributors_detail" translatable="false">AkaneTan, 123Duo3, nift4</string>
     <string name="upper_folder" translatable="false">..</string>
