@@ -1,2 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="dismiss">Avslå</string>
+    <string name="categories">Kategorier</string>
+    <string name="settings_category_behavior">Adferd</string>
+    <string name="operations">Operasjoner</string>
+    <string name="go_to_album">Gå til album</string>
+    <string name="category_dates">Datoer</string>
+    <string name="unknown_album">Ukjent album</string>
+    <string name="sort_by_size">Størrelse</string>
+    <string name="dialog_title">Navn</string>
+    <string name="settings_repository">Pakkebrønn</string>
+    <string name="sort_by_artist">Artist</string>
+    <string name="settings_mediastore_filter">MediaStore-filter</string>
+    <string name="category_songs">Spor</string>
+    <string name="settings_app_theme">Drakt</string>
+    <string name="compact_list">Liste (kompakt)</string>
+    <string name="dialog_album_artist">Albumsartist</string>
+    <plurals name="playlists">
+        <item quantity="one">%d spilleliste</item>
+        <item quantity="other">%d spillelister</item>
+    </plurals>
+    <string name="equalizer_not_found">Fant ikke tonekontroll.</string>
+    <plurals name="items">
+        <item quantity="one">%d element</item>
+        <item quantity="other">%d elementer</item>
+    </plurals>
+    <string name="home_menu_shuffle">Omstokking</string>
+    <string name="category_genres">Sjangre</string>
+    <string name="natural_order">Naturlig rekkefølge</string>
+    <string name="light">Lys</string>
+    <string name="settings_app_name">Programnavn</string>
+    <string name="settings_category_info">Info</string>
+    <string name="dialog_information">Informasjon</string>
+    <string name="gramophone_crashed">Gramophone krasjet.</string>
+    <string name="dialog_track_number">Spornummer</string>
+    <string name="folders">Mapper</string>
+    <plurals name="artists">
+        <item quantity="one">%d artist</item>
+        <item quantity="other">%d artister</item>
+    </plurals>
+    <string name="settings_mediastore_filter_summary">Filtrer ut spor kortere en angitt antall sekunder. (Krever omskanning.)</string>
+    <plurals name="albums">
+        <item quantity="one">%d album</item>
+        <item quantity="other">%d album</item>
+    </plurals>
+    <string name="unknown_playlist">Ukjent spilleliste</string>
+    <string name="dialog_year">År</string>
+    <string name="dialog_artist">Artist</string>
+    <string name="home_menu_settings">Innstillinger</string>
+    <string name="home_menu_refresh">Oppdater</string>
+    <string name="settings_contributors">Bidragsytere</string>
+    <string name="settings_category_appearance">Utseende</string>
+    <string name="dialog_album">Album</string>
+    <string name="settings_default_progress_bar">Skru på forvalgt framdriftsindikator</string>
+    <string name="home_menu_about">Om</string>
+    <string name="details">Detaljer</string>
+    <string name="home_menu_equalizer">Tonekontroll</string>
+    <string name="dialog_path">Sti</string>
+    <string name="settings_version">Versjon</string>
+    <string name="album_artist">Albumsartist</string>
+    <string name="sort_by_album">Album</string>
+    <string name="category_albums">Album</string>
+    <string name="refreshed_songs">Gjenoppfrisket %1$s spor</string>
+    <string name="dark">Mørk</string>
+    <string name="sort_by_name">Navn</string>
+    <string name="check_for_updates">Sjekk kanalen vår for oppdateringer.</string>
+    <string name="shuffle">Omstokking</string>
+    <string name="category_playlists">Spillelister</string>
+    <string name="follow_system">System</string>
+    <string name="list">Liste</string>
+    <string name="search">Søk</string>
+    <string name="grid">Rutenett</string>
+    <plurals name="songs">
+        <item quantity="one">%d spor</item>
+        <item quantity="other">%d spor</item>
+    </plurals>
+    <string name="settings_default_progress_bar_summary">Skru på gammeldags framdriftsindikator</string>
+    <string name="recently_added">Nylig tillagt</string>
+    <string name="dialog_genre">Sjanger</string>
+    <string name="unknown_genre">Ukjent sjanger</string>
+    <string name="category_artists">Artister</string>
+    <string name="go_to_artist">Gå til artist</string>
+    <string name="settings_float_output">Skru på lydflyttallsutdata</string>
+    <string name="unknown_year">Ukjent år</string>
+    <string name="home_menu_search">Søk</string>
+    <string name="layout">Visning …</string>
+    <string name="play_next">Spill neste</string>
+    <string name="settings_float_output_summary">Behold avslått hvis du vil at tonekontroll skal fungere normalt. (Krever programomstart.)</string>
+    <string name="unknown_version">Ukjent versjon</string>
+    <string name="unknown_artist">Ukjent artist</string>
+    <string name="repeat_mode">Gjentagelsesmodus</string>
+</resources>
