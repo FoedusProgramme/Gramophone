@@ -40,7 +40,7 @@
         <item quantity="many">%d artistes</item>
         <item quantity="other">%d artistes</item>
     </plurals>
-    <string name="settings_mediastore_filter_summary">Les chansons filtrées sont plus courtes que les secondes configurées par l\'utilisateur. (Nouveau scan nécessaire)</string>
+    <string name="settings_mediastore_filter_summary">Les chansons filtrées sont plus courtes que les secondes configurées par l’utilisateur. (Nouveau scan nécessaire)</string>
     <plurals name="albums">
         <item quantity="one">%d album</item>
         <item quantity="many">%d albums</item>
@@ -90,4 +90,15 @@
     <string name="unknown_year">Année inconnue</string>
     <string name="unknown_version">Version inconnue</string>
     <string name="unknown_artist">Artiste inconnu</string>
+    <string name="settings_round_corner">Activer le coin rond</string>
+    <string name="settings_round_corner_summary">Activer le coin rond pour les éléments de l’interface utilisateur.</string>
+    <string name="opensource_info">Code source ouvert sous la licence GPL-3.0
+\nCopyright © 2023 Akane Foundation</string>
+    <string name="playlist_favourite">Favori</string>
+    <string name="settings_default_progress_bar">Activer la barre de progression par défaut</string>
+    <string name="home_menu_about">À propos</string>
+    <string name="now_playing">Lecture en cours</string>
+    <string name="settings_default_progress_bar_summary">Activer l’ancienne barre de progression</string>
+    <string name="settings_float_output">Activer la sortie audio</string>
+    <string name="settings_float_output_summary">Gardez ceci désactivé si vous voulez que EQ fonctionne normalement. (Redémarrage de l’appli nécessaire)</string>
 </resources>
