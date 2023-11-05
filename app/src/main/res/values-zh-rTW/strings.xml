@@ -63,15 +63,12 @@
         <item quantity="other">%d 首歌曲</item>
     </plurals>
     <plurals name="albums">
-        <item quantity="one">%d 張專輯</item>
         <item quantity="other">%d 張專輯</item>
     </plurals>
     <plurals name="artists">
-        <item quantity="one">%d 位藝術家</item>
         <item quantity="other">%d 位藝術家</item>
     </plurals>
     <plurals name="items">
-        <item quantity="one">%d 個條目</item>
         <item quantity="other">%d 個條目</item>
     </plurals>
     <string name="grid">網格</string>
