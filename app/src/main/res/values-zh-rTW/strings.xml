@@ -1,2 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="dismiss">關閉</string>
+    <string name="categories">分類</string>
+    <string name="settings_category_behavior">行為</string>
+    <string name="category_dates">日期</string>
+    <string name="sort_by_artist">藝術家</string>
+    <string name="settings_app_theme">應用主題</string>
+    <string name="dialog_album_artist">專輯藝術家</string>
+    <plurals name="items">
+        <item quantity="other">%d 項目</item>
+    </plurals>
+    <string name="settings_app_name">應用名稱</string>
+    <plurals name="artists">
+        <item quantity="other">藝術家</item>
+    </plurals>
+    <plurals name="albums">
+        <item quantity="other">專輯</item>
+    </plurals>
+    <string name="dialog_artist">藝術家</string>
+    <string name="settings_contributors">貢獻者</string>
+    <string name="settings_category_appearance">外觀</string>
+    <string name="dialog_album">專輯</string>
+    <string name="home_menu_about">關於</string>
+    <string name="details">細節</string>
+    <string name="album_artist">專輯藝術家</string>
+    <string name="sort_by_album">專輯</string>
+    <string name="category_albums">專輯</string>
+    <string name="dark">神色</string>
+    <string name="check_for_updates">檢查我們的頻道來獲取更新!</string>
+    <string name="category_artists">藝術家</string>
+    <string name="layout">顯示</string>
+</resources>
