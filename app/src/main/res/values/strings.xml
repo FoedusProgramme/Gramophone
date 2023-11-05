@@ -101,4 +101,6 @@
     <string name="now_playing">Now playing</string>
     <string name="settings_round_corner_summary">Enable round corner for UI elements.</string>
     <string name="settings_round_corner">Enable round corner</string>
+    <string name="settings_content_based_color_summary">Enable album art based color scheme generation for bottom sheet</string>
+    <string name="settings_content_based_color">Enable content based colors</string>
 </resources>
