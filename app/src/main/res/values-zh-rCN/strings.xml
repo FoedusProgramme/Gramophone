@@ -92,4 +92,8 @@
     <string name="settings_default_progress_bar_summary">启用老样式的进度条</string>
     <string name="settings_float_output">启用音频浮点输出</string>
     <string name="settings_float_output_summary">如果你想要启用均衡器的话保持开关关闭. (需要应用重启)</string>
+    <string name="settings_round_corner">启用圆角</string>
+    <string name="settings_round_corner_summary">为用户界面元素启用圆角</string>
+    <string name="playlist_favourite">收藏</string>
+    <string name="now_playing">正在播放</string>
 </resources>
