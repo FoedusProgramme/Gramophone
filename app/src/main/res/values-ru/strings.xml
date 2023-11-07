@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <!-- Translatable -->
     <string name="home_menu_search">"Поиск"</string>
@@ -82,7 +83,6 @@
     <string name="recently_added">"Недавно добавленные"</string>
     <string name="folders">"Папки"</string>
     <string name="settings_app_theme">"Тема оформления"</string>
-
     <!-- Not translatable -->
     <string name="app_name" translatable="false">Gramophone</string>
     <string name="default_time" translatable="false">0:00</string>
@@ -95,5 +95,10 @@
     <string name="home_menu_equalizer">Equalizer</string>
     <string name="equalizer_not_found">Equalizer not found!</string>
     <string name="compact_list">List (compact)</string>
-
+    <string name="settings_content_based_color">Включить цвета на основе контента</string>
+    <string name="settings_default_progress_bar">Включить индикатор выполнения по умолчанию</string>
+    <string name="home_menu_about">О приложении</string>
+    <string name="check_for_updates">Следите за обновлениями на нашем канале!</string>
+    <string name="settings_content_based_color_summary">Включить создание цветовой схемы на основе обложки альбома для нижнего листа</string>
+    <string name="settings_float_output">Включить плавающий аудиовыход</string>
 </resources>
