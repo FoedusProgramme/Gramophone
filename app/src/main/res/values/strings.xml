@@ -104,4 +104,5 @@
     <string name="settings_content_based_color_summary">Enable album art based color scheme generation for bottom sheet</string>
     <string name="settings_content_based_color">Enable content based colors</string>
     <string name="indicator">Indicator</string>
+    <string name="settings_package_type">Package type</string>
 </resources>
