@@ -100,4 +100,5 @@
     <string name="settings_content_based_color">启用基于内容生成的颜色</string>
     <string name="settings_content_based_color_summary">为底栏启用基于专辑封面生成的颜色方案</string>
     <string name="settings_package_type">软件包类型</string>
+    <string name="app_name">留声机</string>
 </resources>
