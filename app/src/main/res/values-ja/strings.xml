@@ -97,5 +97,7 @@
     <string name="now_playing">再生中</string>
     <string name="settings_content_based_color">コンテンツベースのカラー生成</string>
     <string name="playlist_favourite">お気に入り</string>
-    <string name="settings_content_based_color_summary">ボトムシートのアルバムアートをベースした配色の生成を有効化します。</string>
+    <string name="settings_content_based_color_summary">ボトムシートのアルバムアートをベースとした配色の生成を有効化します。</string>
+    <string name="indicator">インジケーター</string>
+    <string name="settings_package_type">パッケージのタイプ</string>
 </resources>
