@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="categories">Thể loại</string>
+    <string name="categories">Các mục</string>
     <string name="settings_category_behavior">Hành vi</string>
     <string name="operations">Các hoạt động</string>
     <string name="go_to_album">Đi tới album</string>
@@ -49,4 +49,44 @@
     <string name="unknown_version">Phiên bản không xác định</string>
     <string name="unknown_artist">Nghệ sĩ không xác định</string>
     <string name="repeat_mode">Chế độ lặp lại</string>
+    <string name="dismiss">Loại bỏ</string>
+    <string name="category_dates">Ngày</string>
+    <string name="sort_by_artist">Nghệ sĩ</string>
+    <string name="indicator">Chỉ số</string>
+    <string name="settings_app_theme">Chủ đề ứng dụng</string>
+    <string name="dialog_album_artist">Album nghệ sĩ</string>
+    <string name="settings_round_corner">Bật bo góc</string>
+    <plurals name="playlists">
+        <item quantity="other">%d Danh sách phát</item>
+    </plurals>
+    <plurals name="items">
+        <item quantity="other">%d Mục</item>
+    </plurals>
+    <string name="light">Sáng</string>
+    <string name="settings_app_name">Tên ứng dụng</string>
+    <string name="settings_content_based_color">Bật màu dựa trên nội dung</string>
+    <string name="settings_category_info">Thông tin</string>
+    <string name="dialog_information">Thông tin</string>
+    <string name="settings_round_corner_summary">Bật bo góc các thành phần của UI</string>
+    <string name="settings_category_appearance">Bên ngoài</string>
+    <string name="dialog_album">Album</string>
+    <string name="settings_default_progress_bar">Bật thanh tiến trình mặc định</string>
+    <string name="home_menu_about">Giới thiệu</string>
+    <string name="details">Chi tiết</string>
+    <string name="dialog_path">Đường dẫn</string>
+    <string name="album_artist">Album nghệ sĩ</string>
+    <string name="sort_by_album">Album</string>
+    <string name="dark">Tối</string>
+    <string name="category_playlists">Danh sách phát</string>
+    <string name="list">Danh sách</string>
+    <string name="grid">Lưới</string>
+    <plurals name="songs">
+        <item quantity="other">%d Bài hát</item>
+    </plurals>
+    <string name="settings_default_progress_bar_summary">Bật thanh tiến trình kiểu cũ</string>
+    <string name="recently_added">Đã thêm gần đây</string>
+    <string name="settings_content_based_color_summary">Bật đổi màu sắc dựa trên ảnh bìa album cho trang dưới cùng</string>
+    <string name="settings_float_output">Bật đầu ra âm thanh nổi</string>
+    <string name="play_next">Phát tiếp</string>
+    <string name="settings_float_output_summary">Hãy tắt tính năng này nếu bạn muốn EQ hoạt động bình thường. (Cần khởi động lại ứng dụng)</string>
 </resources>
