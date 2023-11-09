@@ -2,7 +2,7 @@
 <resources>
     <string name="categories">Các mục</string>
     <string name="settings_category_behavior">Hành vi</string>
-    <string name="operations">Các hoạt động</string>
+    <string name="operations">Các hành động</string>
     <string name="go_to_album">Đi tới album</string>
     <string name="unknown_album">Album không xác định</string>
     <string name="sort_by_size">Kích cỡ</string>
@@ -55,7 +55,7 @@
     <string name="indicator">Chỉ số</string>
     <string name="settings_app_theme">Chủ đề ứng dụng</string>
     <string name="dialog_album_artist">Album nghệ sĩ</string>
-    <string name="settings_round_corner">Bật bo góc</string>
+    <string name="settings_round_corner">Cho phép bo góc</string>
     <plurals name="playlists">
         <item quantity="other">%d Danh sách phát</item>
     </plurals>
@@ -64,13 +64,13 @@
     </plurals>
     <string name="light">Sáng</string>
     <string name="settings_app_name">Tên ứng dụng</string>
-    <string name="settings_content_based_color">Bật màu dựa trên nội dung</string>
+    <string name="settings_content_based_color">Cho phép đổi màu dựa trên nội dung</string>
     <string name="settings_category_info">Thông tin</string>
     <string name="dialog_information">Thông tin</string>
-    <string name="settings_round_corner_summary">Bật bo góc các thành phần của UI</string>
+    <string name="settings_round_corner_summary">Cho phép bo góc các thành phần của UI</string>
     <string name="settings_category_appearance">Bên ngoài</string>
     <string name="dialog_album">Album</string>
-    <string name="settings_default_progress_bar">Bật thanh tiến trình mặc định</string>
+    <string name="settings_default_progress_bar">Cho phép thanh tiến trình mặc định</string>
     <string name="home_menu_about">Giới thiệu</string>
     <string name="details">Chi tiết</string>
     <string name="dialog_path">Đường dẫn</string>
@@ -83,11 +83,17 @@
     <plurals name="songs">
         <item quantity="other">%d Bài hát</item>
     </plurals>
-    <string name="settings_default_progress_bar_summary">Bật thanh tiến trình kiểu cũ</string>
+    <string name="settings_default_progress_bar_summary">Cho phép thanh tiến trình kiểu cũ</string>
     <string name="recently_added">Đã thêm gần đây</string>
-    <string name="settings_content_based_color_summary">Bật đổi màu sắc dựa trên ảnh bìa album cho trang dưới cùng</string>
-    <string name="settings_float_output">Bật đầu ra âm thanh nổi</string>
+    <string name="settings_content_based_color_summary">Cho phép đổi màu sắc dựa trên ảnh bìa album cho trang dưới cùng</string>
+    <string name="settings_float_output">Cho phép đầu ra âm thanh nổi</string>
     <string name="play_next">Phát tiếp</string>
     <string name="settings_float_output_summary">Hãy tắt tính năng này nếu bạn muốn EQ hoạt động bình thường. (Cần khởi động lại ứng dụng)</string>
     <string name="app_name">Gramophone</string>
+    <plurals name="artists">
+        <item quantity="other">%d Nghệ sĩ</item>
+    </plurals>
+    <plurals name="albums">
+        <item quantity="other">%d Album</item>
+    </plurals>
 </resources>
