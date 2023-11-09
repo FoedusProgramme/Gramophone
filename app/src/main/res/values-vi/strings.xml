@@ -89,4 +89,5 @@
     <string name="settings_float_output">Bật đầu ra âm thanh nổi</string>
     <string name="play_next">Phát tiếp</string>
     <string name="settings_float_output_summary">Hãy tắt tính năng này nếu bạn muốn EQ hoạt động bình thường. (Cần khởi động lại ứng dụng)</string>
+    <string name="app_name">Gramophone</string>
 </resources>
