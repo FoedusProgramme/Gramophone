@@ -1,2 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="categories">Thể loại</string>
+    <string name="settings_category_behavior">Hành vi</string>
+    <string name="operations">Các hoạt động</string>
+    <string name="go_to_album">Đi tới album</string>
+    <string name="unknown_album">Album không xác định</string>
+    <string name="sort_by_size">Kích cỡ</string>
+    <string name="dialog_title">Tiêu đề</string>
+    <string name="settings_repository">Kho nguồn</string>
+    <string name="settings_mediastore_filter">Bộ lọc MediaStore</string>
+    <string name="category_songs">Bài hát</string>
+    <string name="compact_list">Danh sách (rút gọn)</string>
+    <string name="equalizer_not_found">Không tìm thấy bộ chỉnh âm!</string>
+    <string name="home_menu_shuffle">Trộn bài</string>
+    <string name="category_genres">Thể loại</string>
+    <string name="natural_order">Trật tự tự nhiên</string>
+    <string name="gramophone_crashed">Gramophone bị lỗi.</string>
+    <string name="dialog_track_number">Số bài hát</string>
+    <string name="folders">Thư mục</string>
+    <string name="settings_mediastore_filter_summary">Các bài hát được lọc ngắn hơn số giây do người dùng điều chỉnh. (Yêu cầu quét lại)</string>
+    <string name="unknown_playlist">Danh sách phát không xác định</string>
+    <string name="dialog_year">Năm</string>
+    <string name="dialog_artist">Nghệ sĩ</string>
+    <string name="opensource_info">Mã nguồn mở theo GPL-3.0
+\nBản quyền © 2023 Akane Foundation</string>
+    <string name="playlist_favourite">Yêu thích</string>
+    <string name="home_menu_settings">Cài đặt</string>
+    <string name="home_menu_refresh">Làm mới</string>
+    <string name="settings_contributors">Người đóng góp</string>
+    <string name="home_menu_equalizer">Bộ chỉnh âm</string>
+    <string name="settings_version">Phiên bản</string>
+    <string name="category_albums">Album</string>
+    <string name="refreshed_songs">Đã làm mới %1$s bài hát</string>
+    <string name="sort_by_name">Tên</string>
+    <string name="check_for_updates">Kiểm tra kênh của chúng tôi để biết thông tin cập nhật!</string>
+    <string name="shuffle">Trộn bài</string>
+    <string name="follow_system">Theo hệ thống</string>
+    <string name="search">Tìm kiếm</string>
+    <string name="now_playing">Đang phát</string>
+    <string name="dialog_genre">Thể loại</string>
+    <string name="unknown_genre">Thể loại không xác định</string>
+    <string name="category_artists">Nghệ sĩ</string>
+    <string name="settings_package_type">Loại gói</string>
+    <string name="go_to_artist">Đi tới nghệ sĩ</string>
+    <string name="unknown_year">Năm không xác định</string>
+    <string name="home_menu_search">Tìm kiếm</string>
+    <string name="layout">Hiển thị…</string>
+    <string name="unknown_version">Phiên bản không xác định</string>
+    <string name="unknown_artist">Nghệ sĩ không xác định</string>
+    <string name="repeat_mode">Chế độ lặp lại</string>
+</resources>
