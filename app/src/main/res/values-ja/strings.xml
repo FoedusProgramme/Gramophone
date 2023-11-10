@@ -100,4 +100,6 @@
     <string name="settings_content_based_color_summary">ボトムシートのアルバムアートをベースとした配色の生成を有効化します。</string>
     <string name="indicator">インジケーター</string>
     <string name="settings_package_type">パッケージのタイプ</string>
+    <string name="settings_amoled">AMOLED テーマを使用する</string>
+    <string name="settings_amoled_summary">ピュアブラックの背景を有効化します。</string>
 </resources>
