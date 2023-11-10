@@ -1,1 +1,1 @@
-media3 music player with up-to-date md3 phonograph designs
+A sane music player built with media3 and material design library that is following android's standard strictly.
