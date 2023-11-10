@@ -15,11 +15,6 @@
     <string name="settings_app_theme">Thèrme de l’appli</string>
     <string name="compact_list">Liste (compacte)</string>
     <string name="dialog_album_artist">Artiste de l’album</string>
-    <plurals name="playlists">
-        <item quantity="one">%d liste de lecture</item>
-        <item quantity="many">%d listes de lecture</item>
-        <item quantity="other">%d listes de lecture</item>
-    </plurals>
     <string name="equalizer_not_found">Égaliseur introuvable !</string>
     <plurals name="items">
         <item quantity="one">%d élément</item>
@@ -90,8 +85,6 @@
     <string name="unknown_year">Année inconnue</string>
     <string name="unknown_version">Version inconnue</string>
     <string name="unknown_artist">Artiste inconnu</string>
-    <string name="settings_round_corner">Activer le coin rond</string>
-    <string name="settings_round_corner_summary">Activer le coin rond pour les éléments de l’interface utilisateur.</string>
     <string name="opensource_info">Code source ouvert sous la licence GPL-3.0
 \nCopyright © 2023 Akane Foundation</string>
     <string name="playlist_favourite">Favori</string>
@@ -99,6 +92,4 @@
     <string name="home_menu_about">À propos</string>
     <string name="now_playing">Lecture en cours</string>
     <string name="settings_default_progress_bar_summary">Activer l’ancienne barre de progression</string>
-    <string name="settings_float_output">Activer la sortie audio</string>
-    <string name="settings_float_output_summary">Gardez ceci désactivé si vous voulez que EQ fonctionne normalement. (Redémarrage de l’appli nécessaire)</string>
 </resources>

@@ -27,11 +27,6 @@
         <item quantity="few">"%d исполнителя"</item>
         <item quantity="other">"%d исполнителей"</item>
     </plurals>
-    <plurals name="playlists">
-        <item quantity="one">"%d плейлист"</item>
-        <item quantity="few">"%d плейлиста"</item>
-        <item quantity="other">"%d плейлистов"</item>
-    </plurals>
     <plurals name="items">
         <item quantity="one">"%d элемент"</item>
         <item quantity="few">"%d элемента"</item>
@@ -100,5 +95,4 @@
     <string name="home_menu_about">О приложении</string>
     <string name="check_for_updates">Следите за обновлениями на нашем канале!</string>
     <string name="settings_content_based_color_summary">Включить создание цветовой схемы на основе обложки альбома для нижнего листа</string>
-    <string name="settings_float_output">Включить плавающий аудиовыход</string>
 </resources>

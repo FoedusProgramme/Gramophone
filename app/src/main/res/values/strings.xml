@@ -24,10 +24,6 @@
         <item quantity="one">%d Artist</item>
         <item quantity="other">%d Artists</item>
     </plurals>
-    <plurals name="playlists">
-        <item quantity="one">%d Playlist</item>
-        <item quantity="other">%d Playlists</item>
-    </plurals>
     <plurals name="items">
         <item quantity="one">%d Item</item>
         <item quantity="other">%d Items</item>
@@ -86,8 +82,6 @@
     <string name="equalizer_not_found">Equalizer not found!</string>
     <string name="compact_list">List (compact)</string>
     <string name="check_for_updates">Check our channel for updates!</string>
-    <string name="settings_float_output">Enable audio float output</string>
-    <string name="settings_float_output_summary">Keep this off if you want EQ working normally. (Need app restart)</string>
     <string name="settings_default_progress_bar">Enable default progress bar</string>
     <string name="settings_default_progress_bar_summary">Enable old styled progress bar</string>
     <string name="home_menu_about">About</string>
@@ -99,8 +93,6 @@
     <string name="settings_contributors_detail" translatable="false">AkaneTan, 123Duo3, nift4</string>
     <string name="upper_folder" translatable="false">..</string>
     <string name="now_playing">Now playing</string>
-    <string name="settings_round_corner_summary">Enable round corner for UI elements.</string>
-    <string name="settings_round_corner">Enable round corner</string>
     <string name="settings_content_based_color_summary">Enable album art based color scheme generation for bottom sheet</string>
     <string name="settings_content_based_color">Enable content based colors</string>
     <string name="indicator">Indicator</string>

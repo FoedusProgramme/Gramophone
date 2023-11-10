@@ -70,10 +70,6 @@
         <item quantity="one">%d 位艺术家</item>
         <item quantity="other">%d 位艺术家</item>
     </plurals>
-    <plurals name="playlists">
-        <item quantity="one">%d 个播放列表</item>
-        <item quantity="other">%d 个播放列表</item>
-    </plurals>
     <plurals name="items">
         <item quantity="one">%d 个条目</item>
         <item quantity="other">%d 个条目</item>
@@ -90,10 +86,6 @@
     <string name="settings_default_progress_bar">启用默认进度条</string>
     <string name="home_menu_about">关于</string>
     <string name="settings_default_progress_bar_summary">启用老样式的进度条</string>
-    <string name="settings_float_output">启用音频浮点输出</string>
-    <string name="settings_float_output_summary">如果你想要启用均衡器的话保持开关关闭. (需要应用重启)</string>
-    <string name="settings_round_corner">启用圆角</string>
-    <string name="settings_round_corner_summary">为用户界面元素启用圆角</string>
     <string name="playlist_favourite">收藏</string>
     <string name="now_playing">正在播放</string>
     <string name="indicator">指示器</string>

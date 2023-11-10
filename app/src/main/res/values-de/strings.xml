@@ -46,10 +46,6 @@
     <string name="settings_app_theme">Farbschema</string>
     <string name="compact_list">Liste (kompakt)</string>
     <string name="dialog_album_artist">Interpret des Albums</string>
-    <plurals name="playlists">
-        <item quantity="one">%d Wiedergabeliste</item>
-        <item quantity="other">%d Wiedergabelisten</item>
-    </plurals>
     <string name="equalizer_not_found">Klangregelung nicht gefunden!</string>
     <plurals name="items">
         <item quantity="one">%d Element</item>

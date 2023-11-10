@@ -16,10 +16,6 @@
     <string name="settings_app_theme">Drakt</string>
     <string name="compact_list">Liste (kompakt)</string>
     <string name="dialog_album_artist">Albumsartist</string>
-    <plurals name="playlists">
-        <item quantity="one">%d spilleliste</item>
-        <item quantity="other">%d spillelister</item>
-    </plurals>
     <string name="equalizer_not_found">Fant ikke tonekontroll.</string>
     <plurals name="items">
         <item quantity="one">%d element</item>
@@ -81,12 +77,10 @@
     <string name="unknown_genre">Ukjent sjanger</string>
     <string name="category_artists">Artister</string>
     <string name="go_to_artist">Gå til artist</string>
-    <string name="settings_float_output">Skru på lydflyttallsutdata</string>
     <string name="unknown_year">Ukjent år</string>
     <string name="home_menu_search">Søk</string>
     <string name="layout">Visning …</string>
     <string name="play_next">Spill neste</string>
-    <string name="settings_float_output_summary">Behold avslått hvis du vil at tonekontroll skal fungere normalt. (Krever programomstart.)</string>
     <string name="unknown_version">Ukjent versjon</string>
     <string name="unknown_artist">Ukjent artist</string>
     <string name="repeat_mode">Gjentagelsesmodus</string>

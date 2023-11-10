@@ -55,10 +55,6 @@
     <string name="indicator">Chỉ số</string>
     <string name="settings_app_theme">Chủ đề ứng dụng</string>
     <string name="dialog_album_artist">Album nghệ sĩ</string>
-    <string name="settings_round_corner">Cho phép bo góc</string>
-    <plurals name="playlists">
-        <item quantity="other">%d Danh sách phát</item>
-    </plurals>
     <plurals name="items">
         <item quantity="other">%d Mục</item>
     </plurals>
@@ -67,7 +63,6 @@
     <string name="settings_content_based_color">Cho phép đổi màu dựa trên nội dung</string>
     <string name="settings_category_info">Thông tin</string>
     <string name="dialog_information">Thông tin</string>
-    <string name="settings_round_corner_summary">Cho phép bo góc các thành phần của UI</string>
     <string name="settings_category_appearance">Bên ngoài</string>
     <string name="dialog_album">Album</string>
     <string name="settings_default_progress_bar">Bật thanh tiến trình mặc định</string>
@@ -86,9 +81,7 @@
     <string name="settings_default_progress_bar_summary">Bật thanh tiến trình kiểu cũ</string>
     <string name="recently_added">Đã thêm gần đây</string>
     <string name="settings_content_based_color_summary">Cho phép đổi màu sắc dựa trên ảnh bìa album cho trang dưới cùng</string>
-    <string name="settings_float_output">Cho phép đầu ra âm thanh nổi</string>
     <string name="play_next">Phát tiếp</string>
-    <string name="settings_float_output_summary">Hãy tắt tính năng này nếu bạn muốn EQ hoạt động bình thường. (Cần khởi động lại ứng dụng)</string>
     <string name="app_name">Gramophone</string>
     <plurals name="artists">
         <item quantity="other">%d Nghệ sĩ</item>

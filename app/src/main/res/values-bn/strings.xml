@@ -36,10 +36,6 @@
     <string name="settings_mediastore_filter">MediaStore ফিল্টার</string>
     <string name="category_songs">গানগুলো</string>
     <string name="compact_list">সারি (কম্প্যাক্ট অবস্থা)</string>
-    <plurals name="playlists">
-        <item quantity="one">%d টি চালনাসারি</item>
-        <item quantity="other">%d টি চলনসারিগুলো</item>
-    </plurals>
     <string name="equalizer_not_found">ইকুয়ালাইজার পাওয়া যায়নি!</string>
     <plurals name="items">
         <item quantity="one">%d টি বস্তু</item>
@@ -78,12 +74,10 @@
     <string name="dialog_genre">গানের জাত</string>
     <string name="unknown_genre">গানের জাত</string>
     <string name="go_to_artist">শিল্পীগণ এর মেনুতে যান</string>
-    <string name="settings_float_output">চালু করুন audio float এর আউটপুট</string>
     <string name="unknown_year">অচেনা বছর</string>
     <string name="home_menu_search">অনুসন্ধান করুন</string>
     <string name="layout">ডিসপ্লে</string>
     <string name="play_next">পরেরটা চালাও</string>
-    <string name="settings_float_output_summary">এটা বন্ধ রাখো যদি EQ চাও স্বাভাবিকভাবে চলতে (অ্যাপটি রিস্টার্ট এর প্রয়োজন আছে)</string>
     <string name="unknown_version">অচেনা ভার্সন</string>
     <string name="unknown_artist">অচেনা শিল্পী</string>
     <string name="repeat_mode">রিপিট সুইচ</string>

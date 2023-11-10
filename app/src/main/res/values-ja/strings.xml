@@ -30,10 +30,6 @@
         <item quantity="one">%d 件のアーティスト</item>
         <item quantity="other">%d 件のアーティスト</item>
     </plurals>
-    <plurals name="playlists">
-        <item quantity="one">%d 個のプレイリスト</item>
-        <item quantity="other">%d 個のプレイリスト</item>
-    </plurals>
     <plurals name="items">
         <item quantity="one">%d 個のアイテム</item>
         <item quantity="other">%d 個のアイテム</item>
@@ -85,15 +81,11 @@
     <string name="list">リスト</string>
     <string name="compact_list">リスト (コンパクト)</string>
     <string name="check_for_updates">アップデートはチャンネルをチェックしてください！</string>
-    <string name="settings_float_output">オーディオを float で出力する</string>
-    <string name="settings_float_output_summary">イコライザーを正常に動作させたい場合はこの設定を OFF にしたままにしてください。(アプリの再起動が必要です)</string>
     <string name="settings_default_progress_bar">従来のプログレスバー</string>
     <string name="opensource_info">Open-sourced under GPL-3.0
 \nCopyright © 2023 Akane Foundation</string>
     <string name="home_menu_about">アプリについて</string>
     <string name="settings_default_progress_bar_summary">古いスタイルのプログレスバーを有効化します。</string>
-    <string name="settings_round_corner">丸みのある角を使用する</string>
-    <string name="settings_round_corner_summary">UI のエレメントに丸みのある角を使用します。</string>
     <string name="now_playing">再生中</string>
     <string name="settings_content_based_color">コンテンツベースのカラー生成</string>
     <string name="playlist_favourite">お気に入り</string>
