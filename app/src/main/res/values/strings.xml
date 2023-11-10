@@ -100,4 +100,5 @@
     <string name="settings_amoled_summary">Enable pure black background</string>
     <string name="settings_amoled">Enable AMOLED theme</string>
     <string name="no_lyric_found">No lyric found</string>
+    <string name="music_format_not_supported">Music format not supported!</string>
 </resources>
