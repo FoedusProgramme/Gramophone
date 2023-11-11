@@ -90,5 +90,7 @@
         <item quantity="other">%d Album</item>
     </plurals>
     <string name="settings_amoled">Bật chủ đề AMOLED</string>
-    <string name="settings_amoled_summary">Bật nền đen đặc</string>
+    <string name="settings_amoled_summary">Bật nền đen thuần tuý</string>
+    <string name="music_format_not_supported">Định dạng âm thanh không được hỗ trợ!</string>
+    <string name="no_lyric_found">Không tìm thấy lời bài hát</string>
 </resources>
