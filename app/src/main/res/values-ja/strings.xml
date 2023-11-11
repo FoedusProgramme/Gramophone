@@ -94,4 +94,6 @@
     <string name="settings_package_type">パッケージのタイプ</string>
     <string name="settings_amoled">AMOLED テーマを使用する</string>
     <string name="settings_amoled_summary">ピュアブラックの背景を有効化します。</string>
+    <string name="music_format_not_supported">フォーマットがサポートされていません！</string>
+    <string name="no_lyric_found">歌詞がありません</string>
 </resources>
