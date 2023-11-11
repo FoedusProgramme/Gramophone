@@ -95,4 +95,15 @@
     <string name="home_menu_about">О приложении</string>
     <string name="check_for_updates">Следите за обновлениями на нашем канале!</string>
     <string name="settings_content_based_color_summary">Включить создание цветовой схемы на основе обложки альбома для нижнего листа</string>
+    <string name="indicator">Индикатор</string>
+    <string name="settings_amoled">Включить чёрную тему</string>
+    <string name="opensource_info">С открытым исходным кодом под GPL-3.0.
+\nАвторские права © 2023 Akane Foundation</string>
+    <string name="playlist_favourite">Избранное</string>
+    <string name="now_playing">Сейчас играет</string>
+    <string name="settings_default_progress_bar_summary">Включить индикатор выполнения в старом стиле</string>
+    <string name="music_format_not_supported">Аудиоформат не поддерживается!</string>
+    <string name="settings_package_type">Тип пакета</string>
+    <string name="no_lyric_found">Текст песни не найден</string>
+    <string name="settings_amoled_summary">Включить чистый чёрный фон</string>
 </resources>
