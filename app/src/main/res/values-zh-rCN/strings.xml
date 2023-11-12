@@ -78,10 +78,10 @@
     <string name="list">列表</string>
     <string name="layout">显示...</string>
     <string name="home_menu_equalizer">均衡器</string>
-    <string name="equalizer_not_found">均衡器未找到!</string>
-    <string name="compact_list">列表 (紧凑)</string>
+    <string name="equalizer_not_found">均衡器未找到！</string>
+    <string name="compact_list">列表（紧凑）</string>
     <string name="check_for_updates">查看我们的频道来获取更新!</string>
-    <string name="opensource_info">基于 GPL-3.0 证书开源
+    <string name="opensource_info">基于 GPL-3.0 协议开源
 \n版权所有 © 2023 Akane Foundation</string>
     <string name="settings_default_progress_bar">启用默认进度条</string>
     <string name="home_menu_about">关于</string>
@@ -94,4 +94,6 @@
     <string name="settings_package_type">软件包类型</string>
     <string name="settings_amoled">启用 AMOLED 主题</string>
     <string name="settings_amoled_summary">启用纯黑背景</string>
+    <string name="music_format_not_supported">不支持的音乐格式！</string>
+    <string name="no_lyric_found">未找到歌词</string>
 </resources>
