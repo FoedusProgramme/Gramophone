@@ -76,7 +76,7 @@
     <string name="recently_added">最近追加をした曲</string>
     <string name="folders">フォルダ</string>
     <string name="layout">表示...</string>
-    <string name="natural_order">配列方法</string>
+    <string name="natural_order">自然順</string>
     <string name="grid">グリッド</string>
     <string name="list">リスト</string>
     <string name="compact_list">リスト (コンパクト)</string>
