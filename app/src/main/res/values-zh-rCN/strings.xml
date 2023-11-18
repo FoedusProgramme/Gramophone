@@ -80,7 +80,7 @@
     <string name="home_menu_equalizer">均衡器</string>
     <string name="equalizer_not_found">均衡器未找到！</string>
     <string name="compact_list">列表（紧凑）</string>
-    <string name="check_for_updates">查看我们的频道来获取更新!</string>
+    <string name="check_for_updates">查看我们的频道来获取更新！</string>
     <string name="opensource_info">基于 GPL-3.0 协议开源
 \n版权所有 © 2023 Akane Foundation</string>
     <string name="settings_default_progress_bar">启用默认进度条</string>
