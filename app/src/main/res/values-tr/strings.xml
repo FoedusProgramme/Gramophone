@@ -1,2 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="dismiss">Ayrıl</string>
+    <string name="categories">Kategoriler</string>
+    <string name="settings_category_behavior">Davranış</string>
+    <string name="operations">Faaliyetler</string>
+    <string name="go_to_album">Albüme git</string>
+    <string name="category_dates">Tarihler</string>
+    <string name="unknown_album">Bilinmeyen albüm</string>
+    <string name="sort_by_size">Boyut</string>
+    <string name="dialog_title">Başlık</string>
+    <string name="settings_repository">Depo</string>
+    <string name="sort_by_artist">Sanatçı</string>
+    <string name="settings_mediastore_filter">MediaStore filtresi</string>
+    <string name="category_songs">Şarkılar</string>
+    <string name="indicator">Gösterge</string>
+    <string name="settings_app_theme">Uygulama teması</string>
+    <string name="compact_list">Liste (kompakt)</string>
+    <string name="dialog_album_artist">Albüm sanatçısı</string>
+    <string name="equalizer_not_found">Ekolayzer bulunamadı!</string>
+    <string name="settings_amoled">AMOLED temayı etkinleştir</string>
+    <plurals name="items">
+        <item quantity="one">%d Öge</item>
+        <item quantity="other">%d Ögeler</item>
+    </plurals>
+    <string name="home_menu_shuffle">Karıştır</string>
+    <string name="category_genres">Türler</string>
+    <string name="natural_order">Doğal düzen</string>
+    <string name="light">Açık</string>
+    <string name="settings_app_name">Uygulama adı</string>
+    <string name="settings_content_based_color">İçerik tabanlı renkleri etkinleştir</string>
+    <string name="settings_category_info">Hakkında</string>
+    <string name="dialog_information">Bilgi</string>
+    <string name="gramophone_crashed">Gramophone çöktü.</string>
+    <string name="dialog_track_number">Parça numarası</string>
+    <string name="folders">Klasörler</string>
+    <plurals name="artists">
+        <item quantity="one">%d Sanatçı</item>
+        <item quantity="other">%d Sanatçılar</item>
+    </plurals>
+    <string name="settings_mediastore_filter_summary">Kullanıcı tarafından yapılandırılan saniyeden daha kısa şarkıları filtreleyin. (Yeniden tarama gerektirir)</string>
+    <plurals name="albums">
+        <item quantity="one">%d Albüm</item>
+        <item quantity="other">%d Albümler</item>
+    </plurals>
+    <string name="unknown_playlist">Bilinmeyen oynatma listesi</string>
+    <string name="dialog_year">Yıl</string>
+    <string name="dialog_artist">Sanatçı</string>
+    <string name="opensource_info">GPL-3.0 altında açık kaynaklı
+\nTelif Hakkı © 2023 Akane Foundation</string>
+    <string name="playlist_favourite">Favoriler</string>
+    <string name="home_menu_settings">Ayarlar</string>
+    <string name="home_menu_refresh">Yenile</string>
+    <string name="settings_contributors">Katkıda Bulunanlar</string>
+    <string name="settings_category_appearance">Görünüş</string>
+    <string name="dialog_album">Albüm</string>
+    <string name="settings_default_progress_bar">Varsayılan ilerleme çubuğunu etkinleştir</string>
+    <string name="home_menu_about">Hakkında</string>
+    <string name="details">Detaylar</string>
+    <string name="home_menu_equalizer">Ekolayzer</string>
+    <string name="dialog_path">Yol</string>
+    <string name="settings_version">Sürüm</string>
+    <string name="album_artist">Albüm sanatçısı</string>
+    <string name="sort_by_album">Albüm</string>
+    <string name="category_albums">Albümler</string>
+    <string name="refreshed_songs">%1$s şarkıları yenilendi</string>
+    <string name="dark">Koyu</string>
+    <string name="sort_by_name">İsim</string>
+    <string name="check_for_updates">Güncellemeler için kanalımız ziyaret edin!</string>
+    <string name="shuffle">Karıştır</string>
+    <string name="dialog_disc_number">Disk numarası</string>
+    <string name="category_playlists">Oynatma listeleri</string>
+    <string name="follow_system">Sistemi takip et</string>
+    <string name="list">Liste</string>
+    <string name="search">Arama</string>
+    <string name="now_playing">Şimdi oynatılıyor</string>
+    <string name="grid">Izgara</string>
+    <plurals name="songs">
+        <item quantity="one">%d Şarkı</item>
+        <item quantity="other">%d Şarkılar</item>
+    </plurals>
+    <string name="settings_default_progress_bar_summary">Eski tarz ilerleme çubuğunu etkinleştir</string>
+    <string name="recently_added">Yakın zamanda eklendi</string>
+    <string name="dialog_genre">Tür</string>
+    <string name="music_format_not_supported">Müzik formatı desteklenmiyor!</string>
+    <string name="settings_content_based_color_summary">Alt kısım için albüm resmi tabanlı renk şeması oluşturmayı etkinleştirin</string>
+    <string name="unknown_genre">Bilinmeyen tür</string>
+    <string name="category_artists">Sanatçılar</string>
+    <string name="settings_package_type">Paket tipi</string>
+    <string name="go_to_artist">Sanatçıya git</string>
+    <string name="unknown_year">Bilinmeyen yıl</string>
+    <string name="home_menu_search">Arama</string>
+    <string name="no_lyric_found">Şarkı sözü bulunamadı</string>
+    <string name="layout">Göster...</string>
+    <string name="settings_amoled_summary">Saf siyah arka planı etkinleştirin</string>
+    <string name="play_next">Sonrakini oynat</string>
+    <string name="unknown_version">Bilinmeyen sürüm</string>
+    <string name="unknown_artist">Bilinmeyen sanatçı</string>
+    <string name="repeat_mode">Tekrar modu</string>
+</resources>
