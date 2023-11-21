@@ -96,4 +96,5 @@
     <string name="settings_amoled_summary">启用纯黑背景</string>
     <string name="music_format_not_supported">不支持的音乐格式！</string>
     <string name="no_lyric_found">未找到歌词</string>
+    <string name="dialog_disc_number">音碟号</string>
 </resources>
