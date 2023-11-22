@@ -18,9 +18,10 @@
         <item quantity="other">"%d треков"</item>
     </plurals>
     <plurals name="albums">
-        <item quantity="one">"%d альбом"</item>
-        <item quantity="few">"%d альбома"</item>
-        <item quantity="other">"%d альбомов"</item>
+        <item quantity="one">%d альбом</item>
+        <item quantity="few">%d альбома</item>
+        <item quantity="many">%d альбомов</item>
+        <item quantity="other">%d альбомов</item>
     </plurals>
     <plurals name="artists">
         <item quantity="one">"%d исполнитель"</item>
@@ -106,4 +107,5 @@
     <string name="settings_package_type">Тип пакета</string>
     <string name="no_lyric_found">Текст песни не найден</string>
     <string name="settings_amoled_summary">Включить чистый чёрный фон</string>
+    <string name="dialog_disc_number">Номер диска</string>
 </resources>
