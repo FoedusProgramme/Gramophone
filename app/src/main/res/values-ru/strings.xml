@@ -108,4 +108,5 @@
     <string name="no_lyric_found">Текст песни не найден</string>
     <string name="settings_amoled_summary">Включить чистый чёрный фон</string>
     <string name="dialog_disc_number">Номер диска</string>
+    <string name="disc">Диск</string>
 </resources>
