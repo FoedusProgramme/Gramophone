@@ -97,4 +97,5 @@
     <string name="music_format_not_supported">フォーマットがサポートされていません！</string>
     <string name="no_lyric_found">歌詞がありません</string>
     <string name="dialog_disc_number">ディスク番号</string>
+    <string name="disc">ディスク</string>
 </resources>
