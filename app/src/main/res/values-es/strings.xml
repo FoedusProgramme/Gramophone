@@ -1,2 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="dismiss">Ignorar</string>
+    <string name="categories">Categorías</string>
+    <string name="settings_category_behavior">Comportamiento</string>
+    <string name="operations">Operaciones</string>
+    <string name="go_to_album">Ir al álbum</string>
+    <string name="category_dates">Fechas</string>
+    <string name="unknown_album">Álbum desconocido</string>
+    <string name="sort_by_size">Tamaño</string>
+    <string name="dialog_title">Título</string>
+    <string name="settings_repository">Repositorio</string>
+    <string name="sort_by_artist">Artista</string>
+    <string name="settings_mediastore_filter">Filtro MediaStore</string>
+    <string name="category_songs">Canciones</string>
+    <string name="disc">Disco</string>
+    <string name="indicator">Indicador</string>
+    <string name="settings_app_theme">Tema de la aplicación</string>
+    <string name="compact_list">Lista (compacto)</string>
+    <string name="dialog_album_artist">Artista de álbum</string>
+    <string name="equalizer_not_found">Ecualizador no encontrado!</string>
+    <string name="settings_amoled">Habilitar tema AMOLED</string>
+    <plurals name="items">
+        <item quantity="one">%d elemento</item>
+        <item quantity="many">%d elementos</item>
+        <item quantity="other">%d elementos</item>
+    </plurals>
+    <string name="home_menu_shuffle">Aleatorio</string>
+    <string name="category_genres">Géneros</string>
+    <string name="natural_order">Orden natural</string>
+    <string name="light">Claro</string>
+    <string name="settings_app_name">Nombre de aplicación</string>
+    <string name="settings_content_based_color">Habilitar colores basados en el contenido</string>
+    <string name="settings_category_info">Info</string>
+    <string name="dialog_information">Información</string>
+    <string name="gramophone_crashed">Gramophone dejó de funcionar.</string>
+    <string name="dialog_track_number">Número de pista</string>
+    <string name="folders">Carpetas</string>
+    <plurals name="artists">
+        <item quantity="one">%d Artista</item>
+        <item quantity="many">%d Artistas</item>
+        <item quantity="other">%d Artistas</item>
+    </plurals>
+    <string name="settings_mediastore_filter_summary">Las canciones filtradas son más cortas que los segundos configurados por el usuario. (Requiere escanear nuevamente)</string>
+    <plurals name="albums">
+        <item quantity="one">%d Álbum</item>
+        <item quantity="many">%d Álbumes</item>
+        <item quantity="other">%d Álbumes</item>
+    </plurals>
+    <string name="unknown_playlist">Lista de reproducción desconocida</string>
+    <string name="dialog_year">Año</string>
+    <string name="dialog_artist">Artista</string>
+    <string name="opensource_info">De código abierto bajo GPL-3.0
+\nCopyright © 2023 Akane Foundation</string>
+    <string name="playlist_favourite">Favorito</string>
+    <string name="home_menu_settings">Ajustes</string>
+    <string name="home_menu_refresh">Refrescar</string>
+    <string name="settings_contributors">Contribuidores</string>
+    <string name="settings_category_appearance">Apariencia</string>
+    <string name="dialog_album">Álbum</string>
+    <string name="settings_default_progress_bar">Habilitar barra de progreso predeterminado</string>
+    <string name="home_menu_about">Acerca de</string>
+    <string name="details">Detalles</string>
+    <string name="home_menu_equalizer">Ecualizador</string>
+    <string name="dialog_path">Directorio</string>
+    <string name="settings_version">Versión</string>
+    <string name="album_artist">Artista de Álbum</string>
+    <string name="sort_by_album">Álbum</string>
+    <string name="category_albums">Álbumes</string>
+    <string name="refreshed_songs">%1$s canciones refrescadas</string>
+    <string name="dark">Oscuro</string>
+    <string name="sort_by_name">Nombre</string>
+    <string name="check_for_updates">Revisa nuestro canal para actualizaciones!</string>
+    <string name="shuffle">Aleatorio</string>
+    <string name="dialog_disc_number">Número de disco</string>
+    <string name="category_playlists">Listas de reproducción</string>
+    <string name="follow_system">Sistema</string>
+    <string name="list">Lista</string>
+    <string name="search">Buscar</string>
+    <string name="now_playing">Reproduciendo</string>
+    <string name="grid">Cuadrícula</string>
+    <plurals name="songs">
+        <item quantity="one">%d Canción</item>
+        <item quantity="many">%d Canciones</item>
+        <item quantity="other">%d Canciones</item>
+    </plurals>
+    <string name="settings_default_progress_bar_summary">Habilitar barra de progreso antigua</string>
+    <string name="recently_added">Recientemente añadido</string>
+    <string name="dialog_genre">Género</string>
+    <string name="music_format_not_supported">Formato de música no compatible!</string>
+    <string name="settings_content_based_color_summary">Habilitar esquema de color basado en la carátula del álbum</string>
+    <string name="unknown_genre">Género desconocido</string>
+    <string name="category_artists">Artistas</string>
+    <string name="settings_package_type">Tipo de paquete</string>
+    <string name="go_to_artist">Ir al artista</string>
+    <string name="unknown_year">Año desconocido</string>
+    <string name="home_menu_search">Buscar</string>
+    <string name="no_lyric_found">Letra no encontrada</string>
+    <string name="layout">Mostrar...</string>
+    <string name="settings_amoled_summary">Habilitar fondo negro puro</string>
+    <string name="play_next">Reproducir a continuación</string>
+    <string name="unknown_version">Versión desconocida</string>
+    <string name="unknown_artist">Artista desconocido</string>
+    <string name="repeat_mode">Modo repetición</string>
+</resources>
