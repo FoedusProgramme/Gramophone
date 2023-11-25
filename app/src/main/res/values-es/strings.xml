@@ -17,8 +17,8 @@
     <string name="indicator">Indicador</string>
     <string name="settings_app_theme">Tema de la aplicación</string>
     <string name="compact_list">Lista (compacto)</string>
-    <string name="dialog_album_artist">Artista de álbum</string>
-    <string name="equalizer_not_found">Ecualizador no encontrado!</string>
+    <string name="dialog_album_artist">Artista del álbum</string>
+    <string name="equalizer_not_found">¡Ecualizador no encontrado!</string>
     <string name="settings_amoled">Habilitar tema AMOLED</string>
     <plurals name="items">
         <item quantity="one">%d elemento</item>
@@ -29,7 +29,7 @@
     <string name="category_genres">Géneros</string>
     <string name="natural_order">Orden natural</string>
     <string name="light">Claro</string>
-    <string name="settings_app_name">Nombre de aplicación</string>
+    <string name="settings_app_name">Nombre de la aplicación</string>
     <string name="settings_content_based_color">Habilitar colores basados en el contenido</string>
     <string name="settings_category_info">Info</string>
     <string name="dialog_information">Información</string>
@@ -50,8 +50,8 @@
     <string name="unknown_playlist">Lista de reproducción desconocida</string>
     <string name="dialog_year">Año</string>
     <string name="dialog_artist">Artista</string>
-    <string name="opensource_info">De código abierto bajo GPL-3.0
-\nCopyright © 2023 Akane Foundation</string>
+    <string name="opensource_info">Bajo licencia GPL-3.0
+\nCopyright © 2023 Fundación Akane</string>
     <string name="playlist_favourite">Favorito</string>
     <string name="home_menu_settings">Ajustes</string>
     <string name="home_menu_refresh">Refrescar</string>
@@ -67,10 +67,10 @@
     <string name="album_artist">Artista de Álbum</string>
     <string name="sort_by_album">Álbum</string>
     <string name="category_albums">Álbumes</string>
-    <string name="refreshed_songs">%1$s canciones refrescadas</string>
+    <string name="refreshed_songs">%1$s canciones actualizadas</string>
     <string name="dark">Oscuro</string>
     <string name="sort_by_name">Nombre</string>
-    <string name="check_for_updates">Revisa nuestro canal para actualizaciones!</string>
+    <string name="check_for_updates">¡Consulte nuestro canal para estar al día!</string>
     <string name="shuffle">Aleatorio</string>
     <string name="dialog_disc_number">Número de disco</string>
     <string name="category_playlists">Listas de reproducción</string>
@@ -87,7 +87,7 @@
     <string name="settings_default_progress_bar_summary">Habilitar barra de progreso antigua</string>
     <string name="recently_added">Recientemente añadido</string>
     <string name="dialog_genre">Género</string>
-    <string name="music_format_not_supported">Formato de música no compatible!</string>
+    <string name="music_format_not_supported">¡Formato de música no compatible!</string>
     <string name="settings_content_based_color_summary">Habilitar esquema de color basado en la carátula del álbum</string>
     <string name="unknown_genre">Género desconocido</string>
     <string name="category_artists">Artistas</string>
@@ -98,8 +98,8 @@
     <string name="no_lyric_found">Letra no encontrada</string>
     <string name="layout">Mostrar...</string>
     <string name="settings_amoled_summary">Habilitar fondo negro puro</string>
-    <string name="play_next">Reproducir a continuación</string>
+    <string name="play_next">Reproducir la siguiente</string>
     <string name="unknown_version">Versión desconocida</string>
     <string name="unknown_artist">Artista desconocido</string>
-    <string name="repeat_mode">Modo repetición</string>
+    <string name="repeat_mode">Modo de repetición</string>
 </resources>
