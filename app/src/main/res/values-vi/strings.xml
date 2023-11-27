@@ -95,4 +95,5 @@
     <string name="no_lyric_found">Không tìm thấy lời bài hát</string>
     <string name="disc">Đĩa</string>
     <string name="dialog_disc_number">Số đĩa</string>
+    <string name="unknown_title">Tiêu đề không xác định</string>
 </resources>
