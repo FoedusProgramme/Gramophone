@@ -104,4 +104,5 @@
     <string name="dialog_disc_number">Disc number</string>
     <string name="disc">Disc</string>
     <string name="unknown_title">Unknown title</string>
+    <string name="no_synced_lyric_found">Synced lyric not found</string>
 </resources>
