@@ -14,7 +14,7 @@
     <string name="unknown_artist">不明なアーティスト</string>
     <string name="unknown_album">不明なアルバム</string>
     <string name="unknown_genre">不明なジャンル</string>
-    <string name="unknown_year">不明な年号</string>
+    <string name="unknown_year">不明な年</string>
     <string name="unknown_version">不明なバージョン</string>
     <string name="unknown_playlist">不明なプレイリスト</string>
     <string name="equalizer_not_found">イコライザーがありません！</string>
@@ -70,7 +70,7 @@
     <string name="dialog_genre">ジャンル</string>
     <string name="dialog_album_artist">アルバムのアーティスト</string>
     <string name="dialog_track_number">トラック番号</string>
-    <string name="dialog_year">年号</string>
+    <string name="dialog_year">年</string>
     <string name="dialog_path">パス</string>
     <string name="dialog_information">詳細情報</string>
     <string name="recently_added">最近追加をした曲</string>
