@@ -104,4 +104,6 @@
     <string name="repeat_mode">Modo de repetición</string>
     <string name="unknown_title">Título desconocido</string>
     <string name="filesystem">Sistema de archivos</string>
+    <string name="dialog_mime">Tipo Mime</string>
+    <string name="dialog_duration">Duración</string>
 </resources>
