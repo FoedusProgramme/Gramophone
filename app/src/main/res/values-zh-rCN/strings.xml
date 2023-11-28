@@ -100,4 +100,6 @@
     <string name="disc">音碟</string>
     <string name="unknown_title">未知歌曲</string>
     <string name="filesystem">文件系统</string>
+    <string name="dialog_duration">时长</string>
+    <string name="dialog_mime">文件类型</string>
 </resources>
