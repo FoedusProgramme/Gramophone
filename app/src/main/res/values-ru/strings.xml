@@ -13,9 +13,10 @@
     <string name="unknown_artist">"Неизвестный исполнитель"</string>
     <string name="category_dates">"Даты"</string>
     <plurals name="songs">
-        <item quantity="one">"%d трек"</item>
-        <item quantity="few">"%d трека"</item>
-        <item quantity="other">"%d треков"</item>
+        <item quantity="one">%d трек</item>
+        <item quantity="few">%d трека</item>
+        <item quantity="many">%d треков</item>
+        <item quantity="other">%d треков</item>
     </plurals>
     <plurals name="albums">
         <item quantity="one">%d альбом</item>
@@ -24,16 +25,18 @@
         <item quantity="other">%d альбомов</item>
     </plurals>
     <plurals name="artists">
-        <item quantity="one">"%d исполнитель"</item>
-        <item quantity="few">"%d исполнителя"</item>
-        <item quantity="other">"%d исполнителей"</item>
+        <item quantity="one">%d исполнитель</item>
+        <item quantity="few">%d исполнителя</item>
+        <item quantity="many">%d исполнителей</item>
+        <item quantity="other">%d исполнителей</item>
     </plurals>
     <plurals name="items">
-        <item quantity="one">"%d элемент"</item>
-        <item quantity="few">"%d элемента"</item>
-        <item quantity="other">"%d элементов"</item>
+        <item quantity="one">%d элемент</item>
+        <item quantity="few">%d элемента</item>
+        <item quantity="many">%d элементов</item>
+        <item quantity="other">%d элементов</item>
     </plurals>
-    <string name="follow_system">"Системная"</string>
+    <string name="follow_system">Системная</string>
     <string name="dark">"Тёмная"</string>
     <string name="light">"Светлая"</string>
     <string name="sort_by_size">"По размеру"</string>
@@ -45,7 +48,7 @@
     <string name="dismiss">"Отмена"</string>
     <string name="unknown_genre">"Неизвестный жанр"</string>
     <string name="unknown_year">"Неизвестный год"</string>
-    <string name="refreshed_songs">"Добавленные %1$s треки"</string>
+    <string name="refreshed_songs">Обновлены %1$s треки</string>
     <string name="search">"Поиск"</string>
     <string name="settings_app_name">"Название приложения"</string>
     <string name="settings_category_info">"Информация"</string>
@@ -65,7 +68,7 @@
     <string name="dialog_title">"Название"</string>
     <string name="dialog_artist">"Исполнитель"</string>
     <string name="settings_category_behavior">"Поведение"</string>
-    <string name="settings_mediastore_filter_summary">"Скрывает треки, короче указанных секунд. (Требуется пересканирование)"</string>
+    <string name="settings_mediastore_filter_summary">Скрывать треки, короче указанной длительность в секундах. (Требуется пересканирование)</string>
     <string name="settings_mediastore_filter">"Фильтр фонотеки"</string>
     <string name="settings_repository">"Репозиторий"</string>
     <string name="dialog_album">"Альбом"</string>
@@ -78,27 +81,27 @@
     <string name="unknown_album">"Неизвестный альбом"</string>
     <string name="recently_added">"Недавно добавленные"</string>
     <string name="folders">"Папки"</string>
-    <string name="settings_app_theme">"Тема оформления"</string>
+    <string name="settings_app_theme">Тема приложения</string>
     <!-- Not translatable -->
     <string name="app_name" translatable="false">Gramophone</string>
     <string name="default_time" translatable="false">0:00</string>
     <string name="settings_contributors_detail" translatable="false">AkaneTan, 123Duo3, nift4</string>
     <string name="upper_folder" translatable="false">..</string>
-    <string name="natural_order">Natural order</string>
-    <string name="grid">Grid</string>
-    <string name="list">List</string>
-    <string name="layout">Display...</string>
-    <string name="home_menu_equalizer">Equalizer</string>
-    <string name="equalizer_not_found">Equalizer not found!</string>
-    <string name="compact_list">List (compact)</string>
+    <string name="natural_order">По возрастанию</string>
+    <string name="grid">Сетка</string>
+    <string name="list">Список</string>
+    <string name="layout">Отображение...</string>
+    <string name="home_menu_equalizer">Эквалайзер</string>
+    <string name="equalizer_not_found">Эквалайзер не найден!</string>
+    <string name="compact_list">Список (компактный)</string>
     <string name="settings_content_based_color">Включить цвета на основе контента</string>
     <string name="settings_default_progress_bar">Включить индикатор выполнения по умолчанию</string>
     <string name="home_menu_about">О приложении</string>
-    <string name="check_for_updates">Следите за обновлениями на нашем канале!</string>
+    <string name="check_for_updates">Следите за обновлениями в нашем канале!</string>
     <string name="settings_content_based_color_summary">Включить создание цветовой схемы на основе обложки альбома для нижнего листа</string>
     <string name="indicator">Индикатор</string>
-    <string name="settings_amoled">Включить чёрную тему</string>
-    <string name="opensource_info">С открытым исходным кодом под GPL-3.0.
+    <string name="settings_amoled">Включить AMOLED тему</string>
+    <string name="opensource_info">С открытым исходным кодом под лицензией GPL-3.0
 \nАвторские права © 2023 Akane Foundation</string>
     <string name="playlist_favourite">Избранное</string>
     <string name="now_playing">Сейчас играет</string>
@@ -109,4 +112,8 @@
     <string name="settings_amoled_summary">Включить чистый чёрный фон</string>
     <string name="dialog_disc_number">Номер диска</string>
     <string name="disc">Диск</string>
+    <string name="unknown_title">Неизвестное название</string>
+    <string name="dialog_mime">Тип мима</string>
+    <string name="filesystem">Файлы</string>
+    <string name="dialog_duration">Длительность</string>
 </resources>
