@@ -97,4 +97,7 @@
     <string name="music_format_not_supported">不支持的音乐格式！</string>
     <string name="no_lyric_found">未找到歌词</string>
     <string name="dialog_disc_number">音碟号</string>
+    <string name="disc">音碟</string>
+    <string name="unknown_title">未知歌曲</string>
+    <string name="filesystem">文件系统</string>
 </resources>
