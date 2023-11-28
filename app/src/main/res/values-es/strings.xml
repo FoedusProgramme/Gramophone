@@ -103,4 +103,5 @@
     <string name="unknown_artist">Artista desconocido</string>
     <string name="repeat_mode">Modo de repetición</string>
     <string name="unknown_title">Título desconocido</string>
+    <string name="filesystem">Sistema de archivos</string>
 </resources>
