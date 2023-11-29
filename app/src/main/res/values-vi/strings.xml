@@ -96,4 +96,7 @@
     <string name="disc">Đĩa</string>
     <string name="dialog_disc_number">Số đĩa</string>
     <string name="unknown_title">Tiêu đề không xác định</string>
+    <string name="dialog_mime">Định dạng</string>
+    <string name="filesystem">Tệp hệ thống</string>
+    <string name="dialog_duration">Độ dài</string>
 </resources>
