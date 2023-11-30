@@ -65,7 +65,7 @@
     <string name="dialog_information">Thông tin</string>
     <string name="settings_category_appearance">Bên ngoài</string>
     <string name="dialog_album">Album</string>
-    <string name="settings_default_progress_bar">Bật thanh thanh phát mặc định</string>
+    <string name="settings_default_progress_bar">Bật thanh phát mặc định</string>
     <string name="home_menu_about">Giới thiệu</string>
     <string name="details">Chi tiết</string>
     <string name="dialog_path">Đường dẫn</string>
@@ -78,7 +78,7 @@
     <plurals name="songs">
         <item quantity="other">%d Bài hát</item>
     </plurals>
-    <string name="settings_default_progress_bar_summary">Bật thanh thanh phát kiểu cũ</string>
+    <string name="settings_default_progress_bar_summary">Bật thanh phát kiểu cũ</string>
     <string name="recently_added">Đã thêm gần đây</string>
     <string name="settings_content_based_color_summary">Cho phép đổi màu sắc dựa trên ảnh bìa album cho trang dưới cùng</string>
     <string name="play_next">Phát tiếp</string>
