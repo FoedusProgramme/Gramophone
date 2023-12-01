@@ -110,4 +110,6 @@
     <string name="unknown_version">Невядомая версія</string>
     <string name="unknown_artist">Невядомы выканаўца</string>
     <string name="repeat_mode">Рэжым паўтору</string>
+    <string name="settings_title_center">Назва па цэнтры</string>
+    <string name="settings_title_center_summary">Адлюстроўваць поўнае імя выканаўцы па цэнтры</string>
 </resources>
