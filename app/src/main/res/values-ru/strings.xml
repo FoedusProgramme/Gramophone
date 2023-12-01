@@ -68,7 +68,7 @@
     <string name="dialog_title">"Название"</string>
     <string name="dialog_artist">"Исполнитель"</string>
     <string name="settings_category_behavior">"Поведение"</string>
-    <string name="settings_mediastore_filter_summary">Скрывать треки, короче указанной длительность в секундах. (Требуется пересканирование)</string>
+    <string name="settings_mediastore_filter_summary">Скрывать треки, короче указанной длительности в секундах. (Требуется пересканирование)</string>
     <string name="settings_mediastore_filter">"Фильтр фонотеки"</string>
     <string name="settings_repository">"Репозиторий"</string>
     <string name="dialog_album">"Альбом"</string>
@@ -116,4 +116,6 @@
     <string name="dialog_mime">Тип мима</string>
     <string name="filesystem">Файлы</string>
     <string name="dialog_duration">Длительность</string>
+    <string name="settings_title_center">Название по центру</string>
+    <string name="settings_title_center_summary">Отображать полное имя исполнители по центру</string>
 </resources>
