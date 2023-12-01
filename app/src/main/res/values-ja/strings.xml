@@ -59,7 +59,7 @@
     <string name="settings_contributors">貢献者</string>
     <string name="settings_version">バージョン</string>
     <string name="settings_category_appearance">外観</string>
-    <string name="settings_category_behavior">振る舞い</string>
+    <string name="settings_category_behavior">動作</string>
     <string name="settings_mediastore_filter">MediaStore のフィルター</string>
     <string name="settings_mediastore_filter_summary">設定した秒数より短い曲を絞り込みます。(再スキャンが必要になります)</string>
     <string name="settings_repository">リポジトリ</string>
