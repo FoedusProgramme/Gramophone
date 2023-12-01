@@ -107,4 +107,6 @@
     <string name="filesystem">Filesystem</string>
     <string name="dialog_mime">Mime type</string>
     <string name="dialog_duration">Duration</string>
+    <string name="settings_title_center">Centered title</string>
+    <string name="settings_title_center_summary">Make full player title centered</string>
 </resources>
