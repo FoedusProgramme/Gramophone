@@ -99,4 +99,6 @@
     <string name="dialog_mime">Định dạng</string>
     <string name="filesystem">Tệp hệ thống</string>
     <string name="dialog_duration">Độ dài</string>
+    <string name="settings_title_center">Căn tiêu đề ở giữa</string>
+    <string name="settings_title_center_summary">Đặt tiêu đề trình phát nhạc nằm ở chính giữa</string>
 </resources>
