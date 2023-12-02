@@ -82,8 +82,8 @@
     <string name="equalizer_not_found">Equalizer not found!</string>
     <string name="compact_list">List (compact)</string>
     <string name="check_for_updates">Check our channel for updates!</string>
-    <string name="settings_default_progress_bar">Enable default progress bar</string>
-    <string name="settings_default_progress_bar_summary">Enable old styled progress bar</string>
+    <string name="settings_default_progress_bar">Default progress bar</string>
+    <string name="settings_default_progress_bar_summary">Enable slider styled progress bar</string>
     <string name="home_menu_about">About</string>
     <string name="opensource_info">Open-sourced under GPL-3.0\nCopyright © 2023 Akane Foundation</string>
     <string name="playlist_favourite">Favourite</string>
@@ -94,7 +94,7 @@
     <string name="upper_folder" translatable="false">..</string>
     <string name="now_playing">Now playing</string>
     <string name="settings_content_based_color_summary">Enable album art based color scheme generation for bottom sheet</string>
-    <string name="settings_content_based_color">Enable content based colors</string>
+    <string name="settings_content_based_color">Content based colors</string>
     <string name="indicator">Indicator</string>
     <string name="settings_package_type">Package type</string>
     <string name="settings_amoled_summary">Enable pure black background</string>
@@ -109,4 +109,20 @@
     <string name="dialog_duration">Duration</string>
     <string name="settings_title_center">Centered title</string>
     <string name="settings_title_center_summary">Make full player title centered</string>
+    <string name="settings_apperance_application">Application</string>
+    <string name="settings_player_ui">Player UI</string>
+    <string name="settings_player_ui_summary">Tweak player UI</string>
+    <string name="settings_appearance_summary">Configure application\'s appearance</string>
+    <string name="settings_about_app">About</string>
+    <string name="settings_about_gramophone">About application</string>
+    <string name="settings_behavior_summary">Configure application\'s behavior</string>
+    <string name="settings_category_links">Links</string>
+    <string name="settings_library">Library</string>
+    <string name="settings_library_summary">Manage media library</string>
+    <string name="settings_player_options">Audio options</string>
+    <string name="settings_player_options_summary">Manage audio output options</string>
+    <string name="settings_customization">Customization</string>
+    <string name="settings_customization_summary">Manage customization options</string>
+    <string name="settings_album_round_corner_summary">Enable round corner in full player</string>
+    <string name="settings_album_round_corner">Album round corner</string>
 </resources>

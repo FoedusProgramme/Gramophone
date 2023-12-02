@@ -102,4 +102,22 @@
     <string name="filesystem">文件系统</string>
     <string name="dialog_duration">时长</string>
     <string name="dialog_mime">文件类型</string>
+    <string name="settings_title_center">标题居中</string>
+    <string name="settings_title_center_summary">使完整播放器的标题居中</string>
+    <string name="settings_apperance_application">应用</string>
+    <string name="settings_player_ui">播放器界面</string>
+    <string name="settings_player_ui_summary">调整播放器界面</string>
+    <string name="settings_appearance_summary">设置程序外观</string>
+    <string name="settings_about_app">关于</string>
+    <string name="settings_about_gramophone">关于程序</string>
+    <string name="settings_behavior_summary">设置程序行为</string>
+    <string name="settings_category_links">链接</string>
+    <string name="settings_library">媒体库</string>
+    <string name="settings_library_summary">管理媒体库</string>
+    <string name="settings_player_options">音频选项</string>
+    <string name="settings_player_options_summary">管理音频输出选项</string>
+    <string name="settings_customization">自定义</string>
+    <string name="settings_customization_summary">管理自定义选项</string>
+    <string name="settings_album_round_corner_summary">在完整播放器中启用圆角</string>
+    <string name="settings_album_round_corner">专辑圆角</string>
 </resources>
