@@ -85,7 +85,7 @@
     <string name="opensource_info">Open-sourced under GPL-3.0
 \nCopyright © 2023 Akane Foundation</string>
     <string name="home_menu_about">アプリについて</string>
-    <string name="settings_default_progress_bar_summary">古いスタイルのプログレスバーを有効化します。</string>
+    <string name="settings_default_progress_bar_summary">スライダースタイルのプログレスバーを有効化します。</string>
     <string name="now_playing">再生中</string>
     <string name="settings_content_based_color">コンテンツベースのカラー生成</string>
     <string name="playlist_favourite">お気に入り</string>
@@ -102,4 +102,7 @@
     <string name="filesystem">ファイルシステム</string>
     <string name="dialog_mime">MIME タイプ</string>
     <string name="dialog_duration">長さ</string>
+    <string name="settings_category_links">リンク</string>
+    <string name="settings_library">ライブラリ</string>
+    <string name="settings_customization">カスタマイズ</string>
 </resources>
