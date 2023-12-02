@@ -19,7 +19,7 @@
     <string name="compact_list">Список (компактний)</string>
     <string name="dialog_album_artist">Виконавець альбому</string>
     <string name="equalizer_not_found">Еквалайзер не знайдено!</string>
-    <string name="settings_amoled">Включити AMOLED тему</string>
+    <string name="settings_oled">Включити OLED тему</string>
     <plurals name="items">
         <item quantity="one">%d елемент</item>
         <item quantity="few">%d елемента</item>
@@ -105,7 +105,7 @@
     <string name="home_menu_search">Пошук</string>
     <string name="no_lyric_found">Текст пісні не знайдено</string>
     <string name="layout">Відображення...</string>
-    <string name="settings_amoled_summary">Увімкнути чисте чорне тло</string>
+    <string name="settings_oled_summary">Увімкнути чисте чорне тло</string>
     <string name="play_next">Грати далі</string>
     <string name="unknown_version">Невідома версія</string>
     <string name="unknown_artist">Невідомий виконавець</string>

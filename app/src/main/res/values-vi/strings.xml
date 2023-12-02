@@ -89,8 +89,8 @@
     <plurals name="albums">
         <item quantity="other">%d Album</item>
     </plurals>
-    <string name="settings_amoled">Bật chủ đề AMOLED</string>
-    <string name="settings_amoled_summary">Bật nền màu đen</string>
+    <string name="settings_oled">Bật chủ đề OLED</string>
+    <string name="settings_oled_summary">Bật nền màu đen</string>
     <string name="music_format_not_supported">Định dạng âm thanh không được hỗ trợ!</string>
     <string name="no_lyric_found">Không tìm thấy lời bài hát</string>
     <string name="disc">Đĩa</string>

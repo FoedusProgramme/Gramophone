@@ -97,8 +97,8 @@
     <string name="settings_content_based_color">Content based colors</string>
     <string name="indicator">Indicator</string>
     <string name="settings_package_type">Package type</string>
-    <string name="settings_amoled_summary">Enable pure black background</string>
-    <string name="settings_amoled">Enable AMOLED theme</string>
+    <string name="settings_oled_summary">Enable pure black background</string>
+    <string name="settings_oled">Enable OLED theme</string>
     <string name="no_lyric_found">No lyric found</string>
     <string name="music_format_not_supported">Music format not supported!</string>
     <string name="dialog_disc_number">Disc number</string>
