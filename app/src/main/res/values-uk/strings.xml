@@ -31,7 +31,7 @@
     <string name="natural_order">За зростанням</string>
     <string name="light">Світла</string>
     <string name="settings_app_name">Назва додатку</string>
-    <string name="settings_content_based_color">Увімкнути кольори на основі контенту</string>
+    <string name="settings_content_based_color">Кольори на основі контенту</string>
     <string name="settings_category_info">Інформація</string>
     <string name="dialog_information">Інформація</string>
     <string name="gramophone_crashed">Gramophone вилетів.</string>
@@ -63,7 +63,7 @@
     <string name="settings_contributors">Учасники розробки</string>
     <string name="settings_category_appearance">Зовнішній вигляд</string>
     <string name="dialog_album">Альбом</string>
-    <string name="settings_default_progress_bar">Увімкнути індикатор виконання за промовчанням</string>
+    <string name="settings_default_progress_bar">Індикатор виконання за промовчанням</string>
     <string name="home_menu_about">Про додаток</string>
     <string name="details">Подробиці</string>
     <string name="home_menu_equalizer">Еквалайзер</string>
@@ -92,7 +92,7 @@
         <item quantity="many">%d треків</item>
         <item quantity="other">%d треків</item>
     </plurals>
-    <string name="settings_default_progress_bar_summary">Увімкнути індикатор виконання у старому стилі</string>
+    <string name="settings_default_progress_bar_summary">Увімкнути індикатор виконання у стилі слайдера</string>
     <string name="recently_added">Нещодавно додані</string>
     <string name="dialog_genre">Жанр</string>
     <string name="music_format_not_supported">Аудіоформат не підтримується!</string>
@@ -112,4 +112,20 @@
     <string name="repeat_mode">Режим повтору</string>
     <string name="settings_title_center">Назва по центру</string>
     <string name="settings_title_center_summary">Відображати повне ім\'я виконавці по центру</string>
+    <string name="settings_album_round_corner">Заокруглення кутів обкладинки альбому</string>
+    <string name="settings_library_summary">Управління медіатекою</string>
+    <string name="settings_player_ui">Інтерфейс плеєра</string>
+    <string name="settings_behavior_summary">Налаштуйте поведінку програми</string>
+    <string name="settings_about_gramophone">Про додаток</string>
+    <string name="settings_customization_summary">Управління параметрами персоналізації</string>
+    <string name="settings_about_app">Про додаток</string>
+    <string name="settings_player_ui_summary">Налаштуйте інтерфейс плеєра</string>
+    <string name="settings_apperance_application">Додаток</string>
+    <string name="settings_player_options">Налаштування звуку</string>
+    <string name="settings_category_links">Посилання</string>
+    <string name="settings_appearance_summary">Налаштуйте зовнішній вигляд програми</string>
+    <string name="settings_album_round_corner_summary">Включити закруглення кутів у повноекранному плеєрі</string>
+    <string name="settings_player_options_summary">Керування параметрами виводу звуку</string>
+    <string name="settings_library">Бібліотека</string>
+    <string name="settings_customization">Персоналізація</string>
 </resources>
