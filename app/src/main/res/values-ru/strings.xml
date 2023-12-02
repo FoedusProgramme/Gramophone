@@ -134,4 +134,11 @@
     <string name="settings_player_options_summary">Управление параметрами вывода звука</string>
     <string name="settings_library">Библиотека</string>
     <string name="settings_customization">Персонализирование</string>
+    <string name="settings_hardware_acceleration_summary"></string>
+    <string name="settings_audio"></string>
+    <string name="settings_skip_silence_summary"></string>
+    <string name="settings_skip_silence"></string>
+    <string name="settings_hardware_acceleration"></string>
+    <string name="settings_float_output"></string>
+    <string name="settings_float_output_summary"></string>
 </resources>
