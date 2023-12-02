@@ -120,4 +120,11 @@
     <string name="settings_customization_summary">管理自定义选项</string>
     <string name="settings_album_round_corner_summary">在完整播放器中启用圆角</string>
     <string name="settings_album_round_corner">专辑圆角</string>
+    <string name="settings_audio">音频</string>
+    <string name="settings_skip_silence">跳过无声片段</string>
+    <string name="settings_skip_silence_summary">当播放歌曲时跳过无声片段 (需要服务重启)</string>
+    <string name="settings_float_output">浮点音频输出</string>
+    <string name="settings_float_output_summary">启用 32 比特浮点输出 (需要服务重启)</string>
+    <string name="settings_hardware_acceleration">播放速度</string>
+    <string name="settings_hardware_acceleration_summary">为播放速度启用硬件加速</string>
 </resources>
