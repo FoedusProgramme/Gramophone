@@ -94,8 +94,8 @@
     <string name="home_menu_equalizer">Эквалайзер</string>
     <string name="equalizer_not_found">Эквалайзер не найден!</string>
     <string name="compact_list">Список (компактный)</string>
-    <string name="settings_content_based_color">Включить цвета на основе контента</string>
-    <string name="settings_default_progress_bar">Включить индикатор выполнения по умолчанию</string>
+    <string name="settings_content_based_color">Цвета на основе контента</string>
+    <string name="settings_default_progress_bar">Индикатор выполнения по умолчанию</string>
     <string name="home_menu_about">О приложении</string>
     <string name="check_for_updates">Следите за обновлениями в нашем канале!</string>
     <string name="settings_content_based_color_summary">Включить создание цветовой схемы на основе обложки альбома для нижнего листа</string>
@@ -105,7 +105,7 @@
 \nАвторские права © 2023 Akane Foundation</string>
     <string name="playlist_favourite">Избранное</string>
     <string name="now_playing">Сейчас играет</string>
-    <string name="settings_default_progress_bar_summary">Включить индикатор выполнения в старом стиле</string>
+    <string name="settings_default_progress_bar_summary">Включить индикатор выполнения в стиле слайдера</string>
     <string name="music_format_not_supported">Аудиоформат не поддерживается!</string>
     <string name="settings_package_type">Тип пакета</string>
     <string name="no_lyric_found">Текст песни не найден</string>
@@ -118,4 +118,20 @@
     <string name="dialog_duration">Длительность</string>
     <string name="settings_title_center">Название по центру</string>
     <string name="settings_title_center_summary">Отображать полное имя исполнители по центру</string>
+    <string name="settings_album_round_corner">Скругление углов обложки альбома</string>
+    <string name="settings_library_summary">Управление медиатекой</string>
+    <string name="settings_player_ui">Интерфейс плеера</string>
+    <string name="settings_behavior_summary">Настройте поведение приложения</string>
+    <string name="settings_about_gramophone">О приложении</string>
+    <string name="settings_customization_summary">Управление параметрами персонализации</string>
+    <string name="settings_about_app">О приложении</string>
+    <string name="settings_player_ui_summary">Настройте интерфейс плеера</string>
+    <string name="settings_apperance_application">Приложение</string>
+    <string name="settings_player_options">Настройки звука</string>
+    <string name="settings_category_links">Ссылки</string>
+    <string name="settings_appearance_summary">Настройте внешний вид приложения</string>
+    <string name="settings_album_round_corner_summary">Включить закругление углов в полновэкранном плеере</string>
+    <string name="settings_player_options_summary">Управление параметрами вывода звука</string>
+    <string name="settings_library">Библиотека</string>
+    <string name="settings_customization">Персонализирование</string>
 </resources>
