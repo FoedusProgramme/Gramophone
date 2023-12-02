@@ -60,12 +60,12 @@
     </plurals>
     <string name="light">Sáng</string>
     <string name="settings_app_name">Tên ứng dụng</string>
-    <string name="settings_content_based_color">Cho phép đổi màu dựa trên nội dung</string>
+    <string name="settings_content_based_color">Đổi màu dựa trên nội dung</string>
     <string name="settings_category_info">Thông tin</string>
     <string name="dialog_information">Thông tin</string>
-    <string name="settings_category_appearance">Bên ngoài</string>
+    <string name="settings_category_appearance">Giao diện</string>
     <string name="dialog_album">Album</string>
-    <string name="settings_default_progress_bar">Bật thanh phát mặc định</string>
+    <string name="settings_default_progress_bar">Thanh phát mặc định</string>
     <string name="home_menu_about">Giới thiệu</string>
     <string name="details">Chi tiết</string>
     <string name="dialog_path">Đường dẫn</string>
@@ -78,7 +78,7 @@
     <plurals name="songs">
         <item quantity="other">%d Bài hát</item>
     </plurals>
-    <string name="settings_default_progress_bar_summary">Bật thanh phát kiểu cũ</string>
+    <string name="settings_default_progress_bar_summary">Bật thanh phát kiểu thanh trượt</string>
     <string name="recently_added">Đã thêm gần đây</string>
     <string name="settings_content_based_color_summary">Cho phép đổi màu sắc dựa trên ảnh bìa album cho trang dưới cùng</string>
     <string name="play_next">Phát tiếp</string>
@@ -101,4 +101,20 @@
     <string name="dialog_duration">Độ dài</string>
     <string name="settings_title_center">Căn tiêu đề ở giữa</string>
     <string name="settings_title_center_summary">Đặt tiêu đề trình phát nhạc nằm ở chính giữa</string>
+    <string name="settings_album_round_corner">Bo góc Album</string>
+    <string name="settings_library_summary">Quản lí thư viện phương tiện</string>
+    <string name="settings_player_ui">Giao diện phát</string>
+    <string name="settings_behavior_summary">Tùy chỉnh các hành vi của ứng dụng</string>
+    <string name="settings_about_gramophone">Giới thiệu ứng dụng</string>
+    <string name="settings_customization_summary">Quản lí các tùy chọn tùy chỉnh</string>
+    <string name="settings_about_app">Giới thiệu</string>
+    <string name="settings_player_ui_summary">Tinh chỉnh giao diện phát</string>
+    <string name="settings_apperance_application">Ứng dụng</string>
+    <string name="settings_player_options">Tuỳ chọn âm thanh</string>
+    <string name="settings_category_links">Liên kết</string>
+    <string name="settings_appearance_summary">Tuỳ chỉnh giao diện ứng dụng</string>
+    <string name="settings_album_round_corner_summary">Bật bo tròn trong trình phát</string>
+    <string name="settings_player_options_summary">Quản lý tùy chọn đầu ra âm thanh</string>
+    <string name="settings_library">Thư viện</string>
+    <string name="settings_customization">Tùy chỉnh</string>
 </resources>
