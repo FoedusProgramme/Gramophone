@@ -19,19 +19,15 @@
     <string name="unknown_playlist">不明なプレイリスト</string>
     <string name="equalizer_not_found">イコライザーがありません！</string>
     <plurals name="songs">
-        <item quantity="one">%d 個の曲</item>
         <item quantity="other">%d 個の曲</item>
     </plurals>
     <plurals name="albums">
-        <item quantity="one">%d 個のアルバム</item>
         <item quantity="other">%d 個のアルバム</item>
     </plurals>
     <plurals name="artists">
-        <item quantity="one">%d 件のアーティスト</item>
         <item quantity="other">%d 件のアーティスト</item>
     </plurals>
     <plurals name="items">
-        <item quantity="one">%d 個のアイテム</item>
         <item quantity="other">%d 個のアイテム</item>
     </plurals>
     <string name="follow_system">システムに従う</string>
@@ -105,4 +101,7 @@
     <string name="settings_category_links">リンク</string>
     <string name="settings_library">ライブラリ</string>
     <string name="settings_customization">カスタマイズ</string>
+    <string name="upper_folder" translatable="false"></string>
+    <string name="settings_contributors_detail" translatable="false"></string>
+    <string name="default_time" translatable="false"></string>
 </resources>
