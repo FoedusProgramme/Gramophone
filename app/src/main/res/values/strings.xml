@@ -132,4 +132,6 @@
     <string name="settings_skip_silence_summary">Skip silence when playing tracks (Require service restart)</string>
     <string name="settings_hardware_acceleration">Playback speed</string>
     <string name="settings_hardware_acceleration_summary">Enable playback speed hardware acceleration (Require service restart)</string>
+    <string name="settings_title_bold">Bold title</string>
+    <string name="settings_title_bold_summary">Make full player title bold</string>
 </resources>
