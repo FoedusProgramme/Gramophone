@@ -59,19 +59,15 @@
     <string name="settings_app_theme">应用主题</string>
     <string name="natural_order">自然排序</string>
     <plurals name="songs">
-        <item quantity="one">%d 首歌曲</item>
         <item quantity="other">%d 首歌曲</item>
     </plurals>
     <plurals name="albums">
-        <item quantity="one">%d 张专辑</item>
         <item quantity="other">%d 张专辑</item>
     </plurals>
     <plurals name="artists">
-        <item quantity="one">%d 位艺术家</item>
         <item quantity="other">%d 位艺术家</item>
     </plurals>
     <plurals name="items">
-        <item quantity="one">%d 个条目</item>
         <item quantity="other">%d 个条目</item>
     </plurals>
     <string name="grid">网格</string>
@@ -127,4 +123,7 @@
     <string name="settings_float_output_summary">启用 32 比特浮点输出 (需要服务重启)</string>
     <string name="settings_hardware_acceleration">播放速度</string>
     <string name="settings_hardware_acceleration_summary">为播放速度启用硬件加速</string>
+    <string name="upper_folder" translatable="false"></string>
+    <string name="settings_contributors_detail" translatable="false"></string>
+    <string name="default_time" translatable="false"></string>
 </resources>
