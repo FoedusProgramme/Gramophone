@@ -123,4 +123,6 @@
     <string name="settings_float_output_summary">启用 32 比特浮点输出 (需要服务重启)</string>
     <string name="settings_hardware_acceleration">播放速度</string>
     <string name="settings_hardware_acceleration_summary">为播放速度启用硬件加速</string>
+    <string name="settings_title_bold">粗体标题</string>
+    <string name="settings_title_bold_summary">让完整播放器的标题使用粗体</string>
 </resources>
