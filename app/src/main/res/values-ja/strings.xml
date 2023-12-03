@@ -117,10 +117,12 @@
     <string name="settings_player_options">オーディオのオプション</string>
     <string name="settings_skip_silence">無音部分をスキップする</string>
     <string name="settings_appearance_summary">アプリの外観を設定します</string>
-    <string name="settings_title_center_summary">フルプレーヤー上のタイトルを中央揃えにします</string>
+    <string name="settings_title_center_summary">フルプレーヤー内のタイトルを中央揃えにします</string>
     <string name="settings_hardware_acceleration">再生速度</string>
     <string name="settings_float_output">Float オーディオ出力</string>
-    <string name="settings_album_round_corner_summary">フルプレーヤーで角の丸みを有効化します</string>
+    <string name="settings_album_round_corner_summary">フルプレーヤー内の角の丸みを有効化します</string>
     <string name="settings_player_options_summary">オーディオ出力オプションの管理</string>
     <string name="settings_float_output_summary">32 bit float 出力を有効化します (サービスの再起動が必要です)</string>
+    <string name="settings_title_bold">タイトルを太字にする</string>
+    <string name="settings_title_bold_summary">フルプレーヤー内のタイトルを太字にします</string>
 </resources>
