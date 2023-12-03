@@ -59,7 +59,6 @@
     <string name="settings_app_theme">應用主題</string>
     <string name="natural_order">自然排序</string>
     <plurals name="songs">
-        <item quantity="one">%d 首歌曲</item>
         <item quantity="other">%d 首歌曲</item>
     </plurals>
     <plurals name="albums">
@@ -124,4 +123,8 @@
     <string name="settings_float_output_summary">啟用 32 比特浮點輸出 (需要服務重啟)</string>
     <string name="settings_hardware_acceleration">播放速度</string>
     <string name="settings_hardware_acceleration_summary">為播放速度啟用硬體加速</string>
+    <string name="upper_folder" translatable="false"></string>
+    <string name="settings_contributors_detail" translatable="false"></string>
+    <string name="default_time" translatable="false"></string>
+    <string name="app_name" translatable="false"></string>
 </resources>
