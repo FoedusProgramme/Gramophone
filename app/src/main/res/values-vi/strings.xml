@@ -117,4 +117,5 @@
     <string name="settings_player_options_summary">Quản lý tùy chọn đầu ra âm thanh</string>
     <string name="settings_library">Thư viện</string>
     <string name="settings_customization">Tùy chỉnh</string>
+    <string name="settings_audio">Âm thanh</string>
 </resources>
