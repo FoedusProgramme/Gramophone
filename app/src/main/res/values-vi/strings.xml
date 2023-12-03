@@ -124,4 +124,7 @@
     <string name="settings_hardware_acceleration"></string>
     <string name="settings_float_output"></string>
     <string name="settings_float_output_summary"></string>
+    <string name="upper_folder" translatable="false"></string>
+    <string name="settings_contributors_detail" translatable="false"></string>
+    <string name="default_time" translatable="false"></string>
 </resources>
