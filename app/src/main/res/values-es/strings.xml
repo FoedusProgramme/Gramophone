@@ -131,4 +131,8 @@
     <string name="settings_library"></string>
     <string name="settings_customization"></string>
     <string name="settings_float_output_summary"></string>
+    <string name="upper_folder" translatable="false"></string>
+    <string name="settings_contributors_detail" translatable="false"></string>
+    <string name="default_time" translatable="false"></string>
+    <string name="app_name" translatable="false"></string>
 </resources>
