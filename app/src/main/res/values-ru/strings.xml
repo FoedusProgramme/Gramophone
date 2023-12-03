@@ -134,4 +134,13 @@
     <string name="settings_player_options_summary">Управление параметрами вывода звука</string>
     <string name="settings_library">Библиотека</string>
     <string name="settings_customization">Персонализирование</string>
+    <string name="settings_hardware_acceleration_summary">Включить аппаратное ускорение скорости воспроизведения (требуется перезапуск службы)</string>
+    <string name="settings_title_bold">Жирный заголовок</string>
+    <string name="settings_audio">Аудио</string>
+    <string name="settings_skip_silence_summary">Пропускать тишину при воспроизведении треков (требуется перезапуск службы)</string>
+    <string name="settings_title_bold_summary">Сделать жирным заголовок полноэкранного плеера</string>
+    <string name="settings_skip_silence">Пропустить тишину</string>
+    <string name="settings_hardware_acceleration">Скорость воспроизведения</string>
+    <string name="settings_float_output">Вывод аудио с плавающей запятой</string>
+    <string name="settings_float_output_summary">Включить 32-битный вывод с плавающей запятой (требуется перезапуск службы)</string>
 </resources>
