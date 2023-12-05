@@ -125,4 +125,9 @@
     <string name="settings_hardware_acceleration_summary">为播放速度启用硬件加速</string>
     <string name="settings_title_bold">粗体标题</string>
     <string name="settings_title_bold_summary">让完整播放器的标题使用粗体</string>
+    <string name="settings_experimental_settings">实验性设置</string>
+    <string name="settings_experimental">实验性</string>
+    <string name="settings_color_accuracy">颜色准确度</string>
+    <string name="settings_color_accuracy_summary">让基于内容的颜色生成更加准确</string>
+    <string name="settings_experimental_settings_summary">设置实验性功能</string>
 </resources>
