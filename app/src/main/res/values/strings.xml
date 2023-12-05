@@ -134,4 +134,9 @@
     <string name="settings_hardware_acceleration_summary">Enable playback speed hardware acceleration (Require service restart)</string>
     <string name="settings_title_bold">Bold title</string>
     <string name="settings_title_bold_summary">Make full player title bold</string>
+    <string name="settings_experimental">Experimental</string>
+    <string name="settings_experimental_settings">Experimental Settings</string>
+    <string name="settings_experimental_settings_summary">Configure testing features</string>
+    <string name="settings_color_accuracy_summary">Make content based color generation more accurate</string>
+    <string name="settings_color_accuracy">Color accuracy</string>
 </resources>
