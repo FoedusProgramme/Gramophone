@@ -90,7 +90,7 @@
     <string name="natural_order">По возрастанию</string>
     <string name="grid">Сетка</string>
     <string name="list">Список</string>
-    <string name="layout">Отображение...</string>
+    <string name="layout">Отображение</string>
     <string name="home_menu_equalizer">Эквалайзер</string>
     <string name="equalizer_not_found">Эквалайзер не найден!</string>
     <string name="compact_list">Список (компактный)</string>

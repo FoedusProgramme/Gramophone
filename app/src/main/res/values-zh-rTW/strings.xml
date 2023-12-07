@@ -72,7 +72,7 @@
     </plurals>
     <string name="grid">網格</string>
     <string name="list">列表</string>
-    <string name="layout">顯示...</string>
+    <string name="layout">顯示</string>
     <string name="home_menu_equalizer">均衡器</string>
     <string name="equalizer_not_found">均衡器未找到！</string>
     <string name="compact_list">列表（緊湊）</string>

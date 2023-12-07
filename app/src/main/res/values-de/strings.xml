@@ -81,5 +81,5 @@
     </plurals>
     <string name="recently_added">Kürzlich hinzugefügt</string>
     <string name="dialog_genre">Genre</string>
-    <string name="layout">Anzeige …</string>
+    <string name="layout">Anzeige</string>
 </resources>

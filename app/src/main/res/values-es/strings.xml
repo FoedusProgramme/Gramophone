@@ -96,7 +96,7 @@
     <string name="unknown_year">Año desconocido</string>
     <string name="home_menu_search">Buscar</string>
     <string name="no_lyric_found">Letra no encontrada</string>
-    <string name="layout">Mostrar...</string>
+    <string name="layout">Mostrar</string>
     <string name="settings_oled_summary">Habilitar fondo negro puro</string>
     <string name="play_next">Reproducir la siguiente</string>
     <string name="unknown_version">Versión desconocida</string>
