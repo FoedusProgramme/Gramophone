@@ -143,4 +143,9 @@
     <string name="settings_hardware_acceleration">Скорость воспроизведения</string>
     <string name="settings_float_output">Вывод аудио с плавающей запятой</string>
     <string name="settings_float_output_summary">Включить 32-битный вывод с плавающей запятой (требуется перезапуск службы)</string>
+    <string name="settings_experimental_settings">Экспериментальные настройки</string>
+    <string name="settings_experimental">Экспериментальные</string>
+    <string name="settings_color_accuracy">Точность цветопередачи</string>
+    <string name="settings_color_accuracy_summary">Делает генерацию цвета на основе контента более точной</string>
+    <string name="settings_experimental_settings_summary">Настройка функций тестирования</string>
 </resources>
