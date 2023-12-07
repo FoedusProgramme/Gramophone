@@ -31,7 +31,7 @@
     <string name="natural_order">Па ўзрастанні</string>
     <string name="light">Светлы</string>
     <string name="settings_app_name">Назва дадатку</string>
-    <string name="settings_content_based_color">Ўключыць колеру на аснове кантэнту</string>
+    <string name="settings_content_based_color">Колеры на аснове кантэнту</string>
     <string name="settings_category_info">Інфармацыя</string>
     <string name="dialog_information">Інфармацыя</string>
     <string name="gramophone_crashed">Gramophone вылецеў.</string>
@@ -63,7 +63,7 @@
     <string name="settings_contributors">Удзельнікі распрацоўкі</string>
     <string name="settings_category_appearance">Знешні выгляд</string>
     <string name="dialog_album">Альбом</string>
-    <string name="settings_default_progress_bar">Ўключыць індыкатар выканання па змаўчанні</string>
+    <string name="settings_default_progress_bar">Панэль выканання па змаўчанні</string>
     <string name="home_menu_about">Аб дадатку</string>
     <string name="details">Падрабязнасць</string>
     <string name="home_menu_equalizer">Эквалайзер</string>
@@ -112,4 +112,16 @@
     <string name="repeat_mode">Рэжым паўтору</string>
     <string name="settings_title_center">Назва па цэнтры</string>
     <string name="settings_title_center_summary">Адлюстроўваць поўнае імя выканаўцы па цэнтры</string>
+    <string name="settings_album_round_corner">Закругленне кутоў вокладкі альбома</string>
+    <string name="settings_behavior_summary">Наладзіць паводзіны праграмы</string>
+    <string name="settings_about_gramophone">Аб праграме</string>
+    <string name="settings_title_bold">Тоўсты загаловак</string>
+    <string name="settings_audio">Аўдыё</string>
+    <string name="settings_about_app">Аб праграме</string>
+    <string name="settings_apperance_application">Праграма</string>
+    <string name="settings_player_options">Налады гуку</string>
+    <string name="settings_color_accuracy">Дакладнасць колераперадачы</string>
+    <string name="settings_appearance_summary">Наладзіць знешні выгляд праграмы</string>
+    <string name="settings_experimental_settings_summary">Наладзіць функцыі тэсціравання</string>
+    <string name="settings_customization">Персаналізацыя</string>
 </resources>
