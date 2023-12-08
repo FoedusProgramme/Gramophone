@@ -139,4 +139,5 @@
     <string name="settings_experimental_settings_summary">Configure testing features</string>
     <string name="settings_color_accuracy_summary">Make content based color generation more accurate</string>
     <string name="settings_color_accuracy">Color accuracy</string>
+    <string name="sort_by_date">Date</string>
 </resources>
