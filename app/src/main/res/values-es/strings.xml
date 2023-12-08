@@ -106,4 +106,19 @@
     <string name="filesystem">Sistema de archivos</string>
     <string name="dialog_mime">Tipo Mime</string>
     <string name="dialog_duration">Duración</string>
+    <string name="settings_album_round_corner">Esquinas redondeadas del álbum</string>
+    <string name="sort_by_add_date">Añadir una fecha</string>
+    <string name="settings_player_ui">Interfaz del reproductor</string>
+    <string name="settings_about_gramophone">Acerca de la aplicación</string>
+    <string name="settings_title_bold">Título en negrita</string>
+    <string name="settings_audio">Sonido</string>
+    <string name="settings_title_center">Título centrado</string>
+    <string name="settings_about_app">Acerca de</string>
+    <string name="settings_lyrics_bold">Letra en negrita</string>
+    <string name="settings_apperance_application">Aplicación</string>
+    <string name="settings_player_options">Opciones del sonido</string>
+    <string name="settings_color_accuracy">Precisión del color</string>
+    <string name="settings_lyrics_center">Centrado</string>
+    <string name="settings_appearance_summary">Configurar la apariencia de la aplicación</string>
+    <string name="settings_title_center_summary">Centrar el título completo del reproductor</string>
 </resources>
