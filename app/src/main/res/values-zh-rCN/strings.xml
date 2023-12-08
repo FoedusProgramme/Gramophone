@@ -130,7 +130,8 @@
     <string name="settings_color_accuracy">精确颜色</string>
     <string name="settings_color_accuracy_summary">让基于内容的颜色生成更加准确</string>
     <string name="settings_experimental_settings_summary">设置实验性功能</string>
-    <string name="sort_by_date">添加日期</string>
+    <string name="sort_by_add_date">添加日期</string>
+    <string name="sort_by_modified_date">修改日期</string>
     <string name="settings_lyric">歌词</string>
     <string name="settings_lyrics_configuration">歌词设置</string>
     <string name="settings_lyrics_configuration_summary">设置歌词外观</string>

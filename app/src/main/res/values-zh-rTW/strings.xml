@@ -125,5 +125,6 @@
     <string name="settings_hardware_acceleration_summary">為播放速度啟用硬體加速</string>
     <string name="settings_title_bold">粗體標題</string>
     <string name="settings_title_bold_summary">讓完整播放器的標題使用粗體</string>
-    <string name="sort_by_date">添加日期</string>
+    <string name="sort_by_add_date">添加日期</string>
+    <string name="sort_by_modified_date">更改日期</string>
 </resources>
