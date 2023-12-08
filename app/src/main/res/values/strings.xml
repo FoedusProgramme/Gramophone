@@ -140,4 +140,13 @@
     <string name="settings_color_accuracy_summary">Make content based color generation more accurate</string>
     <string name="settings_color_accuracy">Color accuracy</string>
     <string name="sort_by_date">Date</string>
+    <string name="settings_lyric">Lyric</string>
+    <string name="settings_lyrics_configuration">Lyrics configuration</string>
+    <string name="settings_lyrics_configuration_summary">Configure lyrics appearance</string>
+    <string name="settings_lyrics_bold">Bold lyrics</string>
+    <string name="settings_lyrics_bold_summary">Make lyrics use a heavier font weight</string>
+    <string name="settings_lyrics_size">Lyrics size</string>
+    <string name="settings_lyrics_size_summary">Adjust lyrics font size</string>
+    <string name="settings_lyrics_center">Center alignment</string>
+    <string name="settings_lyrics_center_summary">Make lyrics display by the center</string>
 </resources>
