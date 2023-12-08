@@ -136,7 +136,6 @@
     <string name="settings_lyrics_configuration_summary">设置歌词外观</string>
     <string name="settings_lyrics_bold">粗体歌词</string>
     <string name="settings_lyrics_bold_summary">使歌词使用更大的字重</string>
-    <string name="settings_lyrics_size">歌詞</string>
     <string name="settings_lyrics_center">中心对齐</string>
     <string name="settings_lyrics_center_summary">使歌词中心对齐</string>
 </resources>
