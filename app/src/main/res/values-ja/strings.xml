@@ -127,7 +127,16 @@
     <string name="settings_title_bold_summary">フルプレーヤー内のタイトルを太字にします</string>
     <string name="settings_experimental_settings">試験的な機能の設定</string>
     <string name="settings_experimental">試験的な機能</string>
-    <string name="settings_color_accuracy">色の精度</string>
+    <string name="settings_color_accuracy">色の精度を向上させる</string>
     <string name="settings_color_accuracy_summary">コンテンツベースのカラー生成の精度を向上させます</string>
     <string name="settings_experimental_settings_summary">試験的な機能を設定します</string>
+    <string name="sort_by_add_date">日付を追加</string>
+    <string name="settings_lyrics_configuration">歌詞の設定</string>
+    <string name="sort_by_modified_date">更新日時</string>
+    <string name="settings_lyrics_bold">歌詞を太字にする</string>
+    <string name="settings_lyrics_center_summary">歌詞を中央揃えで表示します</string>
+    <string name="settings_lyric">歌詞</string>
+    <string name="settings_lyrics_center">歌詞を中央揃えにする</string>
+    <string name="settings_lyrics_configuration_summary">歌詞の外観を設定します</string>
+    <string name="settings_lyrics_bold_summary">歌詞を太字で表示します</string>
 </resources>
