@@ -118,4 +118,26 @@
     <string name="settings_library">Thư viện</string>
     <string name="settings_customization">Tùy chỉnh</string>
     <string name="settings_audio">Âm thanh</string>
+    <string name="sort_by_add_date">Thêm ngày</string>
+    <string name="settings_experimental_settings">Cài đặt thử nghiệm</string>
+    <string name="settings_lyrics_configuration">Tuỳ chỉnh lời bài hát</string>
+    <string name="sort_by_modified_date">Ngày sửa đổi</string>
+    <string name="settings_hardware_acceleration_summary">Cho phép tăng tốc phần cứng tốc độ phát lại (Cần khởi động lại ứng dụng)</string>
+    <string name="settings_title_bold">Làm đậm tiêu đề</string>
+    <string name="settings_skip_silence_summary">Bỏ qua phần lặng khi phát bài hát (Cần khởi động lại ứng dụng)</string>
+    <string name="settings_lyrics_bold">Làm đậm lời bài hát</string>
+    <string name="settings_lyrics_center_summary">Làm lời bài hát hiển thị ở giữa</string>
+    <string name="settings_title_bold_summary">Làm đậm tiêu để cho cả trình phát</string>
+    <string name="settings_experimental">Thử nghiệm</string>
+    <string name="settings_lyric">Lời bài hát</string>
+    <string name="settings_color_accuracy">Độ chính xác màu</string>
+    <string name="settings_skip_silence">Bỏ qua phần lặng</string>
+    <string name="settings_lyrics_center">Căn giữa</string>
+    <string name="settings_color_accuracy_summary">Làm màu sắc dựa trên nội dung chính xác hơn</string>
+    <string name="settings_lyrics_configuration_summary">Tuỳ chỉnh hiển thị lời bài hát</string>
+    <string name="settings_experimental_settings_summary">Tuỳ chỉnh tính năng thử nghiệm</string>
+    <string name="settings_hardware_acceleration">Tốc độ phát lại</string>
+    <string name="settings_float_output">Đầu ra âm thanh nổi</string>
+    <string name="settings_lyrics_bold_summary">Làm cho lời bài hát sử dụng phông chữ nặng hơn</string>
+    <string name="settings_float_output_summary">Bật đầu ra âm thanh nổi 32 bit (Cần khởi động lại ứng dụng)</string>
 </resources>
