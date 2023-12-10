@@ -51,7 +51,7 @@
     <string name="dialog_information">Informação</string>
     <string name="gramophone_crashed">Gramophone quebrou</string>
     <string name="unknown_title">Título desconhecido</string>
-    <string name="dialog_track_number">Números da faixa</string>
+    <string name="dialog_track_number">Número da faixa</string>
     <string name="folders">Pastas</string>
     <plurals name="artists">
         <item quantity="one">%d Artista</item>
@@ -138,4 +138,13 @@
     <string name="unknown_version">Versão desconhecida</string>
     <string name="unknown_artist">Artista desconhecido</string>
     <string name="repeat_mode">Modo repetição</string>
+    <string name="sort_by_add_date">Adicionar data</string>
+    <string name="settings_lyrics_configuration">Lyrics configuration</string>
+    <string name="sort_by_modified_date">Data modificada</string>
+    <string name="settings_lyrics_bold">Letras em negrito</string>
+    <string name="settings_lyrics_center_summary">Fazer com que as letras sejam exibidas no centro</string>
+    <string name="settings_lyric">Letra</string>
+    <string name="settings_lyrics_center">Centro alinhado</string>
+    <string name="settings_lyrics_configuration_summary">Configurar a aparência das letras</string>
+    <string name="settings_lyrics_bold_summary">Fazer as letras usarem uma fonte mais grossa</string>
 </resources>
