@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="dismiss">Ok</string>
-    <string name="settings_album_round_corner">Canto arredondado do álbum</string>
+    <string name="settings_album_round_corner">Cantos arredondados do álbum</string>
     <string name="categories">Categorias</string>
     <string name="settings_category_behavior">Comportamento</string>
     <string name="operations">Operações</string>
@@ -37,7 +37,7 @@
         <item quantity="many">%d Itens</item>
         <item quantity="other">%d Itens</item>
     </plurals>
-    <string name="settings_oled">Ativar tema OLED</string>
+    <string name="settings_oled">Tema OLED</string>
     <string name="home_menu_shuffle">Embaralhar</string>
     <string name="category_genres">Gêneros</string>
     <string name="settings_about_app">Sobre</string>
@@ -45,7 +45,7 @@
     <string name="light">Claro</string>
     <string name="settings_player_ui_summary">Ajustar interface do player</string>
     <string name="settings_app_name">Nome do aplicativo</string>
-    <string name="settings_content_based_color">Cores baseadas no conteúdo</string>
+    <string name="settings_content_based_color">Cores dinâmicas</string>
     <string name="settings_category_info">Informação</string>
     <string name="settings_title_bold_summary">Coloque o título completo do player em negrito</string>
     <string name="dialog_information">Informação</string>
@@ -80,7 +80,7 @@
     <string name="settings_contributors">Colaboradores</string>
     <string name="settings_category_appearance">Aparência</string>
     <string name="dialog_album">Álbum</string>
-    <string name="settings_color_accuracy">Precisão de cores</string>
+    <string name="settings_color_accuracy">Precisão de cores dinâmicas</string>
     <string name="settings_default_progress_bar">Barra de progresso padrão</string>
     <string name="home_menu_about">Sobre</string>
     <string name="details">Detalhes</string>
@@ -91,7 +91,7 @@
     <string name="album_artist">Álbum do artista</string>
     <string name="sort_by_album">Álbum</string>
     <string name="category_albums">Álbuns</string>
-    <string name="settings_color_accuracy_summary">Torne a geração de cores baseada no conteúdo mais precisa</string>
+    <string name="settings_color_accuracy_summary">Torne o esquema de cores baseado na arte do álbum mais preciso</string>
     <string name="filesystem">Arquivos</string>
     <string name="refreshed_songs">Músicas %1$s atualizadas</string>
     <string name="dark">Escuro</string>
@@ -113,38 +113,38 @@
         <item quantity="other">%d Músicas</item>
     </plurals>
     <string name="settings_default_progress_bar_summary">Ativar barra de progresso com estilo deslizante</string>
-    <string name="recently_added">Adicionados recentemente</string>
+    <string name="recently_added">Adicionadas recentemente</string>
     <string name="dialog_genre">Gênero</string>
     <string name="music_format_not_supported">Formato de áudio não suportado!</string>
-    <string name="settings_content_based_color_summary">Ativar a geração de esquema de cores baseado na arte do álbum</string>
+    <string name="settings_content_based_color_summary">Ativar esquema de cores baseado na arte do álbum</string>
     <string name="unknown_genre">Gênero desconhecido</string>
-    <string name="category_artists">Astistas</string>
+    <string name="category_artists">Artistas</string>
     <string name="settings_experimental_settings_summary">Configurar recursos de teste</string>
     <string name="settings_package_type">Tipo de pacote</string>
     <string name="settings_title_center_summary">Centralize o título completo do player</string>
     <string name="settings_hardware_acceleration">Velocidade de reprodução</string>
     <string name="go_to_artist">Ir para o artista</string>
     <string name="settings_float_output">Saída de áudio flutuante</string>
-    <string name="settings_album_round_corner_summary">Ativar canto arredondado completo do player</string>
+    <string name="settings_album_round_corner_summary">Ativar cantos arredondados do álbum no player</string>
     <string name="unknown_year">Ano desconhecido</string>
     <string name="home_menu_search">Pesquisar</string>
     <string name="no_lyric_found">Nenhuma letra encontrada</string>
     <string name="settings_player_options_summary">Gerenciar opções de saída de áudio</string>
     <string name="settings_library">Biblioteca</string>
-    <string name="layout">Tela</string>
-    <string name="settings_customization">Costumização</string>
+    <string name="layout">Exibição</string>
+    <string name="settings_customization">Customização</string>
     <string name="play_next">Reproduzir a seguir</string>
     <string name="settings_float_output_summary">Ativar saída flutuante de 32 bits (requer reinicialização do serviço)</string>
     <string name="unknown_version">Versão desconhecida</string>
     <string name="unknown_artist">Artista desconhecido</string>
     <string name="repeat_mode">Modo repetição</string>
-    <string name="sort_by_add_date">Adicionar data</string>
-    <string name="settings_lyrics_configuration">Lyrics configuration</string>
-    <string name="sort_by_modified_date">Data modificada</string>
+    <string name="sort_by_add_date">Adicionadas recentemente</string>
+    <string name="settings_lyrics_configuration">Configurar letras</string>
+    <string name="sort_by_modified_date">Modificadas recentemente</string>
     <string name="settings_lyrics_bold">Letras em negrito</string>
     <string name="settings_lyrics_center_summary">Fazer com que as letras sejam exibidas no centro</string>
-    <string name="settings_lyric">Letra</string>
-    <string name="settings_lyrics_center">Centro alinhado</string>
+    <string name="settings_lyric">Letras</string>
+    <string name="settings_lyrics_center">Alinhadas no centro</string>
     <string name="settings_lyrics_configuration_summary">Configurar a aparência das letras</string>
     <string name="settings_lyrics_bold_summary">Fazer as letras usarem uma fonte mais grossa</string>
 </resources>
