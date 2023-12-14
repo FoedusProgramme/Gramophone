@@ -64,7 +64,7 @@
     <plurals name="albums">
         <item quantity="one">%d Álbum</item>
         <item quantity="many">%d Álbuns</item>
-        <item quantity="other">%d Albuns</item>
+        <item quantity="other">%d Álbuns</item>
     </plurals>
     <string name="unknown_playlist">Playlist desconhecida</string>
     <string name="dialog_mime">Tipo do mime</string>
