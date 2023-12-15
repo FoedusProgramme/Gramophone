@@ -148,4 +148,6 @@
     <string name="settings_lyrics_bold_summary">Make lyrics use a heavier font weight</string>
     <string name="settings_lyrics_center">Center alignment</string>
     <string name="settings_lyrics_center_summary">Make lyrics display by the center</string>
+    <string name="settings_play_on_launch">Play on launch</string>
+    <string name="settings_play_on_launch_summary">Play music on launch (If there\'s any in the playlist)</string>
 </resources>

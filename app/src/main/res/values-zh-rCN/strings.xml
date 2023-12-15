@@ -139,4 +139,6 @@
     <string name="settings_lyrics_bold_summary">使歌词使用更大的字重</string>
     <string name="settings_lyrics_center">中心对齐</string>
     <string name="settings_lyrics_center_summary">使歌词中心对齐</string>
+    <string name="settings_play_on_launch">启动时播放</string>
+    <string name="settings_play_on_launch_summary">启动时播放音乐 (如果播放列表存在音乐的话)</string>
 </resources>
