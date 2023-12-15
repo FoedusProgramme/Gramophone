@@ -147,4 +147,6 @@
     <string name="settings_lyrics_center">Alinhadas no centro</string>
     <string name="settings_lyrics_configuration_summary">Configurar a aparência das letras</string>
     <string name="settings_lyrics_bold_summary">Fazer as letras usarem uma fonte mais grossa</string>
+    <string name="settings_play_on_launch_summary">Reproduzir música ao iniciar (se houver alguma na playlist)</string>
+    <string name="settings_play_on_launch">Reproduzir ao iniciar</string>
 </resources>
