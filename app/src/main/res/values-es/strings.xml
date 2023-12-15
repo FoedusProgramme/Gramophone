@@ -121,4 +121,13 @@
     <string name="settings_lyrics_center">Centrado</string>
     <string name="settings_appearance_summary">Configurar la apariencia de la aplicación</string>
     <string name="settings_title_center_summary">Centrar el título completo del reproductor</string>
+    <string name="settings_experimental_settings">Ajustes experimentales</string>
+    <string name="settings_hardware_acceleration_summary">Activar la aceleración por hardware de la velocidad de reproducción (requiere reiniciar el servicio)</string>
+    <string name="settings_behavior_summary">Configurar el comportamiento de la aplicación</string>
+    <string name="settings_experimental">Experimental</string>
+    <string name="settings_lyrics_configuration_summary">Configurar la apariencia de las letras</string>
+    <string name="settings_experimental_settings_summary">Configurar las funciones de prueba</string>
+    <string name="settings_album_round_corner_summary">Habilitar las esquinas redondeadas en el reproductor completo</string>
+    <string name="settings_customization">Personalización</string>
+    <string name="settings_float_output_summary">Habilitar la salida flotante de 32 bits (requiere reiniciar el servicio)</string>
 </resources>
