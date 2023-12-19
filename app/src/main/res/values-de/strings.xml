@@ -66,7 +66,7 @@
         <item quantity="other">%d Alben</item>
     </plurals>
     <string name="dialog_year">Jahr</string>
-    <string name="dialog_artist">Künstler/in</string>
+    <string name="dialog_artist">Künstler*in</string>
     <string name="dialog_album">Album</string>
     <string name="home_menu_equalizer">Klangregelung</string>
     <string name="dialog_path">Pfad</string>
@@ -82,4 +82,10 @@
     <string name="recently_added">Kürzlich hinzugefügt</string>
     <string name="dialog_genre">Genre</string>
     <string name="layout">Anzeige</string>
+    <string name="settings_about_gramophone">Über diese App</string>
+    <string name="settings_title_bold">Fettgedruckter Titel</string>
+    <string name="settings_audio">Audio</string>
+    <string name="settings_lyrics_bold">Fettgedruckte Liedtexte</string>
+    <string name="settings_apperance_application">App</string>
+    <string name="settings_player_options">Audioeinstellungen</string>
 </resources>
