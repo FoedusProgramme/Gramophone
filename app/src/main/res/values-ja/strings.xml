@@ -141,4 +141,7 @@
     <string name="settings_lyrics_bold_summary">歌詞を太字で表示します</string>
     <string name="settings_play_on_launch_summary">アプリの起動時に音楽を再生します (プレイリストがある場合)</string>
     <string name="settings_play_on_launch">アプリの起動時に再生</string>
+    <string name="settings_blacklist">ブラックリスト</string>
+    <string name="settings_blacklist_folder">フォルダのブラックリスト</string>
+    <string name="settings_blacklist_folder_summary">特定のフォルダ内の曲を除外します (再スキャンが必要になります)</string>
 </resources>
