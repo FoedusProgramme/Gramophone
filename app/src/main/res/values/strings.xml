@@ -150,4 +150,7 @@
     <string name="settings_lyrics_center_summary">Make lyrics display by the center</string>
     <string name="settings_play_on_launch">Play on launch</string>
     <string name="settings_play_on_launch_summary">Play music on launch (If there\'s any in the playlist)</string>
+    <string name="settings_blacklist">Blacklist</string>
+    <string name="settings_blacklist_folder_summary">Filter songs from certain folders. (Require rescan)</string>
+    <string name="settings_blacklist_folder">Blacklist folders</string>
 </resources>
