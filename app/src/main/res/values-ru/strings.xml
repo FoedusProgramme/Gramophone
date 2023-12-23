@@ -148,4 +148,18 @@
     <string name="settings_color_accuracy">Точность цветопередачи</string>
     <string name="settings_color_accuracy_summary">Делает генерацию цвета на основе контента более точной</string>
     <string name="settings_experimental_settings_summary">Настройка функций тестирования</string>
+    <string name="settings_blacklist">Чёрный список</string>
+    <string name="sort_by_add_date">Добавить дату</string>
+    <string name="settings_lyrics_configuration">Конфигурация текста</string>
+    <string name="sort_by_modified_date">Дата изменения</string>
+    <string name="settings_play_on_launch_summary">Воспроизведение музыки при запуске (если она есть в плейлисте)</string>
+    <string name="settings_lyrics_bold">Жирный текст песни</string>
+    <string name="settings_lyrics_center_summary">Отображать текст песни по центру</string>
+    <string name="settings_play_on_launch">Играть при запуске</string>
+    <string name="settings_lyric">Текст песни</string>
+    <string name="settings_lyrics_center">Выравнивание по центру</string>
+    <string name="settings_lyrics_configuration_summary">Настроить внешний вид текста песни</string>
+    <string name="settings_lyrics_bold_summary">Отображать текст песни жирным шрифтом</string>
+    <string name="settings_blacklist_folder">Чёрный список папок</string>
+    <string name="settings_blacklist_folder_summary">Фильтровать песни из определённых папок. (Потребуется повторное сканирование)</string>
 </resources>
