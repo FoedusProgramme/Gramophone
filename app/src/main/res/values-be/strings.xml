@@ -92,7 +92,7 @@
         <item quantity="many">%d трэкаў</item>
         <item quantity="other">%d трэкаў</item>
     </plurals>
-    <string name="settings_default_progress_bar_summary">Ўключыць індыкатар выканання ў старым стылі</string>
+    <string name="settings_default_progress_bar_summary">Уключыць панэль прагрэсу ў стылі паўзунка</string>
     <string name="recently_added">Нядаўна дададзеныя</string>
     <string name="dialog_genre">Жанр</string>
     <string name="music_format_not_supported">Аўдыё фармат не падтрымліваецца!</string>
@@ -124,4 +124,19 @@
     <string name="settings_appearance_summary">Наладзіць знешні выгляд праграмы</string>
     <string name="settings_experimental_settings_summary">Наладзіць функцыі тэсціравання</string>
     <string name="settings_customization">Персаналізацыя</string>
+    <string name="settings_blacklist">Чорны спіс</string>
+    <string name="sort_by_add_date">Дадаць дату</string>
+    <string name="settings_experimental_settings">Эксперыментальныя налады</string>
+    <string name="settings_hardware_acceleration_summary">Уключыць апаратнае паскарэнне хуткасці прайгравання (патрабуецца перазапуск службы)</string>
+    <string name="settings_lyrics_bold">Тоўсты тэкст песні</string>
+    <string name="settings_experimental">Эксперыментальныя</string>
+    <string name="settings_lyric">Тэкст песні</string>
+    <string name="settings_category_links">Спасылкі</string>
+    <string name="settings_lyrics_center">Выраўноўванне па цэнтры</string>
+    <string name="settings_lyrics_configuration_summary">Наладзіць знешні выгляд тэксту песні</string>
+    <string name="settings_float_output">Плаваючы аўдыявыхад</string>
+    <string name="settings_album_round_corner_summary">Уключыць закругленне кутоў у поўнаэкранным прайгравальніку</string>
+    <string name="settings_library">Бібліятэка</string>
+    <string name="settings_blacklist_folder">Чорны спіс тэчак</string>
+    <string name="settings_float_output_summary">Уключыць 32-бітны вывад з плаваючай кропкай (патрабуецца перазапуск службы)</string>
 </resources>
