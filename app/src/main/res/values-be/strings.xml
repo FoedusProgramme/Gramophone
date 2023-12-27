@@ -30,7 +30,7 @@
     <string name="category_genres">Жанр</string>
     <string name="natural_order">Па ўзрастанні</string>
     <string name="light">Светлы</string>
-    <string name="settings_app_name">Назва дадатку</string>
+    <string name="settings_app_name">Назва праграмы</string>
     <string name="settings_content_based_color">Колеры на аснове кантэнту</string>
     <string name="settings_category_info">Інфармацыя</string>
     <string name="dialog_information">Інфармацыя</string>
@@ -58,13 +58,13 @@
     <string name="opensource_info">З адкрытым зыходным кодам пад ліцэнзіяй GPL-3.0
 \nАўтарскае права © 2023 Akane Foundation</string>
     <string name="playlist_favourite">Абраны</string>
-    <string name="home_menu_settings">Наладжваньне</string>
+    <string name="home_menu_settings">Налады</string>
     <string name="home_menu_refresh">Пересканировать</string>
     <string name="settings_contributors">Удзельнікі распрацоўкі</string>
     <string name="settings_category_appearance">Знешні выгляд</string>
     <string name="dialog_album">Альбом</string>
     <string name="settings_default_progress_bar">Панэль выканання па змаўчанні</string>
-    <string name="home_menu_about">Аб дадатку</string>
+    <string name="home_menu_about">Аб праграме</string>
     <string name="details">Падрабязнасць</string>
     <string name="home_menu_equalizer">Эквалайзер</string>
     <string name="dialog_path">Шлях</string>
@@ -98,7 +98,7 @@
     <string name="music_format_not_supported">Аўдыё фармат не падтрымліваецца!</string>
     <string name="settings_content_based_color_summary">Ўключыць стварэнне каляровай схемы на аснове вокладкі альбома для ніжняга ліста</string>
     <string name="unknown_genre">Невядомы жанр</string>
-    <string name="category_artists">Выканаўца</string>
+    <string name="category_artists">Выканаўцы</string>
     <string name="settings_package_type">Тып пакета</string>
     <string name="go_to_artist">Перайсці да выканаўцы</string>
     <string name="unknown_year">Невядомы год</string>
@@ -139,4 +139,14 @@
     <string name="settings_library">Бібліятэка</string>
     <string name="settings_blacklist_folder">Чорны спіс тэчак</string>
     <string name="settings_float_output_summary">Уключыць 32-бітны вывад з плаваючай кропкай (патрабуецца перазапуск службы)</string>
+    <string name="settings_library_summary">Кіраванне медыятэкай</string>
+    <string name="sort_by_modified_date">Дата змены</string>
+    <string name="settings_player_ui">Інтэрфейс прайгравальніка</string>
+    <string name="settings_customization_summary">Кіраванне наладамі персаналізацыі</string>
+    <string name="settings_skip_silence_summary">Прапусціць цішыню падчас прайгравання трэкаў (патрабуецца перазапуск службы)</string>
+    <string name="settings_play_on_launch_summary">Прайграванне музыкі пры запуску (калі яна ёсць у плэйлісце)</string>
+    <string name="settings_player_ui_summary">Наладзьце інтэрфейс прайгравальніка</string>
+    <string name="settings_play_on_launch">Прайграваць пры запуску</string>
+    <string name="settings_skip_silence">Прапусціць цішыню</string>
+    <string name="settings_hardware_acceleration">Хуткасць прайгравання</string>
 </resources>
