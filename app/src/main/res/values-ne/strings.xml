@@ -1,2 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="sort_by_add_date">मिति थप्नुहोस्</string>
+    <string name="settings_about_gramophone">आवेदन बारे</string>
+    <string name="dialog_album_artist">एल्बम कलाकार</string>
+    <string name="settings_about_app">जानकारी</string>
+    <string name="dialog_album">एल्बम</string>
+    <string name="home_menu_about">जानकारी</string>
+    <string name="album_artist">एल्बम कलाकार</string>
+    <string name="sort_by_album">एल्बम</string>
+</resources>
