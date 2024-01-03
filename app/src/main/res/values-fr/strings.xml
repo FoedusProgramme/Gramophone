@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="dismiss">Rejeter</string>
+    <string name="dismiss">Fermer</string>
     <string name="categories">Catégories</string>
     <string name="settings_category_behavior">Comportement</string>
     <string name="operations">Opérations</string>
@@ -149,4 +149,7 @@
     <string name="settings_float_output_summary">Activer la sortie 32 bits flottant (Nécessite un redémarrage du service)</string>
     <string name="settings_play_on_launch_summary">Lancer la musique au démarrage (s\'il y en a dans la file d\'attente)</string>
     <string name="settings_play_on_launch">Lire au démarrage</string>
+    <string name="settings_blacklist">Liste d\'exclusion</string>
+    <string name="settings_blacklist_folder">Exclure des dossiers</string>
+    <string name="settings_blacklist_folder_summary">Filtre les morceaux de certains dossiers. (Nouveau scan nécessaire)</string>
 </resources>
