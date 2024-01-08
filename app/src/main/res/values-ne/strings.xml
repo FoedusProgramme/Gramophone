@@ -8,4 +8,66 @@
     <string name="home_menu_about">जानकारी</string>
     <string name="album_artist">एल्बम कलाकार</string>
     <string name="sort_by_album">एल्बम</string>
+    <string name="category_albums">एल्बमहरू</string>
+    <string name="category_artists">कलाकारहरू</string>
+    <string name="dark">अँध्यारो</string>
+    <plurals name="artists">
+        <item quantity="one">%dकलाकार</item>
+        <item quantity="other">%dकलाकारहरू</item>
+    </plurals>
+    <plurals name="items">
+        <item quantity="one">%dवस्तु</item>
+        <item quantity="other">%dवस्तुहरू</item>
+    </plurals>
+    <string name="settings_app_name">एप नाम</string>
+    <string name="sort_by_artist">कलाकार</string>
+    <string name="categories">कोटीहरू</string>
+    <string name="dismiss">खारेज गर्नुहोस्</string>
+    <string name="settings_category_appearance">देखा</string>
+    <string name="settings_contributors">योगदानकर्ताहरू</string>
+    <string name="details">विवरणहरू</string>
+    <string name="dialog_artist">कलाकार</string>
+    <string name="settings_category_behavior">व्यवहार</string>
+    <string name="settings_app_theme">एप विषयवस्तु</string>
+    <string name="settings_content_based_color">सामग्री आधारित रंगहरू</string>
+    <string name="settings_default_progress_bar">पूर्वनिर्धारित प्रगति पट्टी</string>
+    <string name="layout">प्रदर्शन</string>
+    <string name="settings_default_progress_bar_summary">स्लाइडर शैलीबद्ध प्रगति पट्टी सक्षम गर्नुहोस्</string>
+    <string name="home_menu_equalizer">इक्वेलाइजर</string>
+    <string name="equalizer_not_found">इक्वेलाइजर फेला परेन!</string>
+    <string name="settings_oled">OLED विषयवस्तु सक्षम गर्नुहोस्</string>
+    <string name="settings_oled_summary">शुद्ध कालो पृष्ठभूमि सक्षम गर्नुहोस्</string>
+    <string name="settings_apperance_application">दरखास्त</string>
+    <string name="settings_title_center">केन्द्रित शीर्षक</string>
+    <string name="disc">डिस्क</string>
+    <string name="dialog_disc_number">डिस्क नम्बर</string>
+    <string name="dialog_duration">अवधि</string>
+    <string name="settings_appearance_summary">अनुप्रयोगको उपस्थिति कन्फिगर गर्नुहोस्</string>
+    <string name="settings_behavior_summary">अनुप्रयोगको व्यवहार कन्फिगर गर्नुहोस्</string>
+    <string name="settings_album_round_corner">एल्बम गोल कुना</string>
+    <string name="settings_player_options">अडियो विकल्प</string>
+    <string name="settings_customization">अनुकूलन</string>
+    <string name="settings_album_round_corner_summary">पूर्ण प्लेयरमा राउन्ड कुना सक्षम गर्नुहोस्</string>
+    <string name="settings_audio">अडियो</string>
+    <string name="settings_title_bold">बोल्ड शीर्षक</string>
+    <string name="settings_float_output_summary">३२ बिट फ्लोट आउटपुट सक्षम गर्नुहोस् (सेवा पुन: सुरु गर्न आवश्यक छ)</string>
+    <string name="settings_color_accuracy">रंग शुद्धता</string>
+    <string name="settings_experimental_settings_summary">परीक्षण सुविधाहरू कन्फिगर गर्नुहोस्</string>
+    <string name="settings_lyrics_center">केन्द्र पङ्क्तिबद्धता</string>
+    <string name="settings_blacklist">कालोसूची</string>
+    <string name="settings_blacklist_folder">कालोसूची फोल्डरहरू</string>
+    <string name="settings_lyrics_bold">बोल्ड गीत</string>
+    <string name="settings_lyrics_configuration_summary">गीतको उपस्थिति कन्फिगर गर्नुहोस्</string>
+    <string name="check_for_updates">अपडेटहरूको लागि हाम्रो च्यानल जाँच गर्नुहोस्!</string>
+    <plurals name="albums">
+        <item quantity="one">%dएल्बम</item>
+        <item quantity="other">%dएल्बमहरू</item>
+    </plurals>
+    <plurals name="songs">
+        <item quantity="one">%dगीत</item>
+        <item quantity="other">%dगीतहरू</item>
+    </plurals>
+    <string name="settings_content_based_color_summary">तल्लो पानाको लागि एल्बम कला आधारित रङ योजना उत्पादन सक्षम गर्नुहोस्</string>
+    <string name="category_dates">मितिहरू</string>
+    <string name="settings_hardware_acceleration_summary">प्लेब्याक गति हार्डवेयर प्रवेग सक्षम गर्नुहोस् (सेवा पुन: सुरु गर्न आवश्यक छ)</string>
 </resources>
