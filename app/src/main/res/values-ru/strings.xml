@@ -51,8 +51,7 @@
     <string name="refreshed_songs">Обновлены %1$s треки</string>
     <string name="search">Поиск</string>
     <string name="settings_app_name">Название приложения</string>
-    <string name="settings_category_info">Информация</string>
-    <string name="settings_contributors">Участники разработки</string>
+	<string name="settings_contributors">Участники разработки</string>
     <string name="play_next">Играть далее</string>
     <string name="go_to_album">Перейти к альбому</string>
     <string name="go_to_artist">Перейти к исполнителю</string>
@@ -77,16 +76,11 @@
     <string name="dialog_track_number">Номер трека</string>
     <string name="dialog_year">Год</string>
     <string name="dialog_path">Путь</string>
-    <string name="dialog_information">Информация</string>
-    <string name="unknown_album">Неизвестный альбом</string>
+	<string name="unknown_album">Неизвестный альбом</string>
     <string name="recently_added">Недавно добавленные</string>
     <string name="folders">Папки</string>
     <string name="settings_app_theme">Тема приложения</string>
     <!-- Not translatable -->
-    <string name="app_name" translatable="false">Gramophone</string>
-    <string name="default_time" translatable="false">0:00</string>
-    <string name="settings_contributors_detail" translatable="false">AkaneTan, 123Duo3, nift4</string>
-    <string name="upper_folder" translatable="false">..</string>
     <string name="natural_order">По возрастанию</string>
     <string name="grid">Сетка</string>
     <string name="list">Список</string>
@@ -99,15 +93,13 @@
     <string name="home_menu_about">О приложении</string>
     <string name="check_for_updates">Следите за обновлениями в нашем канале!</string>
     <string name="settings_content_based_color_summary">Включить создание цветовой схемы на основе обложки альбома для нижнего листа</string>
-    <string name="indicator">Индикатор</string>
-    <string name="settings_oled">Включить OLED тему</string>
+	<string name="settings_oled">Включить OLED тему</string>
     <string name="opensource_info">С открытым исходным кодом под лицензией GPL-3.0
 \nАвторские права © 2023 Akane Foundation</string>
     <string name="playlist_favourite">Избранное</string>
     <string name="now_playing">Сейчас играет</string>
     <string name="settings_default_progress_bar_summary">Включить индикатор выполнения в стиле слайдера</string>
-    <string name="music_format_not_supported">Аудиоформат не поддерживается!</string>
-    <string name="settings_package_type">Тип пакета</string>
+	<string name="settings_package_type">Тип пакета</string>
     <string name="no_lyric_found">Текст песни не найден</string>
     <string name="settings_oled_summary">Включить чистый чёрный фон</string>
     <string name="dialog_disc_number">Номер диска</string>
@@ -126,8 +118,7 @@
     <string name="settings_customization_summary">Управление параметрами персонализации</string>
     <string name="settings_about_app">О приложении</string>
     <string name="settings_player_ui_summary">Настройте интерфейс плеера</string>
-    <string name="settings_apperance_application">Приложение</string>
-    <string name="settings_player_options">Настройки звука</string>
+	<string name="settings_player_options">Настройки звука</string>
     <string name="settings_category_links">Ссылки</string>
     <string name="settings_appearance_summary">Настройте внешний вид приложения</string>
     <string name="settings_album_round_corner_summary">Включить закругление углов в полновэкранном плеере</string>
@@ -144,8 +135,7 @@
     <string name="settings_float_output">Вывод аудио с плавающей запятой</string>
     <string name="settings_float_output_summary">Включить 32-битный вывод с плавающей запятой (требуется перезапуск службы)</string>
     <string name="settings_experimental_settings">Экспериментальные настройки</string>
-    <string name="settings_experimental">Экспериментальные</string>
-    <string name="settings_color_accuracy">Точность цветопередачи</string>
+	<string name="settings_color_accuracy">Точность цветопередачи</string>
     <string name="settings_color_accuracy_summary">Делает генерацию цвета на основе контента более точной</string>
     <string name="settings_experimental_settings_summary">Настройка функций тестирования</string>
     <string name="settings_blacklist">Чёрный список</string>

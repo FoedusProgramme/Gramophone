@@ -45,9 +45,7 @@
     <string name="category_genres">গানের জাতগুলি</string>
     <string name="natural_order">প্রাকৃতিক সারি</string>
     <string name="light">সাদা</string>
-    <string name="settings_category_info">বর্ণনা</string>
-    <string name="dialog_information">তথ্য</string>
-    <string name="gramophone_crashed">Gramophone crash হয়ে গেছে।</string>
+	<string name="gramophone_crashed">Gramophone crash হয়ে গেছে।</string>
     <string name="dialog_track_number">গানের নম্বর</string>
     <string name="folders">ফোল্ডারগুলো</string>
     <string name="settings_mediastore_filter_summary">গানগুলো কে ফিল্টার করুন যা ইউজার ব্যাবস্থাপনার চেয়ে ছোট (rescan জরুরি)</string>

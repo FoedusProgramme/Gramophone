@@ -51,8 +51,7 @@
     <string name="gramophone_crashed">クラッシュしました。</string>
     <string name="album_artist">アルバムのアーティスト</string>
     <string name="settings_app_name">アプリ名</string>
-    <string name="settings_category_info">情報</string>
-    <string name="settings_contributors">貢献者</string>
+	<string name="settings_contributors">貢献者</string>
     <string name="settings_version">バージョン</string>
     <string name="settings_category_appearance">外観</string>
     <string name="settings_category_behavior">動作</string>
@@ -68,8 +67,7 @@
     <string name="dialog_track_number">トラック番号</string>
     <string name="dialog_year">年</string>
     <string name="dialog_path">パス</string>
-    <string name="dialog_information">詳細情報</string>
-    <string name="recently_added">最近追加した曲</string>
+	<string name="recently_added">最近追加した曲</string>
     <string name="folders">フォルダ</string>
     <string name="layout">表示</string>
     <string name="natural_order">自然順</string>
@@ -86,12 +84,10 @@
     <string name="settings_content_based_color">コンテンツベースのカラー生成</string>
     <string name="playlist_favourite">お気に入り</string>
     <string name="settings_content_based_color_summary">ボトムシートのアルバムアートをベースとした配色の生成を有効化します</string>
-    <string name="indicator">インジケーター</string>
-    <string name="settings_package_type">パッケージのタイプ</string>
+	<string name="settings_package_type">パッケージのタイプ</string>
     <string name="settings_oled">OLED テーマを使用する</string>
     <string name="settings_oled_summary">ピュアブラックの背景を有効化します</string>
-    <string name="music_format_not_supported">フォーマットがサポートされていません！</string>
-    <string name="no_lyric_found">歌詞がありません</string>
+	<string name="no_lyric_found">歌詞がありません</string>
     <string name="dialog_disc_number">ディスク番号</string>
     <string name="disc">ディスク</string>
     <string name="unknown_title">不明なタイトル</string>
@@ -113,8 +109,7 @@
     <string name="settings_skip_silence_summary">トラックの再生時に無音部分をスキップします (サービスの再起動が必要です)</string>
     <string name="settings_about_app">情報</string>
     <string name="settings_player_ui_summary">プレーヤーの UI を調整します</string>
-    <string name="settings_apperance_application">アプリ</string>
-    <string name="settings_player_options">オーディオのオプション</string>
+	<string name="settings_player_options">オーディオのオプション</string>
     <string name="settings_skip_silence">無音部分をスキップする</string>
     <string name="settings_appearance_summary">アプリの外観を設定します</string>
     <string name="settings_title_center_summary">フルプレーヤー内のタイトルを中央揃えにします</string>
@@ -126,8 +121,7 @@
     <string name="settings_title_bold">タイトルを太字にする</string>
     <string name="settings_title_bold_summary">フルプレーヤー内のタイトルを太字にします</string>
     <string name="settings_experimental_settings">試験的な機能の設定</string>
-    <string name="settings_experimental">試験的な機能</string>
-    <string name="settings_color_accuracy">色の精度を向上させる</string>
+	<string name="settings_color_accuracy">色の精度を向上させる</string>
     <string name="settings_color_accuracy_summary">コンテンツベースのカラー生成の精度を向上させます</string>
     <string name="settings_experimental_settings_summary">試験的な機能を設定します</string>
     <string name="sort_by_add_date">日付を追加</string>

@@ -52,8 +52,7 @@
     <string name="dismiss">Loại bỏ</string>
     <string name="category_dates">Ngày</string>
     <string name="sort_by_artist">Nghệ sĩ</string>
-    <string name="indicator">Chỉ số</string>
-    <string name="settings_app_theme">Chủ đề ứng dụng</string>
+	<string name="settings_app_theme">Chủ đề ứng dụng</string>
     <string name="dialog_album_artist">Album nghệ sĩ</string>
     <plurals name="items">
         <item quantity="other">%d Mục</item>
@@ -61,9 +60,7 @@
     <string name="light">Sáng</string>
     <string name="settings_app_name">Tên ứng dụng</string>
     <string name="settings_content_based_color">Đổi màu dựa trên nội dung</string>
-    <string name="settings_category_info">Thông tin</string>
-    <string name="dialog_information">Thông tin</string>
-    <string name="settings_category_appearance">Giao diện</string>
+	<string name="settings_category_appearance">Giao diện</string>
     <string name="dialog_album">Album</string>
     <string name="settings_default_progress_bar">Thanh phát mặc định</string>
     <string name="home_menu_about">Giới thiệu</string>
@@ -82,7 +79,6 @@
     <string name="recently_added">Đã thêm gần đây</string>
     <string name="settings_content_based_color_summary">Cho phép đổi màu sắc dựa trên ảnh bìa album cho trang dưới cùng</string>
     <string name="play_next">Phát tiếp</string>
-    <string name="app_name">Gramophone</string>
     <plurals name="artists">
         <item quantity="other">%d Nghệ sĩ</item>
     </plurals>
@@ -91,8 +87,7 @@
     </plurals>
     <string name="settings_oled">Bật chủ đề OLED</string>
     <string name="settings_oled_summary">Bật nền màu đen</string>
-    <string name="music_format_not_supported">Định dạng âm thanh không được hỗ trợ!</string>
-    <string name="no_lyric_found">Không tìm thấy lời bài hát</string>
+	<string name="no_lyric_found">Không tìm thấy lời bài hát</string>
     <string name="disc">Đĩa</string>
     <string name="dialog_disc_number">Số đĩa</string>
     <string name="unknown_title">Tiêu đề không xác định</string>
@@ -109,8 +104,7 @@
     <string name="settings_customization_summary">Quản lí các tùy chọn tùy chỉnh</string>
     <string name="settings_about_app">Giới thiệu</string>
     <string name="settings_player_ui_summary">Tinh chỉnh giao diện phát</string>
-    <string name="settings_apperance_application">Ứng dụng</string>
-    <string name="settings_player_options">Tuỳ chọn âm thanh</string>
+	<string name="settings_player_options">Tuỳ chọn âm thanh</string>
     <string name="settings_category_links">Liên kết</string>
     <string name="settings_appearance_summary">Tuỳ chỉnh giao diện ứng dụng</string>
     <string name="settings_album_round_corner_summary">Bật bo tròn trong trình phát</string>
@@ -128,8 +122,7 @@
     <string name="settings_lyrics_bold">Làm đậm lời bài hát</string>
     <string name="settings_lyrics_center_summary">Làm lời bài hát hiển thị ở giữa</string>
     <string name="settings_title_bold_summary">Làm đậm tiêu để cho cả trình phát</string>
-    <string name="settings_experimental">Thử nghiệm</string>
-    <string name="settings_lyric">Lời bài hát</string>
+	<string name="settings_lyric">Lời bài hát</string>
     <string name="settings_color_accuracy">Độ chính xác màu</string>
     <string name="settings_skip_silence">Bỏ qua phần lặng</string>
     <string name="settings_lyrics_center">Căn giữa</string>

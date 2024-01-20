@@ -43,8 +43,7 @@
     <string name="refreshed_songs">Refreshed %1$s songs</string>
     <string name="search">Search</string>
     <string name="settings_app_name">App name</string>
-    <string name="settings_category_info">Info</string>
-    <string name="settings_contributors">Contributors</string>
+	<string name="settings_contributors">Contributors</string>
     <string name="play_next">Play next</string>
     <string name="go_to_album">Go to album</string>
     <string name="go_to_artist">Go to artist</string>
@@ -69,8 +68,7 @@
     <string name="dialog_track_number">Track number</string>
     <string name="dialog_year">Year</string>
     <string name="dialog_path">Path</string>
-    <string name="dialog_information">Information</string>
-    <string name="unknown_album">Unknown album</string>
+	<string name="unknown_album">Unknown album</string>
     <string name="recently_added">Recently added</string>
     <string name="folders">Folders</string>
     <string name="settings_app_theme">App theme</string>
@@ -95,13 +93,11 @@
     <string name="now_playing">Now playing</string>
     <string name="settings_content_based_color_summary">Enable album art based color scheme generation for bottom sheet</string>
     <string name="settings_content_based_color">Content based colors</string>
-    <string name="indicator">Indicator</string>
-    <string name="settings_package_type">Package type</string>
+	<string name="settings_package_type">Package type</string>
     <string name="settings_oled_summary">Enable pure black background</string>
     <string name="settings_oled">Enable OLED theme</string>
     <string name="no_lyric_found">No lyric found</string>
-    <string name="music_format_not_supported">Music format not supported!</string>
-    <string name="dialog_disc_number">Disc number</string>
+	<string name="dialog_disc_number">Disc number</string>
     <string name="disc">Disc</string>
     <string name="unknown_title">Unknown title</string>
     <string name="filesystem">Filesystem</string>
@@ -109,8 +105,7 @@
     <string name="dialog_duration">Duration</string>
     <string name="settings_title_center">Centered title</string>
     <string name="settings_title_center_summary">Make full player title centered</string>
-    <string name="settings_apperance_application">Application</string>
-    <string name="settings_player_ui">Player UI</string>
+	<string name="settings_player_ui">Player UI</string>
     <string name="settings_player_ui_summary">Tweak player UI</string>
     <string name="settings_appearance_summary">Configure application\'s appearance</string>
     <string name="settings_about_app">About</string>
@@ -134,8 +129,7 @@
     <string name="settings_hardware_acceleration_summary">Enable playback speed hardware acceleration (Require service restart)</string>
     <string name="settings_title_bold">Bold title</string>
     <string name="settings_title_bold_summary">Make full player title bold</string>
-    <string name="settings_experimental">Experimental</string>
-    <string name="settings_experimental_settings">Experimental Settings</string>
+	<string name="settings_experimental_settings">Experimental Settings</string>
     <string name="settings_experimental_settings_summary">Configure testing features</string>
     <string name="settings_color_accuracy_summary">Make content based color generation more accurate</string>
     <string name="settings_color_accuracy">Color accuracy</string>

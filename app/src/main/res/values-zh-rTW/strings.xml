@@ -26,8 +26,7 @@
     <string name="refreshed_songs">刷新了 %1$s 首歌曲。</string>
     <string name="search">搜索</string>
     <string name="settings_app_name">應用名稱</string>
-    <string name="settings_category_info">信息</string>
-    <string name="settings_contributors">貢獻者</string>
+	<string name="settings_contributors">貢獻者</string>
     <string name="play_next">添加至下一曲</string>
     <string name="go_to_album">專輯..</string>
     <string name="go_to_artist">藝術家..</string>
@@ -52,8 +51,7 @@
     <string name="dialog_track_number">音軌號</string>
     <string name="dialog_year">年份</string>
     <string name="dialog_path">路徑</string>
-    <string name="dialog_information">歌曲信息</string>
-    <string name="unknown_album">未知專輯</string>
+	<string name="unknown_album">未知專輯</string>
     <string name="recently_added">最近添加</string>
     <string name="folders">文件夾</string>
     <string name="settings_app_theme">應用主題</string>
@@ -84,14 +82,12 @@
     <string name="settings_default_progress_bar_summary">啟用老樣式的進度條</string>
     <string name="playlist_favourite">收藏</string>
     <string name="now_playing">正在播放</string>
-    <string name="indicator">指示器</string>
-    <string name="settings_content_based_color">啟用基於內容生成的顏色</string>
+	<string name="settings_content_based_color">啟用基於內容生成的顏色</string>
     <string name="settings_content_based_color_summary">為底欄啟用基於專輯封面生成的顏色方案</string>
     <string name="settings_package_type">軟件包類型</string>
     <string name="settings_oled">啟用 OLED 主題</string>
     <string name="settings_oled_summary">啟用純黑背景</string>
-    <string name="music_format_not_supported">不支持的音樂格式！</string>
-    <string name="no_lyric_found">未找到歌詞</string>
+	<string name="no_lyric_found">未找到歌詞</string>
     <string name="dialog_disc_number">音碟號</string>
     <string name="disc">音碟</string>
     <string name="unknown_title">未知歌曲</string>
@@ -100,8 +96,7 @@
     <string name="dialog_mime">文件類型</string>
     <string name="settings_title_center">標題居中</string>
     <string name="settings_title_center_summary">使完整播放器的標題居中</string>
-    <string name="settings_apperance_application">應用</string>
-    <string name="settings_player_ui">播放器界面</string>
+	<string name="settings_player_ui">播放器界面</string>
     <string name="settings_player_ui_summary">調整播放器界面</string>
     <string name="settings_appearance_summary">設置程序外觀</string>
     <string name="settings_about_app">關於</string>

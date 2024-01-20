@@ -26,9 +26,7 @@
     <string name="natural_order">Naturlig rekkefølge</string>
     <string name="light">Lys</string>
     <string name="settings_app_name">Programnavn</string>
-    <string name="settings_category_info">Info</string>
-    <string name="dialog_information">Informasjon</string>
-    <string name="gramophone_crashed">Gramophone krasjet.</string>
+	<string name="gramophone_crashed">Gramophone krasjet.</string>
     <string name="dialog_track_number">Spornummer</string>
     <string name="folders">Mapper</string>
     <plurals name="artists">

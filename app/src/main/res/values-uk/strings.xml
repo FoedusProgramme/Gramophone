@@ -14,8 +14,7 @@
     <string name="settings_mediastore_filter">Фільтр фонотеки</string>
     <string name="category_songs">Треки</string>
     <string name="disc">Диск</string>
-    <string name="indicator">Індикатор</string>
-    <string name="settings_app_theme">Тема додатку</string>
+	<string name="settings_app_theme">Тема додатку</string>
     <string name="compact_list">Список (компактний)</string>
     <string name="dialog_album_artist">Виконавець альбому</string>
     <string name="equalizer_not_found">Еквалайзер не знайдено!</string>
@@ -32,9 +31,7 @@
     <string name="light">Світла</string>
     <string name="settings_app_name">Назва додатку</string>
     <string name="settings_content_based_color">Кольори на основі контенту</string>
-    <string name="settings_category_info">Інформація</string>
-    <string name="dialog_information">Інформація</string>
-    <string name="gramophone_crashed">Gramophone вилетів.</string>
+	<string name="gramophone_crashed">Gramophone вилетів.</string>
     <string name="unknown_title">Невідома назва</string>
     <string name="dialog_track_number">Номер треку</string>
     <string name="folders">Папки</string>
@@ -95,8 +92,7 @@
     <string name="settings_default_progress_bar_summary">Увімкнути індикатор виконання у стилі слайдера</string>
     <string name="recently_added">Нещодавно додані</string>
     <string name="dialog_genre">Жанр</string>
-    <string name="music_format_not_supported">Аудіоформат не підтримується!</string>
-    <string name="settings_content_based_color_summary">Включити створення колірної схеми на основі обкладинки альбому для нижнього аркуша</string>
+	<string name="settings_content_based_color_summary">Включити створення колірної схеми на основі обкладинки альбому для нижнього аркуша</string>
     <string name="unknown_genre">Невідомий жанр</string>
     <string name="category_artists">Виконавці</string>
     <string name="settings_package_type">Тип пакету</string>
@@ -120,8 +116,7 @@
     <string name="settings_customization_summary">Управління параметрами персоналізації</string>
     <string name="settings_about_app">Про додаток</string>
     <string name="settings_player_ui_summary">Налаштуйте інтерфейс плеєра</string>
-    <string name="settings_apperance_application">Додаток</string>
-    <string name="settings_player_options">Налаштування звуку</string>
+	<string name="settings_player_options">Налаштування звуку</string>
     <string name="settings_category_links">Посилання</string>
     <string name="settings_appearance_summary">Налаштуйте зовнішній вигляд програми</string>
     <string name="settings_album_round_corner_summary">Включити закруглення кутів у повноекранному плеєрі</string>
