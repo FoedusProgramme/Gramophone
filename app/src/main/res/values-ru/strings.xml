@@ -95,7 +95,7 @@
     <string name="settings_content_based_color_summary">Включить создание цветовой схемы на основе обложки альбома для нижнего листа</string>
 	<string name="settings_oled">Включить OLED тему</string>
     <string name="opensource_info">С открытым исходным кодом под лицензией GPL-3.0
-\nАвторские права © 2024  Akane Foundation</string>
+\nАвторские права © 2024 Akane Foundation</string>
     <string name="playlist_favourite">Избранное</string>
     <string name="now_playing">Сейчас играет</string>
     <string name="settings_default_progress_bar_summary">Включить индикатор выполнения в стиле слайдера</string>
