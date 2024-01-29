@@ -13,7 +13,7 @@
     <string name="sort_by_artist">Sanatçı</string>
     <string name="settings_mediastore_filter">MediaStore filtresi</string>
     <string name="category_songs">Şarkılar</string>
-	<string name="settings_app_theme">Uygulama teması</string>
+    <string name="settings_app_theme">Uygulama teması</string>
     <string name="compact_list">Liste (kompakt)</string>
     <string name="dialog_album_artist">Albüm sanatçısı</string>
     <string name="equalizer_not_found">Ekolayzer bulunamadı!</string>
@@ -28,7 +28,7 @@
     <string name="light">Açık</string>
     <string name="settings_app_name">Uygulama adı</string>
     <string name="settings_content_based_color">İçerik tabanlı renkleri etkinleştir</string>
-	<string name="gramophone_crashed">Gramophone çöktü.</string>
+    <string name="gramophone_crashed">Gramophone çöktü.</string>
     <string name="dialog_track_number">Parça numarası</string>
     <string name="folders">Klasörler</string>
     <plurals name="artists">
@@ -79,7 +79,7 @@
     <string name="settings_default_progress_bar_summary">Eski tarz ilerleme çubuğunu etkinleştir</string>
     <string name="recently_added">Yakın zamanda eklendi</string>
     <string name="dialog_genre">Tür</string>
-	<string name="settings_content_based_color_summary">Alt kısım için albüm resmi tabanlı renk şeması oluşturmayı etkinleştirin</string>
+    <string name="settings_content_based_color_summary">Alt kısım için albüm resmi tabanlı renk şeması oluşturmayı etkinleştirin</string>
     <string name="unknown_genre">Bilinmeyen tür</string>
     <string name="category_artists">Sanatçılar</string>
     <string name="settings_package_type">Paket tipi</string>
@@ -93,4 +93,12 @@
     <string name="unknown_version">Bilinmeyen sürüm</string>
     <string name="unknown_artist">Bilinmeyen sanatçı</string>
     <string name="repeat_mode">Tekrar modu</string>
+    <string name="settings_player_options">Ses seçenekleri</string>
+    <string name="settings_about_gramophone">Uygulama hakkında</string>
+    <string name="sort_by_add_date">Tarih ekle</string>
+    <string name="settings_about_app">Hakkında</string>
+    <string name="settings_audio">Ses</string>
+    <string name="settings_library">Kütüphane</string>
+    <string name="settings_blacklist">Kara liste</string>
+    <string name="settings_blacklist_folder">Kara liste klasörleri</string>
 </resources>
