@@ -101,4 +101,13 @@
     <string name="settings_library">Kütüphane</string>
     <string name="settings_blacklist">Kara liste</string>
     <string name="settings_blacklist_folder">Kara liste klasörleri</string>
+    <string name="settings_category_links">Bağlantılar</string>
+    <string name="settings_lyric">Şarkı sözü</string>
+    <string name="settings_lyrics_bold">Kalın şarkı sözleri</string>
+    <string name="disc">Disk</string>
+    <string name="settings_customization">Özelleştirme</string>
+    <string name="settings_title_bold">Kalın başlık</string>
+    <string name="dialog_duration">Süre</string>
+    <string name="unknown_title">Bilinmeyen başlık</string>
+    <string name="filesystem">Dosya sistemi</string>
 </resources>
