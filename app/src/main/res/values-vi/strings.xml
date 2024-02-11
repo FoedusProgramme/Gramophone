@@ -15,7 +15,6 @@
     <string name="home_menu_shuffle">Trộn bài</string>
     <string name="category_genres">Thể loại</string>
     <string name="natural_order">Trật tự tự nhiên</string>
-    <string name="gramophone_crashed">Gramophone bị lỗi.</string>
     <string name="dialog_track_number">Số bài hát</string>
     <string name="folders">Thư mục</string>
     <string name="settings_mediastore_filter_summary">Các bài hát được lọc ngắn hơn số giây do người dùng điều chỉnh. (Yêu cầu quét lại)</string>

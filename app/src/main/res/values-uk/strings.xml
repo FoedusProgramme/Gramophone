@@ -31,7 +31,6 @@
     <string name="light">Світла</string>
     <string name="settings_app_name">Назва додатку</string>
     <string name="settings_content_based_color">Кольори на основі контенту</string>
-	<string name="gramophone_crashed">Gramophone вилетів.</string>
     <string name="unknown_title">Невідома назва</string>
     <string name="dialog_track_number">Номер треку</string>
     <string name="folders">Папки</string>

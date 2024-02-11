@@ -46,7 +46,6 @@
     <string name="settings_app_name">Nome do aplicativo</string>
     <string name="settings_content_based_color">Cores dinâmicas</string>
 	<string name="settings_title_bold_summary">Coloque o título completo do player em negrito</string>
-	<string name="gramophone_crashed">Gramophone quebrou</string>
     <string name="unknown_title">Título desconhecido</string>
     <string name="dialog_track_number">Número da faixa</string>
     <string name="folders">Pastas</string>

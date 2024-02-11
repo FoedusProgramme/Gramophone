@@ -54,7 +54,6 @@
     <string name="settings_lyrics_center_summary">Wyśrodkuj słowa utworu</string>
     <string name="settings_content_based_color">Kolorystyka oparta na treści</string>
 	<string name="settings_title_bold_summary">Pogrub tytuł utworu w odtwarzaczu</string>
-	<string name="gramophone_crashed">Gramophone przestał działać</string>
     <string name="unknown_title">Nieznany tytuł</string>
     <string name="dialog_track_number">Nr ścieżki</string>
     <string name="folders">Foldery</string>

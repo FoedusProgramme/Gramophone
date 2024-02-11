@@ -56,7 +56,6 @@
     <string name="settings_lyrics_center_summary">جعل عرض الكلمات في المنتصف</string>
     <string name="settings_content_based_color">الألوان المُستَنِدة للمحتوى</string>
 	<string name="settings_title_bold_summary">جعل خطِّ الاسم في المُشَغِّل الكامل غامقاً</string>
-	<string name="gramophone_crashed">لقد توقَّف غراموفون عن العمل.</string>
     <string name="unknown_title">اسمٌ غير معروف</string>
     <string name="dialog_track_number">رقم الأغنية</string>
     <string name="folders">المُجَلَّدات</string>

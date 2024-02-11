@@ -28,7 +28,6 @@
     <string name="light">Açık</string>
     <string name="settings_app_name">Uygulama adı</string>
     <string name="settings_content_based_color">İçerik tabanlı renkleri etkinleştir</string>
-    <string name="gramophone_crashed">Gramophone çöktü.</string>
     <string name="dialog_track_number">Parça numarası</string>
     <string name="folders">Klasörler</string>
     <plurals name="artists">

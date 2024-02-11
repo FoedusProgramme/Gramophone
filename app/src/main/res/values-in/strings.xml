@@ -50,7 +50,6 @@
     <string name="shuffle">Acak</string>
     <string name="album_artist">Artis album</string>
     <string name="settings_category_appearance">Tampilan</string>
-    <string name="gramophone_crashed">Gramophone crashed.</string>
     <string name="dialog_title">Judul</string>
     <string name="dialog_artist">Artis</string>
     <string name="settings_category_behavior">Behavior</string>
