@@ -37,7 +37,7 @@
     <string name="equalizer_not_found">इक्वेलाइजर फेला परेन!</string>
     <string name="settings_oled">OLED विषयवस्तु सक्षम गर्नुहोस्</string>
     <string name="settings_oled_summary">शुद्ध कालो पृष्ठभूमि सक्षम गर्नुहोस्</string>
-	<string name="settings_title_center">केन्द्रित शीर्षक</string>
+    <string name="settings_title_center">केन्द्रित शीर्षक</string>
     <string name="disc">डिस्क</string>
     <string name="dialog_disc_number">डिस्क नम्बर</string>
     <string name="dialog_duration">अवधि</string>
