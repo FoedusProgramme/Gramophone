@@ -100,7 +100,7 @@
     <string name="settings_player_ui">Interface du lecteur</string>
     <string name="disc">Disque</string>
     <string name="settings_behavior_summary">Configurer le comportement de l\'application</string>
-	<string name="settings_about_gramophone">À propos de l\'application</string>
+    <string name="settings_about_gramophone">À propos de l\'application</string>
     <string name="settings_customization_summary">Gérer les paramètres de personnalisation</string>
     <string name="settings_title_bold">Titre en gras</string>
     <string name="settings_audio">Audio</string>
@@ -114,7 +114,7 @@
     <string name="settings_content_based_color">Couleurs basées sur le contenu</string>
     <string name="settings_title_bold_summary">Mettre le titre en gras dans le lecteur complet</string>
     <string name="unknown_title">Titre inconnu</string>
-	<string name="dialog_mime">Type Mime</string>
+    <string name="dialog_mime">Type Mime</string>
     <string name="settings_player_options">Paramètres audio</string>
     <string name="settings_lyric">Paroles</string>
     <string name="settings_category_links">Liens</string>
@@ -127,7 +127,7 @@
     <string name="dialog_duration">Durée</string>
     <string name="dialog_disc_number">Numéro de disque</string>
     <string name="settings_lyrics_configuration_summary">Configurer l\'apparence des paroles</string>
-	<string name="settings_content_based_color_summary">Activer la couleur basée sur la pochette d\'album pour la barre inférieure</string>
+    <string name="settings_content_based_color_summary">Activer la couleur basée sur la pochette d\'album pour la barre inférieure</string>
     <string name="settings_experimental_settings_summary">Configurer les fonctionnalités en test</string>
     <string name="settings_package_type">Type de paquet</string>
     <string name="settings_title_center_summary">Mettre le titre au centre dans le lecteur complet</string>
