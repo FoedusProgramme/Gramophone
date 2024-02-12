@@ -14,7 +14,7 @@
     <string name="settings_mediastore_filter">Фільтр фанатэкі</string>
     <string name="category_songs">Трэк</string>
     <string name="disc">Дыск</string>
-	<string name="settings_app_theme">Тэма дадатку</string>
+    <string name="settings_app_theme">Тэма дадатку</string>
     <string name="compact_list">Спіс (кампактны)</string>
     <string name="dialog_album_artist">Выканаўца альбома</string>
     <string name="equalizer_not_found">Эквалайзер не знойдзены!</string>
@@ -91,7 +91,7 @@
     <string name="settings_default_progress_bar_summary">Уключыць панэль прагрэсу ў стылі паўзунка</string>
     <string name="recently_added">Нядаўна дададзеныя</string>
     <string name="dialog_genre">Жанр</string>
-	<string name="settings_content_based_color_summary">Ўключыць стварэнне каляровай схемы на аснове вокладкі альбома для ніжняга ліста</string>
+    <string name="settings_content_based_color_summary">Ўключыць стварэнне каляровай схемы на аснове вокладкі альбома для ніжняга ліста</string>
     <string name="unknown_genre">Невядомы жанр</string>
     <string name="category_artists">Выканаўцы</string>
     <string name="settings_package_type">Тып пакета</string>
@@ -113,7 +113,7 @@
     <string name="settings_title_bold">Тоўсты загаловак</string>
     <string name="settings_audio">Аўдыё</string>
     <string name="settings_about_app">Аб праграме</string>
-	<string name="settings_player_options">Налады гуку</string>
+    <string name="settings_player_options">Налады гуку</string>
     <string name="settings_color_accuracy">Дакладнасць колераперадачы</string>
     <string name="settings_appearance_summary">Наладзіць знешні выгляд праграмы</string>
     <string name="settings_experimental_settings_summary">Наладзіць функцыі тэсціравання</string>
@@ -123,7 +123,7 @@
     <string name="settings_experimental_settings">Эксперыментальныя налады</string>
     <string name="settings_hardware_acceleration_summary">Уключыць апаратнае паскарэнне хуткасці прайгравання (патрабуецца перазапуск службы)</string>
     <string name="settings_lyrics_bold">Тоўсты тэкст песні</string>
-	<string name="settings_lyric">Тэкст песні</string>
+    <string name="settings_lyric">Тэкст песні</string>
     <string name="settings_category_links">Спасылкі</string>
     <string name="settings_lyrics_center">Выраўноўванне па цэнтры</string>
     <string name="settings_lyrics_configuration_summary">Наладзіць знешні выгляд тэксту песні</string>
