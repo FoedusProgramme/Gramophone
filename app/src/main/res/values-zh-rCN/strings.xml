@@ -26,7 +26,7 @@
     <string name="refreshed_songs">刷新了 %1$s 首歌曲。</string>
     <string name="search">搜索</string>
     <string name="settings_app_name">应用名称</string>
-	<string name="settings_contributors">贡献者</string>
+    <string name="settings_contributors">贡献者</string>
     <string name="play_next">添加至下一曲</string>
     <string name="go_to_album">专辑..</string>
     <string name="go_to_artist">艺术家..</string>
@@ -50,7 +50,7 @@
     <string name="dialog_track_number">音轨号</string>
     <string name="dialog_year">年份</string>
     <string name="dialog_path">路径</string>
-	<string name="unknown_album">未知专辑</string>
+    <string name="unknown_album">未知专辑</string>
     <string name="recently_added">最近添加</string>
     <string name="folders">文件夹</string>
     <string name="settings_app_theme">应用主题</string>
@@ -81,12 +81,12 @@
     <string name="settings_default_progress_bar_summary">启用老样式的进度条</string>
     <string name="playlist_favourite">收藏</string>
     <string name="now_playing">正在播放</string>
-	<string name="settings_content_based_color">启用基于内容生成的颜色</string>
+    <string name="settings_content_based_color">启用基于内容生成的颜色</string>
     <string name="settings_content_based_color_summary">为底栏启用基于专辑封面生成的颜色方案</string>
     <string name="settings_package_type">软件包类型</string>
     <string name="settings_oled">启用 OLED 主题</string>
     <string name="settings_oled_summary">启用纯黑背景</string>
-	<string name="no_lyric_found">未找到歌词</string>
+    <string name="no_lyric_found">未找到歌词</string>
     <string name="dialog_disc_number">音碟号</string>
     <string name="disc">音碟</string>
     <string name="unknown_title">未知歌曲</string>
@@ -95,7 +95,7 @@
     <string name="dialog_mime">文件类型</string>
     <string name="settings_title_center">标题居中</string>
     <string name="settings_title_center_summary">使完整播放器的标题居中</string>
-	<string name="settings_player_ui">播放器界面</string>
+    <string name="settings_player_ui">播放器界面</string>
     <string name="settings_player_ui_summary">调整播放器界面</string>
     <string name="settings_appearance_summary">设置程序外观</string>
     <string name="settings_about_app">关于</string>
@@ -120,7 +120,7 @@
     <string name="settings_title_bold">粗体标题</string>
     <string name="settings_title_bold_summary">让完整播放器的标题使用粗体</string>
     <string name="settings_experimental_settings">实验性设置</string>
-	<string name="settings_color_accuracy">精确颜色</string>
+    <string name="settings_color_accuracy">精确颜色</string>
     <string name="settings_color_accuracy_summary">让基于内容的颜色生成更加准确</string>
     <string name="settings_experimental_settings_summary">设置实验性功能</string>
     <string name="sort_by_add_date">添加日期</string>
