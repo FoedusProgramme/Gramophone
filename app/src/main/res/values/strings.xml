@@ -119,7 +119,7 @@
     <string name="settings_category_links">Links</string>
     <string name="settings_library">Library</string>
     <string name="settings_library_summary">Manage media library</string>
-    <string name="settings_player_options">Audio options</string>
+    <string name="settings_player_options">Audio</string>
     <string name="settings_player_options_summary">Manage audio output options</string>
     <string name="settings_customization">Customization</string>
     <string name="settings_customization_summary">Manage customization options</string>
@@ -134,7 +134,7 @@
     <string name="settings_hardware_acceleration_summary">Enable playback speed hardware acceleration (Require service restart)</string>
     <string name="settings_title_bold">Bold title</string>
     <string name="settings_title_bold_summary">Make full player title bold</string>
-	<string name="settings_experimental_settings">Experimental Settings</string>
+	<string name="settings_experimental_settings">Experimental</string>
     <string name="settings_experimental_settings_summary">Configure testing features</string>
     <string name="settings_color_accuracy_summary">Make content based color generation more accurate</string>
     <string name="settings_color_accuracy">Color accuracy</string>
