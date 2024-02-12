@@ -10,7 +10,7 @@
     <string name="unknown_version">Versão desconhecida</string>
     <string name="settings_version">Versão</string>
     <string name="settings_mediastore_filter_summary">As músicas filtradas são menores que os segundos configurados pelo utilizador (requer nova busca)</string>
-	<string name="unknown_album">Álbum desconhecido</string>
+    <string name="unknown_album">Álbum desconhecido</string>
     <string name="recently_added">Adicionadas recentemente</string>
     <string name="home_menu_equalizer">Equalizador</string>
     <string name="equalizer_not_found">Equalizador não encontrado!</string>
@@ -21,10 +21,10 @@
     <string name="now_playing">A reproduzir</string>
     <string name="settings_content_based_color_summary">Ativar esquema de cores baseado na arte do álbum</string>
     <string name="settings_content_based_color">Cores dinâmicas</string>
-	<string name="settings_package_type">Tipo de pacote</string>
+    <string name="settings_package_type">Tipo de pacote</string>
     <string name="settings_oled_summary">Ativar fundo preto</string>
     <string name="no_lyric_found">Nenhuma letra encontrada</string>
-	<string name="dialog_disc_number">Número do disco</string>
+    <string name="dialog_disc_number">Número do disco</string>
     <string name="disc">Disco</string>
     <string name="unknown_title">Título desconhecido</string>
     <string name="filesystem">Ficheiros</string>
@@ -79,7 +79,7 @@
     <string name="refreshed_songs">Músicas %1$s atualizadas</string>
     <string name="search">Pesquisar</string>
     <string name="settings_app_name">Nome da app</string>
-	<string name="settings_contributors">Colaboradores</string>
+    <string name="settings_contributors">Colaboradores</string>
     <string name="play_next">Reproduzir a seguir</string>
     <string name="go_to_album">Ir ao álbum</string>
     <string name="go_to_artist">Ir para o artista</string>
@@ -112,7 +112,7 @@
     <string name="dialog_duration">Duração</string>
     <string name="settings_title_center">Título centralizado</string>
     <string name="settings_title_center_summary">Centralize o título completo do player</string>
-	<string name="settings_player_ui">Interface do player</string>
+    <string name="settings_player_ui">Interface do player</string>
     <string name="settings_player_ui_summary">Ajustar interface do player</string>
     <string name="settings_appearance_summary">Configurar a aparência da aplicação</string>
     <string name="settings_about_app">Sobre</string>
@@ -134,7 +134,7 @@
     <string name="settings_hardware_acceleration_summary">Ativar aceleração de hardware de velocidade de reprodução (requer reinicialização do serviço)</string>
     <string name="settings_title_bold">Título em negrito</string>
     <string name="settings_title_bold_summary">Ponha o título completo do player em negrito</string>
-	<string name="settings_experimental_settings">Configurações experimentais</string>
+    <string name="settings_experimental_settings">Configurações experimentais</string>
     <string name="settings_experimental_settings_summary">Configurar recursos de teste</string>
     <string name="settings_color_accuracy_summary">Torne o esquema de cores baseado na arte do álbum mais preciso</string>
     <string name="settings_color_accuracy">Precisão de cores dinâmicas</string>
