@@ -14,7 +14,7 @@
     <string name="settings_mediastore_filter">Фільтр фонотеки</string>
     <string name="category_songs">Треки</string>
     <string name="disc">Диск</string>
-	<string name="settings_app_theme">Тема додатку</string>
+    <string name="settings_app_theme">Тема додатку</string>
     <string name="compact_list">Список (компактний)</string>
     <string name="dialog_album_artist">Виконавець альбому</string>
     <string name="equalizer_not_found">Еквалайзер не знайдено!</string>
@@ -91,7 +91,7 @@
     <string name="settings_default_progress_bar_summary">Увімкнути індикатор виконання у стилі слайдера</string>
     <string name="recently_added">Нещодавно додані</string>
     <string name="dialog_genre">Жанр</string>
-	<string name="settings_content_based_color_summary">Включити створення колірної схеми на основі обкладинки альбому для нижнього аркуша</string>
+    <string name="settings_content_based_color_summary">Включити створення колірної схеми на основі обкладинки альбому для нижнього аркуша</string>
     <string name="unknown_genre">Невідомий жанр</string>
     <string name="category_artists">Виконавці</string>
     <string name="settings_package_type">Тип пакету</string>
@@ -115,7 +115,7 @@
     <string name="settings_customization_summary">Управління параметрами персоналізації</string>
     <string name="settings_about_app">Про додаток</string>
     <string name="settings_player_ui_summary">Налаштуйте інтерфейс плеєра</string>
-	<string name="settings_player_options">Налаштування звуку</string>
+    <string name="settings_player_options">Налаштування звуку</string>
     <string name="settings_category_links">Посилання</string>
     <string name="settings_appearance_summary">Налаштуйте зовнішній вигляд програми</string>
     <string name="settings_album_round_corner_summary">Включити закруглення кутів у повноекранному плеєрі</string>
