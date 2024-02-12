@@ -25,7 +25,7 @@
     <string name="category_songs">Utwory</string>
     <string name="disc">Płyta</string>
     <string name="settings_behavior_summary">Dostosuj zachowanie aplikacji</string>
-	<string name="settings_app_theme">Motyw aplikacji</string>
+    <string name="settings_app_theme">Motyw aplikacji</string>
     <string name="settings_about_gramophone">Informacje o aplikacji</string>
     <string name="compact_list">Lista (kompaktowa)</string>
     <string name="dialog_album_artist">Wykonawca albumu</string>
@@ -53,7 +53,7 @@
     <string name="settings_app_name">Nazwa aplikacji</string>
     <string name="settings_lyrics_center_summary">Wyśrodkuj słowa utworu</string>
     <string name="settings_content_based_color">Kolorystyka oparta na treści</string>
-	<string name="settings_title_bold_summary">Pogrub tytuł utworu w odtwarzaczu</string>
+    <string name="settings_title_bold_summary">Pogrub tytuł utworu w odtwarzaczu</string>
     <string name="unknown_title">Nieznany tytuł</string>
     <string name="dialog_track_number">Nr ścieżki</string>
     <string name="folders">Foldery</string>
@@ -63,7 +63,7 @@
         <item quantity="many">%d wykonawców</item>
         <item quantity="other">%d wykonawców</item>
     </plurals>
-	<string name="settings_play_on_launch">Odtwarzanie przy uruchomieniu</string>
+    <string name="settings_play_on_launch">Odtwarzanie przy uruchomieniu</string>
     <string name="settings_mediastore_filter_summary">Pomijaj utwory krótsze niż wartość ustawiona poniżej (wymaga ponownego skanowania)</string>
     <plurals name="albums">
         <item quantity="one">%d album</item>
@@ -124,7 +124,7 @@
     <string name="settings_default_progress_bar_summary">Włącz pasek postępu w stylu suwaka</string>
     <string name="recently_added">Ostatnio dodane</string>
     <string name="dialog_genre">Gatunek</string>
-	<string name="settings_content_based_color_summary">Dobieraj kolor dolnej belki na podstawie okładki albumu</string>
+    <string name="settings_content_based_color_summary">Dobieraj kolor dolnej belki na podstawie okładki albumu</string>
     <string name="unknown_genre">Nieznany gatunek</string>
     <string name="category_artists">Wykonawcy</string>
     <string name="settings_experimental_settings_summary">Konfiguruj eksperymentalne funkcje aplikacji</string>
