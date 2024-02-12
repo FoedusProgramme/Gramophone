@@ -25,7 +25,7 @@
     <string name="category_songs">الأغاني</string>
     <string name="disc">القُرص</string>
     <string name="settings_behavior_summary">ضبط تصرُّفات التطبيق</string>
-	<string name="settings_app_theme">سِمَة البرنامج</string>
+    <string name="settings_app_theme">سِمَة البرنامج</string>
     <string name="settings_about_gramophone">حول التطبيق</string>
     <string name="compact_list">قائمة (مضغوطة)</string>
     <string name="dialog_album_artist">فنّان الألبوم</string>
@@ -55,7 +55,7 @@
     <string name="settings_app_name">اسم البرنامج</string>
     <string name="settings_lyrics_center_summary">جعل عرض الكلمات في المنتصف</string>
     <string name="settings_content_based_color">الألوان المُستَنِدة للمحتوى</string>
-	<string name="settings_title_bold_summary">جعل خطِّ الاسم في المُشَغِّل الكامل غامقاً</string>
+    <string name="settings_title_bold_summary">جعل خطِّ الاسم في المُشَغِّل الكامل غامقاً</string>
     <string name="unknown_title">اسمٌ غير معروف</string>
     <string name="dialog_track_number">رقم الأغنية</string>
     <string name="folders">المُجَلَّدات</string>
@@ -67,7 +67,7 @@
         <item quantity="many">فنّاناً</item>
         <item quantity="other">فنّاناً</item>
     </plurals>
-	<string name="settings_play_on_launch">شغِّل مع تشغيل البرنامج</string>
+    <string name="settings_play_on_launch">شغِّل مع تشغيل البرنامج</string>
     <string name="settings_mediastore_filter_summary">تصفية الأغاني الأقصر من عدد الثّواني الّتي يحدِّدها المستخدِم. (تحتاج لإعادة مسح)</string>
     <plurals name="albums">
         <item quantity="zero">ألبوم</item>
@@ -132,7 +132,7 @@
     <string name="settings_default_progress_bar_summary">تنشيط شريط التَّقدُّم ذو هيئة شريط السَّحب</string>
     <string name="recently_added">المُضاف حديثاً</string>
     <string name="dialog_genre">النوع</string>
-	<string name="settings_content_based_color_summary">تنشيط إنشاء مُخطَّط ألوانٍ مُستَنِدٍ لصورة الألبوم من أجل القسم السُّفليّ</string>
+    <string name="settings_content_based_color_summary">تنشيط إنشاء مُخطَّط ألوانٍ مُستَنِدٍ لصورة الألبوم من أجل القسم السُّفليّ</string>
     <string name="unknown_genre">نوعٌ غير معروف</string>
     <string name="category_artists">الفنّانون</string>
     <string name="settings_experimental_settings_summary">ضبط الميِّزات التَّجريبيَّة</string>
