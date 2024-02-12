@@ -24,7 +24,7 @@
     <string name="refreshed_songs">%1$s Titel aktualisiert</string>
     <string name="search">Suche</string>
     <string name="settings_app_name">App-Name</string>
-	<string name="settings_contributors">Mitwirkende</string>
+    <string name="settings_contributors">Mitwirkende</string>
     <string name="play_next">Als Nächstes abspielen</string>
     <string name="go_to_album">Zum Album wechseln</string>
     <string name="go_to_artist">Zum Interpreten wechseln</string>
@@ -51,7 +51,7 @@
     </plurals>
     <string name="natural_order">Natürliche Sortierung</string>
     <string name="light">Hell</string>
-	<string name="dialog_track_number">Titelnummer</string>
+    <string name="dialog_track_number">Titelnummer</string>
     <string name="folders">Ordner</string>
     <plurals name="artists">
         <item quantity="one">%d Künstler/in</item>
@@ -83,5 +83,5 @@
     <string name="settings_title_bold">Fettgedruckter Titel</string>
     <string name="settings_audio">Audio</string>
     <string name="settings_lyrics_bold">Fettgedruckte Liedtexte</string>
-	<string name="settings_player_options">Audioeinstellungen</string>
+    <string name="settings_player_options">Audioeinstellungen</string>
 </resources>
