@@ -137,4 +137,5 @@
     <string name="settings_blacklist">ブラックリスト</string>
     <string name="settings_blacklist_folder">フォルダのブラックリスト</string>
     <string name="settings_blacklist_folder_summary">特定のフォルダ内の曲を除外します (再スキャンが必要になります)</string>
+    <string name="settings_preference_category_application">アプリ</string>
 </resources>
