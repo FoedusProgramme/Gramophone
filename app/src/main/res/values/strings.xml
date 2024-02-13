@@ -51,7 +51,7 @@
     <string name="shuffle">Shuffle</string>
     <string name="repeat_mode">Repeat mode</string>
     <string name="unknown_playlist">Unknown playlist</string>
-    <string name="gramophone_crashed" translatable="false">Crash logs</string>
+    <string name="gramophone_crashed" translatable="false">Crash log</string>
     <string name="crash_gramophone_version" translatable="false">Gramophone version</string>
     <string name="crash_phone_model" translatable="false">Model</string>
     <string name="crash_phone_brand" translatable="false">Brand</string>
@@ -86,7 +86,7 @@
     <string name="compact_list">List (compact)</string>
     <string name="check_for_updates">Check our channel for updates!</string>
     <string name="settings_default_progress_bar">Default progress bar</string>
-    <string name="settings_default_progress_bar_summary">Enable slider styled progress bar</string>
+    <string name="settings_default_progress_bar_summary">Enable material styled progress bar</string>
     <string name="home_menu_about">About</string>
     <string name="opensource_info">Open-sourced under GPL-3.0\nCopyright © 2024 Akane Foundation</string>
     <string name="playlist_favourite">Favourite</string>
@@ -96,7 +96,7 @@
     <string name="settings_contributors_detail" translatable="false">AkaneTan, 123Duo3, nift4</string>
     <string name="upper_folder" translatable="false">..</string>
     <string name="now_playing">Now playing</string>
-    <string name="settings_content_based_color_summary">Enable album art based color scheme generation for bottom sheet</string>
+    <string name="settings_content_based_color_summary">Enable album based color generation</string>
     <string name="settings_content_based_color">Content based colors</string>
 	<string name="settings_package_type">Package type</string>
     <string name="settings_oled_summary">Enable pure black background</string>
@@ -109,34 +109,34 @@
     <string name="dialog_mime">Mime type</string>
     <string name="dialog_duration">Duration</string>
     <string name="settings_title_center">Centered title</string>
-    <string name="settings_title_center_summary">Make full player title centered</string>
+    <string name="settings_title_center_summary">Use centered title for full player</string>
 	<string name="settings_player_ui">Player UI</string>
-    <string name="settings_player_ui_summary">Tweak player UI</string>
-    <string name="settings_appearance_summary">Configure application\'s appearance</string>
+    <string name="settings_player_ui_summary">Full player UI, lyrics</string>
+    <string name="settings_appearance_summary">Application appearance, theme modes</string>
     <string name="settings_about_app">About</string>
     <string name="settings_about_gramophone">About application</string>
-    <string name="settings_behavior_summary">Configure application\'s behavior</string>
+    <string name="settings_behavior_summary">Filters, launch behaviors</string>
     <string name="settings_category_links">Links</string>
     <string name="settings_library">Library</string>
     <string name="settings_library_summary">Manage media library</string>
     <string name="settings_player_options">Audio</string>
-    <string name="settings_player_options_summary">Manage audio output options</string>
+    <string name="settings_player_options_summary">Output quality, playback behavior</string>
     <string name="settings_customization">Customization</string>
     <string name="settings_customization_summary">Manage customization options</string>
     <string name="settings_album_round_corner_summary">Enable round corner in full player</string>
     <string name="settings_album_round_corner">Album round corner</string>
     <string name="settings_float_output">Float audio output</string>
-    <string name="settings_float_output_summary">Enable 32 bit float output (Require service restart)</string>
+    <string name="settings_float_output_summary">Enable 32 bit float output</string>
     <string name="settings_audio">Audio</string>
     <string name="settings_skip_silence">Skip silence</string>
-    <string name="settings_skip_silence_summary">Skip silence when playing tracks (Require service restart)</string>
+    <string name="settings_skip_silence_summary">Skip silence when playing tracks</string>
     <string name="settings_hardware_acceleration">Playback speed</string>
-    <string name="settings_hardware_acceleration_summary">Enable playback speed hardware acceleration (Require service restart)</string>
+    <string name="settings_hardware_acceleration_summary">Enable playback speed hardware acceleration</string>
     <string name="settings_title_bold">Bold title</string>
-    <string name="settings_title_bold_summary">Make full player title bold</string>
+    <string name="settings_title_bold_summary">Use bold title for full player</string>
 	<string name="settings_experimental_settings">Experimental</string>
-    <string name="settings_experimental_settings_summary">Configure testing features</string>
-    <string name="settings_color_accuracy_summary">Make content based color generation more accurate</string>
+    <string name="settings_experimental_settings_summary">Testing features, misc</string>
+    <string name="settings_color_accuracy_summary">Make color generation accurate</string>
     <string name="settings_color_accuracy">Color accuracy</string>
     <string name="sort_by_add_date">Add date</string>
     <string name="sort_by_modified_date">Modified date</string>
@@ -144,12 +144,18 @@
     <string name="settings_lyrics_configuration">Lyrics configuration</string>
     <string name="settings_lyrics_configuration_summary">Configure lyrics appearance</string>
     <string name="settings_lyrics_bold">Bold lyrics</string>
-    <string name="settings_lyrics_bold_summary">Make lyrics use a heavier font weight</string>
+    <string name="settings_lyrics_bold_summary">Use a heavier font weight for lyrics</string>
     <string name="settings_lyrics_center">Center alignment</string>
-    <string name="settings_lyrics_center_summary">Make lyrics display by the center</string>
+    <string name="settings_lyrics_center_summary">Use center alignment for lyrics</string>
     <string name="settings_play_on_launch">Play on launch</string>
-    <string name="settings_play_on_launch_summary">Play music on launch (If there\'s any in the playlist)</string>
+    <string name="settings_play_on_launch_summary">Play music on launch</string>
     <string name="settings_blacklist">Blacklist</string>
-    <string name="settings_blacklist_folder_summary">Filter songs from certain folders. (Require rescan)</string>
+    <string name="settings_blacklist_folder_summary">Filter songs from certain folders</string>
     <string name="settings_blacklist_folder">Blacklist folders</string>
+    <string name="settings_category_basic_info">Basic info</string>
+    <string name="preference_category_quality">Quality</string>
+    <string name="settings_category_misc">Misc</string>
+    <string name="settings_category_filters">Filters</string>
+    <string name="settings_preference_category_application">Application</string>
+    <string name="settings_category_full_player">Full player</string>
 </resources>
