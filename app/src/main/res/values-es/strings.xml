@@ -110,12 +110,12 @@
     <string name="settings_title_center">Título centrado</string>
     <string name="settings_about_app">Acerca de</string>
     <string name="settings_lyrics_bold">Letra en negrita</string>
-    <string name="settings_player_options">Opciones del sonido</string>
+    <string name="settings_player_options">Audio</string>
     <string name="settings_color_accuracy">Precisión del color</string>
     <string name="settings_lyrics_center">Centrado</string>
     <string name="settings_appearance_summary">Configurar la apariencia de la aplicación</string>
     <string name="settings_title_center_summary">Centrar el título completo del reproductor</string>
-    <string name="settings_experimental_settings">Ajustes experimentales</string>
+    <string name="settings_experimental_settings">Experimental</string>
     <string name="settings_hardware_acceleration_summary">Activar la aceleración por hardware de la velocidad de reproducción (requiere reiniciar el servicio)</string>
     <string name="settings_behavior_summary">Configurar el comportamiento de la aplicación</string>
     <string name="settings_lyrics_configuration_summary">Configurar la apariencia de las letras</string>
