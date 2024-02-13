@@ -8,7 +8,7 @@
     <string name="go_to_album">Ir para o álbum</string>
     <string name="category_dates">Datas</string>
     <string name="unknown_album">Álbum desconhecido</string>
-    <string name="settings_experimental_settings">Configurações experimentais</string>
+    <string name="settings_experimental_settings">Experimental</string>
     <string name="sort_by_size">Tamanho</string>
     <string name="dialog_title">Título</string>
     <string name="settings_repository">Repositório</string>
@@ -67,7 +67,7 @@
     <string name="opensource_info">Open-sourced under GPL-3.0
 \nCopyright © 2024 Akane Foundation</string>
     <string name="playlist_favourite">Favorito</string>
-    <string name="settings_player_options">Opções de áudio</string>
+    <string name="settings_player_options">Áudio</string>
     <string name="home_menu_settings">Configurações</string>
     <string name="settings_category_links">Links</string>
     <string name="home_menu_refresh">Atualizar</string>
