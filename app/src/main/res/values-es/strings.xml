@@ -83,7 +83,7 @@
     <string name="settings_default_progress_bar_summary">Habilitar barra de progreso antigua</string>
     <string name="recently_added">Recientemente añadido</string>
     <string name="dialog_genre">Género</string>
-    <string name="settings_content_based_color_summary">Habilitar esquema de color basado en la carátula del álbum</string>
+    <string name="settings_content_based_color_summary">Activar la generación de colores basada en álbumes</string>
     <string name="unknown_genre">Género desconocido</string>
     <string name="category_artists">Artistas</string>
     <string name="settings_package_type">Tipo de paquete</string>
@@ -113,7 +113,7 @@
     <string name="settings_player_options">Audio</string>
     <string name="settings_color_accuracy">Precisión del color</string>
     <string name="settings_lyrics_center">Centrado</string>
-    <string name="settings_appearance_summary">Configurar la apariencia de la aplicación</string>
+    <string name="settings_appearance_summary">Aspecto de la aplicación, modos de los temas</string>
     <string name="settings_title_center_summary">Centrar el título completo del reproductor</string>
     <string name="settings_experimental_settings">Experimental</string>
     <string name="settings_hardware_acceleration_summary">Activar la aceleración por hardware de la velocidad de reproducción (requiere reiniciar el servicio)</string>
@@ -122,7 +122,7 @@
     <string name="settings_experimental_settings_summary">Configurar las funciones de prueba</string>
     <string name="settings_album_round_corner_summary">Habilitar las esquinas redondeadas en el reproductor completo</string>
     <string name="settings_customization">Personalización</string>
-    <string name="settings_float_output_summary">Habilitar la salida flotante de 32 bits (requiere reiniciar el servicio)</string>
+    <string name="settings_float_output_summary">Salida de punto flotante de 32 bits habilitada</string>
     <string name="settings_blacklist">Lista negra</string>
     <string name="settings_lyrics_configuration">Configuración de las letras</string>
     <string name="settings_library_summary">Administrar la biblioteca multimedia</string>
@@ -145,4 +145,6 @@
     <string name="settings_lyrics_bold_summary">Las letras deben tener un tipo de letra más grueso</string>
     <string name="settings_blacklist_folder">Lista negra de carpetas</string>
     <string name="settings_blacklist_folder_summary">Filtra canciones de determinadas carpetas. (Requiere volver a escanear)</string>
+    <string name="settings_category_basic_info">Información general</string>
+    <string name="settings_preference_category_application">Aplicación</string>
 </resources>
