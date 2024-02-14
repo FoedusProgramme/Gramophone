@@ -156,4 +156,6 @@
     <string name="settings_category_filters">Filters</string>
     <string name="settings_preference_category_application">Application</string>
     <string name="settings_category_full_player">Full player</string>
+    <string name="settings_crash_application">Crash application</string>
+    <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
 </resources>
