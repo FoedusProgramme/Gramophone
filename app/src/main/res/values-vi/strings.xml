@@ -84,8 +84,6 @@
     <plurals name="albums">
         <item quantity="other">%d Album</item>
     </plurals>
-    <string name="settings_oled">Bật chủ đề OLED</string>
-    <string name="settings_oled_summary">Bật nền màu đen</string>
     <string name="no_lyric_found">Không tìm thấy lời bài hát</string>
     <string name="disc">Đĩa</string>
     <string name="dialog_disc_number">Số đĩa</string>

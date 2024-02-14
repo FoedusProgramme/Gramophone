@@ -92,7 +92,6 @@
     <string name="home_menu_about">О приложении</string>
     <string name="check_for_updates">Следите за обновлениями в нашем канале!</string>
     <string name="settings_content_based_color_summary">Включить создание цветовой схемы на основе обложки альбома для нижнего листа</string>
-    <string name="settings_oled">Включить OLED тему</string>
     <string name="opensource_info">С открытым исходным кодом под лицензией GPL-3.0
 \nАвторские права © 2024 Akane Foundation</string>
     <string name="playlist_favourite">Избранное</string>
@@ -100,7 +99,6 @@
     <string name="settings_default_progress_bar_summary">Включить индикатор выполнения в стиле слайдера</string>
     <string name="settings_package_type">Тип пакета</string>
     <string name="no_lyric_found">Текст песни не найден</string>
-    <string name="settings_oled_summary">Включить чистый чёрный фон</string>
     <string name="dialog_disc_number">Номер диска</string>
     <string name="disc">Диск</string>
     <string name="unknown_title">Неизвестное название</string>

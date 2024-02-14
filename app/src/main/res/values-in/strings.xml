@@ -78,8 +78,6 @@
     <string name="settings_content_based_color">Warna berdasarkan konten</string>
     <string name="dialog_disc_number">Nomor disc</string>
     <string name="settings_content_based_color_summary">Aktifkan warna berdasarkan album untuk lembaran bawah</string>
-    <string name="settings_oled">Aktifkan tema OLED</string>
-    <string name="settings_oled_summary">Aktifkan background hitam</string>
     <string name="no_lyric_found">Lirik tidak ditemukan</string>
     <string name="now_playing">Sedang diputar</string>
     <string name="settings_package_type">Tipe paket</string>

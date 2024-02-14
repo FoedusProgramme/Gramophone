@@ -15,7 +15,6 @@
     <string name="settings_library_summary">Gerenciar biblioteca de mídia</string>
     <string name="sort_by_artist">Artista</string>
     <string name="settings_mediastore_filter">Filtro de armazenamento de mídia</string>
-    <string name="settings_oled_summary">Ativar fundo preto</string>
     <string name="settings_hardware_acceleration_summary">Ativar aceleração de hardware de velocidade de reprodução (requer reinicialização do serviço)</string>
     <string name="settings_player_ui">Interface do player</string>
     <string name="category_songs">Músicas</string>
@@ -36,7 +35,6 @@
         <item quantity="many">%d Itens</item>
         <item quantity="other">%d Itens</item>
     </plurals>
-    <string name="settings_oled">Tema OLED</string>
     <string name="home_menu_shuffle">Embaralhar</string>
     <string name="category_genres">Gêneros</string>
     <string name="settings_about_app">Sobre</string>

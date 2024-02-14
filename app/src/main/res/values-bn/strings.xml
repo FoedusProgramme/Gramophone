@@ -78,6 +78,5 @@
     <string name="unknown_version">অচেনা ভার্সন</string>
     <string name="unknown_artist">অচেনা শিল্পী</string>
     <string name="repeat_mode">রিপিট সুইচ</string>
-    <string name="settings_oled">OLED থিম এনাবল করুন</string>
     <string name="home_menu_about">এর ব্যাপারে জানুন</string>
 </resources>

@@ -22,7 +22,6 @@
     <string name="settings_content_based_color_summary">Ativar esquema de cores baseado na arte do álbum</string>
     <string name="settings_content_based_color">Cores dinâmicas</string>
     <string name="settings_package_type">Tipo de pacote</string>
-    <string name="settings_oled_summary">Ativar fundo preto</string>
     <string name="no_lyric_found">Nenhuma letra encontrada</string>
     <string name="dialog_disc_number">Número do disco</string>
     <string name="disc">Disco</string>
@@ -107,7 +106,6 @@
     <string name="opensource_info">Open-sourced under GPL-3.0
 \nCopyright © 2024 Akane Foundation</string>
     <string name="playlist_favourite">Favorito</string>
-    <string name="settings_oled">Tema OLED</string>
     <string name="dialog_mime">Tipo do MIME</string>
     <string name="dialog_duration">Duração</string>
     <string name="settings_title_center">Título centralizado</string>

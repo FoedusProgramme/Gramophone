@@ -19,7 +19,6 @@
     <string name="sort_by_artist">Wykonawca</string>
     <string name="settings_mediastore_filter">Filtr MediaStore</string>
     <string name="sort_by_modified_date">Data modyfikacji</string>
-    <string name="settings_oled_summary">Używaj prawdziwej czerni dla ciemnego motywu</string>
     <string name="settings_hardware_acceleration_summary">Korzystaj z przyspieszenia sprzętowego podczas odtwarzania (wymaga ponownego uruchomienia)</string>
     <string name="settings_player_ui">Interfejs odtwarzacza</string>
     <string name="category_songs">Utwory</string>
@@ -41,7 +40,6 @@
         <item quantity="many">%d elementów</item>
         <item quantity="other">%d elementów</item>
     </plurals>
-    <string name="settings_oled">Włącz motyw OLED</string>
     <string name="home_menu_shuffle">Odtwarzaj losowo</string>
     <string name="settings_play_on_launch_summary">Odtwarzaj muzykę po uruchomieniu odtwarzacza (jeśli playlista nie jest pusta)</string>
     <string name="category_genres">Gatunki</string>

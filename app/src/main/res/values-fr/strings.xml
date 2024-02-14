@@ -95,7 +95,6 @@
     <string name="settings_lyrics_configuration">Configuration des paroles</string>
     <string name="settings_library_summary">Gérer la bibliothèque audio</string>
     <string name="sort_by_modified_date">Date de modification</string>
-    <string name="settings_oled_summary">Activer l\'arrière-plan complètement noir</string>
     <string name="settings_hardware_acceleration_summary">Activer l\'accélération matérielle pour la vitesse de lecture (Nécessite un redémarrage du service)</string>
     <string name="settings_player_ui">Interface du lecteur</string>
     <string name="disc">Disque</string>
@@ -106,7 +105,6 @@
     <string name="settings_audio">Audio</string>
     <string name="settings_title_center">Titre centré</string>
     <string name="settings_skip_silence_summary">Passer les silences entre les pistes (Nécessite un redémarrage du service)</string>
-    <string name="settings_oled">Activer le thème OLED</string>
     <string name="settings_about_app">À propos</string>
     <string name="settings_player_ui_summary">Modifier l\'interface du lecteur</string>
     <string name="settings_lyrics_bold">Paroles en gras</string>

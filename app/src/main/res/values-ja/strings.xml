@@ -84,8 +84,6 @@
     <string name="playlist_favourite">お気に入り</string>
     <string name="settings_content_based_color_summary">アルバムアートをベースとしたカラー生成を有効化します</string>
     <string name="settings_package_type">パッケージのタイプ</string>
-    <string name="settings_oled">OLED テーマを有効化する</string>
-    <string name="settings_oled_summary">ピュアブラックの背景を有効化します</string>
     <string name="no_lyric_found">歌詞がありません</string>
     <string name="dialog_disc_number">ディスク番号</string>
     <string name="disc">ディスク</string>

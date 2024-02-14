@@ -19,7 +19,6 @@
     <string name="sort_by_artist">الفنّان</string>
     <string name="settings_mediastore_filter">فلتر ميدياستور</string>
     <string name="sort_by_modified_date">تاريخ التعديل</string>
-    <string name="settings_oled_summary">تنشيط الخلفيَّة السَّوداء الصَّافية</string>
     <string name="settings_hardware_acceleration_summary">تنشيط تسريع التشغيل باستخدام العَتَاد الصّلب (تحتاج لإعادة تشغيل البرنامج)</string>
     <string name="settings_player_ui">واجهة المُشَغِّل</string>
     <string name="category_songs">الأغاني</string>
@@ -43,7 +42,6 @@
         <item quantity="many">غرضاً</item>
         <item quantity="other">غرضاً</item>
     </plurals>
-    <string name="settings_oled">تنشيط سِمَة شاشات OLED</string>
     <string name="home_menu_shuffle">خلط</string>
     <string name="settings_play_on_launch_summary">تشغيل الأغنية مع تشغيل القائمة (إن كان فيها أغانٍ)</string>
     <string name="category_genres">الأنواع</string>

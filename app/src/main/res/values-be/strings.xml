@@ -18,7 +18,6 @@
     <string name="compact_list">Спіс (кампактны)</string>
     <string name="dialog_album_artist">Выканаўца альбома</string>
     <string name="equalizer_not_found">Эквалайзер не знойдзены!</string>
-    <string name="settings_oled">Ўключыць OLED тэму</string>
     <plurals name="items">
         <item quantity="one">%d элемент</item>
         <item quantity="few">%d элемента</item>
@@ -100,7 +99,6 @@
     <string name="home_menu_search">Пошук</string>
     <string name="no_lyric_found">Тэкст песні не знойдзены</string>
     <string name="layout">Адлюстраванне</string>
-    <string name="settings_oled_summary">Ўключыць чысты чорны фон</string>
     <string name="play_next">Гуляць далей</string>
     <string name="unknown_version">Невядомая версія</string>
     <string name="unknown_artist">Невядомы выканаўца</string>

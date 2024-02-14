@@ -18,7 +18,6 @@
     <string name="compact_list">Lista (compacto)</string>
     <string name="dialog_album_artist">Artista del álbum</string>
     <string name="equalizer_not_found">¡Ecualizador no encontrado!</string>
-    <string name="settings_oled">Habilitar tema OLED</string>
     <plurals name="items">
         <item quantity="one">%d elemento</item>
         <item quantity="many">%d elementos</item>
@@ -92,7 +91,6 @@
     <string name="home_menu_search">Buscar</string>
     <string name="no_lyric_found">Letra no encontrada</string>
     <string name="layout">Mostrar</string>
-    <string name="settings_oled_summary">Habilitar fondo negro puro</string>
     <string name="play_next">Reproducir la siguiente</string>
     <string name="unknown_version">Versión desconocida</string>
     <string name="unknown_artist">Artista desconocido</string>
