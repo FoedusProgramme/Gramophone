@@ -141,4 +141,9 @@
     <string name="settings_blacklist_folder_summary">从某些文件夹中过滤歌曲</string>
     <string name="settings_category_full_player">播放器</string>
     <string name="settings_preference_category_application">应用</string>
+    <string name="settings_crash_application">崩溃测试</string>
+    <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
+    <string name="dialog_lyrics">歌词</string>
+    <string name="dialog_edit_metadata">编辑</string>
+    <string name="album_cover">专辑封面</string>
 </resources>
