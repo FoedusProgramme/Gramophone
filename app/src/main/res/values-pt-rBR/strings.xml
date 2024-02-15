@@ -143,4 +143,7 @@
     <string name="settings_blacklist">Ignorar</string>
     <string name="settings_blacklist_folder">Pastas ignoradas</string>
     <string name="settings_blacklist_folder_summary">Filtre músicas de determinadas pastas (requer nova busca)</string>
+    <string name="settings_preference_category_application">Aplicativo</string>
+    <string name="settings_category_basic_info">Informação básica</string>
+    <string name="album_cover">Capa do álbum</string>
 </resources>
