@@ -161,4 +161,9 @@
     <string name="album_cover">Album cover</string>
     <string name="dialog_edit_metadata">Edit</string>
     <string name="dialog_lyrics">Lyrics</string>
+	<string name="delete">Delete</string>
+	<string name="delete_failed">Deleting song failed</string>
+    <string name="delete_in_progress">Already deleting another song</string>
+	<string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>
