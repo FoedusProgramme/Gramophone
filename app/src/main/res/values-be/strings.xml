@@ -39,7 +39,7 @@
         <item quantity="many">%d выканаўцаў</item>
         <item quantity="other">%d выканаўцаў</item>
     </plurals>
-    <string name="settings_mediastore_filter_summary">Хаваць трэкі, карацей названай працягласць ў секундах. (Патрабуецца пересканирование)</string>
+    <string name="settings_mediastore_filter_summary">Хаваць трэкі, карацей названай працягласць ў секундах. (Патрабуецца перасканіраванне)</string>
     <plurals name="albums">
         <item quantity="one">%d альбом</item>
         <item quantity="few">%d альбома</item>
@@ -54,13 +54,13 @@
 \nАўтарскае права © 2024 Akane Foundation</string>
     <string name="playlist_favourite">Абраны</string>
     <string name="home_menu_settings">Налады</string>
-    <string name="home_menu_refresh">Пересканировать</string>
+    <string name="home_menu_refresh">Перасканаваць</string>
     <string name="settings_contributors">Удзельнікі распрацоўкі</string>
     <string name="settings_category_appearance">Знешні выгляд</string>
     <string name="dialog_album">Альбом</string>
     <string name="settings_default_progress_bar">Панэль выканання па змаўчанні</string>
     <string name="home_menu_about">Аб праграме</string>
-    <string name="details">Падрабязнасць</string>
+    <string name="details">Звесткі</string>
     <string name="home_menu_equalizer">Эквалайзер</string>
     <string name="dialog_path">Шлях</string>
     <string name="settings_version">Версія</string>
@@ -87,10 +87,10 @@
         <item quantity="many">%d трэкаў</item>
         <item quantity="other">%d трэкаў</item>
     </plurals>
-    <string name="settings_default_progress_bar_summary">Уключыць панэль прагрэсу ў стылі паўзунка</string>
+    <string name="settings_default_progress_bar_summary">Ўключыць панэль прагрэсу ў стылі material</string>
     <string name="recently_added">Нядаўна дададзеныя</string>
     <string name="dialog_genre">Жанр</string>
-    <string name="settings_content_based_color_summary">Ўключыць стварэнне каляровай схемы на аснове вокладкі альбома для ніжняга ліста</string>
+    <string name="settings_content_based_color_summary">Ўключыць стварэнне колеру на аснове альбома</string>
     <string name="unknown_genre">Невядомы жанр</string>
     <string name="category_artists">Выканаўцы</string>
     <string name="settings_package_type">Тып пакета</string>
@@ -106,30 +106,30 @@
     <string name="settings_title_center">Назва па цэнтры</string>
     <string name="settings_title_center_summary">Адлюстроўваць поўнае імя выканаўцы па цэнтры</string>
     <string name="settings_album_round_corner">Закругленне кутоў вокладкі альбома</string>
-    <string name="settings_behavior_summary">Наладзіць паводзіны праграмы</string>
+    <string name="settings_behavior_summary">Фільтры, паводзіны запуску</string>
     <string name="settings_about_gramophone">Аб праграме</string>
     <string name="settings_title_bold">Тоўсты загаловак</string>
-    <string name="settings_audio">Аўдыё</string>
+    <string name="settings_audio">Гук</string>
     <string name="settings_about_app">Аб праграме</string>
-    <string name="settings_player_options">Налады гуку</string>
+    <string name="settings_player_options">Гук</string>
     <string name="settings_color_accuracy">Дакладнасць колераперадачы</string>
-    <string name="settings_appearance_summary">Наладзіць знешні выгляд праграмы</string>
+    <string name="settings_appearance_summary">Знешні выгляд праграмы</string>
     <string name="settings_experimental_settings_summary">Наладзіць функцыі тэсціравання</string>
     <string name="settings_customization">Персаналізацыя</string>
     <string name="settings_blacklist">Чорны спіс</string>
     <string name="sort_by_add_date">Дадаць дату</string>
-    <string name="settings_experimental_settings">Эксперыментальныя налады</string>
-    <string name="settings_hardware_acceleration_summary">Уключыць апаратнае паскарэнне хуткасці прайгравання (патрабуецца перазапуск службы)</string>
+    <string name="settings_experimental_settings">Эксперыментальныя</string>
+    <string name="settings_hardware_acceleration_summary">Ўключыць апаратнае паскарэнне хуткасці прайгравання</string>
     <string name="settings_lyrics_bold">Тоўсты тэкст песні</string>
     <string name="settings_lyric">Тэкст песні</string>
     <string name="settings_category_links">Спасылкі</string>
     <string name="settings_lyrics_center">Выраўноўванне па цэнтры</string>
     <string name="settings_lyrics_configuration_summary">Наладзіць знешні выгляд тэксту песні</string>
     <string name="settings_float_output">Плаваючы аўдыявыхад</string>
-    <string name="settings_album_round_corner_summary">Уключыць закругленне кутоў у поўнаэкранным прайгравальніку</string>
+    <string name="settings_album_round_corner_summary">Ўключыць закругленне кутоў у поўнаэкранным прайгравальніку</string>
     <string name="settings_library">Бібліятэка</string>
     <string name="settings_blacklist_folder">Чорны спіс тэчак</string>
-    <string name="settings_float_output_summary">Уключыць 32-бітны вывад з плаваючай кропкай (патрабуецца перазапуск службы)</string>
+    <string name="settings_float_output_summary">Ўключыць 32-бітны вывад з плаваючай кропкай</string>
     <string name="settings_library_summary">Кіраванне медыятэкай</string>
     <string name="sort_by_modified_date">Дата змены</string>
     <string name="settings_player_ui">Інтэрфейс прайгравальніка</string>
@@ -140,4 +140,14 @@
     <string name="settings_play_on_launch">Прайграваць пры запуску</string>
     <string name="settings_skip_silence">Прапусціць цішыню</string>
     <string name="settings_hardware_acceleration">Хуткасць прайгравання</string>
+    <string name="settings_preference_category_application">Праграма</string>
+    <string name="settings_category_basic_info">Асноўная інфармацыя</string>
+    <string name="settings_category_filters">Фільтры</string>
+    <string name="album_cover">Вокладка альбома</string>
+    <string name="dialog_edit_metadata">Рэдагаваць</string>
+    <string name="settings_crash_application">Збой праграмы</string>
+    <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
+    <string name="delete">Выдаліць</string>
+    <string name="delete_failed">Не атрымалася выдаліць песню</string>
+    <string name="settings_blacklist_folder_summary">Фільтраваць песні з пэўных тэчак</string>
 </resources>
