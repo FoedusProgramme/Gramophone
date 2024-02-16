@@ -26,7 +26,7 @@
     <string name="natural_order">Doğal düzen</string>
     <string name="light">Açık</string>
     <string name="settings_app_name">Uygulama adı</string>
-    <string name="settings_content_based_color">İçerik tabanlı renkleri etkinleştir</string>
+    <string name="settings_content_based_color">İçerik tabanlı renkler</string>
     <string name="dialog_track_number">Parça numarası</string>
     <string name="folders">Klasörler</string>
     <plurals name="artists">
@@ -49,7 +49,7 @@
     <string name="settings_contributors">Katkıda Bulunanlar</string>
     <string name="settings_category_appearance">Görünüş</string>
     <string name="dialog_album">Albüm</string>
-    <string name="settings_default_progress_bar">Varsayılan ilerleme çubuğunu etkinleştir</string>
+    <string name="settings_default_progress_bar">Varsayılan ilerleme çubuğu</string>
     <string name="home_menu_about">Hakkında</string>
     <string name="details">Detaylar</string>
     <string name="home_menu_equalizer">Ekolayzer</string>
@@ -77,7 +77,7 @@
     <string name="settings_default_progress_bar_summary">Eski tarz ilerleme çubuğunu etkinleştir</string>
     <string name="recently_added">Yakın zamanda eklendi</string>
     <string name="dialog_genre">Tür</string>
-    <string name="settings_content_based_color_summary">Alt kısım için albüm resmi tabanlı renk şeması oluşturmayı etkinleştirin</string>
+    <string name="settings_content_based_color_summary">Albüm tabanlı renk oluşturmayı etkinleştir</string>
     <string name="unknown_genre">Bilinmeyen tür</string>
     <string name="category_artists">Sanatçılar</string>
     <string name="settings_package_type">Paket tipi</string>
@@ -90,7 +90,7 @@
     <string name="unknown_version">Bilinmeyen sürüm</string>
     <string name="unknown_artist">Bilinmeyen sanatçı</string>
     <string name="repeat_mode">Tekrar modu</string>
-    <string name="settings_player_options">Ses seçenekleri</string>
+    <string name="settings_player_options">Ses</string>
     <string name="settings_about_gramophone">Uygulama hakkında</string>
     <string name="sort_by_add_date">Tarih ekle</string>
     <string name="settings_about_app">Hakkında</string>
@@ -107,4 +107,22 @@
     <string name="dialog_duration">Süre</string>
     <string name="unknown_title">Bilinmeyen başlık</string>
     <string name="filesystem">Dosya sistemi</string>
+    <string name="settings_hardware_acceleration">Oynatma hızı</string>
+    <string name="sort_by_modified_date">Değiştirilme tarihi</string>
+    <string name="settings_behavior_summary">Filtreler, başlatma davranışları</string>
+    <string name="settings_library_summary">Medya kütüphanesini yönet</string>
+    <string name="settings_customization_summary">Özelleştirme seçeneklerini yönetin</string>
+    <string name="settings_skip_silence">Sessizliği atla</string>
+    <string name="yes">Evet</string>
+    <string name="delete">Sil</string>
+    <string name="no">Hayır</string>
+    <string name="settings_experimental_settings">Deneysel</string>
+    <string name="dialog_edit_metadata">Düzenle</string>
+    <string name="dialog_lyrics">Şarkı sözleri</string>
+    <string name="album_cover">Albüm kapağı</string>
+    <string name="settings_lyrics_configuration">Şarkı sözleri yapılandırması</string>
+    <string name="settings_preference_category_application">Uygulama</string>
+    <string name="preference_category_quality">Kalite</string>
+    <string name="settings_category_filters">Filtreler</string>
+    <string name="settings_category_misc">Diğer</string>
 </resources>
