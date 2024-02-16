@@ -1,1 +1,1 @@
-A sane music player built with media3 and material design library that is following android's standard strictly.
+A sane media3-based Material3 music player that follows Android standards
