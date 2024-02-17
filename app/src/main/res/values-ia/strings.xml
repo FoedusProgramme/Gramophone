@@ -1,2 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="sort_by_artist">Artista</string>
+    <string name="categories">Categorias</string>
+    <string name="settings_category_appearance">Apparentia</string>
+    <string name="dialog_artist">Artista</string>
+    <string name="settings_category_behavior">Comportamento</string>
+    <string name="dialog_album_artist">Artista de album</string>
+    <string name="settings_app_theme">Thema del application</string>
+    <string name="settings_about_app">A proposito de</string>
+    <string name="settings_player_options">Audio</string>
+    <string name="settings_category_basic_info">Information basic</string>
+    <string name="home_menu_about">A proposito de</string>
+    <string name="settings_about_gramophone">A proposito del application</string>
+    <string name="sort_by_add_date">Data de addition</string>
+    <string name="sort_by_album">Album</string>
+    <string name="dialog_album">Album</string>
+    <string name="album_artist">Artista de album</string>
+    <string name="category_albums">Albumes</string>
+    <string name="settings_preference_category_application">Application</string>
+    <string name="settings_app_name">Nomine del application</string>
+    <string name="category_artists">Artistas</string>
+    <string name="settings_audio">Audio</string>
+    <string name="settings_blacklist">Lista nigre</string>
+</resources>
