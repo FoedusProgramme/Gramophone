@@ -15,7 +15,7 @@
     <string name="settings_library_summary">Gerenciar biblioteca de mídia</string>
     <string name="sort_by_artist">Artista</string>
     <string name="settings_mediastore_filter">Filtro de armazenamento de mídia</string>
-    <string name="settings_hardware_acceleration_summary">Ativar aceleração de hardware de velocidade de reprodução (requer reinicialização do serviço)</string>
+    <string name="settings_hardware_acceleration_summary">Ativar aceleração de hardware de velocidade de reprodução</string>
     <string name="settings_player_ui">Interface do player</string>
     <string name="category_songs">Músicas</string>
     <string name="disc">Disco</string>
@@ -83,7 +83,7 @@
     <string name="album_artist">Álbum do artista</string>
     <string name="sort_by_album">Álbum</string>
     <string name="category_albums">Álbuns</string>
-    <string name="settings_color_accuracy_summary">Torne o esquema de cores baseado na arte do álbum mais preciso</string>
+    <string name="settings_color_accuracy_summary">Torne a geração de cores precisa</string>
     <string name="filesystem">Arquivos</string>
     <string name="refreshed_songs">Músicas %1$s atualizadas</string>
     <string name="dark">Escuro</string>
@@ -104,7 +104,7 @@
         <item quantity="many">%d Músicas</item>
         <item quantity="other">%d Músicas</item>
     </plurals>
-    <string name="settings_default_progress_bar_summary">Ativar barra de progresso com estilo deslizante</string>
+    <string name="settings_default_progress_bar_summary">Ativar barra de progresso com material design</string>
     <string name="recently_added">Adicionadas recentemente</string>
     <string name="dialog_genre">Gênero</string>
     <string name="settings_content_based_color_summary">Ativar esquema de cores baseado na arte do álbum</string>
@@ -125,7 +125,7 @@
     <string name="layout">Exibição</string>
     <string name="settings_customization">Customização</string>
     <string name="play_next">Reproduzir a seguir</string>
-    <string name="settings_float_output_summary">Ativar saída flutuante de 32 bits (requer reinicialização do serviço)</string>
+    <string name="settings_float_output_summary">Ativar saída flutuante de 32 bits</string>
     <string name="unknown_version">Versão desconhecida</string>
     <string name="unknown_artist">Artista desconhecido</string>
     <string name="repeat_mode">Modo repetição</string>
@@ -146,4 +146,11 @@
     <string name="settings_preference_category_application">Aplicativo</string>
     <string name="settings_category_basic_info">Informação básica</string>
     <string name="album_cover">Capa do álbum</string>
+    <string name="settings_category_full_player">Player completo</string>
+    <string name="settings_category_misc">Diversos</string>
+    <string name="settings_category_filters">Filtros</string>
+    <string name="no">Não</string>
+    <string name="preference_category_quality">Qualidade</string>
+    <string name="yes">Sim</string>
+    <string name="dialog_lyrics">Letras</string>
 </resources>
