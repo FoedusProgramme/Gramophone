@@ -125,4 +125,12 @@
     <string name="preference_category_quality">Kalite</string>
     <string name="settings_category_filters">Filtreler</string>
     <string name="settings_category_misc">Diğer</string>
+    <string name="settings_player_ui">Oynatıcı arayüzü</string>
+    <string name="settings_title_center">Ortalanmış başlık</string>
+    <string name="settings_appearance_summary">Uygulama görünümü, tema modları</string>
+    <string name="dialog_mime">Mime türü</string>
+    <string name="settings_play_on_launch">Başlatışta oynat</string>
+    <string name="settings_color_accuracy">Renk doğruluğu</string>
+    <string name="settings_play_on_launch_summary">Başlatışta müzik oynat</string>
+    <string name="settings_category_basic_info">Temel bilgi</string>
 </resources>
