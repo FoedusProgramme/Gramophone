@@ -79,7 +79,7 @@
         <item quantity="many">%d Canciones</item>
         <item quantity="other">%d Canciones</item>
     </plurals>
-    <string name="settings_default_progress_bar_summary">Habilitar barra de progreso antigua</string>
+    <string name="settings_default_progress_bar_summary">Activar la barra de progreso con estilo de material desingn</string>
     <string name="recently_added">Recientemente añadido</string>
     <string name="dialog_genre">Género</string>
     <string name="settings_content_based_color_summary">Activar la generación de colores basada en álbumes</string>
@@ -114,8 +114,8 @@
     <string name="settings_appearance_summary">Aspecto de la aplicación, modos de los temas</string>
     <string name="settings_title_center_summary">Centrar el título completo del reproductor</string>
     <string name="settings_experimental_settings">Experimental</string>
-    <string name="settings_hardware_acceleration_summary">Activar la aceleración por hardware de la velocidad de reproducción (requiere reiniciar el servicio)</string>
-    <string name="settings_behavior_summary">Configurar el comportamiento de la aplicación</string>
+    <string name="settings_hardware_acceleration_summary">Activar la aceleración por hardware de la velocidad de reproducción</string>
+    <string name="settings_behavior_summary">Filtros, comportamiento de inicio.</string>
     <string name="settings_lyrics_configuration_summary">Configurar la apariencia de las letras</string>
     <string name="settings_experimental_settings_summary">Configurar las funciones de prueba</string>
     <string name="settings_album_round_corner_summary">Habilitar las esquinas redondeadas en el reproductor completo</string>
@@ -128,21 +128,30 @@
     <string name="settings_customization_summary">Gestionar las opciones de personalización</string>
     <string name="settings_skip_silence_summary">Saltar el silencio al reproducir las pistas (Requerir reinicio del servicio)</string>
     <string name="settings_play_on_launch_summary">Reproducir música al iniciar (si hay alguna en la lista de reproducción)</string>
-    <string name="settings_player_ui_summary">Ajustar la interfaz de usuario</string>
+    <string name="settings_player_ui_summary">Interfaz de usuario completa, letras de canciones</string>
     <string name="settings_lyrics_center_summary">Visualizar letras por el centro</string>
     <string name="settings_title_bold_summary">Poner en negrita el título completo del reproductor</string>
     <string name="settings_play_on_launch">Reproducir al iniciar</string>
     <string name="settings_lyric">Letra</string>
     <string name="settings_category_links">Enlaces</string>
     <string name="settings_skip_silence">Omitir el silencio</string>
-    <string name="settings_color_accuracy_summary">Mayor precisión en la generación de colores basada en el contenido</string>
+    <string name="settings_color_accuracy_summary">Generar colores precisos</string>
     <string name="settings_hardware_acceleration">Velocidad de reproducción</string>
     <string name="settings_float_output">Salida de audio flotante</string>
     <string name="settings_player_options_summary">Gestionar las opciones de salida de audio</string>
     <string name="settings_library">Biblioteca</string>
     <string name="settings_lyrics_bold_summary">Las letras deben tener un tipo de letra más grueso</string>
     <string name="settings_blacklist_folder">Lista negra de carpetas</string>
-    <string name="settings_blacklist_folder_summary">Filtra canciones de determinadas carpetas. (Requiere volver a escanear)</string>
+    <string name="settings_blacklist_folder_summary">Filtrar canciones de determinadas carpetas</string>
     <string name="settings_category_basic_info">Información general</string>
     <string name="settings_preference_category_application">Aplicación</string>
+    <string name="delete_in_progress">Ya estoy borrando otra canción</string>
+    <string name="delete">Borrar</string>
+    <string name="delete_failed">Error al borrar la canción</string>
+    <string name="settings_crash_application">La aplicación falló</string>
+    <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
+    <string name="album_cover">Portada del álbum</string>
+    <string name="dialog_edit_metadata">Editar</string>
+    <string name="dialog_lyrics">Letras</string>
+    <string name="settings_category_filters">Filtros</string>
 </resources>
