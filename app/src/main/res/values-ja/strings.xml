@@ -141,4 +141,14 @@
     <string name="settings_category_full_player">フルプレーヤー</string>
     <string name="settings_category_misc">その他</string>
     <string name="preference_category_quality">音質</string>
+    <string name="delete_in_progress">すでに別の曲を削除中です</string>
+    <string name="delete">削除</string>
+    <string name="no">いいえ</string>
+    <string name="delete_failed">曲の削除に失敗しました</string>
+    <string name="yes">はい</string>
+    <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
+    <string name="settings_crash_application">アプリをクラッシュさせる</string>
+    <string name="album_cover">アルバムカバー</string>
+    <string name="dialog_edit_metadata">編集</string>
+    <string name="dialog_lyrics">歌詞</string>
 </resources>
