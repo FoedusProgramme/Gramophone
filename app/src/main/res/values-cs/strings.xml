@@ -58,4 +58,28 @@
     <string name="category_albums">Alba</string>
     <string name="dialog_album_artist">Interpret alba</string>
     <string name="settings_appearance_summary">Vzhled aplikace, motivy vzhledu</string>
+    <plurals name="songs">
+        <item quantity="one">%d Skladba</item>
+        <item quantity="few">%d Skladby</item>
+        <item quantity="other">%d Skladeb</item>
+    </plurals>
+    <string name="equalizer_not_found">Nebyl nalezen žádný ekvalizér</string>
+    <string name="playlist_favourite">Oblíbené</string>
+    <string name="filesystem">Souborový systém</string>
+    <string name="settings_album_round_corner_summary">Povolit zaoblené rohy pro přehrávač</string>
+    <string name="settings_experimental_settings">Experimentální</string>
+    <string name="settings_category_filters">Filtry</string>
+    <plurals name="items">
+        <item quantity="one">%d Položka</item>
+        <item quantity="few">%d Položky</item>
+        <item quantity="other">%d Položek</item>
+    </plurals>
+    <string name="dialog_duration">Trvání</string>
+    <string name="dialog_edit_metadata">Upravit</string>
+    <string name="settings_float_output_summary">Povolit 32 bitový float výstup</string>
+    <string name="settings_content_based_color_summary">Povolit generaci barev na základě alba</string>
+    <string name="settings_default_progress_bar_summary">Povolit material stylizaci ukazatele průběhu</string>
+    <string name="settings_hardware_acceleration_summary">Povolit hardwarovou akceleraci pro rychlost přehrávání</string>
+    <string name="home_menu_equalizer">Ekvalizér</string>
+    <string name="settings_behavior_summary">Filtry, chování po spuštění</string>
 </resources>
