@@ -64,8 +64,7 @@
     <string name="dialog_title">Title</string>
     <string name="dialog_artist">Artist</string>
     <string name="settings_category_behavior">Behavior</string>
-    <string name="settings_mediastore_filter_summary">Filter songs are shorter than user configured seconds. (Require rescan)</string>
-    <string name="settings_mediastore_filter">MediaStore filter</string>
+    <string name="settings_mediastore_filter">Hide songs shorter than (seconds)…</string>
     <string name="settings_repository">Repository</string>
     <string name="dialog_album">Album</string>
     <string name="dialog_genre">Genre</string>
