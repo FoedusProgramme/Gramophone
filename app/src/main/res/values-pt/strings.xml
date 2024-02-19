@@ -9,7 +9,6 @@
     <string name="unknown_playlist">Playlist desconhecida</string>
     <string name="unknown_version">Versão desconhecida</string>
     <string name="settings_version">Versão</string>
-    <string name="settings_mediastore_filter_summary">As músicas filtradas são menores que os segundos configurados pelo utilizador (requer nova busca)</string>
     <string name="unknown_album">Álbum desconhecido</string>
     <string name="recently_added">Adicionadas recentemente</string>
     <string name="home_menu_equalizer">Equalizador</string>

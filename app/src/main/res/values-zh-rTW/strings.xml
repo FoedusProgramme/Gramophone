@@ -41,7 +41,6 @@
     <string name="dialog_title">標題</string>
     <string name="dialog_artist">藝術家</string>
     <string name="settings_category_behavior">行為</string>
-    <string name="settings_mediastore_filter_summary">過濾短於用戶所配置的最小時長（單位：秒）的歌曲。（需要重新掃描）</string>
     <string name="settings_mediastore_filter">媒體庫過濾器</string>
     <string name="settings_repository">倉庫地址</string>
     <string name="dialog_album">專輯</string>

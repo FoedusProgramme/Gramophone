@@ -62,7 +62,6 @@
         <item quantity="other">%d wykonawców</item>
     </plurals>
     <string name="settings_play_on_launch">Odtwarzanie przy uruchomieniu</string>
-    <string name="settings_mediastore_filter_summary">Pomijaj utwory krótsze niż wartość ustawiona poniżej (wymaga ponownego skanowania)</string>
     <plurals name="albums">
         <item quantity="one">%d album</item>
         <item quantity="few">%d albumy</item>

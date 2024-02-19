@@ -33,7 +33,6 @@
         <item quantity="one">%d Sanatçı</item>
         <item quantity="other">%d Sanatçılar</item>
     </plurals>
-    <string name="settings_mediastore_filter_summary">Kullanıcı tarafından yapılandırılan saniyeden daha kısa şarkıları filtreleyin. (Yeniden tarama gerektirir)</string>
     <plurals name="albums">
         <item quantity="one">%d Albüm</item>
         <item quantity="other">%d Albümler</item>

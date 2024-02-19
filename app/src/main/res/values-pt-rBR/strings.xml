@@ -52,7 +52,6 @@
         <item quantity="many">%d Artistas</item>
         <item quantity="other">%d Artistas</item>
     </plurals>
-    <string name="settings_mediastore_filter_summary">As músicas filtradas são menores que os segundos configurados pelo usuário (requer nova busca)</string>
     <plurals name="albums">
         <item quantity="one">%d Álbum</item>
         <item quantity="many">%d Álbuns</item>

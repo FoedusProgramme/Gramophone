@@ -47,7 +47,6 @@
     <string name="light">সাদা</string>
     <string name="dialog_track_number">গানের নম্বর</string>
     <string name="folders">ফোল্ডারগুলো</string>
-    <string name="settings_mediastore_filter_summary">গানগুলো কে ফিল্টার করুন যা ইউজার ব্যাবস্থাপনার চেয়ে ছোট (rescan জরুরি)</string>
     <string name="unknown_playlist">অচেনা গানের সারি</string>
     <string name="dialog_year">বছর</string>
     <string name="home_menu_settings">সেটিংস</string>

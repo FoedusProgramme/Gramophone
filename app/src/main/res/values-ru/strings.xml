@@ -66,7 +66,6 @@
     <string name="dialog_title">Название</string>
     <string name="dialog_artist">Исполнитель</string>
     <string name="settings_category_behavior">Поведение</string>
-    <string name="settings_mediastore_filter_summary">Скрывать треки, короче указанной длительности в секундах. (Требуется пересканирование)</string>
     <string name="settings_mediastore_filter">Фильтр фонотеки</string>
     <string name="settings_repository">Репозиторий</string>
     <string name="dialog_album">Альбом</string>

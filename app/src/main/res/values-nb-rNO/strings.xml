@@ -32,7 +32,6 @@
         <item quantity="one">%d artist</item>
         <item quantity="other">%d artister</item>
     </plurals>
-    <string name="settings_mediastore_filter_summary">Filtrer ut spor kortere en angitt antall sekunder. (Krever omskanning.)</string>
     <plurals name="albums">
         <item quantity="one">%d album</item>
         <item quantity="other">%d album</item>

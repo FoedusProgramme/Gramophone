@@ -39,7 +39,6 @@
         <item quantity="many">%d виконавців</item>
         <item quantity="other">%d виконавців</item>
     </plurals>
-    <string name="settings_mediastore_filter_summary">Приховувати треки, коротше за вказану тривалість в секундах. (Потрібно пересканування)</string>
     <plurals name="albums">
         <item quantity="one">%d альбом</item>
         <item quantity="few">%d альбома</item>

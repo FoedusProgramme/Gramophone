@@ -57,7 +57,6 @@
         <item quantity="one">%d Künstler/in</item>
         <item quantity="other">%d Künstler/innen</item>
     </plurals>
-    <string name="settings_mediastore_filter_summary">Filterlieder sind kürzer als benutzerkonfigurierte Sekunden. (Scan benötigt)</string>
     <plurals name="albums">
         <item quantity="one">%d Album</item>
         <item quantity="other">%d Alben</item>

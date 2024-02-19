@@ -39,7 +39,6 @@
         <item quantity="many">%d выканаўцаў</item>
         <item quantity="other">%d выканаўцаў</item>
     </plurals>
-    <string name="settings_mediastore_filter_summary">Хаваць трэкі, карацей названай працягласць ў секундах. (Патрабуецца перасканіраванне)</string>
     <plurals name="albums">
         <item quantity="one">%d альбом</item>
         <item quantity="few">%d альбома</item>
