@@ -45,7 +45,7 @@
     <string name="unknown_version">Versiune necunoscut</string>
     <string name="settings_version">Versiune</string>
     <string name="settings_category_behavior">Comportament</string>
-    <string name="settings_mediastore_filter">Filter „MediaStore”</string>
+    <string name="settings_mediastore_filter">Ascunde piesele mai mici (secundare)</string>
     <string name="dialog_genre">Gen</string>
     <string name="settings_repository">Repository</string>
     <string name="dialog_track_number">Numărul piesei</string>
@@ -146,4 +146,16 @@
     <string name="settings_category_full_player">Player complet</string>
     <string name="folders">Documente</string>
     <string name="settings_blacklist_folder_summary">Filtru ale pieselor din anumit document</string>
+    <string name="category_playlists">Playlist</string>
+    <string name="sort_by_name">Nume</string>
+    <string name="play_next">Următorul</string>
+    <string name="dialog_path">Cale</string>
+    <string name="settings_player_ui">Player UI</string>
+    <string name="settings_title_bold_summary">Utilizați titlul gros pentru player complet</string>
+    <string name="sort_by_modified_date">Dată modificată</string>
+    <string name="settings_play_on_launch_summary">Pornește muzică la lansare</string>
+    <string name="settings_play_on_launch">Pornește la lansare</string>
+    <string name="recently_added">Adăugat recent</string>
+    <string name="natural_order">În ordine naturală</string>
+    <string name="preference_category_quality">Calitate</string>
 </resources>
