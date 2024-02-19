@@ -31,7 +31,7 @@
     <string name="operations">Operațiune</string>
     <string name="settings_contributors">Contribuie</string>
     <string name="details">Detalii</string>
-    <string name="go_to_album">Dute la albume</string>
+    <string name="go_to_album">Dute la album</string>
     <string name="refreshed_songs">Reîmprospătare %1$s piesă</string>
     <string name="repeat_mode">În mod repetat</string>
     <string name="search">Caută</string>
@@ -86,7 +86,7 @@
     <string name="settings_hardware_acceleration_summary">Activați accelerarea hardware a vitezei de redare</string>
     <string name="settings_experimental_settings">Experimental</string>
     <string name="settings_color_accuracy_summary">Make color generation accurate</string>
-    <string name="sort_by_add_date">După dată</string>
+    <string name="sort_by_add_date">Adaugă dată</string>
     <string name="settings_lyric">Versuri</string>
     <string name="settings_lyrics_center">Aliniate în centru</string>
     <string name="settings_category_misc">Misc</string>
@@ -100,7 +100,7 @@
     <string name="dialog_lyrics">Viersurile</string>
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
     <string name="delete_in_progress">Deja ștergi altă piesă</string>
-    <string name="delete_failed">Ștergere eșuată a piesei</string>
+    <string name="delete_failed">Ștergerea piesei a eșuat</string>
     <string name="yes">Da</string>
     <string name="no">Nu</string>
     <string name="home_menu_about">Despre</string>
@@ -121,7 +121,7 @@
     <string name="settings_lyrics_bold">Versuri îngroșate</string>
     <string name="settings_title_bold">Titlu gros</string>
     <string name="check_for_updates">Verifică canalul nostrul pentru actualizări</string>
-    <string name="settings_lyrics_configuration_summary">Configurare apariția versurilor</string>
+    <string name="settings_lyrics_configuration_summary">Configurarează apariția versurilor</string>
     <plurals name="artists">
         <item quantity="one">Artist</item>
         <item quantity="few">Artiști</item>
@@ -140,4 +140,10 @@
     <string name="settings_lyrics_bold_summary">Utilizați o majorare mai mare a fontului pentru versuri</string>
     <string name="settings_player_options_summary">Calitatea ieșirii, comportameant redare</string>
     <string name="settings_color_accuracy">Acuratețea culorilor</string>
+    <string name="follow_system">După sistem</string>
+    <string name="settings_player_ui_summary">UI player complet, versuri</string>
+    <string name="settings_float_output">Ieșire audio Float</string>
+    <string name="settings_category_full_player">Player complet</string>
+    <string name="folders">Documente</string>
+    <string name="settings_blacklist_folder_summary">Filtru ale pieselor din anumit document</string>
 </resources>
