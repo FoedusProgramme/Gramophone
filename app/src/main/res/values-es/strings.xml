@@ -11,7 +11,7 @@
     <string name="dialog_title">Título</string>
     <string name="settings_repository">Repositorio</string>
     <string name="sort_by_artist">Artista</string>
-    <string name="settings_mediastore_filter">Filtro MediaStore</string>
+    <string name="settings_mediastore_filter">Ocultar canciones de menos de (segundos)…</string>
     <string name="category_songs">Canciones</string>
     <string name="disc">Disco</string>
     <string name="settings_app_theme">Tema de la aplicación</string>
@@ -111,12 +111,12 @@
     <string name="settings_color_accuracy">Precisión del color</string>
     <string name="settings_lyrics_center">Centrado</string>
     <string name="settings_appearance_summary">Aspecto de la aplicación, modos de los temas</string>
-    <string name="settings_title_center_summary">Centrar el título completo del reproductor</string>
+    <string name="settings_title_center_summary">Utilice el título centrado para ver el reproductor completo</string>
     <string name="settings_experimental_settings">Experimental</string>
     <string name="settings_hardware_acceleration_summary">Activar la aceleración por hardware de la velocidad de reproducción</string>
     <string name="settings_behavior_summary">Filtros, comportamiento de inicio.</string>
     <string name="settings_lyrics_configuration_summary">Configurar la apariencia de las letras</string>
-    <string name="settings_experimental_settings_summary">Configurar las funciones de prueba</string>
+    <string name="settings_experimental_settings_summary">Funciones de prueba, varios</string>
     <string name="settings_album_round_corner_summary">Habilitar las esquinas redondeadas en el reproductor completo</string>
     <string name="settings_customization">Personalización</string>
     <string name="settings_float_output_summary">Salida de punto flotante de 32 bits habilitada</string>
@@ -125,11 +125,11 @@
     <string name="settings_library_summary">Administrar la biblioteca multimedia</string>
     <string name="sort_by_modified_date">Fecha de modificación</string>
     <string name="settings_customization_summary">Gestionar las opciones de personalización</string>
-    <string name="settings_skip_silence_summary">Saltar el silencio al reproducir las pistas (Requerir reinicio del servicio)</string>
-    <string name="settings_play_on_launch_summary">Reproducir música al iniciar (si hay alguna en la lista de reproducción)</string>
+    <string name="settings_skip_silence_summary">Omitir el silencio al reproducir las pistas</string>
+    <string name="settings_play_on_launch_summary">Reproducir la música al iniciar</string>
     <string name="settings_player_ui_summary">Interfaz de usuario completa, letras de canciones</string>
-    <string name="settings_lyrics_center_summary">Visualizar letras por el centro</string>
-    <string name="settings_title_bold_summary">Poner en negrita el título completo del reproductor</string>
+    <string name="settings_lyrics_center_summary">Centrar las letras de las canciones</string>
+    <string name="settings_title_bold_summary">Poner en negrita el título para ver el reproductor completo</string>
     <string name="settings_play_on_launch">Reproducir al iniciar</string>
     <string name="settings_lyric">Letra</string>
     <string name="settings_category_links">Enlaces</string>
@@ -137,9 +137,9 @@
     <string name="settings_color_accuracy_summary">Generar colores precisos</string>
     <string name="settings_hardware_acceleration">Velocidad de reproducción</string>
     <string name="settings_float_output">Salida de audio flotante</string>
-    <string name="settings_player_options_summary">Gestionar las opciones de salida de audio</string>
+    <string name="settings_player_options_summary">Calidad de salida, comportamiento de reproducción</string>
     <string name="settings_library">Biblioteca</string>
-    <string name="settings_lyrics_bold_summary">Las letras deben tener un tipo de letra más grueso</string>
+    <string name="settings_lyrics_bold_summary">Utilice un tipo de fuente más grueso para la letra</string>
     <string name="settings_blacklist_folder">Lista negra de carpetas</string>
     <string name="settings_blacklist_folder_summary">Filtrar canciones de determinadas carpetas</string>
     <string name="settings_category_basic_info">Información general</string>
@@ -153,4 +153,9 @@
     <string name="dialog_edit_metadata">Editar</string>
     <string name="dialog_lyrics">Letras</string>
     <string name="settings_category_filters">Filtros</string>
+    <string name="preference_category_quality">Calidad</string>
+    <string name="yes">Sí</string>
+    <string name="no">No</string>
+    <string name="settings_category_misc">Varias</string>
+    <string name="settings_category_full_player">Reproductor entero</string>
 </resources>
