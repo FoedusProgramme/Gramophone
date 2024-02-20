@@ -54,7 +54,7 @@
     <string name="settings_version">バージョン</string>
     <string name="settings_category_appearance">外観</string>
     <string name="settings_category_behavior">動作</string>
-    <string name="settings_mediastore_filter">MediaStore のフィルター</string>
+    <string name="settings_mediastore_filter">短い曲を非表示にする (秒)…</string>
     <string name="settings_repository">リポジトリ</string>
     <string name="settings_app_theme">アプリのテーマ</string>
     <string name="dialog_title">タイトル</string>
