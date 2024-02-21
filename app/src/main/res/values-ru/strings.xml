@@ -66,7 +66,7 @@
     <string name="dialog_title">Название</string>
     <string name="dialog_artist">Исполнитель</string>
     <string name="settings_category_behavior">Поведение</string>
-    <string name="settings_mediastore_filter">Фильтр фонотеки</string>
+    <string name="settings_mediastore_filter">Скрыть песни короче (секунд)…</string>
     <string name="settings_repository">Репозиторий</string>
     <string name="dialog_album">Альбом</string>
     <string name="dialog_genre">Жанр</string>
