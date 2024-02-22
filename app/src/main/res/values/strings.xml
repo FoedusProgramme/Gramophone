@@ -165,4 +165,8 @@
     <string name="delete_in_progress">Already deleting another song</string>
 	<string name="yes">Yes</string>
     <string name="no">No</string>
+	<string name="album_covers_compat">Album cover compatibility mode</string>
+    <string name="album_covers_compat_desc">Allow albums to have their own cover even if Android doesn\'t support this</string>
+    <string name="deny_images"><![CDATA[Please deny \"Images & videos\" permission]]></string>
+    <string name="grant_images"><![CDATA[Please grant \"Images & videos\" permission]]></string>
 </resources>
