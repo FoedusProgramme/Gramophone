@@ -104,4 +104,28 @@
     <string name="go_to_artist">Vader al artista</string>
     <string name="shuffle">Aleatori</string>
     <string name="no_lyric_found">Parolas de canto non trovate</string>
+    <string name="equalizer_not_found">Equalisator non trovate!</string>
+    <string name="opensource_info">Sub licentia de codice aperte GPL-3.0
+\nCopyright © 2024 Akane Foundation</string>
+    <string name="settings_default_progress_bar">Barra de progresso prededinite</string>
+    <string name="check_for_updates">Verifica nostre canal pro actualisationes!</string>
+    <string name="settings_default_progress_bar_summary">Activar le barra de progresso con stylo Material</string>
+    <string name="compact_list">Lista (compacte)</string>
+    <string name="settings_content_based_color">Colores basate in le contento</string>
+    <string name="disc">Disco</string>
+    <string name="dialog_disc_number">Numero de disco</string>
+    <string name="settings_player_ui_summary">Interfacie de usator complete, parolas de canto</string>
+    <string name="settings_appearance_summary">Apparentia del application, modos de thema</string>
+    <string name="settings_customization">Personalisation</string>
+    <string name="settings_customization_summary">Gerer le optiones de personalisation</string>
+    <string name="settings_behavior_summary">Filtros, comportamento de initio</string>
+    <string name="settings_lyric">Parolas de canto</string>
+    <string name="settings_lyrics_configuration_summary">Configurar apparentia del parolas</string>
+    <string name="settings_play_on_launch_summary">Reproducer le musica in le initio</string>
+    <string name="settings_blacklist_folder">Lista nigre de dossieres</string>
+    <string name="settings_crash_application">Facer faller le application</string>
+    <string name="settings_blacklist_folder_summary">Filtrar cantos ab certe dossieres</string>
+    <string name="album_cover">Copertura del album</string>
+    <string name="delete_in_progress">Jam ha altere canto in deletion</string>
+    <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
 </resources>
