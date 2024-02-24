@@ -128,4 +128,11 @@
     <string name="album_cover">Copertura del album</string>
     <string name="delete_in_progress">Jam ha altere canto in deletion</string>
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
+    <string name="category_genres">Generes</string>
+    <string name="unknown_genre">Genere incognite</string>
+    <string name="dialog_genre">Genere</string>
+    <string name="natural_order">Ordine natural</string>
+    <string name="settings_album_round_corner">Angulos ronde del album</string>
+    <string name="settings_color_accuracy">Precision de color</string>
+    <string name="settings_color_accuracy_summary">Facer le generation de colores precise</string>
 </resources>
