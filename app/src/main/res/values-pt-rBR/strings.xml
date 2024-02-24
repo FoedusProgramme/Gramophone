@@ -152,4 +152,6 @@
     <string name="preference_category_quality">Qualidade</string>
     <string name="yes">Sim</string>
     <string name="dialog_lyrics">Letras</string>
+    <string name="album_covers_compat">Modo de compatibilidade da capa do álbum</string>
+    <string name="album_covers_compat_desc">Permitir que os álbuns tenham sua própria capa, mesmo que o Android não suporte isso</string>
 </resources>
