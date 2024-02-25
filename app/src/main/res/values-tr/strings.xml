@@ -73,7 +73,7 @@
         <item quantity="one">%d Şarkı</item>
         <item quantity="other">%d Şarkılar</item>
     </plurals>
-    <string name="settings_default_progress_bar_summary">Eski tarz ilerleme çubuğunu etkinleştir</string>
+    <string name="settings_default_progress_bar_summary">Materyal tarz ilerleme çubuğunu etkinleştir</string>
     <string name="recently_added">Yakın zamanda eklendi</string>
     <string name="dialog_genre">Tür</string>
     <string name="settings_content_based_color_summary">Albüm tabanlı renk oluşturmayı etkinleştir</string>
