@@ -135,4 +135,6 @@
     <string name="settings_album_round_corner">Angulos ronde del album</string>
     <string name="settings_color_accuracy">Precision de color</string>
     <string name="settings_color_accuracy_summary">Facer le generation de colores precise</string>
+    <string name="settings_player_options_summary">Qualitate de sortita, comportamento de reproduction</string>
+    <string name="settings_skip_silence_summary">Saltar le silentio in le reproduction del tracias</string>
 </resources>
