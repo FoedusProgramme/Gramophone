@@ -158,4 +158,8 @@
     <string name="no">No</string>
     <string name="settings_category_misc">Varias</string>
     <string name="settings_category_full_player">Reproductor entero</string>
+    <string name="album_covers_compat">Modo de compatibilidad con portadas de álbumes</string>
+    <string name="album_covers_compat_desc">Permitir que los álbumes tengan su propia portada aunque Android no lo admita</string>
+    <string name="deny_images">Por favor, deniegue el permiso a \"Imágenes y vídeos\"</string>
+    <string name="grant_images">Por favor, conceda permiso para \"Imágenes y vídeos\"</string>
 </resources>
