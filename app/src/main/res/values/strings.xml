@@ -170,4 +170,5 @@
     <string name="deny_images"><![CDATA[Please deny \"Images & videos\" permission]]></string>
     <string name="grant_images"><![CDATA[Please grant \"Images & videos\" permission]]></string>
 	<string name="crash_clipboard">Copied crash log to clipboard</string>
+	<string name="crash_thread" translatable="false">Thread</string>
 </resources>
