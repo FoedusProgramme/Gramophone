@@ -86,7 +86,7 @@
     <string name="filesystem">Arquivos</string>
     <string name="refreshed_songs">Músicas %1$s atualizadas</string>
     <string name="dark">Escuro</string>
-    <string name="settings_appearance_summary">Configurar a aparência do aplicativo</string>
+    <string name="settings_appearance_summary">Aparência do aplicativo, temas</string>
     <string name="sort_by_name">Nome</string>
     <string name="check_for_updates">Confira nosso canal para atualizações!</string>
     <string name="dialog_duration">Duração</string>
@@ -154,4 +154,9 @@
     <string name="dialog_lyrics">Letras</string>
     <string name="album_covers_compat">Modo de compatibilidade da capa do álbum</string>
     <string name="album_covers_compat_desc">Permitir que os álbuns tenham sua própria capa, mesmo que o Android não suporte isso</string>
+    <string name="settings_crash_application">Travar o aplicativo</string>
+    <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
+    <string name="delete">Apagar</string>
+    <string name="delete_in_progress">Outra música já está sendo deletada</string>
+    <string name="crash_clipboard">Log do crash copiado para a área de transferência</string>
 </resources>
