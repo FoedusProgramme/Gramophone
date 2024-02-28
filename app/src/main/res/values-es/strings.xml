@@ -162,4 +162,6 @@
     <string name="album_covers_compat_desc">Permitir que los álbumes tengan su propia portada aunque Android no lo admita</string>
     <string name="deny_images">Por favor, deniegue el permiso a \"Imágenes y vídeos\"</string>
     <string name="grant_images">Por favor, conceda permiso para \"Imágenes y vídeos\"</string>
+    <string name="settings_trim_lyrics">Eliminar los espacios alrededor de las letras</string>
+    <string name="crash_clipboard">Registro de fallos copiado al portapapeles</string>
 </resources>
