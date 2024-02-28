@@ -150,4 +150,10 @@
     <string name="album_cover">アルバムカバー</string>
     <string name="dialog_edit_metadata">編集</string>
     <string name="dialog_lyrics">歌詞</string>
+    <string name="album_covers_compat">アルバムアート互換モード</string>
+    <string name="album_covers_compat_desc">Android の環境がアルバムアートに非対応の環境でも表示ができるようにします</string>
+    <string name="deny_images">画像と動画のアクセス権限を拒否してください</string>
+    <string name="grant_images">画像と動画のアクセス権限を許可してください</string>
+    <string name="crash_clipboard">クラッシュログをクリップボードにコピー</string>
+    <string name="settings_trim_lyrics">歌詞の空白を削除する</string>
 </resources>
