@@ -67,12 +67,12 @@
     </plurals>
     <string name="settings_play_on_launch">شغِّل مع تشغيل البرنامج</string>
     <plurals name="albums">
-        <item quantity="zero">ألبوم</item>
-        <item quantity="one">ألبوم</item>
-        <item quantity="two">ألبومان</item>
-        <item quantity="few">ألبوماً</item>
-        <item quantity="many">ألبومات</item>
-        <item quantity="other">ألبوماً</item>
+        <item quantity="zero">%d ألبوم</item>
+        <item quantity="one">ألبوم واحد (%d)</item>
+        <item quantity="two">ألبومان (%d)</item>
+        <item quantity="few">%d ألبوماً</item>
+        <item quantity="many">%d ألبومات</item>
+        <item quantity="other">%d ألبوماً</item>
     </plurals>
     <string name="unknown_playlist">قائمة تشغيلٍ غير معروفة</string>
     <string name="dialog_mime">نوع المايم</string>
