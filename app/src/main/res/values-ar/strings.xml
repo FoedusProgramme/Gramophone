@@ -39,7 +39,7 @@
         <item quantity="one">غرض</item>
         <item quantity="two">غرضان</item>
         <item quantity="few">أغراض</item>
-        <item quantity="many">غرضاً</item>
+        <item quantity="many">غروض</item>
         <item quantity="other">غرضاً</item>
     </plurals>
     <string name="home_menu_shuffle">خلط</string>
@@ -62,7 +62,7 @@
         <item quantity="one">فنّان</item>
         <item quantity="two">فنّانان</item>
         <item quantity="few">فنّانين</item>
-        <item quantity="many">فنّاناً</item>
+        <item quantity="many">فنّانون</item>
         <item quantity="other">فنّاناً</item>
     </plurals>
     <string name="settings_play_on_launch">شغِّل مع تشغيل البرنامج</string>
@@ -71,7 +71,7 @@
         <item quantity="one">ألبوم</item>
         <item quantity="two">ألبومان</item>
         <item quantity="few">ألبوماً</item>
-        <item quantity="many">ألبوماً</item>
+        <item quantity="many">ألبومات</item>
         <item quantity="other">ألبوماً</item>
     </plurals>
     <string name="unknown_playlist">قائمة تشغيلٍ غير معروفة</string>
