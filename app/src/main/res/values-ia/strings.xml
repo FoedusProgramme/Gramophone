@@ -137,4 +137,27 @@
     <string name="settings_color_accuracy_summary">Facer le generation de colores precise</string>
     <string name="settings_player_options_summary">Qualitate de sortita, comportamento de reproduction</string>
     <string name="settings_skip_silence_summary">Saltar le silentio in le reproduction del tracias</string>
+    <string name="settings_contributors">Contributores</string>
+    <string name="settings_mediastore_filter">Celar cantos de un duration minor que (secundas)…</string>
+    <string name="settings_title_bold">Titulo grasse</string>
+    <string name="settings_album_round_corner_summary">Activar angulos ronde in le reproductor plen</string>
+    <string name="settings_content_based_color_summary">Activar generation de colores basate in le albumes</string>
+    <string name="settings_title_center">Titulo centrate</string>
+    <string name="settings_title_center_summary">Usar titulo centrate pro le reproductor plen</string>
+    <string name="settings_float_output">Sortita de audio flottante</string>
+    <string name="settings_float_output_summary">Activar sortita flottante de 32 bit</string>
+    <string name="settings_hardware_acceleration_summary">Activar le acceleration de hardware pro le velocitate de reproduction</string>
+    <string name="settings_experimental_settings">Experimental</string>
+    <string name="settings_experimental_settings_summary">Functionalitates de prova, alteres</string>
+    <string name="settings_title_bold_summary">Usar titulo grasse pro le reproductor plen</string>
+    <string name="settings_lyrics_bold_summary">Usar un typo de litteras plus grosse pro le parolas</string>
+    <string name="settings_lyrics_center">Alineamento centrate</string>
+    <string name="settings_lyrics_center_summary">Usar alineamento centrate pro le parolas</string>
+    <string name="settings_lyrics_bold">Parolas in grasse</string>
+    <string name="album_covers_compat">Modo de compatibilitate de coperturas de albumes</string>
+    <string name="album_covers_compat_desc">Permitter al albumes haber su proprie copertura mesmo si Android non lo supporta</string>
+    <string name="deny_images">Refusa le permission a \"Imagines e videos\"</string>
+    <string name="grant_images">Concede le permission a \"Imagines e videos\"</string>
+    <string name="crash_clipboard">Registro de fallimentos copiate al area de transferentia</string>
+    <string name="settings_trim_lyrics">Remover spatios circum le parolas</string>
 </resources>
