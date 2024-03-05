@@ -10,9 +10,9 @@
     <string name="dialog_title">Titre</string>
     <string name="settings_repository">Dépôt</string>
     <string name="sort_by_artist">Artiste</string>
-    <string name="settings_mediastore_filter">Filtre MediaStore</string>
+    <string name="settings_mediastore_filter">Cacher les chansons plus courtes que (en secondes) :</string>
     <string name="category_songs">Chansons</string>
-    <string name="settings_app_theme">Thèrme de l’appli</string>
+    <string name="settings_app_theme">Thème de l’appli</string>
     <string name="compact_list">Liste (compacte)</string>
     <string name="dialog_album_artist">Artiste de l’album</string>
     <string name="equalizer_not_found">Égaliseur introuvable !</string>
@@ -52,7 +52,7 @@
     <string name="refreshed_songs">%1$s chansons actualisées</string>
     <string name="dark">Sombre</string>
     <string name="sort_by_name">Nom</string>
-    <string name="check_for_updates">Vérifiez notre chaîne pour les mises à jour !</string>
+    <string name="check_for_updates">Jetez un œil à notre canal pour les mises à jour !</string>
     <string name="shuffle">Aléatoire</string>
     <string name="category_playlists">Listes de lecture</string>
     <string name="follow_system">Suivre le système</string>
@@ -70,7 +70,7 @@
     <string name="go_to_artist">Voir l’artiste</string>
     <string name="home_menu_search">Recherche</string>
     <string name="layout">Affichage</string>
-    <string name="play_next">Écouter après</string>
+    <string name="play_next">Jouer ensuite</string>
     <string name="repeat_mode">Mode répétition</string>
     <string name="dialog_track_number">Numéro de piste</string>
     <string name="unknown_album">Album inconnu</string>
@@ -87,7 +87,7 @@
     <string name="settings_default_progress_bar">Barre de progression par défaut</string>
     <string name="home_menu_about">À propos</string>
     <string name="now_playing">Lecture en cours</string>
-    <string name="settings_default_progress_bar_summary">Activer la barre de progression droite</string>
+    <string name="settings_default_progress_bar_summary">Activer la barre de progression Material design</string>
     <string name="settings_album_round_corner">Coins d\'albums arrondis</string>
     <string name="sort_by_add_date">Date d\'ajout</string>
     <string name="settings_experimental_settings">Expérimental</string>
@@ -105,7 +105,7 @@
     <string name="settings_title_center">Titre centré</string>
     <string name="settings_skip_silence_summary">Passer les silences entre les pistes</string>
     <string name="settings_about_app">À propos</string>
-    <string name="settings_player_ui_summary">Modifier l\'interface du lecteur</string>
+    <string name="settings_player_ui_summary">Interface complète du lecteur, paroles</string>
     <string name="settings_lyrics_bold">Paroles en gras</string>
     <string name="settings_lyrics_center_summary">Afficher les paroles au centre</string>
     <string name="settings_content_based_color">Couleurs basées sur le contenu</string>
@@ -130,9 +130,9 @@
     <string name="settings_title_center_summary">Mettre le titre au centre dans le lecteur complet</string>
     <string name="settings_hardware_acceleration">Vitesse de lecture</string>
     <string name="settings_float_output">Sortie audio flottante</string>
-    <string name="settings_album_round_corner_summary">Activer les bords ronds dans le lecteur complet</string>
+    <string name="settings_album_round_corner_summary">Activer les bords ronds dans tout le lecteur</string>
     <string name="no_lyric_found">Pas de paroles trouvées</string>
-    <string name="settings_player_options_summary">Qualité de la sortie audio, comportement</string>
+    <string name="settings_player_options_summary">Qualité de la sortie audio, comportement de la lecture</string>
     <string name="settings_library">Bibliothèque</string>
     <string name="settings_lyrics_bold_summary">Utiliser une police plus grosse pour les paroles</string>
     <string name="settings_customization">Personnalisation</string>
@@ -155,4 +155,13 @@
     <string name="settings_category_filters">Filtres</string>
     <string name="settings_category_misc">Autres</string>
     <string name="preference_category_quality">Qualité</string>
+    <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
+    <string name="yes">Oui</string>
+    <string name="album_covers_compat_desc">Permettre aux albums d\'avoir leur propre pochette même si Android ne le supporte pas</string>
+    <string name="album_covers_compat">Mode de compatibilité de la pochette des albums</string>
+    <string name="deny_images">Veuillez refuser la permission « Images et vidéos »</string>
+    <string name="grant_images">Veuillez accepter la permission « Images et vidéos »</string>
+    <string name="crash_clipboard">Journal de plantage copié</string>
+    <string name="settings_category_full_player">Lecteur complet</string>
+    <string name="settings_trim_lyrics">Enlever les espaces autour des paroles</string>
 </resources>
