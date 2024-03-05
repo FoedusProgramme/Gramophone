@@ -33,7 +33,7 @@
     <string name="sort_by_size">দৈর্ঘ্য</string>
     <string name="dialog_title">শিরনাম</string>
     <string name="settings_repository">রেপোজিটোরি</string>
-    <string name="settings_mediastore_filter">MediaStore ফিল্টার</string>
+    <string name="settings_mediastore_filter">সেকেন্ডের থেকে কম সময়ের গানগুলি লুকান</string>
     <string name="category_songs">গানগুলো</string>
     <string name="compact_list">সারি (কম্প্যাক্ট অবস্থা)</string>
     <string name="equalizer_not_found">ইকুয়ালাইজার পাওয়া যায়নি!</string>
