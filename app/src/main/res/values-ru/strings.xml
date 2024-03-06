@@ -169,4 +169,5 @@
     <string name="album_covers_compat_desc">Разрешить альбомам иметь собственную обложку, даже если Android это не поддерживает</string>
     <string name="crash_clipboard">Скопировал журнал сбоев в буфер обмена</string>
     <string name="grant_images">Предоставьте разрешение «Изображения и видео»</string>
+    <string name="settings_trim_lyrics">Удалить пробелы вокруг текста песни</string>
 </resources>
