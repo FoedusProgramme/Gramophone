@@ -64,7 +64,7 @@
     <string name="dialog_title">Title</string>
     <string name="dialog_artist">Artist</string>
     <string name="settings_category_behavior">Behavior</string>
-    <string name="settings_mediastore_filter">Hide songs shorter than (seconds)…</string>
+    <string name="settings_mediastore_filter">Song minimum length (seconds)</string>
     <string name="settings_repository">Repository</string>
     <string name="dialog_album">Album</string>
     <string name="dialog_genre">Genre</string>
