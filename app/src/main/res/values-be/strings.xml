@@ -11,7 +11,7 @@
     <string name="dialog_title">Назва</string>
     <string name="settings_repository">Рэпазітар</string>
     <string name="sort_by_artist">Па выканаўцу</string>
-    <string name="settings_mediastore_filter">Схаваць песні карацей (секунд)…</string>
+    <string name="settings_mediastore_filter">Мінімальная працягласць песні (ў секундах)</string>
     <string name="category_songs">Трэк</string>
     <string name="disc">Дыск</string>
     <string name="settings_app_theme">Тэма дадатку</string>
@@ -111,7 +111,7 @@
     <string name="settings_audio">Гук</string>
     <string name="settings_about_app">Аб праграме</string>
     <string name="settings_player_options">Гук</string>
-    <string name="settings_color_accuracy">Дакладнасць колераперадачы</string>
+    <string name="settings_color_accuracy">Дакладнасць колеру</string>
     <string name="settings_appearance_summary">Знешні выгляд праграмы</string>
     <string name="settings_experimental_settings_summary">Функцыі тэсціравання, рознае</string>
     <string name="settings_customization">Персаналізацыя</string>
@@ -164,7 +164,7 @@
     <string name="album_covers_compat_desc">Дазвольце альбомам мець уласную вокладку, нават калі Android гэта не падтрымлівае</string>
     <string name="deny_images">Адмоўцеся ад дазволу «Выявы і відэа»</string>
     <string name="grant_images">Падайце дазвол «Выявы і відэа»</string>
-    <string name="settings_color_accuracy_summary">Зрабіце генерацыю колеру дакладнай</string>
+    <string name="settings_color_accuracy_summary">Больш дакладная генерацыя колеру</string>
     <string name="crash_clipboard">Журнал збояў скапіяваны ў буфер абмену</string>
     <string name="settings_category_full_player">Прайгравальнік</string>
     <string name="settings_trim_lyrics">Выдаліць прабелы вакол тэксту песні</string>
