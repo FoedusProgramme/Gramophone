@@ -11,7 +11,7 @@
     <string name="dialog_title">Título</string>
     <string name="settings_repository">Repositorio</string>
     <string name="sort_by_artist">Artista</string>
-    <string name="settings_mediastore_filter">Ocultar canciones de menos de (segundos)…</string>
+    <string name="settings_mediastore_filter">Duración mínima de la canción (segundos)</string>
     <string name="category_songs">Canciones</string>
     <string name="disc">Disco</string>
     <string name="settings_app_theme">Tema de la aplicación</string>
