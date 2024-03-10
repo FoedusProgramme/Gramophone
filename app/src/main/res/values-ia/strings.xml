@@ -138,7 +138,7 @@
     <string name="settings_player_options_summary">Qualitate de sortita, comportamento de reproduction</string>
     <string name="settings_skip_silence_summary">Saltar le silentio in le reproduction del tracias</string>
     <string name="settings_contributors">Contributores</string>
-    <string name="settings_mediastore_filter">Celar cantos de un duration minor que (secundas)…</string>
+    <string name="settings_mediastore_filter">Duration minime de canto (secundas)</string>
     <string name="settings_title_bold">Titulo grasse</string>
     <string name="settings_album_round_corner_summary">Activar angulos ronde in le reproductor plen</string>
     <string name="settings_content_based_color_summary">Activar generation de colores basate in le albumes</string>
