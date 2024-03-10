@@ -111,7 +111,7 @@
     <string name="settings_about_gramophone">Про додаток</string>
     <string name="settings_customization_summary">Управління параметрами персоналізації</string>
     <string name="settings_about_app">Про додаток</string>
-    <string name="settings_player_ui_summary">Налаштуйте інтерфейс плеєра</string>
+    <string name="settings_player_ui_summary">Налаштуйте інтерфейс програвача</string>
     <string name="settings_player_options">Звук</string>
     <string name="settings_category_links">Посилання</string>
     <string name="settings_appearance_summary">Зовнішній вигляд застосунка</string>
@@ -144,4 +144,11 @@
     <string name="settings_experimental_settings">Експериментальні</string>
     <string name="settings_category_basic_info">Основна інформація</string>
     <string name="settings_float_output_summary">Увімкнути 32-розрядний вихід із плаваючою комою</string>
+    <string name="settings_color_accuracy_summary">Більш точна генерація кольорів</string>
+    <string name="sort_by_add_date">Додати дату</string>
+    <string name="settings_lyric">Текст пісні</string>
+    <string name="settings_lyrics_configuration">Налаштування текстів пісень</string>
+    <string name="settings_category_full_player">Програвач</string>
+    <string name="dialog_lyrics">Текст пісні</string>
+    <string name="settings_blacklist_folder_summary">Фільтрувати пісні з певних папок</string>
 </resources>
