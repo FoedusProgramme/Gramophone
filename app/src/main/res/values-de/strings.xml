@@ -86,7 +86,7 @@
     <string name="settings_appearance_summary">Erscheinungsbild der Anwendung, Designmodi</string>
     <string name="filesystem">Dateisystem</string>
     <string name="settings_behavior_summary">Filter, Startverhalten</string>
-    <string name="settings_lyrics_configuration_summary">Konfiguriere das Erscheinungsbild des Liedtextes</string>
+    <string name="settings_lyrics_configuration_summary">Aussehen von Liedtexten konfigurieren</string>
     <string name="settings_color_accuracy_summary">Für eine präzise Farberzeugung sorgen</string>
     <string name="preference_category_quality">Qualität</string>
     <string name="settings_category_full_player">Vollbildmodus</string>
@@ -111,7 +111,7 @@
     <string name="settings_library_summary">Medienbibliothek verwalten</string>
     <string name="settings_player_options_summary">Ausgabequalität, Wiedergabeverhalten</string>
     <string name="unknown_title">Unbekannter Titel</string>
-    <string name="settings_hardware_acceleration_summary">Hardwarebeschleunigung für die Wiedergabegeschwindigkeit aktivieren</string>
+    <string name="settings_hardware_acceleration_summary">Hardwarebeschleunigung für Wiedergabegeschwindigkeit aktivieren</string>
     <string name="settings_album_round_corner_summary">Runde Ecken im Vollbildmodus aktivieren</string>
     <string name="settings_hardware_acceleration">Wiedergabegeschwindigkeit</string>
     <string name="settings_skip_silence">Stille überspringen</string>
@@ -126,7 +126,7 @@
     <string name="settings_category_misc">Sonstiges</string>
     <string name="yes">Ja</string>
     <string name="delete_in_progress">Es wird bereits ein anderes Lied gelöscht</string>
-    <string name="delete_failed">Löschen des Songs ist fehlgeschlagen</string>
+    <string name="delete_failed">Löschen des Titels fehlgeschlagen</string>
     <string name="no">Nein</string>
     <string name="settings_color_accuracy">Farbgenauigkeit</string>
     <string name="settings_content_based_color">Inhaltsbasierte Farben</string>
@@ -151,9 +151,14 @@
     <string name="settings_lyrics_configuration">Liedtext-Konfiguration</string>
     <string name="sort_by_modified_date">Änderungsdatum</string>
     <string name="settings_lyric">Liedtext</string>
-    <string name="crash_clipboard">Absturzprotokoll in die Zwischenablage kopiert</string>
+    <string name="crash_clipboard">Absturzprotokoll in Zwischenablage kopiert</string>
     <string name="settings_trim_lyrics">Leerzeichen um Liedtexte entfernen</string>
     <string name="settings_title_center">Zentrierter Titel</string>
     <string name="sort_by_add_date">Datum hinzufügen</string>
     <string name="settings_title_center_summary">Zentrierte Titel für den Vollbildmodus verwenden</string>
+    <string name="settings_album_round_corner">Rundung für Albumcover</string>
+    <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
+    <string name="settings_crash_application">Gramophone abstürzen lassen</string>
+    <string name="opensource_info">Open-Source unter GPL-3.0
+\nCopyright © 2024 Akane Foundation</string>
 </resources>
