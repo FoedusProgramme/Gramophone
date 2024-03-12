@@ -115,7 +115,7 @@
     <string name="settings_album_round_corner_summary">Runde Ecken im Vollbildmodus aktivieren</string>
     <string name="settings_hardware_acceleration">Wiedergabegeschwindigkeit</string>
     <string name="settings_skip_silence">Stille überspringen</string>
-    <string name="settings_lyrics_center">Zentrierte Ausrichtung</string>
+    <string name="settings_lyrics_center">Zentriert</string>
     <string name="settings_play_on_launch_summary">Musik beim Start abspielen</string>
     <string name="settings_play_on_launch">Beim Start abspielen</string>
     <string name="settings_experimental_settings_summary">Testfunktionen, Sonstiges</string>
