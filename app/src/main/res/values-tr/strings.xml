@@ -11,7 +11,7 @@
     <string name="dialog_title">Başlık</string>
     <string name="settings_repository">Depo</string>
     <string name="sort_by_artist">Sanatçı</string>
-    <string name="settings_mediastore_filter">MediaStore filtresi</string>
+    <string name="settings_mediastore_filter">Şarkı minimum uzunluğu (saniye)</string>
     <string name="category_songs">Şarkılar</string>
     <string name="settings_app_theme">Uygulama teması</string>
     <string name="compact_list">Liste (kompakt)</string>
@@ -132,4 +132,6 @@
     <string name="settings_color_accuracy">Renk doğruluğu</string>
     <string name="settings_play_on_launch_summary">Başlatışta müzik oynat</string>
     <string name="settings_category_basic_info">Temel bilgi</string>
+    <string name="settings_player_ui_summary">Tam oynatıcı arayüzü, şarkı sözleri</string>
+    <string name="settings_category_full_player">Tam oynatıcı</string>
 </resources>
