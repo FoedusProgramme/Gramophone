@@ -164,4 +164,6 @@
     <string name="grant_images">Por favor, conceda permiso para \"Imágenes y vídeos\"</string>
     <string name="settings_trim_lyrics">Eliminar los espacios alrededor de las letras</string>
     <string name="crash_clipboard">Registro de fallos copiado al portapapeles</string>
+    <string name="settings_lyrics_contrast">Modo de alto contraste</string>
+    <string name="settings_lyrics_contrast_summary">Útil si desea poder ver líneas de letras inactivas</string>
 </resources>
