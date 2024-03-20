@@ -160,4 +160,5 @@
     <string name="grant_images">Concede le permission a \"Imagines e videos\"</string>
     <string name="crash_clipboard">Registro de fallimentos copiate al area de transferentia</string>
     <string name="settings_trim_lyrics">Remover spatios circum le parolas</string>
+    <string name="settings_lyrics_contrast">Modo de alte contrasto</string>
 </resources>
