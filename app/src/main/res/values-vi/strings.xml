@@ -100,9 +100,9 @@
     <string name="settings_customization_summary">Quản lí các tùy chọn tùy chỉnh</string>
     <string name="settings_about_app">Giới thiệu</string>
     <string name="settings_player_ui_summary">Tinh chỉnh giao diện phát</string>
-    <string name="settings_player_options">Tuỳ chọn âm thanh</string>
+    <string name="settings_player_options">Âm thanh</string>
     <string name="settings_category_links">Liên kết</string>
-    <string name="settings_appearance_summary">Tuỳ chỉnh giao diện ứng dụng</string>
+    <string name="settings_appearance_summary">Giao diện, chủ đề ứng dụng</string>
     <string name="settings_album_round_corner_summary">Bật bo tròn trong trình phát</string>
     <string name="settings_player_options_summary">Quản lý tùy chọn đầu ra âm thanh</string>
     <string name="settings_library">Thư viện</string>
@@ -129,4 +129,7 @@
     <string name="settings_float_output">Đầu ra âm thanh nổi</string>
     <string name="settings_lyrics_bold_summary">Làm cho lời bài hát sử dụng phông chữ nặng hơn</string>
     <string name="settings_float_output_summary">Bật đầu ra âm thanh nổi 32 bit (Cần khởi động lại ứng dụng)</string>
+    <string name="settings_preference_category_application">Ứng dụng</string>
+    <string name="settings_category_basic_info">Thông tin cơ bản</string>
+    <string name="crash_clipboard">Đã sao chép nhật ký lỗi vào bảng nhớ tạm</string>
 </resources>
