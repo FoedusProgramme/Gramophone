@@ -144,6 +144,8 @@
     <string name="settings_lyrics_bold_summary">Use a heavier font weight for lyrics</string>
     <string name="settings_lyrics_center">Center alignment</string>
     <string name="settings_lyrics_center_summary">Use center alignment for lyrics</string>
+    <string name="settings_lyrics_multiline">Read multiline lyrics</string>
+    <string name="settings_lyrics_multiline_summary">Treat all the lines between sync points as one lyric text</string>
     <string name="settings_play_on_launch">Play on launch</string>
     <string name="settings_play_on_launch_summary">Play music on launch</string>
     <string name="settings_blacklist">Blacklist</string>
