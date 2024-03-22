@@ -168,4 +168,8 @@
     <string name="crash_clipboard">Журнал збояў скапіяваны ў буфер абмену</string>
     <string name="settings_category_full_player">Прайгравальнік</string>
     <string name="settings_trim_lyrics">Выдаліць прабелы вакол тэксту песні</string>
+    <string name="settings_lyrics_multiline">Чытанне шматрадковых тэкстаў песень</string>
+    <string name="settings_lyrics_multiline_summary">Ўсе радкі паміж кропкамі сінхранізацыі разглядаюцца як адзіны тэкст</string>
+    <string name="settings_lyrics_contrast">Рэжым высокай кантраснасці</string>
+    <string name="settings_lyrics_contrast_summary">Карысна, калі вы хочаце бачыць неактыўныя радкі тэксту</string>
 </resources>
