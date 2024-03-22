@@ -170,4 +170,8 @@
     <string name="crash_clipboard">Скопировал журнал сбоев в буфер обмена</string>
     <string name="grant_images">Предоставьте разрешение «Изображения и видео»</string>
     <string name="settings_trim_lyrics">Удалить пробелы вокруг текста песни</string>
+    <string name="settings_lyrics_multiline">Чтение многострочных текстов песен</string>
+    <string name="settings_lyrics_multiline_summary">Все строки между точками синхронизации рассматриваются как один единый текст</string>
+    <string name="settings_lyrics_contrast">Режим высокой контрастности</string>
+    <string name="settings_lyrics_contrast_summary">Полезно, если вы хотите видеть неактивные строки текста</string>
 </resources>
