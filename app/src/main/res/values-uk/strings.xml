@@ -103,7 +103,7 @@
     <string name="unknown_artist">Невідомий виконавець</string>
     <string name="repeat_mode">Режим повтору</string>
     <string name="settings_title_center">Назва по центру</string>
-    <string name="settings_title_center_summary">Відображати повне ім\'я виконавці по центру</string>
+    <string name="settings_title_center_summary">Використовувати центрований заголовок для програвача</string>
     <string name="settings_album_round_corner">Заокруглення кутів обкладинки альбому</string>
     <string name="settings_library_summary">Управління медіатекою</string>
     <string name="settings_player_ui">Інтерфейс плеєра</string>
@@ -164,4 +164,12 @@
     <string name="grant_images">Надайте дозвіл «Зображення та відео»</string>
     <string name="settings_trim_lyrics">Видаліть пробіли навколо тексту пісні</string>
     <string name="settings_skip_silence_summary">Пропускати тишу під час відтворення треків</string>
+    <string name="settings_category_misc">Різне</string>
+    <string name="sort_by_modified_date">Дата зміни</string>
+    <string name="settings_lyrics_multiline">Читання багаторядкового тексту пісень</string>
+    <string name="settings_lyrics_multiline_summary">Усі рядки між точками синхронізації розглядаються як один текст</string>
+    <string name="settings_lyrics_contrast">Режим високої контрастності</string>
+    <string name="settings_lyrics_center_summary">Використовувати вирівнювання центром для текстів пісень</string>
+    <string name="settings_lyrics_contrast_summary">Корисно, якщо ви хочете побачити неактивні рядки тексту</string>
+    <string name="settings_title_bold_summary">Використовуйте жирний заголовок для гравця програвача</string>
 </resources>
