@@ -55,7 +55,7 @@
     <string name="layout">نمایش</string>
     <string name="home_menu_equalizer">اکولایزر</string>
     <string name="equalizer_not_found">اکولایزر یافت نشد!</string>
-    <string name="grid">شبکه</string>
+    <string name="grid">توری</string>
     <string name="list">فهرست</string>
     <string name="settings_content_based_color">رنگ‌های مبتنی بر محتوا</string>
     <string name="settings_default_progress_bar">نوار پیشرفت پیش‌فرض</string>
@@ -67,7 +67,7 @@
     <string name="now_playing">در حال پخش</string>
     <string name="settings_package_type">نوع بسته</string>
     <string name="unknown_title">عنوان ناشناخته</string>
-    <string name="settings_appearance_summary">ظاهر کاره، حالت‌های پوسته</string>
+    <string name="settings_appearance_summary">ظاهر کاره، حالت‌های زمینه</string>
     <string name="settings_title_center">عنوان در مرکز</string>
     <string name="dialog_duration">مدت زمان</string>
     <string name="filesystem">مدیریت پرونده‌ها</string>
@@ -116,7 +116,7 @@
     <string name="home_menu_about">درباره</string>
     <string name="settings_about_app">درباره</string>
     <string name="settings_about_gramophone">دربارۀ کاره</string>
-    <string name="sort_by_add_date">افزودن تاریخ</string>
+    <string name="sort_by_add_date">تاریخ افزودن</string>
     <string name="sort_by_album">آلبوم</string>
     <string name="dialog_album">آلبوم</string>
     <string name="album_artist">هنرمند آلبوم</string>
@@ -126,7 +126,7 @@
     <string name="category_albums">آلبوم‌ها</string>
     <string name="album_covers_compat_desc">به آلبوم‌ها اجازه دهید جلد مخصوص به خود را داشته باشند حتی اگر Android از این پشتیبانی نمی‌کند</string>
     <string name="settings_app_name">نام کاره</string>
-    <string name="settings_app_theme">پوستۀ کاره</string>
+    <string name="settings_app_theme">زمینۀ کاره</string>
     <string name="dialog_artist">هنرمند</string>
     <string name="settings_blacklist">فهرست سیاه</string>
     <string name="settings_blacklist_folder">پوشه‌های فهرست سیاه</string>
@@ -160,4 +160,5 @@
     <string name="unknown_playlist">فهرست پخش ناشناخته</string>
     <string name="settings_lyrics_center_summary">استغاده از متن ترانۀ وسط‌چین</string>
     <string name="dialog_year">سال</string>
+    <string name="settings_lyrics_contrast">حالت کنتراست بالا</string>
 </resources>
