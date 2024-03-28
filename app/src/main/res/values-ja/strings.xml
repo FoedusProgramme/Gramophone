@@ -158,4 +158,6 @@
     <string name="settings_trim_lyrics">歌詞の空白を削除する</string>
     <string name="settings_lyrics_contrast_summary">非アクティブな歌詞の行を確認する場合に役立ちます</string>
     <string name="settings_lyrics_contrast">ハイコントラストモード</string>
+    <string name="settings_lyrics_multiline_summary">同期ポイント間のすべての行を 1 つ歌詞のテキストとして扱います</string>
+    <string name="settings_lyrics_multiline">複数行の歌詞を読む</string>
 </resources>
