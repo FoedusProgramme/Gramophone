@@ -14,7 +14,7 @@
     <string name="settings_repository">Repositório</string>
     <string name="settings_library_summary">Gerenciar biblioteca de mídia</string>
     <string name="sort_by_artist">Artista</string>
-    <string name="settings_mediastore_filter">Filtro de armazenamento de mídia</string>
+    <string name="settings_mediastore_filter">Duração mínima da música (segundos)</string>
     <string name="settings_hardware_acceleration_summary">Ativar aceleração de hardware de velocidade de reprodução</string>
     <string name="settings_player_ui">Interface do player</string>
     <string name="category_songs">Músicas</string>
@@ -159,4 +159,13 @@
     <string name="delete">Apagar</string>
     <string name="delete_in_progress">Outra música já está sendo deletada</string>
     <string name="crash_clipboard">Log do crash copiado para a área de transferência</string>
+    <string name="settings_lyrics_multiline">Leia letras multilinhas</string>
+    <string name="settings_lyrics_multiline_summary">Trate todas as linhas entre os pontos de sincronização como um texto de letra</string>
+    <string name="delete_failed">Falha ao excluir música</string>
+    <string name="dialog_edit_metadata">Editar</string>
+    <string name="deny_images">Negue a permissão \"imagens e vídeos\"</string>
+    <string name="grant_images">Conceda permissão para \"imagens e vídeos\"</string>
+    <string name="settings_lyrics_contrast">Modo de alto contraste</string>
+    <string name="settings_trim_lyrics">Remova espaços ao redor das letras</string>
+    <string name="settings_lyrics_contrast_summary">Útil se você quiser realmente ver linhas de letras inativas</string>
 </resources>
