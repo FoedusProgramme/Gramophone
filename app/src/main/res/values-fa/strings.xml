@@ -40,7 +40,7 @@
     <string name="shuffle">درهم</string>
     <string name="settings_category_appearance">ظاهر</string>
     <string name="repeat_mode">حالت تکرار</string>
-    <string name="unknown_version">نسخۀ ناشناخته</string>
+    <string name="unknown_version">نگارش ناشناخته</string>
     <string name="settings_category_behavior">رفتار</string>
     <string name="dialog_title">عنوان</string>
     <string name="settings_version">نگارش</string>
@@ -163,5 +163,5 @@
     <string name="settings_lyrics_contrast">حالت کنتراست بالا</string>
     <string name="settings_lyrics_multiline">خواندن ترانه‌های چند خطی</string>
     <string name="settings_lyrics_multiline_summary">با همۀ خط‌های بین نقاط همگام به عنوان یک متن ترانه رفتار شود</string>
-    <string name="settings_lyrics_contrast_summary">مفید است اگر می‌خواهید در واقع قادر به دیدن خط‌های غیرفعال ترانه باشید</string>
+    <string name="settings_lyrics_contrast_summary">اگر می‌خواهید قادر به در حقیقت دیدن خط‌های ترانۀ غیرفعال باشید مفید است</string>
 </resources>
