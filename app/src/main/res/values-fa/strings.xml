@@ -5,7 +5,7 @@
     <string name="settings_hardware_acceleration_summary">به کار انداختن شتاب سخت‌افزاری سرعت پخش</string>
     <string name="home_menu_shuffle">درهم</string>
     <string name="category_artists">هنرمندها</string>
-    <string name="category_dates">تاریخ</string>
+    <string name="category_dates">تاریخ‌ها</string>
     <string name="category_genres">سبک‌ها</string>
     <string name="home_menu_settings">تنظیمات</string>
     <string name="category_songs">آوازها</string>
@@ -147,7 +147,7 @@
     <string name="opensource_info">متن‌باز شده با قوانین GPL-3.0
 \nگواهی پخش © 2024 Akane Foundation</string>
     <string name="settings_player_options_summary">کیفیت خروجی، رفتار پخش کننده</string>
-    <string name="category_playlists">فهرست پخش</string>
+    <string name="category_playlists">فهرست‌های پخش</string>
     <string name="settings_play_on_launch_summary">پخش آهنگ در اجرا</string>
     <string name="settings_play_on_launch">پخش در اجرا</string>
     <string name="grant_images">لطفا دسترسی \"تصاویر و ویدیوها\" را قبول کنید</string>
