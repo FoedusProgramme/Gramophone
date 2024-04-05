@@ -134,4 +134,12 @@
     <string name="settings_category_basic_info">Temel bilgi</string>
     <string name="settings_player_ui_summary">Tam oynatıcı arayüzü, şarkı sözleri</string>
     <string name="settings_category_full_player">Tam oynatıcı</string>
+    <string name="settings_lyrics_configuration_summary">Şarkı sözlerinin görünümünü yapılandır</string>
+    <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
+    <string name="settings_lyrics_multiline">Çok satırlı şarkı sözlerini oku</string>
+    <string name="settings_lyrics_contrast">Yüksek kontrast modu</string>
+    <string name="deny_images">Lütfen \"Fotoğraflar ve Videolar\" iznini reddedin</string>
+    <string name="album_covers_compat">Albüm kapağı uyumluluk modu</string>
+    <string name="delete_failed">Şarkı silinemedi</string>
+    <string name="settings_trim_lyrics">Şarkı sözleri arasındaki boşlukları kaldır</string>
 </resources>
