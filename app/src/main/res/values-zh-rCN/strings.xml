@@ -41,7 +41,7 @@
     <string name="dialog_title">标题</string>
     <string name="dialog_artist">艺术家</string>
     <string name="settings_category_behavior">行为</string>
-    <string name="settings_mediastore_filter">隐藏时长小于 … 秒的歌曲</string>
+    <string name="settings_mediastore_filter">歌曲最小长度（秒）</string>
     <string name="settings_repository">仓库地址</string>
     <string name="dialog_album">专辑</string>
     <string name="dialog_genre">流派</string>
@@ -77,7 +77,7 @@
 \n版权所有 © 2024 Akane Foundation</string>
     <string name="settings_default_progress_bar">启用默认进度条</string>
     <string name="home_menu_about">关于</string>
-    <string name="settings_default_progress_bar_summary">使用 Material Design 样式的进度条</string>
+    <string name="settings_default_progress_bar_summary">使用 Material Design 默认样式的进度条</string>
     <string name="playlist_favourite">收藏</string>
     <string name="now_playing">正在播放</string>
     <string name="settings_content_based_color">启用基于内容生成的颜色</string>
@@ -156,4 +156,8 @@
     <string name="deny_images">请拒绝“图片和视频”权限</string>
     <string name="crash_clipboard">已将崩溃日志复制到剪贴板</string>
     <string name="settings_trim_lyrics">删除歌词中的空行</string>
+    <string name="settings_lyrics_contrast">高对比度模式</string>
+    <string name="settings_lyrics_contrast_summary">这在您希望能够看到非当前播放的歌词行时很有用</string>
+    <string name="settings_lyrics_multiline">获取多行歌词</string>
+    <string name="settings_lyrics_multiline_summary">将歌词中时间点之间的所有行都视作同一行歌词</string>
 </resources>
