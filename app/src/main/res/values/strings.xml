@@ -176,4 +176,6 @@
 	<string name="settings_trim_lyrics">Remove spaces around lyrics</string>
 	<string name="settings_lyrics_contrast">High contrast mode</string>
     <string name="settings_lyrics_contrast_summary">Useful if you want to be able to actually see inactive lyric lines</string>
+	<string name="timer">Sleep timer</string>
+    <string name="current_playlist">Current playlist</string>
 </resources>
