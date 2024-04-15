@@ -161,4 +161,5 @@
     <string name="crash_clipboard">Registro de fallimentos copiate al area de transferentia</string>
     <string name="settings_trim_lyrics">Remover spatios circum le parolas</string>
     <string name="settings_lyrics_contrast">Modo de alte contrasto</string>
+    <string name="timer">Temporisator de somno</string>
 </resources>
