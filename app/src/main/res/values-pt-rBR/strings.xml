@@ -168,4 +168,6 @@
     <string name="settings_lyrics_contrast">Modo de alto contraste</string>
     <string name="settings_trim_lyrics">Remova espaços ao redor das letras</string>
     <string name="settings_lyrics_contrast_summary">Útil se você quiser realmente ver linhas de letras inativas</string>
+    <string name="current_playlist">Lista de reprodução atual</string>
+    <string name="timer">Despertador</string>
 </resources>
