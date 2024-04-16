@@ -160,4 +160,6 @@
     <string name="settings_lyrics_contrast">ハイコントラストモード</string>
     <string name="settings_lyrics_multiline_summary">同期ポイント間のすべての行を 1 つ歌詞のテキストとして扱います</string>
     <string name="settings_lyrics_multiline">複数行の歌詞を読む</string>
+    <string name="current_playlist">現在のプレイリスト</string>
+    <string name="timer">スリープタイマー</string>
 </resources>
