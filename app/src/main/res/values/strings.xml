@@ -178,4 +178,7 @@
     <string name="settings_lyrics_contrast_summary">Useful if you want to be able to actually see inactive lyric lines</string>
 	<string name="timer">Sleep timer</string>
     <string name="current_playlist">Current playlist</string>
+	<string name="fgs_failed_title">Failed to resume music playback</string>
+    <string name="fgs_failed_text">Click here to open the app and continue playback</string>
+    <string name="fgs_failed_channel">Playback failed to resume</string>
 </resources>
