@@ -162,4 +162,5 @@
     <string name="settings_trim_lyrics">Remover spatios circum le parolas</string>
     <string name="settings_lyrics_contrast">Modo de alte contrasto</string>
     <string name="timer">Temporisator de somno</string>
+    <string name="current_playlist">Lista de reproduction actual</string>
 </resources>
