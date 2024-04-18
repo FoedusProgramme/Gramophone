@@ -170,4 +170,7 @@
     <string name="settings_lyrics_contrast_summary">Útil se você quiser realmente ver linhas de letras inativas</string>
     <string name="current_playlist">Lista de reprodução atual</string>
     <string name="timer">Despertador</string>
+    <string name="fgs_failed_title">Falha ao retomar a reprodução da música</string>
+    <string name="fgs_failed_channel">A reprodução não foi retomada</string>
+    <string name="fgs_failed_text">Clique aqui para abrir o aplicativo e continuar a reprodução</string>
 </resources>
