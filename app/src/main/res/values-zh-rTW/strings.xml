@@ -127,8 +127,6 @@
     <string name="dialog_edit_metadata">編輯</string>
     <string name="album_cover">專輯封面</string>
     <string name="settings_blacklist">黑名單</string>
-    <string name="album_covers_compat">專輯封面相容模式</string>
-    <string name="album_covers_compat_desc">允許專輯擁有個別封面，儘管Android不支援</string>
     <string name="settings_experimental_settings">實驗性設定</string>
     <string name="crash_clipboard">複製崩潰日誌到剪貼簿</string>
     <string name="settings_category_basic_info">基本資訊</string>

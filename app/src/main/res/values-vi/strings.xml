@@ -151,8 +151,6 @@
     <string name="settings_trim_lyrics">Loại bỏ dấu cách xung quanh lời bài hát</string>
     <string name="dialog_lyrics">Lời bài hát</string>
     <string name="settings_blacklist">Danh sách loại trừ</string>
-    <string name="album_covers_compat">Chế độ tương thích cho ảnh album</string>
-    <string name="album_covers_compat_desc">Cho phép các album sử dụng ảnh album riêng kể cả khi Android không hỗ trợ</string>
     <string name="deny_images">Vui lòng tắt quyền \"Truy cập ảnh &amp; video\"</string>
     <string name="grant_images">Vui lòng cho phép quyền \"Truy cập ảnh &amp; video\"</string>
     <string name="settings_lyrics_contrast_summary">Hữu ích nếu bạn muốn đọc những dòng lời bài hát không đồng bộ</string>

@@ -151,8 +151,6 @@
     <string name="no">否</string>
     <string name="delete_in_progress">已删除另一首歌曲</string>
     <string name="grant_images">请授予“图片和视频”权限</string>
-    <string name="album_covers_compat">专辑封面兼容模式</string>
-    <string name="album_covers_compat_desc">即使 Android 不支持，也允许专辑拥有自己的封面</string>
     <string name="deny_images">请拒绝“图片和视频”权限</string>
     <string name="crash_clipboard">已将崩溃日志复制到剪贴板</string>
     <string name="settings_trim_lyrics">删除歌词中的空行</string>

@@ -164,9 +164,7 @@
     <string name="settings_category_misc">Разное</string>
     <string name="preference_category_quality">Качество</string>
     <string name="settings_category_full_player">Плеер</string>
-    <string name="album_covers_compat">Режим совместимости обложек альбомов</string>
     <string name="deny_images">Откажитесь от разрешения «Изображения и видео»</string>
-    <string name="album_covers_compat_desc">Разрешить альбомам иметь собственную обложку, даже если Android это не поддерживает</string>
     <string name="crash_clipboard">Скопировал журнал сбоев в буфер обмена</string>
     <string name="grant_images">Предоставьте разрешение «Изображения и видео»</string>
     <string name="settings_trim_lyrics">Удалить пробелы вокруг текста песни</string>

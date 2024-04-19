@@ -14,13 +14,13 @@
     <plurals name="songs">
         <item quantity="one">%d Brano</item>
         <item quantity="many">%d Brani</item>
-        <item quantity="other"></item>
+        <item quantity="other"/>
     </plurals>
     <string name="dialog_year">Anno</string>
     <plurals name="albums">
         <item quantity="one">%d Album</item>
         <item quantity="many">%d Album</item>
-        <item quantity="other"></item>
+        <item quantity="other"/>
     </plurals>
     <string name="dialog_path">Percorso</string>
     <string name="unknown_album">Album sconosciuto</string>
@@ -58,7 +58,7 @@
     <plurals name="items">
         <item quantity="one">%d Elemento</item>
         <item quantity="many">%d Elementi</item>
-        <item quantity="other"></item>
+        <item quantity="other"/>
     </plurals>
     <string name="settings_blacklist_folder_summary">Filtra brani da alcune cartelle</string>
     <string name="settings_category_basic_info">Info di base</string>
@@ -73,7 +73,6 @@
     <string name="delete_failed">Eliminazione brano fallita</string>
     <string name="delete_in_progress">Già eliminando un altro brano</string>
     <string name="yes">Sì</string>
-    <string name="album_covers_compat_desc">Consenti agli album di avere una propria copertina anche se Android non lo supporta</string>
     <string name="grant_images">Per favore consenti il permesso \"immagini &amp; video\"</string>
     <string name="crash_clipboard">Registro crash copiato negli appunti</string>
     <string name="settings_trim_lyrics">Rimuovi spazi nei testi</string>
@@ -84,7 +83,7 @@
     <plurals name="artists">
         <item quantity="one">%d Artista</item>
         <item quantity="many">%d Artisti</item>
-        <item quantity="other"></item>
+        <item quantity="other"/>
     </plurals>
     <string name="go_to_artist">Vai a artista</string>
     <string name="details">Dettagli</string>
@@ -102,7 +101,6 @@
     <string name="settings_about_gramophone">Riguardo all\'applicazione</string>
     <string name="settings_library">Libreria</string>
     <string name="settings_hardware_acceleration">Velocità riproduzione</string>
-    <string name="album_covers_compat">Modalità compabilità copertina album</string>
     <string name="deny_images">Per favore nega il permesso \"immagini &amp; video\"</string>
     <string name="settings_lyrics_contrast_summary">Utile se vuoi essere in grado di vedere le righe dei testi inattivi</string>
     <string name="settings_player_ui_summary">UI player intero, testi</string>

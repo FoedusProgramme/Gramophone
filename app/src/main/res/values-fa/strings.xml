@@ -121,10 +121,8 @@
     <string name="dialog_album">آلبوم</string>
     <string name="album_artist">هنرمند آلبوم</string>
     <string name="album_cover">جلد آلبوم</string>
-    <string name="album_covers_compat">حالت سازگاری با جلد آلبوم</string>
     <string name="settings_album_round_corner">گوشۀ گرد آلبوم</string>
     <string name="category_albums">آلبوم‌ها</string>
-    <string name="album_covers_compat_desc">به آلبوم‌ها اجازه دهید جلد مخصوص به خود را داشته باشند حتی اگر Android از این پشتیبانی نمی‌کند</string>
     <string name="settings_app_name">نام کاره</string>
     <string name="settings_app_theme">زمینۀ کاره</string>
     <string name="dialog_artist">هنرمند</string>

@@ -154,8 +154,6 @@
     <string name="settings_lyrics_center">Alineamento centrate</string>
     <string name="settings_lyrics_center_summary">Usar alineamento centrate pro le parolas</string>
     <string name="settings_lyrics_bold">Parolas in grasse</string>
-    <string name="album_covers_compat">Modo de compatibilitate de coperturas de albumes</string>
-    <string name="album_covers_compat_desc">Permitter al albumes haber su proprie copertura mesmo si Android non lo supporta</string>
     <string name="deny_images">Refusa le permission a \"Imagines e videos\"</string>
     <string name="grant_images">Concede le permission a \"Imagines e videos\"</string>
     <string name="crash_clipboard">Registro de fallimentos copiate al area de transferentia</string>

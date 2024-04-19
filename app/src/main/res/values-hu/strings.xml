@@ -75,9 +75,7 @@
     <string name="album_cover">Album borítója</string>
     <string name="album_artist">Album előadója</string>
     <string name="dialog_album_artist">Album előadója</string>
-    <string name="album_covers_compat">Album borító kompatibilitási mód</string>
     <string name="settings_album_round_corner">Album kerek sarok</string>
-    <string name="album_covers_compat_desc">Lehetővé teszi, hogy az albumoknak saját borítójuk legyen, még akkor is, ha az Android nem támogatja ezt</string>
     <string name="delete_in_progress">Már törölsz egy másik dalt</string>
     <string name="category_albums">Albumok</string>
     <string name="settings_preference_category_application">Alkalmazás</string>

@@ -172,8 +172,6 @@
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
     <string name="deny_images">يرجى رفض إذن \"الصور ومقاطع الفيديو\"</string>
     <string name="grant_images">يرجى منح إذن \"الصور ومقاطع الفيديو\"</string>
-    <string name="album_covers_compat">وضع توافق غلاف الألبوم</string>
-    <string name="album_covers_compat_desc">السماح للألبومات بأن يكون لها غلافها الخاص حتى لو كان Android لا يدعم ذلك</string>
     <string name="crash_clipboard">تم نسخ سجل الأعطال إلى الحافظة</string>
     <string name="settings_trim_lyrics">إزالة المسافات حول كلمات الأغاني</string>
 </resources>

@@ -160,8 +160,6 @@
     <string name="yes">Так</string>
     <string name="settings_title_bold_summary">Выкарыстоўваць тоўсты загаловак для прайгравальніка</string>
     <string name="delete_in_progress">Ужо выдаляецца іншая песня</string>
-    <string name="album_covers_compat">Рэжым сумяшчальнасці вокладкі альбома</string>
-    <string name="album_covers_compat_desc">Дазвольце альбомам мець уласную вокладку, нават калі Android гэта не падтрымлівае</string>
     <string name="deny_images">Адмоўцеся ад дазволу «Выявы і відэа»</string>
     <string name="grant_images">Падайце дазвол «Выявы і відэа»</string>
     <string name="settings_color_accuracy_summary">Больш дакладная генерацыя колеру</string>

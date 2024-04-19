@@ -137,8 +137,6 @@
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
     <string name="settings_blacklist">Чорний список</string>
     <string name="settings_blacklist_folder">Чорний список папок</string>
-    <string name="album_covers_compat">Режим сумісності обкладинки альбому</string>
-    <string name="album_covers_compat_desc">Дозвольте альбомам мати власні обкладинки, навіть якщо Android їх не підтримує</string>
     <string name="crash_clipboard">Журнал збоїв скопійовано в буфер обміну</string>
     <string name="settings_lyrics_bold">Жирний текст пісні</string>
     <string name="settings_experimental_settings">Експериментальні</string>

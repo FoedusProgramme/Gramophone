@@ -139,7 +139,6 @@
     <string name="settings_lyrics_multiline">Çok satırlı şarkı sözlerini oku</string>
     <string name="settings_lyrics_contrast">Yüksek kontrast modu</string>
     <string name="deny_images">Lütfen \"Fotoğraflar ve Videolar\" iznini reddedin</string>
-    <string name="album_covers_compat">Albüm kapağı uyumluluk modu</string>
     <string name="delete_failed">Şarkı silinemedi</string>
     <string name="settings_trim_lyrics">Şarkı sözleri arasındaki boşlukları kaldır</string>
 </resources>

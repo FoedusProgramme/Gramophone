@@ -139,8 +139,6 @@
     <string name="settings_blacklist_folder_summary">Filtert Songs aus bestimmten Ordnern</string>
     <string name="dialog_disc_number">Disc-Nummer</string>
     <string name="disc">Disc</string>
-    <string name="album_covers_compat">Kompatibilitätsmodus für Albumcover</string>
-    <string name="album_covers_compat_desc">Alben erlauben ein eigenes Cover zu haben, auch wenn Android dies nicht unterstützt</string>
     <string name="deny_images">Bitte die Berechtigung „Bilder und Videos“ verweigern</string>
     <string name="grant_images">Bitte die Berechtigung „Bilder &amp; Videos“ erteilen</string>
     <string name="settings_package_type">Pakettyp</string>

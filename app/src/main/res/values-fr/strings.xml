@@ -157,8 +157,6 @@
     <string name="preference_category_quality">Qualité</string>
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
     <string name="yes">Oui</string>
-    <string name="album_covers_compat_desc">Permettre aux albums d\'avoir leur propre pochette même si Android ne le supporte pas</string>
-    <string name="album_covers_compat">Mode de compatibilité de la pochette des albums</string>
     <string name="deny_images">Veuillez refuser la permission « Images et vidéos »</string>
     <string name="grant_images">Veuillez accepter la permission « Images et vidéos »</string>
     <string name="crash_clipboard">Journal de plantage copié</string>

@@ -158,5 +158,4 @@
     <string name="recently_added">Adăugat recent</string>
     <string name="natural_order">În ordine naturală</string>
     <string name="preference_category_quality">Calitate</string>
-    <string name="album_covers_compat_desc">Permite albumele să aibă propriul lor cover dacă android suportă</string>
 </resources>
