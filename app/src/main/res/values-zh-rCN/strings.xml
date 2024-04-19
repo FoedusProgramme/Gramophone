@@ -160,4 +160,9 @@
     <string name="settings_lyrics_contrast_summary">这在您希望能够看到非当前播放的歌词行时很有用</string>
     <string name="settings_lyrics_multiline">获取多行歌词</string>
     <string name="settings_lyrics_multiline_summary">将歌词中时间点之间的所有行都视作同一行歌词</string>
+    <string name="timer">睡眠定时器</string>
+    <string name="current_playlist">当前播放列表</string>
+    <string name="fgs_failed_text">单击此处以打开应用并继续播放</string>
+    <string name="fgs_failed_title">无法恢复音乐播放</string>
+    <string name="fgs_failed_channel">播放无法恢复</string>
 </resources>
