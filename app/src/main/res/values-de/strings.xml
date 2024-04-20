@@ -159,4 +159,7 @@
     <string name="settings_crash_application">Gramophone abstürzen lassen</string>
     <string name="opensource_info">Open-Source unter GPL-3.0
 \nCopyright © 2024 Akane Foundation</string>
+    <string name="current_playlist">Aktuelle Wiedergabeliste</string>
+    <string name="fgs_failed_title">Fehler beim Fortsetzen der Musikwiedergabe</string>
+    <string name="share">Teilen</string>
 </resources>
