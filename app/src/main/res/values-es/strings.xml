@@ -171,4 +171,7 @@
     <string name="fgs_failed_text">Haga clic aquí para abrir la aplicación y continuar la reproducción</string>
     <string name="fgs_failed_channel">No se puede reanudar la reproducción</string>
     <string name="fgs_failed_title">Error al reanudar la reproducción de música</string>
+    <string name="album_covers_enhance">Carga de portada de álbum mejorada</string>
+    <string name="share">Compartir</string>
+    <string name="album_covers_enhance_desc">Admite portadas de canciones de alta calidad y permite que la portada del álbum y la canción sean diferentes (requiere acceso a las fotos)</string>
 </resources>
