@@ -163,4 +163,7 @@
     <string name="fgs_failed_title">音楽の再生を再開できませんでした</string>
     <string name="fgs_failed_text">アプリを開いて再生を続行するにはここをタップしてください</string>
     <string name="fgs_failed_channel">再生を再開できませんでした</string>
+    <string name="album_covers_enhance">強化されたアルバムカバーの読み込み</string>
+    <string name="share">共有</string>
+    <string name="album_covers_enhance_desc">曲とアルバムで高画質なカバー画像に変更できるようにします (写真へのアクセス許可が必要です)</string>
 </resources>
