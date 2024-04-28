@@ -141,4 +141,8 @@
     <string name="deny_images">Lütfen \"Fotoğraflar ve Videolar\" iznini reddedin</string>
     <string name="delete_failed">Şarkı silinemedi</string>
     <string name="settings_trim_lyrics">Şarkı sözleri arasındaki boşlukları kaldır</string>
+    <string name="settings_skip_silence_summary">Parçaları çalarken sessizliği atla</string>
+    <string name="album_covers_enhance">Gelişmiş albüm kapağı yükleniyor</string>
+    <string name="share">Paylaş</string>
+    <string name="current_playlist">Şu anki çalma listesi</string>
 </resources>
