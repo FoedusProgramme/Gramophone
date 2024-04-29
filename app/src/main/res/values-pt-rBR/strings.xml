@@ -171,4 +171,7 @@
     <string name="fgs_failed_title">Falha ao retomar a reprodução da música</string>
     <string name="fgs_failed_channel">A reprodução não foi retomada</string>
     <string name="fgs_failed_text">Clique aqui para abrir o aplicativo e continuar a reprodução</string>
+    <string name="album_covers_enhance">Carregamento aprimorado da capa do álbum</string>
+    <string name="share">Compartilhar</string>
+    <string name="album_covers_enhance_desc">Suporta capas de músicas de alta qualidade e permite que a capa do álbum e da música seja diferente (requer acesso às fotos)</string>
 </resources>
