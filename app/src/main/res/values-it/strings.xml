@@ -166,4 +166,12 @@
     <string name="settings_hardware_acceleration_summary">Abilita accelerazione hardware velocità riproduzione</string>
     <string name="settings_color_accuracy_summary">Rendi generazione colore accurata</string>
     <string name="settings_experimental_settings_summary">Funzioni in test, varie</string>
+    <string name="album_covers_enhance">Caricamento delle copertine album migliorato</string>
+    <string name="share">Condividi</string>
+    <string name="current_playlist">Playlist attuale</string>
+    <string name="fgs_failed_title">Impossibile riprendere la riproduzione musicale</string>
+    <string name="timer">Timer di riposo</string>
+    <string name="fgs_failed_channel">Impossibile riprendere la riproduzione</string>
+    <string name="fgs_failed_text">Fai click qui per aprire l\'app e continuare la riproduzione</string>
+    <string name="album_covers_enhance_desc">Supporto per copertine di alta qualità delle canzoni e possibilità di differenziare tra copertine di album e canzoni (richiede l\'accesso alle foto)</string>
 </resources>
