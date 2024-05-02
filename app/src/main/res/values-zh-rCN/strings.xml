@@ -163,4 +163,7 @@
     <string name="fgs_failed_text">单击此处以打开应用并继续播放</string>
     <string name="fgs_failed_title">无法恢复音乐播放</string>
     <string name="fgs_failed_channel">播放无法恢复</string>
+    <string name="album_covers_enhance_desc">支持高品质歌曲封面，并允许专辑和歌曲封面有所不同（需要照片访问权限）</string>
+    <string name="album_covers_enhance">增强的专辑封面加载</string>
+    <string name="share">分享</string>
 </resources>
