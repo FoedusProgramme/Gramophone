@@ -158,4 +158,11 @@
     <string name="recently_added">Adăugat recent</string>
     <string name="natural_order">În ordine naturală</string>
     <string name="preference_category_quality">Calitate</string>
+    <string name="current_playlist">Playlistul curent</string>
+    <string name="fgs_failed_channel">Rateu de rezumare playback</string>
+    <string name="crash_clipboard">Copiază lista în tastatură</string>
+    <string name="settings_lyrics_contrast">Mode de contrast mare</string>
+    <string name="fgs_failed_text">Apăsa aici pentru a porni aplicația și continua ascultarea</string>
+    <string name="album_covers_enhance">Încărcare îmbunătățită a copertei albumului</string>
+    <string name="fgs_failed_title">Rateu de a rezuma ascultarea</string>
 </resources>
