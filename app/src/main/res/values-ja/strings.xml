@@ -166,4 +166,5 @@
     <string name="album_covers_enhance">強化されたアルバムカバーの読み込み</string>
     <string name="share">共有</string>
     <string name="album_covers_enhance_desc">曲とアルバムで高画質なカバー画像に変更できるようにします (写真へのアクセス許可が必要です)</string>
+    <string name="sort_by_release_date">リリース日</string>
 </resources>
