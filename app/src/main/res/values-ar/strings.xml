@@ -17,7 +17,7 @@
     <string name="settings_repository">المستودع</string>
     <string name="settings_library_summary">إدارة مكتبة الوسائط</string>
     <string name="sort_by_artist">الفنّان</string>
-    <string name="settings_mediastore_filter">إخفاء الأغاني الأقصر من (ثواني)…</string>
+    <string name="settings_mediastore_filter">الحد الأدنى لطول الأغنية (بالثواني)</string>
     <string name="sort_by_modified_date">تاريخ التعديل</string>
     <string name="settings_hardware_acceleration_summary">تنشيط تسريع التشغيل باستخدام العَتَاد الصّلب</string>
     <string name="settings_player_ui">واجهة المُشَغِّل</string>
@@ -174,4 +174,17 @@
     <string name="grant_images">يرجى منح إذن \"الصور ومقاطع الفيديو\"</string>
     <string name="crash_clipboard">تم نسخ سجل الأعطال إلى الحافظة</string>
     <string name="settings_trim_lyrics">إزالة المسافات حول كلمات الأغاني</string>
+    <string name="sort_by_release_date">تاريخ الإصدار</string>
+    <string name="album_covers_enhance">تحميل غلاف الألبوم المحسن</string>
+    <string name="share">مشاركة</string>
+    <string name="settings_lyrics_multiline_summary">تعامل مع كافة الأسطر الموجودة بين نقاط المزامنة كنص غنائي واحد</string>
+    <string name="fgs_failed_title">فشل في استئناف تشغيل الموسيقى</string>
+    <string name="settings_lyrics_contrast">وضع التباين العالي</string>
+    <string name="album_covers_enhance_desc">دعم أغلفة الأغاني عالية الجودة والسماح باختلاف الألبوم وغلاف الأغنية (يتطلب الوصول إلى الصور)</string>
+    <string name="fgs_failed_text">انقر هنا لفتح التطبيق ومتابعة التشغيل في الخلفية</string>
+    <string name="fgs_failed_channel">فشل استئناف التشغيل</string>
+    <string name="settings_lyrics_multiline">قراءة كلمات متعددة الأسطر</string>
+    <string name="settings_lyrics_contrast_summary">مفيد إذا كنت تريد أن تكون قادرًا على رؤية الأسطر الغنائية غير النشطة فعليًا</string>
+    <string name="current_playlist">قائمة التشغيل الحالية</string>
+    <string name="timer">مؤقت النوم</string>
 </resources>
