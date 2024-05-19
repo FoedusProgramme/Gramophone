@@ -174,4 +174,5 @@
     <string name="album_covers_enhance">Carga de portada de álbum mejorada</string>
     <string name="share">Compartir</string>
     <string name="album_covers_enhance_desc">Admite portadas de canciones de alta calidad y permite que la portada del álbum y la canción sean diferentes (requiere acceso a las fotos)</string>
+    <string name="sort_by_release_date">Fecha de lanzamiento</string>
 </resources>
