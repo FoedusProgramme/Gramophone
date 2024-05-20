@@ -166,4 +166,5 @@
     <string name="album_covers_enhance_desc">Hỗ trợ ảnh bài hát chất lượng cao và cho phép ảnh bài hát khác ảnh album (yêu cầu quyền truy cập ảnh)</string>
     <string name="share">Chia sẻ</string>
     <string name="album_covers_enhance">Tải ảnh album nâng cao</string>
+    <string name="sort_by_release_date">Năm phát hành</string>
 </resources>
