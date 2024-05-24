@@ -1,0 +1,11 @@
+Highlights of this release:
+- Reverted back to old icon
+- Show sleep timer end time in tooltip and remaining time in dialog
+- New shuffle implementation
+- Multi-level sorting (eg albums>track number)
+- better old (<9) Android and A12 compatibility
+- Nicely animated now playing indicator in song list
+- Added AboutLibraries
+- Migrated to Coil3 image loader
+  - Fixed issue where thumbnails are too big while scrolling list
+- Many more bug fixes I forgot about
