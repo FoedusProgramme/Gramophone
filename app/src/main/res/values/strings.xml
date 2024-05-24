@@ -183,4 +183,5 @@
     <string name="fgs_failed_text">Click here to open the app and continue playback</string>
     <string name="fgs_failed_channel">Playback failed to resume</string>
 	<string name="sort_by_release_date">Release date</string>
+	<string name="timer_expiry">Sleep timer will pause music at %s</string>
 </resources>
