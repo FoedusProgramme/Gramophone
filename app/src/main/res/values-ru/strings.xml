@@ -174,4 +174,12 @@
     <string name="settings_lyrics_contrast_summary">Полезно, если вы хотите видеть неактивные строки текста</string>
     <string name="current_playlist">Текущий плейлист</string>
     <string name="timer">Таймер сна</string>
+    <string name="sort_by_release_date">Дата выхода</string>
+    <string name="album_covers_enhance">Расширенная загрузка обложек альбомов</string>
+    <string name="share">Поделиться</string>
+    <string name="album_covers_enhance_desc">Поддержка обложек песен высокого качества и возможность различать обложки альбомов и песен (требуется доступ к фотографиям)</string>
+    <string name="fgs_failed_title">Не удалось возобновить воспроизведение музыки</string>
+    <string name="fgs_failed_text">Нажмите здесь, чтобы открыть приложение и продолжить воспроизведение</string>
+    <string name="fgs_failed_channel">Не удалось возобновить воспроизведение</string>
+    <string name="timer_expiry">Таймер сна приостоновит музыку на %s</string>
 </resources>
