@@ -167,5 +167,5 @@
     <string name="share">共有</string>
     <string name="album_covers_enhance_desc">曲とアルバムで高画質なカバー画像に変更できるようにします (写真へのアクセス許可が必要です)</string>
     <string name="sort_by_release_date">リリース日</string>
-    <string name="timer_expiry">スリープタイマーは、%sで音楽を一時停止します</string>
+    <string name="timer_expiry">スリープタイマーは %s に再生を一時停止します</string>
 </resources>
