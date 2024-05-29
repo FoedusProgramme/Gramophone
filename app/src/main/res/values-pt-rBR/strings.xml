@@ -40,7 +40,7 @@
     <string name="settings_about_app">Sobre</string>
     <string name="natural_order">Ordem natural</string>
     <string name="light">Claro</string>
-    <string name="settings_player_ui_summary">Ajustar interface do player</string>
+    <string name="settings_player_ui_summary">Interface completa do player, Letras</string>
     <string name="settings_app_name">Nome do aplicativo</string>
     <string name="settings_content_based_color">Cores dinâmicas</string>
     <string name="settings_title_bold_summary">Coloque o título completo do player em negrito</string>
@@ -174,4 +174,6 @@
     <string name="album_covers_enhance">Carregamento aprimorado da capa do álbum</string>
     <string name="share">Compartilhar</string>
     <string name="album_covers_enhance_desc">Suporta capas de músicas de alta qualidade e permite que a capa do álbum e da música seja diferente (requer acesso às fotos)</string>
+    <string name="sort_by_release_date">Data de lançamento</string>
+    <string name="timer_expiry">O temporizador irá pausar a música em %s</string>
 </resources>
