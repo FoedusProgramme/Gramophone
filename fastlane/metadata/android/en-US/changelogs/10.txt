@@ -1,0 +1,9 @@
+Hotfix release to fix crashes on Android 5. Original changelog below.
+
+Highlights of this release:
+- Support moving now playing queue items (thanks @topazrn)
+- Fix various bugs in shuffle implementation
+- Update lyric color system to make sure it always is readable
+  - Make sure lyric color is same in system-dark-app-light and system-light-app-system modes
+- Some bug fixes
+- Fixed reproducible builds
