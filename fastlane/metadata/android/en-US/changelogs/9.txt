@@ -1,0 +1,10 @@
+Highlights of this release:
+- Support moving now playing queue items (thanks @topazrn)
+- Fix various bugs in shuffle implementation
+- Update lyric color system to make sure it always is readable
+  - Make sure lyric color is same in system-dark-app-light and system-light-app-system modes
+- Some bug fixes
+- Fixed reproducible builds (hopefully now back in F-Droid)
+
+For more information about what the last release had to offer:
+https://github.com/AkaneTan/Gramophone/releases/tag/1.0.6
