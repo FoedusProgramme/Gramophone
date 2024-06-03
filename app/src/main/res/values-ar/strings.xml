@@ -35,12 +35,12 @@
     <string name="settings_title_center">توسيط الاسم</string>
     <string name="settings_skip_silence_summary">تجاوز الصَّمت أثناء تشغيل الأغاني</string>
     <plurals name="items">
-        <item quantity="zero">غرض</item>
-        <item quantity="one">غرض</item>
-        <item quantity="two">غرضان</item>
-        <item quantity="few">أغراض</item>
-        <item quantity="many">غروض</item>
-        <item quantity="other">غرضاً</item>
+        <item quantity="zero">لا أغراض</item>
+        <item quantity="one">غرض واحد (%d)</item>
+        <item quantity="two">غرضان اثنان (%d)</item>
+        <item quantity="few">%d أغراض</item>
+        <item quantity="many">%d غرضاً</item>
+        <item quantity="other">%d غرضاً</item>
     </plurals>
     <string name="home_menu_shuffle">خلط</string>
     <string name="settings_play_on_launch_summary">تشغيل الأغنية مع تشغيل القائمة</string>
@@ -67,9 +67,9 @@
     </plurals>
     <string name="settings_play_on_launch">شغِّل مع تشغيل البرنامج</string>
     <plurals name="albums">
-        <item quantity="zero">%d ألبوم</item>
+        <item quantity="zero">لا ألبومات</item>
         <item quantity="one">ألبوم واحد (%d)</item>
-        <item quantity="two">ألبومان (%d)</item>
+        <item quantity="two">ألبومان اثنان (%d)</item>
         <item quantity="few">%d ألبوماً</item>
         <item quantity="many">%d ألبومات</item>
         <item quantity="other">%d ألبوماً</item>
@@ -120,8 +120,8 @@
     <string name="grid">عرضُ شَبَكِيّ</string>
     <plurals name="songs">
         <item quantity="zero">%d أغنية</item>
-        <item quantity="one">(%d) أغنية</item>
-        <item quantity="two">(%d) أغنيتان</item>
+        <item quantity="one">(%d) أغنية واحدة</item>
+        <item quantity="two">(%d) أغنيتان اثنتان</item>
         <item quantity="few">%d أغنية</item>
         <item quantity="many">%d أغنية</item>
         <item quantity="other">%d أغنية</item>
@@ -155,7 +155,7 @@
     <string name="unknown_artist">فنّانٌ غير معروف</string>
     <string name="repeat_mode">وضع التَّكرار</string>
     <string name="album_cover">صورة غلاف الألبوم</string>
-    <string name="settings_crash_application">اسم برنامج الخطأ</string>
+    <string name="settings_crash_application">اجعل البرنامج يقف عن الاستجابة</string>
     <string name="dialog_edit_metadata">تعديل</string>
     <string name="dialog_lyrics">الكلمات</string>
     <string name="settings_preference_category_application">التَّطبيق</string>
@@ -168,7 +168,7 @@
     <string name="delete_failed">فشل حذف الأغنية</string>
     <string name="no">لا</string>
     <string name="yes">نعم</string>
-    <string name="delete_in_progress">Already deleting another song</string>
+    <string name="delete_in_progress">يجري حذف أغنيةٍ أخرى بالفعل</string>
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
     <string name="deny_images">يرجى رفض إذن \"الصور ومقاطع الفيديو\"</string>
     <string name="grant_images">يرجى منح إذن \"الصور ومقاطع الفيديو\"</string>
@@ -187,4 +187,5 @@
     <string name="settings_lyrics_contrast_summary">مفيد إذا كنت تريد أن تكون قادرًا على رؤية الأسطر الغنائية غير النشطة فعليًا</string>
     <string name="current_playlist">قائمة التشغيل الحالية</string>
     <string name="timer">مؤقت النوم</string>
+    <string name="timer_expiry">سيُوقِف مؤقِّت النّوم الموسيقى خلال %s ثانية</string>
 </resources>
