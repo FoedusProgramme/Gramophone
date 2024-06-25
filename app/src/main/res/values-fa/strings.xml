@@ -162,4 +162,14 @@
     <string name="settings_lyrics_multiline">خواندن ترانه‌های چند خطی</string>
     <string name="settings_lyrics_multiline_summary">با همۀ خط‌های بین نقاط همگام به عنوان یک متن ترانه رفتار شود</string>
     <string name="settings_lyrics_contrast_summary">اگر می‌خواهید قادر به در حقیقت دیدن خط‌های ترانۀ غیرفعال باشید مفید است</string>
+    <string name="sort_by_release_date">تاریخ انتشار</string>
+    <string name="album_covers_enhance">بارگذاری بهبود یافتۀ جلد آلبوم</string>
+    <string name="share">هم‌رسانی</string>
+    <string name="album_covers_enhance_desc">پشتیبانی از جلدهای آواز کیفیت بالا و اجازۀ تفاوت داشتن جلد آلبوم و آواز (نیازمند دسترسی عکس‌ها)</string>
+    <string name="current_playlist">فهرست پخش کنونی</string>
+    <string name="fgs_failed_text">برای باز شدن کاره و ادامۀ پخش این‌جا کلیک کنید</string>
+    <string name="timer">زمان‌سنج خواب</string>
+    <string name="fgs_failed_channel">ازسرگیری پخش شکست خورد</string>
+    <string name="timer_expiry">زمان‌سنج خواب پخش را در %s نگه خواهد داشت</string>
+    <string name="fgs_failed_title">ازسرگیری پخش آهنگ شکست خورد</string>
 </resources>
