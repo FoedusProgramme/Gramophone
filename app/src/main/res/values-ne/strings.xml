@@ -67,4 +67,12 @@
     <string name="settings_content_based_color_summary">तल्लो पानाको लागि एल्बम कला आधारित रङ योजना उत्पादन सक्षम गर्नुहोस्</string>
     <string name="category_dates">मितिहरू</string>
     <string name="settings_hardware_acceleration_summary">प्लेब्याक गति हार्डवेयर प्रवेग सक्षम गर्नुहोस् (सेवा पुन: सुरु गर्न आवश्यक छ)</string>
+    <string name="home_menu_shuffle">शफल</string>
+    <string name="home_menu_settings">सेटिङहरू</string>
+    <string name="home_menu_search">खोज</string>
+    <string name="unknown_artist">अज्ञात कलाकार</string>
+    <string name="category_songs">गीतहरू</string>
+    <string name="home_menu_refresh">रिफ्रेश</string>
+    <string name="category_playlists">प्लेलिस्टहरू</string>
+    <string name="light">उज्यालो</string>
 </resources>
