@@ -58,12 +58,12 @@
     <string name="dialog_track_number">رقم الأغنية</string>
     <string name="folders">المُجَلَّدات</string>
     <plurals name="artists">
-        <item quantity="zero">فنّان</item>
-        <item quantity="one">فنّان</item>
-        <item quantity="two">فنّانان</item>
-        <item quantity="few">فنّانين</item>
-        <item quantity="many">فنّانون</item>
-        <item quantity="other">فنّاناً</item>
+        <item quantity="zero">لا فنّانين</item>
+        <item quantity="one">فنّانٌ واحد (%d)</item>
+        <item quantity="two">فنّانان اثنان (%d)</item>
+        <item quantity="few">%d فنّانين</item>
+        <item quantity="many">%d فنّاناً</item>
+        <item quantity="other">%d فنّاناً</item>
     </plurals>
     <string name="settings_play_on_launch">شغِّل مع تشغيل البرنامج</string>
     <plurals name="albums">
@@ -119,7 +119,7 @@
     <string name="now_playing">يتمُّ التَّشغيل الآن</string>
     <string name="grid">عرضُ شَبَكِيّ</string>
     <plurals name="songs">
-        <item quantity="zero">%d أغنية</item>
+        <item quantity="zero">لا أغاني</item>
         <item quantity="one">(%d) أغنية واحدة</item>
         <item quantity="two">(%d) أغنيتان اثنتان</item>
         <item quantity="few">%d أغنية</item>
