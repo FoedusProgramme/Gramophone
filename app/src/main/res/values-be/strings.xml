@@ -67,7 +67,7 @@
     <string name="sort_by_album">Па альбоме</string>
     <string name="category_albums">Альбомы</string>
     <string name="filesystem">Файл</string>
-    <string name="refreshed_songs">Абноўлены % 1$s трэкі</string>
+    <string name="refreshed_songs">Абноўлены %1$s трэкі</string>
     <string name="dark">Цёмны</string>
     <string name="sort_by_name">Па імені</string>
     <string name="check_for_updates">Сачыце за абнаўленнямі ў нашым канале!</string>
