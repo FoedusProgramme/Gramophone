@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="dismiss">Ignorar</string>
-    <string name="categories">Categorías</string>
     <string name="settings_category_behavior">Comportamiento</string>
-    <string name="operations">Operaciones</string>
     <string name="go_to_album">Ir al álbum</string>
     <string name="category_dates">Fechas</string>
     <string name="unknown_album">Álbum desconocido</string>
@@ -13,7 +11,6 @@
     <string name="sort_by_artist">Artista</string>
     <string name="settings_mediastore_filter">Duración mínima de la canción (segundos)</string>
     <string name="category_songs">Canciones</string>
-    <string name="disc">Disco</string>
     <string name="settings_app_theme">Tema de la aplicación</string>
     <string name="compact_list">Lista (compacto)</string>
     <string name="dialog_album_artist">Artista del álbum</string>
@@ -23,7 +20,6 @@
         <item quantity="many">%d elementos</item>
         <item quantity="other">%d elementos</item>
     </plurals>
-    <string name="home_menu_shuffle">Aleatorio</string>
     <string name="category_genres">Géneros</string>
     <string name="natural_order">Orden natural</string>
     <string name="light">Claro</string>
@@ -53,7 +49,6 @@
     <string name="settings_category_appearance">Apariencia</string>
     <string name="dialog_album">Álbum</string>
     <string name="settings_default_progress_bar">Habilitar barra de progreso predeterminado</string>
-    <string name="home_menu_about">Acerca de</string>
     <string name="details">Detalles</string>
     <string name="home_menu_equalizer">Ecualizador</string>
     <string name="dialog_path">Directorio</string>
@@ -145,7 +140,6 @@
     <string name="settings_category_basic_info">Información general</string>
     <string name="settings_preference_category_application">Aplicación</string>
     <string name="delete_in_progress">Ya estoy borrando otra canción</string>
-    <string name="delete">Borrar</string>
     <string name="delete_failed">Error al borrar la canción</string>
     <string name="settings_crash_application">La aplicación falló</string>
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
@@ -154,8 +148,6 @@
     <string name="dialog_lyrics">Letras</string>
     <string name="settings_category_filters">Filtros</string>
     <string name="preference_category_quality">Calidad</string>
-    <string name="yes">Sí</string>
-    <string name="no">No</string>
     <string name="settings_category_misc">Varias</string>
     <string name="settings_category_full_player">Reproductor entero</string>
     <string name="deny_images">Por favor, deniegue el permiso a \"Imágenes y vídeos\"</string>

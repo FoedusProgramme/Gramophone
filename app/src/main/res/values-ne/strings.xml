@@ -5,7 +5,6 @@
     <string name="dialog_album_artist">एल्बम कलाकार</string>
     <string name="settings_about_app">जानकारी</string>
     <string name="dialog_album">एल्बम</string>
-    <string name="home_menu_about">जानकारी</string>
     <string name="album_artist">एल्बम कलाकार</string>
     <string name="sort_by_album">एल्बम</string>
     <string name="category_albums">एल्बमहरू</string>
@@ -21,7 +20,6 @@
     </plurals>
     <string name="settings_app_name">एप नाम</string>
     <string name="sort_by_artist">कलाकार</string>
-    <string name="categories">कोटीहरू</string>
     <string name="dismiss">खारेज गर्नुहोस्</string>
     <string name="settings_category_appearance">देखा</string>
     <string name="settings_contributors">योगदानकर्ताहरू</string>
@@ -36,7 +34,6 @@
     <string name="home_menu_equalizer">इक्वेलाइजर</string>
     <string name="equalizer_not_found">इक्वेलाइजर फेला परेन!</string>
     <string name="settings_title_center">केन्द्रित शीर्षक</string>
-    <string name="disc">डिस्क</string>
     <string name="dialog_disc_number">डिस्क नम्बर</string>
     <string name="dialog_duration">अवधि</string>
     <string name="settings_appearance_summary">अनुप्रयोगको उपस्थिति कन्फिगर गर्नुहोस्</string>
@@ -67,7 +64,6 @@
     <string name="settings_content_based_color_summary">तल्लो पानाको लागि एल्बम कला आधारित रङ योजना उत्पादन सक्षम गर्नुहोस्</string>
     <string name="category_dates">मितिहरू</string>
     <string name="settings_hardware_acceleration_summary">प्लेब्याक गति हार्डवेयर प्रवेग सक्षम गर्नुहोस् (सेवा पुन: सुरु गर्न आवश्यक छ)</string>
-    <string name="home_menu_shuffle">शफल</string>
     <string name="home_menu_settings">सेटिङहरू</string>
     <string name="home_menu_search">खोज</string>
     <string name="unknown_artist">अज्ञात कलाकार</string>

@@ -25,17 +25,14 @@
         <item quantity="other">%d Interpretů</item>
     </plurals>
     <string name="sort_by_artist">Interpretů</string>
-    <string name="categories">Kategorie</string>
     <string name="dismiss">Zrušit</string>
     <string name="settings_app_name">Název aplikace</string>
     <string name="details">Detaily</string>
     <string name="settings_category_appearance">Vzhled</string>
     <string name="settings_category_behavior">Chování</string>
-    <string name="home_menu_about">O aplikaci</string>
     <string name="check_for_updates">Podívejte se na náš kanál pro aktualizace!</string>
     <string name="settings_default_progress_bar">Výchozí ukazatel průběhu</string>
     <string name="dialog_disc_number">Čislo disku</string>
-    <string name="disc">Disk</string>
     <string name="settings_album_round_corner">Zaoblení rohu alba</string>
     <string name="settings_audio">Zvuk</string>
     <string name="settings_lyrics_configuration_summary">Konfigurujte vzhed textů skladeb</string>
@@ -45,7 +42,6 @@
     <string name="settings_preference_category_application">Aplikace</string>
     <string name="settings_category_basic_info">Základní informace</string>
     <string name="settings_blacklist_folder">Složky černé listiny</string>
-    <string name="delete">Smazat</string>
     <string name="delete_failed">Smazání skladby selhalo</string>
     <string name="delete_in_progress">Právě se maže jiná skladba</string>
     <string name="settings_about_app">O aplikaci</string>

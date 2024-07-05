@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="home_menu_search">検索</string>
-    <string name="home_menu_shuffle">シャッフル</string>
     <string name="home_menu_settings">設定</string>
     <string name="home_menu_refresh">更新</string>
     <string name="home_menu_equalizer">イコライザー</string>
@@ -37,8 +36,6 @@
     <string name="sort_by_name">名前</string>
     <string name="sort_by_artist">アーティスト</string>
     <string name="sort_by_album">アルバム</string>
-    <string name="categories">カテゴリー</string>
-    <string name="operations">操作</string>
     <string name="dismiss">OK</string>
     <string name="refreshed_songs">%1$s 個の曲を更新しました</string>
     <string name="search">検索</string>
@@ -76,7 +73,6 @@
     <string name="settings_default_progress_bar">デフォルトのプログレスバー</string>
     <string name="opensource_info">Open-sourced under GPL-3.0
 \nCopyright © 2024 Akane Foundation</string>
-    <string name="home_menu_about">アプリについて</string>
     <string name="settings_default_progress_bar_summary">マテリアルスタイルのプログレスバーを有効化します</string>
     <string name="now_playing">再生中</string>
     <string name="settings_content_based_color">コンテンツベースのカラー生成</string>
@@ -85,7 +81,6 @@
     <string name="settings_package_type">パッケージのタイプ</string>
     <string name="no_lyric_found">歌詞がありません</string>
     <string name="dialog_disc_number">ディスク番号</string>
-    <string name="disc">ディスク</string>
     <string name="unknown_title">不明なタイトル</string>
     <string name="filesystem">ファイルシステム</string>
     <string name="dialog_mime">MIME タイプ</string>
@@ -141,10 +136,7 @@
     <string name="settings_category_misc">その他</string>
     <string name="preference_category_quality">音質</string>
     <string name="delete_in_progress">すでに別の曲を削除中です</string>
-    <string name="delete">削除</string>
-    <string name="no">いいえ</string>
     <string name="delete_failed">曲の削除に失敗しました</string>
-    <string name="yes">はい</string>
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
     <string name="settings_crash_application">アプリをクラッシュさせる</string>
     <string name="album_cover">アルバムカバー</string>

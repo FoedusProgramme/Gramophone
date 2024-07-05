@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="dismiss">Fermer</string>
-    <string name="categories">Catégories</string>
     <string name="settings_category_behavior">Comportement</string>
-    <string name="operations">Opérations</string>
     <string name="go_to_album">Voir l’album</string>
     <string name="category_dates">Dates</string>
     <string name="sort_by_size">Taille</string>
@@ -21,7 +19,6 @@
         <item quantity="many">%d éléments</item>
         <item quantity="other">%d éléments</item>
     </plurals>
-    <string name="home_menu_shuffle">Aléatoire</string>
     <string name="category_genres">Genres</string>
     <string name="natural_order">Ordre naturel</string>
     <string name="light">Clair</string>
@@ -85,7 +82,6 @@
 \nCopyright © 2024 Akane Foundation</string>
     <string name="playlist_favourite">Favori</string>
     <string name="settings_default_progress_bar">Barre de progression par défaut</string>
-    <string name="home_menu_about">À propos</string>
     <string name="now_playing">Lecture en cours</string>
     <string name="settings_default_progress_bar_summary">Activer la barre de progression Material design</string>
     <string name="settings_album_round_corner">Coins d\'albums arrondis</string>
@@ -96,7 +92,6 @@
     <string name="sort_by_modified_date">Date de modification</string>
     <string name="settings_hardware_acceleration_summary">Activer l\'accélération matérielle pour la vitesse de lecture</string>
     <string name="settings_player_ui">Interface du lecteur</string>
-    <string name="disc">Disque</string>
     <string name="settings_behavior_summary">Filtres, paramètres de démarrage</string>
     <string name="settings_about_gramophone">À propos de l\'application</string>
     <string name="settings_customization_summary">Gérer les paramètres de personnalisation</string>
@@ -143,8 +138,6 @@
     <string name="settings_blacklist_folder">Exclure des dossiers</string>
     <string name="settings_blacklist_folder_summary">Filtre les morceaux de certains dossiers</string>
     <string name="delete_in_progress">Déjà en train de supprimer une autre musique</string>
-    <string name="no">Non</string>
-    <string name="delete">Supprimer</string>
     <string name="delete_failed">Échec de la suppression</string>
     <string name="settings_crash_application">Faire planter l\'application</string>
     <string name="album_cover">Pochette d\'album</string>
@@ -156,7 +149,6 @@
     <string name="settings_category_misc">Autres</string>
     <string name="preference_category_quality">Qualité</string>
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
-    <string name="yes">Oui</string>
     <string name="deny_images">Veuillez refuser la permission « Images et vidéos »</string>
     <string name="grant_images">Veuillez accepter la permission « Images et vidéos »</string>
     <string name="crash_clipboard">Journal de plantage copié</string>

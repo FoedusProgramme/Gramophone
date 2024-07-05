@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="dismiss">Ayrıl</string>
-    <string name="categories">Kategoriler</string>
     <string name="settings_category_behavior">Davranış</string>
-    <string name="operations">Faaliyetler</string>
     <string name="go_to_album">Albüme git</string>
     <string name="category_dates">Tarihler</string>
     <string name="unknown_album">Bilinmeyen albüm</string>
@@ -21,7 +19,6 @@
         <item quantity="one">%d Öge</item>
         <item quantity="other">%d Ögeler</item>
     </plurals>
-    <string name="home_menu_shuffle">Karıştır</string>
     <string name="category_genres">Türler</string>
     <string name="natural_order">Doğal düzen</string>
     <string name="light">Açık</string>
@@ -49,7 +46,6 @@
     <string name="settings_category_appearance">Görünüş</string>
     <string name="dialog_album">Albüm</string>
     <string name="settings_default_progress_bar">Varsayılan ilerleme çubuğu</string>
-    <string name="home_menu_about">Hakkında</string>
     <string name="details">Detaylar</string>
     <string name="home_menu_equalizer">Ekolayzer</string>
     <string name="dialog_path">Yol</string>
@@ -100,7 +96,6 @@
     <string name="settings_category_links">Bağlantılar</string>
     <string name="settings_lyric">Şarkı sözü</string>
     <string name="settings_lyrics_bold">Kalın şarkı sözleri</string>
-    <string name="disc">Disk</string>
     <string name="settings_customization">Özelleştirme</string>
     <string name="settings_title_bold">Kalın başlık</string>
     <string name="dialog_duration">Süre</string>
@@ -112,9 +107,6 @@
     <string name="settings_library_summary">Medya kütüphanesini yönet</string>
     <string name="settings_customization_summary">Özelleştirme seçeneklerini yönetin</string>
     <string name="settings_skip_silence">Sessizliği atla</string>
-    <string name="yes">Evet</string>
-    <string name="delete">Sil</string>
-    <string name="no">Hayır</string>
     <string name="settings_experimental_settings">Deneysel</string>
     <string name="dialog_edit_metadata">Düzenle</string>
     <string name="dialog_lyrics">Şarkı sözleri</string>

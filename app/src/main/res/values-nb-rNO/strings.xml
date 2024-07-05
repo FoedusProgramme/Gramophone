@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="dismiss">Avslå</string>
-    <string name="categories">Kategorier</string>
     <string name="settings_category_behavior">Adferd</string>
-    <string name="operations">Operasjoner</string>
     <string name="go_to_album">Gå til album</string>
     <string name="category_dates">Datoer</string>
     <string name="unknown_album">Ukjent album</string>
@@ -21,7 +19,6 @@
         <item quantity="one">%d element</item>
         <item quantity="other">%d elementer</item>
     </plurals>
-    <string name="home_menu_shuffle">Omstokking</string>
     <string name="category_genres">Sjangre</string>
     <string name="natural_order">Naturlig rekkefølge</string>
     <string name="light">Lys</string>
@@ -45,7 +42,6 @@
     <string name="settings_category_appearance">Utseende</string>
     <string name="dialog_album">Album</string>
     <string name="settings_default_progress_bar">Skru på forvalgt framdriftsindikator</string>
-    <string name="home_menu_about">Om</string>
     <string name="details">Detaljer</string>
     <string name="home_menu_equalizer">Tonekontroll</string>
     <string name="dialog_path">Sti</string>

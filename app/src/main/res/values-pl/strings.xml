@@ -3,9 +3,7 @@
     <string name="dismiss">Odrzuć</string>
     <string name="settings_blacklist">Ignorowane</string>
     <string name="settings_album_round_corner">Zaokrąglone rogi albumu</string>
-    <string name="categories">Kategorie</string>
     <string name="settings_category_behavior">Zachowanie</string>
-    <string name="operations">Narzędzia</string>
     <string name="sort_by_add_date">Data dodania</string>
     <string name="go_to_album">Przejdź do albumu</string>
     <string name="category_dates">Daty</string>
@@ -22,7 +20,6 @@
     <string name="settings_hardware_acceleration_summary">Korzystaj z przyspieszenia sprzętowego podczas odtwarzania</string>
     <string name="settings_player_ui">Interfejs odtwarzacza</string>
     <string name="category_songs">Utwory</string>
-    <string name="disc">Płyta</string>
     <string name="settings_behavior_summary">Filtry, zachowania przy uruchamianiu</string>
     <string name="settings_app_theme">Motyw aplikacji</string>
     <string name="settings_about_gramophone">Informacje o aplikacji</string>
@@ -40,7 +37,6 @@
         <item quantity="many">%d elementów</item>
         <item quantity="other">%d elementów</item>
     </plurals>
-    <string name="home_menu_shuffle">Odtwarzaj losowo</string>
     <string name="settings_play_on_launch_summary">Odtwarzaj muzykę po uruchomieniu odtwarzacza</string>
     <string name="category_genres">Gatunki</string>
     <string name="settings_about_app">O Gramophone</string>
@@ -85,7 +81,6 @@
     <string name="dialog_album">Album</string>
     <string name="settings_color_accuracy">Dokładność kolorów</string>
     <string name="settings_default_progress_bar">Pasek postępu</string>
-    <string name="home_menu_about">O Gramophone</string>
     <string name="details">Szczegóły</string>
     <string name="home_menu_equalizer">Korekcja dźwięku</string>
     <string name="settings_skip_silence">Pomiń ciszę</string>
@@ -149,12 +144,10 @@
     <string name="settings_preference_category_application">Aplikacja</string>
     <string name="settings_category_full_player">Pełny odtwarzacz</string>
     <string name="settings_category_basic_info">Informacje podstawowe</string>
-    <string name="no">Nie</string>
     <string name="sort_by_release_date">Data wydania</string>
     <string name="album_covers_enhance">Ulepszone wczytywanie okładek albumów</string>
     <string name="share">Udostępnij</string>
     <string name="settings_crash_application_summary">Awaria-O-Matic 3000</string>
-    <string name="delete">Usuń</string>
     <string name="album_covers_enhance_desc">Obsługa wysokiej jakości okładek utworów i możliwość różnicowania okładek albumów i utworów (wymaga dostępu do zdjęć)</string>
     <string name="fgs_failed_text">Dotknij tutaj, aby otworzyć aplikację i kontynuować odtwarzanie</string>
     <string name="current_playlist">Bieżąca lista odtwarzania</string>
@@ -170,7 +163,6 @@
     <string name="settings_category_filters">Filtry</string>
     <string name="settings_category_misc">Różne</string>
     <string name="delete_failed">Usunięcie utworu nie powiodło się</string>
-    <string name="yes">Tak</string>
     <string name="settings_trim_lyrics">Usuń spacje wokół tekstów</string>
     <string name="settings_lyrics_contrast">Tryb wysokiego kontrastu</string>
     <string name="grant_images">Przyznaj uprawnienie: \"Zdjęcia i filmy\"</string>

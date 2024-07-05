@@ -20,7 +20,6 @@
     <string name="unknown_artist">Ismeretlen előadó</string>
     <string name="light">Könnyű</string>
     <string name="sort_by_size">Méret</string>
-    <string name="operations">Műveletek</string>
     <string name="search">Keresés</string>
     <string name="play_next">Következő lejátszása</string>
     <string name="go_to_artist">Vissza az előadóhoz</string>
@@ -35,7 +34,6 @@
     <string name="equalizer_not_found">Hangszínszabályozó nem található!</string>
     <string name="compact_list">Lista (kompakt)</string>
     <string name="settings_default_progress_bar">Alap folyamatjelző sáv</string>
-    <string name="home_menu_about">Rólunk</string>
     <string name="now_playing">Lejátszás</string>
     <string name="settings_content_based_color_summary">Album alapú színgenerálás engedélyezése</string>
     <string name="no_lyric_found">Nem található dalszöveg</string>
@@ -67,7 +65,6 @@
     <string name="settings_crash_application_summary">Össze-o-moltató 3000</string>
     <string name="dialog_edit_metadata">Szerkesztés</string>
     <string name="dialog_lyrics">Dalszövegek</string>
-    <string name="yes">Igen</string>
     <string name="settings_about_app">Rólunk</string>
     <string name="settings_about_gramophone">Az alkalmazásról</string>
     <string name="sort_by_album">Album</string>
@@ -86,7 +83,6 @@
     <string name="settings_audio">Hang</string>
     <string name="settings_category_basic_info">Alap infó</string>
     <string name="settings_category_behavior">Működés</string>
-    <string name="categories">Kategóriák</string>
     <string name="settings_blacklist">Feketelista</string>
     <string name="settings_lyrics_bold">Félkövér dalszövegek</string>
     <string name="settings_lyrics_center">Középre igazítás</string>
@@ -100,10 +96,8 @@
     <string name="settings_customization">Testreszabás</string>
     <string name="dark">Sötét</string>
     <string name="category_dates">Dátumok</string>
-    <string name="delete">Törlés</string>
     <string name="delete_failed">A dal törlése sikertelen</string>
     <string name="details">Részletek</string>
-    <string name="disc">Lemez</string>
     <string name="dialog_disc_number">Lemezszám</string>
     <string name="dismiss">Kihagyás</string>
     <string name="layout">Megjelenítés</string>
@@ -129,7 +123,6 @@
     <string name="dialog_mime">Mime típus</string>
     <string name="settings_category_misc">Egyéb</string>
     <string name="sort_by_name">Név</string>
-    <string name="no">Nem</string>
     <string name="settings_package_type">Csomag típusa</string>
     <string name="opensource_info">Nyílt forráskódú GPL-3.0 alatt
 \nCopyright © 2024 Akane Foundation</string>
@@ -148,7 +141,6 @@
     <string name="settings_repository">Tároló</string>
     <string name="home_menu_search">Keresés</string>
     <string name="home_menu_settings">Beállítások</string>
-    <string name="home_menu_shuffle">Keverés</string>
     <string name="shuffle">Keverés</string>
     <string name="unknown_album">Ismeretlen album</string>
     <string name="unknown_genre">Ismeretlen műfaj</string>

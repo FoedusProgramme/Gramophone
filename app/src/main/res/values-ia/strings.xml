@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="sort_by_artist">Artista</string>
-    <string name="categories">Categorias</string>
     <string name="settings_category_appearance">Apparentia</string>
     <string name="dialog_artist">Artista</string>
     <string name="settings_category_behavior">Comportamento</string>
@@ -10,7 +9,6 @@
     <string name="settings_about_app">A proposito de</string>
     <string name="settings_player_options">Audio</string>
     <string name="settings_category_basic_info">Information basic</string>
-    <string name="home_menu_about">A proposito de</string>
     <string name="settings_about_gramophone">A proposito del application</string>
     <string name="sort_by_add_date">Data de addition</string>
     <string name="sort_by_album">Album</string>
@@ -31,7 +29,6 @@
     <string name="light">Clar</string>
     <string name="sort_by_size">Dimension</string>
     <string name="sort_by_name">Nomine</string>
-    <string name="operations">Operationes</string>
     <string name="unknown_year">Anno incognite</string>
     <string name="refreshed_songs">%1$s cantos actualisate</string>
     <string name="search">Cercar</string>
@@ -44,7 +41,6 @@
     <string name="settings_repository">Repositorio</string>
     <string name="sort_by_modified_date">Data de modification</string>
     <string name="delete_failed">Falleva le deletion del canto</string>
-    <string name="delete">Deler</string>
     <plurals name="songs">
         <item quantity="one">%d canto</item>
         <item quantity="other">%d cantos</item>
@@ -91,13 +87,10 @@
     <string name="preference_category_quality">Qualitate</string>
     <string name="dialog_edit_metadata">Modificar</string>
     <string name="dialog_lyrics">Parolas de canto</string>
-    <string name="no">Non</string>
-    <string name="yes">Si</string>
     <string name="home_menu_search">Cerca</string>
     <string name="unknown_artist">Artista incognite</string>
     <string name="dismiss">Dimitter</string>
     <string name="now_playing">Reproduction in curso</string>
-    <string name="home_menu_shuffle">Aleatori</string>
     <string name="play_next">Reproducer sequente</string>
     <string name="category_playlists">Listas de reproduction</string>
     <string name="go_to_album">Vader al album</string>
@@ -112,7 +105,6 @@
     <string name="settings_default_progress_bar_summary">Activar le barra de progresso con stylo Material</string>
     <string name="compact_list">Lista (compacte)</string>
     <string name="settings_content_based_color">Colores basate in le contento</string>
-    <string name="disc">Disco</string>
     <string name="dialog_disc_number">Numero de disco</string>
     <string name="settings_player_ui_summary">Interfacie de usator complete, parolas de canto</string>
     <string name="settings_appearance_summary">Apparentia del application, modos de thema</string>

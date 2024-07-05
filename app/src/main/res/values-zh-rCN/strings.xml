@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="home_menu_search">搜索</string>
-    <string name="home_menu_shuffle">随机</string>
     <string name="home_menu_settings">设置</string>
     <string name="home_menu_refresh">刷新</string>
     <string name="category_songs">歌曲</string>
@@ -18,8 +17,6 @@
     <string name="sort_by_name">名称</string>
     <string name="sort_by_artist">艺术家</string>
     <string name="sort_by_album">专辑</string>
-    <string name="categories">分类</string>
-    <string name="operations">操作</string>
     <string name="dismiss">关闭</string>
     <string name="unknown_genre">未知主题</string>
     <string name="unknown_year">未知年份</string>
@@ -76,7 +73,6 @@
     <string name="opensource_info">基于 GPL-3.0 协议开源
 \n版权所有 © 2024 Akane Foundation</string>
     <string name="settings_default_progress_bar">启用默认进度条</string>
-    <string name="home_menu_about">关于</string>
     <string name="settings_default_progress_bar_summary">使用 Material Design 默认样式的进度条</string>
     <string name="playlist_favourite">收藏</string>
     <string name="now_playing">正在播放</string>
@@ -85,7 +81,6 @@
     <string name="settings_package_type">软件包类型</string>
     <string name="no_lyric_found">未找到歌词</string>
     <string name="dialog_disc_number">音碟号</string>
-    <string name="disc">音碟</string>
     <string name="unknown_title">未知歌曲</string>
     <string name="filesystem">文件系统</string>
     <string name="dialog_duration">时长</string>
@@ -146,9 +141,6 @@
     <string name="dialog_edit_metadata">编辑</string>
     <string name="album_cover">专辑封面</string>
     <string name="delete_failed">删除歌曲失败</string>
-    <string name="yes">是</string>
-    <string name="delete">删除</string>
-    <string name="no">否</string>
     <string name="delete_in_progress">已删除另一首歌曲</string>
     <string name="grant_images">请授予“图片和视频”权限</string>
     <string name="deny_images">请拒绝“图片和视频”权限</string>

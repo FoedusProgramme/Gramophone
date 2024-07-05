@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="dismiss">Відміна</string>
-    <string name="categories">Категорії</string>
     <string name="settings_category_behavior">Поведінка</string>
-    <string name="operations">Дії</string>
     <string name="go_to_album">Перейти до альбому</string>
     <string name="category_dates">Дати</string>
     <string name="unknown_album">Невідомий альбом</string>
@@ -13,7 +11,6 @@
     <string name="sort_by_artist">За виконавцем</string>
     <string name="settings_mediastore_filter">Мінімальна тривалість пісні (у секундах)</string>
     <string name="category_songs">Треки</string>
-    <string name="disc">Диск</string>
     <string name="settings_app_theme">Тема додатку</string>
     <string name="compact_list">Список (компактний)</string>
     <string name="dialog_album_artist">Виконавець альбому</string>
@@ -24,7 +21,6 @@
         <item quantity="many">%d елементів</item>
         <item quantity="other">%d елементів</item>
     </plurals>
-    <string name="home_menu_shuffle">Перемішати</string>
     <string name="category_genres">Жанри</string>
     <string name="natural_order">За зростанням</string>
     <string name="light">Світла</string>
@@ -58,7 +54,6 @@
     <string name="settings_category_appearance">Зовнішній вигляд</string>
     <string name="dialog_album">Альбом</string>
     <string name="settings_default_progress_bar">Індикатор виконання за промовчанням</string>
-    <string name="home_menu_about">Про додаток</string>
     <string name="details">Подробиці</string>
     <string name="home_menu_equalizer">Еквалайзер</string>
     <string name="dialog_path">Шлях</string>
@@ -133,7 +128,6 @@
     <string name="delete_failed">Не вдалося видалити пісню</string>
     <string name="dialog_edit_metadata">Редагувати</string>
     <string name="settings_category_filters">Фільтри</string>
-    <string name="delete">Видалити</string>
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
     <string name="settings_blacklist">Чорний список</string>
     <string name="settings_blacklist_folder">Чорний список папок</string>
@@ -155,8 +149,6 @@
     <string name="settings_hardware_acceleration">Швидкість відтворення</string>
     <string name="settings_play_on_launch">Грати при запуску</string>
     <string name="preference_category_quality">Якість</string>
-    <string name="no">Ні</string>
-    <string name="yes">Так</string>
     <string name="settings_experimental_settings_summary">Тестування функцій, інше</string>
     <string name="deny_images">Заборонити дозвіл «Зображення та відео»</string>
     <string name="grant_images">Надайте дозвіл «Зображення та відео»</string>

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="dismiss">সরিয়ে দাউ</string>
-    <string name="categories">বিভাগগুলো</string>
     <string name="settings_category_behavior">ব্যাবহার</string>
     <string name="category_dates">তারিখগুলো</string>
     <string name="sort_by_artist">শিল্পী</string>
@@ -27,7 +26,6 @@
     <string name="dark">কালো</string>
     <string name="check_for_updates">আমাদের চ্যানেল এ গিয়ে দেখো আপডেট এর জন্য!</string>
     <string name="category_artists">শিল্পীগুচ্ছ</string>
-    <string name="operations">কাজসমূহ</string>
     <string name="go_to_album">অ্যালবাম এ যান</string>
     <string name="unknown_album">অচেনা অ্যালবাম</string>
     <string name="sort_by_size">দৈর্ঘ্য</string>
@@ -41,7 +39,6 @@
         <item quantity="one">%d টি বস্তু</item>
         <item quantity="other">%d টি বস্তু</item>
     </plurals>
-    <string name="home_menu_shuffle">শাফেল</string>
     <string name="category_genres">গানের জাতগুলি</string>
     <string name="natural_order">প্রাকৃতিক সারি</string>
     <string name="light">সাদা</string>
@@ -77,5 +74,4 @@
     <string name="unknown_version">অচেনা ভার্সন</string>
     <string name="unknown_artist">অচেনা শিল্পী</string>
     <string name="repeat_mode">রিপিট সুইচ</string>
-    <string name="home_menu_about">এর ব্যাপারে জানুন</string>
 </resources>

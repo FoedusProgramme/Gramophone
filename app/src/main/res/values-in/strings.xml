@@ -6,7 +6,6 @@
     <string name="settings_play_on_launch_summary">Putar musik saat peluncuran (Jika ada di playlist)</string>
     <string name="refreshed_songs">Berhasil memuat %1$s lagu</string>
     <string name="home_menu_settings">Pengaturan</string>
-    <string name="home_menu_shuffle">Acak</string>
     <string name="settings_skip_silence">Lewati keheningan</string>
     <string name="unknown_playlist">Playlist tidak dikenal</string>
     <string name="settings_version">Versi</string>
@@ -33,11 +32,9 @@
     <string name="follow_system">Ikuti sistem</string>
     <string name="light">Terang</string>
     <string name="sort_by_artist">Artis</string>
-    <string name="categories">Kategori</string>
     <string name="sort_by_album">Album</string>
     <string name="dismiss">Batalkan</string>
     <string name="sort_by_name">Nama</string>
-    <string name="operations">Operasi</string>
     <string name="sort_by_size">Ukuran</string>
     <string name="unknown_genre">Genre tidak dikenal</string>
     <string name="settings_app_name">Nama aplikasi</string>
@@ -62,7 +59,6 @@
     <string name="settings_repository">Repositori</string>
     <string name="unknown_album">Album tidak dikenal</string>
     <string name="dialog_year">Tahun</string>
-    <string name="home_menu_about">Tentang</string>
     <string name="settings_app_theme">Tema aplikasi</string>
     <string name="check_for_updates">Cek saluran kami untuk pembaruan!</string>
     <string name="settings_default_progress_bar">Progress bar default</string>
@@ -84,7 +80,6 @@
     <string name="settings_title_center">Judul di tengah</string>
     <string name="settings_appearance_summary">Tampilan aplikasi, mode tema</string>
     <string name="settings_behavior_summary">Filter, konfigurasi peluncuran</string>
-    <string name="disc">Disc</string>
     <string name="dialog_duration">Durasi</string>
     <string name="filesystem">File sistem</string>
     <string name="settings_library">Perpustakaan</string>

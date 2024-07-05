@@ -52,7 +52,6 @@
     <string name="settings_appearance_summary">Aspetto applicazione, modalità tema</string>
     <string name="settings_skip_silence_summary">Salta silenzio quando brani in esecuzione</string>
     <string name="settings_preference_category_application">Applicazione</string>
-    <string name="no">No</string>
     <string name="settings_lyrics_multiline">Leggi testi multilinea</string>
     <string name="settings_play_on_launch_summary">Esegui musica all\'avvio</string>
     <plurals name="items">
@@ -69,10 +68,8 @@
     <string name="settings_category_full_player">Player intero</string>
     <string name="settings_crash_application">Crash applicazione</string>
     <string name="dialog_lyrics">Testi</string>
-    <string name="delete">Elimina</string>
     <string name="delete_failed">Eliminazione brano fallita</string>
     <string name="delete_in_progress">Già eliminando un altro brano</string>
-    <string name="yes">Sì</string>
     <string name="grant_images">Per favore consenti il permesso \"immagini &amp; video\"</string>
     <string name="crash_clipboard">Registro crash copiato negli appunti</string>
     <string name="settings_trim_lyrics">Rimuovi spazi nei testi</string>
@@ -89,11 +86,9 @@
     <string name="details">Dettagli</string>
     <string name="recently_added">Aggiunti recentemente</string>
     <string name="list">Lista</string>
-    <string name="operations">Operazioni</string>
     <string name="unknown_version">Versione sconosciuta</string>
     <string name="settings_app_theme">Tema app</string>
     <string name="home_menu_equalizer">Equalizzatore</string>
-    <string name="home_menu_about">A riguardo</string>
     <string name="playlist_favourite">Preferito</string>
     <string name="settings_package_type">Tipo di pacchetto</string>
     <string name="dialog_duration">Durata</string>
@@ -110,7 +105,6 @@
     <string name="dialog_edit_metadata">Modifica</string>
     <string name="album_cover">Copertina album</string>
     <string name="home_menu_search">Cerca</string>
-    <string name="home_menu_shuffle">Casuale</string>
     <string name="home_menu_settings">Impostazioni</string>
     <string name="home_menu_refresh">Ricarica</string>
     <string name="category_albums">Album</string>
@@ -125,7 +119,6 @@
     <string name="sort_by_name">Nome</string>
     <string name="sort_by_artist">Artista</string>
     <string name="sort_by_album">Album</string>
-    <string name="categories">Categorie</string>
     <string name="dismiss">Rifiuta</string>
     <string name="unknown_genre">Genere sconosciuto</string>
     <string name="unknown_year">Anno sconosciuto</string>
@@ -145,7 +138,6 @@
     <string name="dialog_track_number">Numero traccia</string>
     <string name="check_for_updates">Controlla il nostro canale per aggiornamenti!</string>
     <string name="settings_default_progress_bar">Barra avanzamento di default</string>
-    <string name="disc">Disco</string>
     <string name="settings_behavior_summary">Filtri, comportamento avvio</string>
     <string name="settings_category_links">Collegamenti</string>
     <string name="settings_color_accuracy">Accuratezza colore</string>

@@ -3,9 +3,7 @@
     <string name="dismiss">إلغاء</string>
     <string name="settings_blacklist">القائمة السّوداء</string>
     <string name="settings_album_round_corner">تدوير زوايا صورة الألبوم</string>
-    <string name="categories">الأقسام</string>
     <string name="settings_category_behavior">السُّلوك</string>
-    <string name="operations">الإجراءات</string>
     <string name="sort_by_add_date">أضِف تاريخاً</string>
     <string name="go_to_album">اذهب إلى الألبوم</string>
     <string name="category_dates">التَّواريخ</string>
@@ -22,7 +20,6 @@
     <string name="settings_hardware_acceleration_summary">تنشيط تسريع التشغيل باستخدام العَتَاد الصّلب</string>
     <string name="settings_player_ui">واجهة المُشَغِّل</string>
     <string name="category_songs">الأغاني</string>
-    <string name="disc">القُرص</string>
     <string name="settings_behavior_summary">الفلاتر وسلوكات التَّشغيل</string>
     <string name="settings_app_theme">سِمَة البرنامج</string>
     <string name="settings_about_gramophone">حول التطبيق</string>
@@ -42,7 +39,6 @@
         <item quantity="many">%d غرضاً</item>
         <item quantity="other">%d غرضاً</item>
     </plurals>
-    <string name="home_menu_shuffle">خلط</string>
     <string name="settings_play_on_launch_summary">تشغيل الأغنية مع تشغيل القائمة</string>
     <string name="category_genres">الأنواع</string>
     <string name="settings_about_app">حول</string>
@@ -91,7 +87,6 @@
     <string name="dialog_album">ألبوم</string>
     <string name="settings_color_accuracy">دِقَّة التلوين</string>
     <string name="settings_default_progress_bar">شريط التَّقدُّم الأصليّ</string>
-    <string name="home_menu_about">حول</string>
     <string name="details">التَّفاصيل</string>
     <string name="home_menu_equalizer">مُعادِل الصَّوت</string>
     <string name="settings_skip_silence">تجاوز الصَّمت</string>
@@ -164,10 +159,7 @@
     <string name="settings_category_full_player">المُشغِّل الكامل</string>
     <string name="settings_category_misc">مُنوَّعات</string>
     <string name="preference_category_quality">الدِّقَّة</string>
-    <string name="delete">حذف</string>
     <string name="delete_failed">فشل حذف الأغنية</string>
-    <string name="no">لا</string>
-    <string name="yes">نعم</string>
     <string name="delete_in_progress">يجري حذف أغنيةٍ أخرى بالفعل</string>
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
     <string name="deny_images">يرجى رفض إذن \"الصور ومقاطع الفيديو\"</string>

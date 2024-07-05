@@ -3,7 +3,6 @@
     <string name="settings_float_output_summary">به کار اندختن خروجی شناور ۳۲ بیتی</string>
     <string name="settings_content_based_color_summary">به کار انداختن تولید رنگ مبتنی بر آلبوم</string>
     <string name="settings_hardware_acceleration_summary">به کار انداختن شتاب سخت‌افزاری سرعت پخش</string>
-    <string name="home_menu_shuffle">درهم</string>
     <string name="category_artists">هنرمندها</string>
     <string name="category_dates">تاریخ‌ها</string>
     <string name="category_genres">سبک‌ها</string>
@@ -11,7 +10,6 @@
     <string name="category_songs">آوازها</string>
     <string name="unknown_artist">هنرمند ناشناخته</string>
     <string name="sort_by_artist">هنرمند</string>
-    <string name="categories">دسته‌بندی‌ها</string>
     <string name="dismiss">رد</string>
     <plurals name="items">
         <item quantity="one">%d مورد</item>
@@ -28,7 +26,6 @@
     <string name="follow_system">پیروی از سامانه</string>
     <string name="light">روشن</string>
     <string name="sort_by_name">نام</string>
-    <string name="operations">عملیات</string>
     <string name="sort_by_size">اندازه</string>
     <string name="unknown_genre">سبک ناشناخته</string>
     <string name="settings_contributors">مشارکت کنندگان</string>
@@ -59,7 +56,6 @@
     <string name="list">فهرست</string>
     <string name="settings_content_based_color">رنگ‌های مبتنی بر محتوا</string>
     <string name="settings_default_progress_bar">نوار پیشرفت پیش‌گزیده</string>
-    <string name="disc">دیسک</string>
     <string name="dialog_disc_number">شمارۀ دیسک</string>
     <string name="settings_default_progress_bar_summary">به کار انداختن سبک material برای نوار پیشرفت</string>
     <string name="playlist_favourite">پسندیده‌ها</string>
@@ -105,15 +101,11 @@
     <string name="settings_category_misc">متفرقه</string>
     <string name="preference_category_quality">کیفیت</string>
     <string name="crash_clipboard">گزارش فروپاشی در تخته‌گیره رونوشت شد</string>
-    <string name="delete">پاک کردن</string>
     <string name="delete_in_progress">در حال پاک کردن یک آواز دیگر</string>
     <string name="dialog_edit_metadata">ویرایش</string>
     <string name="dialog_lyrics">ترانه‌ها</string>
     <string name="deny_images">لطفا دسترسی \"تصاویر و ویدیوها\" را رد کنید</string>
-    <string name="yes">بله</string>
-    <string name="no">خیر</string>
     <string name="settings_trim_lyrics">برداشتن فاصلۀ اطراف ترانه‌ها</string>
-    <string name="home_menu_about">درباره</string>
     <string name="settings_about_app">درباره</string>
     <string name="settings_about_gramophone">دربارۀ کاره</string>
     <string name="sort_by_add_date">تاریخ افزودن</string>

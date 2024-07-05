@@ -19,16 +19,13 @@
     <string name="category_genres">Genuri</string>
     <string name="home_menu_search">Caută</string>
     <string name="home_menu_settings">Setări</string>
-    <string name="home_menu_shuffle">Amesteca</string>
     <string name="category_songs">Piesă</string>
     <string name="unknown_artist">Artist necunoscut</string>
     <string name="home_menu_refresh">Reîmprospătare</string>
-    <string name="categories">Categorii</string>
     <string name="dark">Negru</string>
     <string name="dismiss">Respins</string>
     <string name="light">Alb</string>
     <string name="sort_by_size">Mărime</string>
-    <string name="operations">Operațiune</string>
     <string name="settings_contributors">Contribuie</string>
     <string name="details">Detalii</string>
     <string name="go_to_album">Dute la album</string>
@@ -95,15 +92,11 @@
     <string name="album_cover">Imagine album</string>
     <string name="settings_preference_category_application">Aplicație</string>
     <string name="settings_crash_application">Aplicație blocată</string>
-    <string name="delete">Șterge</string>
     <string name="dialog_edit_metadata">Editare</string>
     <string name="dialog_lyrics">Viersurile</string>
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
     <string name="delete_in_progress">Deja ștergi altă piesă</string>
     <string name="delete_failed">Ștergerea piesei a eșuat</string>
-    <string name="yes">Da</string>
-    <string name="no">Nu</string>
-    <string name="home_menu_about">Despre</string>
     <string name="settings_about_gramophone">Despre aplicație</string>
     <string name="sort_by_album">Album</string>
     <string name="dialog_album">Album</string>
@@ -128,7 +121,6 @@
         <item quantity="other">Artiști</item>
     </plurals>
     <string name="category_dates">Dățile</string>
-    <string name="disc">Disc</string>
     <string name="dialog_disc_number">Număr disc</string>
     <string name="equalizer_not_found">Equalizer negasit!</string>
     <string name="layout">Ecran</string>

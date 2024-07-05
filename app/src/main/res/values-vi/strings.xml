@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="categories">Thể loại</string>
     <string name="settings_category_behavior">Thao tác</string>
-    <string name="operations">Thao tác</string>
     <string name="go_to_album">Xem album</string>
     <string name="unknown_album">Album chưa biết</string>
     <string name="sort_by_size">Kích cỡ</string>
@@ -12,7 +10,6 @@
     <string name="category_songs">Bài hát</string>
     <string name="compact_list">Danh sách (gọn gàng)</string>
     <string name="equalizer_not_found">Không tìm thấy bộ chỉnh âm!</string>
-    <string name="home_menu_shuffle">Ngẫu nhiên</string>
     <string name="category_genres">Thể loại</string>
     <string name="natural_order">Xếp tự nhiên</string>
     <string name="dialog_track_number">Số track</string>
@@ -61,7 +58,6 @@
     <string name="settings_category_appearance">Giao diện</string>
     <string name="dialog_album">Album</string>
     <string name="settings_default_progress_bar">Thanh thời lượng</string>
-    <string name="home_menu_about">Giới thiệu</string>
     <string name="details">Chi tiết</string>
     <string name="dialog_path">Đường dẫn</string>
     <string name="album_artist">Album nghệ sĩ</string>
@@ -84,7 +80,6 @@
         <item quantity="other">%d Album</item>
     </plurals>
     <string name="no_lyric_found">Không tìm thấy lời bài hát</string>
-    <string name="disc">Đĩa</string>
     <string name="dialog_disc_number">Số đĩa</string>
     <string name="unknown_title">Tên bài hát chưa biết</string>
     <string name="dialog_mime">Định dạng</string>
@@ -134,7 +129,6 @@
     <string name="crash_clipboard">Đã sao chép nhật ký lỗi vào bộ nhớ tạm</string>
     <string name="settings_lyrics_contrast">Tương phản cao</string>
     <string name="settings_blacklist_folder">Loại trừ các thư mục</string>
-    <string name="delete">Xóa</string>
     <string name="settings_category_filters">Bộ lọc</string>
     <string name="settings_blacklist_folder_summary">Lọc bài hát trong một số thư mục</string>
     <string name="settings_category_full_player">Trình phát đầy đủ</string>
@@ -144,8 +138,6 @@
     <string name="preference_category_quality">Chất lượng</string>
     <string name="album_cover">Ảnh album</string>
     <string name="delete_in_progress">Đang xóa một bài hát khác</string>
-    <string name="no">Không</string>
-    <string name="yes">Có</string>
     <string name="delete_failed">Không thể xóa bài hát</string>
     <string name="dialog_edit_metadata">Chỉnh sửa</string>
     <string name="settings_trim_lyrics">Loại bỏ dấu cách xung quanh lời bài hát</string>

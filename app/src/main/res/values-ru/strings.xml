@@ -2,7 +2,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <!-- Translatable -->
     <string name="home_menu_search">Поиск</string>
-    <string name="home_menu_shuffle">Перемешать</string>
     <string name="home_menu_settings">Настройки</string>
     <string name="home_menu_refresh">Пересканировать</string>
     <string name="category_songs">Треки</string>
@@ -43,8 +42,6 @@
     <string name="sort_by_name">По имени</string>
     <string name="sort_by_artist">По исполнителю</string>
     <string name="sort_by_album">По альбому</string>
-    <string name="categories">Категории</string>
-    <string name="operations">Действия</string>
     <string name="dismiss">Отмена</string>
     <string name="unknown_genre">Неизвестный жанр</string>
     <string name="unknown_year">Неизвестный год</string>
@@ -88,7 +85,6 @@
     <string name="compact_list">Список (компактный)</string>
     <string name="settings_content_based_color">Цвета на основе контента</string>
     <string name="settings_default_progress_bar">Индикатор выполнения по умолчанию</string>
-    <string name="home_menu_about">О приложении</string>
     <string name="check_for_updates">Следите за обновлениями в нашем канале!</string>
     <string name="settings_content_based_color_summary">Включить генерацию цветов на основе обложек альбомов</string>
     <string name="opensource_info">С открытым исходным кодом под лицензией GPL-3.0
@@ -99,7 +95,6 @@
     <string name="settings_package_type">Тип пакета</string>
     <string name="no_lyric_found">Текст песни не найден</string>
     <string name="dialog_disc_number">Номер диска</string>
-    <string name="disc">Диск</string>
     <string name="unknown_title">Неизвестное название</string>
     <string name="dialog_mime">Тип мима</string>
     <string name="filesystem">Файлы</string>
@@ -149,11 +144,8 @@
     <string name="settings_blacklist_folder">Чёрный список папок</string>
     <string name="settings_blacklist_folder_summary">Фильтровать песни из определённых папок</string>
     <string name="settings_crash_application">Сбой приложения</string>
-    <string name="delete">Удалить</string>
     <string name="delete_failed">Не удалось удалить песню</string>
     <string name="dialog_edit_metadata">Редактировать</string>
-    <string name="no">Нет</string>
-    <string name="yes">Да</string>
     <string name="album_cover">Обложка альбома</string>
     <string name="delete_in_progress">Уже удаляется другая песня</string>
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>

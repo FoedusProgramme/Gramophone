@@ -16,14 +16,12 @@
     <string name="compact_list">Lista (compacta)</string>
     <string name="check_for_updates">Confira o nosso canal para atualizações!</string>
     <string name="settings_default_progress_bar_summary">Ativar barra de progresso com estilo deslizante</string>
-    <string name="home_menu_about">Sobre</string>
     <string name="now_playing">A reproduzir</string>
     <string name="settings_content_based_color_summary">Ativar esquema de cores baseado na arte do álbum</string>
     <string name="settings_content_based_color">Cores dinâmicas</string>
     <string name="settings_package_type">Tipo de pacote</string>
     <string name="no_lyric_found">Nenhuma letra encontrada</string>
     <string name="dialog_disc_number">Número do disco</string>
-    <string name="disc">Disco</string>
     <string name="unknown_title">Título desconhecido</string>
     <string name="filesystem">Ficheiros</string>
     <string name="settings_audio">Áudio</string>
@@ -36,7 +34,6 @@
     <string name="settings_play_on_launch">Reproduzir ao iniciar</string>
     <string name="settings_play_on_launch_summary">Reproduzir música ao iniciar (se houver alguma na playlist)</string>
     <string name="home_menu_search">Pesquisar</string>
-    <string name="home_menu_shuffle">Baralhar</string>
     <string name="home_menu_settings">Configurações</string>
     <string name="home_menu_refresh">Atualizar</string>
     <string name="category_playlists">Playlists</string>
@@ -69,8 +66,6 @@
     <string name="sort_by_name">Nome</string>
     <string name="sort_by_artist">Artista</string>
     <string name="sort_by_album">Álbum</string>
-    <string name="categories">Categorias</string>
-    <string name="operations">Operações</string>
     <string name="dismiss">Ok</string>
     <string name="unknown_genre">Gênero desconhecido</string>
     <string name="unknown_year">Ano desconhecido</string>

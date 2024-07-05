@@ -2,7 +2,6 @@
 <resources>
     <!-- Translatable -->
     <string name="home_menu_search">Suche</string>
-    <string name="home_menu_shuffle">Shuffle</string>
     <string name="home_menu_settings">Einstellungen</string>
     <string name="home_menu_refresh">Aktualisieren</string>
     <string name="category_songs">Titel</string>
@@ -16,8 +15,6 @@
     <string name="sort_by_name">Name</string>
     <string name="sort_by_artist">Interpret</string>
     <string name="sort_by_album">Album</string>
-    <string name="categories">Kategorien</string>
-    <string name="operations">Aktionen</string>
     <string name="dismiss">Ausblenden</string>
     <string name="unknown_genre">Unbekanntes Genre</string>
     <string name="unknown_year">Unbekanntes Jahr</string>
@@ -94,7 +91,6 @@
     <string name="settings_skip_silence_summary">Stille beim Abspielen von Titeln überspringen</string>
     <string name="settings_lyrics_center_summary">Zentrierte Ausrichtung für Liedtexte verwenden</string>
     <string name="dialog_duration">Dauer</string>
-    <string name="home_menu_about">Über</string>
     <string name="settings_default_progress_bar">Standard-Fortschrittsbalken</string>
     <string name="settings_default_progress_bar_summary">Fortschrittsbalken im MD3-Stil aktivieren</string>
     <string name="dialog_mime">Mime-Typ</string>
@@ -121,13 +117,10 @@
     <string name="settings_experimental_settings_summary">Testfunktionen, Sonstiges</string>
     <string name="settings_lyrics_bold_summary">Für Liedtexte eine höhere Schriftstärke verwenden</string>
     <string name="settings_category_basic_info">Basisinformation</string>
-    <string name="delete">Löschen</string>
     <string name="settings_category_filters">Filter</string>
     <string name="settings_category_misc">Sonstiges</string>
-    <string name="yes">Ja</string>
     <string name="delete_in_progress">Es wird bereits ein anderes Lied gelöscht</string>
     <string name="delete_failed">Löschen des Titels fehlgeschlagen</string>
-    <string name="no">Nein</string>
     <string name="settings_color_accuracy">Farbgenauigkeit</string>
     <string name="settings_content_based_color">Inhaltsbasierte Farben</string>
     <string name="settings_content_based_color_summary">Albumbasierte Farbgenerierung aktivieren</string>
@@ -138,7 +131,6 @@
     <string name="settings_blacklist_folder">Ordner auf schwarze Liste setzen</string>
     <string name="settings_blacklist_folder_summary">Filtert Songs aus bestimmten Ordnern</string>
     <string name="dialog_disc_number">Disc-Nummer</string>
-    <string name="disc">Disc</string>
     <string name="deny_images">Bitte die Berechtigung „Bilder und Videos“ verweigern</string>
     <string name="grant_images">Bitte die Berechtigung „Bilder &amp; Videos“ erteilen</string>
     <string name="settings_package_type">Pakettyp</string>

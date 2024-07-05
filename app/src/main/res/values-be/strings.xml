@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="dismiss">Адмена</string>
-    <string name="categories">Катэгорыя</string>
     <string name="settings_category_behavior">Паводзіны</string>
-    <string name="operations">Дзеянне</string>
     <string name="go_to_album">Перайсці да альбома</string>
     <string name="category_dates">Дата</string>
     <string name="unknown_album">Невядомы альбом</string>
@@ -13,7 +11,6 @@
     <string name="sort_by_artist">Па выканаўцу</string>
     <string name="settings_mediastore_filter">Мінімальная працягласць песні (ў секундах)</string>
     <string name="category_songs">Трэк</string>
-    <string name="disc">Дыск</string>
     <string name="settings_app_theme">Тэма дадатку</string>
     <string name="compact_list">Спіс (кампактны)</string>
     <string name="dialog_album_artist">Выканаўца альбома</string>
@@ -24,7 +21,6 @@
         <item quantity="many">%d элементаў</item>
         <item quantity="other">%d элементаў</item>
     </plurals>
-    <string name="home_menu_shuffle">Перамяшаць</string>
     <string name="category_genres">Жанр</string>
     <string name="natural_order">Па ўзрастанні</string>
     <string name="light">Светлы</string>
@@ -58,7 +54,6 @@
     <string name="settings_category_appearance">Знешні выгляд</string>
     <string name="dialog_album">Альбом</string>
     <string name="settings_default_progress_bar">Панэль выканання па змаўчанні</string>
-    <string name="home_menu_about">Аб праграме</string>
     <string name="details">Звесткі</string>
     <string name="home_menu_equalizer">Эквалайзер</string>
     <string name="dialog_path">Шлях</string>
@@ -146,7 +141,6 @@
     <string name="dialog_edit_metadata">Рэдагаваць</string>
     <string name="settings_crash_application">Збой праграмы</string>
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
-    <string name="delete">Выдаліць</string>
     <string name="delete_failed">Не атрымалася выдаліць песню</string>
     <string name="settings_blacklist_folder_summary">Фільтраваць песні з пэўных тэчак</string>
     <string name="preference_category_quality">Якасць</string>
@@ -156,8 +150,6 @@
     <string name="settings_category_misc">Рознае</string>
     <string name="settings_lyrics_center_summary">Выкарыстоўваць выраўноўванне па цэнтры для тэкстаў песень</string>
     <string name="dialog_lyrics">Тэкст песні</string>
-    <string name="no">Не</string>
-    <string name="yes">Так</string>
     <string name="settings_title_bold_summary">Выкарыстоўваць тоўсты загаловак для прайгравальніка</string>
     <string name="delete_in_progress">Ужо выдаляецца іншая песня</string>
     <string name="deny_images">Адмоўцеся ад дазволу «Выявы і відэа»</string>
