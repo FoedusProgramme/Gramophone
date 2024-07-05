@@ -16,12 +16,14 @@
     <plurals name="albums">
         <item quantity="one">%d Album</item>
         <item quantity="few">%d Alba</item>
+        <item quantity="many">%d Alb</item>
         <item quantity="other">%d Alb</item>
     </plurals>
     <string name="dark">Tmavý</string>
     <plurals name="artists">
         <item quantity="one">%d Interpret</item>
         <item quantity="few">%d Interpreti</item>
+        <item quantity="many">%d Interpretů</item>
         <item quantity="other">%d Interpretů</item>
     </plurals>
     <string name="sort_by_artist">Interpretů</string>
@@ -57,6 +59,7 @@
     <plurals name="songs">
         <item quantity="one">%d Skladba</item>
         <item quantity="few">%d Skladby</item>
+        <item quantity="many">%d Skladeb</item>
         <item quantity="other">%d Skladeb</item>
     </plurals>
     <string name="equalizer_not_found">Nebyl nalezen žádný ekvalizér</string>
@@ -68,6 +71,7 @@
     <plurals name="items">
         <item quantity="one">%d Položka</item>
         <item quantity="few">%d Položky</item>
+        <item quantity="many">%d Položek</item>
         <item quantity="other">%d Položek</item>
     </plurals>
     <string name="dialog_duration">Trvání</string>
