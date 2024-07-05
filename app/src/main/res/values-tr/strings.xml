@@ -137,4 +137,5 @@
     <string name="album_covers_enhance">Gelişmiş albüm kapağı yükleniyor</string>
     <string name="share">Paylaş</string>
     <string name="current_playlist">Şu anki çalma listesi</string>
+    <string name="sort_by_release_date">Çıkış tarihi</string>
 </resources>
