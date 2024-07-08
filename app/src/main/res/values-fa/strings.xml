@@ -128,7 +128,7 @@
         <item quantity="one">%d هنرمند</item>
         <item quantity="other">%d هنرمند</item>
     </plurals>
-    <string name="delete_failed">پاک کردن آواز شکست خورد</string>
+    <string name="delete_failed">پاک‌کردن آواز شکست خورد</string>
     <string name="details">جزئیات</string>
     <string name="settings_album_round_corner_summary">به کار انداختن گوشۀ گرد در پخش کنندۀ کامل</string>
     <string name="settings_player_ui_summary">رابط کاربری پخش کننده، ترانه‌ها</string>
@@ -140,7 +140,7 @@
     <string name="category_playlists">فهرست‌های پخش</string>
     <string name="settings_play_on_launch_summary">پخش آهنگ در اجرا</string>
     <string name="settings_play_on_launch">پخش در اجرا</string>
-    <string name="grant_images">لطفا دسترسی \"تصاویر و ویدیوها\" را قبول کنید</string>
+    <string name="grant_images">لطفا دسترسی \"تصاویر و ویدیوها\" را بپذیرید</string>
     <string name="home_menu_refresh">بازخوانی</string>
     <string name="refreshed_songs">%1$s آواز بازخوانی شد</string>
     <string name="home_menu_search">جست‌وجو</string>
