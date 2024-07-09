@@ -130,4 +130,6 @@
     <string name="dialog_track_number">Nomor trek</string>
     <string name="settings_skip_silence_summary">Lewati keheningan saat memutar trek</string>
     <string name="share">Bagikan</string>
+    <string name="settings_lyrics_multiline">Baca lirik multi baris</string>
+    <string name="settings_lyrics_multiline_summary">Perlakukan semua baris di antara titik sinkronisasi sebagai satu teks lirik</string>
 </resources>
