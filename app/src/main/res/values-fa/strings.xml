@@ -137,7 +137,7 @@
     <string name="opensource_info">متن‌باز شده با قوانین GPL-3.0
 \nگواهی پخش © 2024 Akane Foundation</string>
     <string name="settings_player_options_summary">کیفیت خروجی، رفتار پخش کننده</string>
-    <string name="category_playlists">پهرست‌های پخش</string>
+    <string name="category_playlists">فهرست‌های پخش</string>
     <string name="settings_play_on_launch_summary">پخش آهنگ در اجرا</string>
     <string name="settings_play_on_launch">پخش در اجرا</string>
     <string name="grant_images">لطفا دسترسی \"تصاویر و ویدیوها\" را بپذیرید</string>
@@ -147,7 +147,7 @@
     <string name="settings_skip_silence_summary">رد شدن از سکوت هنگام پخش موسیقی</string>
     <string name="settings_experimental_settings_summary">قابلیت‌های آزمایشی، متفرقه</string>
     <string name="dialog_track_number">شمارۀ اثر</string>
-    <string name="unknown_playlist">پهرست پخش ناشناخته</string>
+    <string name="unknown_playlist">فهرست پخش ناشناخته</string>
     <string name="settings_lyrics_center_summary">استغاده از متن ترانۀ وسط‌چین</string>
     <string name="dialog_year">سال</string>
     <string name="settings_lyrics_contrast">حالت کنتراست بالا</string>
@@ -164,4 +164,5 @@
     <string name="fgs_failed_channel">ازسرگیری پخش شکست خورد</string>
     <string name="timer_expiry">زمان‌سنج خواب پخش را در %s نگه خواهد داشت</string>
     <string name="fgs_failed_title">ازسرگیری پخش آهنگ شکست خورد</string>
+    <string name="seperator_dot">•</string>
 </resources>
