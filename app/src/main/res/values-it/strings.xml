@@ -168,4 +168,5 @@
     <string name="album_covers_enhance_desc">Supporto per copertine di alta qualità delle canzoni e possibilità di differenziare tra copertine di album e canzoni (richiede l\'accesso alle foto)</string>
     <string name="sort_by_release_date">Data di pubblicazione</string>
     <string name="timer_expiry">Timer riposo fermerà la musica a %s</string>
+    <string name="seperator_dot">•</string>
 </resources>
