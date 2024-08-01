@@ -153,4 +153,11 @@
     <string name="settings_lyrics_contrast">Modo de alte contrasto</string>
     <string name="timer">Temporisator de somno</string>
     <string name="current_playlist">Lista de reproduction actual</string>
+    <string name="share">Compartir</string>
+    <string name="fgs_failed_text">Clicca hic pro aperir le app e continuar le reproduction</string>
+    <string name="fgs_failed_channel">Non pote resumer le reproduction</string>
+    <string name="fgs_failed_title">Fallimento in resumer le reproduction de musica</string>
+    <string name="sort_by_release_date">Data de lanceamento</string>
+    <string name="timer_expiry">Le temporisator de somno pausara le musica in %s</string>
+    <string name="seperator_dot">•</string>
 </resources>
