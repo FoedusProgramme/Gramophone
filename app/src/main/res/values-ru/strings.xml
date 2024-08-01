@@ -174,4 +174,5 @@
     <string name="fgs_failed_text">Нажмите здесь, чтобы открыть приложение и продолжить воспроизведение</string>
     <string name="fgs_failed_channel">Не удалось возобновить воспроизведение</string>
     <string name="timer_expiry">Таймер сна приостоновит музыку на %s</string>
+    <string name="seperator_dot">•</string>
 </resources>
