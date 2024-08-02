@@ -48,7 +48,7 @@
     <string name="refreshed_songs">Обновлены %1$s треки</string>
     <string name="search">Поиск</string>
     <string name="settings_app_name">Название приложения</string>
-    <string name="settings_contributors">Участники разработки</string>
+    <string name="settings_contributors">Разработки</string>
     <string name="play_next">Играть далее</string>
     <string name="go_to_album">Перейти к альбому</string>
     <string name="go_to_artist">Перейти к исполнителю</string>
@@ -96,7 +96,7 @@
     <string name="no_lyric_found">Текст песни не найден</string>
     <string name="dialog_disc_number">Номер диска</string>
     <string name="unknown_title">Неизвестное название</string>
-    <string name="dialog_mime">Тип мима</string>
+    <string name="dialog_mime">MIME-тип</string>
     <string name="filesystem">Файлы</string>
     <string name="dialog_duration">Длительность</string>
     <string name="settings_title_center">Название по центру</string>
@@ -112,10 +112,10 @@
     <string name="settings_player_options">Звук</string>
     <string name="settings_category_links">Ссылки</string>
     <string name="settings_appearance_summary">Внешний вид приложения</string>
-    <string name="settings_album_round_corner_summary">Включить закругление углов в полновэкранном плеере</string>
+    <string name="settings_album_round_corner_summary">Включить закругление углов в полноэкранном плеере</string>
     <string name="settings_player_options_summary">Качество вывода, поведение воспроизведения</string>
     <string name="settings_library">Библиотека</string>
-    <string name="settings_customization">Персонализирование</string>
+    <string name="settings_customization">Персонализация</string>
     <string name="settings_hardware_acceleration_summary">Включить аппаратное ускорение скорости воспроизведения</string>
     <string name="settings_title_bold">Жирный заголовок</string>
     <string name="settings_audio">Звук</string>
@@ -157,7 +157,7 @@
     <string name="preference_category_quality">Качество</string>
     <string name="settings_category_full_player">Плеер</string>
     <string name="deny_images">Откажитесь от разрешения «Изображения и видео»</string>
-    <string name="crash_clipboard">Скопировал журнал сбоев в буфер обмена</string>
+    <string name="crash_clipboard">Журнал сбоев скопирован в буфер обмена</string>
     <string name="grant_images">Предоставьте разрешение «Изображения и видео»</string>
     <string name="settings_trim_lyrics">Удалить пробелы вокруг текста песни</string>
     <string name="settings_lyrics_multiline">Чтение многострочных текстов песен</string>
@@ -167,12 +167,12 @@
     <string name="current_playlist">Текущий плейлист</string>
     <string name="timer">Таймер сна</string>
     <string name="sort_by_release_date">Дата выхода</string>
-    <string name="album_covers_enhance">Расширенная загрузка обложек альбомов</string>
+    <string name="album_covers_enhance">Улучшенная загрузка обложек альбомов</string>
     <string name="share">Поделиться</string>
     <string name="album_covers_enhance_desc">Поддержка обложек песен высокого качества и возможность различать обложки альбомов и песен (требуется доступ к фотографиям)</string>
     <string name="fgs_failed_title">Не удалось возобновить воспроизведение музыки</string>
     <string name="fgs_failed_text">Нажмите здесь, чтобы открыть приложение и продолжить воспроизведение</string>
     <string name="fgs_failed_channel">Не удалось возобновить воспроизведение</string>
-    <string name="timer_expiry">Таймер сна приостоновит музыку на %s</string>
+    <string name="timer_expiry">Таймер сна приостановит музыку на %s</string>
     <string name="seperator_dot">•</string>
 </resources>
