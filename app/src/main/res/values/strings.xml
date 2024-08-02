@@ -2,7 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <!-- Translatable -->
     <string name="home_menu_search">Search</string>
-	<string name="home_menu_settings">Settings</string>
+    <string name="home_menu_settings">Settings</string>
     <string name="home_menu_refresh">Refresh</string>
     <string name="category_songs">Songs</string>
     <string name="category_albums">Albums</string>
@@ -34,14 +34,14 @@
     <string name="sort_by_name">Name</string>
     <string name="sort_by_artist">Artist</string>
     <string name="sort_by_album">Album</string>
-	<string name="dismiss">Dismiss</string>
+    <string name="dismiss">Dismiss</string>
     <string name="unknown_genre">Unknown genre</string>
     <string name="unknown_year">Unknown year</string>
     <string name="refreshed_songs">Refreshed %1$s songs</string>
     <string name="search">Search</string>
     <string name="share">Share</string>
     <string name="settings_app_name">App name</string>
-	<string name="settings_contributors">Contributors</string>
+    <string name="settings_contributors">Contributors</string>
     <string name="play_next">Play next</string>
     <string name="go_to_album">Go to album</string>
     <string name="go_to_artist">Go to artist</string>
@@ -70,7 +70,7 @@
     <string name="dialog_track_number">Track number</string>
     <string name="dialog_year">Year</string>
     <string name="dialog_path">Path</string>
-	<string name="unknown_album">Unknown album</string>
+    <string name="unknown_album">Unknown album</string>
     <string name="recently_added">Recently added</string>
     <string name="folders">Folders</string>
     <string name="settings_app_theme">App theme</string>
@@ -84,7 +84,7 @@
     <string name="check_for_updates">Check our channel for updates!</string>
     <string name="settings_default_progress_bar">Default progress bar</string>
     <string name="settings_default_progress_bar_summary">Enable material styled progress bar</string>
-	<string name="opensource_info">Open-sourced under GPL-3.0\nCopyright © 2024 Akane Foundation</string>
+    <string name="opensource_info">Open-sourced under GPL-3.0\nCopyright © 2024 Akane Foundation</string>
     <string name="playlist_favourite">Favourite</string>
     <!-- Not translatable -->
     <string name="app_name" translatable="false">Gramophone</string>
@@ -94,16 +94,16 @@
     <string name="now_playing">Now playing</string>
     <string name="settings_content_based_color_summary">Enable album based color generation</string>
     <string name="settings_content_based_color">Content based colors</string>
-	<string name="settings_package_type">Package type</string>
+    <string name="settings_package_type">Package type</string>
     <string name="no_lyric_found">No lyric found</string>
-	<string name="dialog_disc_number">Disc number</string>
-	<string name="unknown_title">Unknown title</string>
+    <string name="dialog_disc_number">Disc number</string>
+    <string name="unknown_title">Unknown title</string>
     <string name="filesystem">Filesystem</string>
-    <string name="dialog_mime">Mime type</string>
+    <string name="dialog_mime">MIME type</string>
     <string name="dialog_duration">Duration</string>
     <string name="settings_title_center">Centered title</string>
     <string name="settings_title_center_summary">Use centered title for full player</string>
-	<string name="settings_player_ui">Player UI</string>
+    <string name="settings_player_ui">Player UI</string>
     <string name="settings_player_ui_summary">Full player UI, lyrics</string>
     <string name="settings_appearance_summary">Application appearance, theme modes</string>
     <string name="settings_about_app">About</string>
@@ -127,7 +127,7 @@
     <string name="settings_hardware_acceleration_summary">Enable playback speed hardware acceleration</string>
     <string name="settings_title_bold">Bold title</string>
     <string name="settings_title_bold_summary">Use bold title for full player</string>
-	<string name="settings_experimental_settings">Experimental</string>
+    <string name="settings_experimental_settings">Experimental</string>
     <string name="settings_experimental_settings_summary">Testing features, misc</string>
     <string name="settings_color_accuracy_summary">Make color generation accurate</string>
     <string name="settings_color_accuracy">Color accuracy</string>
@@ -158,23 +158,23 @@
     <string name="album_cover">Album cover</string>
     <string name="dialog_edit_metadata">Edit</string>
     <string name="dialog_lyrics">Lyrics</string>
-	<string name="delete_failed">Deleting song failed</string>
+    <string name="delete_failed">Deleting song failed</string>
     <string name="delete_in_progress">Already deleting another song</string>
-	<string name="album_covers_enhance">Enhanced album cover loading</string>
+    <string name="album_covers_enhance">Enhanced album cover loading</string>
     <string name="album_covers_enhance_desc">Support high quality song covers and allow album and song cover to differ (requires photos access)</string>
     <string name="deny_images"><![CDATA[Please deny \"Images & videos\" permission]]></string>
     <string name="grant_images"><![CDATA[Please grant \"Images & videos\" permission]]></string>
-	<string name="crash_clipboard">Copied crash log to clipboard</string>
-	<string name="crash_thread" translatable="false">Thread</string>
-	<string name="settings_trim_lyrics">Remove spaces around lyrics</string>
-	<string name="settings_lyrics_contrast">High contrast mode</string>
+    <string name="crash_clipboard">Copied crash log to clipboard</string>
+    <string name="crash_thread" translatable="false">Thread</string>
+    <string name="settings_trim_lyrics">Remove spaces around lyrics</string>
+    <string name="settings_lyrics_contrast">High contrast mode</string>
     <string name="settings_lyrics_contrast_summary">Useful if you want to be able to actually see inactive lyric lines</string>
-	<string name="timer">Sleep timer</string>
+    <string name="timer">Sleep timer</string>
     <string name="current_playlist">Current playlist</string>
-	<string name="fgs_failed_title">Failed to resume music playback</string>
+    <string name="fgs_failed_title">Failed to resume music playback</string>
     <string name="fgs_failed_text">Click here to open the app and continue playback</string>
     <string name="fgs_failed_channel">Playback failed to resume</string>
-	<string name="sort_by_release_date">Release date</string>
-	<string name="timer_expiry">Sleep timer will pause music at %s</string>
-	<string name="seperator_dot">•</string>
+    <string name="sort_by_release_date">Release date</string>
+    <string name="timer_expiry">Sleep timer will pause music at %s</string>
+    <string name="seperator_dot">•</string>
 </resources>
