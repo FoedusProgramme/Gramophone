@@ -48,7 +48,7 @@
     <string name="refreshed_songs">Обновлены %1$s треки</string>
     <string name="search">Поиск</string>
     <string name="settings_app_name">Название приложения</string>
-    <string name="settings_contributors">Разработки</string>
+    <string name="settings_contributors">Разработчики</string>
     <string name="play_next">Играть далее</string>
     <string name="go_to_album">Перейти к альбому</string>
     <string name="go_to_artist">Перейти к исполнителю</string>
