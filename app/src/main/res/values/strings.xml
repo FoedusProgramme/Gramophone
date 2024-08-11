@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Demonstration</string>
+    <string name="default_str">Default</string>
+    <string name="complete">Completed</string>
+    <string name="ok">Confirm</string>
+    <string name="refresh">Refresh</string>
+    <string name="prompt_str">Full rescan fetched %1$s songs, %2$s albums, %3$s artists, %4$s playlists, %5$s folders.\n\nTook %6$s milliseconds.</string>
 </resources>

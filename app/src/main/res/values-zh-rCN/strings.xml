@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">演示</string>
+    <string name="default_str">默认</string>
+    <string name="complete">完成</string>
+    <string name="ok">确认</string>
+    <string name="refresh">刷新</string>
+    <string name="prompt_str">完整更新索引了 %1$s 首曲目，%2$s 张专辑，%3$s 位艺人，%4$s 个播放列表，%5$s 个文件夹。\n\n共花费 %6$s 毫秒。</string>
+</resources>
