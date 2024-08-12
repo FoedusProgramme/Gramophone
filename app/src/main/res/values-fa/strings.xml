@@ -23,7 +23,7 @@
         <item quantity="one">%d آهنگ</item>
         <item quantity="other">%d آهنگ</item>
     </plurals>
-    <string name="follow_system">پیروی از سامانه</string>
+    <string name="follow_system">هماهنگ شدن با سیستم</string>
     <string name="light">روشن</string>
     <string name="sort_by_name">نام</string>
     <string name="sort_by_size">اندازه</string>
@@ -32,7 +32,7 @@
     <string name="go_to_album">رفتن به آلبوم</string>
     <string name="go_to_artist">رفتن به هنرمند</string>
     <string name="play_next">پخش پسین</string>
-    <string name="search">جست‌وجو</string>
+    <string name="search">جستجو</string>
     <string name="unknown_year">سال ناشناخته</string>
     <string name="shuffle">درهم</string>
     <string name="settings_category_appearance">نمایه</string>
@@ -40,7 +40,7 @@
     <string name="unknown_version">نگارش ناشناخته</string>
     <string name="settings_category_behavior">رفتار</string>
     <string name="dialog_title">نام</string>
-    <string name="settings_version">نگارش</string>
+    <string name="settings_version">ورژن برنامه </string>
     <string name="dialog_album_artist">هنرمند آلبوم</string>
     <string name="folders">پوشه‌ها</string>
     <string name="settings_mediastore_filter">کمینۀ طول آهنگ (ثانیه)</string>
@@ -48,15 +48,15 @@
     <string name="recently_added">به تازگی افزوده شده</string>
     <string name="settings_repository">مخزن</string>
     <string name="unknown_album">آلبوم ناشناخته</string>
-    <string name="natural_order">چینش طبیعی</string>
+    <string name="natural_order">چینش عادی</string>
     <string name="layout">نمایش</string>
     <string name="home_menu_equalizer">اکولایزر</string>
     <string name="equalizer_not_found">اکولایزر یافت نشد!</string>
-    <string name="grid">توری</string>
+    <string name="grid">حالت مربع</string>
     <string name="list">فهرست</string>
     <string name="settings_content_based_color">رنگ‌های مبتنی بر محتوا</string>
     <string name="settings_default_progress_bar">نوار پیشرفت پیش‌گزیده</string>
-    <string name="dialog_disc_number">شمارۀ دیسک</string>
+    <string name="dialog_disc_number">تعداد دیسک</string>
     <string name="settings_default_progress_bar_summary">به کار انداختن سبک material برای نوار پیشرفت</string>
     <string name="playlist_favourite">پسندیده‌ها</string>
     <string name="no_lyric_found">ترانه یافت نشد</string>
@@ -67,7 +67,7 @@
     <string name="settings_title_center">عنوان در مرکز</string>
     <string name="dialog_duration">مدت زمان</string>
     <string name="filesystem">مدیریت پرونده‌ها</string>
-    <string name="dialog_mime">گونۀ mime</string>
+    <string name="dialog_mime">نوع mime</string>
     <string name="settings_player_ui">رابط کاربری پخش کننده</string>
     <string name="settings_title_center_summary">استفاده از عنوان وسط‌چین در پخش کنندۀ کامل</string>
     <string name="settings_player_options">صدا</string>
@@ -78,7 +78,7 @@
     <string name="settings_customization_summary">مدیریت گزینه‌های شخصی‌سازی</string>
     <string name="settings_audio">صدا</string>
     <string name="settings_float_output">خروجی صوتی شناور</string>
-    <string name="settings_title_bold">عنوان توپر</string>
+    <string name="settings_title_bold">عنوان ترانه</string>
     <string name="settings_color_accuracy">دقت رنگ</string>
     <string name="settings_experimental_settings">آزمایشی</string>
     <string name="settings_lyric">ترانه</string>
@@ -88,8 +88,8 @@
     <string name="settings_hardware_acceleration">سرعت پخش</string>
     <string name="settings_skip_silence">رد شدن از سکوت</string>
     <string name="settings_title_bold_summary">استفاده از عنوان توپر برای پخش کنندۀ کامل</string>
-    <string name="settings_lyrics_bold">ترانه‌های توپر</string>
-    <string name="settings_lyrics_center">وسط‌چین</string>
+    <string name="settings_lyrics_bold">ترانه‌های منتخب</string>
+    <string name="settings_lyrics_center">وسط‌ چین</string>
     <string name="settings_lyrics_configuration_summary">پیکربندی ظاهر ترانه‌ها</string>
     <string name="settings_blacklist_folder_summary">پالایش آوازها از شاخه‌های مشخص</string>
     <string name="settings_lyrics_bold_summary">استفاده از وزن فونت سنگین‌تر در ترانه‌ها</string>
@@ -98,7 +98,7 @@
     <string name="settings_crash_application">فروپاشی کاره</string>
     <string name="settings_category_filters">پالایش‌ها</string>
     <string name="settings_category_full_player">پخش کنندۀ کامل</string>
-    <string name="settings_category_misc">متفرقه</string>
+    <string name="settings_category_misc">بیشتر</string>
     <string name="preference_category_quality">کیفیت</string>
     <string name="crash_clipboard">گزارش فروپاشی در تخته‌گیره رونوشت شد</string>
     <string name="delete_in_progress">در حال پاک کردن یک آواز دیگر</string>
@@ -109,27 +109,27 @@
     <string name="settings_about_app">درباره</string>
     <string name="settings_about_gramophone">دربارۀ کاره</string>
     <string name="sort_by_add_date">تاریخ افزودن</string>
-    <string name="sort_by_album">آلبوم</string>
+    <string name="sort_by_album"> مرتب کردن آلبوم</string>
     <string name="dialog_album">آلبوم</string>
-    <string name="album_artist">هنرمند آلبوم</string>
+    <string name="album_artist">هنرمند آلبوم نام</string>
     <string name="album_cover">جلد آلبوم</string>
     <string name="settings_album_round_corner">گوشۀ گرد آلبوم</string>
     <string name="category_albums">آلبوم‌ها</string>
     <string name="settings_app_name">نام برنامه</string>
     <string name="settings_app_theme">پوسته‌ی برنامه</string>
     <string name="dialog_artist">هنرمند</string>
-    <string name="settings_blacklist">فهرست سیاه</string>
+    <string name="settings_blacklist">لیست سیاه</string>
     <string name="settings_blacklist_folder">شاخه‌های فهرست سیاه</string>
     <string name="check_for_updates">کانال ما را برای به‌روز رسانی‌ها بررسی کنید!</string>
     <string name="settings_crash_application_summary">Crash-O-Matic ۳۰۰۰</string>
     <string name="settings_customization">شخصی‌سازی</string>
-    <string name="dark">تیره</string>
+    <string name="dark">تاریک</string>
     <plurals name="artists">
         <item quantity="one">%d هنرمند</item>
         <item quantity="other">%d هنرمند</item>
     </plurals>
     <string name="delete_failed">پاک‌کردن آواز شکست خورد</string>
-    <string name="details">ریزگان</string>
+    <string name="details">درباره موزیک </string>
     <string name="settings_album_round_corner_summary">به کار انداختن گوشۀ گرد در پخش کنندۀ کامل</string>
     <string name="settings_player_ui_summary">رابط کاربری پخش کننده، ترانه‌ها</string>
     <string name="dialog_genre">سبک</string>
