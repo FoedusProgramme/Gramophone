@@ -113,4 +113,5 @@
     <string name="settings_crash_application">Kaada ohjelma</string>
     <string name="settings_crash_application_summary">Kaatomaatti 3000</string>
     <string name="dialog_edit_metadata">Muokkaa</string>
+    <string name="deny_images">Kiellä \"Valokuvat ja videot\" lupa</string>
 </resources>
