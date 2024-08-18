@@ -42,7 +42,7 @@
         <item quantity="other">%d альбомаў</item>
     </plurals>
     <string name="unknown_playlist">Невядомы плэйліст</string>
-    <string name="dialog_mime">Тып міма</string>
+    <string name="dialog_mime">Тып MIME</string>
     <string name="dialog_year">Год</string>
     <string name="dialog_artist">Выканаўца</string>
     <string name="opensource_info">З адкрытым зыходным кодам пад ліцэнзіяй GPL-3.0
@@ -164,4 +164,13 @@
     <string name="settings_lyrics_contrast_summary">Карысна, калі вы хочаце бачыць неактыўныя радкі тэксту</string>
     <string name="current_playlist">Бягучы плэйліст</string>
     <string name="timer">Таймер сну</string>
+    <string name="sort_by_release_date">Дата выхаду</string>
+    <string name="album_covers_enhance">Палепшаная загрузка вокладак альбомаў</string>
+    <string name="share">Падзяліцца</string>
+    <string name="album_covers_enhance_desc">Падтрымка вокладак песень высокай якасці і магчымасць адрозніваць вокладкі альбомаў і песень (патрабуецца доступ да фатаграфій)</string>
+    <string name="fgs_failed_channel">Не ўдалося аднавіць прайграванне</string>
+    <string name="fgs_failed_title">Не ўдалося аднавіць прайграванне музыкі</string>
+    <string name="fgs_failed_text">Націсніце тут, каб адкрыць праграму і працягнуць прайграванне</string>
+    <string name="seperator_dot">•</string>
+    <string name="timer_expiry">Таймер сну прыпыніць музыку на %s</string>
 </resources>
