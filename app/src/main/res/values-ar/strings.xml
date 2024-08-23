@@ -28,7 +28,7 @@
     <string name="settings_customization_summary">إدارة إعدادات التَّخصيص</string>
     <string name="equalizer_not_found">لم يَتِمّ العثور على مُعادِل الصَّوت!</string>
     <string name="settings_title_bold">تغميق خط الاسم</string>
-    <string name="settings_audio">الأوديو</string>
+    <string name="settings_audio">الصوت</string>
     <string name="settings_title_center">توسيط الاسم</string>
     <string name="settings_skip_silence_summary">تجاوز الصَّمت أثناء تشغيل الأغاني</string>
     <plurals name="items">
@@ -43,7 +43,7 @@
     <string name="category_genres">الأنواع</string>
     <string name="settings_about_app">حول</string>
     <string name="natural_order">التَّرتيب الطَّبيعيّ</string>
-    <string name="light">مُضِيء</string>
+    <string name="light">فاتح</string>
     <string name="settings_player_ui_summary">واجهة المُشَغِّل الكامل والكلمات</string>
     <string name="settings_lyrics_bold">خط غامق</string>
     <string name="settings_app_name">اسم البرنامج</string>
@@ -71,17 +71,17 @@
         <item quantity="other">%d ألبوماً</item>
     </plurals>
     <string name="unknown_playlist">قائمة تشغيلٍ غير معروفة</string>
-    <string name="dialog_mime">نوع المايم</string>
+    <string name="dialog_mime">نوع IME</string>
     <string name="dialog_year">السَّنة</string>
     <string name="dialog_artist">الفنّان</string>
     <string name="opensource_info">مفتوح المصدر تحت رخصة GPL-3.0
 \nحقوق الملكيّة محفوظة © ٢٠٢٤ أكاني فاونديشين</string>
     <string name="playlist_favourite">المفضلة</string>
-    <string name="settings_player_options">الأوديو</string>
+    <string name="settings_player_options">الصوت</string>
     <string name="settings_lyric">الكلمات</string>
     <string name="home_menu_settings">الإعدادات</string>
     <string name="settings_category_links">الرَّوابِط</string>
-    <string name="home_menu_refresh">إنعاش</string>
+    <string name="home_menu_refresh">إعادة تحميل</string>
     <string name="settings_contributors">المُساهِمون</string>
     <string name="settings_category_appearance">المظهر</string>
     <string name="dialog_album">ألبوم</string>
@@ -97,9 +97,9 @@
     <string name="sort_by_album">ألبوم</string>
     <string name="category_albums">الألبومات</string>
     <string name="settings_color_accuracy_summary">جعل عمليَّة صناعة الألوان دقيقة</string>
-    <string name="filesystem">المَسَاقات</string>
+    <string name="filesystem">نظام الملفات</string>
     <string name="refreshed_songs">%1$sأغنية</string>
-    <string name="dark">مُظلِم</string>
+    <string name="dark">داكن</string>
     <string name="settings_appearance_summary">مظهر التّطبيق وأوضاع السِّمات</string>
     <string name="sort_by_name">الاسم</string>
     <string name="check_for_updates">تابِع قناتنا للتَّحديثات!</string>
@@ -124,7 +124,7 @@
     <string name="settings_default_progress_bar_summary">تنشيط شريط التَّقدُّم ذو المظهر المادّي</string>
     <string name="recently_added">المُضاف حديثاً</string>
     <string name="dialog_genre">النوع</string>
-    <string name="settings_content_based_color_summary">تنشيط إنشاء ألوانٍ مُستَنِدةٍ لصورة الألبوم</string>
+    <string name="settings_content_based_color_summary">تمكين إنشاء ألوانٍ مُستَنِدةٍ لصورة الألبوم</string>
     <string name="unknown_genre">نوعٌ غير معروف</string>
     <string name="category_artists">الفنّانون</string>
     <string name="settings_experimental_settings_summary">تجريب الميّزات والمُنوَّعات</string>
@@ -137,7 +137,7 @@
     <string name="unknown_year">سَنَةٌ غير معروفة</string>
     <string name="home_menu_search">بحث</string>
     <string name="no_lyric_found">لا يوجد كلمات</string>
-    <string name="settings_player_options_summary">دقّة الخَرج وسلوكات تشغيل الأغاني</string>
+    <string name="settings_player_options_summary">دقّة الخَرج وسلوكيات تشغيل الأغاني</string>
     <string name="settings_library">المكتبة</string>
     <string name="settings_lyrics_bold_summary">استعمال خطٍّ ذي وزنٍ أثقل للكلمات</string>
     <string name="layout">العرض</string>
@@ -145,12 +145,12 @@
     <string name="settings_blacklist_folder">مُجلَّدات القائمة السّوداء</string>
     <string name="settings_blacklist_folder_summary">فلترة أغانٍ من مجلَّداتٍ معيَّنة.</string>
     <string name="play_next">شغِّل تالِيَاً</string>
-    <string name="settings_float_output_summary">تنشيط خَرجٍ ٣٢ بِتّاً طافياً</string>
+    <string name="settings_float_output_summary">تمكين مخَرجٍ ٣٢ بِتّ عائم</string>
     <string name="unknown_version">إصدارٌ غير معروف</string>
     <string name="unknown_artist">فنّانٌ غير معروف</string>
     <string name="repeat_mode">وضع التَّكرار</string>
     <string name="album_cover">صورة غلاف الألبوم</string>
-    <string name="settings_crash_application">اجعل البرنامج يقف عن الاستجابة</string>
+    <string name="settings_crash_application">اجعل البرنامج يغلق</string>
     <string name="dialog_edit_metadata">تعديل</string>
     <string name="dialog_lyrics">الكلمات</string>
     <string name="settings_preference_category_application">التَّطبيق</string>
@@ -180,4 +180,5 @@
     <string name="current_playlist">قائمة التشغيل الحالية</string>
     <string name="timer">مؤقت النوم</string>
     <string name="timer_expiry">سيُوقِف مؤقِّت النّوم الموسيقى خلال %s ثانية</string>
+    <string name="seperator_dot">•</string>
 </resources>
