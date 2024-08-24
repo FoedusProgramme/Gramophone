@@ -8,7 +8,7 @@
     <string name="dialog_title">Titre</string>
     <string name="settings_repository">Dépôt</string>
     <string name="sort_by_artist">Artiste</string>
-    <string name="settings_mediastore_filter">Cacher les chansons plus courtes que (en secondes) :</string>
+    <string name="settings_mediastore_filter">Durée minimale des chansons (en secondes) :</string>
     <string name="category_songs">Chansons</string>
     <string name="settings_app_theme">Thème de l’appli</string>
     <string name="compact_list">Liste (compacte)</string>
@@ -106,7 +106,7 @@
     <string name="settings_content_based_color">Couleurs basées sur le contenu</string>
     <string name="settings_title_bold_summary">Mettre le titre en gras dans le lecteur complet</string>
     <string name="unknown_title">Titre inconnu</string>
-    <string name="dialog_mime">Type Mime</string>
+    <string name="dialog_mime">Type MIME</string>
     <string name="settings_player_options">Audio</string>
     <string name="settings_lyric">Paroles</string>
     <string name="settings_category_links">Liens</string>
@@ -154,4 +154,19 @@
     <string name="crash_clipboard">Journal de plantage copié</string>
     <string name="settings_category_full_player">Lecteur complet</string>
     <string name="settings_trim_lyrics">Enlever les espaces autour des paroles</string>
+    <string name="settings_lyrics_contrast">Mode contraste élevé</string>
+    <string name="settings_lyrics_multiline">Lire les paroles multi-lignes</string>
+    <string name="sort_by_release_date">Date de publication</string>
+    <string name="timer_expiry">Le minuteur de sommeil arrêtera la musique à %s</string>
+    <string name="album_covers_enhance">Chargement amélioré des couvertures d\'albums</string>
+    <string name="share">Partager</string>
+    <string name="settings_lyrics_multiline_summary">Traiter toutes les lignes entre les points de synchronisation comme une seule parole</string>
+    <string name="album_covers_enhance_desc">Permet d\'utiliser des couvertures de chanson de haute qualité et d\'avoir des couvertures d\'albums et de chansons différentes (nécessite la permission d\'accès aux photos)</string>
+    <string name="fgs_failed_title">Échec de la reprise de la lecture</string>
+    <string name="timer">Minuteur de sommeil</string>
+    <string name="current_playlist">Playlist actuelle</string>
+    <string name="fgs_failed_text">Cliquez ici pour ouvrir l\'application et continuer la lecture</string>
+    <string name="fgs_failed_channel">La reprise de la lecture a échoué</string>
+    <string name="settings_lyrics_contrast_summary">Utile si vous avez besoin de lire les lignes de paroles inactives</string>
+    <string name="seperator_dot">•</string>
 </resources>
