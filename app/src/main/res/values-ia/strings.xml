@@ -70,7 +70,7 @@
     <string name="playlist_favourite">Favorito</string>
     <string name="dialog_duration">Duration</string>
     <string name="filesystem">Systema de files</string>
-    <string name="dialog_mime">Typo Mime</string>
+    <string name="dialog_mime">Typo MIME</string>
     <string name="settings_package_type">Typo de pacchetto</string>
     <string name="unknown_title">Titulo incognite</string>
     <string name="settings_player_ui">Interfacie del reproductor</string>
