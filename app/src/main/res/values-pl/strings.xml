@@ -75,7 +75,7 @@
     <string name="settings_lyric">Tekst utworu</string>
     <string name="home_menu_settings">Ustawienia</string>
     <string name="settings_category_links">Linki</string>
-    <string name="home_menu_refresh">Przeładuj bibliotekę</string>
+    <string name="home_menu_refresh">Odśwież</string>
     <string name="settings_contributors">Twórcy</string>
     <string name="settings_category_appearance">Wygląd</string>
     <string name="dialog_album">Album</string>
@@ -92,11 +92,11 @@
     <string name="category_albums">Albumy</string>
     <string name="settings_color_accuracy_summary">Dokładne generowanie kolorów</string>
     <string name="filesystem">System plików</string>
-    <string name="refreshed_songs">Przeładowano %1$s utworów</string>
+    <string name="refreshed_songs">Odśwież %1$s utworów</string>
     <string name="dark">Ciemny</string>
     <string name="settings_appearance_summary">Wygląd aplikacji, tryby motywów</string>
     <string name="sort_by_name">Nazwa</string>
-    <string name="check_for_updates">Sprawdź nasz kanał, aby otrzymywać aktualizacje</string>
+    <string name="check_for_updates">Sprawdź nasz kanał, aby otrzymywać aktualizacje!</string>
     <string name="dialog_duration">Długość</string>
     <string name="shuffle">Odtwarzaj losowo</string>
     <string name="dialog_disc_number">Numer płyty</string>
