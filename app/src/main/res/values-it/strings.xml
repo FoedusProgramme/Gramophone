@@ -40,7 +40,7 @@
     <string name="unknown_title">Titolo sconosciuto</string>
     <string name="settings_player_options_summary">Qualità output, comportamento riproduzione</string>
     <string name="filesystem">File di sistema</string>
-    <string name="dialog_mime">Tipo mime</string>
+    <string name="dialog_mime">Tipo MIME</string>
     <string name="settings_about_app">A riguardo</string>
     <string name="settings_customization">Personalizzazione</string>
     <string name="settings_customization_summary">Gestisci opzioni personalizzazione</string>
