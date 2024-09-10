@@ -1,2 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="home_menu_settings">Seadistused</string>
+    <plurals name="albums">
+        <item quantity="one">%d album</item>
+        <item quantity="other">%d albumit</item>
+    </plurals>
+    <plurals name="artists">
+        <item quantity="one">%d esitaja</item>
+        <item quantity="other">%d esitajat</item>
+    </plurals>
+    <plurals name="items">
+        <item quantity="one">%d kirje</item>
+        <item quantity="other">%d kirjet</item>
+    </plurals>
+    <string name="follow_system">Järgi süsteemi kujundust</string>
+    <string name="dark">Tume kujundus</string>
+    <string name="light">Hele kujundus</string>
+    <string name="sort_by_size">Suuruse alusel</string>
+    <string name="sort_by_name">Nime alusel</string>
+    <string name="sort_by_artist">Esitaja järgi</string>
+    <string name="sort_by_album">Albumi järgi</string>
+    <string name="dismiss">Katkesta</string>
+    <string name="unknown_year">Teadmata aasta</string>
+    <string name="refreshed_songs">Värskendasime %1$s pala</string>
+    <string name="share">Jaga</string>
+    <string name="shuffle">Sega lood</string>
+    <string name="repeat_mode">Taasesituse viis</string>
+    <string name="unknown_playlist">Tundmatu esitusloend</string>
+    <string name="settings_version">Versioon</string>
+    <string name="dialog_artist">Esitaja</string>
+    <string name="settings_category_behavior">Käitumine</string>
+    <string name="settings_mediastore_filter">Pala väikseim kestus (sekundites)</string>
+    <string name="settings_repository">Hoidla</string>
+    <string name="dialog_track_number">Pala number</string>
+    <string name="dialog_year">Aasta</string>
+    <string name="dialog_path">Asukoht</string>
+    <string name="unknown_album">Tundmatu album</string>
+    <string name="recently_added">Hiljuti lisatud</string>
+    <string name="folders">Kaustad</string>
+    <string name="settings_app_theme">Rakenduse kujundus</string>
+    <string name="grid">Ruudustik</string>
+    <string name="list">Loend</string>
+    <string name="layout">Vaade</string>
+    <string name="home_menu_equalizer">Ekvalaiser</string>
+    <string name="compact_list">Loend (kompaktne)</string>
+    <string name="check_for_updates">Viimast teavet leiad meie kanalist!</string>
+    <string name="settings_default_progress_bar">Vaikimisi edenemisriba</string>
+    <string name="playlist_favourite">Lemmik</string>
+    <string name="settings_content_based_color_summary">Kasuta albumipõhist värvimustrit</string>
+    <string name="settings_content_based_color">Sisust lähtuvad värvid</string>
+    <string name="home_menu_search">Otsi</string>
+    <string name="home_menu_refresh">Värskenda andmeid</string>
+    <string name="category_albums">Albumid</string>
+    <string name="category_songs">Palad</string>
+    <string name="category_playlists">Esitusloendid</string>
+    <string name="category_artists">Esitajaid</string>
+    <string name="category_genres">Žanrid</string>
+    <string name="unknown_artist">Tundmatu esitaja</string>
+    <string name="category_dates">Kuupäevad</string>
+    <plurals name="songs">
+        <item quantity="one">%d pala</item>
+        <item quantity="other">%d pala</item>
+    </plurals>
+    <string name="unknown_genre">Tundmatu žanr</string>
+    <string name="settings_category_appearance">Välimus</string>
+    <string name="album_artist">Albumi esitaja</string>
+    <string name="dialog_title">Pealkiri</string>
+    <string name="search">Otsi</string>
+    <string name="go_to_artist">Mine esitaja juurde</string>
+    <string name="details">Üksikasjad</string>
+    <string name="unknown_version">Teadmata versioon</string>
+    <string name="settings_app_name">Rakenduse nimi</string>
+    <string name="go_to_album">Mine albumi juurde</string>
+    <string name="settings_contributors">Kaasautorid</string>
+    <string name="play_next">Esita järgmisena</string>
+    <string name="dialog_album_artist">Albumi esitaja</string>
+    <string name="dialog_album">Album</string>
+    <string name="dialog_genre">Žanr</string>
+    <string name="natural_order">Loomulik järjekord</string>
+    <string name="equalizer_not_found">Evalaiserit ei leidu!</string>
+    <string name="opensource_info">Avatud lähtekoodiga tarkvara, avaldatud GPL-3.0 litsentsi alusel
+\nAutoriõigused © 2024 Akane Foundation</string>
+    <string name="now_playing">Hetkel esitamisel</string>
+    <string name="settings_package_type">Tarkvarapaketi tüüp</string>
+    <string name="unknown_title">Teadmata pealkiri</string>
+    <string name="no_lyric_found">Laulusõnu ei leidu</string>
+    <string name="filesystem">Failisüsteem</string>
+    <string name="dialog_mime">MIME-tüüp</string>
+    <string name="dialog_duration">Kestus</string>
+    <string name="dialog_disc_number">Plaadi number</string>
+</resources>
