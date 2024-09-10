@@ -1,0 +1,4 @@
+- File player redesign
+- Keep screen on while viewing lyrics
+- Support SD cards in Filesystem tab
+- Bug fixes
