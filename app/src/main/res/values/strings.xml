@@ -162,8 +162,9 @@
     <string name="delete_in_progress">Already deleting another song</string>
     <string name="album_covers_enhance">Enhanced album cover loading</string>
     <string name="album_covers_enhance_desc">Support high quality song covers and allow album and song cover to differ (requires photos access)</string>
-    <string name="deny_images"><![CDATA[Please deny \"Images & videos\" permission]]></string>
-    <string name="grant_images"><![CDATA[Please grant \"Images & videos\" permission]]></string>
+    <string name="deny_images"><![CDATA[Please deny \"Photos and videos\" permission]]></string>
+    <string name="grant_images"><![CDATA[Please grant \"Photos and videos\" permission]]></string>
+    <string name="grant_audio"><![CDATA[Please grant \"Music and audio\" permission]]></string>
     <string name="crash_clipboard">Copied crash log to clipboard</string>
     <string name="crash_thread" translatable="false">Thread</string>
     <string name="settings_trim_lyrics">Remove spaces around lyrics</string>
