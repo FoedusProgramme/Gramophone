@@ -173,4 +173,5 @@
     <string name="deny_images">Odrzuć uprawnienie: \"Zdjęcia i filmy\"</string>
     <string name="timer_expiry">Wyłącznik czasowy wstrzyma odtwarzanie muzyki o %s</string>
     <string name="seperator_dot">•</string>
+    <string name="grant_audio">Przyznaj uprawnienia: \"Muzyka i dźwięk\"</string>
 </resources>
