@@ -74,7 +74,7 @@
     <string name="settings_crash_application">Pad aplikacije</string>
     <string name="dialog_lyrics">Tekstovi</string>
     <string name="deny_images">Molim odbijte dozvolu „Slike i video snimci“</string>
-    <string name="grant_images">Molim dajte dozvolu „Slike i video snimci“</string>
+    <string name="grant_images">Molim odobrite dozvolu „Slike i video snimci“</string>
     <string name="fgs_failed_title">Nastavljanje reprodukcije muzike nije uspelo</string>
     <string name="fgs_failed_text">Kliknite ovde da otvorite aplikaciju i nastavite sa reprodukcijom</string>
     <string name="fgs_failed_channel">Nastavak reprodukcije nije uspeo</string>
@@ -169,4 +169,5 @@
     <string name="settings_category_basic_info">Osnovne informacije</string>
     <string name="album_covers_enhance_desc">Podržite visokokvalitetne omote pesama i dozvolite da se album i omot pesme razlikuju (zahteva pristup fotografijama)</string>
     <string name="preference_category_quality">Kvalitet</string>
+    <string name="grant_audio">Odobrite dozvolu „Muzika i audio“</string>
 </resources>
