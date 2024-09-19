@@ -34,7 +34,7 @@
     </plurals>
     <plurals name="items">
         <item quantity="one">%d aytem</item>
-        <item quantity="other">% na mga aytem</item>
+        <item quantity="other">%d na mga aytem</item>
     </plurals>
     <string name="follow_system">Sundin ang sistema</string>
     <string name="dark">Madilim</string>
