@@ -165,4 +165,5 @@
     <string name="timer_expiry">زمان‌سنج خواب پخش را در %s نگه خواهد داشت</string>
     <string name="fgs_failed_title">ازسرگیری پخش آهنگ شکست خورد</string>
     <string name="seperator_dot">•</string>
+    <string name="grant_audio">لطفا دسترسی \"صدا و موسیقی\" را بپذیرید</string>
 </resources>
