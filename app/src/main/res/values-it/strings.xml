@@ -70,7 +70,7 @@
     <string name="dialog_lyrics">Testi</string>
     <string name="delete_failed">Eliminazione brano fallita</string>
     <string name="delete_in_progress">Già eliminando un altro brano</string>
-    <string name="grant_images">Per favore consenti il permesso \"immagini &amp; video\"</string>
+    <string name="grant_images">Per favore consenti l\'autorizzazione \"Foto e video\"</string>
     <string name="crash_clipboard">Registro crash copiato negli appunti</string>
     <string name="settings_trim_lyrics">Rimuovi spazi nei testi</string>
     <string name="category_songs">Brani</string>
@@ -96,7 +96,7 @@
     <string name="settings_about_gramophone">Riguardo all\'applicazione</string>
     <string name="settings_library">Libreria</string>
     <string name="settings_hardware_acceleration">Velocità riproduzione</string>
-    <string name="deny_images">Per favore nega il permesso \"immagini &amp; video\"</string>
+    <string name="deny_images">Per favore nega l\'autorizzazione \"Foto e video\"</string>
     <string name="settings_lyrics_contrast_summary">Utile se vuoi essere in grado di vedere le righe dei testi inattivi</string>
     <string name="settings_player_ui_summary">UI player intero, testi</string>
     <string name="settings_library_summary">Gestisci libreria media</string>
@@ -169,4 +169,5 @@
     <string name="sort_by_release_date">Data di pubblicazione</string>
     <string name="timer_expiry">Timer riposo fermerà la musica a %s</string>
     <string name="seperator_dot">•</string>
+    <string name="grant_audio">Per favore consenti l\'autorizzazione \"Musica e audio\"</string>
 </resources>
