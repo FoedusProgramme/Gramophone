@@ -156,9 +156,9 @@
     <string name="settings_category_misc">Разное</string>
     <string name="preference_category_quality">Качество</string>
     <string name="settings_category_full_player">Плеер</string>
-    <string name="deny_images">Откажитесь от разрешения \"Фото и видео\"</string>
+    <string name="deny_images">Откажитесь от разрешения «Фото и видео»</string>
     <string name="crash_clipboard">Журнал сбоев скопирован в буфер обмена</string>
-    <string name="grant_images">Пожалуйста, дайте разрешение на \"Фото и видео\"</string>
+    <string name="grant_images">Пожалуйста, дайте разрешение на «Фото и видео»</string>
     <string name="settings_trim_lyrics">Удалить пробелы вокруг текста песни</string>
     <string name="settings_lyrics_multiline">Чтение многострочных текстов песен</string>
     <string name="settings_lyrics_multiline_summary">Все строки между точками синхронизации рассматриваются как один единый текст</string>
@@ -175,5 +175,5 @@
     <string name="fgs_failed_channel">Не удалось возобновить воспроизведение</string>
     <string name="timer_expiry">Таймер сна приостановит музыку на %s</string>
     <string name="seperator_dot">•</string>
-    <string name="grant_audio">Пожалуйста, предоставьте разрешение на \"Музыку и аудио\"</string>
+    <string name="grant_audio">Пожалуйста, предоставьте разрешение на «Музыку и аудио»</string>
 </resources>
