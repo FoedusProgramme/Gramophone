@@ -111,7 +111,7 @@
     <string name="settings_customization">Personalisation</string>
     <string name="settings_customization_summary">Gerer le optiones de personalisation</string>
     <string name="settings_behavior_summary">Filtros, comportamento de initio</string>
-    <string name="settings_lyric">Parolas de canto</string>
+    <string name="settings_lyric">Parola de canto</string>
     <string name="settings_lyrics_configuration_summary">Configurar apparentia del parolas</string>
     <string name="settings_play_on_launch_summary">Reproducer le musica in le initio</string>
     <string name="settings_blacklist_folder">Lista nigre de dossieres</string>
@@ -165,4 +165,5 @@
     <string name="settings_lyrics_multiline">Leger le parolas de canto multilinea</string>
     <string name="settings_lyrics_contrast_summary">Utile si tu vole poter vider le lineas de parolas de canto inactive</string>
     <string name="grant_audio">Concede le permission de \"Musica e audio\"</string>
+    <string name="settings_lyrics_multiline_summary">Tractar tote le lineas inter le punctos de synchronisation como un sol parola de canto</string>
 </resources>
