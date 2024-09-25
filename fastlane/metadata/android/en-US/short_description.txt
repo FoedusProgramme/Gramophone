@@ -1,1 +1,1 @@
-A sane media3-based Material3 music player that follows Android standards
+Simple offline music player with minimalistic design
