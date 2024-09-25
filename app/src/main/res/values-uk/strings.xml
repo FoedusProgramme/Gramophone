@@ -42,7 +42,7 @@
         <item quantity="other">%d альбомів</item>
     </plurals>
     <string name="unknown_playlist">Невідомий плейлист</string>
-    <string name="dialog_mime">Тип міма</string>
+    <string name="dialog_mime">MIME-тип</string>
     <string name="dialog_year">Рік</string>
     <string name="dialog_artist">Виконавець</string>
     <string name="opensource_info">З відкритим кодом під ліцензією GPL-3.0
@@ -150,8 +150,8 @@
     <string name="settings_play_on_launch">Грати при запуску</string>
     <string name="preference_category_quality">Якість</string>
     <string name="settings_experimental_settings_summary">Тестування функцій, інше</string>
-    <string name="deny_images">Заборонити дозвіл «Зображення та відео»</string>
-    <string name="grant_images">Надайте дозвіл «Зображення та відео»</string>
+    <string name="deny_images">Заборонити дозвіл «Фото та відео»</string>
+    <string name="grant_images">Будь ласка, надайте дозвіл на «Фото та відео»</string>
     <string name="settings_trim_lyrics">Видаліть пробіли навколо тексту пісні</string>
     <string name="settings_skip_silence_summary">Пропускати тишу під час відтворення треків</string>
     <string name="settings_category_misc">Різне</string>
@@ -164,4 +164,14 @@
     <string name="settings_title_bold_summary">Використовуйте жирний заголовок для гравця програвача</string>
     <string name="current_playlist">Поточний список відтворення</string>
     <string name="timer">Таймер сну</string>
+    <string name="grant_audio">Будь ласка, надайте дозвіл на «Музику та аудіо»</string>
+    <string name="album_covers_enhance">Поліпшене завантаження обкладинок альбомів</string>
+    <string name="share">Поділитися</string>
+    <string name="album_covers_enhance_desc">Підтримка обкладинок пісень високої якості та можливість розрізняти обкладинки альбомів та пісень (потрібний доступ до фотографій)</string>
+    <string name="fgs_failed_text">Натисніть тут, щоб відкрити застосунок та продовжити відтворення</string>
+    <string name="fgs_failed_title">Не вдалося відновити відтворення музики</string>
+    <string name="fgs_failed_channel">Не вдалося відновити відтворення</string>
+    <string name="sort_by_release_date">Дата виходу</string>
+    <string name="seperator_dot">•</string>
+    <string name="timer_expiry">Таймер сну призупинить музику на %s</string>
 </resources>
