@@ -21,7 +21,7 @@
         <item quantity="many">%d элементаў</item>
         <item quantity="other">%d элементаў</item>
     </plurals>
-    <string name="category_genres">Жанр</string>
+    <string name="category_genres">Жанры</string>
     <string name="natural_order">Па ўзрастанні</string>
     <string name="light">Светлы</string>
     <string name="settings_app_name">Назва праграмы</string>
@@ -81,10 +81,10 @@
         <item quantity="many">%d трэкаў</item>
         <item quantity="other">%d трэкаў</item>
     </plurals>
-    <string name="settings_default_progress_bar_summary">Ўключыць панэль прагрэсу ў стылі material</string>
+    <string name="settings_default_progress_bar_summary">Уключыць панэль прагрэсу ў стылі material</string>
     <string name="recently_added">Нядаўна дададзеныя</string>
     <string name="dialog_genre">Жанр</string>
-    <string name="settings_content_based_color_summary">Ўключыць стварэнне колеру на аснове альбома</string>
+    <string name="settings_content_based_color_summary">Уключыць стварэнне колеру на аснове альбома</string>
     <string name="unknown_genre">Невядомы жанр</string>
     <string name="category_artists">Выканаўцы</string>
     <string name="settings_package_type">Тып пакета</string>
@@ -113,17 +113,17 @@
     <string name="settings_blacklist">Чорны спіс</string>
     <string name="sort_by_add_date">Дадаць дату</string>
     <string name="settings_experimental_settings">Эксперыментальныя</string>
-    <string name="settings_hardware_acceleration_summary">Ўключыць апаратнае паскарэнне хуткасці прайгравання</string>
+    <string name="settings_hardware_acceleration_summary">Уключыць апаратнае паскарэнне хуткасці прайгравання</string>
     <string name="settings_lyrics_bold">Тоўсты тэкст песні</string>
     <string name="settings_lyric">Тэкст песні</string>
     <string name="settings_category_links">Спасылкі</string>
     <string name="settings_lyrics_center">Выраўноўванне па цэнтры</string>
     <string name="settings_lyrics_configuration_summary">Наладзіць знешні выгляд тэксту песні</string>
     <string name="settings_float_output">Плаваючы аўдыявыхад</string>
-    <string name="settings_album_round_corner_summary">Ўключыць закругленне кутоў у поўнаэкранным прайгравальніку</string>
+    <string name="settings_album_round_corner_summary">Уключыць закругленне кутоў у поўнаэкранным прайгравальніку</string>
     <string name="settings_library">Бібліятэка</string>
     <string name="settings_blacklist_folder">Чорны спіс тэчак</string>
-    <string name="settings_float_output_summary">Ўключыць 32-бітны вывад з плаваючай кропкай</string>
+    <string name="settings_float_output_summary">Уключыць 32-бітны вывад з плаваючай кропкай</string>
     <string name="settings_library_summary">Кіраванне медыятэкай</string>
     <string name="sort_by_modified_date">Дата змены</string>
     <string name="settings_player_ui">Інтэрфейс прайгравальніка</string>
@@ -152,14 +152,14 @@
     <string name="dialog_lyrics">Тэкст песні</string>
     <string name="settings_title_bold_summary">Выкарыстоўваць тоўсты загаловак для прайгравальніка</string>
     <string name="delete_in_progress">Ужо выдаляецца іншая песня</string>
-    <string name="deny_images">Адмоўцеся ад дазволу «Выявы і відэа»</string>
-    <string name="grant_images">Падайце дазвол «Выявы і відэа»</string>
+    <string name="deny_images">Адмоўцеся ад дазволу «Фота і відэа»</string>
+    <string name="grant_images">Калі ласка, дайце дазвол на «Фота і відэа»</string>
     <string name="settings_color_accuracy_summary">Больш дакладная генерацыя колеру</string>
     <string name="crash_clipboard">Журнал збояў скапіяваны ў буфер абмену</string>
     <string name="settings_category_full_player">Прайгравальнік</string>
     <string name="settings_trim_lyrics">Выдаліць прабелы вакол тэксту песні</string>
     <string name="settings_lyrics_multiline">Чытанне шматрадковых тэкстаў песень</string>
-    <string name="settings_lyrics_multiline_summary">Ўсе радкі паміж кропкамі сінхранізацыі разглядаюцца як адзіны тэкст</string>
+    <string name="settings_lyrics_multiline_summary">Усе радкі паміж кропкамі сінхранізацыі разглядаюцца як адзіны тэкст</string>
     <string name="settings_lyrics_contrast">Рэжым высокай кантраснасці</string>
     <string name="settings_lyrics_contrast_summary">Карысна, калі вы хочаце бачыць неактыўныя радкі тэксту</string>
     <string name="current_playlist">Бягучы плэйліст</string>
@@ -173,4 +173,5 @@
     <string name="fgs_failed_text">Націсніце тут, каб адкрыць праграму і працягнуць прайграванне</string>
     <string name="seperator_dot">•</string>
     <string name="timer_expiry">Таймер сну прыпыніць музыку на %s</string>
+    <string name="grant_audio">Калі ласка, дайце дазвол на «Музыку і аўдыё»</string>
 </resources>
