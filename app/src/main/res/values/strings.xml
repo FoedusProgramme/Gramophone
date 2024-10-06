@@ -178,4 +178,7 @@
     <string name="sort_by_release_date">Release date</string>
     <string name="timer_expiry">Sleep timer will pause music at %s</string>
     <string name="seperator_dot">•</string>
+	<string name="settings_preference_category_home">Home screen</string>
+    <string name="tab_order">Configure tab order</string>
+    <string name="tab_order_summary">The app will show the first tab on startup. Tabs after the divider will be hidden.</string>
 </resources>
