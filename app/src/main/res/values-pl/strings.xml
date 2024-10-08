@@ -174,4 +174,22 @@
     <string name="timer_expiry">Wyłącznik czasowy wstrzyma odtwarzanie muzyki o %s</string>
     <string name="separator_dot">•</string>
     <string name="grant_audio">Przyznaj uprawnienia: \"Muzyka i dźwięk\"</string>
+    <string name="seekbar">Pasek wyszukiwania</string>
+    <string name="divider">Separator</string>
+    <string name="back">Wstecz</string>
+    <string name="play_all">Odtwórz wszystko</string>
+    <string name="shuffle_all">Przetasuj wszystko</string>
+    <string name="sort">Sortuj</string>
+    <string name="scroll_to_albums">Przewiń do albumów</string>
+    <string name="play">Odtwórz</string>
+    <string name="more">Wiecej</string>
+    <string name="remove">Usuń</string>
+    <string name="skip_next">Przejdź do następnego</string>
+    <string name="expand_less">Zamknij</string>
+    <string name="skip_previous">Przejdź do poprzedniego</string>
+    <string name="position_slider">Suwak położenia</string>
+    <string name="settings_preference_category_home">Ekran główny</string>
+    <string name="tab_order">Skonfiguruj kolejność zakładek</string>
+    <string name="tab_order_summary">Aplikacja wyświetli pierwszą kartę po uruchomieniu. Zakładki po separatorze będą ukryte.</string>
+    <string name="scroll_to_songs">Przewiń do utworów</string>
 </resources>
