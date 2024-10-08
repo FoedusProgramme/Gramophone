@@ -170,4 +170,22 @@
     <string name="timer_expiry">El temporizador de apagado pausará la música en %s</string>
     <string name="separator_dot">•</string>
     <string name="grant_audio">Por favor, concede el permiso para \"Música y audio</string>
+    <string name="seekbar">Seekbar</string>
+    <string name="divider">Divisor</string>
+    <string name="back">Atrás</string>
+    <string name="play_all">Reproducir todo</string>
+    <string name="sort">Clasificar</string>
+    <string name="scroll_to_songs">Ir a las canciones</string>
+    <string name="scroll_to_albums">Ir a los álbumes</string>
+    <string name="play">Reproducir</string>
+    <string name="more">Más</string>
+    <string name="remove">Eliminar</string>
+    <string name="skip_next">Saltar a la siguiente</string>
+    <string name="expand_less">Cerrar</string>
+    <string name="position_slider">Control deslizante de la ubicación</string>
+    <string name="tab_order_summary">La aplicación mostrará la primera pestaña al iniciarse. Las pestañas que estén después del divisor estarán ocultas.</string>
+    <string name="settings_preference_category_home">Pantalla de inicio</string>
+    <string name="shuffle_all">Mezclar todas</string>
+    <string name="tab_order">Configurar el orden de las pestañas</string>
+    <string name="skip_previous">Ir a la anterior</string>
 </resources>
