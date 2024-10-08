@@ -162,4 +162,22 @@
     <string name="timer_expiry">スリープタイマーは %s に再生を一時停止します</string>
     <string name="separator_dot">•</string>
     <string name="grant_audio">「音楽とオーディオ」の権限を許可してください</string>
+    <string name="settings_preference_category_home">ホーム画面</string>
+    <string name="tab_order">タブの順序を設定する</string>
+    <string name="seekbar">シークバー</string>
+    <string name="divider">区切り線</string>
+    <string name="back">戻る</string>
+    <string name="play_all">すべて再生</string>
+    <string name="shuffle_all">すべてシャッフル</string>
+    <string name="sort">ソート</string>
+    <string name="scroll_to_albums">アルバムへスクロール</string>
+    <string name="play">再生</string>
+    <string name="more">詳細</string>
+    <string name="remove">削除</string>
+    <string name="skip_next">次へスキップ</string>
+    <string name="expand_less">閉じる</string>
+    <string name="skip_previous">前へスキップ</string>
+    <string name="position_slider">スライダーの位置</string>
+    <string name="scroll_to_songs">曲までスクロール</string>
+    <string name="tab_order_summary">起動時に表示するタブを設定します。区切り線以降のタブは非表示になります。</string>
 </resources>
