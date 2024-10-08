@@ -166,4 +166,22 @@
     <string name="settings_play_on_launch">Käivitamisel esita muusikat</string>
     <string name="settings_lyrics_multiline">Mitmerealiste laulusõnade tuvastus</string>
     <string name="settings_lyrics_multiline_summary">Tõlgenda kõiki ridu sünkroniseerimispunktide vahel ühe laulutekstina</string>
+    <string name="settings_preference_category_home">Avavaade</string>
+    <string name="tab_order">Seadista vahekaartide järjekorda</string>
+    <string name="tab_order_summary">Rakendus näitab käivitamisel esimest vahekaarti. Eraldaja taga olevad vahekaardid saavad olema peidetud.</string>
+    <string name="scroll_to_songs">Keri paladeni</string>
+    <string name="more">Veel</string>
+    <string name="remove">Eemalda</string>
+    <string name="seekbar">Kerimisriba</string>
+    <string name="divider">Eraldaja</string>
+    <string name="back">Tagasi</string>
+    <string name="play_all">Esita kõik</string>
+    <string name="shuffle_all">Sega kõik lood</string>
+    <string name="sort">Järjesta</string>
+    <string name="scroll_to_albums">Keri albumiteni</string>
+    <string name="play">Esita</string>
+    <string name="skip_next">Hüppa järgmise juurde</string>
+    <string name="expand_less">Sulge</string>
+    <string name="skip_previous">Hüppa eelmise juurde</string>
+    <string name="position_slider">Asukoha liugur</string>
 </resources>
