@@ -171,7 +171,7 @@
     <string name="fgs_failed_channel">Не ўдалося аднавіць прайграванне</string>
     <string name="fgs_failed_title">Не ўдалося аднавіць прайграванне музыкі</string>
     <string name="fgs_failed_text">Націсніце тут, каб адкрыць праграму і працягнуць прайграванне</string>
-    <string name="seperator_dot">•</string>
+    <string name="separator_dot">•</string>
     <string name="timer_expiry">Таймер сну прыпыніць музыку на %s</string>
     <string name="grant_audio">Калі ласка, дайце дазвол на «Музыку і аўдыё»</string>
 </resources>

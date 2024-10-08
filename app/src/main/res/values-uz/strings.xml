@@ -63,7 +63,7 @@
     <string name="current_playlist">Hozirgi pleylist</string>
     <string name="fgs_failed_text">Ilovani ochish va ijroni davom ettirish uchun shu yerni bosing</string>
     <string name="fgs_failed_channel">Ijro davom ettirilmadi</string>
-    <string name="seperator_dot">•</string>
+    <string name="separator_dot">•</string>
     <string name="category_albums">Albomlar</string>
     <plurals name="albums">
         <item quantity="one">%d Albom</item>

@@ -172,6 +172,6 @@
     <string name="fgs_failed_title">Не вдалося відновити відтворення музики</string>
     <string name="fgs_failed_channel">Не вдалося відновити відтворення</string>
     <string name="sort_by_release_date">Дата виходу</string>
-    <string name="seperator_dot">•</string>
+    <string name="separator_dot">•</string>
     <string name="timer_expiry">Таймер сну призупинить музику на %s</string>
 </resources>

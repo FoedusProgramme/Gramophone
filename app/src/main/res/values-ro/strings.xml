@@ -167,6 +167,6 @@
     <string name="settings_trim_lyrics">Elimină spațiul din jurul versurilor</string>
     <string name="grant_images">Vă rugăm permiteți accesul la \"Imagini &amp; Clipuri Video\"</string>
     <string name="settings_lyrics_contrast_summary">Utilă dacă doriți să vedeți rândurile de versuri inactive</string>
-    <string name="seperator_dot">•</string>
+    <string name="separator_dot">•</string>
     <string name="timer_expiry">Cronometrul de somn va opri muzica la %s</string>
 </resources>

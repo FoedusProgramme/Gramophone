@@ -137,7 +137,7 @@
     <string name="fgs_failed_text">Rakenduse avamiseks ja taasesituse jätkamiseks klõpsi siin</string>
     <string name="sort_by_release_date">Avaldamise kuupäev</string>
     <string name="timer_expiry">Unetaimer peatab muusika esitamise kell %s</string>
-    <string name="seperator_dot">•</string>
+    <string name="separator_dot">•</string>
     <string name="settings_category_filters">Filtrid</string>
     <string name="fgs_failed_channel">Taasesituse jätkamine ei õnnestunud</string>
     <string name="settings_skip_silence">Jäta vaikus vahele</string>

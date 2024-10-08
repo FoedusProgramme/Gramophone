@@ -159,7 +159,7 @@
     <string name="fgs_failed_title">Fallimento in resumer le reproduction de musica</string>
     <string name="sort_by_release_date">Data de lanceamento</string>
     <string name="timer_expiry">Le temporisator de somno pausara le musica in %s</string>
-    <string name="seperator_dot">•</string>
+    <string name="separator_dot">•</string>
     <string name="album_covers_enhance">Carga meliorate del copertura de album</string>
     <string name="album_covers_enhance_desc">Supporta coperturas de cantos de alte qualitate e permitte haber coperturas de album e canto different (require accesso al photos)</string>
     <string name="settings_lyrics_multiline">Leger le parolas de canto multilinea</string>

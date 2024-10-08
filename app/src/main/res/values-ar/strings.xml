@@ -180,5 +180,5 @@
     <string name="current_playlist">قائمة التشغيل الحالية</string>
     <string name="timer">مؤقت النوم</string>
     <string name="timer_expiry">سيُوقِف مؤقِّت النّوم الموسيقى خلال %s ثانية</string>
-    <string name="seperator_dot">•</string>
+    <string name="separator_dot">•</string>
 </resources>

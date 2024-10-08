@@ -79,7 +79,7 @@
     <string name="fgs_failed_text">Kliknite ovde da otvorite aplikaciju i nastavite sa reprodukcijom</string>
     <string name="fgs_failed_channel">Nastavak reprodukcije nije uspeo</string>
     <string name="sort_by_release_date">Datum izlaska</string>
-    <string name="seperator_dot">•</string>
+    <string name="separator_dot">•</string>
     <string name="unknown_version">Nepoznata verzija</string>
     <string name="dialog_title">Naslov</string>
     <string name="dialog_genre">Žanr</string>

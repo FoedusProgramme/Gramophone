@@ -96,7 +96,7 @@
     <string name="crash_clipboard">충돌 로그를 클립보드에 복사했습니다</string>
     <string name="home_menu_settings">설정</string>
     <string name="sort_by_release_date">발매 날짜</string>
-    <string name="seperator_dot">•</string>
+    <string name="separator_dot">•</string>
     <string name="current_playlist">현재 재생 목록</string>
     <string name="timer">수면 타이머</string>
     <string name="settings_lyrics_contrast">고대비 모드</string>

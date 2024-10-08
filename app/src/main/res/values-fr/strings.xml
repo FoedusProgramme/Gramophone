@@ -168,5 +168,5 @@
     <string name="fgs_failed_text">Cliquez ici pour ouvrir l\'application et continuer la lecture</string>
     <string name="fgs_failed_channel">La reprise de la lecture a échoué</string>
     <string name="settings_lyrics_contrast_summary">Utile si vous avez besoin de lire les lignes de paroles inactives</string>
-    <string name="seperator_dot">•</string>
+    <string name="separator_dot">•</string>
 </resources>

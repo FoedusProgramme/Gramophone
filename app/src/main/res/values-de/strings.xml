@@ -165,5 +165,5 @@
     <string name="settings_lyrics_multiline_summary">Behandele alle Zeilen zwischen Synchronisationspunkten als ein Liedtext</string>
     <string name="settings_lyrics_contrast_summary">Nützlich, falls man die inaktiven Liedtextzeilen tatsächlich sehen können will</string>
     <string name="timer">Einschlaftimer</string>
-    <string name="seperator_dot">•</string>
+    <string name="separator_dot">•</string>
 </resources>
