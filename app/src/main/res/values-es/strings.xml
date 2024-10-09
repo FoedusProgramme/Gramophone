@@ -188,4 +188,5 @@
     <string name="shuffle_all">Mezclar todas</string>
     <string name="tab_order">Configurar el orden de las pestañas</string>
     <string name="skip_previous">Ir a la anterior</string>
+    <string name="app_name">Gramophone</string>
 </resources>
