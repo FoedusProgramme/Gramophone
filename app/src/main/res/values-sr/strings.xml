@@ -170,4 +170,11 @@
     <string name="album_covers_enhance_desc">Podržite visokokvalitetne omote pesama i dozvolite da se album i omot pesme razlikuju (zahteva pristup fotografijama)</string>
     <string name="preference_category_quality">Kvalitet</string>
     <string name="grant_audio">Odobrite dozvolu „Muzika i audio“</string>
+    <string name="back">Nazad</string>
+    <string name="play">Pusti</string>
+    <string name="more">Više</string>
+    <string name="expand_less">Zatvori</string>
+    <string name="settings_preference_category_home">Početna stranica</string>
+    <string name="play_all">Pusti sve</string>
+    <string name="sort">Sortiraj</string>
 </resources>
