@@ -192,4 +192,5 @@
     <string name="tab_order">Skonfiguruj kolejność zakładek</string>
     <string name="tab_order_summary">Aplikacja wyświetli pierwszą kartę po uruchomieniu. Zakładki po separatorze będą ukryte.</string>
     <string name="scroll_to_songs">Przewiń do utworów</string>
+    <string name="app_name">Gramophone</string>
 </resources>
