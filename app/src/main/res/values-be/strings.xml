@@ -174,4 +174,23 @@
     <string name="separator_dot">•</string>
     <string name="timer_expiry">Таймер сну прыпыніць музыку на %s</string>
     <string name="grant_audio">Калі ласка, дайце дазвол на «Музыку і аўдыё»</string>
+    <string name="app_name">Gramophone</string>
+    <string name="seekbar">Панэль пошуку</string>
+    <string name="divider">Падзельнік</string>
+    <string name="shuffle_all">Змяшаць усё</string>
+    <string name="sort">Сартаванне</string>
+    <string name="scroll_to_albums">Перайсці да альбомаў</string>
+    <string name="more">Больш</string>
+    <string name="remove">Выдаліць</string>
+    <string name="skip_next">Перайсці да наступнага</string>
+    <string name="expand_less">Закрыць</string>
+    <string name="skip_previous">Перайсці да папярэдняга</string>
+    <string name="settings_preference_category_home">Галоўны экран</string>
+    <string name="tab_order_summary">Праграма пакажа першую ўкладку пры запуску. Укладкі пасля падзельніка будуць схаваны.</string>
+    <string name="tab_order">Наладзіць парадак укладак</string>
+    <string name="scroll_to_songs">Перайсці да песень</string>
+    <string name="play_all">Гуляць усё</string>
+    <string name="position_slider">Паўзунок становішча</string>
+    <string name="back">Назад</string>
+    <string name="play">Гуляць</string>
 </resources>
