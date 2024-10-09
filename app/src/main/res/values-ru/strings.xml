@@ -176,4 +176,23 @@
     <string name="timer_expiry">Таймер сна приостановит музыку на %s</string>
     <string name="separator_dot">•</string>
     <string name="grant_audio">Пожалуйста, предоставьте разрешение на «Музыку и аудио»</string>
+    <string name="app_name">Gramophone</string>
+    <string name="settings_preference_category_home">Главный экран</string>
+    <string name="tab_order">Настроить порядок вкладок</string>
+    <string name="tab_order_summary">Приложение покажет первую вкладку при запуске. Вкладки после разделителя будут скрыты.</string>
+    <string name="seekbar">Панель поиска</string>
+    <string name="divider">Разделитель</string>
+    <string name="back">Назад</string>
+    <string name="play_all">Играть все</string>
+    <string name="shuffle_all">Перемешать все</string>
+    <string name="sort">Сортировка</string>
+    <string name="scroll_to_albums">Перейти к альбомам</string>
+    <string name="scroll_to_songs">Перейти к песням</string>
+    <string name="play">Играть</string>
+    <string name="more">Больше</string>
+    <string name="remove">Удалить</string>
+    <string name="skip_next">Перейти к следующему</string>
+    <string name="expand_less">Закрыть</string>
+    <string name="skip_previous">Перейти к предыдущему</string>
+    <string name="position_slider">Ползунок положения</string>
 </resources>
