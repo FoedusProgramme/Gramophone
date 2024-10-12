@@ -131,8 +131,8 @@
     <string name="settings_blacklist_folder">Ordner auf schwarze Liste setzen</string>
     <string name="settings_blacklist_folder_summary">Songs aus bestimmten Ordnern filtern</string>
     <string name="dialog_disc_number">Disc-Nummer</string>
-    <string name="deny_images">Bitte die Berechtigung „Bilder und Videos“ verweigern</string>
-    <string name="grant_images">Bitte die Berechtigung „Bilder &amp; Videos“ erteilen</string>
+    <string name="deny_images">Bitte die Berechtigung „Fotos und Videos“ verweigern</string>
+    <string name="grant_images">Bitte die Berechtigung „Fotos und Videos“ erteilen</string>
     <string name="settings_package_type">Pakettyp</string>
     <string name="settings_customization">Anpassung</string>
     <string name="settings_float_output_summary">32-Bit-Float-Ausgabe aktivieren</string>
@@ -166,4 +166,21 @@
     <string name="settings_lyrics_contrast_summary">Nützlich, falls man die inaktiven Liedtextzeilen tatsächlich sehen können will</string>
     <string name="timer">Einschlaftimer</string>
     <string name="separator_dot">•</string>
+    <string name="app_name">Gramophone</string>
+    <string name="scroll_to_albums">Zu den Alben scrollen</string>
+    <string name="position_slider">Positionsschieberegler</string>
+    <string name="grant_audio">Bitte die Berechtigung „Musik und Audio“ erteilen</string>
+    <string name="tab_order">Tab-Reihenfolge konfigurieren</string>
+    <string name="tab_order_summary">Die App zeigt beim Starten den ersten Tab an. Tabs nach der Trennlinie werden ausgeblendet.</string>
+    <string name="seekbar">Suchleiste</string>
+    <string name="divider">Trennlinie</string>
+    <string name="back">Zurück</string>
+    <string name="play_all">Alles abspielen</string>
+    <string name="sort">Sortieren</string>
+    <string name="play">Wiedergabe</string>
+    <string name="more">Mehr</string>
+    <string name="remove">Entfernen</string>
+    <string name="expand_less">Schließen</string>
+    <string name="skip_next">Zum Nächsten springen</string>
+    <string name="skip_previous">Zum Vorherigen springen</string>
 </resources>
