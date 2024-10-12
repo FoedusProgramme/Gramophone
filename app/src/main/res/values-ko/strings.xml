@@ -161,4 +161,23 @@
     <string name="settings_category_full_player">플레이어</string>
     <string name="deny_images">\"사진 및 동영상\" 권한을 거부해 주세요</string>
     <string name="grant_images">\"사진 및 동영상\" 권한을 허용해 주세요</string>
+    <string name="remove">제거</string>
+    <string name="grant_audio">\"음악 및 오디오\" 권한을 허용해 주세요</string>
+    <string name="settings_preference_category_home">홈 화면</string>
+    <string name="tab_order">탭 순서 설정</string>
+    <string name="tab_order_summary">앱을 시작하면 첫 번째 탭이 보여집니다. 구분 줄 아래의 탭은 숨겨집니다.</string>
+    <string name="seekbar">탐색 바</string>
+    <string name="divider">구분 줄</string>
+    <string name="back">뒤로</string>
+    <string name="play_all">모두 재생</string>
+    <string name="shuffle_all">모두 무작위 재생</string>
+    <string name="sort">정렬</string>
+    <string name="scroll_to_albums">앨범으로 이동</string>
+    <string name="scroll_to_songs">음악으로 이동</string>
+    <string name="play">재생</string>
+    <string name="more">더 보기</string>
+    <string name="skip_next">다음으로 건너뛰기</string>
+    <string name="expand_less">닫기</string>
+    <string name="skip_previous">이전으로 건너뛰기</string>
+    <string name="position_slider">위치 슬라이더</string>
 </resources>
