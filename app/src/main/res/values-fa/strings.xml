@@ -116,7 +116,7 @@
     <string name="settings_album_round_corner">گوشۀ گرد آلبوم</string>
     <string name="category_albums">آلبوم‌ها</string>
     <string name="settings_app_name">نام برنامه</string>
-    <string name="settings_app_theme">پوسته‌ی برنامه</string>
+    <string name="settings_app_theme">پوستۀ برنامه</string>
     <string name="dialog_artist">هنرمند</string>
     <string name="settings_blacklist">فهرست سیاه</string>
     <string name="settings_blacklist_folder">شاخه‌های فهرست سیاه</string>
@@ -166,4 +166,21 @@
     <string name="fgs_failed_title">ازسرگیری پخش آهنگ شکست خورد</string>
     <string name="separator_dot">•</string>
     <string name="grant_audio">لطفا دسترسی \"صدا و موسیقی\" را بپذیرید</string>
+    <string name="play">پخش</string>
+    <string name="more">بیشتر</string>
+    <string name="app_name">گرامافون</string>
+    <string name="play_all">پخش همه</string>
+    <string name="shuffle_all">درهم کردن همه</string>
+    <string name="sort">چینش</string>
+    <string name="back">برگشت</string>
+    <string name="scroll_to_albums">‍لغزش به آلبوم‌ها</string>
+    <string name="seekbar">نوار جویش</string>
+    <string name="divider">جداگر</string>
+    <string name="tab_order">پیکربندی چینش زبانه‌ها</string>
+    <string name="tab_order_summary">برنامه هنگام شروع اولین زبانه را نشان خواهد داد. زبانه‌های پس از جداگر مخفی خواهند شد.</string>
+    <string name="remove">برداشتن</string>
+    <string name="skip_next">رد کردن به بعدی</string>
+    <string name="expand_less">بستن</string>
+    <string name="skip_previous">رد کردن به قبلی</string>
+    <string name="scroll_to_songs">لغزش به آهنگ‌ها</string>
 </resources>
