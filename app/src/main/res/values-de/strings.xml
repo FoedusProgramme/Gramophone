@@ -183,4 +183,7 @@
     <string name="expand_less">Schließen</string>
     <string name="skip_next">Zum Nächsten springen</string>
     <string name="skip_previous">Zum Vorherigen springen</string>
+    <string name="settings_preference_category_home">Startbildschirm</string>
+    <string name="shuffle_all">Alle zufällig abspielen</string>
+    <string name="scroll_to_songs">Zu den Songs scrollen</string>
 </resources>
