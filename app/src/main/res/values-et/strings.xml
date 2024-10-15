@@ -124,9 +124,9 @@
     <string name="delete_in_progress">Teise pala kustutamine on veel pooleli</string>
     <string name="album_covers_enhance">Albumi kaanepildi tõhusam laadimine</string>
     <string name="album_covers_enhance_desc">Kasuta parema kvaliteediga kaanepilte ning luba albumi ja palade kaanepiltidel erineda (eeldab õigust avada fotosid ja pildifaile)</string>
-    <string name="deny_images">Palun keela ligipääs fotodele ja videotele</string>
-    <string name="grant_images">Palun luba ligipääs fotodele ja videotele</string>
-    <string name="grant_audio">Palun luba ligipääs muusikale ja helile</string>
+    <string name="deny_images"><![CDATA[Palun keela \"Fotod ja videod\" õigused]]></string>
+    <string name="grant_images"><![CDATA[Palun luba \"Fotod ja videod\" õigused]]></string>
+    <string name="grant_audio"><![CDATA[Palun luba \"Muusika ja heli\" õigused]]></string>
     <string name="crash_clipboard">Krahhilogi on kopeeritud lõikelauale</string>
     <string name="settings_trim_lyrics">Eemalda laulusõnu ümbritsevad tühikud</string>
     <string name="settings_lyrics_contrast">Suure kontrastsusega vaade</string>
