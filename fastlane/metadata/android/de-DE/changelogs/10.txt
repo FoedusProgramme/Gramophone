@@ -1,0 +1,9 @@
+Hotfix-Release, um Abstürze auf Android 5 zu beheben. Original-Changelog:
+
+Highlights dieses Updates:
+- Abspielreihenfolge kann während des Abspielens geändert werden (Dank @topazrn)
+- Einige Fehler in "Zufällig abspielen" wurden behoben 
+- Lyric-Farben wurden überarbeitet, um sicherzugehen, dass diese immer lesbar sind
+  - Fehler behoben, wo Lyric-Farben nicht in System-dunkel-App-hell- und System-hell-App-system-Modus gleich waren
+- Fehler wurden behoben
+- Reproduzierbare Builds repariert
