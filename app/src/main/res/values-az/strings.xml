@@ -20,4 +20,25 @@
     <string name="home_menu_refresh">Yenilə</string>
     <string name="category_genres">Janrlar</string>
     <string name="category_playlists">Pleylistlər</string>
+    <string name="search">Axtarış</string>
+    <string name="go_to_album">Alboma bax</string>
+    <string name="dialog_year">İl</string>
+    <string name="dialog_album">Albom</string>
+    <string name="dialog_genre">Janr</string>
+    <string name="settings_audio">Audio</string>
+    <string name="sort_by_artist">İfaçı</string>
+    <string name="sort_by_album">Albom</string>
+    <string name="share">Paylaş</string>
+    <string name="settings_preference_category_home">Əsas səhifə</string>
+    <string name="expand_less">Bağla</string>
+    <string name="settings_version">Versiya</string>
+    <string name="settings_about_app">Haqqında</string>
+    <string name="settings_about_gramophone">Tətbiq haqqında</string>
+    <string name="folders">Qovluqlar</string>
+    <string name="dialog_album_artist">Albom ifaçısı</string>
+    <string name="go_to_artist">İfaçıya bax</string>
+    <string name="dialog_lyrics">Sözlər</string>
+    <string name="dialog_edit_metadata">Redaktə et</string>
+    <string name="album_artist">Albom ifaçısı</string>
+    <string name="no_lyric_found">Sözlər tapılmadı</string>
 </resources>
