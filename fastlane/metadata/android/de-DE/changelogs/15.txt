@@ -1,0 +1,2 @@
+- Möglichkeit, die Tab-Reihenfolge zu verändern oder Tabs zu verstecken
+- Einige Abstürze wurden behoben
