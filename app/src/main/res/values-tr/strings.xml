@@ -169,4 +169,15 @@
     <string name="divider">Ayırıcı</string>
     <string name="back">Geri</string>
     <string name="play_all">Tümünü oynat</string>
+    <string name="play">Oynat</string>
+    <string name="more">Daha fazla</string>
+    <string name="sort">Sırala</string>
+    <string name="remove">Sil</string>
+    <string name="shuffle_all">Tümünü karıştır</string>
+    <string name="scroll_to_albums">Albümlere kaydır</string>
+    <string name="scroll_to_songs">Müziklere kaydır</string>
+    <string name="skip_next">Sıradakine atla</string>
+    <string name="expand_less">Kapat</string>
+    <string name="skip_previous">Öncekine atla</string>
+    <string name="position_slider">Yer kaydırıcısı</string>
 </resources>
