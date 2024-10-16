@@ -1,0 +1,2 @@
+- Sekmelere sıralama ve gizleme özelliği eklendi
+- Bir takım çökmeler düzeltildi

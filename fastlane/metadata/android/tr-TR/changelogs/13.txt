@@ -1,0 +1,4 @@
+- Dosya gezgini yeni arayüzü eklendi
+- Sözleri gösterirken ekran kapanmayacak
+- Dosya sistemindeki SD kartlar için destek eklendi
+- Hata düzeltmeleri yapıldı

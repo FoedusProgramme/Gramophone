@@ -1,0 +1,3 @@
+- Sekmeleri sıralama düzeltildi 
+- Ekolayzır desteği düzeltildi 
+- Bazı erişilebilirlik sorunları düzeltildi (Eğer başka varsa lütfen bilgilendirin!)
