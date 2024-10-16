@@ -124,7 +124,7 @@
     <string name="settings_color_accuracy">Farbgenauigkeit</string>
     <string name="settings_content_based_color">Inhaltsbasierte Farben</string>
     <string name="settings_content_based_color_summary">Albumbasierte Farbgenerierung aktivieren</string>
-    <string name="album_cover">Album-Cover</string>
+    <string name="album_cover">Albumcover</string>
     <string name="dialog_edit_metadata">Bearbeiten</string>
     <string name="dialog_lyrics">Liedtexte</string>
     <string name="settings_blacklist">Schwarze Liste</string>
