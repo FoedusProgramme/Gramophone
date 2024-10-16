@@ -1,2 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="home_menu_settings">تنظیمات</string>
+    <string name="category_albums">آلبوم ها</string>
+    <string name="category_genres">ژانر ها</string>
+    <string name="category_playlists">پلی‌لیست ها</string>
+    <string name="unknown_artist">هنرمند ناشناس</string>
+    <string name="category_dates">زمان ها</string>
+    <plurals name="songs">
+        <item quantity="one">آهنگ</item>
+        <item quantity="other">آهنگ ها</item>
+    </plurals>
+    <plurals name="albums">
+        <item quantity="one">آلبوم</item>
+        <item quantity="other">آلبوم ها</item>
+    </plurals>
+    <plurals name="artists">
+        <item quantity="one">هنرمند</item>
+        <item quantity="other">هنرمندان</item>
+    </plurals>
+    <string name="sort_by_size">اندازه</string>
+    <string name="sort_by_name">اسم</string>
+    <string name="sort_by_artist">هنرمند</string>
+    <string name="dismiss">رد کردن</string>
+    <string name="search">جست و جو</string>
+    <string name="share">اشتراک گذاری</string>
+    <string name="settings_app_name">نام برنامه</string>
+    <string name="play_next">پخش آهنگ بعدی</string>
+    <string name="details">جزئیات</string>
+    <string name="settings_category_appearance">ظاهر</string>
+    <string name="album_artist">آلبوم هنرمند</string>
+    <string name="settings_version">نسخه</string>
+    <string name="dialog_title">عنوان</string>
+    <string name="dialog_artist">هنرمند</string>
+    <string name="settings_mediastore_filter">حداقل زمان آهنگ(ثانیه)</string>
+    <string name="settings_repository">مخزن</string>
+    <string name="dialog_track_number">شماره ی آهنگ</string>
+    <string name="unknown_album">آلبوم ناشناس</string>
+    <string name="recently_added">به تازگی اضافه شده</string>
+    <string name="natural_order">ترتیب عادی</string>
+    <string name="grid">چینش</string>
+    <string name="list">لیست</string>
+    <string name="layout">نوع نمایش</string>
+    <string name="home_menu_equalizer">اکولایزر</string>
+    <string name="equalizer_not_found">اکولایزر یافت نشد!</string>
+    <string name="compact_list">لیست (فشرده)</string>
+    <string name="home_menu_refresh">بازنشانی</string>
+    <string name="category_songs">آهنگ ها</string>
+    <string name="home_menu_search">جست و جو</string>
+    <string name="category_artists">خوانندگان</string>
+    <string name="dark">تیره</string>
+    <plurals name="items">
+        <item quantity="one">آیتم</item>
+        <item quantity="other">آیتم ها</item>
+    </plurals>
+    <string name="light">روشن</string>
+    <string name="sort_by_album">آلبوم</string>
+    <string name="follow_system">بر اساس سیستم</string>
+    <string name="unknown_genre">ژانر ناشناس</string>
+    <string name="unknown_year">سال ناشناس</string>
+    <string name="refreshed_songs">آهنگ های بروز شده</string>
+    <string name="settings_contributors">مشارکت کنندگان در ساخت برنامه</string>
+    <string name="go_to_artist">برو به هنرمند</string>
+    <string name="go_to_album">برو به آلبوم</string>
+    <string name="shuffle">تصادفی</string>
+    <string name="repeat_mode">حالت تکرار</string>
+    <string name="unknown_playlist">پلی‌لیست ناشناس</string>
+    <string name="unknown_version">ورژن نامشخص</string>
+    <string name="settings_category_behavior">رفتار</string>
+    <string name="dialog_year">سال</string>
+    <string name="dialog_album_artist">آلبوم هنرمند</string>
+    <string name="dialog_album">آلبوم</string>
+    <string name="dialog_genre">ژانر</string>
+    <string name="dialog_path">مسیر</string>
+    <string name="folders">پوشه ها</string>
+    <string name="settings_app_theme">تم برنامه</string>
+</resources>
