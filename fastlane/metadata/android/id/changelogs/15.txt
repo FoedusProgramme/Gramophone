@@ -1,0 +1,2 @@
+- Memungkinkan penyusunan ulang dan menyembunyikan tab
+- Beberapa kerusakan diperbaiki

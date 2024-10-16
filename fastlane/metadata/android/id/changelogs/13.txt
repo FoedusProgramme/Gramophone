@@ -1,0 +1,4 @@
+- Desain ulang pemutar file
+- Layar tetap hidup saat melihat lirik
+- Mendukung SD card pada tab Filesystem
+- Perbaikan bug

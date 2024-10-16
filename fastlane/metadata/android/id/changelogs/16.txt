@@ -1,0 +1,3 @@
+- Memperbaiki beberapa bug yang terkait dengan pengurutan ulang tab
+- Memperbaiki dukungan equalizer
+- Memperbaiki beberapa masalah aksesibilitas (beri tahu saya jika ada lagi!)
