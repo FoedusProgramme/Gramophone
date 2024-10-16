@@ -1,0 +1,4 @@
+- Przeprojektowanie odtwarzacza plików
+- Ekran pozostaje włączony podczas przeglądania tekstów
+- Obsługa kart SD w zakładce System plików
+- Poprawki błędów
