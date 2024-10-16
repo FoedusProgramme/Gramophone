@@ -138,4 +138,23 @@
     <string name="share">Paylaş</string>
     <string name="current_playlist">Şu anki çalma listesi</string>
     <string name="sort_by_release_date">Çıkış tarihi</string>
+    <string name="settings_album_round_corner">Albüm yuvarlak köşesi</string>
+    <string name="settings_player_options_summary">İşleme kalitesi, oynatma davranışı</string>
+    <string name="settings_title_center_summary">Tam ekran oynatıcıdaki parça ismini ortala</string>
+    <string name="settings_float_output">Düz ses çıkışı</string>
+    <string name="settings_float_output_summary">32 bit düz çıkış modunu etkinleştir</string>
+    <string name="settings_color_accuracy_summary">Renk seçilimi doğruluğunu artír</string>
+    <string name="settings_crash_application">Uygulamayı çökert</string>
+    <string name="delete_in_progress">Zaten başka bir müzik siliniyor</string>
+    <string name="settings_title_bold_summary">Tüm oynatıcıda kalın başlık kullan</string>
+    <string name="settings_experimental_settings_summary">Test özellikleri, çeşitli</string>
+    <string name="settings_album_round_corner_summary">Tam ekran oynatıcıda köşeleri yuvarlat</string>
+    <string name="settings_hardware_acceleration_summary">Oynatma hızı için donanım hızlandırmasını etkinleştir</string>
+    <string name="settings_lyrics_center">Merkeze ortalama</string>
+    <string name="timer">Uyku zamanlayıcısı</string>
+    <string name="crash_clipboard">Çökme günlüğü panoya kopyalandı</string>
+    <string name="settings_blacklist_folder_summary">Belirli klasörlerden müzikleri filtrele</string>
+    <string name="app_name">Gramophone</string>
+    <string name="settings_lyrics_bold_summary">Parça sözleri için kalın metin kullan</string>
+    <string name="settings_lyrics_center_summary">Sözleri merkeze ortala</string>
 </resources>
