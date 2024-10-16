@@ -1,2 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="category_songs">Mahnılar</string>
+    <string name="home_menu_search">Axtarış</string>
+    <string name="home_menu_settings">Parametrlər</string>
+    <string name="category_albums">Albomlar</string>
+    <string name="category_artists">İfaçılar</string>
+    <plurals name="songs">
+        <item quantity="one">%d mahnı</item>
+        <item quantity="other">%d mahnı</item>
+    </plurals>
+    <plurals name="albums">
+        <item quantity="one">%d albom</item>
+        <item quantity="other">%d albom</item>
+    </plurals>
+    <plurals name="artists">
+        <item quantity="one">%d ifaçı</item>
+        <item quantity="other">%d ifaçı</item>
+    </plurals>
+    <string name="home_menu_refresh">Yenilə</string>
+    <string name="category_genres">Janrlar</string>
+    <string name="category_playlists">Pleylistlər</string>
+</resources>
