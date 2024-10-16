@@ -74,4 +74,5 @@
     <string name="dialog_path">مسیر</string>
     <string name="folders">پوشه ها</string>
     <string name="settings_app_theme">تم برنامه</string>
+    <string name="check_for_updates">چنل ما را برای آپدیت ها دنبال کنید!</string>
 </resources>
