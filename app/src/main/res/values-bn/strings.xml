@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="dismiss">সরিয়ে দাউ</string>
+    <string name="dismiss">খারিজ</string>
     <string name="settings_category_behavior">ব্যাবহার</string>
     <string name="category_dates">তারিখগুলো</string>
     <string name="sort_by_artist">শিল্পী</string>
@@ -29,9 +29,9 @@
     <string name="go_to_album">অ্যালবাম এ যান</string>
     <string name="unknown_album">অচেনা অ্যালবাম</string>
     <string name="sort_by_size">দৈর্ঘ্য</string>
-    <string name="dialog_title">শিরনাম</string>
+    <string name="dialog_title">শিরোনাম</string>
     <string name="settings_repository">রেপোজিটোরি</string>
-    <string name="settings_mediastore_filter">সেকেন্ডের থেকে কম সময়ের গানগুলি লুকান</string>
+    <string name="settings_mediastore_filter">গানের ন্যূনতম দৈর্ঘ্য (সেকেন্ড)</string>
     <string name="category_songs">গানগুলো</string>
     <string name="compact_list">সারি (কম্প্যাক্ট অবস্থা)</string>
     <string name="equalizer_not_found">ইকুয়ালাইজার পাওয়া যায়নি!</string>
@@ -39,7 +39,7 @@
         <item quantity="one">%d টি বস্তু</item>
         <item quantity="other">%d টি বস্তু</item>
     </plurals>
-    <string name="category_genres">গানের জাতগুলি</string>
+    <string name="category_genres">গানের ধরন</string>
     <string name="natural_order">প্রাকৃতিক সারি</string>
     <string name="light">সাদা</string>
     <string name="dialog_track_number">গানের নম্বর</string>
@@ -53,7 +53,7 @@
     <string name="settings_version">ভার্সন</string>
     <string name="refreshed_songs">রিফ্রেশ করা হয়েছে %1$s গানগুলোকে</string>
     <string name="sort_by_name">নাম</string>
-    <string name="shuffle">শাফেল</string>
+    <string name="shuffle">এলোমেলো</string>
     <string name="category_playlists">চালনা সারি</string>
     <string name="follow_system">সিস্টেমকে অনুসরণ করুন</string>
     <string name="list">সারি</string>
@@ -63,7 +63,7 @@
         <item quantity="one">%d টি গান</item>
         <item quantity="other">%d টা গান</item>
     </plurals>
-    <string name="recently_added">সম্প্রতিকাল যোগ করা হয়েছে</string>
+    <string name="recently_added">সম্প্রতি যোগ করা হয়েছে</string>
     <string name="dialog_genre">গানের জাত</string>
     <string name="unknown_genre">গানের জাত</string>
     <string name="go_to_artist">শিল্পীগণ এর মেনুতে যান</string>
@@ -73,5 +73,66 @@
     <string name="play_next">পরেরটা চালাও</string>
     <string name="unknown_version">অচেনা ভার্সন</string>
     <string name="unknown_artist">অচেনা শিল্পী</string>
-    <string name="repeat_mode">রিপিট সুইচ</string>
+    <string name="repeat_mode">পুনরাবৃত্তি সুইচ</string>
+    <string name="settings_default_progress_bar">ডিফল্ট প্রক্রিয়া বার</string>
+    <string name="app_name">গ্রামোফোন</string>
+    <string name="settings_default_progress_bar_summary">মেটেরিয়াল স্টাইলড প্রক্রিয়া বার চালু করুন</string>
+    <string name="now_playing">এখন চলছে</string>
+    <string name="settings_skip_silence">নীরবতা এড়িয়ে যান</string>
+    <string name="settings_lyrics_bold">বোল্ড লিরিক</string>
+    <string name="filesystem">ফাইল সিস্টেম</string>
+    <string name="settings_player_options_summary">আউটপুট গুণমান, প্লেব্যাক আচরণ</string>
+    <string name="settings_album_round_corner_summary">পুরো প্লেয়ারে বৃত্তাকার কর্নার সক্ষম করুন</string>
+    <string name="settings_lyrics_center">কেন্দ্র প্রান্তিককরণ</string>
+    <string name="opensource_info">GPL-3.0 এর অধীনে ওপেন সোর্স\nকপিরাইট © 2024 Akane Foundation</string>
+    <string name="playlist_favourite">প্রিয়</string>
+    <string name="settings_content_based_color_summary">অ্যালবাম ভিত্তিক রঙ তৈরি চালু করুন</string>
+    <string name="settings_package_type">প্যাকেজের ধরন</string>
+    <string name="no_lyric_found">কোন লিরিক পাওয়া যায়নি</string>
+    <string name="dialog_disc_number">ডিস্ক নম্বর</string>
+    <string name="unknown_title">অজানা শিরোনাম</string>
+    <string name="dialog_mime">মাইম টাইপ</string>
+    <string name="dialog_duration">সময়কাল</string>
+    <string name="settings_title_center_summary">পুরো প্লেয়ারের জন্য কেন্দ্রীভূত শিরোনাম ব্যবহার করুন</string>
+    <string name="settings_about_gramophone">অ্যাপ্লিকেশন সম্পর্কে</string>
+    <string name="settings_behavior_summary">ফিল্টার, লঞ্চ আচরণ</string>
+    <string name="settings_category_links">লিঙ্কস</string>
+    <string name="settings_customization">কাস্টমাইজেশন</string>
+    <string name="settings_album_round_corner">অ্যালবাম বৃত্তাকার কোণ</string>
+    <string name="settings_skip_silence_summary">ট্র্যাক বাজানোর সময় নীরবতা এড়িয়ে যান</string>
+    <string name="settings_hardware_acceleration">প্লেব্যাক গতি</string>
+    <string name="settings_title_bold">বোল্ড শিরোনাম</string>
+    <string name="settings_experimental_settings">পরীক্ষামূলক</string>
+    <string name="settings_lyrics_multiline">মাল্টিলাইন লিরিক্স পড়ুন</string>
+    <string name="share">শেয়ার করুন</string>
+    <string name="settings_hardware_acceleration_summary">প্লেব্যাক গতি হার্ডওয়্যার ত্বরণ সক্ষম করুন</string>
+    <string name="settings_title_center">কেন্দ্রীভূত শিরোনাম</string>
+    <string name="settings_player_ui">প্লেয়ার ইওআই</string>
+    <string name="settings_float_output_summary">৩২ বিট ফ্লোট আউটপুট সক্ষম করুন</string>
+    <string name="settings_audio">অডিও</string>
+    <string name="settings_title_bold_summary">সম্পূর্ণ প্লেয়ারের জন্য বোল্ড শিরোনাম ব্যবহার করুন</string>
+    <string name="settings_player_ui_summary">সম্পূর্ণ প্লেয়ার ইউয়াই, গানের কথা</string>
+    <string name="settings_appearance_summary">অ্যাপ্লিকেশন চেহারা, থিম মোড</string>
+    <string name="settings_lyrics_configuration_summary">গানের কথার রুপ কনফিগার করুন</string>
+    <string name="settings_experimental_settings_summary">পরীক্ষার বৈশিষ্ট্য, বিবিধ</string>
+    <string name="settings_color_accuracy_summary">রঙ সৃষ্টি সঠিক করুন</string>
+    <string name="settings_lyrics_bold_summary">গানের জন্য একটি ভারী ফন্ট ওজন ব্যবহার করুন</string>
+    <string name="settings_lyrics_configuration">লিরিক্স কনফিগারেশন</string>
+    <string name="settings_play_on_launch_summary">লঞ্চে মিউজিক প্লে করুন</string>
+    <string name="settings_play_on_launch">লঞ্চে প্লে করুন</string>
+    <string name="settings_lyrics_multiline_summary">সিঙ্ক পয়েন্টগুলির মধ্যে সমস্ত লাইনকে একটি লিরিক টেক্সট হিসাবে বিবেচনা করুন</string>
+    <string name="settings_content_based_color">বিষয়বস্তু ভিত্তিক রং</string>
+    <string name="settings_blacklist">সীমাবদ্ধ তালিকা</string>
+    <string name="settings_blacklist_folder_summary">নির্দিষ্ট ফোল্ডার থেকে গান ফিল্টার করুন</string>
+    <string name="settings_lyrics_center_summary">গানের লিরিক এর জন্য কেন্দ্রের প্রান্তিককরণ ব্যবহার করুন</string>
+    <string name="settings_library">লাইব্রেরি</string>
+    <string name="settings_library_summary">মিডিয়া লাইব্রেরি পরিচালনা করুন</string>
+    <string name="settings_customization_summary">কাস্টমাইজেশন বিকল্পগুলি পরিচালনা করুন</string>
+    <string name="settings_float_output">ফ্লোট অডিও আউটপুট</string>
+    <string name="settings_about_app">সম্পর্কে</string>
+    <string name="settings_color_accuracy">রঙ নির্ভুলতা</string>
+    <string name="sort_by_add_date">তারিখ যোগ করুন</string>
+    <string name="sort_by_modified_date">পরিবর্তিত তারিখ</string>
+    <string name="settings_lyric">লিরিক</string>
+    <string name="settings_player_options">অডিও</string>
 </resources>
