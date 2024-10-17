@@ -49,12 +49,12 @@
     <string name="settings_category_appearance">Tampilan</string>
     <string name="dialog_title">Judul</string>
     <string name="dialog_artist">Artis</string>
-    <string name="settings_category_behavior">Behavior</string>
+    <string name="settings_category_behavior">Tindakan</string>
     <string name="dialog_album">Album</string>
     <string name="folders">Folder</string>
     <string name="dialog_genre">Genre</string>
     <string name="settings_mediastore_filter">Minimum panjang lagu (detik)</string>
-    <string name="dialog_path">Path</string>
+    <string name="dialog_path">Lokasi</string>
     <string name="recently_added">Terakhir ditambahkan</string>
     <string name="settings_repository">Repositori</string>
     <string name="unknown_album">Album tidak dikenal</string>
@@ -68,7 +68,7 @@
     <string name="playlist_favourite">Favorit</string>
     <string name="grid">Grid</string>
     <string name="list">Daftar</string>
-    <string name="natural_order">Natural order</string>
+    <string name="natural_order">Urutan normal</string>
     <string name="opensource_info">Open-sourced under GPL-3.0
 \nCopyright © 2024 Akane Foundation</string>
     <string name="settings_content_based_color">Warna berdasarkan konten</string>
@@ -84,7 +84,7 @@
     <string name="filesystem">File sistem</string>
     <string name="settings_library">Perpustakaan</string>
     <string name="settings_title_center_summary">Taruh judul di tengah pada mode layar penuh</string>
-    <string name="dialog_mime">MIME type</string>
+    <string name="dialog_mime">Tipe MIME</string>
     <string name="settings_player_ui">Player UI</string>
     <string name="settings_player_ui_summary">UI Layar penuh, lirik</string>
     <string name="unknown_title">Judul tidak dikenal</string>
@@ -97,7 +97,7 @@
     <string name="settings_float_output_summary">Aktifkan suara 32 bit float</string>
     <string name="settings_float_output">Output audio float</string>
     <string name="settings_color_accuracy">Akurasi warna</string>
-    <string name="settings_experimental_settings">Experimental</string>
+    <string name="settings_experimental_settings">Eksperimental</string>
     <string name="settings_color_accuracy_summary">Membuat pembuat warna menjadi akurat</string>
     <string name="settings_title_bold_summary">Gunakan judul yang dicetak tebal untuk tampilan penuh</string>
     <string name="settings_hardware_acceleration">Kecepatan pemutaran</string>
@@ -133,7 +133,7 @@
     <string name="settings_lyrics_multiline">Baca lirik multi baris</string>
     <string name="settings_lyrics_multiline_summary">Perlakukan semua baris di antara titik sinkronisasi sebagai satu teks lirik</string>
     <string name="deny_images"><![CDATA[Mohon tolak izin \"Foto dan Video\"]]></string>
-    <string name="grant_images"><![CDATA[Mohon izinkan izin \"Foto dan video\"]]></string>
+    <string name="grant_images"><![CDATA[Mohon berikan izin \"Foto dan video\"]]></string>
     <string name="settings_lyrics_contrast_summary">Berguna jika Anda ingin benar-benar dapat melihat baris lirik yang tidak aktif</string>
     <string name="app_name">Gramophone</string>
     <string name="settings_preference_category_application">Aplikasi</string>
