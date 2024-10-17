@@ -57,15 +57,10 @@
     <string name="dark">Tünd</string>
     <string name="unknown_album">Naməlum album</string>
     <string name="repeat_mode">Təkrarlama rejimi</string>
-    <string name="settings_title_center_summary"></string>
     <string name="unknown_title">Naməlum başlıq</string>
     <string name="dialog_disc_number">Disk nömrəsi</string>
     <string name="now_playing">Hal-hazırda oynanılır</string>
-    <string name="settings_title_bold_summary"></string>
-    <string name="settings_library_summary"></string>
-    <string name="settings_customization_summary"></string>
     <string name="settings_title_bold">Qalın şriftli başlıq</string>
-    <string name="settings_lyrics_bold_summary"></string>
     <string name="category_dates">Tarixlər</string>
     <string name="unknown_artist">Naməlum ifaçı</string>
     <string name="sort_by_name">Ad</string>
@@ -110,8 +105,6 @@
     <string name="settings_color_accuracy">Rəng dəqiqliyi</string>
     <string name="settings_lyrics_bold">Qalın şriftli sözlər</string>
     <string name="settings_lyrics_configuration">Sözlərin konfiqurasiyası</string>
-    <string name="settings_lyrics_configuration_summary"></string>
-    <string name="settings_lyrics_center_summary"></string>
     <string name="preference_category_quality">Keyfiyyət</string>
     <string name="settings_preference_category_application">Tətbiq</string>
     <string name="settings_category_filters">Filtrlər</string>
