@@ -183,4 +183,5 @@
     <string name="expand_less">بستن</string>
     <string name="skip_previous">رد کردن به قبلی</string>
     <string name="scroll_to_songs">لغزش به آهنگ‌ها</string>
+    <string name="settings_preference_category_home">صفحه‌ی اصلی</string>
 </resources>
