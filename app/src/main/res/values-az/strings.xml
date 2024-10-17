@@ -108,7 +108,7 @@
     <string name="preference_category_quality">Keyfiyyət</string>
     <string name="settings_preference_category_application">Tətbiq</string>
     <string name="settings_category_filters">Filtrlər</string>
-    <string name="album_cover">Albom üzlüyü</string>
+    <string name="album_cover">Albom örtüyü</string>
     <string name="delete_failed">Mahnının silinməsində xəta baş verdi</string>
     <string name="settings_category_full_player">Tam pleyer</string>
     <string name="timer">Yuxu taymeri</string>
@@ -121,6 +121,10 @@
     <string name="skip_next">Növbətiyə keç</string>
     <string name="skip_previous">Geriyə dön</string>
     <string name="more">Daha çox</string>
-    <string name="settings_lyric">Söz</string>
+    <string name="settings_lyric">Sözlər</string>
     <string name="settings_lyrics_center">Mərkəzi düzülüş</string>
+    <string name="opensource_info">GPL-3.0 lisenziyası altında açıq mənbəli\nMüəlliflik hüququ © 2024 Akane Foundation</string>
+    <string name="app_name">Gramophone</string>
+    <string name="settings_lyrics_configuration_summary">Sözlərin görünüşünü tənzimləmək</string>
+    <string name="settings_lyrics_multiline">Çoxsətirli mahnı sözlərinin oxunması</string>
 </resources>
