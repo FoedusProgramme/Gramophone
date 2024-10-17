@@ -3,12 +3,12 @@
     <string name="settings_float_output_summary">به کار اندختن خروجی شناور ۳۲ بیتی</string>
     <string name="settings_content_based_color_summary">به کار انداختن تولید رنگ مبتنی بر آلبوم</string>
     <string name="settings_hardware_acceleration_summary">به کار انداختن شتاب سخت‌افزاری سرعت پخش</string>
-    <string name="category_artists">هنرمندان</string>
+    <string name="category_artists">خوانندگان</string>
     <string name="category_dates">تاریخ‌ها</string>
     <string name="category_genres">سبک‌ها</string>
     <string name="home_menu_settings">تنظیمات</string>
     <string name="category_songs">آهنگ‌ها</string>
-    <string name="unknown_artist">هنرمند ناشناخته</string>
+    <string name="unknown_artist">خواننده ناشناخته</string>
     <string name="sort_by_artist">هنرمند</string>
     <string name="dismiss">رد</string>
     <plurals name="items">
