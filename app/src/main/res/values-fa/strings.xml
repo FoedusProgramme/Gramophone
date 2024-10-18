@@ -52,7 +52,7 @@
     <string name="layout">نمایش</string>
     <string name="home_menu_equalizer">اکولایزر</string>
     <string name="equalizer_not_found">اکولایزر یافت نشد!</string>
-    <string name="grid">توری</string>
+    <string name="grid">شبکه</string>
     <string name="list">فهرست</string>
     <string name="settings_content_based_color">رنگ‌های مبتنی بر محتوا</string>
     <string name="settings_default_progress_bar">نوار پیشرفت پیش‌گزیده</string>
@@ -104,7 +104,7 @@
     <string name="delete_in_progress">در حال پاک کردن یک آواز دیگر</string>
     <string name="dialog_edit_metadata">ویرایش</string>
     <string name="dialog_lyrics">ترانه‌ها</string>
-    <string name="deny_images">لطفا دسترسی \"تصاویر و ویدیوها\" را رد کنید</string>
+    <string name="deny_images"><![CDATA[لطفا اجازۀ دسترسی به «تصاویر و ویدیوها» را نپذیرید]]></string>
     <string name="settings_trim_lyrics">برداشتن فاصلۀ اطراف ترانه‌ها</string>
     <string name="settings_about_app">درباره</string>
     <string name="settings_about_gramophone">دربارۀ کاره</string>
@@ -140,7 +140,7 @@
     <string name="category_playlists">فهرست‌های پخش</string>
     <string name="settings_play_on_launch_summary">پخش آهنگ در اجرا</string>
     <string name="settings_play_on_launch">پخش در اجرا</string>
-    <string name="grant_images">لطفا دسترسی \"تصاویر و ویدیوها\" را بپذیرید</string>
+    <string name="grant_images"><![CDATA[لطفا اجازۀ دسترسی به «تصاویر و ویدیوها» را بپذیرید]]></string>
     <string name="home_menu_refresh">بازخوانی</string>
     <string name="refreshed_songs">%1$s آهنگ بازخوانی شد</string>
     <string name="home_menu_search">جست‌وجو</string>
@@ -165,7 +165,7 @@
     <string name="timer_expiry">زمان‌سنج خواب پخش را در %s نگه خواهد داشت</string>
     <string name="fgs_failed_title">ازسرگیری پخش آهنگ شکست خورد</string>
     <string name="separator_dot">•</string>
-    <string name="grant_audio">لطفا دسترسی \"صدا و موسیقی\" را بپذیرید</string>
+    <string name="grant_audio"><![CDATA[لطفا اجازۀ دسترسی به «صدا و موسیقی» را بپذیرید]]></string>
     <string name="play">پخش</string>
     <string name="more">بیشتر</string>
     <string name="app_name">گرامافون</string>
@@ -184,4 +184,5 @@
     <string name="skip_previous">رد کردن به قبلی</string>
     <string name="scroll_to_songs">لغزش به آهنگ‌ها</string>
     <string name="settings_preference_category_home">صفحه‌ی اصلی</string>
+    <string name="position_slider">لغزندۀ موقعیت</string>
 </resources>
