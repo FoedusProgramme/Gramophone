@@ -1,4 +1,4 @@
 - Neues Design beim Abspielen von Dateien
-- Bildschirm in der Liedtext-Ansicht angeschaltet lassen
+- Bildschirm bleibt in der Liedtext-Ansicht jetzt eingeschaltet
 - Unterstützung für SD-Karten im Dateisystem-Tab
-- Einige Käfer wurden entfernt
+- Einige Fehler wurden behoben

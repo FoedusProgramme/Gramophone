@@ -1,0 +1,3 @@
+- Einige Fehler, die beim ändern der Tab-Reihenfolge auftreten können, behoben
+- Equalizer-Unterstützung wurde repariert
+- Einige Probleme mit Bedienungshilfen wurden behoben (bitte sag es uns, wenn es noch mehr gibt!)
