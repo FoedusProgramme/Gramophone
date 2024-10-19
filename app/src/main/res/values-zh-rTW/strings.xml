@@ -161,4 +161,9 @@
     <string name="timer_expiry">睡眠計時器會在 %s 時暫停音樂</string>
     <string name="settings_lyrics_configuration">歌詞配置</string>
     <string name="grant_audio">請授予「音樂與音訊」權限</string>
+    <string name="app_name">Gramophone</string>
+    <string name="separator_dot">•</string>
+    <string name="settings_preference_category_home">主畫面</string>
+    <string name="tab_order">配置標籤順序</string>
+    <string name="tab_order_summary">應用將在啟動時顯示第一個標籤。分隔符後的標籤將被隱藏。</string>
 </resources>
