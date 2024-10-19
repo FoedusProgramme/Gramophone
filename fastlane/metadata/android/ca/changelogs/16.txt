@@ -1,0 +1,3 @@
+- Correcció d'alguns errors relacionats amb la reordenació de pestanyes
+- Corregeix la implementació de l'equalitzador
+- Soluciona alguns problemes d'accessibilitat (feu-me saber si n'hi ha més!)

@@ -1,0 +1,4 @@
+- Redisseny del reproductor de fitxers
+- Mantenir la pantalla activada mentre es visualitzen les lletres
+- Permetre targetes SD a la pestanya del sistema de fitxers
+- Correcció d'errors

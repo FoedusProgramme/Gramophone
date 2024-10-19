@@ -1,0 +1,1 @@
+Correcció directa d'una fallada quan el telèfon està definit amb l'idioma filipí

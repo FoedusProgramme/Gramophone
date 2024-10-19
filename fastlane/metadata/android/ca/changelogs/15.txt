@@ -1,0 +1,2 @@
+- Permetre reordenar i amagar pestanyes
+- S'han corregit diverses fallades
