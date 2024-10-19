@@ -166,4 +166,8 @@
     <string name="play">播放</string>
     <string name="sort">排序</string>
     <string name="play_all">播放所有</string>
+    <string name="separator_dot">•</string>
+    <string name="settings_preference_category_home">主屏幕</string>
+    <string name="tab_order">配置标签顺序</string>
+    <string name="tab_order_summary">应用将在启动时显示第一个标签。分隔符后的标签将被隐藏。</string>
 </resources>
