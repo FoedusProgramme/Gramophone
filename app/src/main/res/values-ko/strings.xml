@@ -90,7 +90,7 @@
     <string name="settings_play_on_launch">앱을 실행할 때 재생</string>
     <string name="settings_play_on_launch_summary">앱을 실행하면 자동으로 음악 재생</string>
     <string name="album_covers_enhance">개선된 방식으로 앨범 커버 불러오기</string>
-    <string name="album_covers_enhance_desc">고품질 앨범 커버 및 앨범과 음악의 커버가 서로 다른 경우를 지원 (사진 접근 권한 필요)</string>
+    <string name="album_covers_enhance_desc">고품질 앨범 커버, 또는 앨범과 음악의 커버가 서로 다른 경우를 지원 (사진 접근 권한 필요)</string>
     <string name="delete_in_progress">이미 다른 음악을 삭제 중</string>
     <string name="settings_trim_lyrics">가사 양 끝의 공백 제거</string>
     <string name="crash_clipboard">충돌 로그를 클립보드에 복사했습니다</string>
@@ -159,10 +159,10 @@
     <string name="settings_category_filters">필터</string>
     <string name="settings_preference_category_application">애플리케이션</string>
     <string name="settings_category_full_player">플레이어</string>
-    <string name="deny_images">\"사진 및 동영상\" 권한을 거부해 주세요</string>
-    <string name="grant_images">\"사진 및 동영상\" 권한을 허용해 주세요</string>
+    <string name="deny_images"><![CDATA[\"사진 및 동영상\" 권한을 거부해 주세요permission]]></string>
+    <string name="grant_images"><![CDATA[\"사진 및 동영상\" 권한을 허용해 주세요permission]]></string>
     <string name="remove">제거</string>
-    <string name="grant_audio">\"음악 및 오디오\" 권한을 허용해 주세요</string>
+    <string name="grant_audio"><![CDATA[\"음악 및 오디오\" 권한을 허용해 주세요permission]]></string>
     <string name="settings_preference_category_home">홈 화면</string>
     <string name="tab_order">탭 순서 설정</string>
     <string name="tab_order_summary">앱을 시작하면 첫 번째 탭이 보여집니다. 구분 줄 아래의 탭은 숨겨집니다.</string>
@@ -180,4 +180,9 @@
     <string name="expand_less">닫기</string>
     <string name="skip_previous">이전으로 건너뛰기</string>
     <string name="position_slider">위치 슬라이더</string>
+    <string name="settings_lyrics_parser_summary">단어별 가사 동기, 화자 표시, 오프셋 등을 지원하는 새 버전의 가사 분석기 사용</string>
+    <string name="settings_lyrics_ui">새 버전의 가사 UI 사용</string>
+    <string name="settings_lyrics_parser">새 버전의 가사 분석기 사용</string>
+    <string name="settings_lyrics_ui_summary">단어별 가사 등 고급 기능을 지원하는 실험용 UI 사용</string>
+    <string name="app_name">Gramophone</string>
 </resources>
