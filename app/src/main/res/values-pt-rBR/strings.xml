@@ -155,9 +155,7 @@
     <string name="dialog_edit_metadata">Editar</string>
     <string name="deny_images">Negue a permissão \"imagens e vídeos\"</string>
     <string name="grant_images">Conceda permissão para \"imagens e vídeos\"</string>
-    <string name="settings_lyrics_contrast">Modo de alto contraste</string>
-    <string name="settings_trim_lyrics">Remova espaços ao redor das letras</string>
-    <string name="settings_lyrics_contrast_summary">Útil se você quiser realmente ver linhas de letras inativas</string>
+	<string name="settings_trim_lyrics">Remova espaços ao redor das letras</string>
     <string name="current_playlist">Lista de reprodução atual</string>
     <string name="timer">Despertador</string>
     <string name="fgs_failed_title">Falha ao retomar a reprodução da música</string>

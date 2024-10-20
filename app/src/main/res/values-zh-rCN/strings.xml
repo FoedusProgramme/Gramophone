@@ -146,8 +146,6 @@
     <string name="deny_images">请拒绝“图片和视频”权限</string>
     <string name="crash_clipboard">已将崩溃日志复制到剪贴板</string>
     <string name="settings_trim_lyrics">删除歌词中的空行</string>
-    <string name="settings_lyrics_contrast">高对比度模式</string>
-    <string name="settings_lyrics_contrast_summary">这在您希望能够看到非当前播放的歌词行时很有用</string>
     <string name="settings_lyrics_multiline">获取多行歌词</string>
     <string name="settings_lyrics_multiline_summary">将歌词中时间点之间的所有行都视作同一行歌词</string>
     <string name="timer">睡眠定时器</string>

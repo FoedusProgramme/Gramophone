@@ -59,8 +59,7 @@
     <string name="dialog_lyrics">Qo\'shiq matni</string>
     <string name="delete_failed">Qo‘shiqni o‘chirib bo‘lmadi</string>
     <string name="album_covers_enhance">Kengaytirilgan albom muqovasini yuklanmoqda</string>
-    <string name="settings_lyrics_contrast">Yuqori kontrast rejimi</string>
-    <string name="current_playlist">Hozirgi pleylist</string>
+	<string name="current_playlist">Hozirgi pleylist</string>
     <string name="fgs_failed_text">Ilovani ochish va ijroni davom ettirish uchun shu yerni bosing</string>
     <string name="fgs_failed_channel">Ijro davom ettirilmadi</string>
     <string name="separator_dot">•</string>
@@ -160,7 +159,6 @@
     <string name="grant_images">“Rasmlar va videolar”ga ruxsat bering</string>
     <string name="crash_clipboard">Nosozliklar jurnali vaqtinchalik xotiraga nusxalandi</string>
     <string name="settings_trim_lyrics">Qo\'shiq matni atrofidagi bo\'shliqlarni olib tashlang</string>
-    <string name="settings_lyrics_contrast_summary">Agar siz faol bo\'lmagan lirik satrlarni ko\'rishni istasangiz foydali bo\'ladi</string>
     <string name="timer">Avtomatik ochirish</string>
     <string name="fgs_failed_title">Musiqa ijrosini davom ettirib bo‘lmadi</string>
     <string name="sort_by_release_date">Ishlab chiqarilish sanasi</string>

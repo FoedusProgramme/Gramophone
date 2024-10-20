@@ -127,8 +127,7 @@
     <string name="settings_preference_category_application">Ứng dụng</string>
     <string name="settings_category_basic_info">Thông tin</string>
     <string name="crash_clipboard">Đã sao chép nhật ký lỗi vào bộ nhớ tạm</string>
-    <string name="settings_lyrics_contrast">Tương phản cao</string>
-    <string name="settings_blacklist_folder">Loại trừ các thư mục</string>
+	<string name="settings_blacklist_folder">Loại trừ các thư mục</string>
     <string name="settings_category_filters">Bộ lọc</string>
     <string name="settings_blacklist_folder_summary">Lọc bài hát trong một số thư mục</string>
     <string name="settings_category_full_player">Trình phát đầy đủ</string>
@@ -145,7 +144,6 @@
     <string name="settings_blacklist">Danh sách loại trừ</string>
     <string name="deny_images">Vui lòng tắt quyền \"Truy cập ảnh &amp; video\"</string>
     <string name="grant_images">Vui lòng cho phép quyền \"Truy cập ảnh &amp; video\"</string>
-    <string name="settings_lyrics_contrast_summary">Hữu ích nếu bạn muốn đọc những dòng lời bài hát không đồng bộ</string>
     <string name="settings_lyrics_multiline_summary">Xem tất cả các dòng giữa các điểm đồng bộ là một văn bản lời bài hát</string>
     <string name="settings_lyrics_multiline">Ngắt lời bài hát thành nhiều dòng</string>
     <string name="current_playlist">Danh sách phát gần đây</string>

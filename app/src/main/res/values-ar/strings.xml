@@ -171,12 +171,10 @@
     <string name="share">مشاركة</string>
     <string name="settings_lyrics_multiline_summary">تعامل مع كافة الأسطر الموجودة بين نقاط المزامنة كنص غنائي واحد</string>
     <string name="fgs_failed_title">فشل في استئناف تشغيل الموسيقى</string>
-    <string name="settings_lyrics_contrast">وضع التباين العالي</string>
-    <string name="album_covers_enhance_desc">دعم أغلفة الأغاني عالية الجودة والسماح باختلاف الألبوم وغلاف الأغنية (يتطلب الوصول إلى الصور)</string>
+	<string name="album_covers_enhance_desc">دعم أغلفة الأغاني عالية الجودة والسماح باختلاف الألبوم وغلاف الأغنية (يتطلب الوصول إلى الصور)</string>
     <string name="fgs_failed_text">انقر هنا لفتح التطبيق ومتابعة التشغيل في الخلفية</string>
     <string name="fgs_failed_channel">فشل استئناف التشغيل</string>
     <string name="settings_lyrics_multiline">قراءة كلمات متعددة الأسطر</string>
-    <string name="settings_lyrics_contrast_summary">مفيد إذا كنت تريد أن تكون قادرًا على رؤية الأسطر الغنائية غير النشطة فعليًا</string>
     <string name="current_playlist">قائمة التشغيل الحالية</string>
     <string name="timer">مؤقت النوم</string>
     <string name="timer_expiry">سيُوقِف مؤقِّت النّوم الموسيقى خلال %s ثانية</string>

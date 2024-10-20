@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="settings_lyrics_contrast">Modalità contrasto elevato</string>
-    <string name="settings_contributors">Contributori</string>
+	<string name="settings_contributors">Contributori</string>
     <string name="go_to_album">Vai a album</string>
     <string name="repeat_mode">Modalità ripetizione</string>
     <string name="unknown_playlist">Playlist sconosciuta</string>
@@ -97,7 +96,6 @@
     <string name="settings_library">Libreria</string>
     <string name="settings_hardware_acceleration">Velocità riproduzione</string>
     <string name="deny_images">Per favore nega l\'autorizzazione \"Foto e video\"</string>
-    <string name="settings_lyrics_contrast_summary">Utile se vuoi essere in grado di vedere le righe dei testi inattivi</string>
     <string name="settings_player_ui_summary">UI player intero, testi</string>
     <string name="settings_library_summary">Gestisci libreria media</string>
     <string name="settings_lyrics_multiline_summary">Tratta tutte le righe tra i punti di sincronizzazione come un unico testo</string>

@@ -129,8 +129,7 @@
     <string name="settings_lyrics_configuration_summary">Şarkı sözlerinin görünümünü yapılandır</string>
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
     <string name="settings_lyrics_multiline">Çok satırlı şarkı sözlerini oku</string>
-    <string name="settings_lyrics_contrast">Yüksek kontrast modu</string>
-    <string name="deny_images">Lütfen \"Fotoğraflar ve Videolar\" iznini reddedin</string>
+	<string name="deny_images">Lütfen \"Fotoğraflar ve Videolar\" iznini reddedin</string>
     <string name="delete_failed">Şarkı silinemedi</string>
     <string name="settings_trim_lyrics">Şarkı sözleri arasındaki boşlukları kaldır</string>
     <string name="settings_skip_silence_summary">Parçaları çalarken sessizliği atla</string>

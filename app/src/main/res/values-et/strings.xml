@@ -129,8 +129,6 @@
     <string name="grant_audio"><![CDATA[Palun luba \"Muusika ja heli\" õigused]]></string>
     <string name="crash_clipboard">Krahhilogi on kopeeritud lõikelauale</string>
     <string name="settings_trim_lyrics">Eemalda laulusõnu ümbritsevad tühikud</string>
-    <string name="settings_lyrics_contrast">Suure kontrastsusega vaade</string>
-    <string name="settings_lyrics_contrast_summary">See vaade on abiks, kui soovid laulusõnade seda osa, mis hetkel pole esitamisel</string>
     <string name="timer">Unetaimer</string>
     <string name="current_playlist">Praegune esitusloend</string>
     <string name="fgs_failed_title">Muusika esitamise jätkamine ei õnnestunud</string>

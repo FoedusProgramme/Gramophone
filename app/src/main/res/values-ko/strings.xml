@@ -99,8 +99,6 @@
     <string name="separator_dot">•</string>
     <string name="current_playlist">현재 재생 목록</string>
     <string name="timer">수면 타이머</string>
-    <string name="settings_lyrics_contrast">고대비 모드</string>
-    <string name="settings_lyrics_contrast_summary">비활성화된 가사 줄을 보고 싶을 때 유용합니다.</string>
     <string name="fgs_failed_text">여기를 눌러 앱을 열고 음악을 다시 재생하세요.</string>
     <string name="fgs_failed_title">음악 재생 재개 실패</string>
     <string name="fgs_failed_channel">음악 재생 재개 실패</string>

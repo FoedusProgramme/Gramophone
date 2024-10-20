@@ -154,8 +154,6 @@
     <string name="grant_images"><![CDATA[Conceda permiso para "Fotos y vídeos"]]></string>
     <string name="settings_trim_lyrics">Eliminar los espacios alrededor de las letras</string>
     <string name="crash_clipboard">Registro de fallos copiado al portapapeles</string>
-    <string name="settings_lyrics_contrast">Modo de alto contraste</string>
-    <string name="settings_lyrics_contrast_summary">Útil si desea poder ver líneas de letras inactivas</string>
     <string name="settings_lyrics_multiline">Leer las letras de varias líneas</string>
     <string name="settings_lyrics_multiline_summary">Todas las líneas entre puntos de sincronización se tratan como texto único</string>
     <string name="timer">Temporizador</string>

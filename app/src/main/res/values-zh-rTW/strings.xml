@@ -135,8 +135,6 @@
     <string name="settings_preference_category_application">應用程式</string>
     <string name="settings_category_full_player">完整播放器</string>
     <string name="album_covers_enhance_desc">支援高品質歌曲封面，並允許專輯與歌曲封面不同（需要相片存取權限）</string>
-    <string name="settings_lyrics_contrast">高對比度模式</string>
-    <string name="settings_lyrics_contrast_summary">如果您想實際看到未使用的歌詞行列，這將非常有用。</string>
     <string name="sort_by_release_date">發佈日期</string>
     <string name="album_covers_enhance">增強的專輯封面載入功能</string>
     <string name="settings_lyric">歌詞</string>

@@ -136,7 +136,6 @@
     <string name="grant_audio"><![CDATA[Atorgueu el permís \"Música i àudio\"]]></string>
     <string name="crash_clipboard">Registre d\'errors copiat al porta-retalls</string>
     <string name="settings_trim_lyrics">Elimina els espais de les lletres</string>
-    <string name="settings_lyrics_contrast_summary">Útil si voleu veure les línies inactives de les lletres</string>
     <string name="fgs_failed_title">Ha fallat en reprendre la reproducció de música</string>
     <string name="fgs_failed_text">Feu clic aquí per obrir l\'aplicació i continuar la reproducció</string>
     <string name="separator_dot">•</string>
@@ -178,8 +177,7 @@
     <string name="album_covers_enhance_desc">Admet caràtules de cançons d\'alta qualitat i permet que l\'àlbum i la caràtula de la cançó difereixin (requereix accés a les fotos)</string>
     <string name="timer">Temporitzador per a adormir-se</string>
     <string name="grant_images"><![CDATA[Atorgueu el permís \"Fotos i vídeos\"]]></string>
-    <string name="settings_lyrics_contrast">Mode de contrast alt</string>
-    <string name="current_playlist">Llista de reproducció actual</string>
+	<string name="current_playlist">Llista de reproducció actual</string>
     <string name="sort_by_release_date">Data de publicació</string>
     <string name="fgs_failed_channel">La reproducció ha fallat en reprendre</string>
     <string name="timer_expiry">El temporitzador d\'adormir-se farà pausa de la música a les %s</string>

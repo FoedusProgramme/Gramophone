@@ -153,8 +153,7 @@
     <string name="current_playlist">Playlist-ul curent</string>
     <string name="fgs_failed_channel">Redarea nu a putut fi reluată</string>
     <string name="crash_clipboard">Copiază crash log-ul în clipboard</string>
-    <string name="settings_lyrics_contrast">Mod contrast ridicat</string>
-    <string name="fgs_failed_text">Apasă aici pentru a deschide aplicația și a continua ascultarea</string>
+	<string name="fgs_failed_text">Apasă aici pentru a deschide aplicația și a continua ascultarea</string>
     <string name="album_covers_enhance">Încărcare îmbunătățită a copertei albumului</string>
     <string name="fgs_failed_title">Am eșuat în rezuma redarea</string>
     <string name="sort_by_release_date">Data lansării</string>
@@ -166,7 +165,6 @@
     <string name="deny_images">Vă rugăm refuzați permisiunea \"Imagini &amp; Clipuri video\"</string>
     <string name="settings_trim_lyrics">Elimină spațiul din jurul versurilor</string>
     <string name="grant_images">Vă rugăm permiteți accesul la \"Imagini &amp; Clipuri Video\"</string>
-    <string name="settings_lyrics_contrast_summary">Utilă dacă doriți să vedeți rândurile de versuri inactive</string>
     <string name="separator_dot">•</string>
     <string name="timer_expiry">Cronometrul de somn va opri muzica la %s</string>
 </resources>

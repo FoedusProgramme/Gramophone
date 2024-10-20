@@ -150,10 +150,8 @@
     <string name="unknown_playlist">فهرست پخش ناشناخته</string>
     <string name="settings_lyrics_center_summary">استغاده از متن ترانۀ وسطچین</string>
     <string name="dialog_year">سال</string>
-    <string name="settings_lyrics_contrast">حالت کنتراست بالا</string>
-    <string name="settings_lyrics_multiline">خواندن ترانه‌های چند خطی</string>
+	<string name="settings_lyrics_multiline">خواندن ترانه‌های چند خطی</string>
     <string name="settings_lyrics_multiline_summary">با همۀ خط‌های بین نقاط همگام همچون یک متن ترانه رفتار شود</string>
-    <string name="settings_lyrics_contrast_summary">اگر می‌خواهید قادر به در حقیقت دیدن خط‌های ترانۀ غیرفعال باشید مفید است</string>
     <string name="sort_by_release_date">تاریخ انتشار</string>
     <string name="album_covers_enhance">بارگذاری بهبود یافتۀ جلد آلبوم</string>
     <string name="share">هم‌رسانی</string>

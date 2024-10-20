@@ -86,8 +86,7 @@
     <string name="grant_images">Myönnä \"Valokuvat ja videot\" lupa</string>
     <string name="settings_category_basic_info">Perustiedot</string>
     <string name="crash_clipboard">Kaatumisloki kopioitu leikepöydälle</string>
-    <string name="settings_lyrics_contrast">Suuri kontrasti</string>
-    <string name="timer">Nukkumisajastin</string>
+	<string name="timer">Nukkumisajastin</string>
     <string name="sort_by_release_date">Julkaisupäivä</string>
     <string name="timer_expiry">Nukkumisajastin keskeyttää musiikin klo %s</string>
     <string name="play_next">Toista seuraavaksi</string>

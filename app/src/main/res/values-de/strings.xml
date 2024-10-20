@@ -153,8 +153,7 @@
     <string name="current_playlist">Aktuelle Wiedergabeliste</string>
     <string name="fgs_failed_title">Fehler beim Fortsetzen der Musikwiedergabe</string>
     <string name="share">Teilen</string>
-    <string name="settings_lyrics_contrast">Hoher Kontrast Modus</string>
-    <string name="timer_expiry">Einschlaftimer wird Musik bei %s pausieren</string>
+	<string name="timer_expiry">Einschlaftimer wird Musik bei %s pausieren</string>
     <string name="sort_by_release_date">Veröffentlichungsdatum</string>
     <string name="album_covers_enhance">Erweitertes Albumcover-laden</string>
     <string name="album_covers_enhance_desc">Unterstützt Albumcover mit höherer Qualität und erlaubt, dass sich Album- und Songcover unterscheiden (benötigt Zugriff auf Fotos)</string>
@@ -162,7 +161,6 @@
     <string name="fgs_failed_channel">Wiedergabe konnte nicht fortgesetzt werden</string>
     <string name="settings_lyrics_multiline">Lese mehrzeilige Liedtexte</string>
     <string name="settings_lyrics_multiline_summary">Behandele alle Zeilen zwischen Synchronisationspunkten als ein Liedtext</string>
-    <string name="settings_lyrics_contrast_summary">Nützlich, falls man die inaktiven Liedtextzeilen tatsächlich sehen können will</string>
     <string name="timer">Einschlaftimer</string>
     <string name="separator_dot">•</string>
     <string name="app_name">Gramophone</string>

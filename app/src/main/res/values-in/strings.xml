@@ -134,7 +134,6 @@
     <string name="settings_lyrics_multiline_summary">Perlakukan semua baris di antara titik sinkronisasi sebagai satu teks lirik</string>
     <string name="deny_images"><![CDATA[Mohon tolak izin \"Foto dan Video\"]]></string>
     <string name="grant_images"><![CDATA[Mohon berikan izin \"Foto dan video\"]]></string>
-    <string name="settings_lyrics_contrast_summary">Berguna jika Anda ingin benar-benar dapat melihat baris lirik yang tidak aktif</string>
     <string name="app_name">Gramophone</string>
     <string name="settings_preference_category_application">Aplikasi</string>
     <string name="settings_category_basic_info">Info dasar</string>
@@ -154,8 +153,7 @@
     <string name="delete_in_progress">Sudah menghapus lagu lain</string>
     <string name="crash_clipboard">Disalin catatan kerusakan ke papan klip</string>
     <string name="settings_trim_lyrics">Hapus jarak antar lirik</string>
-    <string name="settings_lyrics_contrast">Mode kontras tinggi</string>
-    <string name="sort_by_release_date">Tanggal rilis</string>
+	<string name="sort_by_release_date">Tanggal rilis</string>
     <string name="timer_expiry">Waktu tidur akan menghentikan musik pada %s</string>
     <string name="grant_audio"><![CDATA[Mohon berikan izin \"Musik dan audio\"]]></string>
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>

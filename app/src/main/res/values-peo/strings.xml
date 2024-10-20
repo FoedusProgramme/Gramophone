@@ -93,12 +93,10 @@
     <string name="settings_preference_category_application">برنامه</string>
     <string name="crash_clipboard">اطلاعات کرش را در کلیپبورد کپی کن</string>
     <string name="album_covers_enhance">لود شدن کاور های بهبود شده ی آلبوم ها</string>
-    <string name="settings_lyrics_contrast">حالت کنتراست بالا</string>
-    <string name="current_playlist">پلی لیست کنونی</string>
+	<string name="current_playlist">پلی لیست کنونی</string>
     <string name="album_covers_enhance_desc">پشتیبانی از کاور های با کیفیت بالا و اجازه ی تفاوت قائل شدن میان کاور آلبوم و آهنگ(نیاز به دسترسی به عکس ها)</string>
     <string name="settings_trim_lyrics">پاک کردن فاصله ها در متن ترانه ها</string>
     <string name="settings_preference_category_home">صفحه ی اصلی</string>
-    <string name="settings_lyrics_contrast_summary">کارآمد در حالتی که می‌خواهید واقعا خط های متن ترانه های غیر فعال را ببینید</string>
     <string name="timer">تایمر خواب</string>
     <string name="fgs_failed_title">شکست در ادامه ی اجرای آهنگ</string>
     <string name="fgs_failed_text">اینجا را کلیک کنید تا برنامه اجرا شده و پخش را ادامه دهید</string>

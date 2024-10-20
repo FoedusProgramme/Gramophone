@@ -144,8 +144,6 @@
     <string name="album_covers_enhance">Poboljšano učitavanje omota albuma</string>
     <string name="crash_clipboard">Evidencija pada je kopirana u međuspremnik</string>
     <string name="settings_trim_lyrics">Uklonite razmake oko teksta</string>
-    <string name="settings_lyrics_contrast">Režim visokog kontrasta</string>
-    <string name="settings_lyrics_contrast_summary">Korisno ako želite da vidite neaktivne linije teksta</string>
     <string name="timer">Tajmer za spavanje</string>
     <string name="current_playlist">Trenutna plejlista</string>
     <string name="timer_expiry">Tajmer za spavanje će pauzirati muziku na %s</string>

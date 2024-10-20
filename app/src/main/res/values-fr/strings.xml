@@ -154,8 +154,7 @@
     <string name="crash_clipboard">Journal de plantage copié</string>
     <string name="settings_category_full_player">Lecteur complet</string>
     <string name="settings_trim_lyrics">Enlever les espaces autour des paroles</string>
-    <string name="settings_lyrics_contrast">Mode contraste élevé</string>
-    <string name="settings_lyrics_multiline">Lire les paroles multi-lignes</string>
+	<string name="settings_lyrics_multiline">Lire les paroles multi-lignes</string>
     <string name="sort_by_release_date">Date de publication</string>
     <string name="timer_expiry">Le minuteur de sommeil arrêtera la musique à %s</string>
     <string name="album_covers_enhance">Chargement amélioré des couvertures d\'albums</string>
@@ -167,6 +166,5 @@
     <string name="current_playlist">Playlist actuelle</string>
     <string name="fgs_failed_text">Cliquez ici pour ouvrir l\'application et continuer la lecture</string>
     <string name="fgs_failed_channel">La reprise de la lecture a échoué</string>
-    <string name="settings_lyrics_contrast_summary">Utile si vous avez besoin de lire les lignes de paroles inactives</string>
     <string name="separator_dot">•</string>
 </resources>
