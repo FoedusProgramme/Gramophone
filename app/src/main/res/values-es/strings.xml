@@ -167,7 +167,7 @@
     <string name="sort_by_release_date">Fecha de lanzamiento</string>
     <string name="timer_expiry">El temporizador de apagado pausará la música en %s</string>
     <string name="separator_dot">•</string>
-    <string name="grant_audio"><![CDATA[Por favor, permite "Música y audio"]]></string>
+    <string name="grant_audio"><![CDATA[Por favor, permite los permisos "Música y audio"]]></string>
     <string name="seekbar">Seekbar</string>
     <string name="divider">Divisor</string>
     <string name="back">Atrás</string>
