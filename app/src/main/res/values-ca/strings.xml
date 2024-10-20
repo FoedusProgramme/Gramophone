@@ -177,7 +177,7 @@
     <string name="album_covers_enhance_desc">Admet caràtules de cançons d\'alta qualitat i permet que l\'àlbum i la caràtula de la cançó difereixin (requereix accés a les fotos)</string>
     <string name="timer">Temporitzador per a adormir-se</string>
     <string name="grant_images"><![CDATA[Atorgueu el permís \"Fotos i vídeos\"]]></string>
-	<string name="current_playlist">Llista de reproducció actual</string>
+    <string name="current_playlist">Llista de reproducció actual</string>
     <string name="sort_by_release_date">Data de publicació</string>
     <string name="fgs_failed_channel">La reproducció ha fallat en reprendre</string>
     <string name="timer_expiry">El temporitzador d\'adormir-se farà pausa de la música a les %s</string>
@@ -186,4 +186,8 @@
     <string name="scroll_to_albums">Desplaça\'t als àlbums</string>
     <string name="remove">Elimina</string>
     <string name="skip_next">Salta al següent</string>
+    <string name="settings_lyrics_parser">Analitzador nou de lletres</string>
+    <string name="settings_lyrics_parser_summary">Activa l\'analitzador nou de lletres que admet la sincronització paraula a paraula, indicador d\'altaveu, desplaçament i més</string>
+    <string name="settings_lyrics_ui">Activa la interfície d\'usuari nova de lletres</string>
+    <string name="settings_lyrics_ui_summary">IU experimental per a mostrar la lletra paraula a paraula amb característiques avançades</string>
 </resources>
