@@ -196,4 +196,8 @@
 	<string name="expand_less">Close</string>
     <string name="skip_previous">Skip to previous</string>
     <string name="position_slider">Position slider</string>
+	<string name="settings_lyrics_parser">New lyric parser</string>
+    <string name="settings_lyrics_parser_summary">Enable new lyric parser that supports word-by-word synchronisation, speaker indicator, offset and more</string>
+    <string name="settings_lyrics_ui">Enable new lyric UI</string>
+    <string name="settings_lyrics_ui_summary">Experimental UI to display word-by-word lyric with advanced features</string>
 </resources>
