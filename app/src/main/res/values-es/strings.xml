@@ -109,7 +109,7 @@
     <string name="settings_title_center_summary">Utilice el título centrado para ver el reproductor completo</string>
     <string name="settings_experimental_settings">Experimental</string>
     <string name="settings_hardware_acceleration_summary">Activar la aceleración por hardware de la velocidad de reproducción</string>
-    <string name="settings_behavior_summary">Filtros, comportamiento de inicio.</string>
+    <string name="settings_behavior_summary">Filtros, comportamiento de inicio</string>
     <string name="settings_lyrics_configuration_summary">Configurar la apariencia de las letras</string>
     <string name="settings_experimental_settings_summary">Funciones de prueba, varios</string>
     <string name="settings_album_round_corner_summary">Habilitar las esquinas redondeadas en el reproductor completo</string>
@@ -150,14 +150,14 @@
     <string name="preference_category_quality">Calidad</string>
     <string name="settings_category_misc">Varias</string>
     <string name="settings_category_full_player">Reproductor entero</string>
-    <string name="deny_images">Por favor, deniegue el permiso a \"Imágenes y vídeos\"</string>
-    <string name="grant_images">Por favor, conceda permiso para \"Imágenes y vídeos\"</string>
+    <string name="deny_images"><![CDATA[Por favor, quite el permiso a "Fotos y vídeos"]]></string>
+    <string name="grant_images"><![CDATA[Conceda permiso para "Fotos y vídeos"]]></string>
     <string name="settings_trim_lyrics">Eliminar los espacios alrededor de las letras</string>
     <string name="crash_clipboard">Registro de fallos copiado al portapapeles</string>
     <string name="settings_lyrics_contrast">Modo de alto contraste</string>
     <string name="settings_lyrics_contrast_summary">Útil si desea poder ver líneas de letras inactivas</string>
     <string name="settings_lyrics_multiline">Leer las letras de varias líneas</string>
-    <string name="settings_lyrics_multiline_summary">Todas las líneas entre puntos de sincronización se tratan como texto único.</string>
+    <string name="settings_lyrics_multiline_summary">Todas las líneas entre puntos de sincronización se tratan como texto único</string>
     <string name="timer">Temporizador</string>
     <string name="current_playlist">Lista de reproducción</string>
     <string name="fgs_failed_text">Haga clic aquí para abrir la aplicación y continuar la reproducción</string>
@@ -169,7 +169,7 @@
     <string name="sort_by_release_date">Fecha de lanzamiento</string>
     <string name="timer_expiry">El temporizador de apagado pausará la música en %s</string>
     <string name="separator_dot">•</string>
-    <string name="grant_audio">Por favor, concede el permiso para \"Música y audio</string>
+    <string name="grant_audio"><![CDATA[Por favor, permite "Música y audio"]]></string>
     <string name="seekbar">Seekbar</string>
     <string name="divider">Divisor</string>
     <string name="back">Atrás</string>
@@ -189,4 +189,8 @@
     <string name="tab_order">Configurar el orden de las pestañas</string>
     <string name="skip_previous">Ir a la anterior</string>
     <string name="app_name">Gramophone</string>
+    <string name="settings_lyrics_parser_summary">Habilita un nuevo analizador de letras que admite sincronización palabra por palabra, indicador de altavoz, desplazamiento y mucho más</string>
+    <string name="settings_lyrics_parser">Nuevo analizador de letras</string>
+    <string name="settings_lyrics_ui_summary">Interfaz de usuario experimental para mostrar la letra palabra por palabra con funciones avanzadas</string>
+    <string name="settings_lyrics_ui">Activar la nueva interfaz para las letras</string>
 </resources>
