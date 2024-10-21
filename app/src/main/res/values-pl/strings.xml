@@ -164,7 +164,7 @@
     <string name="settings_category_misc">Różne</string>
     <string name="delete_failed">Usunięcie utworu nie powiodło się</string>
     <string name="settings_trim_lyrics">Usuń spacje wokół tekstów</string>
-	<string name="grant_images"><![CDATA[Przyznaj uprawnienie \"Zdjęcia i filmy\"]]></string>
+    <string name="grant_images"><![CDATA[Przyznaj uprawnienie \"Zdjęcia i filmy\"]]></string>
     <string name="settings_crash_application">Awaria aplikacji</string>
     <string name="delete_in_progress">Kolejny utwór został już usunięty</string>
     <string name="crash_clipboard">Skopiowano dziennik awarii do schowka</string>
@@ -191,4 +191,8 @@
     <string name="tab_order_summary">Aplikacja wyświetli pierwszą kartę po uruchomieniu. Zakładki po separatorze będą ukryte.</string>
     <string name="scroll_to_songs">Przewiń do utworów</string>
     <string name="app_name">Gramophone</string>
+    <string name="settings_lyrics_parser">Nowy parser tekstów</string>
+    <string name="settings_lyrics_parser_summary">Włącz nowy parser tekstów, który obsługuje synchronizację słowo po słowie, wskaźnik głośnika, przesunięcie i inne funkcje</string>
+    <string name="settings_lyrics_ui">Włącz nowy interfejs użytkownika tekstów</string>
+    <string name="settings_lyrics_ui_summary">Eksperymentalny interfejs użytkownika do wyświetlania tekstu słowo po słowie z zaawansowanymi funkcjami</string>
 </resources>
