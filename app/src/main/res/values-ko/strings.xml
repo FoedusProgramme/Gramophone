@@ -157,10 +157,10 @@
     <string name="settings_category_filters">필터</string>
     <string name="settings_preference_category_application">애플리케이션</string>
     <string name="settings_category_full_player">플레이어</string>
-    <string name="deny_images"><![CDATA[\"사진 및 동영상\" 권한을 거부해 주세요permission]]></string>
-    <string name="grant_images"><![CDATA[\"사진 및 동영상\" 권한을 허용해 주세요permission]]></string>
+    <string name="deny_images"><![CDATA[\"사진 및 동영상\" 권한을 거부해 주세요]]></string>
+    <string name="grant_images"><![CDATA[\"사진 및 동영상\" 권한을 허용해 주세요]]></string>
     <string name="remove">제거</string>
-    <string name="grant_audio"><![CDATA[\"음악 및 오디오\" 권한을 허용해 주세요permission]]></string>
+    <string name="grant_audio"><![CDATA[\"음악 및 오디오\" 권한을 허용해 주세요]]></string>
     <string name="settings_preference_category_home">홈 화면</string>
     <string name="tab_order">탭 순서 설정</string>
     <string name="tab_order_summary">앱을 시작하면 첫 번째 탭이 보여집니다. 구분 줄 아래의 탭은 숨겨집니다.</string>
