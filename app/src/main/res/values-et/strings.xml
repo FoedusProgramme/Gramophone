@@ -183,4 +183,8 @@
     <string name="skip_previous">Hüppa eelmise juurde</string>
     <string name="position_slider">Asukoha liugur</string>
     <string name="app_name">Gramophone</string>
+    <string name="settings_lyrics_parser">Uus laulusõnade esitaja</string>
+    <string name="settings_lyrics_parser_summary">Võta kasutusele uus laulusõnade esitaja, mis oskab sõnahaaval sünkroniseerimist, hääle tuvastamist ja muud olulist</string>
+    <string name="settings_lyrics_ui">Võta kasutusele uus laulusõnade kasutajaliides</string>
+    <string name="settings_lyrics_ui_summary">Testjärgus kasutajaliides oskab laulusõnu kuvada sõnahaaval ning muud olulist</string>
 </resources>
