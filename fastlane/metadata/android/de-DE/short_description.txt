@@ -1,1 +1,1 @@
-Einfacher Offline-Musik-Player mit minimalistischem Design
+Einfacher Offline-Musikspieler mit minimalistischem Design
