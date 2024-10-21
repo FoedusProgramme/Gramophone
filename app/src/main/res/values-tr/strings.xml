@@ -119,7 +119,7 @@
     <string name="settings_player_ui">Oynatıcı arayüzü</string>
     <string name="settings_title_center">Ortalanmış başlık</string>
     <string name="settings_appearance_summary">Uygulama görünümü, tema modları</string>
-    <string name="dialog_mime">Mime türü</string>
+    <string name="dialog_mime">MIME tipi</string>
     <string name="settings_play_on_launch">Başlatışta oynat</string>
     <string name="settings_color_accuracy">Renk doğruluğu</string>
     <string name="settings_play_on_launch_summary">Başlatışta müzik oynat</string>
@@ -127,9 +127,9 @@
     <string name="settings_player_ui_summary">Tam oynatıcı arayüzü, şarkı sözleri</string>
     <string name="settings_category_full_player">Tam oynatıcı</string>
     <string name="settings_lyrics_configuration_summary">Şarkı sözlerinin görünümünü yapılandır</string>
-    <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
+    <string name="settings_crash_application_summary">Ç-0-kertici 3000</string>
     <string name="settings_lyrics_multiline">Çok satırlı şarkı sözlerini oku</string>
-	<string name="deny_images">Lütfen \"Fotoğraflar ve Videolar\" iznini reddedin</string>
+    <string name="deny_images"><![CDATA[Lütfen \"medya\" erişimini engelleyin]]></string>
     <string name="delete_failed">Şarkı silinemedi</string>
     <string name="settings_trim_lyrics">Şarkı sözleri arasındaki boşlukları kaldır</string>
     <string name="settings_skip_silence_summary">Parçaları çalarken sessizliği atla</string>
@@ -179,4 +179,12 @@
     <string name="expand_less">Kapat</string>
     <string name="skip_previous">Öncekine atla</string>
     <string name="position_slider">Yer kaydırıcısı</string>
+    <string name="album_covers_enhance_desc">Yüksek kaliteli albüm kapaklarını destekleyin ve albümle şarkı kapaklarının birbirinden farklı olmasına izin verin (fotoğraflara erişim izni gerektirir)</string>
+    <string name="settings_lyrics_multiline_summary">Senkron noktaları arasındaki tüm satırları tek bir söz olarak işleyin</string>
+    <string name="grant_images"><![CDATA[Lütfen \"medyaya\" erişim izni verin]]></string>
+    <string name="settings_lyrics_ui_summary">Gelişmiş özelliklerle kelime bazlı şarkı sözlerini görüntülemek için deneysel kullanıcı arayüzü</string>
+    <string name="settings_lyrics_parser">Yeni söz işleyici</string>
+    <string name="settings_lyrics_parser_summary">Kelime kelime ilerleme, boşluklar ve daha fazlasını destekleyen yeni şarkı sözü işleyiciyi etkinleştirin</string>
+    <string name="settings_lyrics_ui">Yeni söz arayüzünü etkinleştir</string>
+    <string name="grant_audio"><![CDATA[Lütfen \"müzik ve seslere \" erişim izni verin]]></string>
 </resources>
