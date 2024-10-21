@@ -26,18 +26,18 @@
     <string name="go_to_album">Zum Album wechseln</string>
     <string name="go_to_artist">Zum Interpreten wechseln</string>
     <string name="details">Details</string>
-    <string name="shuffle">Mischen</string>
+    <string name="shuffle">Zufällig Abspielen</string>
     <string name="repeat_mode">Wiederholungsmodus</string>
     <string name="unknown_playlist">Unbekannte Wiedergabeliste</string>
     <string name="settings_category_appearance">Aussehen</string>
     <string name="album_artist">Interpret des Albums</string>
-    <string name="unknown_version">Unbekante Version</string>
+    <string name="unknown_version">Unbekannte Version</string>
     <string name="settings_version">Version</string>
     <string name="settings_category_behavior">Verhalten</string>
     <string name="unknown_album">Unbekanntes Album</string>
     <string name="dialog_title">Titel</string>
     <string name="settings_repository">Repository</string>
-    <string name="settings_mediastore_filter">Mindestlänge eines Liedes (Sekunden)</string>
+    <string name="settings_mediastore_filter">Mindestlänge eines Titels (Sekunden)</string>
     <string name="settings_app_theme">Farbschema</string>
     <string name="compact_list">Liste (kompakt)</string>
     <string name="dialog_album_artist">Interpret des Albums</string>
@@ -51,21 +51,21 @@
     <string name="dialog_track_number">Titelnummer</string>
     <string name="folders">Ordner</string>
     <plurals name="artists">
-        <item quantity="one">%d Künstler/in</item>
-        <item quantity="other">%d Künstler/innen</item>
+        <item quantity="one">%d Interpret</item>
+        <item quantity="other">%d Interpreten</item>
     </plurals>
     <plurals name="albums">
         <item quantity="one">%d Album</item>
         <item quantity="other">%d Alben</item>
     </plurals>
     <string name="dialog_year">Jahr</string>
-    <string name="dialog_artist">Künstler*in</string>
+    <string name="dialog_artist">Interpret</string>
     <string name="dialog_album">Album</string>
     <string name="home_menu_equalizer">Equalizer</string>
     <string name="dialog_path">Pfad</string>
     <string name="dark">Dunkel</string>
     <string name="check_for_updates">Überprüfen Sie unseren Kanal für Neuigkeiten!</string>
-    <string name="follow_system">System folgen</string>
+    <string name="follow_system">Systemeinstellung befolgen</string>
     <string name="list">Liste</string>
     <string name="grid">Raster</string>
     <plurals name="songs">
@@ -146,14 +146,14 @@
     <string name="settings_title_center">Zentrierter Titel</string>
     <string name="sort_by_add_date">Datum hinzufügen</string>
     <string name="settings_title_center_summary">Zentrierte Titel für den Vollbildmodus verwenden</string>
-    <string name="settings_album_round_corner">Rundung für Albumcover</string>
+    <string name="settings_album_round_corner">Runde Ecken für Albumcover</string>
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
     <string name="settings_crash_application">Gramophone abstürzen lassen</string>
     <string name="opensource_info">Open-Source unter GPL-3.0\nCopyright © 2024 Akane Foundation</string>
     <string name="current_playlist">Aktuelle Wiedergabeliste</string>
     <string name="fgs_failed_title">Fehler beim Fortsetzen der Musikwiedergabe</string>
     <string name="share">Teilen</string>
-	<string name="timer_expiry">Einschlaftimer wird Musik bei %s pausieren</string>
+    <string name="timer_expiry">Einschlaftimer wird Musik bei %s pausieren</string>
     <string name="sort_by_release_date">Veröffentlichungsdatum</string>
     <string name="album_covers_enhance">Erweitertes Albumcover-laden</string>
     <string name="album_covers_enhance_desc">Unterstützt Albumcover mit höherer Qualität und erlaubt, dass sich Album- und Songcover unterscheiden (benötigt Zugriff auf Fotos)</string>
@@ -183,4 +183,8 @@
     <string name="settings_preference_category_home">Startbildschirm</string>
     <string name="shuffle_all">Alle zufällig abspielen</string>
     <string name="scroll_to_songs">Zu den Songs scrollen</string>
+    <string name="settings_lyrics_parser">Neuer Liedtext-Parser</string>
+    <string name="settings_lyrics_parser_summary">Neuen Liedtext-Parser benutzen, der Wort-für-Wort-Synchronisierung, Sprecher-Indikator, Zeitversetzung und mehr unterstützt</string>
+    <string name="settings_lyrics_ui">Neue Liedtext-Benutzeroberfläche benutzen</string>
+    <string name="settings_lyrics_ui_summary">Experimentelle Benutzeroberfläche, die Wort-für-Wort-Liedtexte mit erweiterten Funktionen anzeigen kann</string>
 </resources>
