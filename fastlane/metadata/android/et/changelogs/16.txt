@@ -1,0 +1,3 @@
+- Parandasime vahekaartide järjekorra muutmisel tekkinud vead
+- Parandasime ekvalaiseri toe
+- Parandasime juurdepääsetavusega seotud vead (kui leidub veel, siis palun teavitage meid!)

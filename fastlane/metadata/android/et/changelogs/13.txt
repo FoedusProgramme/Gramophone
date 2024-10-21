@@ -1,0 +1,4 @@
+- Failisüsteemipõhise meediamängija uus lahendus
+- Laulusõnade vaatamisel on ekraan nüüd alati sisselülitatud
+- SD-kaartide tugi failisüsteemi vahekaardil
+- Veaparandused
