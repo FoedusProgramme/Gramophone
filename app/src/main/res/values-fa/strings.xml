@@ -150,7 +150,7 @@
     <string name="unknown_playlist">فهرست پخش ناشناخته</string>
     <string name="settings_lyrics_center_summary">استغاده از متن ترانۀ وسطچین</string>
     <string name="dialog_year">سال</string>
-	<string name="settings_lyrics_multiline">خواندن ترانه‌های چند خطی</string>
+    <string name="settings_lyrics_multiline">خواندن ترانه‌های چند خطی</string>
     <string name="settings_lyrics_multiline_summary">با همۀ خط‌های بین نقاط همگام همچون یک متن ترانه رفتار شود</string>
     <string name="sort_by_release_date">تاریخ انتشار</string>
     <string name="album_covers_enhance">بارگذاری بهبود یافتۀ جلد آلبوم</string>
@@ -183,4 +183,8 @@
     <string name="scroll_to_songs">لغزش به آهنگ‌ها</string>
     <string name="settings_preference_category_home">صفحه‌ی اصلی</string>
     <string name="position_slider">لغزندۀ موقعیت</string>
+    <string name="settings_lyrics_parser">تجزیه‌گر تراتۀ جدید</string>
+    <string name="settings_lyrics_parser_summary">به کار انداختن تجزیه‌گر ترانۀ جدید که از همگام‌سازی کلمه‌به‌کلمه، نشانگر سخنگو، جابه‌جایی و بیشتر پشتیبانی می‌کند</string>
+    <string name="settings_lyrics_ui">به کار انداختن رابط کاربری جدید ترانه</string>
+    <string name="settings_lyrics_ui_summary">رابط کاربری آزمایشی برای نمایش ترانۀ کلمه‌به‌کلمه با قابلیت‌های پیشرفته</string>
 </resources>
