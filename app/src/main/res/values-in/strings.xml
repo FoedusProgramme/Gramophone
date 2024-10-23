@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="settings_category_links">Tautan</string>
-    <string name="compact_list">Daftar (compact)</string>
+    <string name="compact_list">Daftar (ringkas)</string>
     <string name="settings_customization_summary">Kelola opsi kustomisasi</string>
     <string name="settings_play_on_launch_summary">Putar musik saat dibuka</string>
     <string name="refreshed_songs">Berhasil memuat %1$s lagu</string>
@@ -14,7 +14,7 @@
         <item quantity="other">%d Lagu</item>
     </plurals>
     <string name="category_genres">Genre</string>
-    <string name="category_playlists">Playlist</string>
+    <string name="category_playlists">Daftar Putar</string>
     <string name="home_menu_refresh">Muat ulang</string>
     <string name="home_menu_search">Cari</string>
     <string name="category_songs">Lagu</string>
@@ -61,16 +61,15 @@
     <string name="dialog_year">Tahun</string>
     <string name="settings_app_theme">Tema aplikasi</string>
     <string name="check_for_updates">Cek saluran kami untuk pembaruan!</string>
-    <string name="settings_default_progress_bar">Progress bar default</string>
+    <string name="settings_default_progress_bar">Progress bar bawaan</string>
     <string name="layout">Tampilan</string>
-    <string name="home_menu_equalizer">Equalizer</string>
-    <string name="equalizer_not_found">Equalizer tidak ditemukan!</string>
+    <string name="home_menu_equalizer">Ekualizer</string>
+    <string name="equalizer_not_found">Ekualizer tidak ditemukan!</string>
     <string name="playlist_favourite">Favorit</string>
     <string name="grid">Grid</string>
     <string name="list">Daftar</string>
     <string name="natural_order">Urutan normal</string>
-    <string name="opensource_info">Open-sourced under GPL-3.0
-\nCopyright © 2024 Akane Foundation</string>
+    <string name="opensource_info">Diterbitkan secara terbuka di bawah lisensi GPL-3.0 \nHak Cipta © 2024 Akane Foundation</string>
     <string name="settings_content_based_color">Warna berdasarkan konten</string>
     <string name="dialog_disc_number">Nomor disc</string>
     <string name="settings_content_based_color_summary">Aktifkan pemilihan tema berdasarkan gambar album</string>
@@ -85,7 +84,7 @@
     <string name="settings_library">Perpustakaan</string>
     <string name="settings_title_center_summary">Taruh judul di tengah pada mode layar penuh</string>
     <string name="dialog_mime">Tipe MIME</string>
-    <string name="settings_player_ui">Player UI</string>
+    <string name="settings_player_ui">UI Player</string>
     <string name="settings_player_ui_summary">UI Layar penuh, lirik</string>
     <string name="unknown_title">Judul tidak dikenal</string>
     <string name="settings_player_options">Audio</string>
@@ -113,7 +112,7 @@
     <string name="settings_play_on_launch">Putar saat diluncurkan</string>
     <string name="settings_blacklist">Daftar hitam</string>
     <string name="settings_blacklist_folder">Folder daftar hitam</string>
-    <string name="settings_blacklist_folder_summary">Filter lagu dari folder tertentu.</string>
+    <string name="settings_blacklist_folder_summary">Filter lagu dari folder tertentu</string>
     <string name="unknown_version">Versi tidak dikenal</string>
     <string name="unknown_year">Tahun tidak dikenal</string>
     <string name="settings_about_gramophone">Tentang aplikasi</string>
@@ -122,7 +121,7 @@
     <string name="category_artists">Artis</string>
     <string name="settings_title_bold">Judul tebal</string>
     <string name="settings_about_app">Tentang</string>
-    <string name="settings_experimental_settings_summary">Fitur uji coba, dll.</string>
+    <string name="settings_experimental_settings_summary">Fitur uji coba, dll</string>
     <string name="settings_hardware_acceleration_summary">Aktifkan akselerasi hardware kecepatan pemutaran</string>
     <string name="settings_album_round_corner_summary">Aktifkan sudut lengkung di pemutaran penuh</string>
     <string name="settings_default_progress_bar_summary">Aktifkan tampilan baru untuk progress bar</string>
@@ -153,7 +152,7 @@
     <string name="delete_in_progress">Sudah menghapus lagu lain</string>
     <string name="crash_clipboard">Disalin catatan kerusakan ke papan klip</string>
     <string name="settings_trim_lyrics">Hapus jarak antar lirik</string>
-	<string name="sort_by_release_date">Tanggal rilis</string>
+    <string name="sort_by_release_date">Tanggal rilis</string>
     <string name="timer_expiry">Waktu tidur akan menghentikan musik pada %s</string>
     <string name="grant_audio"><![CDATA[Mohon berikan izin \"Musik dan audio\"]]></string>
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
@@ -179,4 +178,8 @@
     <string name="expand_less">Tutup</string>
     <string name="skip_previous">Loncat ke sebelumnya</string>
     <string name="position_slider">Posisi slider</string>
+    <string name="settings_lyrics_parser">Parser lirik baru</string>
+    <string name="settings_lyrics_parser_summary">Aktifkan pengurai lirik baru yang mendukung sinkronisasi kata per kata, indikator speaker, offset, dan lainnya</string>
+    <string name="settings_lyrics_ui">Aktifkan UI Lirik baru</string>
+    <string name="settings_lyrics_ui_summary">UI eksperimental untuk menampilkan lirik kata demi kata dengan fitur-fitur lanjutan</string>
 </resources>
