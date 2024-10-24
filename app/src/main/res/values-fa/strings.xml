@@ -3,12 +3,12 @@
     <string name="settings_float_output_summary">به کار اندختن خروجی شناور ۳۲ بیتی</string>
     <string name="settings_content_based_color_summary">به کار انداختن تولید رنگ مبتنی بر آلبوم</string>
     <string name="settings_hardware_acceleration_summary">به کار انداختن شتاب سخت‌افزاری سرعت پخش</string>
-    <string name="category_artists">خوانندگان</string>
+    <string name="category_artists">هنرمندها</string>
     <string name="category_dates">تاریخ‌ها</string>
     <string name="category_genres">سبک‌ها</string>
     <string name="home_menu_settings">تنظیمات</string>
     <string name="category_songs">آهنگ‌ها</string>
-    <string name="unknown_artist">خواننده ناشناخته</string>
+    <string name="unknown_artist">هنرمند ناشناخته</string>
     <string name="sort_by_artist">هنرمند</string>
     <string name="dismiss">رد</string>
     <plurals name="items">
@@ -105,7 +105,7 @@
     <string name="dialog_edit_metadata">ویرایش</string>
     <string name="dialog_lyrics">ترانه‌ها</string>
     <string name="deny_images"><![CDATA[لطفا اجازۀ دسترسی به «تصاویر و ویدیوها» را نپذیرید]]></string>
-    <string name="settings_trim_lyrics">برداشتن فاصلۀ اطراف ترانه‌ها</string>
+    <string name="settings_trim_lyrics">برداشتن فاصله‌های اطراف ترانه‌ها</string>
     <string name="settings_about_app">درباره</string>
     <string name="settings_about_gramophone">دربارۀ کاره</string>
     <string name="sort_by_add_date">تاریخ افزودن</string>
@@ -181,7 +181,7 @@
     <string name="expand_less">بستن</string>
     <string name="skip_previous">رد کردن به قبلی</string>
     <string name="scroll_to_songs">لغزش به آهنگ‌ها</string>
-    <string name="settings_preference_category_home">صفحه‌ی اصلی</string>
+    <string name="settings_preference_category_home">صفحۀ اصلی</string>
     <string name="position_slider">لغزندۀ موقعیت</string>
     <string name="settings_lyrics_parser">تجزیه‌گر تراتۀ جدید</string>
     <string name="settings_lyrics_parser_summary">به کار انداختن تجزیه‌گر ترانۀ جدید که از همگام‌سازی کلمه‌به‌کلمه، نشانگر سخنگو، جابه‌جایی و بیشتر پشتیبانی می‌کند</string>
