@@ -70,7 +70,7 @@
     <string name="list">リスト</string>
     <string name="compact_list">リスト (コンパクト)</string>
     <string name="check_for_updates">アップデートはチャンネルをチェックしてください！</string>
-    <string name="settings_default_progress_bar">デフォルトのプログレスバー</string>
+    <string name="settings_default_progress_bar">プログレスバー</string>
     <string name="opensource_info">Open-sourced under GPL-3.0
 \nCopyright © 2024 Akane Foundation</string>
     <string name="settings_default_progress_bar_summary">マテリアルスタイルのプログレスバーを有効化します</string>
@@ -142,8 +142,8 @@
     <string name="album_cover">アルバムカバー</string>
     <string name="dialog_edit_metadata">編集</string>
     <string name="dialog_lyrics">歌詞</string>
-    <string name="deny_images">「写真と動画」の権限を拒否してください</string>
-    <string name="grant_images">「写真と動画」の権限を許可してください</string>
+    <string name="deny_images"><![CDATA[「写真と動画」の権限を拒否してください]]></string>
+    <string name="grant_images"><![CDATA[「写真と動画」の権限を許可してください]]></string>
     <string name="crash_clipboard">クラッシュログをクリップボードにコピー</string>
     <string name="settings_trim_lyrics">歌詞の空白を削除する</string>
     <string name="settings_lyrics_multiline_summary">同期ポイント間のすべての行を 1 つの歌詞のテキストで扱います</string>
@@ -159,7 +159,7 @@
     <string name="sort_by_release_date">リリース日</string>
     <string name="timer_expiry">スリープタイマーは %s に再生を一時停止します</string>
     <string name="separator_dot">•</string>
-    <string name="grant_audio">「音楽とオーディオ」の権限を許可してください</string>
+    <string name="grant_audio"><![CDATA[「音楽とオーディオ」の権限を許可してください]]></string>
     <string name="settings_preference_category_home">ホーム画面</string>
     <string name="tab_order">タブの順序を設定する</string>
     <string name="seekbar">シークバー</string>
@@ -179,4 +179,8 @@
     <string name="scroll_to_songs">曲までスクロール</string>
     <string name="tab_order_summary">起動時に表示するタブを設定します。区切り線以降のタブは非表示になります。</string>
     <string name="app_name">Gramophone</string>
+    <string name="settings_lyrics_ui">新しい歌詞 UI を有効化する</string>
+    <string name="settings_lyrics_parser">新しい歌詞パーサー</string>
+    <string name="settings_lyrics_parser_summary">単語単位の同期、スピーカーインジケーター、オフセットなどをサポートする新しい歌詞パーサーを有効化します</string>
+    <string name="settings_lyrics_ui_summary">高度な機能を備えた歌詞を単語ごとに表示する試験的な UI です</string>
 </resources>
