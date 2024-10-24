@@ -1,0 +1,4 @@
+- Rediseño del reproductor de archivos
+- Mantener la pantalla encendida mientras se ve letra
+- Soporte tarjetas SD en la pestaña de Sistema de archivos
+- Correcciones de errores

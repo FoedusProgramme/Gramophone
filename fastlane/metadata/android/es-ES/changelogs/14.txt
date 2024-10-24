@@ -1,0 +1,1 @@
+Revisión del error cuando el idioma del sistema es filipino

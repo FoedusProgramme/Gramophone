@@ -1,0 +1,3 @@
+- Se corrigen algunos errores relacionados con el reordenamiento de pestañas.
+- Soporte de ecualizador fijo
+- Solucionar algunos problemas de accesibilidad (¡avísame si hay más!)
