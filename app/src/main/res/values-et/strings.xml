@@ -187,4 +187,6 @@
     <string name="settings_lyrics_parser_summary">Võta kasutusele uus laulusõnade esitaja, mis oskab sõnahaaval sünkroniseerimist, hääle tuvastamist ja muud olulist</string>
     <string name="settings_lyrics_ui">Võta kasutusele uus laulusõnade kasutajaliides</string>
     <string name="settings_lyrics_ui_summary">Testjärgus kasutajaliides oskab laulusõnu kuvada sõnahaaval ning muud olulist</string>
+    <string name="settings_status_bar_lyrics_title">Laulusõnad olekuribal</string>
+    <string name="settings_status_bar_lyrics_summary">Võta kasutusele MeiZu meetod, mis võimaldab kuvada laulusõnu olekuribal (see meetod ei tööta kõikides nutiseadmetes)</string>
 </resources>
