@@ -200,4 +200,5 @@
     <string name="settings_lyrics_ui_summary">Experimental UI to display word-by-word lyric with advanced features</string>
     <string name="settings_status_bar_lyrics_title">Status bar lyrics</string>
     <string name="settings_status_bar_lyrics_summary">Enable MeiZu method of displaying lyrics in status bar (only available on some devices)</string>
+    <string name="lyric_widget_description">Widget that shows lyrics of currently playing media</string>
 </resources>
