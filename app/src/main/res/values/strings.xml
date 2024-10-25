@@ -198,12 +198,6 @@
     <string name="settings_lyrics_parser_summary">Enable new lyric parser that supports word-by-word synchronisation, speaker indicator, offset and more</string>
     <string name="settings_lyrics_ui">Enable new lyric UI</string>
     <string name="settings_lyrics_ui_summary">Experimental UI to display word-by-word lyric with advanced features</string>
-    <string name="settings_lyrics_StatusBarLyric">Status Bar Lyric </string>
-    <string name="settings_lyrics_StatusBarLyric_summary">Enable StatusBarLyric (Available on some systems, requires notifications to be turned on)</string>
-    <string name="settings_lyrics_StatusBarLyric_permission_denied">Notification permission denied</string>
-    <string name="settings_lyrics_StatusBarLyric_open_permissions">Notification permission is required to enable the status bar lyrics feature. Please enable the permission manually in the system settings.</string>
-    <string name="settings_lyrics_StatusBarLyric_enabled">Status bar lyrics enabled</string>
-    <string name="settings_lyrics_StatusBarLyric_disable">Status bar lyrics disable</string>
-    <string name="settings_go_to_the_settings">Go to the Settings</string>
-    <string name="settings_cancel">Cancel</string>
+    <string name="settings_status_bar_lyrics_title">Status bar lyrics</string>
+    <string name="settings_status_bar_lyrics_summary">Enable MeiZu method of displaying lyrics in status bar (only available on some devices)</string>
 </resources>

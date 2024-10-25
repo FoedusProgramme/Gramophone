@@ -168,12 +168,5 @@
     <string name="settings_preference_category_home">主屏幕</string>
     <string name="tab_order">配置标签顺序</string>
     <string name="tab_order_summary">应用将在启动时显示第一个标签。分隔符后的标签将被隐藏。</string>
-    <string name="settings_lyrics_StatusBarLyric">状态栏歌词</string>
-    <string name="settings_lyrics_StatusBarLyric_summary">打开 状态栏歌词 （某些系统可用，需打开通知）</string>
-    <string name="settings_lyrics_StatusBarLyric_permission_denied">没有通知权限</string>
-    <string name="settings_lyrics_StatusBarLyric_open_permissions">启用状态栏歌词功能需要通知权限。请在系统设置中手动启用该权限。</string>
-    <string name="settings_lyrics_StatusBarLyric_enabled">状态栏歌词已打开</string>
-    <string name="settings_lyrics_StatusBarLyric_disable">状态栏歌词已经关闭</string>
-    <string name="settings_go_to_the_settings">去设置</string>
-    <string name="settings_cancel">取消</string>
+    <string name="settings_status_bar_lyrics_title">状态栏歌词</string>
 </resources>
