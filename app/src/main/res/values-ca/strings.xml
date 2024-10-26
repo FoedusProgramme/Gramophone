@@ -190,4 +190,7 @@
     <string name="settings_lyrics_parser_summary">Activa l\'analitzador nou de lletres que admet la sincronització paraula a paraula, indicador d\'altaveu, desplaçament i més</string>
     <string name="settings_lyrics_ui">Activa la interfície d\'usuari nova de lletres</string>
     <string name="settings_lyrics_ui_summary">IU experimental per a mostrar la lletra paraula a paraula amb característiques avançades</string>
+    <string name="settings_status_bar_lyrics_title">Lletres a la barra d\'estat</string>
+    <string name="settings_status_bar_lyrics_summary">Activa el mètode MeiZu per a mostrar les lletres a la barra d\'estat (disponible només en alguns dispositius)</string>
+    <string name="lyric_widget_description">Giny que mostra la lletra de l\'element multimèdia actualment en reproducció</string>
 </resources>
