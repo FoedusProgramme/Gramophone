@@ -182,4 +182,7 @@
     <string name="settings_lyrics_parser_summary">Aktifkan pengurai lirik baru yang mendukung sinkronisasi kata per kata, indikator speaker, offset, dan lainnya</string>
     <string name="settings_lyrics_ui">Aktifkan UI Lirik baru</string>
     <string name="settings_lyrics_ui_summary">UI eksperimental untuk menampilkan lirik kata demi kata dengan fitur-fitur lanjutan</string>
+    <string name="settings_status_bar_lyrics_title">Lirik bilah status</string>
+    <string name="settings_status_bar_lyrics_summary">Aktifkan metode MeiZu dalam menampilkan lirik di bilah status (hanya tersedia di beberapa perangkat)</string>
+    <string name="lyric_widget_description">Widget yang menampilkan lirik media yang sedang diputar</string>
 </resources>
