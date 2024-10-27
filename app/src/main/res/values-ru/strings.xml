@@ -193,4 +193,10 @@
     <string name="expand_less">Закрыть</string>
     <string name="skip_previous">Перейти к предыдущему</string>
     <string name="position_slider">Ползунок положения</string>
+    <string name="settings_lyrics_parser">Новый парсер текста песни</string>
+    <string name="settings_lyrics_ui">Включить новый дизайн текста песни</string>
+    <string name="settings_lyrics_parser_summary">Включить новый парсер текста песни, который поддерживает синхронизацию по словам, индикатор говорящего, смещение и др.</string>
+    <string name="settings_status_bar_lyrics_title">Текст песни в строке состояния</string>
+    <string name="settings_lyrics_ui_summary">Экспериментальный дизайн с текстом песни по словам и расширенными возможностями</string>
+    <string name="settings_status_bar_lyrics_summary">Включить метод показа текста песни MeiZu в строке состояния (доступно только на некоторых устройствах)</string>
 </resources>
