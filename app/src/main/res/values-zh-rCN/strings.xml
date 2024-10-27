@@ -169,4 +169,7 @@
     <string name="tab_order">配置标签顺序</string>
     <string name="tab_order_summary">应用将在启动时显示第一个标签。分隔符后的标签将被隐藏。</string>
     <string name="settings_status_bar_lyrics_title">状态栏歌词</string>
+    <string name="settings_status_bar_lyrics_summary">启用魅族状态栏歌词（仅适用于部分设备）</string>
+    <string name="settings_lyrics_ui">启用新歌词界面</string>
+    <string name="settings_lyrics_parser">新歌词解析器</string>
 </resources>
