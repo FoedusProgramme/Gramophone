@@ -1,0 +1,1 @@
+Simple offline music player with minimalistic design
