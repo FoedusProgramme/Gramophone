@@ -1,0 +1,3 @@
+- Added status bar lyrics for MeiZu devices, select custom ROMs and Lyric Getter Xposed (thanks to @ghhccghk)
+- Fixed multiple bugs & crashes
+- Updated translations as usual (thanks to our hardworking translators!)
