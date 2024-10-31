@@ -78,14 +78,14 @@
     <string name="dialog_artist">İfaçı</string>
     <string name="dialog_title">Ad</string>
     <string name="unknown_version">Naməlum versiya</string>
-    <string name="settings_mediastore_filter">Mahnının minimum müddəti (saniyə)</string>
+    <string name="settings_mediastore_filter">Mahnının minimum uzunluğu (saniyə)</string>
     <string name="dialog_track_number">Mahnı nömrəsi</string>
     <string name="settings_app_theme">Tema</string>
     <string name="dialog_path">Yol</string>
     <string name="recently_added">Son əlavə olunan</string>
     <string name="compact_list">Siyahı (kompakt)</string>
     <string name="list">Siyahı</string>
-    <string name="grid">Düzüm</string>
+    <string name="grid">Cədvəl</string>
     <string name="check_for_updates">Güncəlləmələr üçün kanalımıza abunə olun!</string>
     <string name="playlist_favourite">Sevimli</string>
     <string name="dialog_mime">MIME növü</string>
@@ -123,8 +123,13 @@
     <string name="more">Daha çox</string>
     <string name="settings_lyric">Sözlər</string>
     <string name="settings_lyrics_center">Mərkəzi düzülüş</string>
-    <string name="opensource_info">GPL-3.0 lisenziyası altında açıq mənbəli\nMüəlliflik hüququ © 2024 Akane Foundation</string>
+    <string name="opensource_info">GPL-3.0 altında açıq mənbə kodu\nMüəllif hüquqları © 2024 Foedus Programme</string>
     <string name="app_name">Gramophone</string>
     <string name="settings_lyrics_configuration_summary">Sözlərin görünüşünü tənzimləmək</string>
     <string name="settings_lyrics_multiline">Çoxsətirli mahnı sözlərinin oxunması</string>
+    <string name="settings_lyrics_bold_summary">Sözlər üçün qalın şriftdən istifadə et</string>
+    <string name="layout">Görünüş</string>
+    <string name="settings_hardware_acceleration_summary">Oynatma sürətinin avadanlıq sürətləndirməsini aktivləşdir</string>
+    <string name="tab_order">Tab sırası</string>
+    <string name="tab_order_summary">Tətbiq işə salındıqda ilk tabı göstərəcək. Ayırıcıdan sonra gələn tablar gizlədiləcək.</string>
 </resources>
