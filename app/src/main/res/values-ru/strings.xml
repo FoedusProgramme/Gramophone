@@ -130,7 +130,7 @@
     <string name="settings_color_accuracy_summary">Более точная генерация цветов</string>
     <string name="settings_experimental_settings_summary">Тестирование функций, разное</string>
     <string name="settings_blacklist">Чёрный список</string>
-    <string name="sort_by_add_date">Добавить дату</string>
+    <string name="sort_by_add_date">Дата добавления</string>
     <string name="settings_lyrics_configuration">Конфигурация текста</string>
     <string name="sort_by_modified_date">Дата изменения</string>
     <string name="settings_play_on_launch_summary">Играть музыку при запуске</string>
