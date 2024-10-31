@@ -25,9 +25,9 @@
     <string name="dialog_year">İl</string>
     <string name="dialog_album">Albom</string>
     <string name="dialog_genre">Janr</string>
-    <string name="settings_audio">Audio</string>
-    <string name="sort_by_artist">İfaçı</string>
-    <string name="sort_by_album">Albom</string>
+    <string name="settings_audio">Səs</string>
+    <string name="sort_by_artist">İfaçı üzrə</string>
+    <string name="sort_by_album">Albom üzrə</string>
     <string name="share">Paylaş</string>
     <string name="settings_preference_category_home">Əsas səhifə</string>
     <string name="expand_less">Bağla</string>
@@ -48,8 +48,8 @@
     <string name="dialog_duration">Müddət</string>
     <string name="back">Geriyə dön</string>
     <string name="shuffle_all">Hamısını qarışdır</string>
-    <string name="play_all">Hamısını oyna</string>
-    <string name="play">Oyna</string>
+    <string name="play_all">Hamısını oynat</string>
+    <string name="play">Oynat</string>
     <string name="remove">Sil</string>
     <string name="unknown_year">Naməlum il</string>
     <string name="unknown_playlist">Naməlum pleylist</string>
@@ -63,8 +63,8 @@
     <string name="settings_title_bold">Qalın şriftli başlıq</string>
     <string name="category_dates">Tarixlər</string>
     <string name="unknown_artist">Naməlum ifaçı</string>
-    <string name="sort_by_name">Ad</string>
-    <string name="sort_by_size">Ölçü</string>
+    <string name="sort_by_name">Ad üzrə</string>
+    <string name="sort_by_size">Ölçü üzrə</string>
     <string name="light">Ağ</string>
     <string name="follow_system">Sistemə uyğun</string>
     <string name="refreshed_songs">%1$s mahnı yeniləndi</string>
@@ -81,7 +81,7 @@
     <string name="settings_mediastore_filter">Mahnının minimum uzunluğu (saniyə)</string>
     <string name="dialog_track_number">Mahnı nömrəsi</string>
     <string name="settings_app_theme">Tema</string>
-    <string name="dialog_path">Yol</string>
+    <string name="dialog_path">Yerləşmə</string>
     <string name="recently_added">Son əlavə olunan</string>
     <string name="compact_list">Siyahı (kompakt)</string>
     <string name="list">Siyahı</string>
@@ -89,12 +89,12 @@
     <string name="check_for_updates">Güncəlləmələr üçün kanalımıza abunə olun!</string>
     <string name="playlist_favourite">Sevimli</string>
     <string name="dialog_mime">MIME növü</string>
-    <string name="filesystem">Fayl sistemi</string>
+    <string name="filesystem">Fayllar</string>
     <string name="settings_package_type">Paket növü</string>
     <string name="settings_appearance_summary">Tətbiq görünüşü, tema rejimləri</string>
     <string name="settings_title_center">Mərkəzləşdirilmiş başlıq</string>
     <string name="settings_player_ui">Pleyer interfeysi</string>
-    <string name="settings_player_ui_summary">Tam pleyer interfeysi, sözlər</string>
+    <string name="settings_player_ui_summary">Pleyer interfeysi, sözlər</string>
     <string name="settings_library">Kitabxana</string>
     <string name="settings_category_links">Keçidlər</string>
     <string name="settings_behavior_summary">Filtrlər, açılış davranışları</string>
@@ -112,7 +112,7 @@
     <string name="delete_failed">Mahnının silinməsində xəta baş verdi</string>
     <string name="settings_category_full_player">Pleyer</string>
     <string name="timer">Yuxu taymeri</string>
-    <string name="sort_by_release_date">Yayımlanma tarixi</string>
+    <string name="sort_by_release_date">Yayımlanma tarixi üzrə</string>
     <string name="separator_dot">•</string>
     <string name="current_playlist">Cari pleylist</string>
     <string name="sort">Sıralama</string>
@@ -132,6 +132,28 @@
     <string name="settings_hardware_acceleration_summary">Oynatma sürətinin avadanlıq sürətləndirməsini aktivləşdir</string>
     <string name="tab_order">Tab sırası</string>
     <string name="tab_order_summary">Tətbiq işə salındıqda ilk tabı göstərəcək. Ayırıcıdan sonra gələn tablar gizlədiləcək.</string>
-    <string name="settings_category_basic_info">Məlumat</string>
+    <string name="settings_category_basic_info">Əsas təfərrüatlar</string>
     <string name="divider">Ayırıcı</string>
+    <string name="settings_title_center_summary">Pleyer üçün mərkəzləşdirilmiş başlıqdan istifadə et</string>
+    <string name="settings_title_bold_summary">Pleyer üçün qalın şriftli başlıqdan istifadə et</string>
+    <plurals name="items">
+        <item quantity="one">%d element</item>
+        <item quantity="other">%d element</item>
+    </plurals>
+    <string name="play_next">Növbəti oynat</string>
+    <string name="settings_category_behavior">Davranış</string>
+    <string name="settings_skip_silence">Sakitliyi burax</string>
+    <string name="settings_skip_silence_summary">Mahnı oynanılma zamanı sakitliyi burax</string>
+    <string name="sort_by_modified_date"></string>
+    <string name="sort_by_add_date">Əlavə edilmə tarixi üzrə</string>
+    <string name="settings_lyrics_center_summary">Sözlər üçün mərkəzi düzülüşdən istifadə et</string>
+    <string name="settings_play_on_launch">Açılış zamanı oynat</string>
+    <string name="settings_blacklist_folder">Qovluqlar qara siyahısı</string>
+    <string name="settings_blacklist_folder_summary">Müəyyən qovluqların mahnıların filtr et</string>
+    <string name="settings_play_on_launch_summary">Mahnını açılış zamanı oynat</string>
+    <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
+    <string name="delete_in_progress">Digər mahnı silinir</string>
+    <string name="settings_trim_lyrics">Sözlərin ətrafında olan boşluqları sil</string>
+    <string name="timer_expiry">Yuxu taymeri musiqini %s dayandıracaq</string>
+    <string name="settings_lyrics_ui"></string>
 </resources>
