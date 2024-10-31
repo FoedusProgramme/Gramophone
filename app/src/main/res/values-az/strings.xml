@@ -110,7 +110,7 @@
     <string name="settings_category_filters">Filtrlər</string>
     <string name="album_cover">Albom örtüyü</string>
     <string name="delete_failed">Mahnının silinməsində xəta baş verdi</string>
-    <string name="settings_category_full_player">Tam pleyer</string>
+    <string name="settings_category_full_player">Pleyer</string>
     <string name="timer">Yuxu taymeri</string>
     <string name="sort_by_release_date">Yayımlanma tarixi</string>
     <string name="separator_dot">•</string>
@@ -132,4 +132,6 @@
     <string name="settings_hardware_acceleration_summary">Oynatma sürətinin avadanlıq sürətləndirməsini aktivləşdir</string>
     <string name="tab_order">Tab sırası</string>
     <string name="tab_order_summary">Tətbiq işə salındıqda ilk tabı göstərəcək. Ayırıcıdan sonra gələn tablar gizlədiləcək.</string>
+    <string name="settings_category_basic_info">Məlumat</string>
+    <string name="divider">Ayırıcı</string>
 </resources>
