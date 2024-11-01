@@ -1,0 +1,3 @@
+- Lisasime olekuriba laulusõnad MeiZu seadmete jaoks, valitud Androidi distributsioonide jaoks ja Lyric Getter Xposedi tarvis (tänud: @ghhccghk)
+- Parandasime mitmed vead ja kokkujooksmised
+- Nagu tavapärane, uuendasime tõlkeid (tänud meie töökatele tõlkijatele!)
