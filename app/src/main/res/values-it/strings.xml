@@ -169,7 +169,6 @@
     <string name="grant_audio">Per favore consenti l\'autorizzazione \"Musica e audio\"</string>
     <string name="skip_next">Prossimo brano</string>
     <string name="expand_less">Chiudi</string>
-    <string name="settings_lyrics_parser"></string>
     <string name="settings_preference_category_home">Schermata principale</string>
     <string name="tab_order">Cambia ordine delle schede</string>
     <string name="back">Indietro</string>

@@ -144,7 +144,6 @@
     <string name="settings_category_behavior">Davranış</string>
     <string name="settings_skip_silence">Sakitliyi burax</string>
     <string name="settings_skip_silence_summary">Mahnı oynanılma zamanı sakitliyi burax</string>
-    <string name="sort_by_modified_date"></string>
     <string name="sort_by_add_date">Əlavə edilmə tarixi üzrə</string>
     <string name="settings_lyrics_center_summary">Sözlər üçün mərkəzi düzülüşdən istifadə et</string>
     <string name="settings_play_on_launch">Açılış zamanı oynat</string>
@@ -155,5 +154,4 @@
     <string name="delete_in_progress">Digər mahnı silinir</string>
     <string name="settings_trim_lyrics">Sözlərin ətrafında olan boşluqları sil</string>
     <string name="timer_expiry">Yuxu taymeri musiqini %s dayandıracaq</string>
-    <string name="settings_lyrics_ui"></string>
 </resources>
