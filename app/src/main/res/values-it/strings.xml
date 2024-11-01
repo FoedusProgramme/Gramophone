@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="settings_contributors">Contributori</string>
+    <string name="settings_contributors">Contributori</string>
     <string name="go_to_album">Vai a album</string>
     <string name="repeat_mode">Modalità ripetizione</string>
     <string name="unknown_playlist">Playlist sconosciuta</string>
@@ -12,14 +12,14 @@
     <string name="settings_title_bold">Titolo in grassetto</string>
     <plurals name="songs">
         <item quantity="one">%d Brano</item>
-        <item quantity="many">%d Brani</item>
-        <item quantity="other"/>
+        <item quantity="many">%d di Brani</item>
+        <item quantity="other">%d Brani</item>
     </plurals>
     <string name="dialog_year">Anno</string>
     <plurals name="albums">
         <item quantity="one">%d Album</item>
-        <item quantity="many">%d Album</item>
-        <item quantity="other"/>
+        <item quantity="many">%d di Album</item>
+        <item quantity="other">%d Album</item>
     </plurals>
     <string name="dialog_path">Percorso</string>
     <string name="unknown_album">Album sconosciuto</string>
@@ -30,22 +30,21 @@
     <string name="equalizer_not_found">Equalizzatore non trovato!</string>
     <string name="compact_list">Lista (compatta)</string>
     <string name="settings_default_progress_bar_summary">Abilita barra avanzamento stile material</string>
-    <string name="opensource_info">Open-source sotto GPL-3.0
-\nCopyright © 2024 Akane Foundation</string>
-    <string name="now_playing">In esecuzione</string>
+    <string name="opensource_info">Open-source sotto GPL-3.0\nCopyright © 2024 Akane Foundation</string>
+    <string name="now_playing">In riproduzione</string>
     <string name="settings_content_based_color_summary">Abilita generazione colore in base all\'album</string>
     <string name="settings_content_based_color">Colori basati sul contenuto</string>
     <string name="no_lyric_found">Testo non trovato</string>
     <string name="unknown_title">Titolo sconosciuto</string>
     <string name="settings_player_options_summary">Qualità output, comportamento riproduzione</string>
-    <string name="filesystem">File di sistema</string>
+    <string name="filesystem">Filesystem</string>
     <string name="dialog_mime">Tipo MIME</string>
     <string name="settings_about_app">A riguardo</string>
     <string name="settings_customization">Personalizzazione</string>
     <string name="settings_customization_summary">Gestisci opzioni personalizzazione</string>
     <string name="settings_album_round_corner_summary">Abilita angoli arrotondati in player intero</string>
     <string name="sort_by_add_date">Aggiungi data</string>
-    <string name="sort_by_modified_date">Data modificata</string>
+    <string name="sort_by_modified_date">Ultima modifica</string>
     <string name="settings_lyrics_center_summary">Usa allineamento centrato per testi</string>
     <string name="settings_play_on_launch">Esegui all\'avvio</string>
     <string name="settings_appearance_summary">Aspetto applicazione, modalità tema</string>
@@ -55,8 +54,8 @@
     <string name="settings_play_on_launch_summary">Esegui musica all\'avvio</string>
     <plurals name="items">
         <item quantity="one">%d Elemento</item>
-        <item quantity="many">%d Elementi</item>
-        <item quantity="other"/>
+        <item quantity="many">%d di Elementi</item>
+        <item quantity="other">%d Elementi</item>
     </plurals>
     <string name="settings_blacklist_folder_summary">Filtra brani da alcune cartelle</string>
     <string name="settings_category_basic_info">Info di base</string>
@@ -78,8 +77,8 @@
     <string name="dialog_album_artist">Artista album</string>
     <plurals name="artists">
         <item quantity="one">%d Artista</item>
-        <item quantity="many">%d Artisti</item>
-        <item quantity="other"/>
+        <item quantity="many">%d di Artisti</item>
+        <item quantity="other">%d Artisti</item>
     </plurals>
     <string name="go_to_artist">Vai a artista</string>
     <string name="details">Dettagli</string>
@@ -168,4 +167,18 @@
     <string name="timer_expiry">Timer riposo fermerà la musica a %s</string>
     <string name="separator_dot">•</string>
     <string name="grant_audio">Per favore consenti l\'autorizzazione \"Musica e audio\"</string>
+    <string name="skip_next">Prossimo brano</string>
+    <string name="expand_less">Chiudi</string>
+    <string name="settings_lyrics_parser"></string>
+    <string name="settings_preference_category_home">Schermata principale</string>
+    <string name="tab_order">Cambia ordine delle schede</string>
+    <string name="back">Indietro</string>
+    <string name="play_all">Riproduci tutto</string>
+    <string name="shuffle_all">Riproduzione casuale</string>
+    <string name="sort">Ordina</string>
+    <string name="scroll_to_albums">Vai agli album</string>
+    <string name="scroll_to_songs">Vai alle canzoni</string>
+    <string name="tab_order_summary">La prima scheda viene mostrata all\'avvio dell\'app. Le schede dopo la linea vengono nascoste.</string>
+    <string name="more">Altro</string>
+    <string name="remove">Rimuovi</string>
 </resources>
