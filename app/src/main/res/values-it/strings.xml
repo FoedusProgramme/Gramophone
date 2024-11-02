@@ -12,13 +12,13 @@
     <string name="settings_title_bold">Titolo in grassetto</string>
     <plurals name="songs">
         <item quantity="one">%d Brano</item>
-        <item quantity="many">%d di Brani</item>
+        <item quantity="many">%d Brani</item>
         <item quantity="other">%d Brani</item>
     </plurals>
     <string name="dialog_year">Anno</string>
     <plurals name="albums">
         <item quantity="one">%d Album</item>
-        <item quantity="many">%d di Album</item>
+        <item quantity="many">%d Album</item>
         <item quantity="other">%d Album</item>
     </plurals>
     <string name="dialog_path">Percorso</string>
@@ -37,14 +37,14 @@
     <string name="no_lyric_found">Testo non trovato</string>
     <string name="unknown_title">Titolo sconosciuto</string>
     <string name="settings_player_options_summary">Qualità output, comportamento riproduzione</string>
-    <string name="filesystem">Filesystem</string>
+    <string name="filesystem">File di sistema</string>
     <string name="dialog_mime">Tipo MIME</string>
     <string name="settings_about_app">A riguardo</string>
     <string name="settings_customization">Personalizzazione</string>
     <string name="settings_customization_summary">Gestisci opzioni personalizzazione</string>
     <string name="settings_album_round_corner_summary">Abilita angoli arrotondati in player intero</string>
     <string name="sort_by_add_date">Aggiungi data</string>
-    <string name="sort_by_modified_date">Ultima modifica</string>
+    <string name="sort_by_modified_date">Data modificata</string>
     <string name="settings_lyrics_center_summary">Usa allineamento centrato per testi</string>
     <string name="settings_play_on_launch">Esegui all\'avvio</string>
     <string name="settings_appearance_summary">Aspetto applicazione, modalità tema</string>
@@ -54,7 +54,7 @@
     <string name="settings_play_on_launch_summary">Esegui musica all\'avvio</string>
     <plurals name="items">
         <item quantity="one">%d Elemento</item>
-        <item quantity="many">%d di Elementi</item>
+        <item quantity="many">%d Elementi</item>
         <item quantity="other">%d Elementi</item>
     </plurals>
     <string name="settings_blacklist_folder_summary">Filtra brani da alcune cartelle</string>
@@ -77,7 +77,7 @@
     <string name="dialog_album_artist">Artista album</string>
     <plurals name="artists">
         <item quantity="one">%d Artista</item>
-        <item quantity="many">%d di Artisti</item>
+        <item quantity="many">%d Artisti</item>
         <item quantity="other">%d Artisti</item>
     </plurals>
     <string name="go_to_artist">Vai a artista</string>
@@ -167,7 +167,7 @@
     <string name="timer_expiry">Timer riposo fermerà la musica a %s</string>
     <string name="separator_dot">•</string>
     <string name="grant_audio">Per favore consenti l\'autorizzazione \"Musica e audio\"</string>
-    <string name="skip_next">Prossimo brano</string>
+    <string name="skip_next">Salta al prossimo</string>
     <string name="expand_less">Chiudi</string>
     <string name="settings_preference_category_home">Schermata principale</string>
     <string name="tab_order">Cambia ordine delle schede</string>
@@ -177,7 +177,16 @@
     <string name="sort">Ordina</string>
     <string name="scroll_to_albums">Vai agli album</string>
     <string name="scroll_to_songs">Vai alle canzoni</string>
-    <string name="tab_order_summary">La prima scheda viene mostrata all\'avvio dell\'app. Le schede dopo la linea vengono nascoste.</string>
+    <string name="tab_order_summary">L\'app mostrerà la prima scheda all\'avvio. Le schede dopo il separatore saranno nascoste.</string>
     <string name="more">Altro</string>
     <string name="remove">Rimuovi</string>
+    <string name="settings_status_bar_lyrics_title">Barra di stato testi</string>
+    <string name="play">Esegui</string>
+    <string name="position_slider">Posizione scorrimento</string>
+    <string name="settings_lyrics_ui">Abilita nuova interfaccia testi</string>
+    <string name="skip_previous">Salta al precedente</string>
+    <string name="settings_lyrics_parser">Nuovo parser testi</string>
+    <string name="seekbar">Barra</string>
+    <string name="divider">Separatore</string>
+    <string name="app_name">Gramophone</string>
 </resources>
