@@ -1,0 +1,3 @@
+- S'ha afegit la lletra a la barra d'estat als dispositius MeiZu, seleccioneu les ROM personalitzades i Lyric Getter Xposed (gràcies a @ghhccghk)
+- S'han corregit múltiples errors i fallades
+- Traducció actualitzada com sempre (gràcies als nostres traductors que treballen de valent!)
