@@ -1,0 +1,3 @@
+- Menambahkan lirik bilah status untuk perangkat MeiZu, pilih ROM khusus dan Lyric Getter Xpose (terima kasih kepada @ghhccghk)
+ - Memperbaiki beberapa bug & kerusakan
+Terjemahan yang diperbarui seperti biasa (terima kasih kepada penerjemah kami yang bekerja keras!)
