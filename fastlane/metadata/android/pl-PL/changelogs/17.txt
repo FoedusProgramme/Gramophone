@@ -1,0 +1,3 @@
+- Dodano teksty na pasku stanu dla urządzeń MeiZu, wybranych custom ROM-ów i Lyric Getter Xposed (dzięki @ghhccghk).
+- Naprawiono wiele błędów i awarii
+- Zaktualizowane tłumaczenia (dzięki naszym ciężko pracującym tłumaczom!)
