@@ -198,4 +198,5 @@
     <string name="settings_status_bar_lyrics_title">Teksty na pasku stanu</string>
     <string name="settings_status_bar_lyrics_summary">Włączenie metody MeiZu wyświetlania tekstów piosenek na pasku stanu (dostępne tylko na niektórych urządzeniach)</string>
     <string name="lyric_widget_description">Widżet wyświetlający teksty aktualnie odtwarzanych multimediów</string>
+    <string name="home_menu_shuffle">Przetasuj wszystko</string>
 </resources>
