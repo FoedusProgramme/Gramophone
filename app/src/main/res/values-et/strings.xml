@@ -190,4 +190,5 @@
     <string name="settings_status_bar_lyrics_title">Laulusõnad olekuribal</string>
     <string name="settings_status_bar_lyrics_summary">Võta kasutusele MeiZu meetod, mis võimaldab kuvada laulusõnu olekuribal (see meetod ei tööta kõikides nutiseadmetes)</string>
     <string name="lyric_widget_description">Vidin, mis näitab hetkel esitatava meedia laulusõnu</string>
+    <string name="home_menu_shuffle">Sega kõik lood</string>
 </resources>
