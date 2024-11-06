@@ -181,7 +181,7 @@
     <string name="sort_by_release_date">Data de publicació</string>
     <string name="fgs_failed_channel">La reproducció ha fallat en reprendre</string>
     <string name="timer_expiry">El temporitzador d\'adormir-se farà pausa de la música a les %s</string>
-    <string name="tab_order">Configurar l\'ordre de les pestanyes</string>
+    <string name="tab_order">Configuració de l\'ordre de les pestanyes</string>
     <string name="sort">Ordena</string>
     <string name="scroll_to_albums">Desplaça\'t als àlbums</string>
     <string name="remove">Elimina</string>
