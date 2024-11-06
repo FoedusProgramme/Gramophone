@@ -187,4 +187,7 @@
     <string name="settings_lyrics_parser_summary">Kelime kelime ilerleme, boşluklar ve daha fazlasını destekleyen yeni şarkı sözü işleyiciyi etkinleştirin</string>
     <string name="settings_lyrics_ui">Yeni söz arayüzünü etkinleştir</string>
     <string name="grant_audio"><![CDATA[Lütfen \"müzik ve seslere \" erişim izni verin]]></string>
+    <string name="settings_status_bar_lyrics_title">Durum çubuğu sözleri</string>
+    <string name="settings_status_bar_lyrics_summary">Şarkı sözlerini durum çubuğunda görüntülemek için MeiZu yöntemini etkinleştirin (yalnızca bazı cihazlarda kullanılabilir)</string>
+    <string name="lyric_widget_description">Șu anda oynatılan medyanın sözlerini gösteren widget</string>
 </resources>
