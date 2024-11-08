@@ -193,4 +193,5 @@
     <string name="settings_status_bar_lyrics_title">Lletres a la barra d\'estat</string>
     <string name="settings_status_bar_lyrics_summary">Activa el mètode MeiZu per a mostrar les lletres a la barra d\'estat (disponible només en alguns dispositius)</string>
     <string name="lyric_widget_description">Giny que mostra la lletra de l\'element multimèdia actualment en reproducció</string>
+    <string name="home_menu_shuffle">Barreja-ho tot</string>
 </resources>
