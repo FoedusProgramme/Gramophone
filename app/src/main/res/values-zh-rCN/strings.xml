@@ -20,13 +20,13 @@
     <string name="dismiss">关闭</string>
     <string name="unknown_genre">未知主题</string>
     <string name="unknown_year">未知年份</string>
-    <string name="refreshed_songs">刷新了 %1$s 首歌曲。</string>
+    <string name="refreshed_songs">刷新了 %1$s 首歌曲</string>
     <string name="search">搜索</string>
     <string name="settings_app_name">应用名称</string>
     <string name="settings_contributors">贡献者</string>
     <string name="play_next">添加至下一曲</string>
-    <string name="go_to_album">专辑..</string>
-    <string name="go_to_artist">艺术家..</string>
+    <string name="go_to_album">专辑</string>
+    <string name="go_to_artist">艺术家</string>
     <string name="details">详细</string>
     <string name="shuffle">随机</string>
     <string name="repeat_mode">循环模式</string>
