@@ -91,8 +91,7 @@
     <string name="settings_play_on_launch_summary">앱을 실행하면 자동으로 음악 재생</string>
     <string name="album_covers_enhance">개선된 방식으로 앨범 커버 불러오기</string>
     <string name="album_covers_enhance_desc">고품질 앨범 커버, 또는 앨범과 음악의 커버가 서로 다른 경우를 지원 (사진 접근 권한 필요)</string>
-    <string name="delete_in_progress">이미 다른 음악을 삭제 중</string>
-    <string name="settings_trim_lyrics">가사 양 끝의 공백 제거</string>
+	<string name="settings_trim_lyrics">가사 양 끝의 공백 제거</string>
     <string name="crash_clipboard">충돌 로그를 클립보드에 복사했습니다</string>
     <string name="home_menu_settings">설정</string>
     <string name="sort_by_release_date">발매 날짜</string>

@@ -140,8 +140,7 @@
     <string name="dialog_edit_metadata">Uredi</string>
     <string name="delete_failed">Brisanje pesme nije uspelo</string>
     <string name="album_cover">Omot albuma</string>
-    <string name="delete_in_progress">Već se briše druga pesma</string>
-    <string name="album_covers_enhance">Poboljšano učitavanje omota albuma</string>
+	<string name="album_covers_enhance">Poboljšano učitavanje omota albuma</string>
     <string name="crash_clipboard">Evidencija pada je kopirana u međuspremnik</string>
     <string name="settings_trim_lyrics">Uklonite razmake oko teksta</string>
     <string name="timer">Tajmer za spavanje</string>

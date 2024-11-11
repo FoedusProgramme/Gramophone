@@ -67,8 +67,7 @@
     <string name="settings_crash_application">Crash applicazione</string>
     <string name="dialog_lyrics">Testi</string>
     <string name="delete_failed">Eliminazione brano fallita</string>
-    <string name="delete_in_progress">Già eliminando un altro brano</string>
-    <string name="grant_images">Per favore consenti l\'autorizzazione \"Foto e video\"</string>
+	<string name="grant_images">Per favore consenti l\'autorizzazione \"Foto e video\"</string>
     <string name="crash_clipboard">Registro crash copiato negli appunti</string>
     <string name="settings_trim_lyrics">Rimuovi spazi nei testi</string>
     <string name="category_songs">Brani</string>

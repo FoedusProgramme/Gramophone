@@ -149,8 +149,7 @@
     <string name="fgs_failed_channel">Pemutaran gagal dilanjutkan</string>
     <string name="settings_crash_application">Aplikasi crash</string>
     <string name="delete_failed">Gagal menghapus lagu</string>
-    <string name="delete_in_progress">Sudah menghapus lagu lain</string>
-    <string name="crash_clipboard">Disalin catatan kerusakan ke papan klip</string>
+	<string name="crash_clipboard">Disalin catatan kerusakan ke papan klip</string>
     <string name="settings_trim_lyrics">Hapus jarak antar lirik</string>
     <string name="sort_by_release_date">Tanggal rilis</string>
     <string name="timer_expiry">Waktu tidur akan menghentikan musik pada %s</string>

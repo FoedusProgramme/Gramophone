@@ -118,8 +118,7 @@
     <string name="settings_crash_application">Facer faller le application</string>
     <string name="settings_blacklist_folder_summary">Filtrar cantos ab certe dossieres</string>
     <string name="album_cover">Copertura del album</string>
-    <string name="delete_in_progress">Jam ha altere canto in deletion</string>
-    <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
+	<string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
     <string name="category_genres">Generes</string>
     <string name="unknown_genre">Genere incognite</string>
     <string name="dialog_genre">Genere</string>

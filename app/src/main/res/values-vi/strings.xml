@@ -136,8 +136,7 @@
     <string name="settings_play_on_launch">Phát khi mở ứng dụng</string>
     <string name="preference_category_quality">Chất lượng</string>
     <string name="album_cover">Ảnh album</string>
-    <string name="delete_in_progress">Đang xóa một bài hát khác</string>
-    <string name="delete_failed">Không thể xóa bài hát</string>
+	<string name="delete_failed">Không thể xóa bài hát</string>
     <string name="dialog_edit_metadata">Chỉnh sửa</string>
     <string name="settings_trim_lyrics">Loại bỏ dấu cách xung quanh lời bài hát</string>
     <string name="dialog_lyrics">Lời bài hát</string>

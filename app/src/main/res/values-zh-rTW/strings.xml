@@ -117,8 +117,7 @@
     <string name="settings_lyrics_bold">粗體歌詞</string>
     <string name="settings_lyrics_center">中心對齊</string>
     <string name="settings_lyrics_configuration_summary">設定歌詞外觀</string>
-    <string name="delete_in_progress">已經正在刪除另外一首歌曲</string>
-    <string name="delete_failed">歌曲刪除失敗</string>
+	<string name="delete_failed">歌曲刪除失敗</string>
     <string name="dialog_edit_metadata">編輯</string>
     <string name="album_cover">專輯封面</string>
     <string name="settings_blacklist">黑名單</string>

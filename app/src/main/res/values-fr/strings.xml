@@ -137,8 +137,7 @@
     <string name="settings_blacklist">Liste d\'exclusion</string>
     <string name="settings_blacklist_folder">Exclure des dossiers</string>
     <string name="settings_blacklist_folder_summary">Filtre les morceaux de certains dossiers</string>
-    <string name="delete_in_progress">Déjà en train de supprimer une autre musique</string>
-    <string name="delete_failed">Échec de la suppression</string>
+	<string name="delete_failed">Échec de la suppression</string>
     <string name="settings_crash_application">Faire planter l\'application</string>
     <string name="album_cover">Pochette d\'album</string>
     <string name="dialog_edit_metadata">Modifier</string>

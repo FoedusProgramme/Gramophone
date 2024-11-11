@@ -160,7 +160,6 @@
     <string name="dialog_edit_metadata">Edit</string>
     <string name="dialog_lyrics">Lyrics</string>
     <string name="delete_failed">Deleting song failed</string>
-    <string name="delete_in_progress">Already deleting another song</string>
     <string name="album_covers_enhance">Enhanced album cover loading</string>
     <string name="album_covers_enhance_desc">Support high quality song covers and allow album and song cover to differ (requires photos access)</string>
     <string name="deny_images"><![CDATA[Please deny \"Photos and videos\" permission]]></string>
@@ -202,4 +201,7 @@
     <string name="settings_status_bar_lyrics_title">Status bar lyrics</string>
     <string name="settings_status_bar_lyrics_summary">Enable MeiZu method of displaying lyrics in status bar (only available on some devices)</string>
     <string name="lyric_widget_description">Widget that shows lyrics of currently playing media</string>
+	<string name="delete">Delete</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>

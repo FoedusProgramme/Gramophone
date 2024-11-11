@@ -147,8 +147,7 @@
     <string name="delete_failed">Не удалось удалить песню</string>
     <string name="dialog_edit_metadata">Редактировать</string>
     <string name="album_cover">Обложка альбома</string>
-    <string name="delete_in_progress">Уже удаляется другая песня</string>
-    <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
+	<string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
     <string name="dialog_lyrics">Текст песни</string>
     <string name="settings_preference_category_application">Приложение</string>
     <string name="settings_category_basic_info">Основная информация</string>

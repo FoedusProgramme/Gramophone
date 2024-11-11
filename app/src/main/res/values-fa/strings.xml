@@ -101,8 +101,7 @@
     <string name="settings_category_misc">متفرقه</string>
     <string name="preference_category_quality">کیفیت</string>
     <string name="crash_clipboard">گزارش فروپاشی در تخته‌گیره رونوشت شد</string>
-    <string name="delete_in_progress">در حال پاک کردن یک آواز دیگر</string>
-    <string name="dialog_edit_metadata">ویرایش</string>
+	<string name="dialog_edit_metadata">ویرایش</string>
     <string name="dialog_lyrics">ترانه‌ها</string>
     <string name="deny_images"><![CDATA[لطفا اجازۀ دسترسی به «تصاویر و ویدیوها» را نپذیرید]]></string>
     <string name="settings_trim_lyrics">برداشتن فاصله‌های اطراف ترانه‌ها</string>

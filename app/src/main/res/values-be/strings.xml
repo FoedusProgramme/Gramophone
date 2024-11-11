@@ -151,8 +151,7 @@
     <string name="settings_lyrics_center_summary">Выкарыстоўваць выраўноўванне па цэнтры для тэкстаў песень</string>
     <string name="dialog_lyrics">Тэкст песні</string>
     <string name="settings_title_bold_summary">Выкарыстоўваць тоўсты загаловак для прайгравальніка</string>
-    <string name="delete_in_progress">Ужо выдаляецца іншая песня</string>
-    <string name="deny_images">Адмоўцеся ад дазволу «Фота і відэа»</string>
+	<string name="deny_images">Адмоўцеся ад дазволу «Фота і відэа»</string>
     <string name="grant_images">Калі ласка, дайце дазвол на «Фота і відэа»</string>
     <string name="settings_color_accuracy_summary">Больш дакладная генерацыя колеру</string>
     <string name="crash_clipboard">Журнал збояў скапіяваны ў буфер абмену</string>

@@ -119,8 +119,7 @@
     <string name="settings_category_basic_info">Basisinformation</string>
     <string name="settings_category_filters">Filter</string>
     <string name="settings_category_misc">Sonstiges</string>
-    <string name="delete_in_progress">Es wird bereits ein anderer Titel gelöscht</string>
-    <string name="delete_failed">Löschen des Titels fehlgeschlagen</string>
+	<string name="delete_failed">Löschen des Titels fehlgeschlagen</string>
     <string name="settings_color_accuracy">Farbgenauigkeit</string>
     <string name="settings_content_based_color">Inhaltsbasierte Farben</string>
     <string name="settings_content_based_color_summary">Albumbasierte Farbgenerierung aktivieren</string>

@@ -160,8 +160,7 @@
     <string name="settings_category_misc">مُنوَّعات</string>
     <string name="preference_category_quality">الدِّقَّة</string>
     <string name="delete_failed">فشل حذف الأغنية</string>
-    <string name="delete_in_progress">يجري حذف أغنيةٍ أخرى بالفعل</string>
-    <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
+	<string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
     <string name="deny_images">يرجى رفض إذن \"الصور ومقاطع الفيديو\"</string>
     <string name="grant_images">يرجى منح إذن \"الصور ومقاطع الفيديو\"</string>
     <string name="crash_clipboard">تم نسخ سجل الأعطال إلى الحافظة</string>

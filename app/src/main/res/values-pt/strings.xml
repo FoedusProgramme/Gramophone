@@ -153,8 +153,7 @@
     <string name="settings_crash_application">Travar a aplicação</string>
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
     <string name="delete_failed">Falha ao apagar música</string>
-    <string name="delete_in_progress">Outra música já está a ser apagada</string>
-    <string name="crash_clipboard">Log do crash copiado para a área de transferência</string>
+	<string name="crash_clipboard">Log do crash copiado para a área de transferência</string>
     <string name="settings_trim_lyrics">Remover espaços à volta da letra</string>
     <string name="deny_images">Negue a permissão \"imagens e vídeos\"</string>
     <string name="grant_images">Conceda permissão para \"imagens e vídeos\"</string>

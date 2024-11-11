@@ -121,8 +121,7 @@
     <string name="dialog_edit_metadata">Muuda</string>
     <string name="dialog_lyrics">Laulusõnad</string>
     <string name="delete_failed">Pala kustutamine ei õnnestunud</string>
-    <string name="delete_in_progress">Teise pala kustutamine on veel pooleli</string>
-    <string name="album_covers_enhance">Albumi tõhustatud kaanepiltide laadimine</string>
+	<string name="album_covers_enhance">Albumi tõhustatud kaanepiltide laadimine</string>
     <string name="album_covers_enhance_desc">Kasuta parema kvaliteediga kaanepilte ning luba albumi ja palade kaanepiltidel erineda (eeldab õigust avada fotosid ja pildifaile)</string>
     <string name="deny_images"><![CDATA[Palun keela \"Fotod ja videod\" õigused]]></string>
     <string name="grant_images"><![CDATA[Palun luba \"Fotod ja videod\" õigused]]></string>

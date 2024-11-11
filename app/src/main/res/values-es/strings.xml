@@ -139,8 +139,7 @@
     <string name="settings_blacklist_folder_summary">Filtrar canciones de determinadas carpetas</string>
     <string name="settings_category_basic_info">Información general</string>
     <string name="settings_preference_category_application">Aplicación</string>
-    <string name="delete_in_progress">Ya estoy borrando otra canción</string>
-    <string name="delete_failed">Error al borrar la canción</string>
+	<string name="delete_failed">Error al borrar la canción</string>
     <string name="settings_crash_application">La aplicación falló</string>
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
     <string name="album_cover">Portada del álbum</string>

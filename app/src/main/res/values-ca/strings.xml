@@ -130,8 +130,7 @@
     <string name="album_cover">Caràtules d\'àlbums</string>
     <string name="dialog_edit_metadata">Edita</string>
     <string name="delete_failed">Ha fallat en suprimir la cançó</string>
-    <string name="delete_in_progress">Ja s\'està eliminant una altra cançó</string>
-    <string name="album_covers_enhance">Càrrega millorada de les caràtules d\'àlbums</string>
+	<string name="album_covers_enhance">Càrrega millorada de les caràtules d\'àlbums</string>
     <string name="deny_images"><![CDATA[Denegueu el permís \"Fotos i vídeos\"]]></string>
     <string name="grant_audio"><![CDATA[Atorgueu el permís \"Música i àudio\"]]></string>
     <string name="crash_clipboard">Registre d\'errors copiat al porta-retalls</string>

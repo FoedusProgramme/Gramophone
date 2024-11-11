@@ -166,8 +166,7 @@
     <string name="settings_trim_lyrics">Usuń spacje wokół tekstów</string>
     <string name="grant_images"><![CDATA[Przyznaj uprawnienie \"Zdjęcia i filmy\"]]></string>
     <string name="settings_crash_application">Awaria aplikacji</string>
-    <string name="delete_in_progress">Kolejny utwór został już usunięty</string>
-    <string name="crash_clipboard">Skopiowano dziennik awarii do schowka</string>
+	<string name="crash_clipboard">Skopiowano dziennik awarii do schowka</string>
     <string name="deny_images"><![CDATA[Odrzuć uprawnienie \"Zdjęcia i filmy\"]]></string>
     <string name="timer_expiry">Wyłącznik czasowy wstrzyma odtwarzanie muzyki o %s</string>
     <string name="separator_dot">•</string>

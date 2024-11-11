@@ -122,8 +122,7 @@
     <string name="settings_color_accuracy">Точність передачі кольору</string>
     <string name="settings_lyrics_configuration_summary">Налаштуйте вигляд тексту пісні</string>
     <string name="album_cover">Обкладинка альбому</string>
-    <string name="delete_in_progress">Ще одна пісня вже видаляється</string>
-    <string name="settings_preference_category_application">Застосунок</string>
+	<string name="settings_preference_category_application">Застосунок</string>
     <string name="settings_crash_application">Збій застосунка</string>
     <string name="delete_failed">Не вдалося видалити пісню</string>
     <string name="dialog_edit_metadata">Редагувати</string>

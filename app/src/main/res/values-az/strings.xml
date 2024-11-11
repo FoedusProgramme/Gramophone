@@ -151,7 +151,6 @@
     <string name="settings_blacklist_folder_summary">Müəyyən qovluqların mahnıların filtr et</string>
     <string name="settings_play_on_launch_summary">Mahnını açılış zamanı oynat</string>
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
-    <string name="delete_in_progress">Digər mahnı silinir</string>
-    <string name="settings_trim_lyrics">Sözlərin ətrafında olan boşluqları sil</string>
+	<string name="settings_trim_lyrics">Sözlərin ətrafında olan boşluqları sil</string>
     <string name="timer_expiry">Yuxu taymeri musiqini %s dayandıracaq</string>
 </resources>

@@ -73,8 +73,7 @@
     <string name="album_artist">Album előadója</string>
     <string name="dialog_album_artist">Album előadója</string>
     <string name="settings_album_round_corner">Album kerek sarok</string>
-    <string name="delete_in_progress">Már törölsz egy másik dalt</string>
-    <string name="category_albums">Albumok</string>
+	<string name="category_albums">Albumok</string>
     <string name="settings_preference_category_application">Alkalmazás</string>
     <string name="settings_app_name">App neve</string>
     <string name="settings_app_theme">App téma</string>

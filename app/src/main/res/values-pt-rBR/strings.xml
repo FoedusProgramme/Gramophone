@@ -147,8 +147,7 @@
     <string name="dialog_lyrics">Letras</string>
     <string name="settings_crash_application">Travar o aplicativo</string>
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
-    <string name="delete_in_progress">Outra música já está sendo deletada</string>
-    <string name="crash_clipboard">Log do crash copiado para a área de transferência</string>
+	<string name="crash_clipboard">Log do crash copiado para a área de transferência</string>
     <string name="settings_lyrics_multiline">Leia letras multilinhas</string>
     <string name="settings_lyrics_multiline_summary">Trate todas as linhas entre os pontos de sincronização como um texto de letra</string>
     <string name="delete_failed">Falha ao excluir música</string>
