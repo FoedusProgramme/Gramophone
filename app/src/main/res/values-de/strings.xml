@@ -186,4 +186,8 @@
     <string name="settings_lyrics_parser_summary">Neuen Liedtext-Parser benutzen, der Wort-für-Wort-Synchronisierung, Sprecher-Indikator, Zeitversetzung und mehr unterstützt</string>
     <string name="settings_lyrics_ui">Neue Liedtext-Benutzeroberfläche benutzen</string>
     <string name="settings_lyrics_ui_summary">Experimentelle Benutzeroberfläche, die Wort-für-Wort-Liedtexte mit erweiterten Funktionen anzeigen kann</string>
+    <string name="settings_status_bar_lyrics_title">Liedtexte in der Statusleiste</string>
+    <string name="settings_status_bar_lyrics_summary">MeiZu Methode aktivieren, die Liedtexte in der Statusleiste anzeigt (nur auf manchen Geräten verfügbar)</string>
+    <string name="home_menu_shuffle">Alle zufällig abspielen</string>
+    <string name="lyric_widget_description">Widget, das den Liedtext des aktuellen Titels anzeigt</string>
 </resources>
