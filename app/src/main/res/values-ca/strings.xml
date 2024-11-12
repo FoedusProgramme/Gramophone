@@ -130,7 +130,7 @@
     <string name="album_cover">Caràtules d\'àlbums</string>
     <string name="dialog_edit_metadata">Edita</string>
     <string name="delete_failed">Ha fallat en suprimir la cançó</string>
-	<string name="album_covers_enhance">Càrrega millorada de les caràtules d\'àlbums</string>
+    <string name="album_covers_enhance">Càrrega millorada de les caràtules d\'àlbums</string>
     <string name="deny_images"><![CDATA[Denegueu el permís \"Fotos i vídeos\"]]></string>
     <string name="grant_audio"><![CDATA[Atorgueu el permís \"Música i àudio\"]]></string>
     <string name="crash_clipboard">Registre d\'errors copiat al porta-retalls</string>
@@ -193,4 +193,7 @@
     <string name="settings_status_bar_lyrics_summary">Activa el mètode MeiZu per a mostrar les lletres a la barra d\'estat (disponible només en alguns dispositius)</string>
     <string name="lyric_widget_description">Giny que mostra la lletra de l\'element multimèdia actualment en reproducció</string>
     <string name="home_menu_shuffle">Barreja-ho tot</string>
+    <string name="yes">Sí</string>
+    <string name="delete">Suprimeix</string>
+    <string name="no">No</string>
 </resources>
