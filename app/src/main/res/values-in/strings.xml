@@ -149,7 +149,7 @@
     <string name="fgs_failed_channel">Pemutaran gagal dilanjutkan</string>
     <string name="settings_crash_application">Aplikasi crash</string>
     <string name="delete_failed">Gagal menghapus lagu</string>
-	<string name="crash_clipboard">Disalin catatan kerusakan ke papan klip</string>
+    <string name="crash_clipboard">Disalin catatan kerusakan ke papan klip</string>
     <string name="settings_trim_lyrics">Hapus jarak antar lirik</string>
     <string name="sort_by_release_date">Tanggal rilis</string>
     <string name="timer_expiry">Waktu tidur akan menghentikan musik pada %s</string>
@@ -184,4 +184,8 @@
     <string name="settings_status_bar_lyrics_title">Lirik bilah status</string>
     <string name="settings_status_bar_lyrics_summary">Aktifkan metode MeiZu dalam menampilkan lirik di bilah status (hanya tersedia di beberapa perangkat)</string>
     <string name="lyric_widget_description">Widget yang menampilkan lirik media yang sedang diputar</string>
+    <string name="home_menu_shuffle">Acak semua</string>
+    <string name="yes">Ya</string>
+    <string name="delete">Hapus</string>
+    <string name="no">Tidak</string>
 </resources>
