@@ -1,0 +1,2 @@
+-Permite reordonare și ascunderi tabuurilor
+-Multiple fixări la când aplicația dădea crashe

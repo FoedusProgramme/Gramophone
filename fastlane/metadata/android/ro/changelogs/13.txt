@@ -1,0 +1,4 @@
+-Re-design la playerul de file
+-Ține ecranul pornit în timp ce vezi versurile
+-Suport pentru carduri SD în bara de file de sistem
+-Bug rezolvat

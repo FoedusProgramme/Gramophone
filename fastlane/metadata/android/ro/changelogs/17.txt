@@ -1,0 +1,3 @@
+-Suport pentru versuri pentru dispozitive MeiZu în bara de versuri, selectează un ROM modificat și versuri Getter Xposed (mulțumită lui @ghhccghk)
+-Multiple fixări de bugs & crashes
+-Actualizări de rutină la traduceri (mulțumim traducătorilor noștri harnici!)

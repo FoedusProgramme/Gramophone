@@ -1,0 +1,3 @@
+-Fixare la un bug relatat de ordonare tabuurilor
+-Fixare suport pentru egalizator
+-Fixare la niște probleme legate de accesibilitate
