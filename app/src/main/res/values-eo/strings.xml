@@ -1,2 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="home_menu_shuffle">Miksi ĉiujn</string>
+    <string name="home_menu_refresh">Ĝisdatigi</string>
+    <string name="category_songs">Kanzonoj</string>
+    <string name="category_albums">Albumoj</string>
+    <string name="category_artists">Artistoj</string>
+    <string name="category_playlists">Ludlistoj</string>
+    <string name="unknown_artist">Nekonata artisto</string>
+    <string name="category_dates">Datoj</string>
+    <plurals name="songs">
+        <item quantity="one">%d Kanzono</item>
+        <item quantity="other">%d Kanzonoj</item>
+    </plurals>
+    <plurals name="albums">
+        <item quantity="one">%d Albumo</item>
+        <item quantity="other">%d Albumoj</item>
+    </plurals>
+    <plurals name="artists">
+        <item quantity="one">%d Artisto</item>
+        <item quantity="other">%d Artistoj</item>
+    </plurals>
+    <plurals name="items">
+        <item quantity="one">%d Ero</item>
+        <item quantity="other">%d Eroj</item>
+    </plurals>
+    <string name="follow_system">Sekvi sistemon</string>
+    <string name="dark">Malluma</string>
+    <string name="sort_by_name">Nomo</string>
+    <string name="sort_by_artist">Artisto</string>
+    <string name="dialog_album">Albumo</string>
+    <string name="dialog_genre">Ĝenro</string>
+    <string name="dialog_year">Jaro</string>
+    <string name="unknown_album">Nekonata albumo</string>
+    <string name="folders">Dosierujoj</string>
+    <string name="settings_app_theme">Aplika temo</string>
+    <string name="grid">Krado</string>
+    <string name="list">Listo</string>
+    <string name="home_menu_equalizer">Egaligilo</string>
+    <string name="equalizer_not_found">Egaligilo ne troveblas!</string>
+    <string name="compact_list">Listo (kompakta)</string>
+    <string name="check_for_updates">Kontrolu nian kanalon por ĝisdatigoj!</string>
+    <string name="settings_default_progress_bar">Defaŭlta progresbreto</string>
+    <string name="settings_default_progress_bar_summary">Enŝalti progresbreton materialstilan</string>
+    <string name="opensource_info">Malfermkodita sub GPL-3.0\nKopirajto © 2024 Fondaĵo Akane</string>
+    <string name="app_name">Gramofono</string>
+    <string name="now_playing">Ludanta nun</string>
+    <string name="settings_content_based_color_summary">Enŝaltu albumbazan kolorigon</string>
+    <string name="settings_content_based_color">Enhavbazitaj koloroj</string>
+    <string name="settings_package_type">Pakaĵa tipo</string>
+    <string name="no_lyric_found">Neniu teksto troviĝis</string>
+    <string name="dialog_disc_number">Diska numero</string>
+    <string name="unknown_title">Nekonata titolo</string>
+    <string name="dialog_mime">MIME-tipo</string>
+    <string name="dialog_duration">Daŭro</string>
+    <string name="settings_title_center">Titolo centrigita</string>
+    <string name="settings_title_center_summary">Uzi centrigitan titolon por plena ludilo</string>
+    <string name="settings_player_ui">Ludila interfaco</string>
+    <string name="settings_player_ui_summary">Plena ludila interfaco, kanzonteksto</string>
+    <string name="home_menu_search">Serĉi</string>
+    <string name="home_menu_settings">Agordoj</string>
+    <string name="sort_by_size">Grandeco</string>
+    <string name="category_genres">Ĝenroj</string>
+    <string name="light">Luma</string>
+    <string name="sort_by_album">Albumo</string>
+    <string name="settings_mediastore_filter">Minimuma longo de kanzono (sekundoj)</string>
+    <string name="dialog_album_artist">Albumartisto</string>
+    <string name="recently_added">Laste aldonitaj</string>
+    <string name="natural_order">Natura ordigo</string>
+</resources>
