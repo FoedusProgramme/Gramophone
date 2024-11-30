@@ -148,8 +148,8 @@
     <string name="settings_category_misc">Autres</string>
     <string name="preference_category_quality">Qualité</string>
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
-    <string name="deny_images"><![CDATA[Veuillez refuser l'autorisation \"Photos and videos\" ]]></string>
-    <string name="grant_images"><![CDATA[Veuillez accorder l'autorisation \"Photos and videos\"]]></string>
+    <string name="deny_images"><![CDATA[Veuillez refuser l\'autorisation \"Photos and videos\" ]]></string>
+    <string name="grant_images"><![CDATA[Veuillez accorder l\'autorisation \"Photos and videos\"]]></string>
     <string name="crash_clipboard">Journal de plantage copié</string>
     <string name="settings_category_full_player">Lecteur complet</string>
     <string name="settings_trim_lyrics">Enlever les espaces autour des paroles</string>
@@ -191,7 +191,7 @@
     <string name="delete">Supprimer</string>
     <string name="yes">Oui</string>
     <string name="no">Non</string>
-    <string name="grant_audio"><![CDATA[Veuillez accorder l'autorisation \"Music and audio\"]]></string>
+    <string name="grant_audio"><![CDATA[Veuillez accorder l\'autorisation \"Music and audio\"]]></string>
     <string name="play_all">Tout jouer</string>
     <string name="remove">Retirer</string>
     <string name="scroll_to_songs">Aller aux chansons</string>
