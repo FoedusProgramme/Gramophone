@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="dismiss">Адмена</string>
+    <string name="dismiss">Адхіліць</string>
     <string name="settings_category_behavior">Паводзіны</string>
     <string name="go_to_album">Перайсці да альбома</string>
     <string name="category_dates">Дата</string>
     <string name="unknown_album">Невядомы альбом</string>
     <string name="sort_by_size">Па памеры</string>
     <string name="dialog_title">Назва</string>
-    <string name="settings_repository">Рэпазітар</string>
+    <string name="settings_repository">Рэпазіторый</string>
     <string name="sort_by_artist">Па выканаўцу</string>
     <string name="settings_mediastore_filter">Мінімальная працягласць песні (ў секундах)</string>
     <string name="category_songs">Трэк</string>
-    <string name="settings_app_theme">Тэма дадатку</string>
+    <string name="settings_app_theme">Тэма праграмы</string>
     <string name="compact_list">Спіс (кампактны)</string>
     <string name="dialog_album_artist">Выканаўца альбома</string>
     <string name="equalizer_not_found">Эквалайзер не знойдзены!</string>
@@ -49,11 +49,11 @@
 \nАўтарскае права © 2024 Akane Foundation</string>
     <string name="playlist_favourite">Абраны</string>
     <string name="home_menu_settings">Налады</string>
-    <string name="home_menu_refresh">Перасканаваць</string>
+    <string name="home_menu_refresh">Абнавіць</string>
     <string name="settings_contributors">Удзельнікі распрацоўкі</string>
     <string name="settings_category_appearance">Знешні выгляд</string>
     <string name="dialog_album">Альбом</string>
-    <string name="settings_default_progress_bar">Панэль выканання па змаўчанні</string>
+    <string name="settings_default_progress_bar">Перадвызначаны панэль прагрэсу</string>
     <string name="details">Звесткі</string>
     <string name="home_menu_equalizer">Эквалайзер</string>
     <string name="dialog_path">Шлях</string>
@@ -73,7 +73,7 @@
     <string name="follow_system">Сістэмны</string>
     <string name="list">Спіс</string>
     <string name="search">Пошук</string>
-    <string name="now_playing">Зараз гуляе</string>
+    <string name="now_playing">Зараз іграе</string>
     <string name="grid">Сетка</string>
     <plurals name="songs">
         <item quantity="one">%d трэк</item>
@@ -93,7 +93,7 @@
     <string name="home_menu_search">Пошук</string>
     <string name="no_lyric_found">Тэкст песні не знойдзены</string>
     <string name="layout">Адлюстраванне</string>
-    <string name="play_next">Гуляць далей</string>
+    <string name="play_next">Іграць далей</string>
     <string name="unknown_version">Невядомая версія</string>
     <string name="unknown_artist">Невядомы выканаўца</string>
     <string name="repeat_mode">Рэжым паўтору</string>
@@ -151,7 +151,7 @@
     <string name="settings_lyrics_center_summary">Выкарыстоўваць выраўноўванне па цэнтры для тэкстаў песень</string>
     <string name="dialog_lyrics">Тэкст песні</string>
     <string name="settings_title_bold_summary">Выкарыстоўваць тоўсты загаловак для прайгравальніка</string>
-	<string name="deny_images">Адмоўцеся ад дазволу «Фота і відэа»</string>
+    <string name="deny_images">Адмоўцеся ад дазволу «Фота і відэа»</string>
     <string name="grant_images">Калі ласка, дайце дазвол на «Фота і відэа»</string>
     <string name="settings_color_accuracy_summary">Больш дакладная генерацыя колеру</string>
     <string name="crash_clipboard">Журнал збояў скапіяваны ў буфер абмену</string>
@@ -163,7 +163,7 @@
     <string name="timer">Таймер сну</string>
     <string name="sort_by_release_date">Дата выхаду</string>
     <string name="album_covers_enhance">Палепшаная загрузка вокладак альбомаў</string>
-    <string name="share">Падзяліцца</string>
+    <string name="share">Абагуліць</string>
     <string name="album_covers_enhance_desc">Падтрымка вокладак песень высокай якасці і магчымасць адрозніваць вокладкі альбомаў і песень (патрабуецца доступ да фатаграфій)</string>
     <string name="fgs_failed_channel">Не ўдалося аднавіць прайграванне</string>
     <string name="fgs_failed_title">Не ўдалося аднавіць прайграванне музыкі</string>
