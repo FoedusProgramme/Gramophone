@@ -67,4 +67,15 @@
     <string name="dialog_album_artist">Albumartisto</string>
     <string name="recently_added">Laste aldonitaj</string>
     <string name="natural_order">Natura ordigo</string>
+    <string name="settings_lyrics_multiline">Legi plurliniajn kanzontekstojn</string>
+    <string name="settings_play_on_launch">Ludi eklanĉe</string>
+    <string name="settings_play_on_launch_summary">Ludi muzikon kiam lanĉita</string>
+    <string name="settings_blacklist">Malpermesi</string>
+    <string name="settings_blacklist_folder_summary">Ellasi kanzonojn el certaj dosierujoj</string>
+    <string name="settings_blacklist_folder">Malpermesi dosierujojn</string>
+    <string name="settings_category_basic_info">Bazaj informoj</string>
+    <string name="settings_category_filters">Filtroj</string>
+    <string name="settings_preference_category_application">Aplikaĵo</string>
+    <string name="preference_category_quality">Kvalito</string>
+    <string name="settings_category_misc">Diversaj</string>
 </resources>
