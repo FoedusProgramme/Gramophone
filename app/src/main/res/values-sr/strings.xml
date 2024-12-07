@@ -73,8 +73,8 @@
     <string name="settings_category_full_player">Puni plejer</string>
     <string name="settings_crash_application">Pad aplikacije</string>
     <string name="dialog_lyrics">Tekstovi</string>
-    <string name="deny_images">Molim odbijte dozvolu „Slike i video snimci“</string>
-    <string name="grant_images">Molim odobrite dozvolu „Slike i video snimci“</string>
+    <string name="deny_images"><![CDATA[Molimo uskratite dozvolu \"Photos and videos\" permission]]></string>
+    <string name="grant_images"><![CDATA[Molimo odobritet \"Photos and videos\" permission]]></string>
     <string name="fgs_failed_title">Nastavljanje reprodukcije muzike nije uspelo</string>
     <string name="fgs_failed_text">Kliknite ovde da otvorite aplikaciju i nastavite sa reprodukcijom</string>
     <string name="fgs_failed_channel">Nastavak reprodukcije nije uspeo</string>
@@ -140,7 +140,7 @@
     <string name="dialog_edit_metadata">Uredi</string>
     <string name="delete_failed">Brisanje pesme nije uspelo</string>
     <string name="album_cover">Omot albuma</string>
-	<string name="album_covers_enhance">Poboljšano učitavanje omota albuma</string>
+    <string name="album_covers_enhance">Poboljšano učitavanje omota albuma</string>
     <string name="crash_clipboard">Evidencija pada je kopirana u međuspremnik</string>
     <string name="settings_trim_lyrics">Uklonite razmake oko teksta</string>
     <string name="timer">Tajmer za spavanje</string>
@@ -166,7 +166,7 @@
     <string name="settings_category_basic_info">Osnovne informacije</string>
     <string name="album_covers_enhance_desc">Podržite visokokvalitetne omote pesama i dozvolite da se album i omot pesme razlikuju (zahteva pristup fotografijama)</string>
     <string name="preference_category_quality">Kvalitet</string>
-    <string name="grant_audio">Odobrite dozvolu „Muzika i audio“</string>
+    <string name="grant_audio"><![CDATA[Molimo odobrite \"Music and audio\" permission]]></string>
     <string name="back">Nazad</string>
     <string name="play">Pusti</string>
     <string name="more">Više</string>
@@ -174,4 +174,27 @@
     <string name="settings_preference_category_home">Početna stranica</string>
     <string name="play_all">Pusti sve</string>
     <string name="sort">Sortiraj</string>
+    <string name="app_name">Gramofon</string>
+    <string name="home_menu_shuffle">Promešaj sve</string>
+    <string name="shuffle_all">Promešaj sve</string>
+    <string name="settings_lyrics_ui_summary">Eksperimentalno korisničko sučelje za prikaz teksta reči po reč sa naprednim funkcijama</string>
+    <string name="settings_lyrics_parser_summary">Omogućite novi parser teksta koji podržava sinhronizaciju reč po reč, indikator zvučnika, ofset i još mnogo toga</string>
+    <string name="settings_status_bar_lyrics_title">Tekst trake statusa</string>
+    <string name="settings_status_bar_lyrics_summary">Omogući MeiZu metod prikazivanja tekstova u statusnoj traci (dostupno samo na nekim uređajima)</string>
+    <string name="skip_next">Preskoči na sledeće</string>
+    <string name="settings_lyrics_ui">Omogući novi korisnički interfejs za tekst</string>
+    <string name="position_slider">Pozicioni klizač</string>
+    <string name="settings_lyrics_parser">Novi parser teksta</string>
+    <string name="scroll_to_albums">Listajte do albuma</string>
+    <string name="scroll_to_songs">Listajte do pesama</string>
+    <string name="skip_previous">Preskoči na prethodni</string>
+    <string name="delete">Izbriši</string>
+    <string name="yes">Da</string>
+    <string name="no">Ne</string>
+    <string name="seekbar">Traka za traženje</string>
+    <string name="divider">Razdelnik</string>
+    <string name="tab_order">Konfigurišite redosled kartica</string>
+    <string name="tab_order_summary">Aplikacija će prikazati prvu karticu pri pokretanju. Kartice nakon razdelnika će biti skrivene.</string>
+    <string name="remove">Ukloni</string>
+    <string name="lyric_widget_description">Vidžet koji prikazuje tekstove medija koji se trenutno reprodukuju</string>
 </resources>
