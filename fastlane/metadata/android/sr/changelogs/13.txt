@@ -1,0 +1,4 @@
+- Redizajn plejera datoteka
+- Držite ekran uključen dok gledate tekstove
+- Podržava SD kartice na kartici Sistem datoteka
+- Ispravke grešaka

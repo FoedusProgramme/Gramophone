@@ -1,0 +1,3 @@
+- Dodati tekst u statusnoj traci za MeiZu uređaje, izaberite prilagođene ROM-ove i Liric Getter Ksposed (zahvaljujući @ghhccghk)
+- Ispravljeno više grešaka i rušenja
+- Ažurirani prevodi kao i obično (zahvaljujući našim vrednim prevodiocima!)
