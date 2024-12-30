@@ -199,6 +199,6 @@
     <string name="settings_lyrics_ui_summary">Експериментальний інтерфейс користувача для відображення слова за словом лірики з розширеними функціями</string>
     <string name="settings_status_bar_lyrics_title">Тексти пісень у рядку стану</string>
     <string name="delete">Видалити</string>
-    <string name="yes">так</string>
-    <string name="no">немає</string>
+    <string name="yes">Так</string>
+    <string name="no">Ні</string>
 </resources>
