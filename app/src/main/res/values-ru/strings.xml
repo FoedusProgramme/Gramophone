@@ -147,7 +147,7 @@
     <string name="delete_failed">Не удалось удалить песню</string>
     <string name="dialog_edit_metadata">Редактировать</string>
     <string name="album_cover">Обложка альбома</string>
-	<string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
+    <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
     <string name="dialog_lyrics">Текст песни</string>
     <string name="settings_preference_category_application">Приложение</string>
     <string name="settings_category_basic_info">Основная информация</string>
@@ -199,4 +199,8 @@
     <string name="settings_lyrics_ui_summary">Экспериментальный дизайн с текстом песни по словам и расширенными возможностями</string>
     <string name="settings_status_bar_lyrics_summary">Включить метод показа текста песни MeiZu в строке состояния (доступно только на некоторых устройствах)</string>
     <string name="lyric_widget_description">Виджет, показывающий тексты песен, воспроизводимых в данный момент</string>
+    <string name="home_menu_shuffle">Перемешать всё</string>
+    <string name="delete">Удалить</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
 </resources>
