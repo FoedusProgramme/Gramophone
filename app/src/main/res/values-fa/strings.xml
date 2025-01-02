@@ -101,7 +101,7 @@
     <string name="settings_category_misc">متفرقه</string>
     <string name="preference_category_quality">کیفیت</string>
     <string name="crash_clipboard">گزارش فروپاشی در تخته‌گیره رونوشت شد</string>
-	<string name="dialog_edit_metadata">ویرایش</string>
+    <string name="dialog_edit_metadata">ویرایش</string>
     <string name="dialog_lyrics">ترانه‌ها</string>
     <string name="deny_images"><![CDATA[لطفا اجازۀ دسترسی به «تصاویر و ویدیوها» را نپذیرید]]></string>
     <string name="settings_trim_lyrics">برداشتن فاصله‌های اطراف ترانه‌ها</string>
@@ -186,4 +186,11 @@
     <string name="settings_lyrics_parser_summary">به کار انداختن تجزیه‌گر ترانۀ جدید که از همگام‌سازی کلمه‌به‌کلمه، نشانگر سخنگو، جابه‌جایی و بیشتر پشتیبانی می‌کند</string>
     <string name="settings_lyrics_ui">به کار انداختن رابط کاربری جدید ترانه</string>
     <string name="settings_lyrics_ui_summary">رابط کاربری آزمایشی برای نمایش ترانۀ کلمه‌به‌کلمه با قابلیت‌های پیشرفته</string>
+    <string name="home_menu_shuffle">بر زدن همه</string>
+    <string name="settings_status_bar_lyrics_title">ترانۀ نوار وضعیت</string>
+    <string name="settings_status_bar_lyrics_summary">به کار انداختن روش نمایشی ترانۀ MeiZu در نوار وضعیت (فقط در بعضی دستگاه‌ها در دسترس است)</string>
+    <string name="lyric_widget_description">ویجتی که ترانۀ رسانۀ فعلی درحال پخش را نشان می‌دهد</string>
+    <string name="delete">پاک کردن</string>
+    <string name="yes">بله</string>
+    <string name="no">خیر</string>
 </resources>
