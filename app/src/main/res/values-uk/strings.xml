@@ -201,4 +201,6 @@
     <string name="delete">Видалити</string>
     <string name="yes">Так</string>
     <string name="no">Ні</string>
+    <string name="sort_by_album_artist">Виконавець альбому</string>
+    <string name="sort_by_file_path">Шлях до файлу</string>
 </resources>
