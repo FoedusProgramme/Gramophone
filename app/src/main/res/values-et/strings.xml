@@ -193,4 +193,6 @@
     <string name="no">Ei</string>
     <string name="delete">Kustuta</string>
     <string name="yes">Jah</string>
+    <string name="sort_by_album_artist">Albumi esitaja</string>
+    <string name="sort_by_file_path">Faili asukoht</string>
 </resources>
