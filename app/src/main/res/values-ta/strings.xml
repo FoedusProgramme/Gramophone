@@ -155,9 +155,9 @@
     <string name="delete_failed">பாடல் நீக்குவது தோல்வியடைந்தது</string>
     <string name="album_covers_enhance">மேம்படுத்தப்பட்ட ஆல்பம் கவர் ஏற்றுதல்</string>
     <string name="album_covers_enhance_desc">உயர் தரமான பாடல் அட்டைகளை ஆதரிக்கவும், ஆல்பம் மற்றும் பாடல் அட்டையை வேறுபடுத்த அனுமதிக்கவும் (புகைப்படங்கள் அணுகல் தேவை)</string>
-    <string name="deny_images">&lt;! [சி.டி.ஏ.டி.ஏ [தயவுசெய்து \\ \"புகைப்படங்கள் மற்றும் வீடியோக்களை மறுக்கவும் \\\" அனுமதியை]&gt;&gt;</string>
-    <string name="grant_images">&lt;! [சி.டி.ஏ.டி.ஏ [தயவுசெய்து \\ \"புகைப்படங்கள் மற்றும் வீடியோக்களை வழங்கவும் \\\" அனுமதி]]&gt;</string>
-    <string name="grant_audio">&lt;! [CDATA [தயவுசெய்து \\ \"இசை மற்றும் ஆடியோ \\\" இசைவு வழங்கவும்]&gt;</string>
+    <string name="deny_images"><![CDATA[தயவுசெய்து \"புகைப்படங்கள் மற்றும் வீடியோக்களை மறுக்கவும்\" அனுமதியை]]></string>
+    <string name="grant_images"><![CDATA[தயவுசெய்து \"புகைப்படங்கள் மற்றும் வீடியோக்களை வழங்கவும்\" அனுமதி]]></string>
+    <string name="grant_audio"><![CDATA[தயவுசெய்து \"இசை மற்றும் ஆடியோ\" இசைவு வழங்கவும்]]></string>
     <string name="crash_clipboard">இடைநிலைப்பலகைக்கு க்ராச் பதிவை நகலெடுத்தது</string>
     <string name="settings_trim_lyrics">பாடல் வரிகளைச் சுற்றியுள்ள இடங்களை அகற்று</string>
     <string name="timer">தூக்க நேரங்குறிகருவி</string>
