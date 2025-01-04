@@ -189,4 +189,6 @@
     <string name="no">いいえ</string>
     <string name="delete">削除</string>
     <string name="yes">はい</string>
+    <string name="sort_by_album_artist">アルバムアーティスト</string>
+    <string name="sort_by_file_path">ファイルパス</string>
 </resources>
