@@ -119,7 +119,7 @@
     <string name="settings_category_basic_info">Basisinformation</string>
     <string name="settings_category_filters">Filter</string>
     <string name="settings_category_misc">Sonstiges</string>
-	<string name="delete_failed">Löschen des Titels fehlgeschlagen</string>
+    <string name="delete_failed">Löschen des Titels fehlgeschlagen</string>
     <string name="settings_color_accuracy">Farbgenauigkeit</string>
     <string name="settings_content_based_color">Inhaltsbasierte Farben</string>
     <string name="settings_content_based_color_summary">Albumbasierte Farbgenerierung aktivieren</string>
@@ -190,4 +190,9 @@
     <string name="settings_status_bar_lyrics_summary">MeiZu Methode aktivieren, die Liedtexte in der Statusleiste anzeigt (nur auf manchen Geräten verfügbar)</string>
     <string name="home_menu_shuffle">Alle zufällig abspielen</string>
     <string name="lyric_widget_description">Widget, das den Liedtext des aktuellen Titels anzeigt</string>
+    <string name="sort_by_file_path">Dateipfad</string>
+    <string name="sort_by_album_artist">Interpret des Albums</string>
+    <string name="delete">Löschen</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nein</string>
 </resources>
