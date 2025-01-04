@@ -196,4 +196,6 @@
     <string name="yes">Sí</string>
     <string name="delete">Suprimeix</string>
     <string name="no">No</string>
+    <string name="sort_by_file_path">Camí del fitxer</string>
+    <string name="sort_by_album_artist">Artista de l\'àlbum</string>
 </resources>
