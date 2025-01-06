@@ -189,4 +189,6 @@
     <string name="delete">삭제</string>
     <string name="yes">예</string>
     <string name="no">아니오</string>
+    <string name="sort_by_album_artist">앨범 아티스트</string>
+    <string name="sort_by_file_path">파일 경로</string>
 </resources>
