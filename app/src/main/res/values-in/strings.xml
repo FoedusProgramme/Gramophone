@@ -188,4 +188,6 @@
     <string name="yes">Ya</string>
     <string name="delete">Hapus</string>
     <string name="no">Tidak</string>
+    <string name="sort_by_album_artist">Album artis</string>
+    <string name="sort_by_file_path">Lokasi file</string>
 </resources>
