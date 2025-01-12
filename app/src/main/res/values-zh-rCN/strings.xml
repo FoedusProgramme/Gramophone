@@ -189,4 +189,6 @@
     <string name="delete">删除</string>
     <string name="yes">是</string>
     <string name="no">不是</string>
+    <string name="sort_by_file_path">文件路径</string>
+    <string name="sort_by_album_artist">专辑艺术家</string>
 </resources>
