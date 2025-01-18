@@ -26,7 +26,7 @@
     <string name="folders">Cartelle</string>
     <string name="natural_order">Ordine normale</string>
     <string name="grid">Griglia</string>
-    <string name="layout">Schermo</string>
+    <string name="layout">Mostra</string>
     <string name="equalizer_not_found">Equalizzatore non trovato!</string>
     <string name="compact_list">Lista (compatta)</string>
     <string name="settings_default_progress_bar_summary">Abilita barra avanzamento stile material</string>
@@ -192,4 +192,6 @@
     <string name="delete">Elimina</string>
     <string name="yes">Sì</string>
     <string name="no">No</string>
+    <string name="sort_by_album_artist">Artista album</string>
+    <string name="sort_by_file_path">Percorso file</string>
 </resources>
