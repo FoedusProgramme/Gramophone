@@ -143,7 +143,7 @@
     <string name="layout">العرض</string>
     <string name="settings_customization">التَّخصيص</string>
     <string name="settings_blacklist_folder">مُجلَّدات القائمة السّوداء</string>
-    <string name="settings_blacklist_folder_summary">فلترة أغانٍ من مجلَّداتٍ معيَّنة.</string>
+    <string name="settings_blacklist_folder_summary">فلترة أغانٍ من مجلَّداتٍ معيَّنة</string>
     <string name="play_next">شغِّل تالِيَاً</string>
     <string name="settings_float_output_summary">تمكين مخَرجٍ ٣٢ بِتّ عائم</string>
     <string name="unknown_version">إصدارٌ غير معروف</string>
@@ -152,7 +152,7 @@
     <string name="album_cover">صورة غلاف الألبوم</string>
     <string name="settings_crash_application">اجعل البرنامج يغلق</string>
     <string name="dialog_edit_metadata">تعديل</string>
-    <string name="dialog_lyrics">الكلمات</string>
+    <string name="dialog_lyrics">كلمات الأغنية</string>
     <string name="settings_preference_category_application">التَّطبيق</string>
     <string name="settings_category_basic_info">معلوماتٌ مبدئيَّة</string>
     <string name="settings_category_filters">فَلَاتِر</string>
@@ -186,7 +186,7 @@
     <string name="settings_status_bar_lyrics_title">كلمات شريط الحالة</string>
     <string name="tab_order_summary">سيعرض التطبيق اللسان الأول عند البدء، وستُخفى الألسنة التي تَلِي الفاصل.</string>
     <string name="grant_audio"><![CDATA[رجاءً امنح \"إذن الموسيقى\" والملفات الصوتية]]></string>
-    <string name="remove">احذف</string>
+    <string name="remove">أزِل</string>
     <string name="settings_lyrics_parser_summary">فعّل موزّع الكلمات الجديد الداعم لمزامنة الأسطر كمةً كلمة، وتحديد المُغنِّ، والتأخير وغير ذلك</string>
     <string name="sort_by_file_path">مسار الملف</string>
     <string name="no">لا</string>
