@@ -206,4 +206,5 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="sort_by_file_path">File path</string>
+    <string name="spk_channel_out_mono">Mono</string>
 </resources>
