@@ -195,4 +195,5 @@
     <string name="yes">Jah</string>
     <string name="sort_by_album_artist">Albumi esitaja</string>
     <string name="sort_by_file_path">Faili asukoht</string>
+    <string name="spk_channel_out_mono">Mono</string>
 </resources>
