@@ -256,24 +256,14 @@
     <string name="spk_encoding_opus">Opus</string>
     <string name="spk_encoding_dts_uhd_p2">DTS-X</string>
     <string name="spk_encoding_e_ac3">E-AC-3</string>
-    <string name="device_type_remote_tablet_docked">Tauleta (acoblada)</string>
     <string name="spk_encoding_aac_er_bsac">AAC ER BSAC</string>
-    <string name="device_type_remote_tablet">Tauleta</string>
     <string name="spk_encoding_pcm_16bit">PCM de 16 bits</string>
     <string name="spk_encoding_pcm_24bit">PCM de 24 bits</string>
     <string name="device_type_bluetooth_a2dp">Bluetooth A2DP</string>
     <string name="spk_encoding_ac3">AC-3</string>
-    <string name="device_type_remote_car">Cotxe</string>
     <string name="spk_encoding_aac_he_v1">HE-AAC v1</string>
     <string name="device_type_unknown">Desconegut</string>
-    <string name="device_type_game_remote_console">Videoconsola</string>
     <string name="spk_encoding_aac_lc">AAC-LC</string>
-    <string name="device_type_tv">TV</string>
-    <string name="gdevice_type_unknown">Desconegut</string>
-    <string name="device_type_remote_speaker">Altaveu remot</string>
-    <string name="device_type_audio_video_receiver">Receptor d\'àudio vídeo</string>
-    <string name="device_type_remote_smartwatch">Rellotge intel·ligent</string>
-    <string name="device_type_remote_smartphone">Telèfon intel·ligent</string>
     <string name="device_type_builtin_speaker">Altaveu integrat</string>
     <string name="device_type_wired_headphones">Auriculars amb cable</string>
     <string name="device_type_wired_headset">Auriculars amb micròfon amb cable</string>
@@ -286,7 +276,5 @@
     <string name="device_type_ble_headset">Auriculars amb micròfon Bluetooth LE</string>
     <string name="device_type_hdmi_arc">Canal de retorn d\'àudio HDMI</string>
     <string name="device_type_hdmi_earc">Canal de retorn d\'àudio millorat HDMI</string>
-    <string name="device_type_group">Grup de dispositius</string>
-    <string name="device_type_remote_computer">Ordinador</string>
     <string name="spk_encoding_aac_eld">AAC-ELD</string>
 </resources>

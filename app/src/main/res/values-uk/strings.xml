@@ -268,11 +268,7 @@
     <string name="spk_encoding_invalid">Недійсний</string>
     <string name="spk_encoding_pcm_32bit_big_endian">32-розрядний (int) PCM (великий порядок байтів)</string>
     <string name="spk_encoding_e_ac3_joc">E-AC-3-JOC</string>
-    <string name="device_type_group">Група пристроїв</string>
-    <string name="device_type_tv">TV</string>
     <string name="device_type_ble_headset">Гарнітура Bluetooth LE</string>
-    <string name="device_type_audio_video_receiver">Аудіо-відео приймач</string>
-    <string name="device_type_remote_computer">Комп\'ютер</string>
     <string name="device_type_hdmi_earc">HDMI Покращений зворотний звуковий канал</string>
     <string name="device_type_unknown">Невідомий</string>
     <string name="device_type_hdmi">HDMI</string>
@@ -280,18 +276,10 @@
     <string name="device_type_builtin_speaker">Вбудований динамік</string>
     <string name="device_type_usb_device">пристрій USB</string>
     <string name="device_type_hearing_aid">Слуховий апарат</string>
-    <string name="device_type_remote_tablet">Планшет</string>
-    <string name="device_type_remote_tablet_docked">Планшет (підключений)</string>
-    <string name="device_type_game_remote_console">Ігрова консоль</string>
-    <string name="device_type_remote_car">Автомобіль</string>
-    <string name="device_type_remote_smartwatch">Розумний годинник</string>
-    <string name="device_type_remote_smartphone">Смартфон</string>
     <string name="device_type_dock">Док</string>
     <string name="device_type_usb_headset">USB гарнітура</string>
     <string name="device_type_hdmi_arc">HDMI Зворотний аудіоканал</string>
     <string name="device_type_wired_headset">Дротова гарнітура</string>
     <string name="device_type_wired_headphones">Дротові навушники</string>
     <string name="device_type_bluetooth_a2dp">Bluetooth A2DP</string>
-    <string name="gdevice_type_unknown">Невідомий</string>
-    <string name="device_type_remote_speaker">Віддалений динамік</string>
 </resources>
