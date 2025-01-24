@@ -282,4 +282,11 @@
     <string name="device_type_wired_headset">Дротова гарнітура</string>
     <string name="device_type_wired_headphones">Дротові навушники</string>
     <string name="device_type_bluetooth_a2dp">Bluetooth A2DP</string>
+    <string name="device_type_aux_line">лінія AUX</string>
+    <string name="device_type_line_digital">Цифрова лінія</string>
+    <string name="device_type_ble_broadcast">Трансляція Bluetooth LE</string>
+    <string name="device_type_line_analog">Аналогова лінія</string>
+    <string name="device_type_ble_speaker">Колонка Bluetooth LE</string>
+    <string name="device_type_dock_digital">Цифрова док-станція</string>
+    <string name="device_type_dock_analog">Аналоговий док</string>
 </resources>
