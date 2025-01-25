@@ -277,4 +277,13 @@
     <string name="device_type_hdmi_arc">Canal de retorn d\'àudio HDMI</string>
     <string name="device_type_hdmi_earc">Canal de retorn d\'àudio millorat HDMI</string>
     <string name="spk_encoding_aac_eld">AAC-ELD</string>
+    <string name="device_type_ble_broadcast">Emissió Bluetooth LE</string>
+    <string name="device_type_line_analog">Línia analògica</string>
+    <string name="device_type_dock_digital">Acoblador digital</string>
+    <string name="device_type_ble_speaker">Altaveu Bluetooth LE</string>
+    <string name="settings_pixel_perfect_measurement_legacy_title">Mesura del text de píxels perfectes</string>
+    <string name="device_type_line_digital">Línia digital</string>
+    <string name="device_type_aux_line">Línia AUX</string>
+    <string name="device_type_dock_analog">Acoblador analògic</string>
+    <string name="settings_pixel_perfect_measurement_legacy_summary">Abans de l\'Android 15, les mesures del text es basen en avanços en lloc de quadre contenidor. Per a evitar retalls de degradats en les lletres, afegim uns quants píxels als costats. Tanmateix, això pot causar defectes visuals no desitjats si l\'interlletratge està activat, que es mitiguen si aquest commutador està activat renderitzant text a un mapa de bits i analitzant-lo per a extreure dades d\'espaiat adequades.</string>
 </resources>
