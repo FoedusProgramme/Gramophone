@@ -289,4 +289,6 @@
     <string name="spk_encoding_pcm_float">32-bit (float) PCM</string>
     <string name="spk_encoding_e_ac3_joc">E-AC-3-JOC</string>
     <string name="device_type_ble_headset">Zestaw słuchawkowy Bluetooth LE</string>
+    <string name="settings_pixel_perfect_measurement_legacy_title">Doskonały pomiar tekstu w pikselach</string>
+    <string name="settings_pixel_perfect_measurement_legacy_summary">Przed Androidem 15 pomiary tekstu są oparte na \"advances\" zamiast \"bounding box\". Aby uniknąć przycinania gradientu w tekstach, dodajemy kilka pikseli po bokach. Może to jednak powodować niezamierzone artefakty, jeśli kerning jest włączony, które są łagodzone, jeśli ten przełącznik jest włączony poprzez renderowanie tekstu do mapy bitowej i analizowanie go w celu wyodrębnienia odpowiednich danych odstępów.</string>
 </resources>
