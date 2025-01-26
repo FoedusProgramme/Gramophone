@@ -277,4 +277,6 @@
     <string name="device_type_ble_speaker">Bluetooth LE スピーカー</string>
     <string name="device_type_ble_broadcast">Bluetooth LE ブロードキャスト</string>
     <string name="spk_channel_out_7point1_surround">サラウンド (7.1)</string>
+    <string name="settings_pixel_perfect_measurement_legacy_summary">Android 15 以前では、テキストの測定は境界ボックスではなくアドバンスに基づいています。歌詞のグラデーションクリッピングを回避するために、側面にいくつかのピクセルを追加します。ただし、カーニングが有効化されていると意図しないアーティファクトが発生する可能性があります。この機能に切り替えるとテキストをビットマップにレンダリングと分析をして適切な間隔データを抽出することでアーティファクトを軽減させます。</string>
+    <string name="settings_pixel_perfect_measurement_legacy_title">ピクセルパーフェクトなテキスト測定</string>
 </resources>
