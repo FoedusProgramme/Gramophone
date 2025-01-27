@@ -294,4 +294,5 @@
     <string name="device_type_ble_broadcast">Bluetooth LE Broadcast</string>
     <string name="settings_pixel_perfect_measurement_legacy_title">Pixel perfect text measurement</string>
     <string name="settings_pixel_perfect_measurement_legacy_summary">Before Android 15, text measurements are based on advances instead of bounding box. To avoid gradient clipping in lyrics, we add a few pixels to the sides. This however may cause unintended artifacts if kerning is enabled, which are mitigated if this toggle is enabled by rendering text to a bitmap and analysing it to extract proper spacing data.</string>
+    <string name="open_in_gramophone">Open in Gramophone</string>
 </resources>
