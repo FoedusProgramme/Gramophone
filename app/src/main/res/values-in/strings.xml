@@ -17,7 +17,7 @@
     <string name="category_playlists">Daftar Putar</string>
     <string name="home_menu_refresh">Muat ulang</string>
     <string name="home_menu_search">Cari</string>
-    <string name="category_songs">Lagu</string>
+    <string name="category_songs">Login</string>
     <string name="unknown_artist">Artis tidak dikenal</string>
     <plurals name="albums">
         <item quantity="other">%d Album</item>
@@ -190,4 +190,25 @@
     <string name="no">Tidak</string>
     <string name="sort_by_album_artist">Album artis</string>
     <string name="sort_by_file_path">Lokasi file</string>
+    <string name="spk_channel_out_stereo">Stereo</string>
+    <string name="spk_channel_out_5point1">5.1</string>
+    <string name="spk_channel_out_6point1">6.1</string>
+    <string name="spk_channel_out_front_left">Depan Kiri</string>
+    <string name="spk_channel_out_front_right">Depan Kanan</string>
+    <string name="spk_encoding_pcm_24bit">24-bit PCM</string>
+    <string name="spk_encoding_mp3">MP3</string>
+    <string name="spk_encoding_aac_lc">AAC-LC</string>
+    <string name="spk_encoding_aac_he_v1">HE-AAC v1</string>
+    <string name="spk_encoding_aac_he_v2">HE-AAC v2</string>
+    <string name="open_in_gramophone">Buka di Gramophone</string>
+    <string name="device_type_usb_device">Perangkat USB</string>
+    <string name="device_type_ble_headset">Headset Bluetooth LE</string>
+    <string name="settings_trim_lyrics_summary">Spasi sebelum atau sesudah huruf pertama pada sebuah baris lirik mungkin memiliki nilai artistik. Jika Anda tidak setuju, Anda dapat mengaktifkan tombol ini untuk menghapus spasi-spasi ini secara otomatis.</string>
+    <string name="spk_channel_out_mono">Mono</string>
+    <string name="device_type_hdmi">HDMI</string>
+    <string name="device_type_usb_accessory">Aksesoris USB</string>
+    <string name="device_type_usb_headset">Headset USB</string>
+    <string name="device_type_hearing_aid">Alat bantu dengar</string>
+    <string name="device_type_unknown">Tidak diketahui</string>
+    <string name="device_type_ble_speaker">Speaker Bluetooth LE</string>
 </resources>
