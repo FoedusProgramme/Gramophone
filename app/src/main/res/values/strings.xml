@@ -298,4 +298,6 @@
     <string name="open_in_gramophone">Open in Gramophone</string>
     <string name="settings_trim_lyrics_summary">Spaces before or after the first letter in a lyric line may have artistic value. If you disagree, you can turn on this toggle to remove these spaces automatically.</string>
     <string name="cannot_play_file">Cannot play this file</string>
+    <string name="settings_lyrics_no_animation">Disable animations</string>
+    <string name="settings_lyrics_no_animation_summary">Disable all line transition lyric animations</string>
 </resources>
