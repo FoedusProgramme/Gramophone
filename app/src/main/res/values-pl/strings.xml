@@ -294,4 +294,5 @@
     <string name="open_in_gramophone">Otwórz w Gramophone</string>
     <string name="settings_trim_lyrics_summary">Spacje przed lub po pierwszej literze w linii tekstu mogą mieć wartość artystyczną. Jeśli się z tym nie zgadzasz, możesz włączyć ten przełącznik, aby automatycznie usunąć te spacje.</string>
     <string name="delete_really">Czy naprawdę chcesz usunąć „%s”? Tego działania nie można cofnąć.</string>
+    <string name="cannot_play_file">Nie można odtworzyć tego pliku</string>
 </resources>
