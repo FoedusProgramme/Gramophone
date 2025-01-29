@@ -294,4 +294,7 @@
     <string name="open_in_gramophone">Відкрити в Gramophone</string>
     <string name="settings_trim_lyrics_summary">Пробіли перед або після першої літери в тексті можуть мати художню цінність. Якщо ви не згодні, ви можете ввімкнути цей перемикач, щоб автоматично видалити ці пробіли.</string>
     <string name="delete_really">Ви справді хочете видалити \"%s\"? Цю дію не можна скасувати.</string>
+    <string name="cannot_play_file">Неможливо відтворити цей файл</string>
+    <string name="settings_lyrics_no_animation">Вимкнути анімацію</string>
+    <string name="settings_lyrics_no_animation_summary">Вимкнути всі анімації переходу між рядками</string>
 </resources>
