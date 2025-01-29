@@ -285,4 +285,5 @@
     <string name="device_type_ble_speaker">Bluetooth LE kõlar</string>
     <string name="device_type_ble_broadcast">Bluetooth LE leviedastus</string>
     <string name="settings_pixel_perfect_measurement_legacy_title">Tekstimõõtmine piksli täpsusega</string>
+    <string name="delete_really">Kas sa kindlasti soovid „%s“ kustutada? Seda tegevust ei saa tagasi pöörata.</string>
 </resources>
