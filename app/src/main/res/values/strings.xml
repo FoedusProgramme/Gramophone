@@ -297,4 +297,5 @@
     <string name="settings_pixel_perfect_measurement_legacy_summary">Before Android 15, text measurements are based on advances instead of bounding box. To avoid gradient clipping in lyrics, we add a few pixels to the sides. This however may cause unintended artifacts if kerning is enabled, which are mitigated if this toggle is enabled by rendering text to a bitmap and analysing it to extract proper spacing data.</string>
     <string name="open_in_gramophone">Open in Gramophone</string>
     <string name="settings_trim_lyrics_summary">Spaces before or after the first letter in a lyric line may have artistic value. If you disagree, you can turn on this toggle to remove these spaces automatically.</string>
+    <string name="cannot_play_file">Cannot play this file</string>
 </resources>
