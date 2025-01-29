@@ -288,4 +288,8 @@
     <string name="settings_pixel_perfect_measurement_legacy_summary">Abans de l\'Android 15, les mesures del text es basen en avanços en lloc de quadre contenidor. Per a evitar retalls de degradats en les lletres, afegim uns quants píxels als costats. Tanmateix, això pot causar defectes visuals no desitjats si l\'interlletratge està activat, que es mitiguen si aquest commutador està activat renderitzant text a un mapa de bits i analitzant-lo per a extreure dades d\'espaiat adequades.</string>
     <string name="open_in_gramophone">Obre en el Gramophone</string>
     <string name="settings_trim_lyrics_summary">Els espais abans o després del primer caràcter d\'una línia de lletra poden tenir valor artístic. Si no hi esteu d\'acord, podeu activar aquest commutador per a eliminar aquests espais automàticament.</string>
+    <string name="cannot_play_file">Aquest fitxer no es pot reproduir</string>
+    <string name="settings_lyrics_no_animation">Desactiva les animacions</string>
+    <string name="settings_lyrics_no_animation_summary">Desactiva totes les animacions de transició de línia de les lletres</string>
+    <string name="delete_really">Segur que voleu suprimir «%s»? Aquesta acció no es pot desfer.</string>
 </resources>
