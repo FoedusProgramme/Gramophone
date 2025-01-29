@@ -293,4 +293,5 @@
     <string name="settings_pixel_perfect_measurement_legacy_title">Вимірювання ідеального піксельного тексту</string>
     <string name="open_in_gramophone">Відкрити в Gramophone</string>
     <string name="settings_trim_lyrics_summary">Пробіли перед або після першої літери в тексті можуть мати художню цінність. Якщо ви не згодні, ви можете ввімкнути цей перемикач, щоб автоматично видалити ці пробіли.</string>
+    <string name="delete_really">Ви справді хочете видалити \"%s\"? Цю дію не можна скасувати.</string>
 </resources>
