@@ -297,4 +297,6 @@
     <string name="cannot_play_file">Неможливо відтворити цей файл</string>
     <string name="settings_lyrics_no_animation">Вимкнути анімацію</string>
     <string name="settings_lyrics_no_animation_summary">Вимкнути всі анімації переходу між рядками</string>
+    <string name="settings_lyrics_char_scaling">Масштабування на основі символів для ліричного градієнта</string>
+    <string name="settings_lyrics_char_scaling_summary">Обчисліть швидкість градієнта лірики в символах на секунду замість пікселів на секунду. Швидкість може виглядати неправильно через різну довжину символів у пікселях.</string>
 </resources>
