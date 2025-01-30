@@ -292,4 +292,6 @@
     <string name="settings_lyrics_no_animation">Desactiva les animacions</string>
     <string name="settings_lyrics_no_animation_summary">Desactiva totes les animacions de transició de línia de les lletres</string>
     <string name="delete_really">Segur que voleu suprimir «%s»? Aquesta acció no es pot desfer.</string>
+    <string name="settings_lyrics_char_scaling">Escala basada en els caràcters de la pendent de les lletres</string>
+    <string name="settings_lyrics_char_scaling_summary">Calcula la velocitat de la pendent de les lletres en caràcters per segon en lloc de píxels per segon. Pot causar que la velocitat es vegi irregular a causa de la diferent longitud dels caràcters en píxels.</string>
 </resources>
