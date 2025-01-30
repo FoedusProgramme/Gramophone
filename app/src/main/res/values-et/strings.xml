@@ -289,4 +289,6 @@
     <string name="cannot_play_file">Selle faili esitamine ei õnnestu</string>
     <string name="settings_lyrics_no_animation_summary">Ära kasuta laulusõnade näitamisel reavahetusega seotud animatsioone</string>
     <string name="settings_lyrics_no_animation">Lülita animatsioonid välja</string>
+    <string name="settings_lyrics_char_scaling">Tähemärkide põhine laulusõnade gradiendi skaleerimine</string>
+    <string name="settings_lyrics_char_scaling_summary">Selle asemel, et kasutada piksleid sekundi kohta arvuta laulusõnade gradiendi kiirus tähemärkides sekundi kohta. Kuna tähemärkidel on pikslites erinevad pikkused, siis võib tekitada mulje, et kiirus pole ühtlane.</string>
 </resources>
