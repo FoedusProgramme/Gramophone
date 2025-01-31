@@ -295,4 +295,8 @@
     <string name="settings_trim_lyrics_summary">Spacje przed lub po pierwszej literze w linii tekstu mogą mieć wartość artystyczną. Jeśli się z tym nie zgadzasz, możesz włączyć ten przełącznik, aby automatycznie usunąć te spacje.</string>
     <string name="delete_really">Czy naprawdę chcesz usunąć „%s”? Tego działania nie można cofnąć.</string>
     <string name="cannot_play_file">Nie można odtworzyć tego pliku</string>
+    <string name="settings_lyrics_no_animation">Wyłącz animacje</string>
+    <string name="settings_lyrics_no_animation_summary">Wyłączenie wszystkich animacji przejść między wierszami</string>
+    <string name="settings_lyrics_char_scaling">Skalowanie oparte na znakach dla gradientu tekstu</string>
+    <string name="settings_lyrics_char_scaling_summary">Obliczanie prędkości gradientu tekstu w znakach na sekundę zamiast w pikselach na sekundę. Może to spowodować, że prędkość będzie wyglądać nieregularnie z powodu różnej długości znaków w pikselach.</string>
 </resources>
