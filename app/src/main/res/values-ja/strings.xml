@@ -282,4 +282,9 @@
     <string name="open_in_gramophone">Gramophone で開く</string>
     <string name="delete_really">本当に「%s」を削除しますか？この操作は元に戻せません。</string>
     <string name="settings_trim_lyrics_summary">歌詞の前後のスペースは芸術的な価値がある場合があります。同意しない場合は、この設定を ON に切り替えてスペースを自動的に削除することができます。</string>
+    <string name="cannot_play_file">このファイルは再生できません</string>
+    <string name="settings_lyrics_no_animation_summary">歌詞の遷移アニメーションをすべて無効化します</string>
+    <string name="settings_lyrics_char_scaling">文字ベースの歌詞のグラデーションのスケーリング</string>
+    <string name="settings_lyrics_no_animation">アニメーションを無効化</string>
+    <string name="settings_lyrics_char_scaling_summary">歌詞のグラデーション速度をピクセル/秒ではなく文字/秒で計算します。ピクセル単位の文字長が異なるため、速度が不規則に見える場合があります。</string>
 </resources>
