@@ -299,4 +299,7 @@
     <string name="settings_lyrics_no_animation_summary">Вимкнути всі анімації переходу між рядками</string>
     <string name="settings_lyrics_char_scaling">Масштабування на основі символів для ліричного градієнта</string>
     <string name="settings_lyrics_char_scaling_summary">Обчисліть швидкість градієнта лірики в символах на секунду замість пікселів на секунду. Швидкість може виглядати неправильно через різну довжину символів у пікселях.</string>
+    <string name="dialog_bitrate">Бітрейт</string>
+    <string name="bitrate_unknown">Невідомий бітрейт</string>
+    <string name="bitrate_format">%1$d кбіт/с</string>
 </resources>
