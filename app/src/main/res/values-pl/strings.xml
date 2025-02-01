@@ -299,4 +299,7 @@
     <string name="settings_lyrics_no_animation_summary">Wyłączenie wszystkich animacji przejść między wierszami</string>
     <string name="settings_lyrics_char_scaling">Skalowanie oparte na znakach dla gradientu tekstu</string>
     <string name="settings_lyrics_char_scaling_summary">Obliczanie prędkości gradientu tekstu w znakach na sekundę zamiast w pikselach na sekundę. Może to spowodować, że prędkość będzie wyglądać nieregularnie z powodu różnej długości znaków w pikselach.</string>
+    <string name="dialog_bitrate">Szybkość transmisji</string>
+    <string name="bitrate_unknown">Nieznana szybkość transmisji</string>
+    <string name="bitrate_format">%1$d kbps</string>
 </resources>
