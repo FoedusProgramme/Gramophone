@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.enableEdgeToEdgePaddingListener
+import org.akanework.gramophone.logic.getBitrate
 import org.akanework.gramophone.logic.getFile
 import org.akanework.gramophone.logic.hasGenreInMediaStore
 import org.akanework.gramophone.logic.toLocaleString
@@ -56,6 +57,7 @@ class DetailDialogFragment : BaseFragment(false) {
         val durationTextView = rootView.findViewById<TextView>(R.id.duration)
         val mimeTypeTextView = rootView.findViewById<TextView>(R.id.mime)
         val pathTextView = rootView.findViewById<TextView>(R.id.path)
+        val bitRateTextView = rootView.findViewById<TextView>(R.id.bit_rate)
         albumCoverImageView.load(mediaMetadata.artworkUri) {
             placeholderScaleToFit(R.drawable.ic_default_cover)
             crossfade(true)
@@ -82,6 +84,8 @@ class DetailDialogFragment : BaseFragment(false) {
         mimeTypeTextView.text = mediaItem.localConfiguration?.mimeType ?: "(null)"
         pathTextView.text = mediaItem.getFile()?.path
             ?: mediaItem.requestMetadata.mediaUri?.toString() ?: "(null)"
+        val bitrate = mediaItem.getBitrate(requireContext())
+        bitRateTextView.text = if (bitrate > 0) "${bitrate / 1000} kbps" else "(no bitrate)"
         return rootView
     }
 }

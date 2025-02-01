@@ -27,6 +27,7 @@ import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.graphics.drawable.Drawable
+import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -96,6 +97,25 @@ fun MediaItem.getUri(): Uri? {
 
 fun MediaItem.getFile(): File? {
     return getUri()?.toFile()
+}
+
+fun MediaItem.getBitrate(context: Context): Long {
+    val retriever = MediaMetadataRetriever()
+    return try {
+        val filePath = getFile()?.path
+        if (filePath != null) {
+            retriever.setDataSource(filePath)
+        } else {
+            val uri = requestMetadata.mediaUri ?: return 0
+            retriever.setDataSource(context, uri)
+        }
+        val s = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_BITRATE)
+        s?.toLongOrNull() ?: 0
+    } catch (e: Exception) {
+        0
+    } finally {
+        retriever.release()
+    }
 }
 
 fun Activity.closeKeyboard(view: View) {
