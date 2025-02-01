@@ -108,7 +108,7 @@ fun MediaItem.getBitrate(): Long? {
         retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_BITRATE)
             ?.toLongOrNull()
     } catch (e: Exception) {
-        Log.w("getBitrate", e.printStackTrace().toString())
+        Log.w("getBitrate", Log.getStackTraceString(e))
         null
     } finally {
         retriever.release()
