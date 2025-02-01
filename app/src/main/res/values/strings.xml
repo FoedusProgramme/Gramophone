@@ -302,4 +302,7 @@
     <string name="settings_lyrics_no_animation_summary">Disable all line transition lyric animations</string>
     <string name="settings_lyrics_char_scaling_summary">Calculate lyric gradient velocity in characters per second instead of pixels per second. Might cause speed to look irregular due to differing character length in pixels.</string>
     <string name="settings_lyrics_char_scaling">Character-based scaling for lyric gradient</string>
+    <string name="dialog_bitrate">Bitrate</string>
+    <string name="bitrate_format">%1$d kbps</string>
+    <string name="bitrate_unknown">Unknown bitrate</string>
 </resources>
