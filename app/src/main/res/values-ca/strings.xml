@@ -294,4 +294,7 @@
     <string name="delete_really">Segur que voleu suprimir «%s»? Aquesta acció no es pot desfer.</string>
     <string name="settings_lyrics_char_scaling">Escala basada en els caràcters de la pendent de les lletres</string>
     <string name="settings_lyrics_char_scaling_summary">Calcula la velocitat de la pendent de les lletres en caràcters per segon en lloc de píxels per segon. Pot causar que la velocitat es vegi irregular a causa de la diferent longitud dels caràcters en píxels.</string>
+    <string name="dialog_bitrate">Taxa de bits</string>
+    <string name="bitrate_unknown">Taxa de bits desconeguda</string>
+    <string name="bitrate_format">%1$d kbps</string>
 </resources>
