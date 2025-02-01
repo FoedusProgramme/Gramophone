@@ -100,18 +100,13 @@ fun MediaItem.getFile(): File? {
     return getUri()?.toFile()
 }
 
-fun MediaItem.getBitrate(context: Context): Long? {
+fun MediaItem.getBitrate(): Long? {
     val retriever = MediaMetadataRetriever()
     return try {
-        val filePath = getFile()?.path
-        if (filePath != null) {
-            retriever.setDataSource(filePath)
-        } else {
-            val uri = requestMetadata.mediaUri ?: return 0
-            retriever.setDataSource(context, uri)
-        }
-        val s = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_BITRATE)
-        s?.toLongOrNull()
+        val filePath = getFile()?.path ?: return null
+        retriever.setDataSource(filePath)
+        retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_BITRATE)
+            ?.toLongOrNull()
     } catch (e: Exception) {
         Log.w("getBitrate", e.printStackTrace().toString())
         null

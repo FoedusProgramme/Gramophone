@@ -84,7 +84,7 @@ class DetailDialogFragment : BaseFragment(false) {
         mimeTypeTextView.text = mediaItem.localConfiguration?.mimeType ?: "(null)"
         pathTextView.text = mediaItem.getFile()?.path
             ?: mediaItem.requestMetadata.mediaUri?.toString() ?: "(null)"
-        val bitrate = mediaItem.getBitrate(requireContext())
+        val bitrate = mediaItem.getBitrate()
         bitRateTextView.text = if (bitrate != null) {
             getString(R.string.bitrate_format, bitrate / 1000)
         } else {
