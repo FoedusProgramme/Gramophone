@@ -291,4 +291,7 @@
     <string name="settings_lyrics_no_animation">Lülita animatsioonid välja</string>
     <string name="settings_lyrics_char_scaling">Tähemärkide põhine laulusõnade gradiendi skaleerimine</string>
     <string name="settings_lyrics_char_scaling_summary">Selle asemel, et kasutada piksleid sekundi kohta arvuta laulusõnade gradiendi kiirus tähemärkides sekundi kohta. Kuna tähemärkidel on pikslites erinevad pikkused, siis võib tekitada mulje, et kiirus pole ühtlane.</string>
+    <string name="bitrate_unknown">Tundmatu bitikiirus</string>
+    <string name="dialog_bitrate">Bitikiirus</string>
+    <string name="bitrate_format">%1$d kb/s</string>
 </resources>
