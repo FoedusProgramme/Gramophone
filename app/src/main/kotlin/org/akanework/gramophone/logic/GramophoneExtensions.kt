@@ -35,6 +35,7 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Message
 import android.os.StrictMode
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup.MarginLayoutParams
 import android.view.ViewPropertyAnimator
@@ -99,7 +100,7 @@ fun MediaItem.getFile(): File? {
     return getUri()?.toFile()
 }
 
-fun MediaItem.getBitrate(context: Context): Long {
+fun MediaItem.getBitrate(context: Context): Long? {
     val retriever = MediaMetadataRetriever()
     return try {
         val filePath = getFile()?.path
@@ -110,9 +111,10 @@ fun MediaItem.getBitrate(context: Context): Long {
             retriever.setDataSource(context, uri)
         }
         val s = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_BITRATE)
-        s?.toLongOrNull() ?: 0
+        s?.toLongOrNull()
     } catch (e: Exception) {
-        0
+        Log.w("getBitrate", e.printStackTrace().toString())
+        null
     } finally {
         retriever.release()
     }
