@@ -287,4 +287,7 @@
     <string name="settings_lyrics_char_scaling">文字ベースの歌詞のグラデーションのスケーリング</string>
     <string name="settings_lyrics_no_animation">アニメーションを無効化</string>
     <string name="settings_lyrics_char_scaling_summary">歌詞のグラデーション速度をピクセル/秒ではなく文字/秒で計算します。ピクセル単位の文字長が異なるため、速度が不規則に見える場合があります。</string>
+    <string name="dialog_bitrate">ビットレート</string>
+    <string name="bitrate_format">%1$d kbps</string>
+    <string name="bitrate_unknown">不明なビットレート</string>
 </resources>
