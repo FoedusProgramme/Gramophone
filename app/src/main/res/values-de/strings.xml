@@ -251,4 +251,6 @@
     <string name="device_type_dock_analog">Analoges Dock</string>
     <string name="spk_encoding_ac3">AC-3</string>
     <string name="spk_encoding_aac_xhe">xHE-AAC</string>
+    <string name="open_in_gramophone">In Gramophone öffnen</string>
+    <string name="spk_channel_out_mono">Mono</string>
 </resources>
