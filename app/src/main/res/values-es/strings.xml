@@ -197,4 +197,9 @@
     <string name="delete">Borrar</string>
     <string name="yes">Sí</string>
     <string name="no">No</string>
+    <string name="sort_by_album_artist">Álbum del artista</string>
+    <string name="delete_really">¿Seguro/a que querés borrar \"%s\"? Esta acción no puede ser cambiada.</string>
+    <string name="sort_by_file_path">Ruta del archivo</string>
+    <string name="spk_channel_out_mono">Mono</string>
+    <string name="spk_channel_out_stereo">Estéreo</string>
 </resources>
