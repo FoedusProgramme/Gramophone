@@ -127,7 +127,7 @@
     <string name="settings_preference_category_application">Ứng dụng</string>
     <string name="settings_category_basic_info">Thông tin</string>
     <string name="crash_clipboard">Đã sao chép nhật ký lỗi vào bộ nhớ tạm</string>
-	<string name="settings_blacklist_folder">Loại trừ các thư mục</string>
+    <string name="settings_blacklist_folder">Loại trừ các thư mục</string>
     <string name="settings_category_filters">Bộ lọc</string>
     <string name="settings_blacklist_folder_summary">Lọc bài hát trong một số thư mục</string>
     <string name="settings_category_full_player">Trình phát đầy đủ</string>
@@ -136,7 +136,7 @@
     <string name="settings_play_on_launch">Phát khi mở ứng dụng</string>
     <string name="preference_category_quality">Chất lượng</string>
     <string name="album_cover">Ảnh album</string>
-	<string name="delete_failed">Không thể xóa bài hát</string>
+    <string name="delete_failed">Không thể xóa bài hát</string>
     <string name="dialog_edit_metadata">Chỉnh sửa</string>
     <string name="settings_trim_lyrics">Loại bỏ dấu cách xung quanh lời bài hát</string>
     <string name="dialog_lyrics">Lời bài hát</string>
@@ -157,4 +157,20 @@
     <string name="album_covers_enhance">Tải ảnh album nâng cao</string>
     <string name="sort_by_release_date">Năm phát hành</string>
     <string name="timer_expiry">Hẹn giờ ngủ sẽ tạm dừng bài hát vào lúc %s</string>
+    <string name="home_menu_shuffle">Trộn tất cả</string>
+    <string name="divider">Thanh chia màn hình</string>
+    <string name="dialog_bitrate">Tốc độ bit</string>
+    <string name="bitrate_unknown">Tốc độ bit chưa biết</string>
+    <string name="bitrate_format">%1$d kbps</string>
+    <string name="device_type_unknown">Không biết</string>
+    <string name="open_in_gramophone">Mở bằng Gramophone</string>
+    <string name="settings_lyrics_no_animation">Tắt hoạt ảnh</string>
+    <string name="settings_lyrics_no_animation_summary">Tắt toàn bộ hoạt ảnh chuyển động lyric</string>
+    <string name="settings_preference_category_home">Màn hình chính</string>
+    <string name="tab_order">Thiết lập trật tự tab</string>
+    <string name="back">Trở về</string>
+    <string name="play_all">Phát tất cả</string>
+    <string name="sort_by_album_artist">Album nghệ sĩ</string>
+    <string name="cannot_play_file">Không thể phát file này</string>
+    <string name="tab_order_summary">Ứng dụng sẽ hiển thị tab đầu tiên khi khởi chạy. Những tabs sau thanh chia màn hình sẽ bị ẩn.</string>
 </resources>
