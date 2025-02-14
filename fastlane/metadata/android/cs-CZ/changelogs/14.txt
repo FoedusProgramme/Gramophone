@@ -1,0 +1,1 @@
+Oprava pádu aplikace při nastavení telefonu na filipínský jazyk

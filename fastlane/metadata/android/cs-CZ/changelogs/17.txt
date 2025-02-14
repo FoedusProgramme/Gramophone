@@ -1,0 +1,3 @@
+- Přidány texty na stavovém řádku pro zařízení MeiZu, vybrané vlastní ROM a Lyric Getter Xposed (díky @ghhccghk)
+- Opraveno několik chyb
+- Jako obvykle aktualizovány překlady (díky našim pracovitým překladatelům!)

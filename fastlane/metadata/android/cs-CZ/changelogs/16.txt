@@ -1,0 +1,3 @@
+- Oprava některých chyb souvisejících se změnou pořadí karet
+- Opravena podpora ekvalizéru
+- Oprava některých problémů s přístupností (pokud jich je více, dejte mi prosím vědět!)
