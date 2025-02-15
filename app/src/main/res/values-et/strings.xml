@@ -294,4 +294,7 @@
     <string name="bitrate_unknown">Tundmatu bitikiirus</string>
     <string name="dialog_bitrate">Bitikiirus</string>
     <string name="bitrate_format">%1$d kb/s</string>
+    <string name="settings_contributors_click">%s (lisateabe jaoks klõpsi!)</string>
+    <string name="package_type_explainer">Kuna kasutusel on avatud lähtekood, siis saab Gramophone\'i APK-faile luua igaüks. Et oleks selge, kust fail on pärit, eristab Gramophone paketi tüüpe.\n\nLevinuim paketi tüüp on Väljalase, neid võid alla laadida F-Droidist, Google Playst, GitHubist või IzzyOnDroidist.\nCI väljalasked on automaatselt loodud kompilatsioonid peale iga lähtekoodi sissekannet GitHubis. Need versioonid ei pruugi olla stabiilsed.\nMuude pakettide puhul eeldame, et nimi peaks piisavalt täpselt selgitama APK-failide päritolu.</string>
+    <string name="settings_open_source_licenses">Avatud lähtekoodiga tarkvara litsentsid</string>
 </resources>
