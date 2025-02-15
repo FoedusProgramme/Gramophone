@@ -69,7 +69,7 @@
     <string name="grid">Grid</string>
     <string name="list">Daftar</string>
     <string name="natural_order">Urutan normal</string>
-    <string name="opensource_info">Diterbitkan secara terbuka di bawah lisensi GPL-3.0 \nHak Cipta © 2024 Akane Foundation</string>
+    <string name="opensource_info">Diterbitkan secara terbuka di bawah lisensi GPL-3.0 \nHak Cipta %s</string>
     <string name="settings_content_based_color">Warna berdasarkan konten</string>
     <string name="dialog_disc_number">Nomor disc</string>
     <string name="settings_content_based_color_summary">Aktifkan pemilihan tema berdasarkan gambar album</string>

@@ -81,7 +81,7 @@
     <string name="unknown_album">Àlbum desconegut</string>
     <string name="list">Llista</string>
     <string name="equalizer_not_found">No s\'ha trobat l\'equalitzador!</string>
-    <string name="opensource_info">Codi font obert d\'acord amb la GPL-3.0\nCopyright © 2024 Akane Foundation</string>
+    <string name="opensource_info">Codi font obert d\'acord amb la GPL-3.0\nCopyright %s</string>
     <string name="settings_default_progress_bar">Barra de progrés predeterminada</string>
     <string name="settings_default_progress_bar_summary">Habilita la barra de progrés amb estil Material</string>
     <string name="app_name">Gramophone</string>

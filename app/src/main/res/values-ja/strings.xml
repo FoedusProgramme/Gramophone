@@ -72,7 +72,7 @@
     <string name="check_for_updates">アップデートはチャンネルをチェックしてください！</string>
     <string name="settings_default_progress_bar">プログレスバー</string>
     <string name="opensource_info">Open-sourced under GPL-3.0
-\nCopyright © 2024 Akane Foundation</string>
+\nCopyright %s</string>
     <string name="settings_default_progress_bar_summary">マテリアルスタイルのプログレスバーを有効化します</string>
     <string name="now_playing">再生中</string>
     <string name="settings_content_based_color">コンテンツベースのカラー生成</string>

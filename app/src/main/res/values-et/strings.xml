@@ -80,7 +80,7 @@
     <string name="natural_order">Loomulik järjekord</string>
     <string name="equalizer_not_found">Evalaiserit ei leidu!</string>
     <string name="opensource_info">Avatud lähtekoodiga tarkvara, avaldatud GPL-3.0 litsentsi alusel
-\nAutoriõigused © 2024 Akane Foundation</string>
+\nAutoriõigused %s</string>
     <string name="now_playing">Hetkel esitamisel</string>
     <string name="settings_package_type">Tarkvarapaketi tüüp</string>
     <string name="unknown_title">Teadmata pealkiri</string>

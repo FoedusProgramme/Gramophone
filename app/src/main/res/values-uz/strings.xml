@@ -108,7 +108,7 @@
     <string name="compact_list">Ro\'yxat (ixcham)</string>
     <string name="settings_default_progress_bar_summary">Material uslubidagi panelini yoqing</string>
     <string name="opensource_info">GPL-3.0 ostida ochiq manba (open-source)
-\nMualliflik huquqi © 2024 Akane Foundation</string>
+\nMualliflik huquqi %s</string>
     <string name="playlist_favourite">Sevimli</string>
     <string name="settings_content_based_color">Tarkibga asoslangan ranglar</string>
     <string name="settings_content_based_color_summary">Albom asosida rang yaratishni yoqing</string>

@@ -71,7 +71,7 @@
     <string name="compact_list">列表（紧凑）</string>
     <string name="check_for_updates">查看我们的频道来获取更新！</string>
     <string name="opensource_info">基于 GPL-3.0 协议开源
-\n版权所有 © 2024 Akane Foundation</string>
+\n版权所有 %s</string>
     <string name="settings_default_progress_bar">启用默认进度条</string>
     <string name="settings_default_progress_bar_summary">使用 Material Design 默认样式的进度条</string>
     <string name="playlist_favourite">收藏</string>

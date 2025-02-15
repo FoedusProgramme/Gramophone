@@ -99,7 +99,7 @@
     <string name="no_lyric_found">Parolas de canto non trovate</string>
     <string name="equalizer_not_found">Equalisator non trovate!</string>
     <string name="opensource_info">Sub licentia de codice aperte GPL-3.0
-\nCopyright © 2024 Akane Foundation</string>
+\nCopyright %s</string>
     <string name="settings_default_progress_bar">Barra de progresso prededinite</string>
     <string name="check_for_updates">Verifica nostre canal pro actualisationes!</string>
     <string name="settings_default_progress_bar_summary">Activar le barra de progresso con stylo Material</string>

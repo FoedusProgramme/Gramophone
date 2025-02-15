@@ -84,7 +84,7 @@
     <string name="compact_list">பட்டியல் (சிறிய)</string>
     <string name="check_for_updates">புதுப்பிப்புகளுக்கு எங்கள் சேனலை சரிபார்க்கவும்!</string>
     <string name="settings_default_progress_bar_summary">பொருள் பாணியிலான முன்னேற்றப் பட்டியை இயக்கவும்</string>
-    <string name="opensource_info">சிபிஎல் -3.0 இன் கீழ் திறந்த மூல\n பதிப்புரிமை © 2024 அகானே அறக்கட்டளை</string>
+    <string name="opensource_info">சிபிஎல் -3.0 இன் கீழ் திறந்த மூல\n பதிப்புரிமை %s</string>
     <string name="settings_default_progress_bar">இயல்புநிலை முன்னேற்றப் பட்டி</string>
     <string name="playlist_favourite">பிடித்த</string>
     <string name="now_playing">இப்போது விளையாடுகிறது</string>

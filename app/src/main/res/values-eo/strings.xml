@@ -42,7 +42,7 @@
     <string name="check_for_updates">Kontrolu nian kanalon por ĝisdatigoj!</string>
     <string name="settings_default_progress_bar">Defaŭlta progresbreto</string>
     <string name="settings_default_progress_bar_summary">Enŝalti progresbreton materialstilan</string>
-    <string name="opensource_info">Malfermkodita sub GPL-3.0\nKopirajto © 2024 Fondaĵo Akane</string>
+    <string name="opensource_info">Malfermkodita sub GPL-3.0\nKopirajto %s</string>
     <string name="app_name">Gramofono</string>
     <string name="now_playing">Ludanta nun</string>
     <string name="settings_content_based_color_summary">Enŝaltu albumbazan kolorigon</string>

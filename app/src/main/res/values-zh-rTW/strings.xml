@@ -71,7 +71,7 @@
     <string name="compact_list">列表（緊湊）</string>
     <string name="check_for_updates">查看我們的頻道來獲取更新！</string>
     <string name="opensource_info">基於 GPL-3.0 協議開源
-\n版權所有 © 2024 Akane Foundation</string>
+\n版權所有 %s</string>
     <string name="settings_default_progress_bar">啟用默認進度條</string>
     <string name="settings_default_progress_bar_summary">啟用material樣式的進度列</string>
     <string name="playlist_favourite">收藏</string>

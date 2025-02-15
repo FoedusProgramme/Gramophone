@@ -86,12 +86,13 @@
     <string name="check_for_updates">Check our channel for updates!</string>
     <string name="settings_default_progress_bar">Default progress bar</string>
     <string name="settings_default_progress_bar_summary">Enable material styled progress bar</string>
-    <string name="opensource_info">Open-sourced under GPL-3.0\nCopyright © 2024 Akane Foundation</string>
+    <string name="opensource_info">Open-sourced under GPL-3.0\nCopyright %s</string>
     <string name="playlist_favourite">Favourite</string>
+    <string name="settings_contributors_click">%s (click for more!)</string>
     <!-- Not translatable -->
     <string name="app_name">Gramophone</string>
     <string name="default_time" translatable="false">0:00</string>
-    <string name="settings_contributors_detail" translatable="false">AkaneTan, 123Duo3, nift4, WSTxda, imjyotiraditya</string>
+    <string name="settings_contributors_detail" translatable="false">nift4, 123Duo3, AkaneTan, WSTxda, imjyotiraditya</string>
     <string name="upper_folder" translatable="false">..</string>
     <string name="now_playing">Now playing</string>
     <string name="settings_content_based_color_summary">Enable album based color generation</string>
@@ -305,4 +306,6 @@
     <string name="dialog_bitrate">Bitrate</string>
     <string name="bitrate_format">%1$d kbps</string>
     <string name="bitrate_unknown">Unknown bitrate</string>
+    <string name="package_type_explainer">Gramophone APKs can be created by anyone, because Gramophone is open source. To help remembering where an APK came from, Gramophone provides the package type.\n\nThe most common type is Release, which is obtained from F-Droid, Google Play, GitHub or IzzyOnDroid.\nThe CI package type refers to automated builds made for every commit on GitHub. These builds may be unstable.\nFor other package types, the name should give a reasonable hint to where the APK is from.</string>
+    <string name="settings_open_source_licenses">Open source licenses</string>
 </resources>

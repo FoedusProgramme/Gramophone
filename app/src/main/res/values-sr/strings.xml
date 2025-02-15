@@ -36,7 +36,7 @@
     <string name="equalizer_not_found">Ekvilajzer nije pronađen!</string>
     <string name="settings_default_progress_bar_summary">Omogućite traku napretka u stilu materijala</string>
     <string name="opensource_info">Otvoren kod pod GPL-3.0
-\nAutorska prava © 2024 Akane fondacija</string>
+\nAutorska prava %s</string>
     <string name="playlist_favourite">Omiljene</string>
     <string name="settings_content_based_color">Boje zasnovane na sadržaju</string>
     <string name="filesystem">Sistem datoteka</string>

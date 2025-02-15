@@ -35,7 +35,7 @@
     <string name="compact_list">목록 (콤팩트)</string>
     <string name="settings_default_progress_bar_summary">머티리얼 스타일 재생 바 사용</string>
     <string name="opensource_info">Open-sourced under GPL-3.0
-\nCopyright © 2024 Akane Foundation</string>
+\nCopyright %s</string>
     <string name="playlist_favourite">즐겨찾기</string>
     <string name="now_playing">지금 재생 중</string>
     <string name="settings_content_based_color_summary">앨범에 따른 색상 생성 사용</string>

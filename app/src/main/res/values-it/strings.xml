@@ -30,7 +30,7 @@
     <string name="equalizer_not_found">Equalizzatore non trovato!</string>
     <string name="compact_list">Lista (compatta)</string>
     <string name="settings_default_progress_bar_summary">Abilita barra avanzamento stile material</string>
-    <string name="opensource_info">Open-source sotto GPL-3.0\nCopyright © 2024 Akane Foundation</string>
+    <string name="opensource_info">Open-source sotto GPL-3.0\nCopyright %s</string>
     <string name="now_playing">In riproduzione</string>
     <string name="settings_content_based_color_summary">Abilita generazione colore in base all\'album</string>
     <string name="settings_content_based_color">Colori basati sul contenuto</string>

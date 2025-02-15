@@ -134,7 +134,7 @@
     <string name="dialog_genre">سبک</string>
     <string name="compact_list">فهرست (جمع و جور)</string>
     <string name="opensource_info">متن‌باز شده با قوانین GPL-3.0
-\nگواهی پخش © 2024 Akane Foundation</string>
+\nگواهی پخش %s</string>
     <string name="settings_player_options_summary">کیفیت خروجی، رفتار پخش کننده</string>
     <string name="category_playlists">فهرست‌های پخش</string>
     <string name="settings_play_on_launch_summary">پخش آهنگ در اجرا</string>

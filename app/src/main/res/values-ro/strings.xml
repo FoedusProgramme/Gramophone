@@ -55,7 +55,7 @@
     <string name="settings_default_progress_bar_summary">Activează bara de progres Material Style</string>
     <string name="compact_list">Listă (compactă)</string>
     <string name="opensource_info">Open-sourced under GPL-3.0
-\nCopyright © 2024 Akane Foundation</string>
+\nCopyright %s</string>
     <string name="settings_content_based_color">Conținut bazat pe culori</string>
     <string name="playlist_favourite">Favorite</string>
     <string name="now_playing">Se redă acum</string>
