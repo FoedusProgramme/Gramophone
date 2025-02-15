@@ -302,4 +302,7 @@
     <string name="dialog_bitrate">Бітрейт</string>
     <string name="bitrate_unknown">Невідомий бітрейт</string>
     <string name="bitrate_format">%1$d кбіт/с</string>
+    <string name="settings_contributors_click">%s (натисніть, щоб дізнатися більше!)</string>
+    <string name="package_type_explainer">Gramophone APK може створити кожен, оскільки Gramophone є відкритим кодом. Щоб допомогти запам’ятати, звідки надійшов APK, Gramophone надає тип пакета. \n\nНайпоширенішим типом є Release, який отримують із F-Droid, Google Play, GitHub або IzzyOnDroid. \nТип пакета CI відноситься до автоматизованих збірок, створених для кожного коміту на GitHub. Ці збірки можуть бути нестабільними. \nДля інших типів пакунків назва має давати розумну підказку про те, звідки походить APK.</string>
+    <string name="settings_open_source_licenses">Ліцензії з відкритим кодом</string>
 </resources>
