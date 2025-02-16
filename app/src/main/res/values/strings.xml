@@ -57,6 +57,7 @@
     <string name="crash_phone_brand" translatable="false">Brand</string>
     <string name="crash_sdk_level" translatable="false">SDK Level</string>
     <string name="crash_time" translatable="false">Time</string>
+    <string name="crash_rtype" translatable="false">Release type</string>
     <string name="settings_category_appearance">Appearance</string>
     <string name="album_artist">Album artist</string>
     <string name="unknown_version">Unknown version</string>
@@ -309,4 +310,8 @@
     <string name="package_type_explainer">Gramophone APKs can be created by anyone, because Gramophone is open source. To help remembering where an APK came from, Gramophone provides the package type.\n\nThe most common type is Release, which is obtained from F-Droid, Google Play, GitHub or IzzyOnDroid.\nThe CI package type refers to automated builds made for every commit on GitHub. These builds may be unstable.\nFor other package types, the name should give a reasonable hint to where the APK is from.</string>
     <string name="settings_open_source_licenses">Open source licenses</string>
     <string name="settings_contributors_long"><![CDATA[- nift4: Maintainer / Lead Developer\n- 123Duo3: Lead Designer\n- AkaneTan: Original creator, retired developer\n- imjyoritaditya: Developer\n- WSTxda: designed one variation of app icon\n- pxe_emo: Help & testing of new lyrics\n- Lambada10: providing lyric samples & SongSync\n- lightsummer233: Developer\n- nicholaswww: Code contributions\n- Yuyuko1024: Squiggly progress bar\n- ghhccghk: Status Bar lyrics\n- lucaxvi: Code contributions\n- tungnk123: Code contributions\n- topazrn: Code contributions\n- strongville: Code contributions\n- bggRGjQaUbCoE: Code contributions\n- VishnuSanal: Code contributions\n- mikooomich: Code contributions\n- HotarunIchijou: Code contributions\n- someone5678: Code contributions\n- IzzySoft: Code contributions\n- PalanixYT: Code contributions\n- N3Shemmy3: Code contributions]]></string>
+    <string name="oh_no">Oh no!</string>
+    <string name="gramophone_crashed_explainer">Gramophone crashed :( to allow this crash to get fixed in the future, please send me an email with the log shown below. This is very important, because crashes depend on music files, devices and more. Only if I get sent crash logs, I can fix the crashes! After all, the version you\'re using seems to work fine for me. So please spare those 2 minutes and send me that crash log!</string>
+    <string name="send_email">Send email</string>
+    <string name="send_email_manually">Please send log to nift4dev@gmail.com - can\'t find mail app</string>
 </resources>
