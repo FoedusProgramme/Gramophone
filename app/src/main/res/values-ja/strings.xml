@@ -290,4 +290,6 @@
     <string name="dialog_bitrate">ビットレート</string>
     <string name="bitrate_format">%1$d kbps</string>
     <string name="bitrate_unknown">不明なビットレート</string>
+    <string name="settings_contributors_click">%s (タップで詳細を表示します！)</string>
+    <string name="settings_open_source_licenses">オープンソースライセンス</string>
 </resources>
