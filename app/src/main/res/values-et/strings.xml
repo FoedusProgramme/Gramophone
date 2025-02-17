@@ -31,7 +31,7 @@
     <string name="dialog_artist">Esitaja</string>
     <string name="settings_category_behavior">Käitumine</string>
     <string name="settings_mediastore_filter">Pala väikseim kestus (sekundites)</string>
-    <string name="settings_repository">Hoidla</string>
+    <string name="settings_repository">Lähtekoodi hoidla</string>
     <string name="dialog_track_number">Pala number</string>
     <string name="dialog_year">Aasta</string>
     <string name="dialog_path">Asukoht</string>
@@ -297,4 +297,9 @@
     <string name="settings_contributors_click">%s (lisateabe jaoks klõpsi!)</string>
     <string name="package_type_explainer">Kuna kasutusel on avatud lähtekood, siis saab Gramophone\'i APK-faile luua igaüks. Et oleks selge, kust fail on pärit, eristab Gramophone paketi tüüpe.\n\nLevinuim paketi tüüp on Väljalase, neid võid alla laadida F-Droidist, Google Playst, GitHubist või IzzyOnDroidist.\nCI väljalasked on automaatselt loodud kompilatsioonid peale iga lähtekoodi sissekannet GitHubis. Need versioonid ei pruugi olla stabiilsed.\nMuude pakettide puhul eeldame, et nimi peaks piisavalt täpselt selgitama APK-failide päritolu.</string>
     <string name="settings_open_source_licenses">Avatud lähtekoodiga tarkvara litsentsid</string>
+    <string name="gramophone_crashed_explainer">Gramophone jooksis kokku :( Võimaldamaks, et see viga saaks tulevikus parandatud, palun saada mulle e-kiri allpooltoodud logifailiga. Kuna kokkujooksmised on seotud konkreetsete muusikafailidega, täpse nutiseadmega ja palju muuga, siis see teave on väga oluline. Kui saan täpsed vealogid, siis saan neid vigu ka parandada! Õieti, sinu kasutatav rakenduse versioon tundub minu kasutuses korralikult toimima. Seega palun kuluta need paar minutit ja saada mulle see e-kiri kokkujooksmise logidega!</string>
+    <string name="settings_contributors_long"><![CDATA[- nift4: Projekti haldur / juhtiv arendaja \n- 123Duo3: Juhtiv kujundaja\n- AkaneTan: Algne autor, varasem arendaja\n- imjyoritaditya: Arendaja\n- WSTxda: kujundas rakenduse ikooni ühe versiooni\n- pxe_emo: Abi laulusõnade uue liidese loomisel ja testimisel\n- Lambada10: laulusõnade näited ja SongSync\n- lightsummer233: Arendaja\n- nicholaswww: koodi kirjutamine\n- Yuyuko1024: Vingerdav edenemisriba\n- ghhccghk: Status Bar lyrics\n- lucaxvi: koodi kirjutamine\n- tungnk123: koodi kirjutamine\n- topazrn: koodi kirjutamine\n- strongville: koodi kirjutamine\n- bggRGjQaUbCoE: koodi kirjutamine\n- VishnuSanal: koodi kirjutamine\n- mikooomich: koodi kirjutamine\n- HotarunIchijou: koodi kirjutamine\n- someone5678: koodi kirjutamine\n- IzzySoft: koodi kirjutamine\n- PalanixYT: koodi kirjutamine\n- N3Shemmy3: koodi kirjutamine]]></string>
+    <string name="oh_no">Oh appikene!</string>
+    <string name="send_email">Saada e-kiri</string>
+    <string name="send_email_manually">E-posti rakendust ei õnnestu tuvastada - seega lihtsalt saada e-kiri nift4dev@gmail.com aadressile</string>
 </resources>
