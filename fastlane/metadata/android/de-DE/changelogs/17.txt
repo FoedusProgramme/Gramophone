@@ -1,0 +1,3 @@
+- Unterstützung für Songtexte in der Statusleiste bei Geräten von MeiZu, bestimmten custom ROMs und Lyric Getter Xposed (dank @ghhccghk)
+- Verschiedene Fehler und Abstürze wurden behoben
+- Übersetzungen wurden wie üblich aktualisiert (dank unserer hart arbeitenden Übersetzer!)
