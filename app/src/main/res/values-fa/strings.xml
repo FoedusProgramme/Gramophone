@@ -283,4 +283,23 @@
     <string name="settings_pixel_perfect_measurement_legacy_title">اندازه‌گیری پیکسلی متن</string>
     <string name="sort_by_album_artist">هنرمند آلبوم</string>
     <string name="sort_by_file_path">مسیر پرونده</string>
+    <string name="dialog_bitrate">میزان بیت</string>
+    <string name="bitrate_format">%1$d ک.بی. بر ث.</string>
+    <string name="bitrate_unknown">میزان بیت نامعلوم</string>
+    <string name="delete_really">آیا واقعا می‌خواهید «%s» را پاک کنید؟ این کنش بازگشت ناپذیر است.</string>
+    <string name="open_in_gramophone">باز کردن در گرامافون</string>
+    <string name="settings_lyrics_no_animation">از کار انداختن انیمیشن‌ها</string>
+    <string name="settings_lyrics_no_animation_summary">از کار انداختن همۀ انیمیشن‌های تغییر خط ترانه</string>
+    <string name="gramophone_crashed_explainer">گرامافون فروپاشید :( برای اجازۀ این‌که این فروپاشی در آینده برطرف شود، لطفا یک ایمیل برای من با گرازش پایین ارسال کنید. این خیلی مهم است، چون فروپاشی‌ها به پرونده‌های موسیقی، دستگاه و بیشتر بستگی دارند. فقط اگر گزارش‌های فرستاده شده را بگیرم، می‌توانم فروپاشی‌ها را برطرف کنم! به هر حال، نگارشی که دارید استفاده می‌کنید به‌نظر می‌رسد برای من به‌خوبی کار می‌کند. پس لطفا آن ۲ دقیقه را ببخشید و آن گزارش فروپاشی را برای من بفرستید!</string>
+    <string name="cannot_play_file">نمی‌توان این پرونده را پخش کرد</string>
+    <string name="settings_lyrics_char_scaling_summary">محاسبۀ سرعت گرادیان ترانه به حروف بر ثانیه جای پیکسل بر ثانیه. ممکن است باعث شود سرعت به‌خاطر تفاوت طول حروف در پیکسل غیرطبیعی به‌نظر برسد.</string>
+    <string name="settings_lyrics_char_scaling">پیمایش بر اساس حروف برای گرادیان ترانه</string>
+    <string name="settings_open_source_licenses">گواهی منبع باز</string>
+    <string name="oh_no">وای نه!</string>
+    <string name="send_email">فرستادن ایمیل</string>
+    <string name="send_email_manually">لطفا گزارش را بفرستید به nift4dev@gmail.com - نمی‌توان برنامۀ ایمیل پیدا کرد</string>
+    <string name="settings_contributors_click">%s (برای بیشتر کلیک کنید!)</string>
+    <string name="settings_trim_lyrics_summary">فاصله‌های پیش و پس از اولین حرف در یک خط ترانه ممکن است ارزش هنری داشته باشد. اگر موافق نیستید، می‌توانید این مورد را تغییر دهید تا این فاصله‌ها به‌طور خودکار برداشته شوند.</string>
+    <string name="package_type_explainer">‏APKهای گرامون می‌تواند توسط هر کسی ساخته شود، چون گرامافون منبع-باز است. برای یادآوری این‌که یک APK از کجا آمده، گرامافون نوع بسته را ارائه می‌دهد.\n\nمرسوم‌ترین نوع انتشار (Release) است، که از اف-دروید، گوگل پلی، گیت‌هاب یا IzzyOnDroid قابل دریافت است.\nنوع بسته CI به ساخت‌های خودکار که در هر commit ساخته می‌شود اشاره می‌کند. این ساخت‌ها ممکن از ناپایدار باشند.\nبرای نوع بسته‌ها، نام باید راهنمای معقولی از این‌که APK از کجا آمده بدهد.</string>
+    <string name="settings_contributors_long"><![CDATA[- nift4: نگه‌دارنده / توسعه‌دهندۀ راهبر\n- 123Duo3: طراح راهبر\n- AkaneTan: سازندۀ اصلی، توسعه‌دهندۀ بازنشسته\n- imjyoritaditya: توسعه‌دهنده\n- WSTxda: ساخت یک تنوع از آیکن برنامه\n- pxe_emo: کمک و تست ترانه‌های جدید\n- Lambada10: ارائۀ نمونه‌های ترانه و SongSync\n- lightsummer233: توسعه‌دهنده\n- nicholaswww: مشارکت در کد\n- Yuyuko1024: نوار پیشرفت پیچ‌دار\n- ghhccghk: ترانه‌های نوار وضعیت\n- lucaxvi: مشارکت در کد\n- tungnk123: مشارکت در کد\n- topazrn: مشارکت در کد\n- strongville: مشارکت در کد\n- bggRGjQaUbCoE: مشارکت در کد\n- VishnuSanal: مشارکت در کد\n- mikooomich: مشارکت در کد\n- HotarunIchijou: مشارکت در کد\n- someone5678: مشارکت در کد\n- IzzySoft: مشارکت در کد\n- PalanixYT: مشارکت در کد\n- N3Shemmy3: مشارکت در کد]]></string>
 </resources>
