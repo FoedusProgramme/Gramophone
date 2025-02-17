@@ -702,8 +702,10 @@ class FullBottomSheet
         }
 
         bottomSheetFullQualityDetails.text = buildString {
-            append("${info.bitDepth}bit")
-            append(" / ${info.sampleRate / 1000f}kHz")
+            info.bitDepth?.let {
+                append("${it}bit / ")
+            }
+            append("${info.sampleRate / 1000f}kHz")
             append(" / $channelInfo")
             info.bitrate?.let {
                 append(" / ${it / 1000}kbps")
