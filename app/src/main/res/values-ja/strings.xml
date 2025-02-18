@@ -292,4 +292,7 @@
     <string name="bitrate_unknown">不明なビットレート</string>
     <string name="settings_contributors_click">%s (タップで詳細を表示します！)</string>
     <string name="settings_open_source_licenses">オープンソースライセンス</string>
+    <string name="send_email_manually">こちらにログを送信 nift4dev@gmail.com - メールアプリがありません</string>
+    <string name="oh_no">オーノー！</string>
+    <string name="send_email">メールを送信</string>
 </resources>
