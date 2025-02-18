@@ -294,7 +294,7 @@
     <string name="oh_no">Oh nein!</string>
     <string name="gramophone_crashed_explainer">Gramophone ist abgestürzt :( um diesen Absturz in Zukunft zu verhindern, schick mir eine E-Mail mit dem unten angezeigten Protokoll. Das ist sehr wichtig, da Abstürze von Musikdateien, Geräten und mehr abhängen. Nur wenn ich Absturzprotokolle erhalte, kann ich Abstürze beheben! Schließlich scheint die Version, die du benutzt, bei mir zu funktionieren. Also wende bitte nimm dir ein paar Minuten und schick mir das Absturzprotokoll!</string>
     <string name="send_email">E-Mail senden</string>
-    <string name="send_email_manually">Bitte schick das Protokoll an nift4@gmail.com - E-Mail-App wurde nicht gefunden</string>
+    <string name="send_email_manually">Bitte schick das Protokoll an nift4dev@gmail.com - E-Mail-App wurde nicht gefunden</string>
     <string name="spk_channel_out_top_front_right">Oben Vorne Rechts</string>
     <string name="device_type_ble_broadcast">Bluetooth LE Broadcast</string>
     <string name="settings_lyrics_char_scaling_summary">Songtextfarbverlaufgeschwindigkeit in Buchstaben pro Sekunde anstatt Pixeln pro Sekunde berechnen. Die Geschwindigkeit könnte aufgrund unterschiedlicher Länge von Buchstaben in Pixeln unregelmäßig aussehen.</string>
