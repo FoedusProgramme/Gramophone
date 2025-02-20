@@ -39,7 +39,7 @@
     <string name="repeat_mode">حالت تکرار</string>
     <string name="unknown_version">نگارش ناشناخته</string>
     <string name="settings_category_behavior">رفتار</string>
-    <string name="dialog_title">نام</string>
+    <string name="dialog_title">عنوان</string>
     <string name="settings_version">نگارش</string>
     <string name="dialog_album_artist">هنرمند آلبوم</string>
     <string name="folders">پوشه‌ها</string>
@@ -194,7 +194,7 @@
     <string name="yes">بله</string>
     <string name="no">خیر</string>
     <string name="spk_channel_out_stereo">استریو</string>
-    <string name="spk_channel_out_quad">کواد</string>
+    <string name="spk_channel_out_quad">چهارتایی</string>
     <string name="spk_channel_out_5point1">۵.۱</string>
     <string name="spk_channel_out_surround">احاطه (۴.۰)</string>
     <string name="spk_channel_out_5point1point2">۵.۱.۲</string>
@@ -284,7 +284,7 @@
     <string name="sort_by_album_artist">هنرمند آلبوم</string>
     <string name="sort_by_file_path">مسیر پرونده</string>
     <string name="dialog_bitrate">میزان بیت</string>
-    <string name="bitrate_format">%1$d ک.بی. بر ث.</string>
+    <string name="bitrate_format">%1$d kbps</string>
     <string name="bitrate_unknown">میزان بیت نامعلوم</string>
     <string name="delete_really">آیا واقعا می‌خواهید «%s» را پاک کنید؟ این کنش بازگشت ناپذیر است.</string>
     <string name="open_in_gramophone">باز کردن در گرامافون</string>
@@ -294,7 +294,7 @@
     <string name="cannot_play_file">نمی‌توان این پرونده را پخش کرد</string>
     <string name="settings_lyrics_char_scaling_summary">محاسبۀ سرعت گرادیان ترانه به حروف بر ثانیه جای پیکسل بر ثانیه. ممکن است باعث شود سرعت به‌خاطر تفاوت طول حروف در پیکسل غیرطبیعی به‌نظر برسد.</string>
     <string name="settings_lyrics_char_scaling">پیمایش بر اساس حروف برای گرادیان ترانه</string>
-    <string name="settings_open_source_licenses">گواهی منبع باز</string>
+    <string name="settings_open_source_licenses">پروانۀ منبع باز</string>
     <string name="oh_no">وای نه!</string>
     <string name="send_email">فرستادن ایمیل</string>
     <string name="send_email_manually">لطفا گزارش را بفرستید به nift4dev@gmail.com - نمی‌توان برنامۀ ایمیل پیدا کرد</string>
