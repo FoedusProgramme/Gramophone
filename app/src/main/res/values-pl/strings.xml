@@ -310,4 +310,5 @@
     <string name="oh_no">O nie!</string>
     <string name="send_email">Wyślij wiadomość e-mail</string>
     <string name="send_email_manually">Wyślij dziennik na adres nift4dev@gmail.com - nie mogę znaleźć aplikacji pocztowej</string>
+    <string name="failed_to_parse_lyric">Nie udało się przeanalizować tekstów</string>
 </resources>
