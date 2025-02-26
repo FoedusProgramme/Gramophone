@@ -314,4 +314,5 @@
     <string name="gramophone_crashed_explainer">Gramophone crashed :( to allow this crash to get fixed in the future, please send me an email with the log shown below. This is very important, because crashes depend on music files, devices and more. Only if I get sent crash logs, I can fix the crashes! After all, the version you\'re using seems to work fine for me. So please spare those 2 minutes and send me that crash log!</string>
     <string name="send_email">Send email</string>
     <string name="send_email_manually">Please send log to nift4dev@gmail.com - can\'t find mail app</string>
+	<string name="failed_to_parse_lyric">Failed to parse lyrics</string>
 </resources>

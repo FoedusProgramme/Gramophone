@@ -287,12 +287,12 @@
     <string name="spk_encoding_pcm_24bit_big_endian">24-bit PCM (big endian)</string>
     <string name="spk_encoding_pcm_32bit">32-bit (int) PCM</string>
     <string name="spk_encoding_pcm_32bit_big_endian">32-bit (int) PCM (big endian)</string>
-    <string name="settings_contributors_click">%s(anklicken für weitere Informationen!)</string>
+    <string name="settings_contributors_click">%s (anklicken für weitere Informationen!)</string>
     <string name="spk_channel_out_front_wide_right">Vorne Wide Rechts</string>
     <string name="cannot_play_file">Datei kann nicht abgespielt werden</string>
     <string name="settings_open_source_licenses">Open Source Lizensen</string>
     <string name="oh_no">Oh nein!</string>
-    <string name="gramophone_crashed_explainer">Gramophone ist abgestürzt :( um diesen Absturz in Zukunft zu verhindern, schick mir eine E-Mail mit dem unten angezeigten Protokoll. Das ist sehr wichtig, da Abstürze von Musikdateien, Geräten und mehr abhängen. Nur wenn ich Absturzprotokolle erhalte, kann ich Abstürze beheben! Schließlich scheint die Version, die du benutzt, bei mir zu funktionieren. Also wende bitte nimm dir ein paar Minuten und schick mir das Absturzprotokoll!</string>
+    <string name="gramophone_crashed_explainer">Gramophone ist abgestürzt :( um diesen Absturz in Zukunft zu verhindern, schick mir eine E-Mail mit dem unten angezeigten Protokoll. Das ist sehr wichtig, da Abstürze von Musikdateien, Geräten und mehr abhängen. Nur wenn ich Absturzprotokolle erhalte, kann ich Abstürze beheben! Schließlich scheint die Version, die du benutzt, bei mir zu funktionieren. Also bitte nimm dir ein paar Minuten und schick mir das Absturzprotokoll!</string>
     <string name="send_email">E-Mail senden</string>
     <string name="send_email_manually">Bitte schick das Protokoll an nift4dev@gmail.com - E-Mail-App wurde nicht gefunden</string>
     <string name="spk_channel_out_top_front_right">Oben Vorne Rechts</string>
