@@ -302,4 +302,5 @@
     <string name="oh_no">Oh appikene!</string>
     <string name="send_email">Saada e-kiri</string>
     <string name="send_email_manually">E-posti rakendust ei õnnestu tuvastada - seega lihtsalt saada e-kiri nift4dev@gmail.com aadressile</string>
+    <string name="failed_to_parse_lyric">Laulusõnade liigendamine ei õnnestunud</string>
 </resources>
