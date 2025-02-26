@@ -310,4 +310,5 @@
     <string name="oh_no">О ні!</string>
     <string name="send_email">Надіслати електронний лист</string>
     <string name="send_email_manually">Будь ласка, надішліть журнал на nift4dev@gmail.com - не можу знайти поштову програму</string>
+    <string name="failed_to_parse_lyric">Не вдалося проаналізувати текст</string>
 </resources>
