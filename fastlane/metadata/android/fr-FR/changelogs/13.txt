@@ -1,0 +1,4 @@
+- Redesign du lecteur de fichiers
+- Garde l'écran allumé pendant l'affichage des paroles
+- Supporte les cartes SD dans l'onglet Système de fichiers
+- Corrections de bugs

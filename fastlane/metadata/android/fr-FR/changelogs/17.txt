@@ -1,0 +1,3 @@
+- Ajout des paroles dans la barre d'état pour les appareils MeiZu, sélection des ROMs personnalisées et Lyric Getter Xposed (merci à @ghhccghk)
+- Correction de plusieurs bugs et plantages
+- Mises à jour des traductions comme d'habitude (merci à nos traducteurs acharnés !)

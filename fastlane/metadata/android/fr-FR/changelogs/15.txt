@@ -1,0 +1,2 @@
+- Permet la réorganisation et le masquage des onglets
+- Corrections multiples de crash

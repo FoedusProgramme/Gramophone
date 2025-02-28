@@ -1,0 +1,3 @@
+- Correction de bugs liés à la réorganisation des onglets
+- Correction du support des applications d'égaliseur
+- Correction de problèmes d'accessibilité (N'hésitez pas à me faire savoir s'il y en a d'autres !)
