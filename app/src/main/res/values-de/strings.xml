@@ -301,4 +301,6 @@
     <string name="spk_channel_out_bottom_front_center">Unten Vorne Center</string>
     <string name="spk_channel_out_top_front_center">Oben Vorne Mitte</string>
     <string name="settings_lyrics_no_animation_summary">Alle Zeilenübergangsanimationen deaktivieren</string>
+    <string name="failed_to_parse_lyric">Analysieren des Liedtextes fehlgeschlagen</string>
+    <string name="package_type_explainer">Gramophone APKs können von jedem erstellt werden weil Gramophone open source ist. Um daran zu erinnern, woher eine APK kam gibt Gramophone den Pakettyp an.\n\nDer häufigste Typ ist Release, der bei F-Droid, Google Play, Github oder IzzyOnDroid erworben werden kann.\nDer CI Pakettyp weißt auf automatisierte APKs hin, die für jeden commit auf Github generiert werden. Diese Pakete können instabil sein.\nBei anderen Typen sollte die Bezeichnung des Pakettypen einen Hinweis darauf geben, woher die APK stammt.</string>
 </resources>
