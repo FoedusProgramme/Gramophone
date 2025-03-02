@@ -315,4 +315,6 @@
     <string name="send_email">Send email</string>
     <string name="send_email_manually">Please send log to nift4dev@gmail.com - can\'t find mail app</string>
 	<string name="failed_to_parse_lyric">Failed to parse lyrics</string>
+	<string name="audio_signal_chain">Audio signal chain</string>
+    <string name="audio_not_initialized">The audio playback system is not initialized. Try playing something!</string>
 </resources>
