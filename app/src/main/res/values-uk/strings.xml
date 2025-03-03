@@ -311,4 +311,6 @@
     <string name="send_email">Надіслати електронний лист</string>
     <string name="send_email_manually">Будь ласка, надішліть журнал на nift4dev@gmail.com - не можу знайти поштову програму</string>
     <string name="failed_to_parse_lyric">Не вдалося проаналізувати текст</string>
+    <string name="audio_signal_chain">Ланцюг звукового сигналу</string>
+    <string name="audio_not_initialized">Система відтворення аудіо не ініціалізована. Спробуй щось зіграти!</string>
 </resources>
