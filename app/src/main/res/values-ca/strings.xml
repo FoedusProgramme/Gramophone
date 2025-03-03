@@ -306,4 +306,6 @@
     <string name="send_email">Envia un correu electrònic</string>
     <string name="send_email_manually">Envieu un correu electrònic a nift4dev@gmail.com, no s\'ha pogut trobar cap aplicació de correu</string>
     <string name="failed_to_parse_lyric">Ha fallat en analitzar la lletra</string>
+    <string name="audio_not_initialized">El sistema de reproducció d\'àudio no està inicialitzat. Intenteu reproduir alguna cosa!</string>
+    <string name="audio_signal_chain">Cadena del senyal d\'àudio</string>
 </resources>
