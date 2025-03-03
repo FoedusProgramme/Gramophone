@@ -303,4 +303,6 @@
     <string name="send_email">Saada e-kiri</string>
     <string name="send_email_manually">E-posti rakendust ei õnnestu tuvastada - seega lihtsalt saada e-kiri nift4dev@gmail.com aadressile</string>
     <string name="failed_to_parse_lyric">Laulusõnade liigendamine ei õnnestunud</string>
+    <string name="audio_signal_chain">Helisignaali ahel</string>
+    <string name="audio_not_initialized">Heli taasesituse süsteem pole algolekusse viidud. Proovi midagi kuulata!</string>
 </resources>
