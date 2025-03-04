@@ -311,4 +311,19 @@
     <string name="send_email">Wyślij wiadomość e-mail</string>
     <string name="send_email_manually">Wyślij dziennik na adres nift4dev@gmail.com - nie mogę znaleźć aplikacji pocztowej</string>
     <string name="failed_to_parse_lyric">Nie udało się przeanalizować tekstów</string>
+    <string name="mix_port_flag_ultrasound">Ultrasound</string>
+    <string name="mix_port_flag_voip_rx">VoIP RX</string>
+    <string name="mix_port_flag_mmap_noirq">MMAP (brak irq)</string>
+    <string name="mix_port_flag_spatializer">Spatializer</string>
+    <string name="mix_port_flag_raw">Raw</string>
+    <string name="mix_port_flag_hw_av_sync">Sprzętowa synchronizacja A/V</string>
+    <string name="mix_port_flag_tts">TTS</string>
+    <string name="mix_port_flag_direct_pcm">Direct PCM</string>
+    <string name="mix_port_flag_iec958_nonaudio">IEC 958 (bez dźwięku)</string>
+    <string name="mix_port_flag_none">Brak</string>
+    <string name="mix_port_flag_incall_music">Muzyka w trakcie połączenia</string>
+    <string name="audio_not_initialized">System odtwarzania dźwięku nie został zainicjowany. Spróbuj coś odtworzyć!</string>
+    <string name="mix_port_flag_sync">Synchronizuj</string>
+    <string name="mix_port_flag_non_blocking">Bez blokowania</string>
+    <string name="audio_signal_chain">Łańcuch sygnału audio</string>
 </resources>
