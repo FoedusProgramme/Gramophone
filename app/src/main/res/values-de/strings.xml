@@ -306,7 +306,6 @@
     <string name="mix_port_flag_bit_perfect">Bit perfect</string>
     <string name="mix_port_flag_direct_pcm">Direct PCM</string>
     <string name="mix_port_flag_sync">Sync</string>
-    <string name="mix_port_flag_compress_offload"></string>
     <string name="spk_encoding_pcm_8_24bit">24-bit (8,24) PCM</string>
     <string name="spk_encoding_amr_wb">AMR-WB</string>
     <string name="spk_encoding_aac">AAC</string>
