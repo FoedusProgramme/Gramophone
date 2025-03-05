@@ -1,4 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="home_menu_search">Buscar</string>
+    <string name="home_menu_shuffle">Barallar todo</string>
+    <string name="home_menu_refresh">Actualizar</string>
+    <string name="category_songs">Cancións</string>
+    <string name="category_albums">Álbums</string>
+    <string name="category_artists">Artistas</string>
+    <string name="category_genres">Xéneros</string>
+    <string name="category_playlists">Listas</string>
+    <string name="unknown_artist">Artista descoñecido</string>
+    <string name="category_dates">Datas</string>
+    <plurals name="songs">
+        <item quantity="one">%d Canción</item>
+        <item quantity="other">%d Cancións</item>
+    </plurals>
+    <plurals name="albums">
+        <item quantity="one">%d Álbum</item>
+        <item quantity="other">%d Álbums</item>
+    </plurals>
+    <plurals name="artists">
+        <item quantity="one">%d Artista</item>
+        <item quantity="other">%d Artistas</item>
+    </plurals>
+    <string name="sort_by_album">Álbum</string>
+    <plurals name="items">
+        <item quantity="one">%d Elemento</item>
+        <item quantity="other">%d Elementos</item>
+    </plurals>
+    <string name="follow_system">Seguir ao sistema</string>
+    <string name="dark">Escuro</string>
+    <string name="light">Claro</string>
+    <string name="sort_by_size">Tamaño</string>
+    <string name="sort_by_album_artist">Artista do álbum</string>
+    <string name="sort_by_name">Nome</string>
+    <string name="sort_by_artist">Artista</string>
+    <string name="dismiss">Desbotar</string>
+    <string name="unknown_genre">Xénero descoñecido</string>
+    <string name="unknown_year">Ano descoñecido</string>
+    <string name="refreshed_songs">Actualizáronse %1$s cancións</string>
+    <string name="search">Buscar</string>
+    <string name="share">Compartir</string>
+    <string name="settings_app_name">Nome da app</string>
+    <string name="settings_contributors">Colaboradoras</string>
+    <string name="play_next">Reproducir a seguir</string>
+    <string name="go_to_album">Ir ao álbum</string>
+    <string name="go_to_artist">Ir ao artista</string>
+    <string name="details">Detalles</string>
+    <string name="shuffle">Barallar</string>
+    <string name="repeat_mode">Modo de repetición</string>
+    <string name="unknown_playlist">Lista descoñecida</string>
+    <string name="settings_category_appearance">Aparencia</string>
+    <string name="album_artist">Artista do álbum</string>
+    <string name="unknown_version">Versión descoñecida</string>
+    <string name="settings_version">Versión</string>
+    <string name="dialog_title">Título</string>
+    <string name="dialog_artist">Artista</string>
+    <string name="settings_category_behavior">Comportamento</string>
+    <string name="settings_mediastore_filter">Lonxitude mínima da canción (s)</string>
+    <string name="settings_repository">Repositorio</string>
+    <string name="dialog_album">Álbum</string>
+    <string name="dialog_genre">Xénero</string>
+    <string name="dialog_album_artist">Artista do álbum</string>
+    <string name="dialog_track_number">Número de canción</string>
+    <string name="dialog_path">Ruta</string>
+    <string name="unknown_album">Álbum descoñecido</string>
+    <string name="recently_added">Adicións recentes</string>
+    <string name="folders">Cartafoles</string>
+    <string name="settings_app_theme">Decorado da app</string>
+    <string name="natural_order">Orde natural</string>
+    <string name="grid">Grella</string>
+    <string name="list">Lista</string>
+    <string name="layout">Disposición</string>
+    <string name="home_menu_equalizer">Ecualizador</string>
+    <string name="equalizer_not_found">Non hai ecualizador!</string>
+    <string name="compact_list">Lista (compacta)</string>
+    <string name="check_for_updates">Comproba a nosa canles de actualizacións!</string>
+    <string name="settings_default_progress_bar">Barra de progreso predeterminada</string>
+    <string name="settings_default_progress_bar_summary">Activar a barra de progreso co estilo de Material</string>
+    <string name="opensource_info">Código Aberto baixo a GPL-3.0\nDereitos %s</string>
+    <string name="playlist_favourite">Favorita</string>
+    <string name="settings_contributors_click">%s (saber máis!)</string>
+    <string name="app_name">Gramophone</string>
+    <string name="home_menu_settings">Axustes</string>
+    <string name="dialog_year">Ano</string>
 </resources>
