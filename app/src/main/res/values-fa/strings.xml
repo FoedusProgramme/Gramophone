@@ -344,7 +344,7 @@
     <string name="spk_encoding_aac_latm_lc">AAC-LC در LATM</string>
     <string name="mix_port_flag_primary">خروجی اولیه</string>
     <string name="mix_port_flag_tts">TTS</string>
-    <string name="mix_port_flag_hw_av_sync">هم‌گام‌سازی سخت‌افزاری A/V</string>
+    <string name="mix_port_flag_hw_av_sync">همگام‌سازی سخت‌افزاری A/V</string>
     <string name="spk_encoding_ape">Monkey\'s Audio</string>
     <string name="spk_encoding_evrcwb">EVRC WB</string>
     <string name="spk_encoding_aac_adif">AAC ADIF</string>
