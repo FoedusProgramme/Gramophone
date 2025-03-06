@@ -1,2 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="light">Gaišs</string>
+    <string name="unknown_genre">Nezināms žanrs</string>
+    <string name="sort_by_name">Nosaukums</string>
+    <string name="refreshed_songs">Atsvaidzinātas %1$s dziesmas</string>
+    <string name="sort_by_album">Albums</string>
+    <plurals name="songs">
+        <item quantity="zero">%d Dziesmas</item>
+        <item quantity="one">%d Dziesma</item>
+        <item quantity="other">%d Dziesmas</item>
+    </plurals>
+    <plurals name="artists">
+        <item quantity="zero">%d Mākslinieki</item>
+        <item quantity="one">%d Mākslinieks</item>
+        <item quantity="other">%d Mākslinieki</item>
+    </plurals>
+    <string name="sort_by_size">Izmērs</string>
+    <string name="unknown_artist">Nezināms mākslinieks</string>
+    <string name="category_playlists">Pleilistes</string>
+    <string name="sort_by_artist">Mākslinieks</string>
+    <string name="dark">Tumšs</string>
+    <string name="unknown_year">Nezināms gads</string>
+    <string name="category_artists">Mākslinieki</string>
+    <string name="category_dates">Datumi</string>
+    <string name="category_genres">Žanri</string>
+    <string name="dismiss">Atmest</string>
+    <string name="home_menu_search">Meklēt</string>
+    <string name="home_menu_settings">Iestatījumi</string>
+    <string name="home_menu_shuffle">Atskaņot jauktā secībā</string>
+    <string name="home_menu_refresh">Atsvaidzināt</string>
+    <string name="category_songs">Dziesmas</string>
+    <string name="category_albums">Albumi</string>
+    <string name="follow_system">Izmantot sistēmas iestatījumus</string>
+    <plurals name="items">
+        <item quantity="zero">%d Vienumi</item>
+        <item quantity="one">%d Vienums</item>
+        <item quantity="other">%d Vienumi</item>
+    </plurals>
+    <plurals name="albums">
+        <item quantity="zero">%d Albumi</item>
+        <item quantity="one">%d Albums</item>
+        <item quantity="other">%d Albumi</item>
+    </plurals>
+    <string name="sort_by_album_artist">Albuma mākslinieks</string>
+</resources>
