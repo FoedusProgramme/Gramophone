@@ -394,4 +394,9 @@
     <string name="spk_encoding_aac_adts_scalable">Skaleeritav AAC ADTSis</string>
     <string name="spk_encoding_aac_latm_he_v1">HE-AAC v1 LATMis</string>
     <string name="spk_encoding_aac_adts_ssr">AAC-SSR ADTSis</string>
+    <string name="crash_report">Rakenduse krahhiaruanne</string>
+    <string name="settings_export_logs">Ekspordi rakenduse logid</string>
+    <string name="gramophone_crashed_explainer2">Gramophone jooksis kokku :(\n\nEt sarnased vead, nagu praegu juhtus, saaksid parandatud, siis palun saada meile veateade!\n\nNii nagu ka muusika, on iga olukord unikaalne ja ilma sinu abita see viga tõenäoliselt <b>EI</b> saa parandatud!</string>
+    <string name="email_clipboard">E-posti aadress ja tekst on kopeeritud lõikelauale</string>
+    <string name="what_were_you_doing">Mida sa tegid Gramophone\'is, kui see viga juhtus? Et selle probleemi parandamise tõenäosus oleks suurem, siis palun lisa võimalikult palju üksikasju.\n\nPalun koosta veakirjeldus inglise keeles. Kui peaksid kasutama muud keelt, siis proovin masintõlke abiga tekstist selgust saada, aga kunagi ju ei tea, kuidas see toimib.</string>
 </resources>
