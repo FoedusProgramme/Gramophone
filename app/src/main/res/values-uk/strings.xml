@@ -402,4 +402,9 @@
     <string name="spk_encoding_mat_1_0">Dolby MAT 1.0</string>
     <string name="spk_encoding_aac_latm_lc">AAC-LC в LATM</string>
     <string name="spk_encoding_aac_ssr">AAC-SSR</string>
+    <string name="crash_report">Звіт про збій</string>
+    <string name="email_clipboard">Адресу електронної пошти та текст скопійовано в буфер обміну</string>
+    <string name="gramophone_crashed_explainer2">Грамофон зламався :( \n\nБудь ласка, надішліть мені звіт про помилку, щоб можна було виправити такі проблеми, як те, що призвело до цього збою! \n\nКожна ситуація унікальна, як музика, без вашої допомоги цю помилку, ймовірно, <b>НЕ</b> буде виправлено!</string>
+    <string name="settings_export_logs">Експорт журналів програм</string>
+    <string name="what_were_you_doing">Що ви робили в Gramophone, коли сталася ця аварія? Будь ласка, додайте якомога більше деталей, щоб збільшити шанси, що я зможу вирішити проблему. \n\nЗверніть увагу, що для звітів про помилки бажано використовувати англійську мову, але я спробую використовувати машинний переклад, якщо ви надсилатимете звіти про помилки іншою мовою.</string>
 </resources>
