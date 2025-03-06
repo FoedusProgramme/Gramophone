@@ -301,7 +301,6 @@
     <string name="bitrate_unknown">Bitrate inconnu</string>
     <string name="settings_open_source_licenses">Licenses open source</string>
     <string name="oh_no">Oh non !</string>
-    <string name="gramophone_crashed_explainer">Gramophone a planté :( Pour permettre la correction de ce plantage à l\'avenir, veuillez m\'envoyer un e-mail avec le journal affiché ci-dessous. C\'est très important, car les plantages dépendent des fichiers musicaux, des appareils... Je ne peux corriger les plantages que si je reçois des journaux de plantage ! Après tout, la version que vous utilisez semble fonctionner correctement pour moi. S\'il vous plait, prenez donc 2 minutes pour m\'envoyer ce journal de plantage !</string>
     <string name="send_email">Envoyer un email</string>
     <string name="send_email_manually">Veuillez envoyer le journal à nift4dev@gmail.com - impossible de trouver une application d\'email</string>
 </resources>

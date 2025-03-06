@@ -272,7 +272,6 @@
     <string name="dialog_bitrate">비트레이트</string>
     <string name="settings_contributors_long"><![CDATA[- nift4: 메인테이너 / 리드 개발자\n- 123Duo3: 리드 디자이너\n- AkaneTan: 기존 앱 개발자(현재 개발 중지)\n- imjyoritaditya: 개발자\n- WSTxda: 앱 아이콘 1종 디자인\n- pxe_emo: 새로운 가사 기능 테스팅\n- Lambada10: SongSync 개발자, 가사 샘플 제공\n- lightsummer233: 개발자\n- nicholaswww: 코드 기여\n- Yuyuko1024: 재생 바 디자인\n- ghhccghk: 상태 표시줄 가사\n- lucaxvi: 코드 기여\n- tungnk123: 코드 기여\n- topazrn: 코드 기여\n- strongville: 코드 기여\n- bggRGjQaUbCoE: 코드 기여\n- VishnuSanal: 코드 기여\n- mikooomich: 코드 기여\n- HotarunIchijou: 코드 기여\n- someone5678: 코드 기여\n- IzzySoft: 코드 기여\n- PalanixYT: 코드 기여\n- N3Shemmy3: 코드 기여]]></string>
     <string name="send_email_manually">nift4dev@gmail.com 주소로 로그를 보내 주세요. 메일 앱을 찾을 수 없습니다.</string>
-    <string name="gramophone_crashed_explainer">앱이 강제 종료되었습니다. 아래 로그를 첨부하여 이메일을 보내 주시면 오류 해결에 도움을 주실 수 있습니다. 앱 강제 종료 문제는 음악 파일이나 기기에 따라 다르게 나타날 수 있으므로, 로그를 확인해야 오류를 해결할 수 있습니다. 일단 제가 사용 중인 버전은 문제가 없는 것 같거든요. 그러니까 2분 정도만 시간을 내서 로그를 보내 주시면 감사하겠습니다.</string>
     <string name="bitrate_format">%1$d kbps</string>
     <string name="settings_contributors_click">%s(여기를 눌러 더 보기)</string>
     <string name="send_email">이메일 전송</string>
