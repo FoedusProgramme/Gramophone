@@ -393,4 +393,9 @@
     <string name="spk_encoding_unknown">Unknown format %s</string>
     <string name="spk_encoding_unknown_d">Formato descoñecido %d</string>
     <string name="send_email_manually">Envíame o informe a nift4dev@gmail.com - non atopo a app de correo</string>
+    <string name="email_clipboard">Copiáronse o enderezo de correo e texto ao portapapeis</string>
+    <string name="settings_export_logs">Exportar rexistro da app</string>
+    <string name="crash_report">Informe do fallo</string>
+    <string name="what_were_you_doing">Que estabas a facer en Gramophone cando xurdiu o problema? Por favor, engade cantos detalles sexan posibles para aumentar as posibilidades de que o solucione.\n\nTen en conta que o idioma Inglés é o preferido para informar sobre as incidencias, pero intentaremos traducilo se o envías noutro idioma.</string>
+    <string name="gramophone_crashed_explainer2">Gramophone fallou :(\n\nPor favor envíame un informe coa incidencia para que poida arranxar o problema!\n\nCada situación é única, como a música, sen a túa axuda é probable que este problema <b>NON</b> se solucione!</string>
 </resources>
