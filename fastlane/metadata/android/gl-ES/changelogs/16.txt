@@ -1,0 +1,3 @@
+- arranxo de problemas relacionados coa orde das pestanas
+- arranxo da compatibilidade do ecualizador
+- arranxo de problemas de accesibilidade (infórmame se persisten!)

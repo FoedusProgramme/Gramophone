@@ -1,0 +1,2 @@
+- permitir reordear e ocultar pestanas
+- arranxo de varios fallos

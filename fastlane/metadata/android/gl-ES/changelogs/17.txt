@@ -1,0 +1,3 @@
+- engadidas as letras na barra de estado en dispositivos MeiZu, selección de ROMs personalizadas e Lyric Getter Xposed (grazas a @ghhccghk)
+- arranxo de varios problemas e fallos
+- a habitual actualización das traducións (grazas ás persoas tradutoras!)
