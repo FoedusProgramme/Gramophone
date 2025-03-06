@@ -390,4 +390,7 @@
     <string name="spk_encoding_dts_uhd">DTS-UHD</string>
     <string name="spk_encoding_aac_ld">AAC-LD</string>
     <string name="audio_not_initialized">オーディオ再生システムが初期化されていません。何か音楽を再生してください！</string>
+    <string name="crash_report">クラッシュレポート</string>
+    <string name="email_clipboard">メールアドレスとテキストをクリップボードにコピーしました</string>
+    <string name="settings_export_logs">アプリのログをエクスポート</string>
 </resources>
