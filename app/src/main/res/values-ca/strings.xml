@@ -397,4 +397,7 @@
     <string name="spk_encoding_mpegh_sub_bl_l4">MPEG-H línea base perfil L4</string>
     <string name="spk_encoding_aac_adts_eld">AAC-ELD en ADTS</string>
     <string name="spk_encoding_mat_2_1">Dolby MAT 2.1</string>
+    <string name="gramophone_crashed_explainer2">El Gramophone ha fallat :(\n\nEnvieu-me un informe d\'error per tal que els problemes que han portat a aquesta fallada es puguin solucionar!\n\nAmb les situacions tan úniques com la música, sense la vostra ajuda, és probable que aquest error <b>NO</b> es pugui corregir!</string>
+    <string name="crash_report">Informe de fallada</string>
+    <string name="what_were_you_doing">Què fèieu al Gramophone quan va passar aquesta fallada? Afegiu tants detalls com sigui possible per a augmentar les possibilitats que jo pugui solucionar el problema.\n\nTingueu en compte que es prefereix l\'anglès als informes d\'errors, però intentaré utilitzar la traducció automàtica si envieu informes d\'errors en un altre idioma.</string>
 </resources>
