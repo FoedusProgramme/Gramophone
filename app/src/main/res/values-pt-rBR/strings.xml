@@ -310,7 +310,6 @@
     <string name="device_type_hdmi_earc">Canal de retorno de áudio aprimorado HDMI</string>
     <string name="mix_port_flag_spatializer">Espacializador</string>
     <string name="mix_port_flag_ultrasound">Ultrasound</string>
-    <string name="spk_encoding_aptx_adaptive"></string>
     <string name="audio_signal_chain">Cadeia de sinal</string>
     <string name="device_type_hdmi">HDMI</string>
     <string name="device_type_wired_headset">Headset com fio</string>
