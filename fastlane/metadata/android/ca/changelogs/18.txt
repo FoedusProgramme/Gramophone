@@ -1,0 +1,8 @@
+- Mostra la taxa de bits en el diàleg de detalls
+- Experimental: analitzador nou de lletres per a sincronitzar paraules LRC & TTML, SRT (properament IU)
+- Informació del format d'àudio a la pantalla Està sonant
+- Actualització automàtica de la biblioteca
+- «Obre en el Gramophone» des del reproductor de fitxers
+- Giny de lletres
+- Ordenació millorada
+- Moltes correccions d'errors
