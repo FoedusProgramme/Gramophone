@@ -325,4 +325,20 @@
     <string name="mix_port_flag_sync">Synchronizuj</string>
     <string name="mix_port_flag_non_blocking">Bez blokowania</string>
     <string name="audio_signal_chain">Łańcuch sygnału audio</string>
+    <string name="mix_port_flag_gapless_offload">wspracie Gapless</string>
+    <string name="mix_port_flag_fast">Szybki</string>
+    <string name="mix_port_flag_primary">Główne wyjście</string>
+    <string name="spk_encoding_pcm_8_24bit">24-bit (8.24) PCM</string>
+    <string name="spk_encoding_amr_wb">AMR-WB</string>
+    <string name="spk_encoding_evrc">EVRC</string>
+    <string name="spk_encoding_evrcb">EVRC-B</string>
+    <string name="spk_encoding_flac">FLAC</string>
+    <string name="spk_encoding_amr_wb_plus">AMR-WB+</string>
+    <string name="spk_encoding_alac">ALAC</string>
+    <string name="spk_encoding_vorbis">Vorbis</string>
+    <string name="spk_encoding_aac">AAC</string>
+    <string name="spk_encoding_evrcwb">EVRC WB</string>
+    <string name="spk_encoding_iec61937">IEC 61937</string>
+    <string name="mix_port_flag_unknown">Nieznany</string>
+    <string name="spk_encoding_amr_nb">AMR-NB</string>
 </resources>
