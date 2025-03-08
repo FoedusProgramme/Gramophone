@@ -411,4 +411,6 @@
     <string name="what_were_you_doing">What were you doing in Gramophone when this crash happened? Please add as many details as possible to increase the chances of me being able to fix the problem.\n\nPlease note that English is preferred for bug reports, but I will try to use machine translation if you send bug reports in another language.</string>
     <string name="email_clipboard">Copied e-mail address and text to clipboard</string>
     <string name="settings_export_logs">Export app logs</string>
+    <string name="settings_audio_quality_info">Audio quality info</string>
+    <string name="settings_audio_quality_info_summary">Show audio quality/format information on the player screen</string>
 </resources>
