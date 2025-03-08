@@ -393,4 +393,8 @@
     <string name="crash_report">クラッシュレポート</string>
     <string name="email_clipboard">メールアドレスとテキストをクリップボードにコピーしました</string>
     <string name="settings_export_logs">アプリのログをエクスポート</string>
+    <string name="gramophone_crashed_explainer2">Gramophone がクラッシュしました :(\n\nこのクラッシュの原因となった問題を修正するためのバグレポートを送信してください！\n\n音楽と同様に状況はそれぞれ異なります。あなたの助けがなければこのバグは<b>修正されない</b>可能性があります！</string>
+    <string name="settings_audio_quality_info_summary">プレーヤー画面にオーディオ品質、形式情報を表示します</string>
+    <string name="what_were_you_doing">クラッシュの発生時に Gramophone で何をしていましたか？問題を解決できる可能性を高めるために、できるだけ多くの詳細情報を追加してください。\n\nバグレポートは英語を推奨しますが、別の言語でバグレポートを送信した場合は、翻訳サービスを使用するように努めます。</string>
+    <string name="settings_audio_quality_info">オーディオ品質情報</string>
 </resources>
