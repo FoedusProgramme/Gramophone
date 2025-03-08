@@ -1,0 +1,9 @@
+Hotfix. Allow disabling audio format info. Last changelog:
+- Show bitrate in details dialog
+- Experimental: new lyric parser for word-sync LRC & TTML, SRT (UI coming soon)
+- Audio format info in Now Playing screen
+- Automatic library refresh
+- "Open in Gramophone" from file player
+- Lyric widget
+- Improved sorting
+- A lot of bug fixes
