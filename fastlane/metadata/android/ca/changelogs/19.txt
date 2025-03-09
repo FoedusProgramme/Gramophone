@@ -1,0 +1,9 @@
+Correcció ràpida. Permet desactivar la informació del format d'àudio. Últim registre de canvis:
+- Mostra la taxa de bits al diàleg de detalls
+- Experimental: analitzador nou de lletres per a sincronitzar paraules LRC i TTML, SRT (properament a la IU)
+- Informació del format d'àudio a la pantalla «Ara sona»
+- Actualització automàtica de la biblioteca
+- «Obre en el Gramophone» al reproductor de fitxers
+- Giny de lletresc
+- Ordenació millorada
+- Moltes correccions d'errors
