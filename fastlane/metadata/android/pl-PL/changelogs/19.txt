@@ -1,0 +1,9 @@
+Poprawka. Umożliwia wyłączenie informacji o formacie audio. Ostatni dziennik zmian:
+- Pokaż bitrate w oknie dialogowym szczegółów
+- Eksperymentalne: nowy parser tekstów dla synchronizacji słów LRC i TTML, SRT (interfejs użytkownika wkrótce)
+- Informacje o formacie audio na ekranie Teraz odtwarzane
+- Automatyczne odświeżanie biblioteki
+- „Otwórz w Gramofonie” z poziomu odtwarzacza plików
+- Widżet tekstów
+- Ulepszone sortowanie
+- Wiele poprawek błędów
