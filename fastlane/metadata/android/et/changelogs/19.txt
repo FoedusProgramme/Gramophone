@@ -1,0 +1,9 @@
+Kiirparandus, mis võimaldab helivormingu kuvamise välja lülitada. Ülejäänud muudatuste logi:
+- Näitame üksikasjade vaates bitikiirust
+- Katseline: uus laulusõnade parser sõnahaaval sünkroniseerimiseks LRC & TTML, SRT (kasutajaliides lisandub varsti)
+- Helivormingu teave hetkel esitamise vaates
+- Automaatne meediakogu uuendus
+- „Ava Gramophone'is“ võimalus failihalduris
+- Laulusõnade vidin
+- Parem järjestamise võimalus
+- Rohkelt veaparandusi
