@@ -375,4 +375,11 @@
     <string name="mix_port_flag_direct_pcm">Direct PCM</string>
     <string name="failed_to_parse_lyric">가사 분석 실패</string>
     <string name="cannot_play_file">파일 재생 실패</string>
+    <string name="gramophone_crashed_explainer2">Gramophone이 중지되었습니다.\n\n문제를 해결할 수 있도록 버그를 신고해 주세요!\n\n문제의 원인은 음악만큼이나 제각기 달라서, 여러분의 도움이 없으면 이 버그가 <b>절대</b> 고쳐지지 않을 수도 있습니다!</string>
+    <string name="crash_report">앱 비정상 종료 보고</string>
+    <string name="email_clipboard">이메일 주소를 클립보드에 복사했습니다</string>
+    <string name="settings_export_logs">앱 로그 내보내기</string>
+    <string name="settings_audio_quality_info">오디오 품질 정보</string>
+    <string name="settings_audio_quality_info_summary">플레이어 화면에 오디오 품질/포맷 정보 표시</string>
+    <string name="what_were_you_doing">앱이 비정상 종료되기 직전에 무엇을 하고 계셨나요? 문제를 해결할 수 있도록 최대한 자세히 작성해 주세요.\n\n영어로 작성해 주시면 가장 좋지만, 다른 언어로 보내 주셔도 기계 번역을 사용해서 확인해 보겠습니다.</string>
 </resources>
