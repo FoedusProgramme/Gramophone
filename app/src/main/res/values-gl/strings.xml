@@ -101,7 +101,7 @@
     <string name="settings_title_center_summary">Pór o título en pantalla completa</string>
     <string name="settings_player_ui">Interface</string>
     <string name="settings_player_ui_summary">Interface pantalla completa, letras</string>
-    <string name="settings_appearance_summary">Aparencia da aplicación, tipos de decoración</string>
+    <string name="settings_appearance_summary">Modo do decorado, lapelas</string>
     <string name="settings_about_app">Sobre</string>
     <string name="settings_about_gramophone">Sobre a aplicación</string>
     <string name="settings_behavior_summary">Filtros, comportamentos</string>
@@ -398,4 +398,6 @@
     <string name="crash_report">Informe do fallo</string>
     <string name="what_were_you_doing">Que estabas a facer en Gramophone cando xurdiu o problema? Por favor, engade cantos detalles sexan posibles para aumentar as posibilidades de que o solucione.\n\nTen en conta que o idioma Inglés é o preferido para informar sobre as incidencias, pero intentaremos traducilo se o envías noutro idioma.</string>
     <string name="gramophone_crashed_explainer2">Gramophone fallou :(\n\nPor favor envíame un informe coa incidencia para que poida arranxar o problema!\n\nCada situación é única, como a música, sen a túa axuda é probable que este problema <b>NON</b> se solucione!</string>
+    <string name="settings_audio_quality_info">Info da calidade do audio</string>
+    <string name="settings_audio_quality_info_summary">Mostra información sobre o formato/calidade na pantalla de reprodución</string>
 </resources>
