@@ -1,0 +1,9 @@
+Un arranxo rápido, permitindo desactivar a info sobre o audio. Úlitmos cambios:
+- Mostra taxa de datos con detalle
+- Experimental: novo procesador das letras para sincronizar por palabras LRC & TTML, SRT (pronto na IU)
+- Info sobre o formato de audio na pantalla do reprodutor
+- Actualización automática da biblioteca
+- Opción "Abrir en Gramophone" nos ficheiros
+- Trebello para as letras
+- Orde mellorada
+- Moitos arranxos e melloras
