@@ -180,7 +180,7 @@
     <string name="skip_next">Zum Nächsten springen</string>
     <string name="skip_previous">Zum Vorherigen springen</string>
     <string name="settings_preference_category_home">Startbildschirm</string>
-    <string name="shuffle_all">Alle zufällig abspielen</string>
+    <string name="shuffle_all">Alles zufällig abspielen</string>
     <string name="scroll_to_songs">Zu den Titeln scrollen</string>
     <string name="settings_lyrics_parser">Neuer Liedtext-Parser</string>
     <string name="settings_lyrics_parser_summary">Neuen Liedtext-Parser benutzen, der Wort-für-Wort-Synchronisierung, Sprecher-Indikator, Zeitversetzung und mehr unterstützt</string>
