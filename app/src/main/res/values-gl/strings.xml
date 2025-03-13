@@ -74,12 +74,12 @@
     <string name="home_menu_equalizer">Ecualizador</string>
     <string name="equalizer_not_found">Non hai ecualizador!</string>
     <string name="compact_list">Lista (compacta)</string>
-    <string name="check_for_updates">Comproba a nosa canles de actualizacións!</string>
+    <string name="check_for_updates">Accede á nosa canle de actualizacións!</string>
     <string name="settings_default_progress_bar">Barra de progreso predeterminada</string>
     <string name="settings_default_progress_bar_summary">Activar a barra de progreso co estilo de Material</string>
     <string name="opensource_info">Código Aberto baixo a GPL-3.0\nDereitos %s</string>
     <string name="playlist_favourite">Favorita</string>
-    <string name="settings_contributors_click">%s (saber máis!)</string>
+    <string name="settings_contributors_click">%s (ler máis)</string>
     <string name="app_name">Gramophone</string>
     <string name="home_menu_settings">Axustes</string>
     <string name="dialog_year">Ano</string>
@@ -98,10 +98,10 @@
     <string name="dialog_mime">Tipo MIME</string>
     <string name="dialog_duration">Duración</string>
     <string name="settings_title_center">Título centrado</string>
-    <string name="settings_title_center_summary">Pór o título en pantalla completa</string>
+    <string name="settings_title_center_summary">Centrar o título en pantalla completa</string>
     <string name="settings_player_ui">Interface</string>
-    <string name="settings_player_ui_summary">Interface pantalla completa, letras</string>
-    <string name="settings_appearance_summary">Modo do decorado, lapelas</string>
+    <string name="settings_player_ui_summary">IU en pantalla completa, letras</string>
+    <string name="settings_appearance_summary">Modo do decorado, pestanas</string>
     <string name="settings_about_app">Sobre</string>
     <string name="settings_about_gramophone">Sobre a aplicación</string>
     <string name="settings_behavior_summary">Filtros, comportamentos</string>
@@ -169,8 +169,8 @@
     <string name="timer_expiry">O temporizador deterá a música ás %s</string>
     <string name="separator_dot">•</string>
     <string name="settings_preference_category_home">Inicio</string>
-    <string name="tab_order">Configurar orde de lapelas</string>
-    <string name="tab_order_summary">A app mostrará a primeira pestana no inicio. As pestanas após o divisor estarán ocultos.</string>
+    <string name="tab_order">Establecer orde das pestanas</string>
+    <string name="tab_order_summary">A app mostrará a primeira pestana no inicio. As pestanas após o divisor estarán ocultas.</string>
     <string name="seekbar">Buscador</string>
     <string name="divider">División</string>
     <string name="back">Volver</string>
@@ -399,5 +399,5 @@
     <string name="what_were_you_doing">Que estabas a facer en Gramophone cando xurdiu o problema? Por favor, engade cantos detalles sexan posibles para aumentar as posibilidades de que o solucione.\n\nTen en conta que o idioma Inglés é o preferido para informar sobre as incidencias, pero intentaremos traducilo se o envías noutro idioma.</string>
     <string name="gramophone_crashed_explainer2">Gramophone fallou :(\n\nPor favor envíame un informe coa incidencia para que poida arranxar o problema!\n\nCada situación é única, como a música, sen a túa axuda é probable que este problema <b>NON</b> se solucione!</string>
     <string name="settings_audio_quality_info">Info da calidade do audio</string>
-    <string name="settings_audio_quality_info_summary">Mostra información sobre o formato/calidade na pantalla de reprodución</string>
+    <string name="settings_audio_quality_info_summary">Mostra info sobre o formato/calidade na pantalla de reprodución</string>
 </resources>
