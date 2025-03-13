@@ -388,7 +388,7 @@
     <string name="mix_port_flag_tts">TTS</string>
     <string name="audio_signal_chain">Weg des Audiosignals</string>
     <string name="audio_not_initialized">Das Audiowiedergabesystem ist noch nicht initialisiert. Versuch mal, etwas abzuspielen!</string>
-    <string name="crash_report">Fehlerbericht</string>
+    <string name="crash_report">Absturzbericht</string>
     <string name="email_clipboard">E-Mail-Adresse und Text wurden in die Zwischenablage kopiert</string>
     <string name="settings_export_logs">App-Protokolle exportieren</string>
     <string name="gramophone_crashed_explainer2">Gramophone ist abgestürzt :(\n\nBitte sende mir einen Fehlerbericht, sodass Probleme wie das, welches diesen Absturz verursacht hat, behoben werden können!\n\nJede Situation ist so einzigartig wie Musik, ohne deine Hilfe ist es wahrscheinlich, das dieser Fehler <b>NICHT</b> behoben wird!</string>
