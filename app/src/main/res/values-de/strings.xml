@@ -393,4 +393,6 @@
     <string name="settings_export_logs">App-Protokolle exportieren</string>
     <string name="gramophone_crashed_explainer2">Gramophone ist abgestürzt :(\n\nBitte sende mir einen Fehlerbericht, sodass Probleme wie das, welches diesen Absturz verursacht hat, behoben werden können!\n\nJede Situation ist so einzigartig wie Musik, ohne deine Hilfe ist es wahrscheinlich, das dieser Fehler <b>NICHT</b> behoben wird!</string>
     <string name="what_were_you_doing">Was hast du in Gramophone gemacht, bevor dieser Absturz passiert ist? Bitte erklär es so detailliert wie möglich, um die Chance zu erhöhen, dass ich das Problem beheben kann.\n\nEnglisch ist die bevorzugte Sprache für Fehlerberichte, für andere Sprachen werde ich versuchen, Maschinenübersetzung zu benutzen.</string>
+    <string name="settings_audio_quality_info">Audioqualität anzeigen</string>
+    <string name="settings_audio_quality_info_summary">Informationen über Audioformat/-qualität im Player anzeigen</string>
 </resources>
