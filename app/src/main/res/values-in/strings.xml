@@ -17,7 +17,7 @@
     <string name="category_playlists">Daftar Putar</string>
     <string name="home_menu_refresh">Muat ulang</string>
     <string name="home_menu_search">Cari</string>
-    <string name="category_songs">Login</string>
+    <string name="category_songs">Lagu</string>
     <string name="unknown_artist">Artis tidak dikenal</string>
     <plurals name="albums">
         <item quantity="other">%d Album</item>
@@ -250,4 +250,5 @@
     <string name="spk_channel_out_top_center">Tengah Atas</string>
     <string name="spk_channel_out_bottom_front_center">Sisi Bawah Tengah</string>
     <string name="spk_channel_out_bottom_front_right">Sisi Bawah Kanan</string>
+    <string name="spk_encoding_aac_xhe">xHE-AAC</string>
 </resources>
