@@ -318,7 +318,7 @@
     <string name="spk_encoding_sbc">SBC</string>
     <string name="spk_encoding_ldac">LDAC</string>
     <string name="spk_encoding_celt">CELT</string>
-    <string name="spk_encoding_lhdc_ll">LLAC (LDHC-LL)</string>
+    <string name="spk_encoding_lhdc_ll">LLAC (LHDC-LL)</string>
     <string name="spk_encoding_iec60958">IEC 60958</string>
     <string name="spk_encoding_aptx_adaptive_qlea">aptX Adaptive через LE Audio</string>
     <string name="spk_encoding_aac_adts_ltp">AAC-LTP в ADTS</string>

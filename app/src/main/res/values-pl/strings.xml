@@ -366,7 +366,7 @@
     <string name="spk_encoding_qcelp">QCELP</string>
     <string name="spk_encoding_dra">DRA</string>
     <string name="spk_encoding_sbc">SBC</string>
-    <string name="spk_encoding_lhdc_ll">LLAC (LDHC-LL)</string>
+    <string name="spk_encoding_lhdc_ll">LLAC (LHDC-LL)</string>
     <string name="spk_encoding_aac_adts_ltp">AAC-LTP w ADTS</string>
     <string name="what_were_you_doing">Co robiłeś/aś w Gramophone, gdy wystąpiła ta awaria? Podaj jak najwięcej szczegółów, aby zwiększyć szanse na naprawienie problemu.\n\nPamiętaj, że w przypadku zgłoszeń błędów preferowany jest język angielski, ale spróbuję użyć tłumaczenia maszynowego, jeśli wyślesz zgłoszenie w innym języku.</string>
     <string name="spk_encoding_lc3">LC3</string>

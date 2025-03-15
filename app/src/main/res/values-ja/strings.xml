@@ -368,7 +368,7 @@
     <string name="spk_encoding_dsd">ダイレクトストリームデジタル (DSD)</string>
     <string name="spk_encoding_evrc">EVRC</string>
     <string name="spk_encoding_aac_adts">AAC in ADTS</string>
-    <string name="spk_encoding_lhdc_ll">LLAC (LDHC-LL)</string>
+    <string name="spk_encoding_lhdc_ll">LLAC (LHDC-LL)</string>
     <string name="spk_encoding_mpegh">MPEG-H</string>
     <string name="spk_encoding_aac_adts_eld">AAC-ELD in ADTS</string>
     <string name="spk_encoding_aptx_twsp">aptX TWS+</string>

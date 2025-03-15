@@ -368,7 +368,7 @@
     <string name="spk_encoding_celt">CELT</string>
     <string name="spk_encoding_aptx_adaptive">aptX Adaptive</string>
     <string name="spk_encoding_lhdc">LHDC</string>
-    <string name="spk_encoding_lhdc_ll">LLAC (LDHC-LL)</string>
+    <string name="spk_encoding_lhdc_ll">LLAC (LHDC-LL)</string>
     <string name="spk_encoding_aptx_twsp">aptX TWS+</string>
     <string name="spk_encoding_lc3">LC3</string>
     <string name="spk_encoding_mpegh">MPEG-H</string>

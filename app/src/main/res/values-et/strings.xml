@@ -357,7 +357,7 @@
     <string name="mix_port_flag_hw_av_sync">Raudvaraline A/V sünkroniseerimine</string>
     <string name="mix_port_flag_direct">Otseväljund</string>
     <string name="spk_encoding_aac_latm">AAC LATMis</string>
-    <string name="spk_encoding_lhdc_ll">LLAC (LDHC-LL)</string>
+    <string name="spk_encoding_lhdc_ll">LLAC (LHDC-LL)</string>
     <string name="spk_encoding_mat_1_0">Dolby MAT 1.0</string>
     <string name="spk_encoding_mat_2_1">Dolby MAT 2.1</string>
     <string name="spk_encoding_aptx">aptX</string>

@@ -322,7 +322,7 @@
     <string name="mix_port_flag_primary">Primary output</string>
     <string name="audio_not_initialized">오디오 재생 시스템이 초기화되지 않았습니다. 아무거나 재생해 보세요!</string>
     <string name="mix_port_flag_bit_perfect">비트 퍼펙트</string>
-    <string name="spk_encoding_lhdc_ll">LLAC (LDHC-LL)</string>
+    <string name="spk_encoding_lhdc_ll">LLAC (LHDC-LL)</string>
     <string name="mix_port_flag_ultrasound">Ultrasound</string>
     <string name="mix_port_flag_iec958_nonaudio">IEC 958 (non-audio)</string>
     <string name="spk_encoding_aac">AAC</string>

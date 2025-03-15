@@ -356,7 +356,7 @@
     <string name="spk_encoding_mpegh_sub_lc_l4">MPEG-H Low Complexity L4</string>
     <string name="spk_encoding_amr_wb">AMR-WB</string>
     <string name="spk_encoding_aac">AAC</string>
-    <string name="spk_encoding_lhdc_ll">LLAC (LDHC-LL)</string>
+    <string name="spk_encoding_lhdc_ll">LLAC (LHDC-LL)</string>
     <string name="spk_encoding_lc3">LC3</string>
     <string name="spk_encoding_aac_ssr">AAC-SSR</string>
     <string name="spk_encoding_mpegh_sub_lc_l3">MPEG-H Low Complexity L3</string>

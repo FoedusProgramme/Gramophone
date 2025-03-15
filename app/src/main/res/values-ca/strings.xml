@@ -388,7 +388,7 @@
     <string name="spk_encoding_dra">DRA</string>
     <string name="spk_encoding_dts_hd_ma">Àudio mestre DTS-HD</string>
     <string name="spk_encoding_aptx">aptX</string>
-    <string name="spk_encoding_lhdc_ll">LLAC (LDHC-LL)</string>
+    <string name="spk_encoding_lhdc_ll">LLAC (LHDC-LL)</string>
     <string name="spk_encoding_aac_ltp">AAC-LTP</string>
     <string name="spk_encoding_aac_ld">AAC-LD</string>
     <string name="spk_encoding_aptx_twsp">aptX TWS+</string>
