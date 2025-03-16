@@ -1,0 +1,9 @@
+Correctif. Possibilité de désactiver les informations sur le format audio. Dernières modifications :
+- Affichage du débit binaire dans la boîte de dialogue détails
+- Expérimental : nouvel analyseur de paroles pour la synchronisation des mots LRC, TTML et SRT (interface utilisateur bientôt disponible)
+- Informations sur le format audio dans l'écran Lecture en cours
+- Actualisation automatique de la bibliothèque
+- « Ouvrir dans Gramophone » depuis le lecteur de fichiers
+- Widget Paroles
+- Tri amélioré
+- Nombreuses corrections de bugs
