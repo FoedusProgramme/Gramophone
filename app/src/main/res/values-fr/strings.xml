@@ -65,7 +65,7 @@
     <string name="dialog_genre">Genre</string>
     <string name="category_artists">Artistes</string>
     <string name="go_to_artist">Voir l’artiste</string>
-    <string name="home_menu_search">Recherche</string>
+    <string name="home_menu_search">Rechercher</string>
     <string name="layout">Affichage</string>
     <string name="play_next">Jouer ensuite</string>
     <string name="repeat_mode">Mode répétition</string>
@@ -166,7 +166,7 @@
     <string name="fgs_failed_text">Cliquez ici pour ouvrir l\'application et continuer la lecture</string>
     <string name="fgs_failed_channel">La reprise de la lecture a échoué</string>
     <string name="separator_dot">•</string>
-    <string name="home_menu_shuffle">Jouer aléatoirement</string>
+    <string name="home_menu_shuffle">Tout jouer aléatoirement</string>
     <string name="app_name">Gramophone</string>
     <string name="lyric_widget_description">Widget qui affiche les paroles des médias joués</string>
     <string name="settings_preference_category_home">Écran d\'accueil</string>
@@ -303,4 +303,12 @@
     <string name="oh_no">Oh non !</string>
     <string name="send_email">Envoyer un email</string>
     <string name="send_email_manually">Veuillez envoyer le journal à nift4dev@gmail.com - impossible de trouver une application d\'email</string>
+    <string name="mix_port_flag_none">Aucun</string>
+    <string name="audio_not_initialized">Le système de lecture audio n\'a pas été initialisé. Essaye de jouer quelque chose !</string>
+    <string name="mix_port_flag_spatializer">Son spatial</string>
+    <string name="mix_port_flag_ultrasound">Ultrason</string>
+    <string name="gramophone_crashed_explainer2">Gramophone à crasher :(\n\nMerci de m\'envoyer un rapport de bug pour que les problèmes comme celle qui a conduit à ce crash peut être résolu !\n\nChaques situations aussi unique que la musique, sans votre aide il est probable que ce bug ne sera <b>PAS</b> résolu !</string>
+    <string name="spk_encoding_opus">Opus</string>
+    <string name="audio_signal_chain">Chaîne son spatial</string>
+    <string name="settings_lyrics_no_animation_summary">Désactive la transition de toutes les lignes dans l\'animation des paroles</string>
 </resources>
