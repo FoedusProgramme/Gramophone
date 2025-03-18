@@ -1,0 +1,4 @@
+- Fájl lejátszó újragondolása
+- Képernyő bekapcsolva marad dalszövegek megtekintésnél
+- SD kártya támogatása a Fájlrendszer fülön
+- Hiba javítások

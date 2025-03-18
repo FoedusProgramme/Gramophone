@@ -1,0 +1,3 @@
+- A fülek rendezésénél felbukkanó hibák javítása
+- Hangszintszabályozó támogatás javítása
+- Könnyű-kezelési problémák javítása (kérem jelezze, ha még van ilyen!)

@@ -1,0 +1,9 @@
+Gyorsjavítás. Kikapcsolható hang formátum információ. Utolsó változásnapló:
+- Bitráta megjelenítése a részletek panelen
+- Kísérleti: új dalszöveg elemző szó-szinkronhoz LRC & TTML, SRT (felület hamarosan)
+- Hang formátum a Lejátszás Alatt képernyőn
+- Automatikus könyvtár frissítés
+- "Megnyitás Gramophone-ban" a fájl lejátszónál
+- Dalszöveg widget
+- Feljavított sorba rendezés
+- Megannyi hibajavítás

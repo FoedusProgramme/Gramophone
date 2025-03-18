@@ -1,0 +1,8 @@
+- Bitráta megjelenítése a részletek panelnél
+- Kísérleti: új dalszöveg elemző szó-szinkronhoz LRC & TTML, SRT (felület hamarosan)
+- Hang formátum információ a Lejátszás Alatt képernyőn
+- Automatikus könyvtár frissítés
+- "Megnyitás Gramophone-ban" a fájl lejátszóban
+- Dalszöveg widget
+- Feljavított sorba rendezés
+- Megannyi hibajavítás

@@ -1,0 +1,1 @@
+Egyszerű offline zene lejátszó minimalista konstrukcióval
