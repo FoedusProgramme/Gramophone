@@ -191,4 +191,6 @@
     <string name="no">不是</string>
     <string name="sort_by_file_path">文件路径</string>
     <string name="sort_by_album_artist">专辑艺术家</string>
+    <string name="delete_really">真的要删除\"%s\"吗？此操作无法撤回。</string>
+    <string name="settings_contributors_click">%s (点击展开更多)</string>
 </resources>
