@@ -37,10 +37,10 @@
     <string name="shuffle">درهم</string>
     <string name="settings_category_appearance">نمایه</string>
     <string name="repeat_mode">حالت تکرار</string>
-    <string name="unknown_version">نگارش ناشناخته</string>
+    <string name="unknown_version">نسخه ناشناخته</string>
     <string name="settings_category_behavior">رفتار</string>
     <string name="dialog_title">عنوان</string>
-    <string name="settings_version">نگارش</string>
+    <string name="settings_version">نسخه</string>
     <string name="dialog_album_artist">هنرمند آلبوم</string>
     <string name="folders">پوشه‌ها</string>
     <string name="settings_mediastore_filter">کمینۀ طول آهنگ (ثانیه)</string>
@@ -63,7 +63,7 @@
     <string name="now_playing">در حال پخش</string>
     <string name="settings_package_type">گونۀ بسته</string>
     <string name="unknown_title">نام ناشناخته</string>
-    <string name="settings_appearance_summary">ظاهر کاره، حالت‌های زمینه</string>
+    <string name="settings_appearance_summary">ظاهر برنامه، حالت‌های زمینه</string>
     <string name="settings_title_center">نام در مرکز</string>
     <string name="dialog_duration">مدت زمان</string>
     <string name="filesystem">مدیریت پرونده‌ها</string>
@@ -93,20 +93,20 @@
     <string name="settings_lyrics_configuration_summary">پیکربندی ظاهر ترانه‌ها</string>
     <string name="settings_blacklist_folder_summary">پالایش آوازها از شاخه‌های مشخص</string>
     <string name="settings_lyrics_bold_summary">استفاده از وزن فونت سنگین‌تر در ترانه‌ها</string>
-    <string name="settings_preference_category_application">کاره</string>
+    <string name="settings_preference_category_application">برنامه</string>
     <string name="settings_category_basic_info">اطلاعات پایه</string>
-    <string name="settings_crash_application">فروپاشی کاره</string>
+    <string name="settings_crash_application">برنامه ازکار افتاد</string>
     <string name="settings_category_filters">پالایش‌ها</string>
     <string name="settings_category_full_player">پخش کنندۀ کامل</string>
     <string name="settings_category_misc">متفرقه</string>
     <string name="preference_category_quality">کیفیت</string>
-    <string name="crash_clipboard">گزارش فروپاشی در تخته‌گیره رونوشت شد</string>
+    <string name="crash_clipboard">گزارش ازکار افتادن در کلیپ‌بورد ذخیره شد</string>
     <string name="dialog_edit_metadata">ویرایش</string>
     <string name="dialog_lyrics">ترانه‌ها</string>
     <string name="deny_images"><![CDATA[لطفا اجازۀ دسترسی به «تصاویر و ویدیوها» را نپذیرید]]></string>
     <string name="settings_trim_lyrics">برداشتن فاصله‌های اطراف ترانه‌ها</string>
     <string name="settings_about_app">درباره</string>
-    <string name="settings_about_gramophone">دربارۀ کاره</string>
+    <string name="settings_about_gramophone">دربارۀ برنامه</string>
     <string name="sort_by_add_date">تاریخ افزودن</string>
     <string name="sort_by_album">آلبوم</string>
     <string name="dialog_album">آلبوم</string>
@@ -133,8 +133,7 @@
     <string name="settings_player_ui_summary">رابط کاربری پخش کننده، ترانه‌ها</string>
     <string name="dialog_genre">سبک</string>
     <string name="compact_list">فهرست (جمع و جور)</string>
-    <string name="opensource_info">متن‌باز شده با قوانین GPL-3.0
-\nگواهی پخش %s</string>
+    <string name="opensource_info">متن‌باز شده با قوانین GPL-3.0\nگواهی پخش %s</string>
     <string name="settings_player_options_summary">کیفیت خروجی، رفتار پخش کننده</string>
     <string name="category_playlists">فهرست‌های پخش</string>
     <string name="settings_play_on_launch_summary">پخش آهنگ در اجرا</string>
@@ -180,7 +179,7 @@
     <string name="expand_less">بستن</string>
     <string name="skip_previous">رد کردن به قبلی</string>
     <string name="scroll_to_songs">لغزش به آهنگ‌ها</string>
-    <string name="settings_preference_category_home">صفحۀ اصلی</string>
+    <string name="settings_preference_category_home">صفحه اصلی</string>
     <string name="position_slider">لغزندۀ موقعیت</string>
     <string name="settings_lyrics_parser">تجزیه‌گر تراتۀ جدید</string>
     <string name="settings_lyrics_parser_summary">به کار انداختن تجزیه‌گر ترانۀ جدید که از همگام‌سازی کلمه‌به‌کلمه، نشانگر سخنگو، جابه‌جایی و بیشتر پشتیبانی می‌کند</string>
@@ -310,7 +309,7 @@
     <string name="mix_port_flag_direct_pcm">PCM مستقیم</string>
     <string name="mix_port_flag_sync">هم‌گام</string>
     <string name="mix_port_flag_compress_offload">تخلیۀ فشرده</string>
-    <string name="mix_port_flag_non_blocking">بدون مسدودسازی</string>
+    <string name="mix_port_flag_non_blocking">مسدود-نکننده</string>
     <string name="mix_port_flag_fast">سریع</string>
     <string name="mix_port_flag_direct">مستقیم</string>
     <string name="mix_port_flag_unknown">ناشناخته</string>
@@ -332,7 +331,7 @@
     <string name="spk_encoding_aac_latm_he_v2">HE-AAC v2 در LATM</string>
     <string name="spk_encoding_mat_2_0">Dolby MAT 2.0</string>
     <string name="spk_encoding_mat_2_1">Dolby MAT 2.1</string>
-    <string name="spk_encoding_mpegh_sub_bl_l3">MPEG-H Baseline Profile L3</string>
+    <string name="spk_encoding_mpegh_sub_bl_l3">MPEG-H Baseline Profile L۳</string>
     <string name="spk_encoding_unknown">قالب ناشناخته %s</string>
     <string name="spk_encoding_unknown_d">قالب ناشناخته %d</string>
     <string name="spk_encoding_celt">CELT</string>
@@ -353,13 +352,13 @@
     <string name="spk_encoding_aac_latm">AAC در LATM</string>
     <string name="spk_encoding_dra">DRA</string>
     <string name="spk_encoding_aac_adts_ssr">AAC-SSR در ADTS</string>
-    <string name="spk_encoding_mpegh_sub_lc_l4">MPEG-H Low Complexity L4</string>
+    <string name="spk_encoding_mpegh_sub_lc_l4">MPEG-H Low Complexity L۴</string>
     <string name="spk_encoding_amr_wb">AMR-WB</string>
     <string name="spk_encoding_aac">AAC</string>
     <string name="spk_encoding_lhdc_ll">LLAC (LHDC-LL)</string>
     <string name="spk_encoding_lc3">LC3</string>
     <string name="spk_encoding_aac_ssr">AAC-SSR</string>
-    <string name="spk_encoding_mpegh_sub_lc_l3">MPEG-H Low Complexity L3</string>
+    <string name="spk_encoding_mpegh_sub_lc_l3">MPEG-H Low Complexity L۳</string>
     <string name="spk_encoding_aac_adts_he_v2">HE-AAC v2 در ADTS</string>
     <string name="spk_encoding_aac_adts_ld">AAC-LD در ADTS</string>
     <string name="spk_encoding_aac_adts_scalable">AAC Scalable در ADTS</string>
@@ -381,7 +380,7 @@
     <string name="spk_encoding_wma">WMA</string>
     <string name="spk_encoding_mp2">MPEG-2</string>
     <string name="spk_encoding_aptx_adaptive_r4">aptX تطبیقی R4</string>
-    <string name="spk_encoding_mpegh_sub_bl_l4">MPEG-H Baseline Profile L4</string>
+    <string name="spk_encoding_mpegh_sub_bl_l4">MPEG-H Baseline Profile L۴</string>
     <string name="spk_encoding_mpegh">MPEG-H</string>
     <string name="spk_encoding_aac_ltp">AAC-LTP</string>
     <string name="spk_encoding_iec60958">IEC 60958</string>
@@ -393,4 +392,12 @@
     <string name="audio_signal_chain">زنجیرۀ سیگنال صدا</string>
     <string name="audio_not_initialized">سامانۀ پخش صدا مقداردهی نشده است. پخش کردن چیزی را امتحان کنید!</string>
     <string name="failed_to_parse_lyric">تجزیۀ ترانه شکست خورد</string>
+    <string name="mix_port_flag_incall_music">آهنگ هنگام-تماس</string>
+    <string name="crash_report">گزارش کار افتادن</string>
+    <string name="what_were_you_doing">هنگام ازکارافتادن، شما در گرامافون چه می‌کردید؟ لطفاً تا آنجا که ممکن است جزئیات بیشتری اضافه کنید تا شانس برطرف کردن مشکل توسط ما افزایش یابد.\n\nلطفاً توجه داشته باشید که انگلیسی برای گزارش‌های اشکال ترجیح داده می‌شود، اما اگر گزارش‌های اشکال را به زبان دیگری ارسال کنید، سعی می‌کنیم از ترجمه ماشینی استفاده کنم.</string>
+    <string name="email_clipboard">آدرس ایمیل و متن در کلیپ‌بورد ذخیره شد</string>
+    <string name="settings_export_logs">خروجی گرفتن گزارش برنامه</string>
+    <string name="gramophone_crashed_explainer2">گرامافون خراب شد :(\n\nلطفاً یک گزارش کار افتادن برای ما بفرستید تا مشکلاتی مانند آنچه منجر به این ازکار افتادن می شود برطرف شود!\n\nهر مشکلی به خاصی آهنگ است، بدون کمک شما محتمل است این مشکل را <b>نمی‌توان</b> برطرف کرد!</string>
+    <string name="settings_audio_quality_info">اطلاعات کیفیت صدا</string>
+    <string name="settings_audio_quality_info_summary">اطلاعات کیفیت یا قالب صدا را در صفحه پخش‌کننده نشان بده</string>
 </resources>
