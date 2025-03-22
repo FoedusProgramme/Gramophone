@@ -202,4 +202,13 @@
     <string name="sort_by_file_path">Ruta del archivo</string>
     <string name="spk_channel_out_mono">Mono</string>
     <string name="spk_channel_out_stereo">Estéreo</string>
+    <string name="mix_port_flag_unknown">Desconocido</string>
+    <string name="device_type_usb_accessory">Accesorio USB</string>
+    <string name="settings_lyrics_no_animation">Desactivar animaciones</string>
+    <string name="crash_report">Informe de error</string>
+    <string name="settings_export_logs">Exportar registros de la app</string>
+    <string name="device_type_builtin_speaker">Altavoz integrado</string>
+    <string name="device_type_unknown">Desconocido</string>
+    <string name="cannot_play_file">No se puede reproducir este archivo</string>
+    <string name="oh_no">¡Oh no!</string>
 </resources>
