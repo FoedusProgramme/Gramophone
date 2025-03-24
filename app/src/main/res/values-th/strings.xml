@@ -170,7 +170,7 @@
     <string name="spk_encoding_aptx_twsp">aptX TWS+</string>
     <string name="spk_channel_out_9point1point4">9.1.4</string>
     <string name="spk_encoding_mat_1_0">Dolby MAT 1.0</string>
-    <string name="settings_app_theme">ธีมของแอป</string>
+    <string name="settings_app_theme">ธีม</string>
     <string name="sort_by_modified_date">วันที่แก้ไข</string>
     <string name="spk_channel_out_6point1">6.1</string>
     <string name="spk_channel_out_7point1point2">7.1.2</string>
@@ -195,4 +195,23 @@
     <string name="spk_encoding_aac_adts_ssr">AAC-SSR ใน ADTS</string>
     <string name="spk_encoding_aac_adts_he_v2">HE-AAC v2 ใน ADTS</string>
     <string name="spk_encoding_aac_adts_ltp">AAC-LTP ใน ADTS</string>
+    <string name="category_genres">แนวเพลง</string>
+    <plurals name="items">
+        <item quantity="other">%d รายการ</item>
+    </plurals>
+    <string name="unknown_genre">ไม่ทราบแนวเพลง</string>
+    <string name="sort_by_album_artist">ศิลปินอัลบั้ม</string>
+    <string name="unknown_playlist">เพลย์ลิสต์ที่ไม่รู้จัก</string>
+    <string name="album_artist">ศิลปินอัลบั้ม</string>
+    <string name="settings_category_behavior">พฤติกรรม</string>
+    <string name="settings_repository">รีพอสซิทอรี</string>
+    <string name="repeat_mode">โหมดซ้ํา</string>
+    <string name="dialog_genre">แนวเพลง</string>
+    <string name="dialog_album_artist">ศิลปินอัลบั้ม</string>
+    <string name="dialog_track_number">หมายเลขแทร็ก</string>
+    <string name="recently_added">เพิ่มล่าสุด</string>
+    <string name="grid">กริด</string>
+    <string name="list">ลิสต์</string>
+    <string name="dialog_disc_number">หมายเลขดิสก์</string>
+    <string name="settings_experimental_settings_summary">ฟีเจอร์ทดสอบและอื่นๆ</string>
 </resources>
