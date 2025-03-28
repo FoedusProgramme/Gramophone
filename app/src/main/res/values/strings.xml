@@ -413,4 +413,7 @@
     <string name="settings_export_logs">Export app logs</string>
     <string name="settings_audio_quality_info">Audio quality info</string>
     <string name="settings_audio_quality_info_summary">Show audio quality/format information on the player screen</string>
+    <string name="spk_encoding_pcm_16bit_offload">16-bit PCM Offload</string>
+    <string name="spk_encoding_pcm_24bit_offload">24-bit (8.24) PCM offload</string>
+    <string name="spk_encoding_dts_lbr">DTS Express</string>
 </resources>
