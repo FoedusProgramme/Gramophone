@@ -401,4 +401,7 @@
     <string name="what_were_you_doing">Mida sa tegid Gramophone\'is, kui see viga juhtus? Et selle probleemi parandamise tõenäosus oleks suurem, siis palun lisa võimalikult palju üksikasju.\n\nPalun koosta veakirjeldus inglise keeles. Kui peaksid kasutama muud keelt, siis proovin masintõlke abiga tekstist selgust saada, aga kunagi ju ei tea, kuidas see toimib.</string>
     <string name="settings_audio_quality_info">Helikvaliteedi teave</string>
     <string name="settings_audio_quality_info_summary">Näita meediamängija vaates helikvaliteedi ja -vormingu teavet</string>
+    <string name="spk_encoding_pcm_16bit_offload">16-bitine PCM Offload</string>
+    <string name="spk_encoding_pcm_24bit_offload">24-bitine (8.24) PCM offload</string>
+    <string name="spk_encoding_dts_lbr">DTS Express</string>
 </resources>
