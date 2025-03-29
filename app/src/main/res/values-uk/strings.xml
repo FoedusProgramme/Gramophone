@@ -409,4 +409,7 @@
     <string name="what_were_you_doing">Що ви робили в Gramophone, коли сталася ця аварія? Будь ласка, додайте якомога більше деталей, щоб збільшити шанси, що я зможу вирішити проблему. \n\nЗверніть увагу, що для звітів про помилки бажано використовувати англійську мову, але я спробую використовувати машинний переклад, якщо ви надсилатимете звіти про помилки іншою мовою.</string>
     <string name="settings_audio_quality_info">Інформація про якість звуку</string>
     <string name="settings_audio_quality_info_summary">Показувати інформацію про якість/формат звуку на екрані плеєра</string>
+    <string name="spk_encoding_pcm_24bit_offload">24-розрядний (8.24) PCM розвантаження</string>
+    <string name="spk_encoding_pcm_16bit_offload">Розвантаження 16-бітного PCM</string>
+    <string name="spk_encoding_dts_lbr">DTS Express</string>
 </resources>
