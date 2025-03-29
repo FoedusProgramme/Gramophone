@@ -404,4 +404,7 @@
     <string name="settings_export_logs">Exporta els registres de l\'aplicació</string>
     <string name="settings_audio_quality_info">Informació de la qualitat de l\'àudio</string>
     <string name="settings_audio_quality_info_summary">Mostra informació de la qualitat/format de l\'àudio a la pantalla del reproductor</string>
+    <string name="spk_encoding_dts_lbr">DTS Express</string>
+    <string name="spk_encoding_pcm_16bit_offload">PCM offload de 16 bits</string>
+    <string name="spk_encoding_pcm_24bit_offload">PCM offload de 24 bits (8.24)</string>
 </resources>
