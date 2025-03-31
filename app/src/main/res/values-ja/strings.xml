@@ -397,4 +397,7 @@
     <string name="settings_audio_quality_info_summary">プレーヤー画面にオーディオ品質、形式情報を表示します</string>
     <string name="what_were_you_doing">クラッシュの発生時に Gramophone で何をしていましたか？問題を解決できる可能性を高めるために、できるだけ多くの詳細情報を追加してください。\n\nバグレポートは英語を推奨しますが、別の言語でバグレポートを送信した場合は、翻訳サービスを使用するように努めます。</string>
     <string name="settings_audio_quality_info">オーディオ品質情報</string>
+    <string name="spk_encoding_pcm_16bit_offload">16-bit PCM オフロード</string>
+    <string name="spk_encoding_pcm_24bit_offload">24-bit (8.24) PCM オフロード</string>
+    <string name="spk_encoding_dts_lbr">DTS Express</string>
 </resources>
