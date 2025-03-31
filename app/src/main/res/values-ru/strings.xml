@@ -222,8 +222,8 @@
     <string name="spk_channel_out_side_right">Правая сторона</string>
     <string name="spk_channel_out_stereo">Стерео</string>
     <string name="spk_channel_out_quad">Квадрофонический</string>
-    <string name="spk_channel_out_surround">Окружной (4.0)</string>
-    <string name="spk_channel_out_7point1_surround">Окружной (7.1)</string>
+    <string name="spk_channel_out_surround">Объёмный (4.0)</string>
+    <string name="spk_channel_out_7point1_surround">Объёмный (7.1)</string>
     <string name="spk_channel_out_5point1">5.1</string>
     <string name="spk_channel_out_6point1">6.1</string>
     <string name="spk_channel_out_5point1point2">5.1.2</string>
@@ -245,4 +245,11 @@
     <string name="spk_channel_out_top_side_left">Верхняя Левая сторона</string>
     <string name="spk_channel_out_top_side_right">Верхняя Правая сторона</string>
     <string name="spk_channel_out_bottom_front_left">Нижняя Левая сторона</string>
+    <string name="spk_encoding_pcm_16bit">16-битная ИКМ</string>
+    <string name="spk_encoding_pcm_16bit_big_endian">16-битная ИКМ (от старшего к младшему)</string>
+    <string name="spk_encoding_pcm_24bit">24-битная ИКМ</string>
+    <string name="spk_encoding_pcm_24bit_big_endian">24-битная ИКМ (от старшего к младшему)</string>
+    <string name="spk_encoding_pcm_32bit">32-битная (целочисленная) ИКМ</string>
+    <string name="spk_encoding_pcm_32bit_big_endian">32-битная (целоцисленная) ИКМ (от старшего к младшему)</string>
+    <string name="spk_encoding_pcm_8bit">8-битная ИКМ</string>
 </resources>
