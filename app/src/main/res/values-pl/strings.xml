@@ -409,4 +409,7 @@
     <string name="spk_encoding_mpegh_sub_bl_l4">MPEG-H Profil podstawowy L4</string>
     <string name="spk_encoding_unknown">Nieznany format %s</string>
     <string name="settings_audio_quality_info">Informacje o jakości dźwięku</string>
+    <string name="spk_encoding_dts_lbr">DTS Express</string>
+    <string name="spk_encoding_pcm_24bit_offload">24-bit (8.24) PCM offload</string>
+    <string name="spk_encoding_pcm_16bit_offload">16-bit PCM Offload</string>
 </resources>
