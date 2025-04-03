@@ -416,4 +416,6 @@
     <string name="spk_encoding_pcm_16bit_offload">16-bit PCM Offload</string>
     <string name="spk_encoding_pcm_24bit_offload">24-bit (8.24) PCM offload</string>
     <string name="spk_encoding_dts_lbr">DTS Express</string>
+    <string name="settings_translation_auto_word">Auto-animate translations</string>
+    <string name="settings_translation_auto_word_summary">Apply linear gradient to translation lines in word-synced lyric playback if translations do not have word-sync metadata</string>
 </resources>
