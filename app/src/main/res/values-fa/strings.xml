@@ -400,4 +400,9 @@
     <string name="gramophone_crashed_explainer2">گرامافون خراب شد :(\n\nلطفاً یک گزارش کار افتادن برای ما بفرستید تا مشکلاتی مانند آنچه منجر به این ازکار افتادن می شود برطرف شود!\n\nهر مشکلی به خاصی آهنگ است، بدون کمک شما محتمل است این مشکل را <b>نمی‌توان</b> برطرف کرد!</string>
     <string name="settings_audio_quality_info">اطلاعات کیفیت صدا</string>
     <string name="settings_audio_quality_info_summary">اطلاعات کیفیت یا قالب صدا را در صفحه پخش‌کننده نشان بده</string>
+    <string name="settings_translation_auto_word_summary">اعمال گرادیان خطی برای پخش خطوط ترجمه در ترانۀ همگام شدۀ کلمه‌ای اگر ترجمه‌ها ابردادۀ همگام کلمه‌ای ندارند</string>
+    <string name="settings_translation_auto_word">متحرک‌سازی خودکار ترجمه‌ها</string>
+    <string name="spk_encoding_pcm_16bit_offload">تخلیۀ ۱۶-بیت PCM</string>
+    <string name="spk_encoding_dts_lbr">DTS Express</string>
+    <string name="spk_encoding_pcm_24bit_offload">تخلیۀ ۲۴-بیت (۸.۲۴) PCM</string>
 </resources>
