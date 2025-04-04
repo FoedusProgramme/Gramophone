@@ -404,4 +404,6 @@
     <string name="spk_encoding_pcm_16bit_offload">16-bitine PCM Offload</string>
     <string name="spk_encoding_pcm_24bit_offload">24-bitine (8.24) PCM offload</string>
     <string name="spk_encoding_dts_lbr">DTS Express</string>
+    <string name="settings_translation_auto_word">Näita tõlgete puhul automaatset animatsiooni</string>
+    <string name="settings_translation_auto_word_summary">Kui sõnakohases laulusõnade vaates puudub tõlgetel sõnakohase sünkroniseerimise teave, siis kasuta reakohast lineaarset gradienti</string>
 </resources>
