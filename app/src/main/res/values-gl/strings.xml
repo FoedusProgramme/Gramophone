@@ -403,4 +403,6 @@
     <string name="spk_encoding_pcm_24bit_offload">24-bit (8.24) PCM offload</string>
     <string name="spk_encoding_dts_lbr">DTS Express</string>
     <string name="spk_encoding_pcm_16bit_offload">16-bit PCM Offload</string>
+    <string name="settings_translation_auto_word">Tradución automática</string>
+    <string name="settings_translation_auto_word_summary">Aplicar un gradiente lineal ás liñas traducidas na reprodución con letra sincronizada se a tradución non ten metadatos sincronizados por palabras</string>
 </resources>
