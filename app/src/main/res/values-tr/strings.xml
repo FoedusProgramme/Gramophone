@@ -207,4 +207,16 @@
     <string name="sort_by_file_path">Dosya yolu</string>
     <string name="no">Hayır</string>
     <string name="spk_channel_out_front_left">Ön Sol</string>
+    <string name="mix_port_flag_none">Hiçbiri</string>
+    <string name="gramophone_crashed_explainer2">Gramophone çöktü :(\n\nLütfen bana bir hata raporu gönderin, böylece bu çökmeye neden olan sorunlar düzeltilebilir!\n\nHer durum müzik kadar eşsiz, izin yardımınız olmadan bu hatanın düzeltilme ihtimali <b>ÇOK DÜŞÜK</b>!</string>
+    <string name="device_type_builtin_speaker">Dahili hoparlör</string>
+    <string name="device_type_wired_headset">Kablolu kulaklık</string>
+    <string name="device_type_wired_headphones">Kablosuz kulaklık</string>
+    <string name="device_type_hdmi">HDMI</string>
+    <string name="dialog_bitrate">Bit hızı</string>
+    <string name="bitrate_format">%1$d kbps</string>
+    <string name="bitrate_unknown">Bilinmeyen bit hızı</string>
+    <string name="settings_open_source_licenses">Açık kaynak lisansları</string>
+    <string name="oh_no">Eyvah!</string>
+    <string name="send_email">E-posta gönder</string>
 </resources>
