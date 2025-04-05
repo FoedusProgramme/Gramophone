@@ -414,4 +414,5 @@
     <string name="spk_encoding_pcm_16bit_offload">16-bit PCM Offload</string>
     <string name="settings_translation_auto_word">Tłumaczenia automatycznie animowane</string>
     <string name="settings_translation_auto_word_summary">Zastosowanie liniowego gradientu do linii tłumaczeń w odtwarzaniu tekstów z synchronizacją słów, jeśli tłumaczenia nie mają metadanych synchronizacji słów</string>
+    <string name="cannot_find_file">Nie można znaleźć tego pliku</string>
 </resources>
