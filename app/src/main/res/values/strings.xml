@@ -418,4 +418,5 @@
     <string name="spk_encoding_dts_lbr">DTS Express</string>
     <string name="settings_translation_auto_word">Auto-animate translations</string>
     <string name="settings_translation_auto_word_summary">Apply linear gradient to translation lines in word-synced lyric playback if translations do not have word-sync metadata</string>
+    <string name="cannot_find_file">Cannot find this file</string>
 </resources>
