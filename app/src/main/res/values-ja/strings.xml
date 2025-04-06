@@ -400,4 +400,7 @@
     <string name="spk_encoding_pcm_16bit_offload">16-bit PCM オフロード</string>
     <string name="spk_encoding_pcm_24bit_offload">24-bit (8.24) PCM オフロード</string>
     <string name="spk_encoding_dts_lbr">DTS Express</string>
+    <string name="cannot_find_file">ファイルが見つかりません</string>
+    <string name="settings_translation_auto_word">翻訳を自動的にアニメーション</string>
+    <string name="settings_translation_auto_word_summary">単語の同期がされた歌詞の再生時に翻訳のメタデータがない場合は、翻訳行に直線的なグラデーションを適用します</string>
 </resources>
