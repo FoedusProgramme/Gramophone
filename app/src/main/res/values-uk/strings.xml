@@ -414,4 +414,5 @@
     <string name="spk_encoding_dts_lbr">DTS Express</string>
     <string name="settings_translation_auto_word">Автоматичні анімовані переклади</string>
     <string name="settings_translation_auto_word_summary">Застосувати лінійний градієнт до рядків перекладу під час відтворення тексту, синхронізованого словами, якщо переклади не мають метаданих синхронізації слів</string>
+    <string name="cannot_find_file">Не вдається знайти цей файл</string>
 </resources>
