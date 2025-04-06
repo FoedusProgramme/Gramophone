@@ -409,4 +409,5 @@
     <string name="spk_encoding_pcm_24bit_offload">PCM offload de 24 bits (8.24)</string>
     <string name="settings_translation_auto_word">Traduccions animades automàticament</string>
     <string name="settings_translation_auto_word_summary">Aplica un degradat lineal a les línies de traducció en la reproducció de lletres sincronitzada de paraules si les traduccions no tenen metadades de sincronització de paraules</string>
+    <string name="cannot_find_file">No s\'ha pogut trobar aquest fitxer</string>
 </resources>
