@@ -406,4 +406,5 @@
     <string name="spk_encoding_dts_lbr">DTS Express</string>
     <string name="settings_translation_auto_word">Näita tõlgete puhul automaatset animatsiooni</string>
     <string name="settings_translation_auto_word_summary">Kui sõnakohases laulusõnade vaates puudub tõlgetel sõnakohase sünkroniseerimise teave, siis kasuta reakohast lineaarset gradienti</string>
+    <string name="cannot_find_file">Seda faili ei õnnestu leida</string>
 </resources>
