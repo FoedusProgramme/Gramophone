@@ -399,4 +399,5 @@
     <string name="cannot_find_file">ファイルが見つかりません</string>
     <string name="settings_translation_auto_word">翻訳を自動的にアニメーション</string>
     <string name="settings_translation_auto_word_summary">単語の同期がされた歌詞の再生時に翻訳のメタデータがない場合は、翻訳行に直線的なグラデーションを適用します</string>
+    <string name="settings_mp3_index_seeking">MP3 インデックスシーク</string>
 </resources>
