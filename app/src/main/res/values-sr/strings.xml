@@ -50,9 +50,6 @@
     <string name="settings_customization">Prilagođavanje</string>
     <string name="settings_customization_summary">Upravljajte opcijama prilagođavanja</string>
     <string name="settings_audio">Audio</string>
-    <string name="settings_skip_silence">Preskoči tišinu</string>
-    <string name="settings_hardware_acceleration">Brzina reprodukcije</string>
-    <string name="settings_hardware_acceleration_summary">Omogućite hardversko ubrzanje brzine reprodukcije</string>
     <string name="settings_title_bold">Podebljani naslov</string>
     <string name="settings_experimental_settings">Eksperimentalno</string>
     <string name="settings_experimental_settings_summary">Karakteristike testiranja, ostalo</string>
@@ -154,7 +151,6 @@
     <string name="settings_float_output_summary">Omogući 32-bitni float izlaz</string>
     <string name="settings_float_output">Float audio izlaz</string>
     <string name="now_playing">Trenutno se repordukuje</string>
-    <string name="settings_skip_silence_summary">Preskoči tišinu prilikom reprodukcije numera</string>
     <string name="settings_title_bold_summary">Koristite podebljani naslov za puni plejer</string>
     <string name="sort_by_add_date">Dodaj datum</string>
     <string name="settings_lyrics_configuration">Konfiguracija teksta</string>

@@ -6,7 +6,6 @@
     <string name="settings_play_on_launch_summary">Putar musik saat dibuka</string>
     <string name="refreshed_songs">Berhasil memuat %1$s lagu</string>
     <string name="home_menu_settings">Pengaturan</string>
-    <string name="settings_skip_silence">Lewati keheningan</string>
     <string name="unknown_playlist">Playlist tidak dikenal</string>
     <string name="settings_version">Versi</string>
     <string name="category_dates">Tanggal</string>
@@ -99,7 +98,6 @@
     <string name="settings_experimental_settings">Eksperimental</string>
     <string name="settings_color_accuracy_summary">Membuat pembuat warna menjadi akurat</string>
     <string name="settings_title_bold_summary">Gunakan judul yang dicetak tebal untuk tampilan penuh</string>
-    <string name="settings_hardware_acceleration">Kecepatan pemutaran</string>
     <string name="sort_by_add_date">Tanggal ditambahkan</string>
     <string name="settings_lyrics_bold">Lirik tebal</string>
     <string name="settings_lyrics_center">Perataan di tengah</string>
@@ -122,12 +120,10 @@
     <string name="settings_title_bold">Judul tebal</string>
     <string name="settings_about_app">Tentang</string>
     <string name="settings_experimental_settings_summary">Fitur uji coba, dll</string>
-    <string name="settings_hardware_acceleration_summary">Aktifkan akselerasi hardware kecepatan pemutaran</string>
     <string name="settings_album_round_corner_summary">Aktifkan sudut lengkung di pemutaran penuh</string>
     <string name="settings_default_progress_bar_summary">Aktifkan tampilan baru untuk progress bar</string>
     <string name="go_to_artist">Pergi ke artis</string>
     <string name="dialog_track_number">Nomor trek</string>
-    <string name="settings_skip_silence_summary">Lewati keheningan saat memutar trek</string>
     <string name="share">Bagikan</string>
     <string name="settings_lyrics_multiline">Baca lirik multi baris</string>
     <string name="settings_lyrics_multiline_summary">Perlakukan semua baris di antara titik sinkronisasi sebagai satu teks lirik</string>

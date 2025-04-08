@@ -8,7 +8,6 @@
     <string name="dialog_disc_number">Numero disco</string>
     <string name="settings_player_ui">Interfaccia player</string>
     <string name="settings_player_options">Audio</string>
-    <string name="settings_skip_silence">Salta silenzio</string>
     <string name="settings_title_bold">Titolo in grassetto</string>
     <plurals name="songs">
         <item quantity="one">%d Brano</item>
@@ -48,7 +47,6 @@
     <string name="settings_lyrics_center_summary">Usa allineamento centrato per testi</string>
     <string name="settings_play_on_launch">Esegui all\'avvio</string>
     <string name="settings_appearance_summary">Aspetto applicazione, modalità tema</string>
-    <string name="settings_skip_silence_summary">Salta silenzio quando brani in esecuzione</string>
     <string name="settings_preference_category_application">Applicazione</string>
     <string name="settings_lyrics_multiline">Leggi testi multilinea</string>
     <string name="settings_play_on_launch_summary">Esegui musica all\'avvio</string>
@@ -92,7 +90,6 @@
     <string name="settings_title_center">Titolo centrato</string>
     <string name="settings_about_gramophone">Riguardo all\'applicazione</string>
     <string name="settings_library">Libreria</string>
-    <string name="settings_hardware_acceleration">Velocità riproduzione</string>
     <string name="deny_images">Per favore nega l\'autorizzazione \"Foto e video\"</string>
     <string name="settings_player_ui_summary">UI player intero, testi</string>
     <string name="settings_library_summary">Gestisci libreria media</string>
@@ -151,7 +148,6 @@
     <string name="settings_lyrics_bold_summary">Usa un font più spesso per i testi</string>
     <string name="settings_title_center_summary">Usa titolo centrato per intero player</string>
     <string name="settings_title_bold_summary">Usa titolo in grassetto per player intero</string>
-    <string name="settings_hardware_acceleration_summary">Abilita accelerazione hardware velocità riproduzione</string>
     <string name="settings_color_accuracy_summary">Rendi generazione colore accurata</string>
     <string name="settings_experimental_settings_summary">Funzioni in test, varie</string>
     <string name="album_covers_enhance">Caricamento delle copertine album migliorato</string>

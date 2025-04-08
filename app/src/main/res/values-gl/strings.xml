@@ -115,10 +115,6 @@
     <string name="settings_album_round_corner_summary">Activar cantos redondeados co reprodutor completo</string>
     <string name="settings_album_round_corner">Canto redondeado do álbum</string>
     <string name="settings_audio">Audio</string>
-    <string name="settings_skip_silence">Omitir silencio</string>
-    <string name="settings_skip_silence_summary">Omitir silencio ao reproducir cancións</string>
-    <string name="settings_hardware_acceleration">Velocidade de reprodución</string>
-    <string name="settings_hardware_acceleration_summary">Activar velocidade de reprodución variable por hardware</string>
     <string name="settings_title_bold">Título resaltado</string>
     <string name="settings_title_bold_summary">Usar letra grosa no reprodutor completo</string>
     <string name="settings_experimental_settings">Experimental</string>

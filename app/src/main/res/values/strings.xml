@@ -125,10 +125,6 @@
     <string name="settings_float_output">Float audio output</string>
     <string name="settings_float_output_summary">Enable 32 bit float output</string>
     <string name="settings_audio">Audio</string>
-    <string name="settings_skip_silence">Skip silence</string>
-    <string name="settings_skip_silence_summary">Skip silence when playing tracks</string>
-    <string name="settings_hardware_acceleration">Playback speed</string>
-    <string name="settings_hardware_acceleration_summary">Enable playback speed hardware acceleration</string>
     <string name="settings_title_bold">Bold title</string>
     <string name="settings_title_bold_summary">Use bold title for full player</string>
     <string name="settings_experimental_settings">Experimental</string>
@@ -419,4 +415,6 @@
     <string name="settings_translation_auto_word">Auto-animate translations</string>
     <string name="settings_translation_auto_word_summary">Apply linear gradient to translation lines in word-synced lyric playback if translations do not have word-sync metadata</string>
     <string name="cannot_find_file">Cannot find this file</string>
+    <string name="settings_mp3_index_seeking_summary">Read all of the MP3 file into memory as required for seeking, instead of relying on potentially missing Xing header for VBR seeking. If this is disabled, CBR seeking will be used if Xing header is missing. A well-formed VBR MP3 file has a Xing header, hence this option shouldn\'t be needed in almost all cases. (Requires app restart to apply)</string>
+    <string name="settings_mp3_index_seeking">MP3 index seeking</string>
 </resources>

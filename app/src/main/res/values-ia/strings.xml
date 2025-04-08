@@ -77,8 +77,6 @@
     <string name="settings_library">Bibliotheca</string>
     <string name="settings_category_links">Ligamines</string>
     <string name="settings_library_summary">Gerer le bibliotheca multimedia</string>
-    <string name="settings_hardware_acceleration">Velocitate de reproduction</string>
-    <string name="settings_skip_silence">Saltar le silentio</string>
     <string name="settings_lyrics_configuration">Configuration del parolas de canto</string>
     <string name="settings_play_on_launch">Reproducer in le initio</string>
     <string name="settings_category_filters">Filtros</string>
@@ -127,7 +125,6 @@
     <string name="settings_color_accuracy">Precision de color</string>
     <string name="settings_color_accuracy_summary">Facer le generation de colores precise</string>
     <string name="settings_player_options_summary">Qualitate de sortita, comportamento de reproduction</string>
-    <string name="settings_skip_silence_summary">Saltar le silentio in le reproduction del tracias</string>
     <string name="settings_contributors">Contributores</string>
     <string name="settings_mediastore_filter">Duration minime de canto (secundas)</string>
     <string name="settings_title_bold">Titulo grasse</string>
@@ -137,7 +134,6 @@
     <string name="settings_title_center_summary">Usar titulo centrate pro le reproductor plen</string>
     <string name="settings_float_output">Sortita de audio flottante</string>
     <string name="settings_float_output_summary">Activar sortita flottante de 32 bit</string>
-    <string name="settings_hardware_acceleration_summary">Activar le acceleration de hardware pro le velocitate de reproduction</string>
     <string name="settings_experimental_settings">Experimental</string>
     <string name="settings_experimental_settings_summary">Functionalitates de prova, alteres</string>
     <string name="settings_title_bold_summary">Usar titulo grasse pro le reproductor plen</string>

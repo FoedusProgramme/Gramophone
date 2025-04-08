@@ -78,7 +78,6 @@
     <string name="app_name">গ্রামোফোন</string>
     <string name="settings_default_progress_bar_summary">মেটেরিয়াল স্টাইলড প্রক্রিয়া বার চালু করুন</string>
     <string name="now_playing">এখন চলছে</string>
-    <string name="settings_skip_silence">নীরবতা এড়িয়ে যান</string>
     <string name="settings_lyrics_bold">বোল্ড লিরিক</string>
     <string name="filesystem">ফাইল সিস্টেম</string>
     <string name="settings_player_options_summary">আউটপুট গুণমান, প্লেব্যাক আচরণ</string>
@@ -99,13 +98,10 @@
     <string name="settings_category_links">লিঙ্কস</string>
     <string name="settings_customization">কাস্টমাইজেশন</string>
     <string name="settings_album_round_corner">অ্যালবাম বৃত্তাকার কোণ</string>
-    <string name="settings_skip_silence_summary">ট্র্যাক বাজানোর সময় নীরবতা এড়িয়ে যান</string>
-    <string name="settings_hardware_acceleration">প্লেব্যাক গতি</string>
     <string name="settings_title_bold">বোল্ড শিরোনাম</string>
     <string name="settings_experimental_settings">পরীক্ষামূলক</string>
     <string name="settings_lyrics_multiline">মাল্টিলাইন লিরিক্স পড়ুন</string>
     <string name="share">শেয়ার করুন</string>
-    <string name="settings_hardware_acceleration_summary">প্লেব্যাক গতি হার্ডওয়্যার ত্বরণ সক্ষম করুন</string>
     <string name="settings_title_center">কেন্দ্রীভূত শিরোনাম</string>
     <string name="settings_player_ui">প্লেয়ার ইওআই</string>
     <string name="settings_float_output_summary">৩২ বিট ফ্লোট আউটপুট সক্ষম করুন</string>

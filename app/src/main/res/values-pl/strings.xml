@@ -17,7 +17,6 @@
     <string name="sort_by_artist">Wykonawca</string>
     <string name="settings_mediastore_filter">Minimalna długość utworu (sekundy)</string>
     <string name="sort_by_modified_date">Data modyfikacji</string>
-    <string name="settings_hardware_acceleration_summary">Korzystaj z przyspieszenia sprzętowego podczas odtwarzania</string>
     <string name="settings_player_ui">Interfejs odtwarzacza</string>
     <string name="category_songs">Utwory</string>
     <string name="settings_behavior_summary">Filtry, zachowania przy uruchamianiu</string>
@@ -30,7 +29,6 @@
     <string name="settings_title_bold">Pogrubiony tytuł</string>
     <string name="settings_audio">Dźwięk</string>
     <string name="settings_title_center">Wyśrodkuj tytuł</string>
-    <string name="settings_skip_silence_summary">Pomijaj ciszę przy odtwarzaniu utworów</string>
     <plurals name="items">
         <item quantity="one">%d element</item>
         <item quantity="few">%d elementy</item>
@@ -83,7 +81,6 @@
     <string name="settings_default_progress_bar">Pasek postępu</string>
     <string name="details">Szczegóły</string>
     <string name="home_menu_equalizer">Korekcja dźwięku</string>
-    <string name="settings_skip_silence">Pomiń ciszę</string>
     <string name="dialog_path">Lokalizacja</string>
     <string name="settings_version">Wersja</string>
     <string name="settings_lyrics_center">Wyrównaj do środka</string>
@@ -122,7 +119,6 @@
     <string name="settings_experimental_settings_summary">Testowanie funkcji, różne</string>
     <string name="settings_package_type">Typ instalacji</string>
     <string name="settings_title_center_summary">Wyśrodkuj tytuł utworu w odtwarzaczu</string>
-    <string name="settings_hardware_acceleration">Przyspieszenie sprzętowe</string>
     <string name="go_to_artist">Przejdź do wykonawcy</string>
     <string name="settings_float_output">Zmiennoprzecinkowe wyjście audio</string>
     <string name="settings_album_round_corner_summary">Zaokrągnij narożniki okładek albumów w odtwarzaczu</string>

@@ -72,8 +72,6 @@
     <string name="settings_album_round_corner_summary">Ota käyttöön pyöristetyt kulmat suurennetussa soittimessa</string>
     <string name="settings_album_round_corner">Albumin pyöristetyt kulmat</string>
     <string name="settings_audio">Ääni</string>
-    <string name="settings_skip_silence">Ohita hiljaisuus</string>
-    <string name="settings_skip_silence_summary">Ohita hiljaisuus toistettaessa kappaleita</string>
     <string name="settings_title_bold">Lihavoitu otsikko</string>
     <string name="settings_title_bold_summary">Käytä lihavoitua otsikkoa suurennetussa soittimessa</string>
     <string name="sort_by_modified_date">Muokkauspäivämäärä</string>
@@ -103,7 +101,6 @@
     <string name="settings_category_appearance">Ulkoasu</string>
     <string name="settings_title_center_summary">Käytä keskitettyä otsikkoa suurennetussa soittimessa</string>
     <string name="settings_float_output_summary">Ota käyttöön 32-bittinen float ulostulo</string>
-    <string name="settings_hardware_acceleration">Toistonopeus</string>
     <string name="sort_by_add_date">Lisäyspäivämäärä</string>
     <string name="settings_play_on_launch">Toista käynnistäessä</string>
     <string name="settings_play_on_launch_summary">Toista musiikkia käynnistäessä</string>

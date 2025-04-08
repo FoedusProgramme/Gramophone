@@ -103,12 +103,8 @@
     <string name="settings_album_round_corner_summary">在完整播放器中啟用圓角</string>
     <string name="settings_album_round_corner">專輯圓角</string>
     <string name="settings_audio">音訊</string>
-    <string name="settings_skip_silence">跳過無聲片段</string>
-    <string name="settings_skip_silence_summary">播放曲目時跳過無聲音訊</string>
     <string name="settings_float_output">浮點音訊輸出</string>
     <string name="settings_float_output_summary">啟用 32 位元浮點輸出 (需要服務重啟)</string>
-    <string name="settings_hardware_acceleration">播放速度</string>
-    <string name="settings_hardware_acceleration_summary">啟用播放速度硬體加速</string>
     <string name="settings_title_bold">粗體標題</string>
     <string name="settings_title_bold_summary">使用粗體標題查看完整播放器</string>
     <string name="sort_by_add_date">添加日期</string>

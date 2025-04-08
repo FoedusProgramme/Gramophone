@@ -100,7 +100,6 @@
     <string name="settings_behavior_summary">Filtrlər, açılış davranışları</string>
     <string name="settings_player_options_summary">Çıxış keyfiyyəti, oynanılma davranışı</string>
     <string name="settings_customization">Fərdiləşdirmə</string>
-    <string name="settings_hardware_acceleration">Oynatma sürəti</string>
     <string name="settings_experimental_settings">Eksperimental</string>
     <string name="settings_color_accuracy">Rəng dəqiqliyi</string>
     <string name="settings_lyrics_bold">Qalın şriftli sözlər</string>
@@ -129,7 +128,6 @@
     <string name="settings_lyrics_multiline">Çoxsətirli mahnı sözlərinin oxunması</string>
     <string name="settings_lyrics_bold_summary">Sözlər üçün qalın şriftdən istifadə et</string>
     <string name="layout">Görünüş</string>
-    <string name="settings_hardware_acceleration_summary">Oynatma sürətinin avadanlıq sürətləndirməsini aktivləşdir</string>
     <string name="tab_order">Tab sırası</string>
     <string name="tab_order_summary">Tətbiq işə salındıqda ilk tabı göstərəcək. Ayırıcıdan sonra gələn tablar gizlədiləcək.</string>
     <string name="settings_category_basic_info">Əsas təfərrüatlar</string>
@@ -142,8 +140,6 @@
     </plurals>
     <string name="play_next">Növbəti oynat</string>
     <string name="settings_category_behavior">Davranış</string>
-    <string name="settings_skip_silence">Sakitliyi burax</string>
-    <string name="settings_skip_silence_summary">Mahnı oynanılma zamanı sakitliyi burax</string>
     <string name="sort_by_add_date">Əlavə edilmə tarixi üzrə</string>
     <string name="settings_lyrics_center_summary">Sözlər üçün mərkəzi düzülüşdən istifadə et</string>
     <string name="settings_play_on_launch">Açılış zamanı oynat</string>

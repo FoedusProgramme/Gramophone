@@ -69,9 +69,6 @@
     <string name="settings_library_summary">Pamahalaan ang media library</string>
     <string name="settings_customization">Pagpapasadya</string>
     <string name="settings_customization_summary">Pamahalaan ang mga pagpipilian sa pagpapasadya</string>
-    <string name="settings_skip_silence_summary">Laktawan ang katahimikan kapag naglalaro ng track</string>
-    <string name="settings_hardware_acceleration">Bilis ng playback</string>
-    <string name="settings_hardware_acceleration_summary">I-enable ang playback speed hardware acceleration</string>
     <string name="settings_title_bold">Naka-bold na teksto</string>
     <string name="settings_title_bold_summary">Gamitin ang naka-bold na pamagat para sa buong player</string>
     <string name="settings_color_accuracy_summary">Gawin accurate ang pagbuo ng kulay</string>
@@ -110,7 +107,6 @@
     <string name="settings_behavior_summary">Mga filter, pag-uugali ng launch</string>
     <string name="settings_player_options_summary">Quality ng output, playback behavior</string>
     <string name="settings_album_round_corner_summary">I-enable ang bilog na sulok sa buong player</string>
-    <string name="settings_skip_silence">Laktawan ang katahimikan</string>
     <string name="settings_experimental_settings">Pang-eksperimento</string>
     <string name="settings_experimental_settings_summary">Mga feature na pagtesting, at iba pa</string>
     <string name="settings_color_accuracy">Accuracy ng kulay</string>

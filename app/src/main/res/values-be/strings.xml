@@ -113,7 +113,6 @@
     <string name="settings_blacklist">Чорны спіс</string>
     <string name="sort_by_add_date">Дадаць дату</string>
     <string name="settings_experimental_settings">Эксперыментальныя</string>
-    <string name="settings_hardware_acceleration_summary">Уключыць апаратнае паскарэнне хуткасці прайгравання</string>
     <string name="settings_lyrics_bold">Тоўсты тэкст песні</string>
     <string name="settings_lyric">Тэкст песні</string>
     <string name="settings_category_links">Спасылкі</string>
@@ -128,12 +127,9 @@
     <string name="sort_by_modified_date">Дата змены</string>
     <string name="settings_player_ui">Інтэрфейс прайгравальніка</string>
     <string name="settings_customization_summary">Кіраванне наладамі персаналізацыі</string>
-    <string name="settings_skip_silence_summary">Прапусціць цішыню падчас прайгравання трэкаў</string>
     <string name="settings_play_on_launch_summary">Гуляць музыку пры запуску</string>
     <string name="settings_player_ui_summary">Наладзьце інтэрфейс прайгравальніка</string>
     <string name="settings_play_on_launch">Прайграваць пры запуску</string>
-    <string name="settings_skip_silence">Прапусціць цішыню</string>
-    <string name="settings_hardware_acceleration">Хуткасць прайгравання</string>
     <string name="settings_preference_category_application">Праграма</string>
     <string name="settings_category_basic_info">Асноўная інфармацыя</string>
     <string name="settings_category_filters">Фільтры</string>

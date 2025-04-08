@@ -13,7 +13,6 @@
     <string name="settings_library_summary">Gerenciar biblioteca de mídia</string>
     <string name="sort_by_artist">Artista</string>
     <string name="settings_mediastore_filter">Duração mínima da música (em segundos)</string>
-    <string name="settings_hardware_acceleration_summary">Ativar aceleração de hardware de velocidade de reprodução</string>
     <string name="settings_player_ui">Interface do player</string>
     <string name="category_songs">Músicas</string>
     <string name="settings_behavior_summary">Configurar o comportamento do aplicativo</string>
@@ -26,7 +25,6 @@
     <string name="settings_title_bold">Título em negrito</string>
     <string name="settings_audio">Áudio</string>
     <string name="settings_title_center">Título centralizado</string>
-    <string name="settings_skip_silence_summary">Pular partes silenciosas ao reproduzir faixas (requer reinicialização do serviço)</string>
     <plurals name="items">
         <item quantity="one">%d item</item>
         <item quantity="many">%d itens</item>
@@ -71,7 +69,6 @@
     <string name="settings_default_progress_bar">Barra de progresso padrão</string>
     <string name="details">Detalhes</string>
     <string name="home_menu_equalizer">Equalizador</string>
-    <string name="settings_skip_silence">Ignorar silêncio</string>
     <string name="dialog_path">Caminho</string>
     <string name="settings_version">Versão</string>
     <string name="album_artist">Álbum do artista</string>
@@ -107,7 +104,6 @@
     <string name="settings_experimental_settings_summary">Configurar funções de teste</string>
     <string name="settings_package_type">Tipo de pacote</string>
     <string name="settings_title_center_summary">Use o título centralizado na tela de reprodução</string>
-    <string name="settings_hardware_acceleration">Velocidade de reprodução</string>
     <string name="go_to_artist">Ir para o artista</string>
     <string name="settings_float_output">Saída de áudio flutuante</string>
     <string name="settings_album_round_corner_summary">Ativar cantos arredondados do álbum no player</string>

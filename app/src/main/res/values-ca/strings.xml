@@ -107,7 +107,6 @@
     <string name="settings_album_round_corner_summary">Activa les cantonades arrodonides en el reproductor complet</string>
     <string name="settings_float_output">Sortida d\'àudio flotant</string>
     <string name="settings_float_output_summary">Activa la sortida flotant de 32 bits</string>
-    <string name="settings_skip_silence_summary">Salta el silenci en reproduir les pistes</string>
     <string name="settings_title_bold">Títols en negreta</string>
     <string name="settings_color_accuracy_summary">Fes que la generació de color sigui precisa</string>
     <string name="settings_experimental_settings_summary">Funcionalitats de prova, miscel·lània</string>
@@ -157,10 +156,7 @@
     <string name="settings_customization_summary">Gestió de les opcions de personalització</string>
     <string name="settings_player_options_summary">Qualitat de la sortida, comportament de la reproducció</string>
     <string name="settings_album_round_corner">Cantonades arrodonides dels àlbums</string>
-    <string name="settings_hardware_acceleration">Velocitat de reproducció</string>
     <string name="settings_audio">Àudio</string>
-    <string name="settings_skip_silence">Salta el silenci</string>
-    <string name="settings_hardware_acceleration_summary">Activa l\'acceleració de maquinari de la velocitat de reproducció</string>
     <string name="settings_title_bold_summary">Utilitza el títol en negreta al reproductor complet</string>
     <string name="settings_experimental_settings">Experimental</string>
     <string name="settings_lyric">Lletra</string>

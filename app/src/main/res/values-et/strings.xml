@@ -137,7 +137,6 @@
     <string name="separator_dot">•</string>
     <string name="settings_category_filters">Filtrid</string>
     <string name="fgs_failed_channel">Taasesituse jätkamine ei õnnestunud</string>
-    <string name="settings_skip_silence">Jäta vaikus vahele</string>
     <string name="settings_behavior_summary">Filtreerimine ja käitumine käivitamisel</string>
     <string name="settings_library">Sinu kogumik</string>
     <string name="settings_default_progress_bar_summary">Kasuta edenemisriba kujundamisel Material Designi põhimõtteid</string>
@@ -148,11 +147,8 @@
     <string name="settings_title_center_summary">Täisekraanivaates joonda pealkiri keskele</string>
     <string name="settings_about_app">Rakenduse teave</string>
     <string name="settings_customization">Kohandamine</string>
-    <string name="settings_skip_silence_summary">Palade esitamisel jäta vaiksed kohad vahele</string>
     <string name="settings_title_bold">Paksus kirjas pealkiri</string>
     <string name="settings_play_on_launch_summary">Rakenduse käivitamisel alusta muusika esitamist</string>
-    <string name="settings_hardware_acceleration">Taasesituse kiirus</string>
-    <string name="settings_hardware_acceleration_summary">Taasesituse kiiruse juhtimisel kasuta raudvaralist kiirendust</string>
     <string name="settings_title_bold_summary">Meediamängija täisekraanivaates kuva pealkiri paksus kirjas</string>
     <string name="settings_experimental_settings">Katselised seadistused</string>
     <string name="settings_lyric">Laulusõnad</string>

@@ -101,12 +101,10 @@
     <string name="dialog_duration">Süre</string>
     <string name="unknown_title">Bilinmeyen başlık</string>
     <string name="filesystem">Dosya sistemi</string>
-    <string name="settings_hardware_acceleration">Oynatma hızı</string>
     <string name="sort_by_modified_date">Değiştirilme tarihi</string>
     <string name="settings_behavior_summary">Filtreler, başlatma davranışları</string>
     <string name="settings_library_summary">Medya kütüphanesini yönet</string>
     <string name="settings_customization_summary">Özelleştirme seçeneklerini yönetin</string>
-    <string name="settings_skip_silence">Sessizliği atla</string>
     <string name="settings_experimental_settings">Deneysel</string>
     <string name="dialog_edit_metadata">Düzenle</string>
     <string name="dialog_lyrics">Şarkı sözleri</string>
@@ -132,7 +130,6 @@
     <string name="deny_images"><![CDATA[Lütfen \"medya\" erişimini engelleyin]]></string>
     <string name="delete_failed">Şarkı silinemedi</string>
     <string name="settings_trim_lyrics">Şarkı sözleri arasındaki boşlukları kaldır</string>
-    <string name="settings_skip_silence_summary">Parçaları çalarken sessizliği atla</string>
     <string name="album_covers_enhance">Gelişmiş albüm kapağı yükleniyor</string>
     <string name="share">Paylaş</string>
     <string name="current_playlist">Şu anki çalma listesi</string>
@@ -147,7 +144,6 @@
     <string name="settings_title_bold_summary">Tüm oynatıcıda kalın başlık kullan</string>
     <string name="settings_experimental_settings_summary">Test özellikleri, çeşitli</string>
     <string name="settings_album_round_corner_summary">Tam ekran oynatıcıda köşeleri yuvarlat</string>
-    <string name="settings_hardware_acceleration_summary">Oynatma hızı için donanım hızlandırmasını etkinleştir</string>
     <string name="settings_lyrics_center">Merkeze ortalama</string>
     <string name="timer">Uyku zamanlayıcısı</string>
     <string name="crash_clipboard">Çökme günlüğü panoya kopyalandı</string>

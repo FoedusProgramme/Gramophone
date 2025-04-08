@@ -17,7 +17,6 @@
     <string name="sort_by_artist">الفنّان</string>
     <string name="settings_mediastore_filter">الحد الأدنى لطول الأغنية (بالثواني)</string>
     <string name="sort_by_modified_date">تاريخ التعديل</string>
-    <string name="settings_hardware_acceleration_summary">تنشيط تسريع التشغيل باستخدام العَتَاد الصّلب</string>
     <string name="settings_player_ui">واجهة المُشَغِّل</string>
     <string name="category_songs">الأغاني</string>
     <string name="settings_behavior_summary">الفلاتر وسلوكات التَّشغيل</string>
@@ -30,7 +29,6 @@
     <string name="settings_title_bold">تغميق خط الاسم</string>
     <string name="settings_audio">الصوت</string>
     <string name="settings_title_center">توسيط الاسم</string>
-    <string name="settings_skip_silence_summary">تجاوز الصَّمت أثناء تشغيل الأغاني</string>
     <plurals name="items">
         <item quantity="zero">لا أغراض</item>
         <item quantity="one">غرض واحد (%d)</item>
@@ -88,7 +86,6 @@
     <string name="settings_default_progress_bar">شريط التَّقدُّم الأصليّ</string>
     <string name="details">التَّفاصيل</string>
     <string name="home_menu_equalizer">مُعادِل الصَّوت</string>
-    <string name="settings_skip_silence">تجاوز الصَّمت</string>
     <string name="dialog_path">المَسَار</string>
     <string name="settings_version">الإصدار</string>
     <string name="settings_lyrics_center">مُحَاذاة المنتصَف</string>
@@ -129,7 +126,6 @@
     <string name="settings_experimental_settings_summary">تجريب الميّزات والمُنوَّعات</string>
     <string name="settings_package_type">نوع الحِزمة</string>
     <string name="settings_title_center_summary">استعمال العنوان المُتمَركِز في المنتصف في المُشغِّل الكامل</string>
-    <string name="settings_hardware_acceleration">سرعة التَّشغيل</string>
     <string name="go_to_artist">اذهب إلى الفنّان</string>
     <string name="settings_float_output">خرج الصَّوت الطّافي</string>
     <string name="settings_album_round_corner_summary">تنشيط الزوايا المُدَوَّرة في المُشَغِّل الكامل</string>

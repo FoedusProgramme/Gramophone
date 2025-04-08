@@ -117,10 +117,6 @@
     <string name="settings_customization_summary">தனிப்பயனாக்குதல் விருப்பங்களை நிர்வகிக்கவும்</string>
     <string name="settings_float_output_summary">32 பிட் மிதவை வெளியீட்டை இயக்கவும்</string>
     <string name="settings_audio">ஆடியோ</string>
-    <string name="settings_skip_silence">ம .னத்தைத் தவிர்க்கவும்</string>
-    <string name="settings_skip_silence_summary">தடங்களை விளையாடும்போது ம silence னத்தைத் தவிர்க்கவும்</string>
-    <string name="settings_hardware_acceleration">பின்னணி விரைவு</string>
-    <string name="settings_hardware_acceleration_summary">பிளேபேக் வேக வன்பொருள் முடுக்கம் இயக்கவும்</string>
     <string name="settings_title_bold">தைரியமான தலைப்பு</string>
     <string name="settings_title_bold_summary">முழு பிளேயருக்கு தைரியமான தலைப்பைப் பயன்படுத்தவும்</string>
     <string name="settings_experimental_settings">சோதனை</string>

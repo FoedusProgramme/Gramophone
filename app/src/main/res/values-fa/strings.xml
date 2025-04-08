@@ -2,7 +2,6 @@
 <resources>
     <string name="settings_float_output_summary">به کار اندختن خروجی شناور ۳۲ بیتی</string>
     <string name="settings_content_based_color_summary">به کار انداختن تولید رنگ مبتنی بر آلبوم</string>
-    <string name="settings_hardware_acceleration_summary">به کار انداختن شتاب سخت‌افزاری سرعت پخش</string>
     <string name="category_artists">هنرمندها</string>
     <string name="category_dates">تاریخ‌ها</string>
     <string name="category_genres">سبک‌ها</string>
@@ -85,8 +84,6 @@
     <string name="settings_lyrics_configuration">پیکربندی ترانه‌ها</string>
     <string name="settings_color_accuracy_summary">دقیق کردن تولید رنگ</string>
     <string name="sort_by_modified_date">تاریخ اصلاح شده</string>
-    <string name="settings_hardware_acceleration">سرعت پخش</string>
-    <string name="settings_skip_silence">رد شدن از سکوت</string>
     <string name="settings_title_bold_summary">استفاده از نام درشت برای پخش کنندۀ کامل</string>
     <string name="settings_lyrics_bold">ترانه‌های درشت</string>
     <string name="settings_lyrics_center">وسط‌چین</string>
@@ -142,7 +139,6 @@
     <string name="home_menu_refresh">بازخوانی</string>
     <string name="refreshed_songs">%1$s آهنگ بازخوانی شد</string>
     <string name="home_menu_search">جست‌وجو</string>
-    <string name="settings_skip_silence_summary">رد شدن از سکوت هنگام پخش موسیقی</string>
     <string name="settings_experimental_settings_summary">قابلیت‌های آزمایشی، متفرقه</string>
     <string name="dialog_track_number">شمارۀ اثر</string>
     <string name="unknown_playlist">فهرست پخش ناشناخته</string>

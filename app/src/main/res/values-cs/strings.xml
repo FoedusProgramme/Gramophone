@@ -78,7 +78,6 @@
     <string name="settings_float_output_summary">Povolit 32 bitový float výstup</string>
     <string name="settings_content_based_color_summary">Povolit generaci barev na základě alba</string>
     <string name="settings_default_progress_bar_summary">Povolit material stylizaci ukazatele průběhu</string>
-    <string name="settings_hardware_acceleration_summary">Povolit hardwarovou akceleraci pro rychlost přehrávání</string>
     <string name="home_menu_equalizer">Ekvalizér</string>
     <string name="settings_behavior_summary">Filtry, chování po spuštění</string>
     <string name="spk_channel_out_surround">Surround (4.0)</string>
@@ -142,7 +141,6 @@
     <string name="now_playing">Nyní se přehrává</string>
     <string name="settings_customization_summary">Správa vlastních nastavení</string>
     <string name="settings_float_output">Plovoucí audio výstup</string>
-    <string name="settings_skip_silence">Přeskočit ticho</string>
     <string name="sort_by_modified_date">Datum modifikace</string>
     <string name="settings_lyric">Lyric</string>
     <string name="preference_category_quality">Kvalita</string>
@@ -207,7 +205,6 @@
     <string name="unknown_title">Neznámý název</string>
     <string name="dialog_mime">MIME typ</string>
     <string name="settings_title_center_summary">Použít centralizovaný název pro přehrávač</string>
-    <string name="settings_skip_silence_summary">Přeskočit ticho ve skladbě</string>
     <string name="lyric_widget_description">Widget který ukazuje text skladby která se teď přehrává</string>
     <string name="timer">Spánkový časovač</string>
     <string name="current_playlist">Aktuální playlist</string>
@@ -267,7 +264,6 @@
     <string name="settings_player_ui_summary">Plný přehrávač UI, text skladby</string>
     <string name="settings_library">Knihovna</string>
     <string name="settings_library_summary">Správa mediální knihovny</string>
-    <string name="settings_hardware_acceleration">Rychlost přehrávání</string>
     <string name="settings_color_accuracy_summary">Udělat barevný gradient přesný</string>
     <string name="settings_lyrics_configuration">Konfigurace textu skladby</string>
     <string name="settings_lyrics_multiline_summary">Považovat všechny řádky text skladby jako za jeden</string>

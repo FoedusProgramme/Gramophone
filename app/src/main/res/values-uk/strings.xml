@@ -114,7 +114,6 @@
     <string name="settings_player_options_summary">Якість виведення, поведінка відтворення</string>
     <string name="settings_library">Бібліотека</string>
     <string name="settings_customization">Персоналізація</string>
-    <string name="settings_hardware_acceleration_summary">Увімкнути апаратне прискорення швидкості відтворення</string>
     <string name="settings_lyrics_center">Вирівнювання по центру</string>
     <string name="settings_audio">Звук</string>
     <string name="settings_title_bold">Жирний заголовок</string>
@@ -144,15 +143,12 @@
     <string name="settings_blacklist_folder_summary">Фільтрувати пісні з певних папок</string>
     <string name="settings_lyrics_bold_summary">Використовуйте більший шрифт для текстів</string>
     <string name="settings_play_on_launch_summary">Відтворення музики під час запуску</string>
-    <string name="settings_skip_silence">Пропустити тишу</string>
-    <string name="settings_hardware_acceleration">Швидкість відтворення</string>
     <string name="settings_play_on_launch">Грати при запуску</string>
     <string name="preference_category_quality">Якість</string>
     <string name="settings_experimental_settings_summary">Тестування функцій, інше</string>
     <string name="deny_images"><![CDATA[Будь ласка, забороніть дозвіл \"Фотографії та відео\"]]></string>
     <string name="grant_images"><![CDATA[Надайте дозвіл \"Фото та відео\"]]></string>
     <string name="settings_trim_lyrics">Видаліть пробіли навколо тексту пісні</string>
-    <string name="settings_skip_silence_summary">Пропускати тишу під час відтворення треків</string>
     <string name="settings_category_misc">Різне</string>
     <string name="sort_by_modified_date">Дата зміни</string>
     <string name="settings_lyrics_multiline">Читання багаторядкового тексту пісень</string>

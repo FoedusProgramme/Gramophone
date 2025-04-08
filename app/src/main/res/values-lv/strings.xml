@@ -51,7 +51,6 @@
     <string name="settings_player_options">Audio</string>
     <string name="dialog_track_number">Dziesmas kārtas numurs</string>
     <string name="settings_category_links">Linki</string>
-    <string name="settings_skip_silence">Izlaist klusumu</string>
     <string name="go_to_album">Doties uz albumu</string>
     <string name="settings_appearance_summary">Aplikācijas izskats, motīvi</string>
     <string name="list">Saraksts</string>
@@ -90,7 +89,6 @@
     <string name="settings_library_summary">Pārvaldīt satura bibliotēku</string>
     <string name="settings_package_type">Paketes tips</string>
     <string name="settings_player_ui_summary">Pilnā pleijera UI, vārdi</string>
-    <string name="settings_skip_silence_summary">Izlaist klusumu, atskaņojot dziesmas</string>
     <string name="settings_contributors_click">%s (spiediet, lai redzētu vēl!)</string>
     <string name="settings_content_based_color_summary">Ieslēgt krāsu ģenerēšanu, atkarībā no albuma krāsām</string>
     <string name="dialog_duration">Ilgums</string>
@@ -98,8 +96,6 @@
     <string name="settings_player_options_summary">Skaņas kvalitāte, uzvedība atskaņojot</string>
     <string name="settings_customization_summary">Pārvaldīt pielāgošanas iestatījumus</string>
     <string name="settings_album_round_corner_summary">Iespējot apaļus stūrus pilnajā pleijerī</string>
-    <string name="settings_hardware_acceleration">Atskaņošanas ātrums</string>
-    <string name="settings_hardware_acceleration_summary">Iespējot atskaņošanas ātruma aparatūras paātrinājumu</string>
     <string name="search">Meklēt</string>
     <string name="settings_app_name">Aplikācijas nosaukums</string>
     <string name="play_next">Atskaņot nākamo</string>

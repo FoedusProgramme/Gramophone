@@ -90,7 +90,6 @@
     <string name="settings_lyrics_configuration">Configuration des paroles</string>
     <string name="settings_library_summary">Gérer la bibliothèque audio</string>
     <string name="sort_by_modified_date">Date de modification</string>
-    <string name="settings_hardware_acceleration_summary">Activer l\'accélération matérielle pour la vitesse de lecture</string>
     <string name="settings_player_ui">Interface du lecteur</string>
     <string name="settings_behavior_summary">Filtres, paramètres de démarrage</string>
     <string name="settings_about_gramophone">À propos de l\'application</string>
@@ -98,7 +97,6 @@
     <string name="settings_title_bold">Titre en gras</string>
     <string name="settings_audio">Audio</string>
     <string name="settings_title_center">Titre centré</string>
-    <string name="settings_skip_silence_summary">Passer les silences entre les pistes</string>
     <string name="settings_about_app">À propos</string>
     <string name="settings_player_ui_summary">Interface complète du lecteur, paroles</string>
     <string name="settings_lyrics_bold">Paroles en gras</string>
@@ -111,7 +109,6 @@
     <string name="settings_lyric">Paroles</string>
     <string name="settings_category_links">Liens</string>
     <string name="settings_color_accuracy">Précision des couleurs</string>
-    <string name="settings_skip_silence">Passer les silences</string>
     <string name="settings_lyrics_center">Alignement au centre</string>
     <string name="settings_color_accuracy_summary">Rendre la génération des couleurs plus précise</string>
     <string name="filesystem">Système de fichiers</string>
@@ -123,7 +120,6 @@
     <string name="settings_experimental_settings_summary">Fonctionnalités en test, autres</string>
     <string name="settings_package_type">Type de paquet</string>
     <string name="settings_title_center_summary">Mettre le titre au centre dans le lecteur complet</string>
-    <string name="settings_hardware_acceleration">Vitesse de lecture</string>
     <string name="settings_float_output">Sortie audio flottante</string>
     <string name="settings_album_round_corner_summary">Activer les bords ronds dans tout le lecteur</string>
     <string name="no_lyric_found">Pas de paroles trouvées</string>
