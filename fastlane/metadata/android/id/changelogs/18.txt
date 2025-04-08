@@ -1,0 +1,8 @@
+- Menampilkan bitrate pada dialog detail
+- Eksperimental: lirik parser baru untuk sinkronisasi per kata LRC & TTML, SRT (UI akan menyusul)
+- Info format audio kini pada layar Sedang Diputar
+- Otomatis memperbarui perpustakaan
+- "Buka dengan Gramophone" dari player file
+- Widget lirik
+- Peningkatan sorting
+- Banyak perbaikan bug
