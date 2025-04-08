@@ -405,4 +405,5 @@
     <string name="spk_encoding_pcm_16bit_offload">16-bit PCM Offload</string>
     <string name="settings_translation_auto_word">Tradución automática</string>
     <string name="settings_translation_auto_word_summary">Aplicar un gradiente lineal ás liñas traducidas na reprodución con letra sincronizada se a tradución non ten metadatos sincronizados por palabras</string>
+    <string name="cannot_find_file">Non se atopa o ficheiro</string>
 </resources>
