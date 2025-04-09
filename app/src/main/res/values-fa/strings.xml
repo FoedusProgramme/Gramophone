@@ -401,4 +401,7 @@
     <string name="spk_encoding_pcm_16bit_offload">تخلیۀ ۱۶-بیت PCM</string>
     <string name="spk_encoding_dts_lbr">DTS Express</string>
     <string name="spk_encoding_pcm_24bit_offload">تخلیۀ ۲۴-بیت (۸.۲۴) PCM</string>
+    <string name="cannot_find_file">نمی‌توان این پرونده را پیدا کرد</string>
+    <string name="settings_mp3_index_seeking">جویش فهرست MP3</string>
+    <string name="settings_mp3_index_seeking_summary">خواندن تمامی پرونده MP3 به حافظه لازم برای جویش، بحای اتکا به سری Xing بالقوه گم شده برای جویش VBR. اگر این از کار افتاده باشد، جویش CBR اگر سری Xing گم شده باشد استفاده می‌شود. یک پرونده MP3 خوش ساختع VBR یک سری Xing دارد، پس این گزینه در اکثر موارد نباید مورد نیاز باشد. (نیاز به ازسرگیری برنامه برای اعمال دارد)</string>
 </resources>
