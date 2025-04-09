@@ -403,4 +403,6 @@
     <string name="settings_translation_auto_word">Näita tõlgete puhul automaatset animatsiooni</string>
     <string name="settings_translation_auto_word_summary">Kui sõnakohases laulusõnade vaates puudub tõlgetel sõnakohase sünkroniseerimise teave, siis kasuta reakohast lineaarset gradienti</string>
     <string name="cannot_find_file">Seda faili ei õnnestu leida</string>
+    <string name="settings_mp3_index_seeking">Kerimine mp3 faili indeksipäise alusel</string>
+    <string name="settings_mp3_index_seeking_summary">Selle valiku puhul laaditakse kogu mp3-fail otsingu jaoks mällu ega arvestata võimaliku puuduva Xing-päisega (vajalik VBR-kodeeringu korral). Kui see valik pole kasutusel, siis puuduva Xing-päise puhul kasutatakse CBR-kodeeringut eeldavat otsingut. Korralikult kodeeritud VBR-põhisel mp3-failil on alati Xing-päis olemas ja seega seda valikut pole tavaliselt vaja. (Jõustamine eeldab rakenduse uuesti käivitamist)</string>
 </resources>
