@@ -400,4 +400,5 @@
     <string name="settings_translation_auto_word">翻訳を自動的にアニメーション</string>
     <string name="settings_translation_auto_word_summary">単語の同期がされた歌詞の再生時に翻訳のメタデータがない場合は、翻訳行に直線的なグラデーションを適用します</string>
     <string name="settings_mp3_index_seeking">MP3 インデックスシーク</string>
+    <string name="settings_mp3_index_seeking_summary">VBR シークで Xing ヘッダーが欠落している可能性を考慮する代替としてシークに必要となる MP3 ファイル全体をメモリ上に読み込みます。このオプションを無効化すると Xing ヘッダーが欠落時に CBR シークを使用します。適切な形式の VBR MP3 ファイルは Xing ヘッダーが含まれているため、基本的にこのオプションを使う必要はありません (適用するにはアプリを再起動してください)。</string>
 </resources>
