@@ -189,4 +189,8 @@
     <string name="sort_by_album_artist">专辑艺术家</string>
     <string name="delete_really">真的要删除\"%s\"吗？此操作无法撤回。</string>
     <string name="settings_contributors_click">%s (点击展开更多)</string>
+    <string name="spk_channel_out_9point1point6">9.1.6</string>
+    <string name="spk_channel_out_front_left">Front Left</string>
+    <string name="spk_channel_out_front_right">Front Right</string>
+    <string name="spk_channel_out_9point1point4">9.1.4</string>
 </resources>
