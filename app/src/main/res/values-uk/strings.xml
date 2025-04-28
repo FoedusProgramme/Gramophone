@@ -255,7 +255,7 @@
     <string name="spk_channel_out_front_left">Передній лівий</string>
     <string name="spk_channel_out_back_right">Назад праворуч</string>
     <string name="spk_channel_out_front_right_of_center">Спереду справа від центру</string>
-    <string name="spk_channel_out_bottom_front_right">Спереду внизу справа</string>
+    <string name="spk_channel_out_bottom_front_right">Внизу Спереду Справа</string>
     <string name="spk_encoding_pcm_16bit">16-розрядний PCM</string>
     <string name="spk_encoding_pcm_24bit">24-розрядний PCM</string>
     <string name="spk_encoding_dts_hd">DTS-HD</string>
