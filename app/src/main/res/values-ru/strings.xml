@@ -194,7 +194,7 @@
     <string name="settings_status_bar_lyrics_title">Текст песни в строке состояния</string>
     <string name="settings_lyrics_ui_summary">Экспериментальный дизайн с текстом песни по словам и расширенными возможностями</string>
     <string name="settings_status_bar_lyrics_summary">Включить метод показа текста песни MeiZu в строке состояния (доступно только на некоторых устройствах)</string>
-    <string name="lyric_widget_description">Виджет, показывающий тексты песен, воспроизводимых в данный момент</string>
+    <string name="lyric_widget_description">Виджет, показывающий текст текущей песни</string>
     <string name="home_menu_shuffle">Перемешать всё</string>
     <string name="delete">Удалить</string>
     <string name="yes">Да</string>
