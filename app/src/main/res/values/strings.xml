@@ -420,5 +420,5 @@
     <string name="enter_msg_for_dev_here">Enter message for developer here</string>
     <string name="do_not_enter_email_enter_msg">Enter message, not an e-mail address</string>
     <string name="log_will_auto_send">Logs will be sent automatically, explain the issue instead</string>
-    <string name="log_attachment">Logs will be sent as attachment</string>
+    <string name="log_attachment">Logs will be sent as attachment automatically</string>
 </resources>
