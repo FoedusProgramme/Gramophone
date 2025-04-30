@@ -405,4 +405,8 @@
     <string name="cannot_find_file">Seda faili ei õnnestu leida</string>
     <string name="settings_mp3_index_seeking">Kerimine mp3 faili indeksipäise alusel</string>
     <string name="settings_mp3_index_seeking_summary">Selle valiku puhul laaditakse kogu mp3-fail otsingu jaoks mällu ega arvestata võimaliku puuduva Xing-päisega (vajalik VBR-kodeeringu korral). Kui see valik pole kasutusel, siis puuduva Xing-päise puhul kasutatakse CBR-kodeeringut eeldavat otsingut. Korralikult kodeeritud VBR-põhisel mp3-failil on alati Xing-päis olemas ja seega seda valikut pole tavaliselt vaja. (Jõustamine eeldab rakenduse uuesti käivitamist)</string>
+    <string name="enter_msg_for_dev_here">Sisesta siia sõnum arendajale</string>
+    <string name="do_not_enter_email_enter_msg">Palun sisesta sõnum, mitte e-posti aadress</string>
+    <string name="log_will_auto_send">Logid saadame niikuinii automaatselt, pigem palun kirjelda probleemi olemust või vea tekkimist</string>
+    <string name="log_attachment">Logid saadame automaatselt manusena</string>
 </resources>
