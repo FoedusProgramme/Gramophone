@@ -413,4 +413,8 @@
     <string name="cannot_find_file">Nie można znaleźć tego pliku</string>
     <string name="settings_mp3_index_seeking_summary">Odczytuje cały plik MP3 do pamięci zgodnie z wymaganiami wyszukiwania, zamiast polegać na potencjalnie brakującym nagłówku Xing przy wyszukiwaniu VBR. Jeśli ta opcja jest wyłączona, wyszukiwanie CBR będzie używane, jeśli brakuje nagłówka Xing. Dobrze sformatowany plik VBR MP3 ma nagłówek Xing, więc ta opcja nie powinna być potrzebna w prawie wszystkich przypadkach. (Wymaga ponownego uruchomienia aplikacji)</string>
     <string name="settings_mp3_index_seeking">Wyszukiwanie indeksu MP3</string>
+    <string name="enter_msg_for_dev_here">Wpisz tutaj wiadomość dla programisty</string>
+    <string name="do_not_enter_email_enter_msg">Wpisz wiadomość, a nie adres e-mail</string>
+    <string name="log_will_auto_send">Dzienniki zostaną wysłane automatycznie, zamiast tego wyjaśnij problem</string>
+    <string name="log_attachment">Dzienniki zostaną automatycznie wysłane jako załącznik</string>
 </resources>
