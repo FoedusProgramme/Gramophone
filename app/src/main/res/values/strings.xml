@@ -159,6 +159,7 @@
     <string name="dialog_edit_metadata">Edit</string>
     <string name="dialog_lyrics">Lyrics</string>
     <string name="delete_failed">Deleting song failed</string>
+    <string name="delete_failed_playlist">Deleting playlist failed</string>
     <string name="album_covers_enhance">Enhanced album cover loading</string>
     <string name="album_covers_enhance_desc">Support high quality song covers and allow album and song cover to differ (requires photos access)</string>
     <string name="deny_images"><![CDATA[Please deny \"Photos and videos\" permission]]></string>
@@ -421,4 +422,6 @@
     <string name="do_not_enter_email_enter_msg">Enter message, not an e-mail address</string>
     <string name="log_will_auto_send">Logs will be sent automatically, explain the issue instead</string>
     <string name="log_attachment">Logs will be sent as attachment automatically</string>
+    <string name="create_playlist">Create playlist</string>
+    <string name="rename">Rename</string>
 </resources>
