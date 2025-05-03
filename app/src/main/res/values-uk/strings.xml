@@ -417,4 +417,7 @@
     <string name="log_will_auto_send">Журнали будуть надіслані автоматично, поясніть проблему</string>
     <string name="log_attachment">Журнали будуть автоматично надіслані як вкладення</string>
     <string name="enter_msg_for_dev_here">Введіть тут повідомлення для розробника</string>
+    <string name="delete_failed_playlist">Не вдалося видалити список відтворення</string>
+    <string name="create_playlist">Створити плейлист</string>
+    <string name="rename">Перейменувати</string>
 </resources>
