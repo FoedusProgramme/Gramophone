@@ -417,4 +417,7 @@
     <string name="do_not_enter_email_enter_msg">Wpisz wiadomość, a nie adres e-mail</string>
     <string name="log_will_auto_send">Dzienniki zostaną wysłane automatycznie, zamiast tego wyjaśnij problem</string>
     <string name="log_attachment">Dzienniki zostaną automatycznie wysłane jako załącznik</string>
+    <string name="rename">Zmień nazwę</string>
+    <string name="delete_failed_playlist">Usunięcie listy odtwarzania nie powiodło się</string>
+    <string name="create_playlist">Utwórz listę odtwarzania</string>
 </resources>
