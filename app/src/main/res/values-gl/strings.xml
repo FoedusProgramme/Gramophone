@@ -408,4 +408,7 @@
     <string name="do_not_enter_email_enter_msg">Escribe a mensaxe, non un enderezo de correo</string>
     <string name="log_attachment">O rexistros vanse enviar automaticamente como un anexo</string>
     <string name="log_will_auto_send">O rexistros vanse enviar automaticamente, só tes que explicar o problema</string>
+    <string name="rename">Cambiar nome</string>
+    <string name="delete_failed_playlist">Fallou a eliminación da lista</string>
+    <string name="create_playlist">Crear lista</string>
 </resources>
