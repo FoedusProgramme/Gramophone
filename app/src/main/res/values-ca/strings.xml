@@ -412,4 +412,7 @@
     <string name="log_will_auto_send">Els registres s\'enviaran automàticament, expliqueu el problema</string>
     <string name="do_not_enter_email_enter_msg">Introduïu un missatge, no una adreça de correu</string>
     <string name="log_attachment">Els registres s\'enviaran automàticament com a adjunts</string>
+    <string name="rename">Canvia el nom</string>
+    <string name="create_playlist">Crea una llista de reproducció</string>
+    <string name="delete_failed_playlist">Ha fallat la supressió de la llista de reproducció</string>
 </resources>
