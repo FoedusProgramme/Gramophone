@@ -411,5 +411,15 @@
     <string name="log_attachment">Logid saadame automaatselt manusena</string>
     <string name="delete_failed_playlist">Esitusloendi kustutamine ei õnnestunud</string>
     <string name="rename">Muuda nime</string>
-    <string name="create_playlist">Loo esitusloend</string>
+    <string name="create_playlist">Loo esitusloend…</string>
+    <string name="did_you_know">Kas sa teadsid…</string>
+    <string name="playlist_name">Esitusloendi nimi</string>
+    <string name="rename_playlist">Muuda esitusloendi nime</string>
+    <string name="add_to_playlist">Lisa esitusloendisse</string>
+    <string name="rename_failed_playlist">Ei õnnestunud muuta esitusloendi nime</string>
+    <string name="edit_playlist_failed">Ei õnnestunud muuta esitusloendit</string>
+    <string name="still_refreshing">Uuendan, %1$d/%2$d: %3$s</string>
+    <string name="refreshing_wait">Uuendan, palun oota…</string>
+    <string name="create_failed_playlist">Ei õnnestunud luua esitusloendit</string>
+    <string name="refresh_did_you_know">Gramophone otsib uusi või uuendatud palasid igal rakenduse käivitamisel ning ka töötamise ajal suudab ta uut sisu tuvastada. See „Uuenda“ nupp ei laadi palu Gramophone\'i uuesti, vaid hoopis käivitab uue süsteemiülese palade otsingu kõikidelt lubatud andmakandjatelt (sellepärast kulubki nii palju aega). Mis praktikas tähendab seda, et kui just kogu süsteemis või muudes rakendustes pole talitlusvigu, siis sul pole vaja seda funktsionaalsust kasutada.\n\nMõned palad on puudu? Palun vaata „Seadistused“ → „Käitumine“ ning kontrolli, et lugude miinimumkestused ja kaustade keeluloend vastavad sinu eelistustele. Muude võimalike põhjuste kohta leiad teavet ka meie Korduma kippuvate küsimuste lehelt.</string>
 </resources>
