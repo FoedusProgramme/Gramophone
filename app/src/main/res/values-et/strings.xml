@@ -409,4 +409,7 @@
     <string name="do_not_enter_email_enter_msg">Palun sisesta sõnum, mitte e-posti aadress</string>
     <string name="log_will_auto_send">Logid saadame niikuinii automaatselt, pigem palun kirjelda probleemi olemust või vea tekkimist</string>
     <string name="log_attachment">Logid saadame automaatselt manusena</string>
+    <string name="delete_failed_playlist">Esitusloendi kustutamine ei õnnestunud</string>
+    <string name="rename">Muuda nime</string>
+    <string name="create_playlist">Loo esitusloend</string>
 </resources>
