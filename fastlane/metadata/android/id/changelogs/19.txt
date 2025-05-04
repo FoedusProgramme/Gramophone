@@ -1,0 +1,9 @@
+Perbaikan cepat. Izinkan menonaktifkan info format audio. Log perubahan terakhir:
+- Tampilkan bitrate dalam dialog detail
+- Eksperimental: pengurai lirik baru untuk sinkronisasi kata LRC & TTML, SRT (UI segera hadir)
+- Info format audio di layar Sedang Diputar
+- Refresh pustaka otomatis
+- “Buka di Gramophone” dari pemutar file
+- Widget lirik
+- Penyortiran yang ditingkatkan
+- Banyak perbaikan bug
