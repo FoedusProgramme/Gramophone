@@ -292,4 +292,5 @@
     <string name="settings_lyrics_char_scaling_summary">Hitung kecepatan gradien lirik dalam karakter per detik, bukan piksel per detik. Mungkin menyebabkan kecepatan terlihat tidak teratur karena panjang karakter yang berbeda dalam piksel.</string>
     <string name="settings_lyrics_char_scaling">Skala berbasis karakter untuk gradien lirik</string>
     <string name="settings_open_source_licenses">Lisensi sumber terbuka</string>
+    <string name="delete_failed_playlist">Menghapus daftar putar gagal</string>
 </resources>
