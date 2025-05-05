@@ -419,5 +419,15 @@
     <string name="log_attachment">Dzienniki zostaną automatycznie wysłane jako załącznik</string>
     <string name="rename">Zmień nazwę</string>
     <string name="delete_failed_playlist">Usunięcie listy odtwarzania nie powiodło się</string>
-    <string name="create_playlist">Utwórz listę odtwarzania</string>
+    <string name="create_playlist">Utwórz listę odtwarzania…</string>
+    <string name="refreshing_wait">Odświeżanie, proszę czekać…</string>
+    <string name="still_refreshing">Odświeżanie, krok %1$d/%2$d: %3$s</string>
+    <string name="did_you_know">Czy wiesz, że…</string>
+    <string name="edit_playlist_failed">Edycja listy odtwarzania nie powiodła się</string>
+    <string name="rename_failed_playlist">Nie udało się zmienić nazwy listy odtwarzania</string>
+    <string name="create_failed_playlist">Nie udało się utworzyć listy odtwarzania</string>
+    <string name="playlist_name">Nazwa listy odtwarzania</string>
+    <string name="refresh_did_you_know">Gramophone prosi o zaktualizowanie listy utworów przy każdym uruchomieniu aplikacji, a gdy Gramophone jest uruchomiony, automatycznie wykrywa również nowe nośniki. Przycisk „Odśwież” nie spowoduje ponownego załadowania multimediów w Gramophone, zamiast tego poprosi system o ponowne przeskanowanie wszystkich plików ze wszystkich podłączonych urządzeń pamięci masowej (dlatego zajmuje to trochę czasu). Oznacza to, że jeśli system lub inne aplikacje nie działają nieprawidłowo, nigdy nie będziesz musieć korzystać z tej funkcji.\n\nBrakuje niektórych utworów? Sprawdź Ustawienia &gt; Zachowanie dla filtra minimalnej długości i czarnej listy folderów i potwierdź, że te ustawienia są ustawione na oczekiwaną wartość. Więcej możliwych przyczyn można znaleźć w naszym FAQ.</string>
+    <string name="rename_playlist">Zmień nazwę listy odtwarzania</string>
+    <string name="add_to_playlist">Dodaj do listy odtwarzania</string>
 </resources>
