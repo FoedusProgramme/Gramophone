@@ -413,6 +413,16 @@
     <string name="do_not_enter_email_enter_msg">Introduïu un missatge, no una adreça de correu</string>
     <string name="log_attachment">Els registres s\'enviaran automàticament com a adjunts</string>
     <string name="rename">Canvia el nom</string>
-    <string name="create_playlist">Crea una llista de reproducció</string>
+    <string name="create_playlist">Crea una llista de reproducció…</string>
     <string name="delete_failed_playlist">Ha fallat la supressió de la llista de reproducció</string>
+    <string name="refreshing_wait">S\'està actualitzant, espereu…</string>
+    <string name="still_refreshing">S\'està actualitzant, pas %1$d/%2$d: %3$s</string>
+    <string name="did_you_know">Sabíeu que…</string>
+    <string name="rename_failed_playlist">Fa fallat en canviar de nom la llista de reproducció</string>
+    <string name="playlist_name">Nom de llista de reproducció</string>
+    <string name="create_failed_playlist">Fa fallat en crear la llista de reproducció</string>
+    <string name="edit_playlist_failed">Fa fallat en editar la llista de reproducció</string>
+    <string name="rename_playlist">Canvia el nom de la llista de reproducció</string>
+    <string name="add_to_playlist">Afegeix a la llista de reproducció</string>
+    <string name="refresh_did_you_know">El Gramophone demana una llista de cançons actualitzada en cada inici d\'aplicació, i mentre el Gramophone s\'està executant, també detectarà automàticament mitjans nous. Aquest botó «Actualitza» no tornarà a carregar el mitjà al Gramophone, sinó que demanarà al vostre sistema que torni a explorar tots els fitxers de tots els dispositius d\'emmagatzematge permanent connectats (per això triga una estona). Això vol dir que, tret que el vostre sistema o altres aplicacions estiguin funcionant malament, mai haureu d\'utilitzar aquesta funció.\n\nFalten algunes cançons? Assegureu-vos de comprovar la Configuració &gt; Comportament per al filtre de longitud mínima i la llista negra de carpetes, i confirmeu que aquests paràmetres estan definits amb el valor esperat. Per altres motius possibles, consulteu les nostres PMF.</string>
 </resources>
