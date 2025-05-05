@@ -404,8 +404,18 @@
     <string name="log_attachment">ログは添付ファイルとして自動送信されます</string>
     <string name="delete_failed_playlist">プレイリストの削除に失敗しました</string>
     <string name="do_not_enter_email_enter_msg">メールアドレスではなくメッセージを入力してください</string>
-    <string name="create_playlist">プレイリストを作成</string>
+    <string name="create_playlist">プレイリストを作成…</string>
     <string name="rename">名前を変更</string>
     <string name="enter_msg_for_dev_here">ここに開発者へのメッセージを入力してください</string>
     <string name="log_will_auto_send">ログは自動送信されます、問題の説明をお願いします</string>
+    <string name="did_you_know">ご存じですか…</string>
+    <string name="playlist_name">プレイリスト名</string>
+    <string name="edit_playlist_failed">プレイリストの編集に失敗しました</string>
+    <string name="still_refreshing">更新中、ステップ %1$d/%2$d: %3$s</string>
+    <string name="refreshing_wait">更新中、お待ちください…</string>
+    <string name="rename_failed_playlist">プレイリスト名の変更に失敗しました</string>
+    <string name="create_failed_playlist">プレイリストの作成に失敗しました</string>
+    <string name="rename_playlist">プレイリスト名を変更</string>
+    <string name="add_to_playlist">プレイリストに追加</string>
+    <string name="refresh_did_you_know">Gramophone はアプリを起動するたびに曲の一覧を要求して起動中に新しいメディアを自動的に検出します。この「更新」ボタンは Gramophone 内のメディアを再読み込みするのではなく、すべてのメディアストレージデバイスからすべてのファイルを再スキャンするようシステムに要求します (そのため、多少時間を要します)。つまり、システムや他のアプリに不具合がない限り、この機能を使用する必要はありません。\n\n曲が不足している場合は「設定」→「動作」から「曲の最小の長さ」と「フォルダのブラックリスト」を確認し、これらの設定が適切な値に設定されているか確認してください。その他の考えられる原因については FAQ をご確認ください。</string>
 </resources>
