@@ -415,4 +415,20 @@
     <string name="what_were_you_doing">Что вы делали в Gramophone, когда произошел сбой? Пожалуйста, добавьте как можно больше деталей, чтобы увеличить шансы того, что я смогу исправить проблему.\n\nПожалуйста, обратите внимание, что для сообщений о ошибках предпочтителен английский язык, но я постараюсь использовать машинный перевод, если вы отправляете сообщения об ошибках на другом языке.</string>
     <string name="spk_encoding_dts_lbr">DTS Express</string>
     <string name="settings_translation_auto_word">Автоматически анимировать переводы</string>
+    <string name="refreshing_wait">Обновление, пожалуйста, подождите…</string>
+    <string name="still_refreshing">Обновление, шаг %1$d/%2$d: %3$s</string>
+    <string name="rename_failed_playlist">Не удалось переименовать плейлист</string>
+    <string name="playlist_name">Название плейлиста</string>
+    <string name="create_failed_playlist">Не удалось создать плейлист</string>
+    <string name="rename_playlist">Переименовать плейлист</string>
+    <string name="edit_playlist_failed">Редактирование плейлиста не удалось</string>
+    <string name="add_to_playlist">Добавить в плейлист</string>
+    <string name="enter_msg_for_dev_here">Введите сообщение для разработчика здесь</string>
+    <string name="log_attachment">Журналы будут отправлены в виде вложения автоматически</string>
+    <string name="did_you_know">Вы знали…</string>
+    <string name="create_playlist">Создать плейлист…</string>
+    <string name="do_not_enter_email_enter_msg">Введите сообщение, а не адрес электронной почты</string>
+    <string name="delete_failed_playlist">Удаление плейлиста не удалось</string>
+    <string name="log_will_auto_send">Логи будут отправлены автоматически, вместо этого объясните проблему</string>
+    <string name="rename">Переименовать</string>
 </resources>
