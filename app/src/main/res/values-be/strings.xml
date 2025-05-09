@@ -147,8 +147,8 @@
     <string name="settings_lyrics_center_summary">Выкарыстоўваць выраўноўванне па цэнтры для тэкстаў песень</string>
     <string name="dialog_lyrics">Тэкст песні</string>
     <string name="settings_title_bold_summary">Выкарыстоўваць тоўсты загаловак для прайгравальніка</string>
-    <string name="deny_images">Адмоўцеся ад дазволу «Фота і відэа»</string>
-    <string name="grant_images">Калі ласка, дайце дазвол на «Фота і відэа»</string>
+    <string name="deny_images"><![CDATA[Калі ласка, адмоўце ад дазволу \"Фота і відэа\"]]></string>
+    <string name="grant_images"><![CDATA[Калі ласка, дайце дазвол \"Фота і відэа\"]]></string>
     <string name="settings_color_accuracy_summary">Больш дакладная генерацыя колеру</string>
     <string name="crash_clipboard">Журнал збояў скапіяваны ў буфер абмену</string>
     <string name="settings_category_full_player">Прайгравальнік</string>
@@ -166,7 +166,7 @@
     <string name="fgs_failed_text">Націсніце тут, каб адкрыць праграму і працягнуць прайграванне</string>
     <string name="separator_dot">•</string>
     <string name="timer_expiry">Таймер сну прыпыніць музыку на %s</string>
-    <string name="grant_audio">Калі ласка, дайце дазвол на «Музыку і аўдыё»</string>
+    <string name="grant_audio"><![CDATA[Калі ласка, дайце дазвол \"Музыка і аўдыё\"]]></string>
     <string name="app_name">Gramophone</string>
     <string name="seekbar">Панэль пошуку</string>
     <string name="divider">Падзельнік</string>
@@ -186,4 +186,11 @@
     <string name="position_slider">Паўзунок становішча</string>
     <string name="back">Назад</string>
     <string name="play">Гуляць</string>
+    <string name="settings_lyrics_parser">Новы парсер тэксту песні</string>
+    <string name="home_menu_shuffle">Змяшаць усё</string>
+    <string name="delete_failed_playlist">Выдаленне плэйліста не ўдалося</string>
+    <string name="settings_lyrics_ui">Уключыць новы дызайн тэксту песні</string>
+    <string name="sort_by_album_artist">Альбом выканаўцы</string>
+    <string name="settings_lyrics_parser_summary">Уключыць новы парсер тэксту песні, які падтрымлівае сінхранізацыю па словах, індыкатар размаўлялага, зрушэнне і інш.</string>
+    <string name="settings_contributors_click">%s (націсніце, каб даведацца больш!)</string>
 </resources>
