@@ -58,7 +58,7 @@
     <string name="dialog_disc_number">شمارۀ دیسک</string>
     <string name="settings_default_progress_bar_summary">به کار انداختن سبک material برای نوار پیشرفت</string>
     <string name="playlist_favourite">پسندیده‌ها</string>
-    <string name="no_lyric_found">ترانه یافت نشد</string>
+    <string name="no_lyric_found">متن‌ترانه یافت نشد</string>
     <string name="now_playing">در حال پخش</string>
     <string name="settings_package_type">گونۀ بسته</string>
     <string name="unknown_title">نام ناشناخته</string>
@@ -147,7 +147,7 @@
     <string name="settings_lyrics_multiline">خواندن ترانه‌های چند خطی</string>
     <string name="settings_lyrics_multiline_summary">با همۀ خط‌های بین نقاط همگام همچون یک متن ترانه رفتار شود</string>
     <string name="sort_by_release_date">تاریخ انتشار</string>
-    <string name="album_covers_enhance">بارگذاری بهبود یافتۀ جلد آلبوم</string>
+    <string name="album_covers_enhance">بارگذاری بهبود یافتهٔ جلد آلبوم</string>
     <string name="share">هم‌رسانی</string>
     <string name="album_covers_enhance_desc">پشتیبانی از جلدهای آواز کیفیت بالا و اجازۀ تفاوت داشتن جلد آلبوم و آواز (نیازمند دسترسی عکس‌ها)</string>
     <string name="current_playlist">فهرست پخش کنونی</string>
@@ -266,7 +266,7 @@
     <string name="device_type_usb_headset">هدست USB</string>
     <string name="device_type_hearing_aid">سمعک</string>
     <string name="device_type_ble_headset">هدست بلوتوثی LE</string>
-    <string name="device_type_hdmi_earc">کانال بازگشت صدای بهبود یافتۀ HDMI</string>
+    <string name="device_type_hdmi_earc">کانال بازگشت صدای بهبود یافتهٔ HDMI</string>
     <string name="device_type_unknown">ناشناخته</string>
     <string name="device_type_dock_digital">بارانداز دیجیتال</string>
     <string name="device_type_dock_analog">بارانداز آنالوگ</string>
