@@ -303,7 +303,7 @@
     <string name="mix_port_flag_voip_rx">VoIP RX</string>
     <string name="mix_port_flag_mmap_noirq">MMAP (بدون irq)</string>
     <string name="mix_port_flag_direct_pcm">PCM مستقیم</string>
-    <string name="mix_port_flag_sync">هم‌گام</string>
+    <string name="mix_port_flag_sync">همگام</string>
     <string name="mix_port_flag_compress_offload">تخلیۀ فشرده</string>
     <string name="mix_port_flag_non_blocking">مسدود-نکننده</string>
     <string name="mix_port_flag_fast">سریع</string>
@@ -404,4 +404,21 @@
     <string name="cannot_find_file">نمی‌توان این پرونده را پیدا کرد</string>
     <string name="settings_mp3_index_seeking">جویش فهرست MP3</string>
     <string name="settings_mp3_index_seeking_summary">خواندن تمامی پرونده MP3 به حافظه لازم برای جویش، بحای اتکا به سری Xing بالقوه گم شده برای جویش VBR. اگر این از کار افتاده باشد، جویش CBR اگر سری Xing گم شده باشد استفاده می‌شود. یک پرونده MP3 خوش ساختع VBR یک سری Xing دارد، پس این گزینه در اکثر موارد نباید مورد نیاز باشد. (نیاز به ازسرگیری برنامه برای اعمال دارد)</string>
+    <string name="create_playlist">ایجاد سیاهۀپخش…</string>
+    <string name="refreshing_wait">درحال بازخوانی، لطفا صبر کنید…</string>
+    <string name="still_refreshing">درحال بازخوانی، گام %1$d/%2$d: %3$s</string>
+    <string name="did_you_know">آیا می‌دانستید…</string>
+    <string name="rename_failed_playlist">تغییر نام سیاهۀپخش شکست خورد</string>
+    <string name="playlist_name">نام سیاهۀپخش</string>
+    <string name="rename_playlist">تغییر نام سیاهۀپخش</string>
+    <string name="add_to_playlist">افزودن به سیاهۀپخش</string>
+    <string name="enter_msg_for_dev_here">این‌جا پیام را برای توسعه‌دهنده وارد کنید</string>
+    <string name="do_not_enter_email_enter_msg">پیام را وارد کنید، نه نشانی ایمیل</string>
+    <string name="create_failed_playlist">ایجاد سیاهۀپخش شکست خورد</string>
+    <string name="edit_playlist_failed">ویرایش سیاهۀپخش شکست خورد</string>
+    <string name="log_attachment">گزارش به‌عنوان ضمیمه به‌طور خودکار فرستاده خواهد شد</string>
+    <string name="log_will_auto_send">گزارش به‌طور خودکار فرستاده خواهد شد، در عوض مشکل را توضیح دهید</string>
+    <string name="refresh_did_you_know">گرامافون در هر بار شروع برنامه، لیست آهنگ‌های به‌روز شده را درخواست می‌کند و در حالی که گرامافون در حال اجرا است، رسانه‌های جدید را نیز به‌طور خودکار شناسایی می‌کند. دکمه «بازخوانی» رسانه‌ها را در گرامافون بارگیری مجدد نمی‌کند، در عوض، از سیستم شما می‌خواهد که تمام فایل‌ها را از تمام دستگاه‌های ذخیره‌سازی دائمی متصل دوباره اسکن کند (به همین دلیل است که مدتی طول می‌کشد). این یعنی هرگز نیازی به استفاده از این ویژگی نخواهید داشت، مگر این‌که سیستم یا برنامه‌های دیگر شما دچار نقص شوند.\n\nآیا برخی از آهنگ‌ها را از دست داده‌اید؟ حتماً «تنظیمات &gt; رفتار» را برای پالایۀ کمینۀ مدت زمان و لیست سیاه پوشه بررسی کنید و تأیید کنید که این تنظیمات روی مقدار مورد انتظار تنظیم شده‌اند. برای دلایل احتمالی بیشتر، لطفا سوالات پرتکرار ما را بررسی کنید.</string>
+    <string name="delete_failed_playlist">پاک کردن سیاهۀپخش شکست خورد</string>
+    <string name="rename">تغییر نام</string>
 </resources>
