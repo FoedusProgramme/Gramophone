@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Build
 import android.view.View
 import androidx.activity.ComponentActivity
@@ -21,6 +22,7 @@ import androidx.core.view.children
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
+import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.utils.AnimationUtils
 import java.util.Locale
 
@@ -87,8 +89,8 @@ fun View.enableEdgeToEdgePaddingListener(
             ViewCompat.setOnApplyWindowInsetsListener(it) { _, insets -> insets }
         }
         collapsingToolbarLayout?.let{
-            it.setCollapsedTitleTypeface(TypefaceCompat.create(context, null, 600, false))
-            it.setExpandedTitleTypeface(TypefaceCompat.create(context, null, 600, false))
+            it.setCollapsedTitleTypeface(TypefaceCompat.create(context, resources.getFont(R.font.gsans), 600, false))
+            it.setExpandedTitleTypeface(TypefaceCompat.create(context, resources.getFont(R.font.gsans), 600, false))
         }
         val expandedTitleMarginStart = collapsingToolbarLayout?.expandedTitleMarginStart
         val expandedTitleMarginEnd = collapsingToolbarLayout?.expandedTitleMarginEnd
