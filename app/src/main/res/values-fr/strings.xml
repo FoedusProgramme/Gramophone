@@ -307,4 +307,5 @@
     <string name="spk_encoding_opus">Opus</string>
     <string name="audio_signal_chain">Chaîne son spatial</string>
     <string name="settings_lyrics_no_animation_summary">Désactive la transition de toutes les lignes dans l\'animation des paroles</string>
+    <string name="delete_failed_playlist">Suppression de la liste de lecture échouée</string>
 </resources>
