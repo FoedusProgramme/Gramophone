@@ -169,7 +169,7 @@
     <string name="timer_expiry">Таймер сна приостановит музыку на %s</string>
     <string name="separator_dot">•</string>
     <string name="grant_audio"><![CDATA[Пожалуйста, предоставьте разрешение \"Музыка и аудио\"]]></string>
-    <string name="app_name">Gramophone</string>
+    <string name="app_name">Граммофон</string>
     <string name="settings_preference_category_home">Главный экран</string>
     <string name="tab_order">Настроить порядок вкладок</string>
     <string name="tab_order_summary">Приложение покажет первую вкладку при запуске. Вкладки после разделителя будут скрыты.</string>
@@ -311,7 +311,7 @@
     <string name="device_type_bluetooth_a2dp">Bluetooth A2DP</string>
     <string name="device_type_ble_headset">Гарнитура Bluetooth LE</string>
     <string name="device_type_hdmi_arc">HDMI Реверсивный аудиоканал</string>
-    <string name="open_in_gramophone">Открыть в Gramphone</string>
+    <string name="open_in_gramophone">Открыть в Граммофоне</string>
     <string name="crash_report">Отчет о сбое</string>
     <string name="email_clipboard">Адрес электронной почты скопирован в буфер обмена</string>
     <string name="settings_export_logs">Экспорт логов программы</string>
@@ -377,7 +377,7 @@
     <string name="settings_pixel_perfect_measurement_legacy_summary">До Android 15, текстовые измерения основывались на достижениях, а не на ограничительных полях. Чтобы избежать градиентной вырезки в тексте, мы добавляем несколько пикселей на боках. Однако, это может привести к непредвиденным артефактам при включении kerning, которые смягчаются, если этот переключатель включен путем отображения текста в топовую карту и его анализа для извлечения данных о правильном интервале.</string>
     <string name="spk_channel_out_front_wide_right">Передняя широкая правая</string>
     <string name="spk_channel_out_low_frequency_2">Низкая частота 2</string>
-    <string name="package_type_explainer">Gramophone APK может быть создан любым, потому что Gramophone является открытым исходным кодом. Чтобы помочь запомнить, откуда взялся APK, Gramophone предоставляет тип пакета.\n\nНаиболее распространенный тип - Release, который получают от F-Droid, Google Play, GitHub или IzzyOnDroid.\nТип пакета CI относится к автоматическим сборкам, сделанным для каждого перевода на GitHub. Эти сборки могут быть нестабильными.\nВ случае других типов упаковок наименование должно давать разумное указание на то, откуда был получен АРК.</string>
+    <string name="package_type_explainer">Gramophone APK может быть создан любым, потому что Граммофон является открытым исходным кодом. Чтобы помочь запомнить, откуда взялся APK, Граммофон предоставляет тип пакета.\n\nНаиболее распространенный тип - Release, который получают от F-Droid, Google Play, GitHub или IzzyOnDroid.\nТип пакета CI относится к автоматическим сборкам, сделанным для каждого перевода на GitHub. Эти сборки могут быть нестабильными.\nВ случае других типов упаковок наименование должно давать разумное указание на то, откуда был получен АРК.</string>
     <string name="send_email">Отправить email</string>
     <string name="spk_encoding_unknown_d">Неизвестный формат %d</string>
     <string name="spk_encoding_qcelp">QCELP</string>
@@ -389,7 +389,7 @@
     <string name="settings_trim_lyrics_summary">Пробелы перед или после первой буквы в лирической строке могут иметь художественную ценность. Если вы не согласны, вы можете включить этот переключатель, чтобы удалить эти пробелы автоматически.</string>
     <string name="settings_lyrics_no_animation">Отключить анимации</string>
     <string name="settings_contributors_long"><![CDATA[- nift4: Maintainer / Lead Developer\n- 123Duo3: Lead Designer\n- AkaneTan: Original creator, retired developer\n- imjyoritaditya: Developer\n- WSTxda: designed one variation of app icon\n- pxe_emo: Help & testing of new lyrics\n- Lambada10: providing lyric samples & SongSync\n- lightsummer233: Developer\n- nicholaswww: Code contributions\n- Yuyuko1024: Squiggly progress bar\n- ghhccghk: Status Bar lyrics\n- lucaxvi: Code contributions\n- tungnk123: Code contributions\n- topazrn: Code contributions\n- strongville: Code contributions\n- bggRGjQaUbCoE: Code contributions\n- VishnuSanal: Code contributions\n- mikooomich: Code contributions\n- HotarunIchijou: Code contributions\n- someone5678: Code contributions\n- IzzySoft: Code contributions\n- PalanixYT: Code contributions\n- N3Shemmy3: Code contributions]]></string>
-    <string name="gramophone_crashed_explainer2">Gramophone сломался :(\n\nПожалуйста, отправьте мне отчёт о ошибке, чтобы проблемы, как например, что привело к этой аварии могли быть исправлены!\n\nЭта ситуация уникальна как и музыка, без вашей помощи эта ошибка, скорее всего, <b>НЕ</b> будет исправлена!</string>
+    <string name="gramophone_crashed_explainer2">Граммофон сломался :(\n\nПожалуйста, отправьте мне отчёт о ошибке, чтобы проблемы, как например, что привело к этой аварии могли быть исправлены!\n\nЭта ситуация уникальна как и музыка, без вашей помощи эта ошибка, скорее всего, <b>НЕ</b> будет исправлена!</string>
     <string name="send_email_manually">Пожалуйста отправьте лог файл по адресу nift4dev@gmail.com - не могу найти почтовую программу</string>
     <string name="spk_encoding_iec61937">IEC 61937</string>
     <string name="spk_encoding_aptx">aptX</string>
@@ -412,7 +412,7 @@
     <string name="spk_encoding_aac_latm_he_v1">HE-AAC v1 в LATM</string>
     <string name="spk_encoding_mpegh_sub_bl_l4">MPEG-H Базовый профиль L4</string>
     <string name="spk_encoding_mpegh_sub_lc_l3">MPEG-H Низкая сложность L3</string>
-    <string name="what_were_you_doing">Что вы делали в Gramophone, когда произошел сбой? Пожалуйста, добавьте как можно больше деталей, чтобы увеличить шансы того, что я смогу исправить проблему.\n\nПожалуйста, обратите внимание, что для сообщений о ошибках предпочтителен английский язык, но я постараюсь использовать машинный перевод, если вы отправляете сообщения об ошибках на другом языке.</string>
+    <string name="what_were_you_doing">Что вы делали в Граммофоне, когда произошел сбой? Пожалуйста, добавьте как можно больше деталей, чтобы увеличить шансы того, что я смогу исправить проблему.\n\nПожалуйста, обратите внимание, что для сообщений о ошибках предпочтителен английский язык, но я постараюсь использовать машинный перевод, если вы отправляете сообщения об ошибках на другом языке.</string>
     <string name="spk_encoding_dts_lbr">DTS Express</string>
     <string name="settings_translation_auto_word">Автоматически анимировать переводы</string>
     <string name="refreshing_wait">Обновление, пожалуйста, подождите…</string>
@@ -431,4 +431,5 @@
     <string name="delete_failed_playlist">Удаление плейлиста не удалось</string>
     <string name="log_will_auto_send">Логи будут отправлены автоматически, вместо этого объясните проблему</string>
     <string name="rename">Переименовать</string>
+    <string name="refresh_did_you_know">Граммофон запрашивает обновленный список песен при каждом запуске приложения, и пока Граммофон работает, он также автоматически обнаруживает новые медиафайлы. Эта кнопка «Обновить» не перезагрузит медиафайлы в Граммофоне, вместо этого она попросит вашу систему повторно просканировать все файлы со всех подключенных постоянных устройств хранения (вот почему это занимает некоторое время). Это означает, что если ваша система или другие приложения не работают со сбоями, вам никогда не понадобится использовать эту функцию.\n\nНе хватает некоторых песен? Обязательно проверьте Настройки &gt; Поведение для фильтра минимальной длины и черного списка папок и убедитесь, что эти настройки установлены на ожидаемое значение. Для получения дополнительных возможных причин, пожалуйста, проверьте наш FAQ.</string>
 </resources>
