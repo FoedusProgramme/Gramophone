@@ -120,14 +120,12 @@
     <string name="settings_experimental_settings_summary">Fonctionnalités en test, autres</string>
     <string name="settings_package_type">Type de paquet</string>
     <string name="settings_title_center_summary">Mettre le titre au centre dans le lecteur complet</string>
-    <string name="settings_float_output">Sortie audio flottante</string>
     <string name="settings_album_round_corner_summary">Activer les bords ronds dans tout le lecteur</string>
     <string name="no_lyric_found">Pas de paroles trouvées</string>
     <string name="settings_player_options_summary">Qualité de la sortie audio, comportement de la lecture</string>
     <string name="settings_library">Bibliothèque</string>
     <string name="settings_lyrics_bold_summary">Utiliser une police plus grosse pour les paroles</string>
     <string name="settings_customization">Personnalisation</string>
-    <string name="settings_float_output_summary">Activer la sortie 32 bits flottant</string>
     <string name="settings_play_on_launch_summary">Lancer la musique au démarrage</string>
     <string name="settings_play_on_launch">Lire au démarrage</string>
     <string name="settings_blacklist">Liste d\'exclusion</string>

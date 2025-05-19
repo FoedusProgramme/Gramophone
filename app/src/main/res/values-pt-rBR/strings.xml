@@ -105,7 +105,6 @@
     <string name="settings_package_type">Tipo de pacote</string>
     <string name="settings_title_center_summary">Use o título centralizado na tela de reprodução</string>
     <string name="go_to_artist">Ir para o artista</string>
-    <string name="settings_float_output">Saída de áudio flutuante</string>
     <string name="settings_album_round_corner_summary">Ativar cantos arredondados do álbum no player</string>
     <string name="unknown_year">Ano desconhecido</string>
     <string name="home_menu_search">Pesquisar</string>
@@ -115,7 +114,6 @@
     <string name="layout">Tipo de visualização</string>
     <string name="settings_customization">Customização</string>
     <string name="play_next">Reproduzir a seguir</string>
-    <string name="settings_float_output_summary">Ativar saída flutuante de 32 bits</string>
     <string name="unknown_version">Versão desconhecida</string>
     <string name="unknown_artist">Artista desconhecido</string>
     <string name="repeat_mode">Modo repetição</string>

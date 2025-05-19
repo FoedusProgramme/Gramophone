@@ -55,8 +55,6 @@
     <string name="settings_album_round_corner_summary">플레이어 화면에서 앨범 커버 모서리를 둥글게 표시</string>
     <string name="settings_audio">오디오</string>
     <string name="settings_album_round_corner">둥근 앨범 커버</string>
-    <string name="settings_float_output">부동 소수점 오디오 출력</string>
-    <string name="settings_float_output_summary">32비트 부동 소수점 오디오 출력 사용</string>
     <string name="settings_title_bold">제목 굵게</string>
     <string name="settings_title_bold_summary">플레이어 화면에서 굵은 폰트로 제목 표시</string>
     <string name="sort_by_add_date">추가한 날짜</string>

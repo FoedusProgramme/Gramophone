@@ -75,7 +75,6 @@
     </plurals>
     <string name="dialog_duration">Trvání</string>
     <string name="dialog_edit_metadata">Upravit</string>
-    <string name="settings_float_output_summary">Povolit 32 bitový float výstup</string>
     <string name="settings_content_based_color_summary">Povolit generaci barev na základě alba</string>
     <string name="settings_default_progress_bar_summary">Povolit material stylizaci ukazatele průběhu</string>
     <string name="home_menu_equalizer">Ekvalizér</string>
@@ -140,7 +139,6 @@
     <string name="folders">Složky</string>
     <string name="now_playing">Nyní se přehrává</string>
     <string name="settings_customization_summary">Správa vlastních nastavení</string>
-    <string name="settings_float_output">Plovoucí audio výstup</string>
     <string name="sort_by_modified_date">Datum modifikace</string>
     <string name="settings_lyric">Lyric</string>
     <string name="preference_category_quality">Kvalita</string>

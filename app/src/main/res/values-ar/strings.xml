@@ -127,7 +127,6 @@
     <string name="settings_package_type">نوع الحِزمة</string>
     <string name="settings_title_center_summary">استعمال العنوان المُتمَركِز في المنتصف في المُشغِّل الكامل</string>
     <string name="go_to_artist">اذهب إلى الفنّان</string>
-    <string name="settings_float_output">خرج الصَّوت الطّافي</string>
     <string name="settings_album_round_corner_summary">تنشيط الزوايا المُدَوَّرة في المُشَغِّل الكامل</string>
     <string name="unknown_year">سَنَةٌ غير معروفة</string>
     <string name="home_menu_search">بحث</string>
@@ -140,7 +139,6 @@
     <string name="settings_blacklist_folder">مُجلَّدات القائمة السّوداء</string>
     <string name="settings_blacklist_folder_summary">فلترة أغانٍ من مجلَّداتٍ معيَّنة</string>
     <string name="play_next">شغِّل تالِيَاً</string>
-    <string name="settings_float_output_summary">تمكين مخَرجٍ ٣٢ بِتّ عائم</string>
     <string name="unknown_version">إصدارٌ غير معروف</string>
     <string name="unknown_artist">فنّانٌ غير معروف</string>
     <string name="repeat_mode">وضع التَّكرار</string>

@@ -104,8 +104,6 @@
     <string name="settings_category_links">Enllaços</string>
     <string name="settings_library">Biblioteca</string>
     <string name="settings_album_round_corner_summary">Activa les cantonades arrodonides en el reproductor complet</string>
-    <string name="settings_float_output">Sortida d\'àudio flotant</string>
-    <string name="settings_float_output_summary">Activa la sortida flotant de 32 bits</string>
     <string name="settings_title_bold">Títols en negreta</string>
     <string name="settings_color_accuracy_summary">Fes que la generació de color sigui precisa</string>
     <string name="settings_experimental_settings_summary">Funcionalitats de prova, miscel·lània</string>

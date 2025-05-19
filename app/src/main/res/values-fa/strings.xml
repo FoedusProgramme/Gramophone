@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="settings_float_output_summary">به کار اندختن خروجی شناور ۳۲ بیتی</string>
     <string name="settings_content_based_color_summary">به کار انداختن تولید رنگ مبتنی بر آلبوم</string>
     <string name="category_artists">هنرمندها</string>
     <string name="category_dates">تاریخ‌ها</string>
@@ -76,7 +75,6 @@
     <string name="settings_library_summary">مدیریت کتابخانۀ رسانه</string>
     <string name="settings_customization_summary">مدیریت گزینه‌های شخصی‌سازی</string>
     <string name="settings_audio">صدا</string>
-    <string name="settings_float_output">خروجی صوتی شناور</string>
     <string name="settings_title_bold">نام درشت</string>
     <string name="settings_color_accuracy">دقت رنگ</string>
     <string name="settings_experimental_settings">آزمایشی</string>

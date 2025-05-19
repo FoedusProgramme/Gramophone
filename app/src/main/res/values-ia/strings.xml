@@ -132,8 +132,6 @@
     <string name="settings_content_based_color_summary">Activar generation de colores basate in le albumes</string>
     <string name="settings_title_center">Titulo centrate</string>
     <string name="settings_title_center_summary">Usar titulo centrate pro le reproductor plen</string>
-    <string name="settings_float_output">Sortita de audio flottante</string>
-    <string name="settings_float_output_summary">Activar sortita flottante de 32 bit</string>
     <string name="settings_experimental_settings">Experimental</string>
     <string name="settings_experimental_settings_summary">Functionalitates de prova, alteres</string>
     <string name="settings_title_bold_summary">Usar titulo grasse pro le reproductor plen</string>

@@ -101,10 +101,8 @@
     <string name="settings_player_options">オーディオ</string>
     <string name="settings_appearance_summary">アプリの外観とテーマを設定します</string>
     <string name="settings_title_center_summary">フルプレーヤーのタイトルに中央揃えを使用します</string>
-    <string name="settings_float_output">Float オーディオ出力</string>
     <string name="settings_album_round_corner_summary">フルプレーヤー内の角の丸みを有効化します</string>
     <string name="settings_player_options_summary">出力の音質と再生時の動作を設定します</string>
-    <string name="settings_float_output_summary">32 bit float 出力を有効化します</string>
     <string name="settings_title_bold">タイトルを太字にする</string>
     <string name="settings_title_bold_summary">フルプレーヤーのタイトルに太字を使用します</string>
     <string name="settings_experimental_settings">試験的</string>

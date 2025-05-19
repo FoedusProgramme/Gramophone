@@ -100,7 +100,6 @@
     <string name="playlist_favourite">Suosikki</string>
     <string name="settings_category_appearance">Ulkoasu</string>
     <string name="settings_title_center_summary">Käytä keskitettyä otsikkoa suurennetussa soittimessa</string>
-    <string name="settings_float_output_summary">Ota käyttöön 32-bittinen float ulostulo</string>
     <string name="sort_by_add_date">Lisäyspäivämäärä</string>
     <string name="settings_play_on_launch">Toista käynnistäessä</string>
     <string name="settings_play_on_launch_summary">Toista musiikkia käynnistäessä</string>

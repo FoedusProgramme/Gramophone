@@ -44,7 +44,6 @@
     <string name="settings_album_round_corner_summary">पूर्ण प्लेयरमा राउन्ड कुना सक्षम गर्नुहोस्</string>
     <string name="settings_audio">अडियो</string>
     <string name="settings_title_bold">बोल्ड शीर्षक</string>
-    <string name="settings_float_output_summary">३२ बिट फ्लोट आउटपुट सक्षम गर्नुहोस् (सेवा पुन: सुरु गर्न आवश्यक छ)</string>
     <string name="settings_color_accuracy">रंग शुद्धता</string>
     <string name="settings_experimental_settings_summary">परीक्षण सुविधाहरू कन्फिगर गर्नुहोस्</string>
     <string name="settings_lyrics_center">केन्द्र पङ्क्तिबद्धता</string>

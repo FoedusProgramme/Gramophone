@@ -111,10 +111,8 @@
     <string name="settings_player_options_summary">வெளியீட்டு தகுதி, பின்னணி நடத்தை</string>
     <string name="settings_album_round_corner_summary">முழு வீரரில் சுற்று மூலையை இயக்கவும்</string>
     <string name="settings_album_round_corner">ஆல்பம் சுற்று மூலையில்</string>
-    <string name="settings_float_output">மிதவை ஆடியோ வெளியீடு</string>
     <string name="settings_customization">தனிப்பயனாக்கம்</string>
     <string name="settings_customization_summary">தனிப்பயனாக்குதல் விருப்பங்களை நிர்வகிக்கவும்</string>
-    <string name="settings_float_output_summary">32 பிட் மிதவை வெளியீட்டை இயக்கவும்</string>
     <string name="settings_audio">ஆடியோ</string>
     <string name="settings_title_bold">தைரியமான தலைப்பு</string>
     <string name="settings_title_bold_summary">முழு பிளேயருக்கு தைரியமான தலைப்பைப் பயன்படுத்தவும்</string>

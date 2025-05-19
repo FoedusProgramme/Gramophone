@@ -92,8 +92,6 @@
     <string name="settings_library_summary">Kelola perpustakaan media</string>
     <string name="settings_audio">Audio</string>
     <string name="settings_album_round_corner">Sudut lengkung album</string>
-    <string name="settings_float_output_summary">Aktifkan suara 32 bit float</string>
-    <string name="settings_float_output">Output audio float</string>
     <string name="settings_color_accuracy">Akurasi warna</string>
     <string name="settings_experimental_settings">Eksperimental</string>
     <string name="settings_color_accuracy_summary">Membuat pembuat warna menjadi akurat</string>

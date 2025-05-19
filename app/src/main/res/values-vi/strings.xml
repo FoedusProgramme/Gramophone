@@ -117,9 +117,7 @@
     <string name="settings_color_accuracy_summary">Dùng màu sắc chính xác dựa theo nội dung</string>
     <string name="settings_lyrics_configuration_summary">Cách hiển thị lời bài hát</string>
     <string name="settings_experimental_settings_summary">Sắp ra mắt</string>
-    <string name="settings_float_output">Đầu ra âm thanh nổi</string>
     <string name="settings_lyrics_bold_summary">In đậm lời bài hát</string>
-    <string name="settings_float_output_summary">Phát âm thanh nổi 32 bit</string>
     <string name="settings_preference_category_application">Ứng dụng</string>
     <string name="settings_category_basic_info">Thông tin</string>
     <string name="crash_clipboard">Đã sao chép nhật ký lỗi vào bộ nhớ tạm</string>

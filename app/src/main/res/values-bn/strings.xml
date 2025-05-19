@@ -103,7 +103,6 @@
     <string name="share">শেয়ার করুন</string>
     <string name="settings_title_center">কেন্দ্রীভূত শিরোনাম</string>
     <string name="settings_player_ui">প্লেয়ার ইওআই</string>
-    <string name="settings_float_output_summary">৩২ বিট ফ্লোট আউটপুট সক্ষম করুন</string>
     <string name="settings_audio">অডিও</string>
     <string name="settings_title_bold_summary">সম্পূর্ণ প্লেয়ারের জন্য বোল্ড শিরোনাম ব্যবহার করুন</string>
     <string name="settings_player_ui_summary">সম্পূর্ণ প্লেয়ার ইউয়াই, গানের কথা</string>
@@ -123,7 +122,6 @@
     <string name="settings_library">লাইব্রেরি</string>
     <string name="settings_library_summary">মিডিয়া লাইব্রেরি পরিচালনা করুন</string>
     <string name="settings_customization_summary">কাস্টমাইজেশন বিকল্পগুলি পরিচালনা করুন</string>
-    <string name="settings_float_output">ফ্লোট অডিও আউটপুট</string>
     <string name="settings_about_app">সম্পর্কে</string>
     <string name="settings_color_accuracy">রঙ নির্ভুলতা</string>
     <string name="sort_by_add_date">তারিখ যোগ করুন</string>

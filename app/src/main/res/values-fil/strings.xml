@@ -103,7 +103,6 @@
     <string name="settings_default_progress_bar_summary">I-enable ang material styled progress bar</string>
     <string name="no_lyric_found">Walang lyrico nahanap</string>
     <string name="now_playing">Ngayon napatugtog</string>
-    <string name="settings_float_output_summary">I-enable ang 32 bit float na output</string>
     <string name="settings_behavior_summary">Mga filter, pag-uugali ng launch</string>
     <string name="settings_player_options_summary">Quality ng output, playback behavior</string>
     <string name="settings_album_round_corner_summary">I-enable ang bilog na sulok sa buong player</string>

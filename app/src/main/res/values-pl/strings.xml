@@ -120,7 +120,6 @@
     <string name="settings_package_type">Typ instalacji</string>
     <string name="settings_title_center_summary">Wyśrodkuj tytuł utworu w odtwarzaczu</string>
     <string name="go_to_artist">Przejdź do wykonawcy</string>
-    <string name="settings_float_output">Zmiennoprzecinkowe wyjście audio</string>
     <string name="settings_album_round_corner_summary">Zaokrągnij narożniki okładek albumów w odtwarzaczu</string>
     <string name="unknown_year">Nieznany rok</string>
     <string name="home_menu_search">Szukaj</string>
@@ -133,7 +132,6 @@
     <string name="settings_blacklist_folder">Ignorowane foldery</string>
     <string name="settings_blacklist_folder_summary">Pomijaj utwory z wybranych folderów</string>
     <string name="play_next">Odtwórz następny</string>
-    <string name="settings_float_output_summary">Włącz 32-bitowe wyjście zmiennoprzecinkowe</string>
     <string name="unknown_version">Nieznana wersja</string>
     <string name="unknown_artist">Nieznany wykonawca</string>
     <string name="repeat_mode">Odtwarzaj w pętli</string>

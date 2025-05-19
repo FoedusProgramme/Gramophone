@@ -63,7 +63,6 @@
     <string name="settings_contributors">Atbalstītāji</string>
     <string name="unknown_album">Nezināms albums</string>
     <string name="settings_player_ui">Pleijera UI</string>
-    <string name="settings_float_output">Float tipa skaņas izvade</string>
     <string name="dialog_album_artist">Albuma mākslinieks</string>
     <string name="compact_list">Saraksts (kompakts)</string>
     <string name="settings_customization">Pielāgošana</string>
@@ -114,7 +113,6 @@
     <string name="settings_title_center_summary">Izmantot centrētu nosaukumu pilnajam pleijerim</string>
     <string name="settings_about_app">Informācija</string>
     <string name="settings_about_gramophone">Par aplikāciju</string>
-    <string name="settings_float_output_summary">Iespējot 32 bitu float tipa izvadi</string>
     <string name="settings_audio">Skaņa</string>
     <string name="settings_title_bold">Nosaukums treknrakstā</string>
     <string name="settings_title_bold_summary">Rādīt nosaukumu treknrakstā pilnajā pleijerī</string>

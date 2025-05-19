@@ -277,8 +277,6 @@
     <string name="settings_content_based_color_summary">Activar creación da cor en función do álbum</string>
     <string name="settings_content_based_color">Cores en función do contido</string>
     <string name="settings_package_type">Tipo de paquete</string>
-    <string name="settings_float_output">Saída Float audio</string>
-    <string name="settings_float_output_summary">Activar saída 32 bit float</string>
     <string name="cannot_play_file">Non se pode reproducir este ficheiro</string>
     <string name="settings_trim_lyrics_summary">Os espazos antes ou despois da primeira letra na liña das letras da canción podería ter valor artístico. Se non estás de acordo podes activar isto para omitir estes espazos.</string>
     <string name="settings_lyrics_no_animation_summary">Desactivar as animacións de transición de liñas nas letras</string>

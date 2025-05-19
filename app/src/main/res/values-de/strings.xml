@@ -99,7 +99,6 @@
     <string name="settings_player_ui_summary">Vollbild-Benutzeroberfläche, Liedtexte</string>
     <string name="settings_player_ui">Abspieloberfläche</string>
     <string name="settings_customization_summary">Anpassungsoptionen verwalten</string>
-    <string name="settings_float_output">Float-Audioausgabe</string>
     <string name="settings_about_app">Über</string>
     <string name="settings_library">Mediathek</string>
     <string name="settings_category_links">Links</string>
@@ -130,7 +129,6 @@
     <string name="grant_images"><![CDATA[Bitte die Berechtigung „Fotos und Videos“ erteilen]]></string>
     <string name="settings_package_type">Pakettyp</string>
     <string name="settings_customization">Anpassung</string>
-    <string name="settings_float_output_summary">32-Bit-Float-Ausgabe aktivieren</string>
     <string name="settings_title_bold_summary">Fett gedruckte Titel für den Vollbildmodus verwenden</string>
     <string name="settings_experimental_settings">Experimentell</string>
     <string name="settings_lyrics_configuration">Liedtext-Konfiguration</string>

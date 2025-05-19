@@ -119,8 +119,6 @@
     <string name="settings_title_bold">Жирный заголовок</string>
     <string name="settings_audio">Звук</string>
     <string name="settings_title_bold_summary">Использовать жирный заголовок для плеера</string>
-    <string name="settings_float_output">Вывод аудио с плавающей запятой</string>
-    <string name="settings_float_output_summary">Включить 32-битный вывод с плавающей запятой</string>
     <string name="settings_experimental_settings">Экспериментальные</string>
     <string name="settings_color_accuracy">Точность цветопередачи</string>
     <string name="settings_color_accuracy_summary">Более точная генерация цветов</string>
