@@ -181,7 +181,6 @@
     <string name="shuffle_all">Mezclar todas</string>
     <string name="tab_order">Configurar el orden de las pestañas</string>
     <string name="skip_previous">Ir a la anterior</string>
-    <string name="app_name">Gramophone</string>
     <string name="settings_lyrics_parser_summary">Habilita un nuevo analizador de letras que admite sincronización palabra por palabra, indicador de altavoz, desplazamiento y mucho más</string>
     <string name="settings_lyrics_parser">Nuevo analizador de letras</string>
     <string name="settings_lyrics_ui_summary">Interfaz de usuario experimental para mostrar la letra palabra por palabra con funciones avanzadas</string>

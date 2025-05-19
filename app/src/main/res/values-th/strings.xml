@@ -41,7 +41,6 @@
     <string name="dialog_mime">ประเภทของ MIME</string>
     <string name="no_lyric_found">ไม่พบเนื้อเพลง</string>
     <string name="now_playing">กำลังเล่น</string>
-    <string name="app_name">Gramophone</string>
     <string name="playlist_favourite">รายการโปรด</string>
     <string name="settings_about_gramophone">เกี่ยวกับแอปพลิเคชัน</string>
     <string name="settings_about_app">เกี่ยวกับ</string>

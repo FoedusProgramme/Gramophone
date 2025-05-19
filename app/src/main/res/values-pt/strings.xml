@@ -312,7 +312,6 @@
     <string name="mix_port_flag_iec958_nonaudio">IEC 958 (sem audio)</string>
     <string name="failed_to_parse_lyric">Falha ao analisar a letra da música</string>
     <string name="settings_contributors_click">%s (clique para saber mais!)</string>
-    <string name="app_name">Gramophone</string>
     <string name="settings_preference_category_home">Ecrã inicial</string>
     <string name="skip_next">Pular para o próximo</string>
     <string name="spk_encoding_e_ac3">E-AC-3</string>

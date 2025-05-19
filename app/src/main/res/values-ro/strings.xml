@@ -167,7 +167,6 @@
     <string name="divider">Schimbător</string>
     <string name="remove">Șterge</string>
     <string name="settings_status_bar_lyrics_title">Status de bară la versuri</string>
-    <string name="app_name">Gramofon</string>
     <string name="lyric_widget_description">Wudget care arată versuri la playerul media curent</string>
     <string name="settings_preference_category_home">Ecran principal</string>
     <string name="tab_order">Configurați ordinea secțiunilor</string>

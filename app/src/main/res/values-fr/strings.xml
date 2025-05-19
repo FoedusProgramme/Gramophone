@@ -163,7 +163,6 @@
     <string name="fgs_failed_channel">La reprise de la lecture a échoué</string>
     <string name="separator_dot">•</string>
     <string name="home_menu_shuffle">Tout jouer aléatoirement</string>
-    <string name="app_name">Gramophone</string>
     <string name="lyric_widget_description">Widget qui affiche les paroles des médias joués</string>
     <string name="settings_preference_category_home">Écran d\'accueil</string>
     <string name="position_slider">Position du défilement</string>

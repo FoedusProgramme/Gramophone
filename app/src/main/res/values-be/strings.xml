@@ -167,7 +167,6 @@
     <string name="separator_dot">•</string>
     <string name="timer_expiry">Таймер сну прыпыніць музыку на %s</string>
     <string name="grant_audio"><![CDATA[Калі ласка, дайце дазвол \"Музыка і аўдыё\"]]></string>
-    <string name="app_name">Gramophone</string>
     <string name="seekbar">Панэль пошуку</string>
     <string name="divider">Падзельнік</string>
     <string name="shuffle_all">Змяшаць усё</string>

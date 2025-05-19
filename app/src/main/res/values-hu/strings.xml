@@ -285,7 +285,6 @@
     <string name="settings_lyrics_ui_summary">Kísérleti szóról-szóra dalszöveg felhasználói felület haladó szintű funkciókkal</string>
     <string name="album_covers_enhance">Feljavított album borító beöltése</string>
     <string name="share">Megosztás</string>
-    <string name="app_name">Gramophone</string>
     <string name="timer">Elalvás időzítő</string>
     <string name="current_playlist">Jelenlegi lejátszási lista</string>
     <string name="album_covers_enhance_desc">Magas minőségű album borítók támogatása, és engedélyezi az album és szám borítók eltérését (fotó engedély szükséges)</string>

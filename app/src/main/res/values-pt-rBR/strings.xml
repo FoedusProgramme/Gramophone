@@ -174,7 +174,6 @@
     <string name="settings_lyrics_parser">Novo analisador de letras</string>
     <string name="settings_lyrics_ui">Ativar nova UI de letras</string>
     <string name="settings_lyrics_ui_summary">Interface de usuário experimental para exibir letras palavra por palavra com recursos avançados</string>
-    <string name="app_name">Gramophone</string>
     <string name="expand_less">Fechar</string>
     <string name="shuffle_all">Reproduzir no modo aleatório</string>
     <string name="sort">Organizar</string>

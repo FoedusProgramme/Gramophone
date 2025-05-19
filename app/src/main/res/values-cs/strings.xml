@@ -154,7 +154,6 @@
     <string name="dialog_bitrate">Bitrate</string>
     <string name="bitrate_format">%1$d kbps</string>
     <string name="bitrate_unknown">Neznámý bitrate</string>
-    <string name="app_name">Gramphone</string>
     <string name="settings_play_on_launch">Začít hrát při spuštění aplikace</string>
     <string name="delete_really">Opravdu chcete smazat \"%s\"? Tato akce je nevratná.</string>
     <string name="yes">Ano</string>

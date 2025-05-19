@@ -159,7 +159,6 @@
     <string name="settings_lyrics_multiline">Leger le parolas de canto multilinea</string>
     <string name="grant_audio">Concede le permission de \"Musica e audio\"</string>
     <string name="settings_lyrics_multiline_summary">Tractar tote le lineas inter le punctos de synchronisation como un sol parola de canto</string>
-    <string name="app_name">Gramophone</string>
     <string name="settings_preference_category_home">Schermo de initio</string>
     <string name="more">Plus</string>
     <string name="remove">Remover</string>

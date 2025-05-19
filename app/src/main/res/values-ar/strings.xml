@@ -174,7 +174,6 @@
     <string name="timer_expiry">سيُوقِف مؤقِّت النّوم الموسيقى خلال %s ثانية</string>
     <string name="separator_dot">•</string>
     <string name="home_menu_shuffle">اخلط الجميع</string>
-    <string name="app_name">غراموفون</string>
     <string name="scroll_to_songs">اسحب إلى الأغاني</string>
     <string name="settings_lyrics_parser">موزّع الكلمات الجديد</string>
     <string name="settings_status_bar_lyrics_summary">فعّل طريقة MeiZu في عرض الكلمات في شريط الحالات (مدعومة فقط على بعض الأجهزة)</string>

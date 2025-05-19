@@ -148,7 +148,6 @@
     <string name="timer">Uyku zamanlayıcısı</string>
     <string name="crash_clipboard">Çökme günlüğü panoya kopyalandı</string>
     <string name="settings_blacklist_folder_summary">Belirli klasörlerden müzikleri filtrele</string>
-    <string name="app_name">Gramophone</string>
     <string name="settings_lyrics_bold_summary">Parça sözleri için kalın metin kullan</string>
     <string name="settings_lyrics_center_summary">Sözleri merkeze ortala</string>
     <string name="fgs_failed_title">Müzik sürdürülemedi</string>

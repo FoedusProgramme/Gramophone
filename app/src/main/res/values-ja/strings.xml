@@ -173,7 +173,6 @@
     <string name="position_slider">スライダーの位置</string>
     <string name="scroll_to_songs">曲までスクロール</string>
     <string name="tab_order_summary">起動時に表示するタブを設定します。区切り線以降のタブは非表示になります。</string>
-    <string name="app_name">Gramophone</string>
     <string name="settings_lyrics_ui">新しい歌詞 UI を有効化する</string>
     <string name="settings_lyrics_parser">新しい歌詞パーサー</string>
     <string name="settings_lyrics_parser_summary">単語単位の同期、スピーカーインジケーター、オフセットなどをサポートする新しい歌詞パーサーを有効化します</string>

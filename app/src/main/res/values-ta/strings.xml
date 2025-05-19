@@ -90,7 +90,6 @@
     <string name="now_playing">இப்போது விளையாடுகிறது</string>
     <string name="settings_content_based_color_summary">ஆல்பம் அடிப்படையிலான வண்ண தலைமுறையை இயக்கவும்</string>
     <string name="settings_content_based_color">உள்ளடக்க அடிப்படையிலான வண்ணங்கள்</string>
-    <string name="app_name">கிராமபோன்</string>
     <string name="settings_package_type">தொகுப்பு வகை</string>
     <string name="no_lyric_found">பாடல் எதுவும் கிடைக்கவில்லை</string>
     <string name="dialog_disc_number">வட்டு எண்</string>

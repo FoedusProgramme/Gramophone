@@ -158,7 +158,6 @@
     <string name="settings_lyrics_multiline_summary">Behandele alle Zeilen zwischen Synchronisationspunkten als ein Liedtext</string>
     <string name="timer">Einschlaftimer</string>
     <string name="separator_dot">•</string>
-    <string name="app_name">Gramophone</string>
     <string name="scroll_to_albums">Zu den Alben scrollen</string>
     <string name="position_slider">Positionsschieberegler</string>
     <string name="grant_audio"><![CDATA[Bitte die Berechtigung „Musik und Audio“ erteilen]]></string>

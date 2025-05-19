@@ -123,7 +123,6 @@
     <string name="settings_lyric">Sözlər</string>
     <string name="settings_lyrics_center">Mərkəzi düzülüş</string>
     <string name="opensource_info">GPL-3.0 altında açıq mənbə kodu\nMüəllif hüquqları %s</string>
-    <string name="app_name">Gramophone</string>
     <string name="settings_lyrics_configuration_summary">Sözlərin görünüşünü tənzimləmək</string>
     <string name="settings_lyrics_multiline">Çoxsətirli mahnı sözlərinin oxunması</string>
     <string name="settings_lyrics_bold_summary">Sözlər üçün qalın şriftdən istifadə et</string>

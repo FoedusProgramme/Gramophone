@@ -169,7 +169,6 @@
     <string name="timer_expiry">Таймер сна приостановит музыку на %s</string>
     <string name="separator_dot">•</string>
     <string name="grant_audio"><![CDATA[Пожалуйста, предоставьте разрешение \"Музыка и аудио\"]]></string>
-    <string name="app_name">Граммофон</string>
     <string name="settings_preference_category_home">Главный экран</string>
     <string name="tab_order">Настроить порядок вкладок</string>
     <string name="tab_order_summary">Приложение покажет первую вкладку при запуске. Вкладки после разделителя будут скрыты.</string>

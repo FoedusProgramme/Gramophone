@@ -84,7 +84,6 @@
     <string name="opensource_info">Codi font obert d\'acord amb la GPL-3.0\nCopyright %s</string>
     <string name="settings_default_progress_bar">Barra de progrés predeterminada</string>
     <string name="settings_default_progress_bar_summary">Habilita la barra de progrés amb estil Material</string>
-    <string name="app_name">Gramophone</string>
     <string name="settings_content_based_color_summary">Activa la generació de color basada en l\'àlbum</string>
     <string name="settings_content_based_color">Colors basats en el contingut</string>
     <string name="settings_package_type">Tipus de paquet</string>
