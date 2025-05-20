@@ -1,0 +1,8 @@
+- Make refresh button refresh MediaStore
+- Remove restrictions for audio sample formats
+- Improve audio preview dialog
+- Pause refresh if app in bg to save battery
+- ANR prevention
+- Fix album artist page
+- Fixed some memory leaks
+- Fix a lot of crashes and bugs
