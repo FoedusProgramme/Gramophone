@@ -418,4 +418,6 @@
     <string name="create_failed_playlist">Fallou a creación da lista</string>
     <string name="refreshing_wait">Actualizando, agarda…</string>
     <string name="refresh_did_you_know">Gramophone mira se hai actualizacións nas listas cada vez que se inicia, e mentras está a funcionar, tamén detectará se hai novas cancións. Este botón «Actualizar» non volve a cargar o multimedia en Gramophone, se non que lle pide ao sistema volver a escanear todos os ficheiros das almacenaxes permanentes (por iso lle leva un pouco de tempo). Isto significa que, a non ser que o sistema ou outras apps non estean a funcionar correctamente, non precisarás usar nunca esta característica.\n\nFaltan algunhas cancións? Comproba o filtro de lonxitude mínima e os cartafoles ignorados en Axustes &gt; Comportamento, e confirma que teñen os valores agardados. Para outras posibles razóns mira as nósas PMF.</string>
+    <string name="settings_hq_output_summary">Permitir usar calquera formato de mostra en lugar de restrinxir a 16-bit int</string>
+    <string name="settings_hq_output">Saída de Alta-calidade</string>
 </resources>
