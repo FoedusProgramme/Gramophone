@@ -1,4 +1,0 @@
-- Redesign do reprodutor de arquivos
-- Manter tela ligada quando ver letras
-- Suporte para Cartões SD na aba do sistema de arquivos
-- Consertaçōes de Bugs
