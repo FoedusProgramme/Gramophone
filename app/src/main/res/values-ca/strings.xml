@@ -422,4 +422,6 @@
     <string name="rename_playlist">Canvia el nom de la llista de reproducció</string>
     <string name="add_to_playlist">Afegeix a la llista de reproducció</string>
     <string name="refresh_did_you_know">El Gramophone demana una llista de cançons actualitzada en cada inici d\'aplicació, i mentre el Gramophone s\'està executant, també detectarà automàticament mitjans nous. Aquest botó «Actualitza» no tornarà a carregar el mitjà al Gramophone, sinó que demanarà al vostre sistema que torni a explorar tots els fitxers de tots els dispositius d\'emmagatzematge permanent connectats (per això triga una estona). Això vol dir que, tret que el vostre sistema o altres aplicacions estiguin funcionant malament, mai haureu d\'utilitzar aquesta funció.\n\nFalten algunes cançons? Assegureu-vos de comprovar la Configuració &gt; Comportament per al filtre de longitud mínima i la llista negra de carpetes, i confirmeu que aquests paràmetres estan definits amb el valor esperat. Per altres motius possibles, consulteu les nostres PMF.</string>
+    <string name="settings_hq_output">Sortida d\'alta qualitat</string>
+    <string name="settings_hq_output_summary">Permet utilitzar qualsevol format de mostra en lloc de restringir a enters de 16 bits</string>
 </resources>
