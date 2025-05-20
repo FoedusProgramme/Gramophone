@@ -439,4 +439,5 @@
     <string name="add_to_playlist">Add to playlist</string>
     <string name="settings_hq_output">High-quality output</string>
     <string name="settings_hq_output_summary">Allow using any sample format instead of restricting to 16-bit int</string>
+    <string name="playlist_editing_pref_desc">Allows to add songs to playlists (moving / removing not yet implemented)</string>
 </resources>
