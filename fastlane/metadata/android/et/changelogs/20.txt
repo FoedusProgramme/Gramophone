@@ -1,0 +1,8 @@
+- Andmete värskendus uuendab nüüd andmeid ka MediaStore'is
+- Eemaldasime heli diskreetimisvormingute piirangud
+- Parem heliriba eelvaade
+- Lisandus andmevärskenduse peatamine töötamisel taustarežiimis
+- ANR-i välistamine
+- Albumi esitaja vaate parandus
+- Mälulekete parandused
+- Palju kokkujooksmiste parandusi ning muid veaparandusi
