@@ -1,0 +1,8 @@
+- Fa que el botó d'actualització actualitzi MediaStore
+- Elimina les restriccions per als formats de mostres d'àudio
+- Millora el diàleg de vista prèvia d'àudio
+- Posa en pausa l'actualització si l'aplicació està en segon pla per a estalviar bateria
+- Prevenció de l'ANR
+- Corregeix la pàgina de l'artista d'àlbum
+- S'han corregit algunes fuites de memòria
+- Corregeix moltes fallades i errors
