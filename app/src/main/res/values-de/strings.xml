@@ -388,4 +388,5 @@
     <string name="what_were_you_doing">Was hast du in Gramophone gemacht, bevor dieser Absturz passiert ist? Bitte erklär es so detailliert wie möglich, um die Chance zu erhöhen, dass ich das Problem beheben kann.\n\nEnglisch ist die bevorzugte Sprache für Fehlerberichte, für andere Sprachen werde ich versuchen, Maschinenübersetzung zu benutzen.</string>
     <string name="settings_audio_quality_info">Audioqualität anzeigen</string>
     <string name="settings_audio_quality_info_summary">Informationen über Audioformat/-qualität im Player anzeigen</string>
+    <string name="delete_failed_playlist">Löschen der Wiedergabeliste fehlgeschlagen</string>
 </resources>
