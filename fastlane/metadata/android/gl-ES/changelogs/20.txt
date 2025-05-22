@@ -1,0 +1,8 @@
+- o botón actualizar actualiza MediaStore
+- elimina as restricións para formatos de mostra de audio
+- mellora no diálogo de vista previa do audio
+- pausa a actualización se a app está en segundo plano para aforrar batería
+- evitar ANR
+- arranxo da páxina do álbume da artista
+- arranxo de fugas de memoria
+- arranxo de varios pequenos problemas e fallos
