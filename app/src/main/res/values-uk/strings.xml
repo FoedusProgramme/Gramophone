@@ -430,4 +430,5 @@
     <string name="settings_hq_output">Високоякісний вихід</string>
     <string name="settings_hq_output_summary">Дозволити використання будь-якого формату зразка замість обмеження 16-бітним цілочисельним числом</string>
     <string name="playlist_editing_pref_desc">Дозволяє додавати пісні до списків відтворення (переміщення/видалення ще не реалізовано)</string>
+    <string name="no_app_found">Не знайдено жодної програми, яка може це зробити</string>
 </resources>
