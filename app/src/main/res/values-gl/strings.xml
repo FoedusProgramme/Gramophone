@@ -421,4 +421,5 @@
     <string name="settings_hq_output_summary">Permitir usar calquera formato de mostra en lugar de restrinxir a 16-bit int</string>
     <string name="settings_hq_output">Saída de Alta-calidade</string>
     <string name="playlist_editing_pref_desc">Permite engadir cancións ás listas (aínda non se pode mover / retirar)</string>
+    <string name="no_app_found">Non atopamos unha app para iso</string>
 </resources>
