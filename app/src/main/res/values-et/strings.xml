@@ -422,4 +422,5 @@
     <string name="settings_hq_output">Kõrge kvaliteediga väljund</string>
     <string name="settings_hq_output_summary">Selle asemel, et piirduda vaid 16-bitiste täisarvudega, luba kõikide muude diskreetimisvormingute kasutamist</string>
     <string name="playlist_editing_pref_desc">Võimaldab lugusid lisada esitusloendisse (teisaldamine ja eemaldamine pole veel teostatud)</string>
+    <string name="no_app_found">Ei leidu rakendust, mis oskaks seda teha</string>
 </resources>
