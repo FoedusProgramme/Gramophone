@@ -425,4 +425,5 @@
     <string name="settings_hq_output">Sortida d\'alta qualitat</string>
     <string name="settings_hq_output_summary">Permet utilitzar qualsevol format de mostra en lloc de restringir a enters de 16 bits</string>
     <string name="playlist_editing_pref_desc">Permet afegir cançons a les llistes de reproducció (encara no s\'ha implementat moure/eliminar)</string>
+    <string name="no_app_found">No s\'ha trobat cap aplicació que pugui fer això</string>
 </resources>
