@@ -415,4 +415,8 @@
     <string name="rename_playlist">プレイリスト名を変更</string>
     <string name="add_to_playlist">プレイリストに追加</string>
     <string name="refresh_did_you_know">Gramophone はアプリを起動するたびに曲の一覧を要求して起動中に新しいメディアを自動的に検出します。この「更新」ボタンは Gramophone 内のメディアを再読み込みするのではなく、すべてのメディアストレージデバイスからすべてのファイルを再スキャンするようシステムに要求します (そのため、多少時間を要します)。つまり、システムや他のアプリに不具合がない限り、この機能を使用する必要はありません。\n\n曲が不足している場合は「設定」→「動作」から「曲の最小の長さ」と「フォルダのブラックリスト」を確認し、これらの設定が適切な値に設定されているか確認してください。その他の考えられる原因については FAQ をご確認ください。</string>
+    <string name="settings_hq_output_summary">16 ビット整数で制限せずに任意のサンプル形式を使用できるようにします</string>
+    <string name="settings_hq_output">高音質な出力</string>
+    <string name="playlist_editing_pref_desc">プレイリストに曲を追加可能にします (移動と削除は未実装です)</string>
+    <string name="no_app_found">実行できるアプリが見つかりません</string>
 </resources>
