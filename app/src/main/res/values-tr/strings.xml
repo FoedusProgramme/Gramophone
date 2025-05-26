@@ -218,4 +218,5 @@
     <string name="settings_contributors_click">%s (daha fazlası için tıklayın!)</string>
     <string name="spk_encoding_unknown">Bilinmeyen format %s</string>
     <string name="spk_encoding_unknown_d">Bilinmeyen format %d</string>
+    <string name="device_type_unknown">Bilinmeyen</string>
 </resources>
