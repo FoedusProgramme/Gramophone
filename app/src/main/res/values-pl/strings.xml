@@ -427,4 +427,8 @@
     <string name="refresh_did_you_know">Gramophone prosi o zaktualizowanie listy utworów przy każdym uruchomieniu aplikacji, a gdy Gramophone jest uruchomiony, automatycznie wykrywa również nowe nośniki. Przycisk „Odśwież” nie spowoduje ponownego załadowania multimediów w Gramophone, zamiast tego poprosi system o ponowne przeskanowanie wszystkich plików ze wszystkich podłączonych urządzeń pamięci masowej (dlatego zajmuje to trochę czasu). Oznacza to, że jeśli system lub inne aplikacje nie działają nieprawidłowo, nigdy nie będziesz musieć korzystać z tej funkcji.\n\nBrakuje niektórych utworów? Sprawdź Ustawienia &gt; Zachowanie dla filtra minimalnej długości i czarnej listy folderów i potwierdź, że te ustawienia są ustawione na oczekiwaną wartość. Więcej możliwych przyczyn można znaleźć w naszym FAQ.</string>
     <string name="rename_playlist">Zmień nazwę listy odtwarzania</string>
     <string name="add_to_playlist">Dodaj do listy odtwarzania</string>
+    <string name="settings_hq_output">Wyjście wysokiej jakości</string>
+    <string name="settings_hq_output_summary">Zezwalaj na używanie dowolnego formatu próbki zamiast ograniczać się do 16-bitowego int</string>
+    <string name="playlist_editing_pref_desc">Umożliwia dodawanie utworów do list odtwarzania (przenoszenie/usuwanie nie zostało jeszcze zaimplementowane)</string>
+    <string name="no_app_found">Nie znaleziono aplikacji, która mogłaby to wykonać</string>
 </resources>
