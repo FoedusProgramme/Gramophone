@@ -1,0 +1,8 @@
+- Dodano przycisk odświeżania odświeża MediaStore
+- Usunięto ograniczenia dla formatów próbek audio
+- Ulepszono okno dialogowe podglądu audio
+- Wstrzymanie odświeżania, jeśli aplikacja jest w tle, aby oszczędzać baterię
+- Zapobieganie ANR
+- Poprawiono stronę wykonawcy albumu
+- Naprawiono niektóre wycieki pamięci
+- Naprawiono wiele awarii i błędów
