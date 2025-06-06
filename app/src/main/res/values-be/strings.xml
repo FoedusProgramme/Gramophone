@@ -192,4 +192,5 @@
     <string name="settings_contributors_click">%s (націсніце, каб даведацца больш!)</string>
     <string name="settings_lyrics_ui_summary">Эксперыментальны карыстальніцкі інтэрфейс для слова-за-словам лірыкі з пашыранымі функцыямі</string>
     <string name="settings_status_bar_lyrics_title">Тэкс песні ў радке стану</string>
+    <string name="delete">Выдаліць</string>
 </resources>
