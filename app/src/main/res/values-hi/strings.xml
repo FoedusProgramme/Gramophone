@@ -1,2 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <plurals name="songs">
+        <item quantity="one">%d गाना</item>
+        <item quantity="other">%d गाने</item>
+    </plurals>
+    <string name="follow_system">डिवाइस के अनुसार</string>
+    <string name="share">शेयर</string>
+    <string name="settings_app_name">ऐप का नाम</string>
+    <string name="details">विवरण</string>
+    <string name="unknown_genre">अज्ञात शैली</string>
+    <string name="play_next">अगला चलाएं</string>
+    <string name="unknown_album">अज्ञात एल्बम</string>
+    <string name="home_menu_shuffle">सभी को शफ़ल करें</string>
+    <string name="settings_contributors">योगदानकर्ता</string>
+    <string name="home_menu_search">खोजें</string>
+    <string name="unknown_artist">अज्ञात कलाकार</string>
+    <string name="shuffle">रैंडम चलाएं</string>
+    <string name="home_menu_refresh">रिफ़्रेश</string>
+    <string name="dialog_genre">शैली</string>
+    <string name="dialog_artist">कलाकार</string>
+    <string name="home_menu_settings">सेटिंग्स</string>
+    <string name="category_songs">गाने</string>
+    <string name="category_albums">एल्बम</string>
+    <string name="category_artists">कलाकार</string>
+    <string name="category_genres">शैलियाँ</string>
+    <string name="category_playlists">प्लेलिस्ट</string>
+    <string name="category_dates">तारीखें</string>
+    <plurals name="albums">
+        <item quantity="one">%d एल्बम</item>
+        <item quantity="other">%d एल्बम</item>
+    </plurals>
+    <plurals name="artists">
+        <item quantity="one">%d कलाकार</item>
+        <item quantity="other">%d कलाकार</item>
+    </plurals>
+    <plurals name="items">
+        <item quantity="one">%d आइटम</item>
+        <item quantity="other">%d आइटम</item>
+    </plurals>
+    <string name="dark">डार्क</string>
+    <string name="light">लाइट</string>
+    <string name="sort_by_size">आकार</string>
+    <string name="sort_by_name">नाम</string>
+    <string name="sort_by_artist">कलाकार</string>
+    <string name="sort_by_album">एल्बम</string>
+    <string name="sort_by_album_artist">एल्बम कलाकार</string>
+    <string name="dismiss">खारिज</string>
+    <string name="unknown_year">अज्ञात वर्ष</string>
+    <string name="search">खोज</string>
+    <string name="unknown_playlist">अज्ञात प्लेलिस्ट</string>
+    <string name="dialog_title">शीर्षक</string>
+    <string name="album_artist">एल्बम कलाकार</string>
+    <string name="dialog_album">एल्बम</string>
+    <string name="dialog_album_artist">एल्बम कलाकार</string>
+</resources>
