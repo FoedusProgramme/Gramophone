@@ -1,0 +1,45 @@
+name: Filter and sync translations from Weblate to main
+
+on:
+  push:
+    branches:
+      - weblate
+
+jobs:
+  filter-and-sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout main branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Configure Git user
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Checkout weblate branch content to temp dir
+        run: |
+          git worktree add ../weblate_tmp origin/weblate
+          
+      - name: Run filter script on weblate_tmp directory
+        run: |
+          INPUT_DIR="../weblate_tmp"
+          ./filter_translations "$(realpath $INPUT_DIR)"
+          git checkout $MAIN_BRANCH -- app/src/main/res/values/strings.xml fastlane/metadata/android/en-US
+
+      - name: Clean up temp directory
+        run: |
+          git worktree remove ../weblate_tmp
+
+      - name: Commit and push changes if any
+        run: |
+          git add -a
+          WEBLATE_HASH=$(git rev-parse origin/weblate)
+          if ! git diff --quiet HEAD; then
+            git commit -m "Filtered translations from $WEBLATE_HASH"
+            git push
+          fi
