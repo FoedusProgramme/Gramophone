@@ -389,4 +389,6 @@
     <string name="settings_audio_quality_info">Audioqualität anzeigen</string>
     <string name="settings_audio_quality_info_summary">Informationen über Audioformat/-qualität im Player anzeigen</string>
     <string name="delete_failed_playlist">Löschen der Wiedergabeliste fehlgeschlagen</string>
+    <string name="mix_port_flag_iec958_nonaudio">IEC 958 (nicht Audio)</string>
+    <string name="mix_port_flag_gapless_offload">Lückenloser Offload</string>
 </resources>
