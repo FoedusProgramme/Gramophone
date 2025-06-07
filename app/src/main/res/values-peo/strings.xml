@@ -93,7 +93,7 @@
     <string name="settings_preference_category_application">برنامه</string>
     <string name="crash_clipboard">اطلاعات کرش را در کلیپبورد کپی کن</string>
     <string name="album_covers_enhance">لود شدن کاور های بهبود شده ی آلبوم ها</string>
-	<string name="current_playlist">پلی لیست کنونی</string>
+    <string name="current_playlist">پلی لیست کنونی</string>
     <string name="album_covers_enhance_desc">پشتیبانی از کاور های با کیفیت بالا و اجازه ی تفاوت قائل شدن میان کاور آلبوم و آهنگ(نیاز به دسترسی به عکس ها)</string>
     <string name="settings_trim_lyrics">پاک کردن فاصله ها در متن ترانه ها</string>
     <string name="settings_preference_category_home">صفحه ی اصلی</string>
@@ -123,7 +123,7 @@
     <string name="settings_category_full_player">پخش کننده ی کامل</string>
     <string name="album_cover">کاور آلبوم</string>
     <string name="delete_failed">پاک کردن آهنگ ها ناموفق بود</string>
-	<string name="fgs_failed_channel">شکست ادامه ی پخش</string>
+    <string name="fgs_failed_channel">شکست ادامه ی پخش</string>
     <string name="sort_by_release_date">زمان انتشار</string>
     <string name="timer_expiry">تایمر خواب آهنگ را در %s متوقف خواهد کرد</string>
     <string name="separator_dot">•</string>
