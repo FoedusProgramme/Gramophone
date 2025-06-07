@@ -56,7 +56,7 @@
     <string name="dialog_lyrics">Qo\'shiq matni</string>
     <string name="delete_failed">Qo‘shiqni o‘chirib bo‘lmadi</string>
     <string name="album_covers_enhance">Kengaytirilgan albom muqovasini yuklanmoqda</string>
-	<string name="current_playlist">Hozirgi pleylist</string>
+    <string name="current_playlist">Hozirgi pleylist</string>
     <string name="fgs_failed_text">Ilovani ochish va ijroni davom ettirish uchun shu yerni bosing</string>
     <string name="fgs_failed_channel">Ijro davom ettirilmadi</string>
     <string name="separator_dot">•</string>
@@ -147,7 +147,7 @@
     <string name="settings_category_misc">Boshqa</string>
     <string name="settings_preference_category_application">Ilova</string>
     <string name="dialog_edit_metadata">O\'zgartirish</string>
-	<string name="album_covers_enhance_desc">Yuqori sifatli qoʻshiq muqovalarini qoʻllab-quvvatlang va albom va qoʻshiq muqovasi farqlanishiga ruxsat bering (fotosuratlarga kirishni talab qiladi)</string>
+    <string name="album_covers_enhance_desc">Yuqori sifatli qoʻshiq muqovalarini qoʻllab-quvvatlang va albom va qoʻshiq muqovasi farqlanishiga ruxsat bering (fotosuratlarga kirishni talab qiladi)</string>
     <string name="deny_images">“Rasmlar va videolar” ruxsatini rad eting</string>
     <string name="grant_images">“Rasmlar va videolar”ga ruxsat bering</string>
     <string name="crash_clipboard">Nosozliklar jurnali vaqtinchalik xotiraga nusxalandi</string>
