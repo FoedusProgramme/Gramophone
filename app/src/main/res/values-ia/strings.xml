@@ -116,7 +116,7 @@
     <string name="settings_crash_application">Facer faller le application</string>
     <string name="settings_blacklist_folder_summary">Filtrar cantos ab certe dossieres</string>
     <string name="album_cover">Copertura del album</string>
-	<string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
+    <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
     <string name="category_genres">Generes</string>
     <string name="unknown_genre">Genere incognite</string>
     <string name="dialog_genre">Genere</string>
@@ -143,7 +143,7 @@
     <string name="grant_images">Concede le permission a \"Imagines e videos\"</string>
     <string name="crash_clipboard">Registro de fallimentos copiate al area de transferentia</string>
     <string name="settings_trim_lyrics">Remover spatios circum le parolas</string>
-	<string name="timer">Temporisator de somno</string>
+    <string name="timer">Temporisator de somno</string>
     <string name="current_playlist">Lista de reproduction actual</string>
     <string name="share">Compartir</string>
     <string name="fgs_failed_text">Clicca hic pro aperir le app e continuar le reproduction</string>
