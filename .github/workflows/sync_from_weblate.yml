@@ -38,7 +38,7 @@ jobs:
 
       - name: Commit and push changes if any
         run: |
-          git add -a
+          git add -A
           WEBLATE_HASH=$(git rev-parse origin/weblate)
           if ! git diff --quiet HEAD; then
             git commit -m "Filtered translations from $WEBLATE_HASH"
