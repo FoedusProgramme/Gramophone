@@ -13,7 +13,7 @@ jobs:
       - name: Checkout main branch
         uses: actions/checkout@v4
         with:
-          ref: main
+          ref: beta
           fetch-depth: 0
 
       - name: Configure Git user
@@ -28,6 +28,7 @@ jobs:
       - name: Run filter script on weblate_tmp directory
         run: |
           INPUT_DIR="../weblate_tmp"
+          MAIN_BRANCH="beta"
           ./filter_translations "$(realpath $INPUT_DIR)"
           git checkout $MAIN_BRANCH -- app/src/main/res/values/strings.xml fastlane/metadata/android/en-US
 
