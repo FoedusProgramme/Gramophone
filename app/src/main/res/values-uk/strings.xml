@@ -158,7 +158,7 @@
     <string name="grant_audio"><![CDATA[Надайте дозвіл \"Музика та аудіо\"]]></string>
     <string name="album_covers_enhance">Поліпшене завантаження обкладинок альбомів</string>
     <string name="share">Поділитися</string>
-    <string name="album_covers_enhance_desc">Підтримка обкладинок пісень високої якості та можливість розрізняти обкладинки альбомів та пісень (потрібний доступ до фотографій)</string>
+    <string name="album_covers_enhance_desc">Відображати високоякісні обкладинки пісень та дозволяти різницю між обкладинками альбомів та пісень (потрібен доступ до фотографій)</string>
     <string name="fgs_failed_text">Натисніть тут, щоб відкрити застосунок та продовжити відтворення</string>
     <string name="fgs_failed_title">Не вдалося відновити відтворення музики</string>
     <string name="fgs_failed_channel">Не вдалося відновити відтворення</string>
