@@ -166,7 +166,7 @@
     <string name="settings_category_filters">Filtres</string>
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
     <string name="dialog_lyrics">Lletres</string>
-    <string name="album_covers_enhance_desc">Admet caràtules de cançons d\'alta qualitat i permet que l\'àlbum i la caràtula de la cançó difereixin (requereix accés a les fotos)</string>
+    <string name="album_covers_enhance_desc">Mostra caràtules de cançons d\'alta qualitat i permet que l\'àlbum i la caràtula de la cançó difereixin (requereix accés a les fotos)</string>
     <string name="timer">Temporitzador per a adormir-se</string>
     <string name="grant_images"><![CDATA[Atorgueu el permís \"Fotos i vídeos\"]]></string>
     <string name="current_playlist">Llista de reproducció actual</string>
