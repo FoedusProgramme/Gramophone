@@ -127,7 +127,7 @@
     <string name="settings_category_misc">雜項</string>
     <string name="settings_preference_category_application">應用程式</string>
     <string name="settings_category_full_player">完整播放器</string>
-    <string name="album_covers_enhance_desc">支援高品質歌曲封面，並允許專輯與歌曲封面不同（需要相片存取權限）</string>
+    <string name="album_covers_enhance_desc">顯示高品質歌曲封面，並允許專輯與歌曲封面不同（需要相片存取權限）</string>
     <string name="sort_by_release_date">發佈日期</string>
     <string name="album_covers_enhance">增強的專輯封面載入功能</string>
     <string name="settings_lyric">歌詞</string>
@@ -201,4 +201,21 @@
     <string name="oh_no">哦不！</string>
     <string name="send_email">傳送email</string>
     <string name="send_email_manually">請將日誌發送至 nift4dev@gmail.com - 找不到郵件應用程式</string>
+    <string name="add_to_playlist">新增至播放清單</string>
+    <string name="settings_translation_auto_word">自動播放翻譯動畫</string>
+    <string name="settings_export_logs">匯出應用程式日誌</string>
+    <string name="settings_lyrics_parser_summary">啟用支援逐字同步、說話者指示器、偏移等功能的新版歌詞剖析器</string>
+    <string name="settings_mp3_index_seeking_summary">讀取所有 MP3 檔案至記憶體以供搜尋，而非仰賴可能遺失的 Xing 標頭進行 VBR 搜尋。若此功能停用，當 Xing 標頭遺失時將會使用 CBR 搜尋。一個格式良好的 VBR MP3 檔案應包含 Xing 標頭，因此在大多數情況下，此選項應該是不必要的。（需要重新啟動應用程式才能套用）</string>
+    <string name="settings_trim_lyrics_summary">歌詞行中第一個字元前後的空格可能具有藝術價值。如果您不同意，可以開啟此開關以自動移除這些空格。</string>
+    <string name="settings_translation_auto_word_summary">在逐字同步歌詞播放中，如果翻譯沒有逐字同步中繼資料，則將線性漸層應用於翻譯行</string>
+    <string name="settings_lyrics_char_scaling">依字元縮放歌詞漸層</string>
+    <string name="settings_lyrics_char_scaling_summary">以每秒字元數而非每秒像素來計算歌詞漸層速度。這可能會導致速度看起來不規則，因為每個字元的像素長度不同。</string>
+    <string name="settings_lyrics_no_animation_summary">停用所有行過渡歌詞動畫</string>
+    <string name="settings_lyrics_parser">新版歌詞剖析器</string>
+    <string name="settings_audio_quality_info">音訊品質資訊</string>
+    <string name="settings_audio_quality_info_summary">在播放器螢幕上顯示音訊品質／格式資訊</string>
+    <string name="settings_hq_output">高品質輸出</string>
+    <string name="settings_hq_output_summary">允許使用任何取樣格式，而非僅限於 16 位元整數</string>
+    <string name="settings_mp3_index_seeking">MP3 索引搜尋</string>
+    <string name="playlist_editing_pref_desc">可將歌曲新增至播放清單（移動／移除功能尚未實作）</string>
 </resources>
