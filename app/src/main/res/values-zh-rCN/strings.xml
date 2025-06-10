@@ -206,7 +206,7 @@
     <string name="spk_channel_out_quad">四声道输出</string>
     <string name="spk_channel_out_stereo">立体声输出</string>
     <string name="spk_channel_out_surround">4.0环绕声</string>
-    <string name="spk_channel_out_7point1_surround">4.0环绕声</string>
+    <string name="spk_channel_out_7point1_surround">7.1 环绕声</string>
     <string name="spk_channel_out_5point1">5.1 环绕声音频系统</string>
     <string name="spk_channel_out_6point1">6.1 环绕声音频系统</string>
     <string name="spk_channel_out_7point1point2">7.1.2 环绕声音频系统</string>
@@ -227,7 +227,7 @@
     <string name="spk_encoding_pcm_float">32 位浮点脉冲编码调制</string>
     <string name="spk_channel_out_5point1point4">5.1.4 环绕声音频系统</string>
     <string name="spk_channel_out_7point1point4">7.1.4 环绕声音频系统</string>
-    <string name="spk_channel_out_low_frequency">低频</string>
+    <string name="spk_channel_out_low_frequency">低音炮</string>
     <string name="spk_channel_out_front_right_of_center">前置中右声道</string>
     <string name="spk_channel_out_back_center">后置中置声道</string>
     <string name="spk_channel_out_top_front_left">顶部前置左声道</string>
@@ -263,4 +263,19 @@
     <string name="send_email">发送邮件</string>
     <string name="send_email_manually">找不到邮件软件，请将日志发送到 nift4dev@gmail.com</string>
     <string name="did_you_know">你知道吗……</string>
+    <string name="create_failed_playlist">创建播放列表失败</string>
+    <string name="rename_failed_playlist">重命名播放列表失败</string>
+    <string name="device_type_wired_headset">有线耳麦</string>
+    <string name="device_type_wired_headphones">有线耳机</string>
+    <string name="device_type_unknown">未知设备</string>
+    <string name="device_type_builtin_speaker">内置扬声器</string>
+    <string name="device_type_usb_headset">USB 耳麦</string>
+    <string name="device_type_dock"></string>
+    <string name="device_type_aux_line">AUX 线</string>
+    <string name="device_type_bluetooth_a2dp">蓝牙 A2DP</string>
+    <string name="device_type_ble_speaker">BLE 扬声器</string>
+    <string name="device_type_hearing_aid">助听器</string>
+    <string name="device_type_ble_headset">BLE 耳麦</string>
+    <string name="rename">重命名</string>
+    <string name="cannot_find_file">找不到此文件</string>
 </resources>
