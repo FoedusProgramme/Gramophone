@@ -156,7 +156,7 @@
     <string name="fgs_failed_title">Error al reanudar la reproducción de música</string>
     <string name="album_covers_enhance">Carga de portada de álbum mejorada</string>
     <string name="share">Compartir</string>
-    <string name="album_covers_enhance_desc">Admite portadas de canciones de alta calidad y permite que la portada del álbum y la canción sean diferentes (requiere acceso a las fotos)</string>
+    <string name="album_covers_enhance_desc">Mostrar portadas de canciones de alta calidad y permite que la portada del álbum y la canción sean diferentes (requiere acceso a las fotos)</string>
     <string name="sort_by_release_date">Fecha de lanzamiento</string>
     <string name="timer_expiry">El temporizador de apagado pausará la música en %s</string>
     <string name="separator_dot">•</string>
@@ -371,4 +371,5 @@
     <string name="spk_encoding_aac_adts_lc">AAC-LC en ADTS</string>
     <string name="send_email">Enviar un correo</string>
     <string name="send_email_manually">Por favor, envía el registro a nift4dev@gmail.com - no pude encontrar la aplicación de correo</string>
+    <string name="settings_contributors_click">%s (¡clic para más!)</string>
 </resources>
