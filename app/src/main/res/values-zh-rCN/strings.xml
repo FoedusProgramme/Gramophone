@@ -270,7 +270,6 @@
     <string name="device_type_unknown">未知设备</string>
     <string name="device_type_builtin_speaker">内置扬声器</string>
     <string name="device_type_usb_headset">USB 耳麦</string>
-    <string name="device_type_dock"></string>
     <string name="device_type_aux_line">AUX 线</string>
     <string name="device_type_bluetooth_a2dp">蓝牙 A2DP</string>
     <string name="device_type_ble_speaker">BLE 扬声器</string>
