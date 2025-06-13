@@ -142,7 +142,7 @@
     <string name="album_covers_enhance">Ulepszone wczytywanie okładek albumów</string>
     <string name="share">Udostępnij</string>
     <string name="settings_crash_application_summary">Awaria-O-Matic 3000</string>
-    <string name="album_covers_enhance_desc">Obsługa wysokiej jakości okładek utworów i możliwość różnicowania okładek albumów i utworów (wymaga dostępu do zdjęć)</string>
+    <string name="album_covers_enhance_desc">Wyświetlanie wysokiej jakości okładek utworów i możliwość różnicowania okładek albumów i utworów (wymaga dostępu do zdjęć)</string>
     <string name="fgs_failed_text">Dotknij tutaj, aby otworzyć aplikację i kontynuować odtwarzanie</string>
     <string name="current_playlist">Bieżąca lista odtwarzania</string>
     <string name="fgs_failed_title">Nie udało się wznowić odtwarzania muzyki</string>
