@@ -28,8 +28,8 @@ import org.akanework.gramophone.R
 class OssLicensesSettingsActivity : AppCompatActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
-        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         setContent {
             MaterialTheme(
                 colorScheme = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
