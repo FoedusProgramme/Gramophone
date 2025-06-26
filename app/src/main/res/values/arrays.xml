@@ -11,4 +11,56 @@
         <item>1</item>
         <item>2</item>
     </string-array>
+
+    <string-array name="contributors_user" translatable="false">
+        <item>nift4</item>
+        <item>123Duo3</item>
+        <item>AkaneTan</item>
+        <item>imjyotiraditya</item>
+        <item>WSTxda</item>
+        <item>pxeemo</item>
+        <item>Lambada10</item>
+        <item>lightsummer233</item>
+        <item>nicholaswww</item>
+        <item>Yuyuko1024</item>
+        <item>ghhccghk</item>
+        <item>lucaxvi</item>
+        <item>tungnk123</item>
+        <item>topazrn</item>
+        <item>strongville</item>
+        <item>bggRGjQaUbCoE</item>
+        <item>VishnuSanal</item>
+        <item>mikooomich</item>
+        <item>HotarunIchijou</item>
+        <item>someone5678</item>
+        <item>IzzySoft</item>
+        <item>PalanixYT</item>
+        <item>N3Shemmy3</item>
+    </string-array>
+
+    <string-array name="contributors_contribute">
+        <item>Maintainer / Lead Developer</item>
+        <item>Lead Designer</item>
+        <item>Original creator, retired developer</item>
+        <item>Developer</item>
+        <item>designed one variation of app icon</item>
+        <item>Help &amp; testing of new lyrics</item>
+        <item>providing lyric samples &amp; SongSync</item>
+        <item>Developer</item>
+        <item>Code contributions</item>
+        <item>Squiggly progress bar</item>
+        <item>Status Bar lyrics</item>
+        <item>Code contributions</item>
+        <item>Code contributions</item>
+        <item>Code contributions</item>
+        <item>Code contributions</item>
+        <item>Code contributions</item>
+        <item>Code contributions</item>
+        <item>Code contributions</item>
+        <item>Code contributions</item>
+        <item>Code contributions</item>
+        <item>Code contributions</item>
+        <item>Code contributions</item>
+        <item>Code contributions</item>
+    </string-array>
 </resources>
