@@ -49,7 +49,6 @@ import org.akanework.gramophone.logic.utils.data.GitHubUser
 import org.akanework.gramophone.logic.utils.fetchGitHubUser
 
 class ContributorsSettingsActivity :  AppCompatActivity(){
-
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -109,24 +108,24 @@ class ContributorsSettingsActivity :  AppCompatActivity(){
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
-                        .size(40.dp)
+                        .size(50.dp)
                         .clip(CircleShape)
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 Column {
                     Row {
                         Text(
-                            text = contributor.name?: "",
+                            text = contributor.name,
                             style = MaterialTheme.typography.titleMedium
                         )
                         Text(
-                            text = "@${contributor.login?: ""}",
+                            text = "@${contributor.login}",
                             modifier = Modifier.padding(start = 8.dp),
                             style = MaterialTheme.typography.titleMedium
                         )
                     }
                     Text(
-                        text = contributor.contribute?: "",
+                        text = contributor.contribute,
                         style = MaterialTheme.typography.titleMedium
                     )
                 }
