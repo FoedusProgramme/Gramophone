@@ -38,29 +38,29 @@
         <item>N3Shemmy3</item>
     </string-array>
 
-    <string-array name="contributors_contribute">
-        <item>Maintainer / Lead Developer</item>
-        <item>Lead Designer</item>
-        <item>Original creator, retired developer</item>
-        <item>Developer</item>
-        <item>designed one variation of app icon</item>
-        <item>Help &amp; testing of new lyrics</item>
-        <item>providing lyric samples &amp; SongSync</item>
-        <item>Developer</item>
-        <item>Code contributions</item>
-        <item>Squiggly progress bar</item>
-        <item>Status Bar lyrics</item>
-        <item>Code contributions</item>
-        <item>Code contributions</item>
-        <item>Code contributions</item>
-        <item>Code contributions</item>
-        <item>Code contributions</item>
-        <item>Code contributions</item>
-        <item>Code contributions</item>
-        <item>Code contributions</item>
-        <item>Code contributions</item>
-        <item>Code contributions</item>
-        <item>Code contributions</item>
-        <item>Code contributions</item>
+    <string-array name="contributors_contribute" translatable="false">
+        <item>@string/contributors_nift4</item>
+        <item>@string/contributors_123duo3</item>
+        <item>@string/contributors_akanetan</item>
+        <item>@string/contributors_developer</item>
+        <item>@string/contributors_wstxda</item>
+        <item>@string/contributors_pxeemo</item>
+        <item>@string/contributors_lambada10</item>
+        <item>@string/contributors_developer</item>
+        <item>@string/contributors_code_contributions</item>
+        <item>@string/contributors_yuyuko1024</item>
+        <item>@string/contributors_ghhccghk</item>
+        <item>@string/contributors_code_contributions</item>
+        <item>@string/contributors_code_contributions</item>
+        <item>@string/contributors_code_contributions</item>
+        <item>@string/contributors_code_contributions</item>
+        <item>@string/contributors_code_contributions</item>
+        <item>@string/contributors_code_contributions</item>
+        <item>@string/contributors_code_contributions</item>
+        <item>@string/contributors_code_contributions</item>
+        <item>@string/contributors_code_contributions</item>
+        <item>@string/contributors_code_contributions</item>
+        <item>@string/contributors_code_contributions</item>
+        <item>@string/contributors_code_contributions</item>
     </string-array>
 </resources>

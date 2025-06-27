@@ -277,4 +277,14 @@
     <string name="device_type_ble_headset">BLE 耳麦</string>
     <string name="rename">重命名</string>
     <string name="cannot_find_file">找不到此文件</string>
+    <string name="contributors_nift4">维护员暨首席开发员</string>
+    <string name="contributors_123duo3">首席设计师</string>
+    <string name="contributors_akanetan">原创作者暨退休开发者</string>
+    <string name="contributors_developer">开发人员</string>
+    <string name="contributors_wstxda">设计了一个不同的应用程序图标</string>
+    <string name="contributors_pxeemo">帮助和测试新歌词</string>
+    <string name="contributors_lambada10">提供歌词样本和歌词同步</string>
+    <string name="contributors_code_contributions">代码贡献</string>
+    <string name="contributors_yuyuko1024">蠕动进度条</string>
+    <string name="contributors_ghhccghk">状态栏歌词</string>
 </resources>
