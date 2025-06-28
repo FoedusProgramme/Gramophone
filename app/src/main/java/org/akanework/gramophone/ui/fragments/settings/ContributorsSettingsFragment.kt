@@ -2,6 +2,7 @@ package org.akanework.gramophone.ui.fragments.settings
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -89,6 +90,7 @@ class ContributorsSettingsActivity :  AppCompatActivity(){
 
     @Composable
     fun ContributorCard(contributor: GitHubUser) {
+        val drawableId = getDrawableByName(applicationContext, "contributor_${contributor.login.lowercase()}")
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -104,7 +106,7 @@ class ContributorsSettingsActivity :  AppCompatActivity(){
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 AsyncImage(
-                    model = contributor.avatar_url.toUri(),
+                    model = drawableId ,
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
@@ -115,7 +117,7 @@ class ContributorsSettingsActivity :  AppCompatActivity(){
                 Column {
                     Row {
                         Text(
-                            text = contributor.name,
+                            text = contributor.name?: contributor.login,
                             style = MaterialTheme.typography.titleMedium
                         )
                         Text(
@@ -149,8 +151,13 @@ class ContributorsSettingsActivity :  AppCompatActivity(){
 
     }
 
+    fun getDrawableByName(context: Context, resName: String): Drawable? {
+        val resId = context.resources.getIdentifier(resName, "drawable", context.packageName)
+        return if (resId != 0) context.getDrawable(resId) else null
+    }
+
     // Get the username in the contributors_user array and get the GitHubUser information
-    suspend fun getContributorsList(context: Context): List<GitHubUser> {
+    fun getContributorsList(context: Context): List<GitHubUser> {
         val usernames = context.resources.getStringArray(R.array.contributors_user) // Get the username array
         val contributorsList = mutableListOf<GitHubUser>()
 

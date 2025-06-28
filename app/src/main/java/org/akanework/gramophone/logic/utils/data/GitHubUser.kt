@@ -2,8 +2,7 @@ package org.akanework.gramophone.logic.utils.data
 
 
 data class CachedGitHubUser(
-    val user: GitHubUser,
-    val timestamp: Long = System.currentTimeMillis()
+    val user: GitHubUser
 )
 
 data class GitHubUser(
