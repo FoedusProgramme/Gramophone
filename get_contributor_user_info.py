@@ -65,7 +65,7 @@ def fetch_user_data(login: str) -> Optional[dict]:
 def download_and_save_avatar(url: str, filename: str):
     response = requests.get(url, timeout=10)
     response.raise_for_status()
-    img = Image.open(BytesIO(response.content)).convert("RGB")
+    img = Image.open(BytesIO(response.content)).convert("RGBA")
     img.thumbnail((128, 128))
     os.makedirs(DRAWABLE_DIR, exist_ok=True)
     filepath = os.path.join(DRAWABLE_DIR, f"{filename}.webp")
