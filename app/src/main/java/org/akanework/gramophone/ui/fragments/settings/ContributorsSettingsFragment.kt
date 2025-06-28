@@ -1,10 +1,10 @@
 package org.akanework.gramophone.ui.fragments.settings
 
-import android.content.Context
+import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -20,7 +20,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -34,9 +34,6 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -44,12 +41,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
-import coil.compose.AsyncImage
+import coil3.compose.AsyncImage
 import org.akanework.gramophone.R
+import org.akanework.gramophone.logic.utils.data.Contributors
 import org.akanework.gramophone.logic.utils.data.GitHubUser
-import org.akanework.gramophone.logic.utils.fetchGitHubUser
 
-class ContributorsSettingsActivity :  AppCompatActivity(){
+class ContributorsSettingsActivity : AppCompatActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,7 +72,7 @@ class ContributorsSettingsActivity :  AppCompatActivity(){
                             title = { Text(stringResource(R.string.settings_contributors)) },
                             navigationIcon = {
                                 IconButton(onClick = { finish() }) {
-                                    Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.back))
+                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
                                 }
                             }
                         )
@@ -90,7 +87,6 @@ class ContributorsSettingsActivity :  AppCompatActivity(){
 
     @Composable
     fun ContributorCard(contributor: GitHubUser) {
-        val drawableId = getDrawableByName(applicationContext, "contributor_${contributor.login.lowercase()}")
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -99,14 +95,19 @@ class ContributorsSettingsActivity :  AppCompatActivity(){
             onClick = {
                 val url = "https://github.com/${contributor.login}"
                 val intent = Intent(Intent.ACTION_VIEW, url.toUri())
-                startActivity(intent) }
+                try {
+                    startActivity(intent)
+                } catch (_: ActivityNotFoundException) {
+                    Toast.makeText(this, R.string.no_app_found, Toast.LENGTH_LONG).show()
+                }
+            }
         ) {
             Row(
                 modifier = Modifier.padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 AsyncImage(
-                    model = drawableId ,
+                    model = contributor.avatar,
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
@@ -117,17 +118,18 @@ class ContributorsSettingsActivity :  AppCompatActivity(){
                 Column {
                     Row {
                         Text(
-                            text = contributor.name?: contributor.login,
+                            text = contributor.name ?: contributor.login,
                             style = MaterialTheme.typography.titleMedium
                         )
-                        Text(
-                            text = "@${contributor.login}",
-                            modifier = Modifier.padding(start = 8.dp),
-                            style = MaterialTheme.typography.titleMedium
-                        )
+                        if (contributor.name != null && contributor.name != contributor.login)
+                            Text(
+                                text = "@${contributor.login}",
+                                modifier = Modifier.padding(start = 8.dp),
+                                style = MaterialTheme.typography.titleMedium
+                            )
                     }
                     Text(
-                        text = contributor.contribute,
+                        text = stringResource(contributor.contributed),
                         style = MaterialTheme.typography.titleMedium
                     )
                 }
@@ -137,50 +139,10 @@ class ContributorsSettingsActivity :  AppCompatActivity(){
 
     @Composable
     fun ContributorsSettingsScreen(modifier: Modifier) {
-        val contributors = remember { mutableStateOf<List<GitHubUser>>(emptyList()) }
-
-        LaunchedEffect(Unit) {
-            contributors.value = getContributorsList(applicationContext)
-        }
-
         LazyColumn(modifier = modifier) {
-            items(contributors.value) { contributor ->
+            items(Contributors.LIST) { contributor ->
                 ContributorCard(contributor)
             }
         }
-
     }
-
-    fun getDrawableByName(context: Context, resName: String): Drawable? {
-        val resId = context.resources.getIdentifier(resName, "drawable", context.packageName)
-        return if (resId != 0) context.getDrawable(resId) else null
-    }
-
-    // Get the username in the contributors_user array and get the GitHubUser information
-    fun getContributorsList(context: Context): List<GitHubUser> {
-        val usernames = context.resources.getStringArray(R.array.contributors_user) // Get the username array
-        val contributorsList = mutableListOf<GitHubUser>()
-
-        val contribute = context.resources.getStringArray(R.array.contributors_contribute)
-
-        // Iterate through the usernames to get the GitHub information for each user
-        for (username in usernames) {
-            try {
-                val user =
-                    fetchGitHubUser(context = context, username = username) // Fetch GitHub user information
-                if (user != null) {
-                    contributorsList.add(user.copy(contribute = contribute[usernames.indexOf(username)]))
-                } else {
-                    // Error handling: you can log or add empty users
-                    contributorsList.add(GitHubUser(username, "$username", "", "${contribute[usernames.indexOf(username)]}"))
-                }
-            } catch (e: Exception) {
-                // Error handling: you can log or add empty users
-                contributorsList.add(GitHubUser(username, "$username", "", "${contribute[usernames.indexOf(username)]}"))
-            }
-        }
-
-        return contributorsList
-    }
-
 }
