@@ -46,7 +46,7 @@ HEADERS = {
 try:
     with open("fastlane/creds.txt", "r", encoding="utf-8") as f:
         HEADERS["Authorization"] = "Bearer " + f.read().strip()
-except e as Exception:
+except Exception as e:
     print("Not using auth, may be subject to rate limits")
 
 def sanitize_login(login: str) -> str:
