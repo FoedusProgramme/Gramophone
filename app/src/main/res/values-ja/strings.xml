@@ -289,7 +289,6 @@
     <string name="oh_no">オーノー！</string>
     <string name="send_email">メールを送信</string>
     <string name="package_type_explainer">Gramophone はオープンソースです。誰でも Gramophone の APK を作成できます。APK の入手先を残すために Gramophone はパッケージのタイプを提供しています。\n\n最も一般的なタイプは Release で F-Droid、Google Play、GitHub または IzzyOnDroid から取得されます。\nCI パッケージタイプは GitHub のすべてのコミットに対して作成される自動ビルドを指します。これらのビルドは不安定な場合があります。\nOther パッケージタイプの場合、名前から APK の入手先がわかるはずです。</string>
-    <string name="settings_contributors_long"><![CDATA[- nift4: メンテナ / リードデベロッパー\n- 123Duo3: リードデザイナー\n- AkaneTan: オリジナルの作成者、元デベロッパー\n- imjyoritaditya: デベロッパー\n- WSTxda: アプリアイコンのバリエーションの一つをデザイン\n- pxe_emo: 新しい歌詞のヘルプとテスト\n- Lambada10: 歌詞のサンプルと SongSync の提供\n- lightsummer233: デベロッパー\n- nicholaswww: コードの貢献\n- Yuyuko1024: 曲線のプログレスバーを実装\n- ghhccghk: ステータスバーの歌詞を実装\n- lucaxvi: コードの貢献\n- tungnk123: コードの貢献\n- topazrn: コードの貢献\n- strongville: コードの貢献\n- bggRGjQaUbCoE: コードの貢献\n- VishnuSanal: コードの貢献\n- mikooomich: コードの貢献\n- HotarunIchijou: コードの貢献\n- someone5678: コードの貢献\n- IzzySoft: コードの貢献\n- PalanixYT: コードの貢献\n- N3Shemmy3: コードの貢献]]></string>
     <string name="failed_to_parse_lyric">歌詞の解析に失敗しました</string>
     <string name="mix_port_flag_gapless_offload">ギャップレスオフロード</string>
     <string name="mix_port_flag_sync">同期</string>
