@@ -422,4 +422,14 @@
     <string name="settings_hq_output_summary">Selle asemel, et piirduda vaid 16-bitiste täisarvudega, luba kõikide muude diskreetimisvormingute kasutamist</string>
     <string name="playlist_editing_pref_desc">Võimaldab lugusid lisada esitusloendisse (teisaldamine ja eemaldamine pole veel teostatud)</string>
     <string name="no_app_found">Ei leidu rakendust, mis oskaks seda teha</string>
+    <string name="contributors_nift4">Hooldaja / Juhtiv arendaja</string>
+    <string name="contributors_123duo3">Juhtiv kujundaja</string>
+    <string name="contributors_akanetan">Algne autor, varasem arendaja</string>
+    <string name="contributors_developer">Arendaja</string>
+    <string name="contributors_wstxda">kujundas rakenduse ikooni ühe variandi</string>
+    <string name="contributors_pxeemo">Abi ja laulusõnade uue lahenduse testimine</string>
+    <string name="contributors_lambada10">laulusõnade näited ja SongSync</string>
+    <string name="contributors_code_contributions">Kaastöö koodi kirjutamisel</string>
+    <string name="contributors_yuyuko1024">Vingerdav edenemisriba</string>
+    <string name="contributors_ghhccghk">Laulusõnad olekuribal</string>
 </resources>
