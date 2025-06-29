@@ -430,5 +430,9 @@
     <string name="contributors_123duo3">Dissenyador principal</string>
     <string name="contributors_akanetan">Creador original, desenvolupador jubilat</string>
     <string name="contributors_developer">Desenvolupador</string>
-    <string name="contributors_wstxda">ha dissenyat una variació de l\'icona d\'aplicació</string>
+    <string name="contributors_wstxda">ha dissenyat una variació de la icona d\'aplicació</string>
+    <string name="contributors_pxeemo">Ajuda i prova de lletres noves</string>
+    <string name="contributors_lambada10">proporcionant exemples de lletres i SongSync</string>
+    <string name="contributors_code_contributions">Aportacions de codi</string>
+    <string name="contributors_yuyuko1024">Barra de progrès ondulada</string>
 </resources>
