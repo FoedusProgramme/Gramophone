@@ -418,4 +418,14 @@
     <string name="settings_hq_output">高音質な出力</string>
     <string name="playlist_editing_pref_desc">プレイリストに曲を追加可能にします (移動と削除は未実装です)</string>
     <string name="no_app_found">実行できるアプリが見つかりません</string>
+    <string name="contributors_nift4">メンテナー / リードデベロッパー</string>
+    <string name="contributors_123duo3">リードデザイナー</string>
+    <string name="contributors_akanetan">オリジナルの作者、引退した開発者</string>
+    <string name="contributors_developer">デベロッパー</string>
+    <string name="contributors_wstxda">アプリアイコンのバリエーションを 1 つデザインしました</string>
+    <string name="contributors_pxeemo">新しい歌詞のヘルプとテスト</string>
+    <string name="contributors_lambada10">歌詞のサンプルと SongSync の提供</string>
+    <string name="contributors_code_contributions">コードの貢献</string>
+    <string name="contributors_yuyuko1024">曲がりくねったプログレスバー</string>
+    <string name="contributors_ghhccghk">ステータスバーの歌詞</string>
 </resources>
