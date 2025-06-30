@@ -430,4 +430,14 @@
     <string name="settings_hq_output_summary">Zezwalaj na używanie dowolnego formatu próbki zamiast ograniczać się do 16-bitowego int</string>
     <string name="playlist_editing_pref_desc">Umożliwia dodawanie utworów do list odtwarzania (przenoszenie/usuwanie nie zostało jeszcze zaimplementowane)</string>
     <string name="no_app_found">Nie znaleziono aplikacji, która mogłaby to wykonać</string>
+    <string name="contributors_nift4">Opiekun / Główny programista</string>
+    <string name="contributors_123duo3">Główny projektant</string>
+    <string name="contributors_akanetan">Pierwotny twórca, emerytowany programista</string>
+    <string name="contributors_developer">Programista</string>
+    <string name="contributors_wstxda">zaprojektował jedną odmianę ikony aplikacji</string>
+    <string name="contributors_pxeemo">Pomoc i testowanie nowych tekstów</string>
+    <string name="contributors_lambada10">dostarczanie próbek tekstów i SongSync</string>
+    <string name="contributors_code_contributions">Wkład w kod</string>
+    <string name="contributors_yuyuko1024">Zygzakowaty pasek postępu</string>
+    <string name="contributors_ghhccghk">Teksty na pasku stanu</string>
 </resources>
