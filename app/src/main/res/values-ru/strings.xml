@@ -160,7 +160,7 @@
     <string name="sort_by_release_date">Дата выхода</string>
     <string name="album_covers_enhance">Улучшенная загрузка обложек альбомов</string>
     <string name="share">Поделиться</string>
-    <string name="album_covers_enhance_desc">Поддержка обложек песен высокого качества и возможность различать обложки альбомов и песен (требуется доступ к фотографиям)</string>
+    <string name="album_covers_enhance_desc">Отображение высококачественных обложек песен и возможность различать обложки альбомов и песен (требуется доступ к фотографиям)</string>
     <string name="fgs_failed_title">Не удалось возобновить воспроизведение музыки</string>
     <string name="fgs_failed_text">Нажмите здесь, чтобы открыть приложение и продолжить воспроизведение</string>
     <string name="fgs_failed_channel">Не удалось возобновить воспроизведение</string>
@@ -180,14 +180,14 @@
     <string name="scroll_to_songs">Перейти к песням</string>
     <string name="play">Играть</string>
     <string name="more">Больше</string>
-    <string name="remove">Удалить</string>
+    <string name="remove">Убрать</string>
     <string name="skip_next">Перейти к следующему</string>
     <string name="expand_less">Закрыть</string>
     <string name="skip_previous">Перейти к предыдущему</string>
     <string name="position_slider">Ползунок положения</string>
     <string name="settings_lyrics_parser">Новый парсер текста песни</string>
     <string name="settings_lyrics_ui">Включить новый дизайн текста песни</string>
-    <string name="settings_lyrics_parser_summary">Включить новый парсер текста песни, который поддерживает синхронизацию по словам, индикатор говорящего, смещение и др.</string>
+    <string name="settings_lyrics_parser_summary">Включите новый парсер текстов песен, поддерживающий синхронизацию по словам, индикатор динамика, смещение и многое другое</string>
     <string name="settings_status_bar_lyrics_title">Текст песни в строке состояния</string>
     <string name="settings_lyrics_ui_summary">Экспериментальный дизайн с текстом песни по словам и расширенными возможностями</string>
     <string name="settings_status_bar_lyrics_summary">Включить метод показа текста песни MeiZu в строке состояния (доступно только на некоторых устройствах)</string>
@@ -432,4 +432,14 @@
     <string name="settings_hq_output_summary">Позволяет использовать любой формат сэмплов вместо ограничения на 16-битный int</string>
     <string name="playlist_editing_pref_desc">Позволяет добавлять песни в плейлисты (перемещение/удаление пока не реализовано)</string>
     <string name="no_app_found">Не найдено ни одного приложения, которое могло бы это сделать</string>
+    <string name="contributors_nift4">Ведущий разработчик</string>
+    <string name="contributors_123duo3">Ведущий дизайнер</string>
+    <string name="contributors_akanetan">Создатель оригинала, разработчик на пенсии</string>
+    <string name="contributors_developer">Разработчик</string>
+    <string name="contributors_wstxda">разработал один вариант иконки приложения</string>
+    <string name="contributors_pxeemo">Помощь &amp; тестирование новых текстов песен</string>
+    <string name="contributors_lambada10">предоставление образцов текстов &amp; SongSync</string>
+    <string name="contributors_code_contributions">Код взносов</string>
+    <string name="contributors_yuyuko1024">Бегущая строка прогресса</string>
+    <string name="contributors_ghhccghk">Лирика Status Bar</string>
 </resources>
