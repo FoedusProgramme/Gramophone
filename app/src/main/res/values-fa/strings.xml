@@ -418,4 +418,17 @@
     <string name="delete_failed_playlist">پاک کردن سیاهۀپخش شکست خورد</string>
     <string name="rename">تغییر نام</string>
     <string name="settings_hq_output">خروجی کیفیت بالا</string>
+    <string name="settings_hq_output_summary">اجازۀ استفاده از هر قالب نمونه‌ای به جای محدود کردن به عدد صحیح ۱۶ بیتی</string>
+    <string name="playlist_editing_pref_desc">امکان افزودن آهنگ‌ها به لیست‌های پخش (جابه‌جایی/حذف هنوز پیاده‌سازی نشده است)</string>
+    <string name="no_app_found">هیچ برنامه‌ای پیدا نشد که بتواند این کار را انجام دهد</string>
+    <string name="contributors_nift4">نگه‌دارنده / توسعه‌دهندۀ راهبر</string>
+    <string name="contributors_123duo3">طراح راهبر</string>
+    <string name="contributors_akanetan">سازندۀ اصلی، توسعه‌دهندۀ بازنشسته</string>
+    <string name="contributors_developer">توسعه‌دهنده</string>
+    <string name="contributors_wstxda">طراحی یک نگارش از آیکون برنامه</string>
+    <string name="contributors_pxeemo">کمک و آزمایش ترانه‌های جدید</string>
+    <string name="contributors_lambada10">ارائۀ نمونه‌های ترانه و SongSync</string>
+    <string name="contributors_code_contributions">مشارکت در کدها</string>
+    <string name="contributors_yuyuko1024">نوار پیشرفت مواج</string>
+    <string name="contributors_ghhccghk">ترانه‌های نوار وضعیت</string>
 </resources>
