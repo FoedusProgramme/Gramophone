@@ -149,7 +149,7 @@
     <string name="timer_expiry">Einschlaftimer wird Musik bei %s pausieren</string>
     <string name="sort_by_release_date">Veröffentlichungsdatum</string>
     <string name="album_covers_enhance">Erweitertes Albumcover-laden</string>
-    <string name="album_covers_enhance_desc">Unterstützt Albumcover mit höherer Qualität und erlaubt, dass sich Album- und Titelcover unterscheiden (benötigt Zugriff auf Fotos)</string>
+    <string name="album_covers_enhance_desc">Zeigt Albumcover mit höherer Qualität an, und erlaubt, dass sich Album- und Titelcover unterscheiden (benötigt Zugriff auf Fotos)</string>
     <string name="fgs_failed_text">Klicke hier, um die App zu öffnen und die Wiedergabe fortzusetzen</string>
     <string name="fgs_failed_channel">Wiedergabe konnte nicht fortgesetzt werden</string>
     <string name="settings_lyrics_multiline">Lese mehrzeilige Liedtexte</string>
