@@ -421,4 +421,14 @@
     <string name="settings_hq_output">Saída de Alta-calidade</string>
     <string name="playlist_editing_pref_desc">Permite engadir cancións ás listas (aínda non se pode mover / retirar)</string>
     <string name="no_app_found">Non atopamos unha app para iso</string>
+    <string name="contributors_nift4">Mantemento / Desenvolvedora principal</string>
+    <string name="contributors_123duo3">Deseñadora principal</string>
+    <string name="contributors_akanetan">Creadora orixinal, fóra do proxecto</string>
+    <string name="contributors_developer">Desenvolvedora</string>
+    <string name="contributors_wstxda">deseñou unha versión da icona da app</string>
+    <string name="contributors_pxeemo">Axuda e proba o novo formato das letras</string>
+    <string name="contributors_lambada10">proporciona exemplos de letra e SongSync</string>
+    <string name="contributors_code_contributions">Colaboración no código</string>
+    <string name="contributors_yuyuko1024">A barra de progreso con ondas</string>
+    <string name="contributors_ghhccghk">Letras na barra de estado</string>
 </resources>
