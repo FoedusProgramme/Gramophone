@@ -335,6 +335,14 @@
     <string name="mix_port_flag_deep_buffer">Deep buffer</string>
     <string name="refreshing_wait">正在刷新，请稍后……</string>
     <string name="create_playlist">正在创建播放列表……</string>
-    <string name="log_attachment">日志将自动作为附件发送</string>
+    <string name="log_attachment">日志将作为附件自动发送</string>
     <string name="log_will_auto_send">日志将自动发送，请说明问题</string>
+    <string name="do_not_enter_email_enter_msg">你应输入信息，而不是输入邮件地址</string>
+    <string name="enter_msg_for_dev_here">在此输入给开发人员的信息</string>
+    <string name="settings_mp3_index_seeking">查找 MP3 索引</string>
+    <string name="settings_mp3_index_seeking_summary">根据需要将 MP3 文件的全部内容读入内存，而不是依靠可能丢失的 Xing 标头进行 VBR 查找。若不开启该选项，在缺少 Xing 标头时将使用 CBR 查找。格式正确的 VBR MP3 文件都有 Xing 标头，因此几乎在几乎所有的情况下都无需启用此选项。(需要重新启动应用程序才能应用此选项）</string>
+    <string name="settings_translation_auto_word_summary">如果译文没有单词同步元数据，则在单词同步歌词播放中对译文行应用线性渐变</string>
+    <string name="settings_translation_auto_word">自动翻译</string>
+    <string name="spk_encoding_dts_lbr">DTS Express</string>
+    <string name="spk_encoding_pcm_24bit_offload">24-bit (8.24) PCM offload</string>
 </resources>
