@@ -303,7 +303,7 @@
     <string name="mix_port_flag_spatializer">இடஞ்சார்ந்தவர்</string>
     <string name="mix_port_flag_gapless_offload">இடைவெளி இல்லாத ஆஃப்லோட்</string>
     <string name="mix_port_flag_incall_music">உள்ளீட்டு இசை</string>
-    <string name="mix_port_flag_voip_rx">VoIP RX</string>
+    <string name="mix_port_flag_voip_rx">வாய்ப் பெறு</string>
     <string name="mix_port_flag_mmap_noirq">MMAP (இல்லை IRQ)</string>
     <string name="mix_port_flag_direct_pcm">நேரடி பிசிஎம்</string>
     <string name="mix_port_flag_iec958_nonaudio">IEC 958 (ஆடியோ அல்லாத)</string>
