@@ -276,7 +276,7 @@
     <string name="device_type_hearing_aid">助听器</string>
     <string name="device_type_ble_headset">BLE 耳麦</string>
     <string name="rename">重命名</string>
-    <string name="cannot_find_file">找不到此文件</string>
+    <string name="cannot_find_file">找不到该文件</string>
     <string name="contributors_nift4">维护员暨首席开发员</string>
     <string name="contributors_123duo3">首席设计师</string>
     <string name="contributors_akanetan">原创作者暨退休开发者</string>
@@ -287,8 +287,8 @@
     <string name="contributors_code_contributions">代码贡献</string>
     <string name="contributors_yuyuko1024">蠕动进度条</string>
     <string name="contributors_ghhccghk">状态栏歌词</string>
-    <string name="no_app_found">没有找到可执行此操作的应用</string>
-    <string name="playlist_editing_pref_desc">允许将歌曲添加到播放列表（应用尚未实现移动/删除操作）</string>
+    <string name="no_app_found">找不到可以进行此操作的应用程序</string>
+    <string name="playlist_editing_pref_desc">允许将歌曲添加到播放列表（移动/删除尚未实现）</string>
     <string name="spk_encoding_mp3">MP3</string>
     <string name="spk_encoding_aac_lc">AAC-LC</string>
     <string name="spk_encoding_aac_he_v1">HE-AAC v1</string>
@@ -333,21 +333,21 @@
     <string name="mix_port_flag_non_blocking">Non-blocking</string>
     <string name="mix_port_flag_compress_offload">Compressed offload</string>
     <string name="mix_port_flag_deep_buffer">Deep buffer</string>
-    <string name="refreshing_wait">正在刷新，请稍后……</string>
-    <string name="create_playlist">正在创建播放列表……</string>
+    <string name="refreshing_wait">正在刷新，请稍等…</string>
+    <string name="create_playlist">新建播放列表…</string>
     <string name="log_attachment">日志将作为附件自动发送</string>
     <string name="log_will_auto_send">日志将自动发送，请说明问题</string>
     <string name="do_not_enter_email_enter_msg">请输入消息内容，而非电子邮件地址</string>
-    <string name="enter_msg_for_dev_here">在此输入给开发人员的信息</string>
+    <string name="enter_msg_for_dev_here">在此处输入给开发者的消息</string>
     <string name="settings_mp3_index_seeking">查找 MP3 索引</string>
     <string name="settings_mp3_index_seeking_summary">根据需要将 MP3 文件的全部内容读入内存，而不是依靠可能丢失的 Xing 标头进行 VBR 查找。若不开启该选项，在缺少 Xing 标头时将使用 CBR 查找。格式正确的 VBR MP3 文件都有 Xing 标头，因此几乎在几乎所有的情况下都无需启用此选项。(需要重新启动应用程序才能应用此选项）</string>
-    <string name="settings_translation_auto_word_summary">如果译文没有单词同步元数据，则在单词同步歌词播放中对译文行应用线性渐变</string>
+    <string name="settings_translation_auto_word_summary">如果逐字歌词的翻译中没有逐字同步元数据，则在逐字歌词播放中对翻译行使用线性渐变动画</string>
     <string name="settings_translation_auto_word">自动翻译</string>
     <string name="spk_encoding_dts_lbr">DTS Express</string>
     <string name="spk_encoding_pcm_24bit_offload">24-bit (8.24) PCM offload</string>
     <string name="mix_port_flag_unknown">未知</string>
     <string name="spk_encoding_pcm_8_24bit">24-bit (8.24) PCM</string>
-    <string name="refresh_did_you_know">每次启动Gramophone时都会自动更新歌曲列表，程序运行期间也会自动检测新增媒体文件。点击\"刷新\"按钮并不会重新加载媒体库，而是要求系统重新扫描所有外接存储设备中的文件（因此需要一定时间）。这意味着除非系统或其他应用出现故障，您通常无需使用此功能。\n若发现歌曲缺失，请前往设置 &gt; 行为选项，检查歌曲最小长度过滤设置，确认文件夹黑名单配置符合预期。更多可能原因请查阅常见问题解答(FAQ)。</string>
+    <string name="refresh_did_you_know">Gramophone 在每次应用程序启动时都会要求更新歌曲列表，并且也会在运行时自动检测新媒体。这个“刷新”按钮不会重新加载 Gramophone 中的媒体，相反，它会要求您的系统重新扫描所有连接的永久存储设备中的所有文件（这就是它需要一些时间的原因）。这意味着，除非您的系统或其他应用程序出现故障，否则您永远不需要使用此功能。\n\n丢失了一些歌曲？请务必检查“设置&gt;行为”中的最小长度过滤器和文件夹黑名单，并确认这些设置符合预期。更多可能的原因，请查看我们的常见问题解答。</string>
     <string name="spk_encoding_unknown">未知格式 %s</string>
     <string name="spk_encoding_unknown_d">未知格式 %d</string>
     <string name="crash_report">崩溃报告</string>
@@ -355,7 +355,7 @@
     <string name="rename_playlist">重命名播放列表</string>
     <string name="edit_playlist_failed">编辑播放列表失败</string>
     <string name="add_to_playlist">添加到播放列表</string>
-    <string name="settings_hq_output">高音质输出</string>
+    <string name="settings_hq_output">高品质输出</string>
     <string name="settings_hq_output_summary">允许使用任意采样格式，而非仅限于16位整型</string>
-    <string name="still_refreshing">正在刷新，步骤 %1$d/%2$d：%3$s</string>
+    <string name="still_refreshing">正在刷新，第%1$d/%2$d步：%3$s</string>
 </resources>
