@@ -345,4 +345,7 @@
     <string name="settings_translation_auto_word">自动翻译</string>
     <string name="spk_encoding_dts_lbr">DTS Express</string>
     <string name="spk_encoding_pcm_24bit_offload">24-bit (8.24) PCM offload</string>
+    <string name="mix_port_flag_unknown">未知</string>
+    <string name="spk_encoding_pcm_8_24bit">24-bit (8.24) PCM</string>
+    <string name="refresh_did_you_know">每次启动Gramophone时都会自动更新歌曲列表，程序运行期间也会自动检测新增媒体文件。点击\"刷新\"按钮并不会重新加载媒体库，而是要求系统重新扫描所有外接存储设备中的文件（因此需要一定时间）。这意味着除非系统或其他应用出现故障，您通常无需使用此功能。\n\n若发现歌曲缺失：\n1. 请前往设置 &gt; 行为选项\n2. 检查歌曲最小长度过滤设置\n3. 确认文件夹黑名单配置符合预期\n更多可能原因请查阅常见问题解答(FAQ)。</string>
 </resources>
