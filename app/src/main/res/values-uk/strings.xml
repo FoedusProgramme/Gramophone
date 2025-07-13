@@ -173,7 +173,7 @@
     <string name="tab_order_summary">Програма відобразить першу вкладку під час запуску. Вкладки після роздільника будуть приховані.</string>
     <string name="scroll_to_songs">Перейдіть до пісень</string>
     <string name="back">Назад</string>
-    <string name="remove">видалити</string>
+    <string name="remove">Вилучити</string>
     <string name="lyric_widget_description">Віджет, який показує тексти медіафайлів, які зараз відтворюються</string>
     <string name="skip_next">Перейти до наступного</string>
     <string name="skip_previous">Перейти до попереднього</string>
@@ -187,8 +187,8 @@
     <string name="shuffle_all">Перемішайте все</string>
     <string name="sort">Сортувати</string>
     <string name="scroll_to_albums">Перейдіть до альбомів</string>
-    <string name="play">грати</string>
-    <string name="more">більше</string>
+    <string name="play">Грати</string>
+    <string name="more">Більше</string>
     <string name="settings_lyrics_ui_summary">Експериментальний інтерфейс користувача для відображення слова за словом лірики з розширеними функціями</string>
     <string name="settings_status_bar_lyrics_title">Тексти пісень у рядку стану</string>
     <string name="delete">Видалити</string>
@@ -240,7 +240,7 @@
     <string name="spk_channel_out_mono">Моно</string>
     <string name="spk_encoding_aac_xhe">xHE-AAC</string>
     <string name="spk_channel_out_7point1point4">7.1.4</string>
-    <string name="spk_channel_out_quad">Quad</string>
+    <string name="spk_channel_out_quad">Квадр</string>
     <string name="spk_channel_out_front_wide_left">Передня широка ліва</string>
     <string name="spk_channel_out_6point1">6.1</string>
     <string name="spk_channel_out_7point1point2">7.1.2</string>
