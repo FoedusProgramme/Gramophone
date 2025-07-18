@@ -181,8 +181,6 @@
     <string name="expand_less">Pechar</string>
     <string name="skip_previous">Ir á anterior</string>
     <string name="position_slider">Marcador de posición</string>
-    <string name="settings_lyrics_parser">Novo analizador de letra</string>
-    <string name="settings_lyrics_parser_summary">Activar un novo analizador de letras que sexa compatible coa sincronización palabra-a-palabra, indicador de altofalante, sincronización do tempo e máis</string>
     <string name="settings_lyrics_ui">Activar IU nova letra</string>
     <string name="settings_lyrics_ui_summary">Interface experimental para mostrar a letra palabra a palabra con características avanzadas</string>
     <string name="settings_status_bar_lyrics_title">Letras na barra de estado</string>

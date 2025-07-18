@@ -294,12 +294,10 @@
     <string name="skip_next">Ugrás a következőre</string>
     <string name="skip_previous">Ugrás az előzőre</string>
     <string name="position_slider">Csúszka áthelyezése</string>
-    <string name="settings_lyrics_parser">Új dalszöveg elemző</string>
     <string name="remove">Eltávolítás</string>
     <string name="expand_less">Bezár</string>
     <string name="settings_lyrics_ui">Új dalszöveg felület bekapcsolása</string>
     <string name="delete">Törlés</string>
-    <string name="settings_lyrics_parser_summary">Az új dalszöveg elemző bekapcsolása, amely támogat szóról-szóra szinkronizálást, hangszóró jelzőt, elmozdítást és még sok mást</string>
     <string name="settings_lyrics_multiline">Többsoros dalszövegek beolvasása</string>
     <string name="settings_lyrics_char_scaling">Karakter alapú átmenet méretezés dalszövegeknél</string>
     <string name="device_type_builtin_speaker">Beépített hangszóró</string>

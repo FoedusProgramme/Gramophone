@@ -171,13 +171,11 @@
     <string name="home_menu_shuffle">Promešaj sve</string>
     <string name="shuffle_all">Promešaj sve</string>
     <string name="settings_lyrics_ui_summary">Eksperimentalno korisničko sučelje za prikaz teksta reči po reč sa naprednim funkcijama</string>
-    <string name="settings_lyrics_parser_summary">Omogućite novi parser teksta koji podržava sinhronizaciju reč po reč, indikator zvučnika, ofset i još mnogo toga</string>
     <string name="settings_status_bar_lyrics_title">Tekst trake statusa</string>
     <string name="settings_status_bar_lyrics_summary">Omogući MeiZu metod prikazivanja tekstova u statusnoj traci (dostupno samo na nekim uređajima)</string>
     <string name="skip_next">Preskoči na sledeće</string>
     <string name="settings_lyrics_ui">Omogući novi korisnički interfejs za tekst</string>
     <string name="position_slider">Pozicioni klizač</string>
-    <string name="settings_lyrics_parser">Novi parser teksta</string>
     <string name="scroll_to_albums">Listajte do albuma</string>
     <string name="scroll_to_songs">Listajte do pesama</string>
     <string name="skip_previous">Preskoči na prethodni</string>

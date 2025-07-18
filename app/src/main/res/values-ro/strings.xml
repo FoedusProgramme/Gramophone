@@ -168,7 +168,6 @@
     <string name="lyric_widget_description">Wudget care arată versuri la playerul media curent</string>
     <string name="settings_preference_category_home">Ecran principal</string>
     <string name="tab_order">Configurați ordinea secțiunilor</string>
-    <string name="settings_lyrics_parser_summary">Adaugă noi versuri la analizator care suportă cuvânt cu cuvânt sincronizare, indicator la vorbire, offset și altele</string>
     <string name="settings_lyrics_ui">Activează noi versuri interfață</string>
     <string name="back">Înapoi</string>
     <string name="play_all">Auscultă pe toate</string>
@@ -182,7 +181,6 @@
     <string name="expand_less">Închide</string>
     <string name="skip_previous">Trece la cel anterior</string>
     <string name="position_slider">Poziție la slide</string>
-    <string name="settings_lyrics_parser">Noi versuri la analizator</string>
     <string name="settings_status_bar_lyrics_summary">Activați metoda MeiZu să arate versuri la statusul de bară (valabil numai la anumite dispozitive)</string>
     <string name="delete">Șterge definitive</string>
     <string name="yes">Da</string>

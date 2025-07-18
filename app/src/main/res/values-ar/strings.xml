@@ -173,13 +173,11 @@
     <string name="separator_dot">•</string>
     <string name="home_menu_shuffle">اخلط الجميع</string>
     <string name="scroll_to_songs">اسحب إلى الأغاني</string>
-    <string name="settings_lyrics_parser">موزّع الكلمات الجديد</string>
     <string name="settings_status_bar_lyrics_summary">فعّل طريقة MeiZu في عرض الكلمات في شريط الحالات (مدعومة فقط على بعض الأجهزة)</string>
     <string name="settings_status_bar_lyrics_title">كلمات شريط الحالة</string>
     <string name="tab_order_summary">سيعرض التطبيق اللسان الأول عند البدء، وستُخفى الألسنة التي تَلِي الفاصل.</string>
     <string name="grant_audio"><![CDATA[رجاءً امنح \"إذن الموسيقى\" والملفات الصوتية]]></string>
     <string name="remove">أزِل</string>
-    <string name="settings_lyrics_parser_summary">فعّل موزّع الكلمات الجديد الداعم لمزامنة الأسطر كمةً كلمة، وتحديد المُغنِّ، والتأخير وغير ذلك</string>
     <string name="sort_by_file_path">مسار الملف</string>
     <string name="no">لا</string>
     <string name="sort_by_album_artist">فنان الآلبوم</string>

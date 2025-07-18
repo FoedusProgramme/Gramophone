@@ -183,8 +183,6 @@
     <string name="tab_order">Skonfiguruj kolejność zakładek</string>
     <string name="tab_order_summary">Aplikacja wyświetli pierwszą kartę po uruchomieniu. Zakładki po separatorze będą ukryte.</string>
     <string name="scroll_to_songs">Przewiń do utworów</string>
-    <string name="settings_lyrics_parser">Nowy parser tekstów</string>
-    <string name="settings_lyrics_parser_summary">Włącz nowy parser tekstów, który obsługuje synchronizację słowo po słowie, wskaźnik głośnika, przesunięcie i inne funkcje</string>
     <string name="settings_lyrics_ui">Włącz nowy interfejs użytkownika tekstów</string>
     <string name="settings_lyrics_ui_summary">Eksperymentalny interfejs użytkownika do wyświetlania tekstu słowo po słowie z zaawansowanymi funkcjami</string>
     <string name="settings_status_bar_lyrics_title">Teksty na pasku stanu</string>

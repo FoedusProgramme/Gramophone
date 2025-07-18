@@ -175,8 +175,6 @@
     <string name="settings_preference_category_home">Startbildschirm</string>
     <string name="shuffle_all">Alles zufällig abspielen</string>
     <string name="scroll_to_songs">Zu den Titeln scrollen</string>
-    <string name="settings_lyrics_parser">Neuer Liedtext-Parser</string>
-    <string name="settings_lyrics_parser_summary">Neuen Liedtext-Parser benutzen, der Wort-für-Wort-Synchronisierung, Sprecher-Indikator, Zeitversetzung und mehr unterstützt</string>
     <string name="settings_lyrics_ui">Neue Liedtext-Benutzeroberfläche benutzen</string>
     <string name="settings_lyrics_ui_summary">Experimentelle Benutzeroberfläche, die Wort-für-Wort-Liedtexte mit erweiterten Funktionen anzeigen kann</string>
     <string name="settings_status_bar_lyrics_title">Liedtexte in der Statusleiste</string>

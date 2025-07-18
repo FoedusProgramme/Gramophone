@@ -179,8 +179,6 @@
     <string name="skip_previous">Перейти до попереднього</string>
     <string name="position_slider">Повзунок положення</string>
     <string name="settings_status_bar_lyrics_summary">Увімкнути метод MeiZu для відображення текстів пісень у рядку стану (доступно лише на деяких пристроях)</string>
-    <string name="settings_lyrics_parser">Новий аналізатор лірики</string>
-    <string name="settings_lyrics_parser_summary">Увімкніть новий синтаксичний аналізатор текстів, який підтримує синхронізацію слово за словом, індикатор динаміка, зміщення тощо</string>
     <string name="expand_less">Закрити</string>
     <string name="settings_lyrics_ui">Увімкнути новий інтерфейс користувача з текстами</string>
     <string name="play_all">Грайте всі</string>

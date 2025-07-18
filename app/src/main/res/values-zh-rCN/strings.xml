@@ -163,7 +163,6 @@
     <string name="settings_status_bar_lyrics_title">状态栏歌词</string>
     <string name="settings_status_bar_lyrics_summary">启用魅族状态栏歌词（仅适用于部分设备）</string>
     <string name="settings_lyrics_ui">启用新歌词界面</string>
-    <string name="settings_lyrics_parser">新歌词解析器</string>
     <string name="lyric_widget_description">显示当前播放媒体歌词的小部件</string>
     <string name="scroll_to_albums">前往相册</string>
     <string name="scroll_to_songs">前往歌曲</string>
@@ -175,7 +174,6 @@
     <string name="divider">分隔线</string>
     <string name="shuffle_all">随机播放全部</string>
     <string name="skip_next">跳至下一个</string>
-    <string name="settings_lyrics_parser_summary">启用新的歌词解析器，支持逐字同步、扬声器指示器、偏移等</string>
     <string name="seekbar">搜索栏</string>
     <string name="home_menu_shuffle">随机播放全部</string>
     <string name="grant_audio"><![CDATA[请授予\“音乐和音频”\权限]]></string>

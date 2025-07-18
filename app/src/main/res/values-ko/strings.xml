@@ -171,9 +171,7 @@
     <string name="expand_less">닫기</string>
     <string name="skip_previous">이전으로 건너뛰기</string>
     <string name="position_slider">위치 슬라이더</string>
-    <string name="settings_lyrics_parser_summary">단어별 가사 동기, 화자 표시, 오프셋 등을 지원하는 새 버전의 가사 분석기 사용</string>
     <string name="settings_lyrics_ui">새 버전의 가사 UI 사용</string>
-    <string name="settings_lyrics_parser">새 버전의 가사 분석기 사용</string>
     <string name="settings_lyrics_ui_summary">단어별 가사 등 고급 기능을 지원하는 실험용 UI 사용</string>
     <string name="settings_status_bar_lyrics_title">상태 표시줄 가사</string>
     <string name="settings_status_bar_lyrics_summary">Meizu에서 사용하는 방식으로 상태 표시줄에 가사 표시(일부 기기에서만 사용 가능)</string>

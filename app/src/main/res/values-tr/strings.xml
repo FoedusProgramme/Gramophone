@@ -175,8 +175,6 @@
     <string name="settings_lyrics_multiline_summary">Senkron noktaları arasındaki tüm satırları tek bir söz olarak işleyin</string>
     <string name="grant_images"><![CDATA[Lütfen \"medyaya\" erişim izni verin]]></string>
     <string name="settings_lyrics_ui_summary">Gelişmiş özelliklerle kelime bazlı şarkı sözlerini görüntülemek için deneysel kullanıcı arayüzü</string>
-    <string name="settings_lyrics_parser">Yeni söz işleyici</string>
-    <string name="settings_lyrics_parser_summary">Kelime kelime ilerleme, boşluklar ve daha fazlasını destekleyen yeni şarkı sözü işleyiciyi etkinleştirin</string>
     <string name="settings_lyrics_ui">Yeni söz arayüzünü etkinleştir</string>
     <string name="grant_audio"><![CDATA[Lütfen \"müzik ve seslere \" erişim izni verin]]></string>
     <string name="settings_status_bar_lyrics_title">Durum çubuğu sözleri</string>

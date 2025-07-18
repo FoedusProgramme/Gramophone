@@ -176,8 +176,6 @@
     <string name="sort">Trier</string>
     <string name="scroll_to_albums">Aller aux albums</string>
     <string name="play">Jouer</string>
-    <string name="settings_lyrics_parser">Nouvel analyseur des paroles</string>
-    <string name="settings_lyrics_parser_summary">Activer le nouvel analyseur de paroles qui prend en charge la synchronisation mot par mot, indicateur de haut-parleur, décalage et plus</string>
     <string name="settings_lyrics_ui">Activer la nouvelle interface paroles</string>
     <string name="settings_status_bar_lyrics_title">Barre d\'état des paroles</string>
     <string name="settings_status_bar_lyrics_summary">Activer la méthode MeiZu d\'affichage des paroles dans la barre d\'état (seulement disponible sur certains appareils)</string>

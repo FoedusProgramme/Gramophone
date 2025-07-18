@@ -174,8 +174,6 @@
     <string name="scroll_to_songs">لغزش به آهنگ‌ها</string>
     <string name="settings_preference_category_home">صفحه اصلی</string>
     <string name="position_slider">لغزندۀ موقعیت</string>
-    <string name="settings_lyrics_parser">تجزیه‌گر تراتۀ جدید</string>
-    <string name="settings_lyrics_parser_summary">به کار انداختن تجزیه‌گر ترانۀ جدید که از همگام‌سازی کلمه‌به‌کلمه، نشانگر سخنگو، جابه‌جایی و بیشتر پشتیبانی می‌کند</string>
     <string name="settings_lyrics_ui">به کار انداختن رابط کاربری جدید ترانه</string>
     <string name="settings_lyrics_ui_summary">رابط کاربری آزمایشی برای نمایش ترانۀ کلمه‌به‌کلمه با قابلیت‌های پیشرفته</string>
     <string name="home_menu_shuffle">بُر زدن همه</string>

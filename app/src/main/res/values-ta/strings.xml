@@ -176,8 +176,6 @@
     <string name="expand_less">மூடு</string>
     <string name="skip_previous">முந்தையதைத் தவிர்க்கவும்</string>
     <string name="position_slider">நிலை ச்லைடர்</string>
-    <string name="settings_lyrics_parser">புதிய பாடல் பாகுபடுத்தி</string>
-    <string name="settings_lyrics_parser_summary">சொல்-மூலம்-வார்த்தை ஒத்திசைவு, பேச்சாளர் காட்டி, ஆஃப்செட் மற்றும் பலவற்றை ஆதரிக்கும் புதிய பாடல் பாகுபடுத்தலை இயக்கவும்</string>
     <string name="settings_lyrics_ui">புதிய பாடல் இடைமுகம் ஐ இயக்கவும்</string>
     <string name="settings_lyrics_ui_summary">மேம்பட்ட அம்சங்களுடன் சொல்-மூலம்-வார்த்தை பாடலைக் காண்பிக்க சோதனை இடைமுகம்</string>
     <string name="settings_status_bar_lyrics_title">நிலை பட்டை பாடல்</string>

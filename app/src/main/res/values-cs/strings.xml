@@ -207,7 +207,6 @@
     <string name="current_playlist">Aktuální playlist</string>
     <string name="back">Zpět</string>
     <string name="tab_order">Konfigurovat pořadí lišty</string>
-    <string name="settings_lyrics_parser">Nový parser textů</string>
     <string name="album_covers_enhance">Pokročilé načítání obálky alba</string>
     <string name="share">Sdílet</string>
     <string name="fgs_failed_title">Chyba při spouštění hudby</string>
@@ -273,7 +272,6 @@
     <string name="expand_less">Zavřít</string>
     <string name="skip_previous">Předchozí</string>
     <string name="position_slider">Pozice slideru</string>
-    <string name="settings_lyrics_parser_summary">Povolení nového analyzátoru textů, který podporuje synchronizaci slovo po slově, indikátor mluvčího, posun a další funkce</string>
     <string name="settings_lyrics_ui">Povolit novou UI textu skladeb</string>
     <string name="settings_lyrics_ui_summary">Experimentální UI pro zobrazení textu slovo po slově s pokročilými funkcemi</string>
     <string name="no">Ne</string>

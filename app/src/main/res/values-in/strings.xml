@@ -170,8 +170,6 @@
     <string name="expand_less">Tutup</string>
     <string name="skip_previous">Loncat ke sebelumnya</string>
     <string name="position_slider">Posisi slider</string>
-    <string name="settings_lyrics_parser">Parser lirik baru</string>
-    <string name="settings_lyrics_parser_summary">Aktifkan pengurai lirik baru yang mendukung sinkronisasi kata per kata, indikator speaker, offset, dan lainnya</string>
     <string name="settings_lyrics_ui">Aktifkan UI Lirik baru</string>
     <string name="settings_lyrics_ui_summary">UI eksperimental untuk menampilkan lirik kata demi kata dengan fitur-fitur lanjutan</string>
     <string name="settings_status_bar_lyrics_title">Lirik bilah status</string>

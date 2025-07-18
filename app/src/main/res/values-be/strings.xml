@@ -183,12 +183,10 @@
     <string name="position_slider">Паўзунок становішча</string>
     <string name="back">Назад</string>
     <string name="play">Гуляць</string>
-    <string name="settings_lyrics_parser">Новы парсер тэксту песні</string>
     <string name="home_menu_shuffle">Змяшаць усё</string>
     <string name="delete_failed_playlist">Выдаленне плэйліста не ўдалося</string>
     <string name="settings_lyrics_ui">Уключыць новы дызайн тэксту песні</string>
     <string name="sort_by_album_artist">Альбом выканаўцы</string>
-    <string name="settings_lyrics_parser_summary">Уключыць новы парсер тэксту песні, які падтрымлівае сінхранізацыю па словах, індыкатар размаўлялага, зрушэнне і інш.</string>
     <string name="settings_contributors_click">%s (націсніце, каб даведацца больш!)</string>
     <string name="settings_lyrics_ui_summary">Эксперыментальны карыстальніцкі інтэрфейс для слова-за-словам лірыкі з пашыранымі функцыямі</string>
     <string name="settings_status_bar_lyrics_title">Тэкс песні ў радке стану</string>

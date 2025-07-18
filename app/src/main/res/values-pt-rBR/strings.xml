@@ -169,7 +169,6 @@
     <string name="back">Voltar</string>
     <string name="skip_previous">Pular para o anterior</string>
     <string name="position_slider">Controle deslizante</string>
-    <string name="settings_lyrics_parser">Novo analisador de letras</string>
     <string name="settings_lyrics_ui">Ativar nova UI de letras</string>
     <string name="settings_lyrics_ui_summary">Interface de usuário experimental para exibir letras palavra por palavra com recursos avançados</string>
     <string name="expand_less">Fechar</string>
@@ -184,7 +183,6 @@
     <string name="tab_order">Configurar ordem das abas</string>
     <string name="tab_order_summary">O aplicativo mostrará a primeira guia na inicialização. As guias após o divisor ficarão ocultas.</string>
     <string name="play_all">Reproduzir tudo</string>
-    <string name="settings_lyrics_parser_summary">Ativar novo analisador de letras que suporta sincronização palavra por palavra, indicador de alto-falante, deslocamento e muito mais</string>
     <string name="home_menu_shuffle">Reproduzir no modo aleatório</string>
     <string name="delete">Excluir</string>
     <string name="yes">Sim</string>
