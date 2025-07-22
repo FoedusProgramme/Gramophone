@@ -448,5 +448,7 @@
     <string name="contributors_code_contributions">Code contributions</string>
     <string name="contributors_yuyuko1024">Squiggly progress bar</string>
     <string name="contributors_ghhccghk">Status Bar lyrics</string>
+	<string name="home_menu_quick_refresh">Quick refresh</string>
+    <string name="add_to_queue">Add to queue</string>
 
 </resources>
