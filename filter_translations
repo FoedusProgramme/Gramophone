@@ -24,6 +24,7 @@ retry_strategy = Retry(
     status_forcelist=[500, 502, 503, 504])
 session = requests.Session()
 adapter = HTTPAdapter(max_retries=retry_strategy)
+units_count = None
 session.mount("http://", adapter)
 session.mount("https://", adapter)
 
@@ -37,10 +38,8 @@ def get_languages(component_slug: str) -> list:
 
 
 def get_pages_units(page: int, language_code: str) -> list:
-    url = f"{
-        WEBLATE_URL}/api/translations/{PROJECT_SLUG}/strings-xml/{language_code}/units/"
-    response = session.get(url, headers=headers,
-                           timeout=5, params={'page': page})
+    url = f"{WEBLATE_URL}/api/translations/{PROJECT_SLUG}/strings-xml/{language_code}/units/"
+    response = session.get(url, headers=headers, timeout=5, params={'page': page})
     response.raise_for_status()
     data = response.json()
     return data.get("results")
@@ -48,22 +47,24 @@ def get_pages_units(page: int, language_code: str) -> list:
 
 # Fetch all units
 def get_units_list(language_code: str, component_slug: str) -> list:
+    global units_count
     units = []
-    url = f"{
-        WEBLATE_URL}/api/translations/{PROJECT_SLUG}/{component_slug}/{language_code}/units/"
+    url = f"{WEBLATE_URL}/api/translations/{PROJECT_SLUG}/{component_slug}/{language_code}/units/"
 
     print(f'\nGetting {component_slug} units of language code "{language_code}"... ', end="")
-    response = session.get(url, headers=headers, timeout=5)
-    response.raise_for_status()
-    data = response.json()
-    units.extend(data.get("results"))
+    if not units_count:
+        response = session.get(url, headers=headers, timeout=5)
+        response.raise_for_status()
+        data = response.json()
+        units.extend(data.get("results"))
+        units_count = data.get("count")
 
-    count = data.get("count")
-    if count > 50:
+    if units_count > 50:
         page_params = [{'page': i, 'language_code': language_code}
-                       for i in range(2, count // 50 + 2)]
+                       for i in range(1, units_count // 50 + 2)]
         with ThreadPoolExecutor(max_workers=10) as executor:
-            futures = [executor.submit(get_pages_units, **params) for params in page_params]
+            futures = [executor.submit(get_pages_units, **params)
+                       for params in page_params]
 
         for future in futures:
             units.extend(future.result())
@@ -86,7 +87,7 @@ def delete_strings(xml_file, names_to_delete):
         resolve_entities=False
     )
 
-    source_file_path = Path(sys.argv[1] + "/" + str(xml_file))
+    source_file_path = Path(sys.argv[1]).joinpath(xml_file)
     tree = etree.parse(source_file_path, parser)
     root = tree.getroot()
 
@@ -114,14 +115,14 @@ def delete_strings(xml_file, names_to_delete):
 
 def filter_editings(language_code: dict, component_slug: str) -> list:
     units = get_units_list(language_code, component_slug)
-    string_names = [unit.get('context')
-                    for unit in units if unit.get('state') == 10]
-    print("  Strings to delete: " + str(string_names))
+    string_names = [u.get('context') for u in units if u.get('state') == 10]
+    print(f"  Strings to delete: {string_names}")
     return string_names
 
 
 def manage_fastlane_files(files_path: Path, editings: list) -> None:
-    source_files_path = Path(sys.argv[1] + "/" + files_path)
+    """Deletes all of the files if any of them is missing or needs editing"""
+    source_files_path = Path(sys.argv[1]).joinpath(files_path)
     if not source_files_path.exists():
         print(f"  Directory does not exist: {source_files_path}")
         return
@@ -132,23 +133,18 @@ def manage_fastlane_files(files_path: Path, editings: list) -> None:
         shutil.copytree(source_files_path, files_path)
 
     files = ["short_description.txt", "full_description.txt", "title.txt"]
-    delete_files = any("description" in s for s in editings)
-    # true if a file has "description" in its name
-    if delete_files:
-        print(f"  Deleting files in {files_path}")
-        for file in files:
-            file_path = Path(files_path + "/" + file)
-            if file_path.exists():
-                os.remove(file_path)
-
-    # if delete_changelogs:
-    #     changelogs_dir = Path(files_path + "/changelogs/")
-    #     if changelogs_dir.exists() and changelogs_dir.is_dir():
-    #         print(f"  Deleting changelog {changelogs_dir}")
-    #         shutil.rmtree(changelogs_dir)
-
+    needs_edit = any(file.split(":")[0] in files for file in editings)
+    all_exist = all(source_files_path.joinpath(f).exists() for f in files)
+    delete_files = not all_exist or needs_edit
     if not delete_files:
         print("  Skipped deleting")
+        return
+
+    print(f"  Deleting files in {files_path}")
+    for file in files:
+        file_path = files_path.joinpath(file)
+        if file_path.exists():
+            os.remove(file_path)
 
 
 def filter_strings_xml():
@@ -168,7 +164,7 @@ def filter_fastlane():
         if language.get("is_source"):
             continue
         language_code = language.get('language').get('code')
-        files_path = language.get('filename')
+        files_path = Path(language.get('filename'))
         editings = filter_editings(language_code, "fastlane")
         manage_fastlane_files(files_path, editings)
 
