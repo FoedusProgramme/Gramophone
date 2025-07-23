@@ -64,7 +64,7 @@
     <string name="settings_appearance_summary">ظاهر برنامه، حالت‌های زمینه</string>
     <string name="settings_title_center">نام در مرکز</string>
     <string name="dialog_duration">مدت زمان</string>
-    <string name="filesystem">مدیریت پرونده‌ها</string>
+    <string name="filesystem">پرونده‌ها</string>
     <string name="dialog_mime">گونۀ mime</string>
     <string name="settings_player_ui">رابط کاربری پخش کننده</string>
     <string name="settings_title_center_summary">بکاربردن نام وسط‌چین در پخش کنندۀ کامل</string>
@@ -431,4 +431,5 @@
     <string name="contributors_ghhccghk">ترانه‌های نوار وضعیت</string>
     <string name="home_menu_quick_refresh">بازخوانی سریع</string>
     <string name="add_to_queue">افزودن به صف</string>
+    <string name="app_name">گرامافون</string>
 </resources>
