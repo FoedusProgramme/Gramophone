@@ -440,4 +440,6 @@
     <string name="contributors_code_contributions">Код взносов</string>
     <string name="contributors_yuyuko1024">Бегущая строка прогресса</string>
     <string name="contributors_ghhccghk">Лирика Status Bar</string>
+    <string name="home_menu_quick_refresh">Быстрое обновление</string>
+    <string name="add_to_queue">Добавить в очередь</string>
 </resources>
