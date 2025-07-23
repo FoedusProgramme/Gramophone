@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - weblate
+  workflow_dispatch:
 
 jobs:
   filter-and-sync:
