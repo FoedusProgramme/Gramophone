@@ -432,4 +432,5 @@
     <string name="contributors_ghhccghk">Laulusõnad olekuribal</string>
     <string name="home_menu_quick_refresh">Kiirvärskendus</string>
     <string name="add_to_queue">Lisa esitusjärjekorda</string>
+    <string name="app_name">Gramophone</string>
 </resources>
