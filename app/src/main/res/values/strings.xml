@@ -6,11 +6,12 @@
     <string name="default_time" translatable="false">0:00</string>
     <string name="settings_contributors_detail" translatable="false">nift4, 123Duo3, AkaneTan, imjyotiraditya, WSTxda</string>
     <string name="upper_folder" translatable="false">..</string>
-    <string name="app_name" translatable="false">Gramophone</string>
 
     <!-- Translatable -->
     <eat-comment/>
 
+    <!-- If your language uses a latin script: use "Gramophone", please do not translate. If your language uses a different script: translate "Gramophone" into your language. -->
+    <string name="app_name">Gramophone</string>
     <string name="home_menu_search">Search</string>
     <string name="home_menu_settings">Settings</string>
     <string name="home_menu_shuffle">Shuffle all</string>
