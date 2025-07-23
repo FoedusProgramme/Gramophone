@@ -433,4 +433,6 @@
     <string name="contributors_lambada10">proporcionant exemples de lletres i SongSync</string>
     <string name="contributors_code_contributions">Aportacions de codi</string>
     <string name="contributors_yuyuko1024">Barra de progrès ondulada</string>
+    <string name="home_menu_quick_refresh">Actualització ràpida</string>
+    <string name="add_to_queue">Afegeix a la cua</string>
 </resources>
