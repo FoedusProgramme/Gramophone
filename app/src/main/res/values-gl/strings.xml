@@ -429,4 +429,6 @@
     <string name="contributors_code_contributions">Colaboración no código</string>
     <string name="contributors_yuyuko1024">A barra de progreso con ondas</string>
     <string name="contributors_ghhccghk">Letras na barra de estado</string>
+    <string name="home_menu_quick_refresh">Actualización rápida</string>
+    <string name="add_to_queue">Engadir á cola</string>
 </resources>
