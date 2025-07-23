@@ -24,7 +24,7 @@ retry_strategy = Retry(
     status_forcelist=[500, 502, 503, 504])
 session = requests.Session()
 adapter = HTTPAdapter(max_retries=retry_strategy)
-units_count = None
+UNITS_COUNT = None
 session.mount("http://", adapter)
 session.mount("https://", adapter)
 
@@ -47,33 +47,33 @@ def get_pages_units(page: int, language_code: str) -> list:
 
 # Fetch all units
 def get_units_list(language_code: str, component_slug: str) -> list:
-    global units_count
+    global UNITS_COUNT
     units = []
     url = f"{WEBLATE_URL}/api/translations/{PROJECT_SLUG}/{component_slug}/{language_code}/units/"
 
     print(f'\nGetting {component_slug} units of language code "{language_code}"... ', end="")
-    if not units_count:
+    if not UNITS_COUNT or UNITS_COUNT <= 50:
         response = session.get(url, headers=headers, timeout=5)
         response.raise_for_status()
         data = response.json()
         units.extend(data.get("results"))
-        units_count = data.get("count")
+        UNITS_COUNT = data.get("count")
 
-    if units_count > 50:
-        page_params = [{'page': i, 'language_code': language_code}
-                       for i in range(1, units_count // 50 + 2)]
+    if UNITS_COUNT > 50:
+        pages_params = [{'page': i, 'language_code': language_code}
+                        for i in range(1 if not units else 2, UNITS_COUNT // 50 + 2)]
         with ThreadPoolExecutor(max_workers=10) as executor:
             futures = [executor.submit(get_pages_units, **params)
-                       for params in page_params]
+                       for params in pages_params]
 
         for future in futures:
             units.extend(future.result())
 
-    print("Done.")
+    print(f"Got {len(units)} units.")
     return units
 
 
-def delete_strings(xml_file, names_to_delete):
+def delete_strings(xml_file: Path, names_to_delete: list[str]) -> None:
     """
     Deletes entire <string> elements from Android string resources XML
     while preserving all formatting, comments, and XML structure
@@ -113,14 +113,14 @@ def delete_strings(xml_file, names_to_delete):
     )
 
 
-def filter_editings(language_code: dict, component_slug: str) -> list:
+def filter_editings(language_code: str, component_slug: str) -> list[str]:
     units = get_units_list(language_code, component_slug)
     string_names = [u.get('context') for u in units if u.get('state') == 10]
     print(f"  Strings to delete: {string_names}")
     return string_names
 
 
-def manage_fastlane_files(files_path: Path, editings: list) -> None:
+def manage_fastlane_files(files_path: Path, editings: list[str]) -> None:
     """Deletes all of the files if any of them is missing or needs editing"""
     source_files_path = Path(sys.argv[1]).joinpath(files_path)
     if not source_files_path.exists():
@@ -148,17 +148,21 @@ def manage_fastlane_files(files_path: Path, editings: list) -> None:
 
 
 def filter_strings_xml():
+    global UNITS_COUNT
+    UNITS_COUNT = None
     languages = get_languages("strings-xml")
     for language in languages:
         if language.get('is_source'):
             continue
         language_code = language.get('language').get('code')
-        files_path = Path(language.get('filename'))
+        xml_file = Path(language.get('filename'))
         editings = filter_editings(language_code, "strings-xml")
-        delete_strings(files_path, editings)
+        delete_strings(xml_file, editings)
 
 
 def filter_fastlane():
+    global UNITS_COUNT
+    UNITS_COUNT = None
     fastlane_languages = get_languages('fastlane')
     for language in fastlane_languages:
         if language.get("is_source"):
