@@ -438,4 +438,7 @@
     <string name="contributors_code_contributions">Wkład w kod</string>
     <string name="contributors_yuyuko1024">Zygzakowaty pasek postępu</string>
     <string name="contributors_ghhccghk">Teksty na pasku stanu</string>
+    <string name="app_name">Gramophone</string>
+    <string name="home_menu_quick_refresh">Szybkie odświeżanie</string>
+    <string name="add_to_queue">Dodaj do kolejki</string>
 </resources>
