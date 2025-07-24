@@ -431,4 +431,5 @@
     <string name="contributors_ghhccghk">Letras na barra de estado</string>
     <string name="home_menu_quick_refresh">Actualización rápida</string>
     <string name="add_to_queue">Engadir á cola</string>
+    <string name="app_name">Gramophone</string>
 </resources>
