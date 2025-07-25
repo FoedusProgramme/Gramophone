@@ -426,4 +426,7 @@
     <string name="contributors_code_contributions">コードの貢献</string>
     <string name="contributors_yuyuko1024">曲がりくねったプログレスバー</string>
     <string name="contributors_ghhccghk">ステータスバーの歌詞</string>
+    <string name="home_menu_quick_refresh">クイック更新</string>
+    <string name="add_to_queue">キューに追加</string>
+    <string name="app_name">Gramophone</string>
 </resources>
