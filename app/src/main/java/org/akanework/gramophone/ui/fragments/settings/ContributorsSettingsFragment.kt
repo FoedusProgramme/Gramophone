@@ -2,6 +2,7 @@ package org.akanework.gramophone.ui.fragments.settings
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
@@ -13,9 +14,16 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -45,9 +53,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.LayoutDirection.*
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import coil3.compose.AsyncImage
@@ -160,7 +171,17 @@ class ContributorsSettingsActivity : AppCompatActivity() {
 
     @Composable
     fun ContributorsSettingsScreen(contentPaddingValues: PaddingValues) {
-        LazyColumn(contentPadding = PaddingValues(horizontal = 16.dp, vertical = 2.dp) + contentPaddingValues) {
+        val configuration = LocalConfiguration.current
+        val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+
+        val cutoutInsets = WindowInsets.displayCutout.asPaddingValues()
+
+        LazyColumn(
+            contentPadding = if (isLandscape)
+                PaddingValues(horizontal = 16.dp, vertical = 2.dp) + contentPaddingValues + cutoutInsets
+            else
+                PaddingValues(horizontal = 16.dp, vertical = 2.dp) + contentPaddingValues
+        ) {
             itemsIndexed(Contributors.LIST) { i, contributor ->
                 val top = if (i == 0) CornerSize(16.dp) else
                     CornerSize(8.dp)
@@ -172,4 +193,14 @@ class ContributorsSettingsActivity : AppCompatActivity() {
             }
         }
     }
+
+    operator fun PaddingValues.plus(other: PaddingValues): PaddingValues {
+        return PaddingValues(
+            start = this.calculateStartPadding(Ltr) + other.calculateStartPadding(Ltr),
+            top = this.calculateTopPadding() + other.calculateTopPadding(),
+            end = this.calculateEndPadding(Ltr) + other.calculateEndPadding(Ltr),
+            bottom = this.calculateBottomPadding() + other.calculateBottomPadding()
+        )
+    }
+
 }
