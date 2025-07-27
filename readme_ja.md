@@ -51,7 +51,7 @@ Gramophone には、アプリのパッケージを示すためのパッケージ
 
 ## 翻訳
 <a href="https://hosted.weblate.org/engage/gramophone/">
-<img src="https://hosted.weblate.org/widget/gramophone/strings-xml/287x66-white.png" alt="Translation status" />
+<img src="https://hosted.weblate.org/widget/gramophone/strings-xml/horizontal-auto.svg" alt="Translation status" />
 </a>
 
 ## お知らせ

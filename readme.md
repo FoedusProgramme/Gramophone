@@ -54,7 +54,7 @@ This project is licensed under the GNU General Public License v3.0 - see the [LI
 
 ## Translation
 <a href="https://hosted.weblate.org/engage/gramophone/">
-<img src="https://hosted.weblate.org/widget/gramophone/strings-xml/287x66-white.png" alt="Translation status" />
+<img src="https://hosted.weblate.org/widget/gramophone/strings-xml/horizontal-auto.svg" alt="Translation status" />
 </a>
 
 ## Notice
