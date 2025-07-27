@@ -442,4 +442,5 @@
     <string name="contributors_ghhccghk">Лирика Status Bar</string>
     <string name="home_menu_quick_refresh">Быстрое обновление</string>
     <string name="add_to_queue">Добавить в очередь</string>
+    <string name="app_name">Gramophоne</string>
 </resources>
