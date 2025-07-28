@@ -356,4 +356,7 @@
     <string name="settings_hq_output">高品质输出</string>
     <string name="settings_hq_output_summary">允许使用任意采样格式，而非仅限于16位整型</string>
     <string name="still_refreshing">正在刷新，第%1$d/%2$d步：%3$s</string>
+    <string name="home_menu_quick_refresh">快速刷新</string>
+    <string name="add_to_queue">添加到队列</string>
+    <string name="spk_encoding_amr_wb">AMR-WB</string>
 </resources>
