@@ -8,6 +8,10 @@ pluginManagement {
     }
 }
 
+gradle.extra.apply {
+    set("androidxMediaEnableMidiModule", true)
+}
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
@@ -22,13 +26,6 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Gramophone"
-includeBuild(file("media3").toPath().toRealPath().toAbsolutePath().toString()) {
-    dependencySubstitution {
-        substitute(module("androidx.media3:media3-common")).using(project(":lib-common"))
-        substitute(module("androidx.media3:media3-common-ktx")).using(project(":lib-common-ktx"))
-        substitute(module("androidx.media3:media3-exoplayer")).using(project(":lib-exoplayer"))
-        substitute(module("androidx.media3:media3-exoplayer-midi")).using(project(":lib-decoder-midi"))
-        substitute(module("androidx.media3:media3-session")).using(project(":lib-session"))
-    }
-}
+(gradle as ExtensionAware).extra["androidxMediaModulePrefix"] = "media3-"
+apply(from = file("media3/core_settings.gradle"))
 include(":hificore", ":app", ":baselineprofile")

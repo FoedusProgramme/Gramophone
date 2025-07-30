@@ -2,7 +2,6 @@
 
 import com.android.build.api.dsl.ApplicationBuildType
 import com.android.build.gradle.tasks.PackageAndroidArtifact
-import org.gradle.kotlin.dsl.support.kotlinCompilerOptions
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.util.removeSuffixIfPresent
 import java.util.Properties
@@ -286,11 +285,15 @@ dependencies {
     implementation("androidx.fragment:fragment-ktx:1.8.8")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.1")
     implementation("androidx.mediarouter:mediarouter:1.8.0")
-    val media3Version = "1.7.1"
-    implementation("androidx.media3:media3-common-ktx:$media3Version")
-    implementation("androidx.media3:media3-exoplayer:$media3Version")
-    implementation("androidx.media3:media3-exoplayer-midi:$media3Version")
-    implementation("androidx.media3:media3-session:$media3Version")
+//    val media3Version = "1.7.1"
+//    implementation("androidx.media3:media3-common-ktx:$media3Version")
+//    implementation("androidx.media3:media3-exoplayer:$media3Version")
+//    implementation("androidx.media3:media3-exoplayer-midi:$media3Version")
+//    implementation("androidx.media3:media3-session:$media3Version")
+    implementation(project(":media3-lib-exoplayer"))
+    implementation(project(":media3-lib-decoder-midi"))
+    implementation(project(":media3-lib-session"))
+    implementation(project(":media3-lib-common-ktx"))
     //implementation("androidx.navigation:navigation-fragment-ktx:2.7.7") TODO consider it
     //implementation("androidx.paging:paging-runtime-ktx:3.2.1") TODO paged, partial, flow based library loading
     //implementation("androidx.paging:paging-guava:3.2.1") TODO do we have guava? do we need this?
