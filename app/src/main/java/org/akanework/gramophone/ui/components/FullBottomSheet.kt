@@ -43,7 +43,7 @@ import androidx.media3.common.MediaMetadata
 import androidx.media3.common.PlaybackParameters
 import androidx.media3.common.Player
 import androidx.media3.common.util.Log
-import androidx.media3.session.MediaBrowser
+import androidx.media3.session.MediaController
 import androidx.media3.session.SessionError
 import androidx.media3.session.SessionResult
 import androidx.preference.PreferenceManager
@@ -219,6 +219,8 @@ class FullBottomSheet
     private var colorSecondaryContainerFinalColor: Int = -1
     private var colorOnSecondaryContainerFinalColor: Int = -1
     private var colorContrastFaintedFinalColor: Int = -1
+    private var playlistNowPlaying: TextView? = null
+    private var playlistNowPlayingCover: ImageView? = null
     private var lastDisposable: Disposable? = null
 
     init {
@@ -412,16 +414,6 @@ class FullBottomSheet
         }
 
         bottomSheetFavoriteButton.addOnCheckedChangeListener(this)
-
-        if (isMediaOutputPanelSupported(context)){
-            bottomSheetMediaControl.setOnClickListener {
-                SystemMediaControlResolver(context).intentSystemMediaDialog()
-            }
-        } else {
-            bottomSheetMediaControl.visibility = GONE
-        }
-
-
 
         bottomSheetPlaylistButton.setOnClickListener {
             ViewCompat.performHapticFeedback(it, HapticFeedbackConstantsCompat.CONTEXT_CLICK)
@@ -1087,8 +1079,6 @@ class FullBottomSheet
             )
 
             bottomSheetTimerButton.iconTint =
-                ColorStateList.valueOf(colorOnSurface)
-            bottomSheetPlaybackSpeedButton.iconTint =
                 ColorStateList.valueOf(colorOnSurface)
             bottomSheetPlaylistButton.iconTint =
                 ColorStateList.valueOf(colorOnSurface)
