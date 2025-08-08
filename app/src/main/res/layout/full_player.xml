@@ -429,6 +429,42 @@
             app:toggleCheckedStateOnClick="false"
             app:tooltipText="@string/timer" />
 
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/playlist"
+			android:layout_width="48dp"
+			android:layout_height="48dp"
+			android:layout_weight="1"
+			android:background="@drawable/rp_buttons"
+			android:insetLeft="0dp"
+			android:insetTop="0dp"
+			android:insetRight="0dp"
+			android:insetBottom="0dp"
+			app:tooltipText="@string/current_playlist"
+			android:contentDescription="@string/current_playlist"
+			app:icon="@drawable/ic_playlist_play"
+			app:iconGravity="textStart"
+			app:iconPadding="0dp"
+			app:iconSize="24dp"
+			app:iconTint="?attr/colorOnSurface" />
+
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/media_control"
+			android:layout_width="48dp"
+			android:layout_height="48dp"
+			android:layout_weight="1"
+			android:background="@drawable/rp_buttons"
+			android:insetLeft="0dp"
+			android:insetTop="0dp"
+			android:insetRight="0dp"
+			android:insetBottom="0dp"
+			app:tooltipText="@string/media_control_text"
+			android:contentDescription="@string/media_control_text"
+			app:icon="@drawable/ic_media_control"
+			app:iconGravity="textStart"
+			app:iconPadding="0dp"
+			app:iconSize="24dp"
+			app:iconTint="?attr/colorOnSurface" />
+	</LinearLayout>
         <com.google.android.material.button.MaterialButton
             android:id="@+id/playlist"
             android:layout_width="48dp"
