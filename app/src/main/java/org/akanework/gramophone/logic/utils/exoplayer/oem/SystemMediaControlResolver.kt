@@ -66,9 +66,19 @@ class SystemMediaControlResolver(val context: Context) {
             if (!tag) {
                 Toast.makeText(context, R.string.media_control_text_error, Toast.LENGTH_SHORT).show()
             }
-        } else {
-            // zh: Android 11 及以下
+        } else if (Build.VERSION.SDK_INT == 30) {
+            // Android 11
             val tag = startNativeMediaDialogForAndroid11(context)
+            if (!tag) {
+                Toast.makeText(context, R.string.media_control_text_error, Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            val intent = Intent().apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                action = "com.android.settings.panel.action.MEDIA_OUTPUT"
+                putExtra("com.android.settings.panel.extra.PACKAGE_NAME", context.packageName)
+            }
+            val tag = startNativeMediaDialog(intent)
             if (!tag) {
                 Toast.makeText(context, R.string.media_control_text_error, Toast.LENGTH_SHORT).show()
             }
@@ -127,9 +137,12 @@ class SystemMediaControlResolver(val context: Context) {
      * zh: 获取 One UI 版本字符串（如 6.0.0），非三星或无此属性则返回 null
      * en: Get One UI version string (e.g. 6.0.0), return null if not Samsung or no such property
      */
-    private fun getOneUIVersionReadable(): String? {
-        return try {1
-            val value = getSystemProperties("ro.build.version.oneui")
+    @SuppressLint("PrivateApi")
+    fun getOneUIVersionReadable(): String? {
+        return try {
+            val systemProperties = Class.forName("android.os.SystemProperties")
+            val get = systemProperties.getMethod("get", String::class.java)
+            val value = (get.invoke(null, "ro.build.version.oneui") as String).trim()
             if (value.isEmpty()) return null
             val code = value.toIntOrNull() ?: return null
             val major = code / 10000
@@ -140,17 +153,4 @@ class SystemMediaControlResolver(val context: Context) {
             null
         }
     }
-
-    @SuppressLint("PrivateApi")
-    private fun getSystemProperties(key: String): String {
-        val ret: String = try {
-            Class.forName("android.os.SystemProperties").getDeclaredMethod("get", String::class.java).invoke(null, key) as String
-        } catch (iAE: IllegalArgumentException) {
-            throw iAE
-        } catch (e: Exception) {
-            ""
-        }
-        return ret
-    }
-
 }
