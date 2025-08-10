@@ -358,7 +358,7 @@
     <string name="spk_encoding_mpegh_sub_bl_l4">MPEG-H baasprofiil L4</string>
     <string name="spk_encoding_unknown_d">Tundmatu vorming %d</string>
     <string name="mix_port_flag_bit_perfect">Bit perfect</string>
-    <string name="mix_port_flag_gapless_offload">Gapless offload</string>
+    <string name="mix_port_flag_gapless_offload">Katkestusteta taasesitus protsessorivälise töötlusega</string>
     <string name="mix_port_flag_non_blocking">Non-blocking</string>
     <string name="mix_port_flag_unknown">Pole teada</string>
     <string name="mix_port_flag_fast">Kiire</string>
@@ -391,7 +391,7 @@
     <string name="what_were_you_doing">Mida sa tegid Gramophone\'is, kui see viga juhtus? Et selle probleemi parandamise tõenäosus oleks suurem, siis palun lisa võimalikult palju üksikasju.\n\nPalun koosta veakirjeldus inglise keeles. Kui peaksid kasutama muud keelt, siis proovin masintõlke abiga tekstist selgust saada, aga kunagi ju ei tea, kuidas see toimib.</string>
     <string name="settings_audio_quality_info">Helikvaliteedi teave</string>
     <string name="settings_audio_quality_info_summary">Näita meediamängija vaates helikvaliteedi ja -vormingu teavet</string>
-    <string name="spk_encoding_pcm_16bit_offload">16-bitine PCM Offload</string>
+    <string name="spk_encoding_pcm_16bit_offload">16-bitine PCM offload</string>
     <string name="spk_encoding_pcm_24bit_offload">24-bitine (8.24) PCM offload</string>
     <string name="spk_encoding_dts_lbr">DTS Express</string>
     <string name="settings_translation_auto_word">Näita tõlgete puhul automaatset animatsiooni</string>
@@ -433,4 +433,8 @@
     <string name="home_menu_quick_refresh">Kiirvärskendus</string>
     <string name="add_to_queue">Lisa esitusjärjekorda</string>
     <string name="app_name">Gramophone</string>
+    <string name="disabled">Pole kasutusel</string>
+    <string name="offload_enabled_if_supported">Kasutusel (kui vorming on toetatud)</string>
+    <string name="offload_enabled_if_gapless">Kasutusel, kui katkestusteta taasesitus on võimalik</string>
+    <string name="settings_audio_offload">Heli töötlus protsessoriväliselt (säästab akukasutust)</string>
 </resources>
