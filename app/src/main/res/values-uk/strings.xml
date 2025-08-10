@@ -441,4 +441,8 @@
     <string name="home_menu_quick_refresh">Швидке оновлення</string>
     <string name="add_to_queue">Додати до черги</string>
     <string name="app_name">Gramophone</string>
+    <string name="disabled">Відключено</string>
+    <string name="offload_enabled_if_supported">Увімкнено (якщо формат підтримується)</string>
+    <string name="offload_enabled_if_gapless">Увімкнено, якщо можливе відтворення без пауз</string>
+    <string name="settings_audio_offload">Розвантаження аудіо (економія заряду батареї)</string>
 </resources>
