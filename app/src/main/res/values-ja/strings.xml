@@ -429,4 +429,8 @@
     <string name="home_menu_quick_refresh">クイック更新</string>
     <string name="add_to_queue">キューに追加</string>
     <string name="app_name">Gramophone</string>
+    <string name="disabled">無効</string>
+    <string name="offload_enabled_if_supported">有効 (形式が対応している場合)</string>
+    <string name="offload_enabled_if_gapless">ギャップレス再生が可能な場合に有効化されます</string>
+    <string name="settings_audio_offload">オーディオオフロード (バッテリーを節約)</string>
 </resources>
