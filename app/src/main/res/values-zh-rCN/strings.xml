@@ -375,4 +375,5 @@
     <string name="spk_encoding_wma_pro">Windows媒体音频专业版（WMA Pro）</string>
     <string name="spk_encoding_mp2">动态影像专家组2层音频（MPEG-2 Audio）</string>
     <string name="spk_encoding_qcelp">高通码激励线性预测编码（QCELP）</string>
+    <string name="app_name">Gramophone</string>
 </resources>
