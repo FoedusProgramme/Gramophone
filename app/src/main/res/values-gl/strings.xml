@@ -432,4 +432,7 @@
     <string name="home_menu_quick_refresh">Actualización rápida</string>
     <string name="add_to_queue">Engadir á cola</string>
     <string name="app_name">Gramophone</string>
+    <string name="disabled">Desactivado</string>
+    <string name="offload_enabled_if_supported">Activado (se o formato é compatible)</string>
+    <string name="offload_enabled_if_gapless">Activado se é posible reproducir sen pausas</string>
 </resources>
