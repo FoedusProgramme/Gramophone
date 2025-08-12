@@ -436,4 +436,8 @@
     <string name="home_menu_quick_refresh">Actualització ràpida</string>
     <string name="add_to_queue">Afegeix a la cua</string>
     <string name="app_name">Gramophone</string>
+    <string name="disabled">Desactivat</string>
+    <string name="offload_enabled_if_supported">Activat (si el format s\'admet)</string>
+    <string name="offload_enabled_if_gapless">Activat si és possible la reproducció sense silencis</string>
+    <string name="settings_audio_offload">Descarrega l\'àudio (estalvia bateria)</string>
 </resources>
