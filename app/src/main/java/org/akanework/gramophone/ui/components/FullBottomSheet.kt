@@ -1000,9 +1000,10 @@ class FullBottomSheet
                     ImageRequest.Builder(context).apply {
                         data(Pair(file, mediaItem?.mediaMetadata?.artworkUri))
                         if (bottomSheetFullCover.width == 0 || bottomSheetFullCover.height == 0) {
-                            throw IllegalStateException("expected to have box of full cover after layout")
+                            size(300, 300) // need some bitmap for material colour
+                        } else {
+                            size(bottomSheetFullCover.width, bottomSheetFullCover.height)
                         }
-                        size(bottomSheetFullCover.width, bottomSheetFullCover.height)
                         precision(Precision.INEXACT)
                         scale(Scale.FILL)
                         // do not react to onStart() which sets placeholder
