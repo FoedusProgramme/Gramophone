@@ -66,19 +66,9 @@ class SystemMediaControlResolver(val context: Context) {
             if (!tag) {
                 Toast.makeText(context, R.string.media_control_text_error, Toast.LENGTH_SHORT).show()
             }
-        } else if (Build.VERSION.SDK_INT == 30) {
-            // Android 11
-            val tag = startNativeMediaDialogForAndroid11(context)
-            if (!tag) {
-                Toast.makeText(context, R.string.media_control_text_error, Toast.LENGTH_SHORT).show()
-            }
         } else {
-            val intent = Intent().apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                action = "com.android.settings.panel.action.MEDIA_OUTPUT"
-                putExtra("com.android.settings.panel.extra.PACKAGE_NAME", context.packageName)
-            }
-            val tag = startNativeMediaDialog(intent)
+            // zh: Android 11 及以下
+            val tag = startNativeMediaDialogForAndroid11(context)
             if (!tag) {
                 Toast.makeText(context, R.string.media_control_text_error, Toast.LENGTH_SHORT).show()
             }
