@@ -933,9 +933,11 @@ private class TtmlParserState(private val parser: XmlPullParser, private val tim
 
 @OptIn(UnstableApi::class)
 fun parseTtml(lyricText: String): SemanticLyrics? {
+    val formattedLyricText = lyricText
+        .replace(Regex("&(?!#?[a-zA-Z0-9]+;)"), "&amp;")
     val parser = Xml.newPullParser()
     parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, true)
-    parser.setInput(StringReader(lyricText))
+    parser.setInput(StringReader(formattedLyricText))
     try {
         parser.nextTag()
         parser.require(XmlPullParser.START_TAG, tt, "tt")
