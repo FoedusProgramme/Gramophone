@@ -443,4 +443,8 @@
     <string name="home_menu_quick_refresh">Быстрое обновление</string>
     <string name="add_to_queue">Добавить в очередь</string>
     <string name="app_name">Gramophоne</string>
+    <string name="disabled">Отключено</string>
+    <string name="offload_enabled_if_supported">Включено (если формат поддерживается)</string>
+    <string name="offload_enabled_if_gapless">Включено, если возможно воспроизведение без пауз</string>
+    <string name="settings_audio_offload">Аудио-разгрузка (экономит заряд батареи)</string>
 </resources>
