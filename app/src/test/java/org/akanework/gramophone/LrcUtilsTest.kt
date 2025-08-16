@@ -3,6 +3,7 @@ package org.akanework.gramophone
 import androidx.media3.common.MimeTypes
 import org.akanework.gramophone.logic.utils.LrcUtils
 import org.akanework.gramophone.logic.utils.SemanticLyrics
+import org.akanework.gramophone.logic.utils.SemanticLyrics.LyricLine
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotEquals
@@ -230,6 +231,29 @@ class LrcUtilsTest {
 		assertEquals("hello\ngood morning", lrc[1].text)
 		assertEquals(204uL, lrc[1].start)
 	}
+
+    @Test
+    fun testEmptyLyricNoTranslation() {
+        val lrc = parseSynced("[00:00.29]It's hard to breathe but that's alright\n[00:04.45]\n[00:04.45]Hush\n[00:14.23]\n[00:16.25]Shh")
+        assertNotNull(lrc)
+        assertEquals(5, lrc!!.size)
+
+        assertEquals("It's hard to breathe but that's alright", lrc[0].text)
+        assertEquals(290uL, lrc[0].start)
+        assertEquals(false, lrc[0].isTranslated)
+        assertEquals("", lrc[1].text)
+        assertEquals(4450uL, lrc[1].start)
+        assertEquals(false, lrc[1].isTranslated)
+        assertEquals("Hush", lrc[2].text)
+        assertEquals(4450uL, lrc[2].start)
+        assertEquals(false, lrc[2].isTranslated)
+        assertEquals("", lrc[3].text)
+        assertEquals(14230uL, lrc[3].start)
+        assertEquals(false, lrc[3].isTranslated)
+        assertEquals("Shh", lrc[4].text)
+        assertEquals(16250uL, lrc[4].start)
+        assertEquals(false, lrc[4].isTranslated)
+    }
 
 	@Test
 	fun testOnlyWordSyncPoints() {

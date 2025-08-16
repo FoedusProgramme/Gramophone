@@ -1324,11 +1324,19 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         }
     }
 
-    fun getCurrentLyricIndex(withTranslation: Boolean) =
-        syncedLyrics?.text?.mapIndexed { i, it -> i to it }?.filter {
+    fun getCurrentLyricIndex(withTranslation: Boolean): Int? {
+        val lines = syncedLyrics?.text?.mapIndexed { i, it -> i to it }?.filter {
             it.second.start <= (controller?.currentPosition ?: 0).toULong()
                     && (!it.second.isTranslated || withTranslation)
-        }?.maxByOrNull { it.second.start }?.first
+        }
+        // return first non-blank line if there are are multiple lines, else the first blank like
+        val max = lines?.maxByOrNull { it.second.start }
+        if (max == null) {
+            return null
+        }
+        val maxLines = lines.filter { it.second.start == max.second.start && it.second.text.isNotBlank() }
+        return maxLines.firstOrNull()?.first ?: max.first
+    }
 
     override fun onForegroundServiceStartNotAllowedException() {
         Log.w(TAG, "Failed to resume playback :/")

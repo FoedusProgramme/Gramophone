@@ -717,13 +717,13 @@ fun parseLrc(lyricText: String, trimEnabled: Boolean, multiLineEnabled: Boolean)
         }
     }
     out.sortBy { it.start }
-    var previousTimestamp = ULong.MAX_VALUE
+    var previousLyric: LyricLine? = null
     val defaultIsWalaokeM = out.find { it.speaker?.isWalaoke == true } != null &&
             out.find { it.speaker?.isWalaoke == false } == null
     out.forEach { lyric ->
         if (defaultIsWalaokeM && lyric.speaker == null)
             lyric.speaker = SpeakerEntity.Male
-        val mainEnd = if (lyric.start == previousTimestamp) out.firstOrNull {
+        val mainEnd = if (lyric.start == previousLyric?.start) out.firstOrNull {
             it.start == lyric.start && !it.endIsImplicit }?.end else null
         if (lyric.endIsImplicit) {
             if (mainEnd != null) {
@@ -734,8 +734,9 @@ fun parseLrc(lyricText: String, trimEnabled: Boolean, multiLineEnabled: Boolean)
                     ?: Long.MAX_VALUE.toULong()
             }
         }
-        lyric.isTranslated = lyric.start == previousTimestamp
-        previousTimestamp = lyric.start
+        lyric.isTranslated = lyric.start == previousLyric?.start &&
+                (previousLyric.text.isNotBlank() || lyric.text.isBlank())
+        previousLyric = lyric
     }
     while (out.firstOrNull()?.text?.isBlank() == true)
         out.removeAt(0)

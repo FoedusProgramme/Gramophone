@@ -324,7 +324,7 @@ object LrcTestData {
 [00:13.000]In the shape of an "L" on her forehead
 [00:18.300]Well, the hits start coming and they don't stop coming
 [00:21.600]Head to the rules and ya hit the ground running
-[00:24.300]Didn't make sense just to live for fun,
+[00:24.300]
 [00:26.300]You're brain gets smart but your head gets dumb
 [00:28.600]So much to do so much to see
 [00:30.600]So what's wrong with takin the backstreets
@@ -377,7 +377,7 @@ object LrcTestData {
 [00:13.000]她手指在额头前摆出的“L”的形状
 [00:18.300]好了 新的时代正在来临 他们无法阻止
 [00:21.600]早已厌烦了老套的规则  奔跑着用双脚撞击地面
-[00:24.300]没有意义只是为了好玩
+[00:24.300]
 [00:26.300]你的大脑变得又聪明又愚蠢
 [00:28.600]那么多事要做 那么多话要说
 [00:30.600]让我们代替后街男孩又如何
@@ -435,8 +435,8 @@ object LrcTestData {
 		LyricLine(start = 18300uL, text = """好了 新的时代正在来临 他们无法阻止""", words = null, speaker = null, end = 21599uL, isTranslated = true, endIsImplicit = true),
 		LyricLine(start = 21600uL, text = """Head to the rules and ya hit the ground running""", words = null, speaker = null, end = 24299uL, isTranslated = false, endIsImplicit = true),
 		LyricLine(start = 21600uL, text = """早已厌烦了老套的规则  奔跑着用双脚撞击地面""", words = null, speaker = null, end = 24299uL, isTranslated = true, endIsImplicit = true),
-		LyricLine(start = 24300uL, text = """Didn't make sense just to live for fun,""", words = null, speaker = null, end = 26299uL, isTranslated = false, endIsImplicit = true),
-		LyricLine(start = 24300uL, text = """没有意义只是为了好玩""", words = null, speaker = null, end = 26299uL, isTranslated = true, endIsImplicit = true),
+		LyricLine(start = 24300uL, text = """""", words = null, speaker = null, end = 26299uL, isTranslated = false, endIsImplicit = true),
+		LyricLine(start = 24300uL, text = """""", words = null, speaker = null, end = 26299uL, isTranslated = true, endIsImplicit = true),
 		LyricLine(start = 26300uL, text = """You're brain gets smart but your head gets dumb""", words = null, speaker = null, end = 28599uL, isTranslated = false, endIsImplicit = true),
 		LyricLine(start = 26300uL, text = """你的大脑变得又聪明又愚蠢""", words = null, speaker = null, end = 28599uL, isTranslated = true, endIsImplicit = true),
 		LyricLine(start = 28600uL, text = """So much to do so much to see""", words = null, speaker = null, end = 30599uL, isTranslated = false, endIsImplicit = true),
