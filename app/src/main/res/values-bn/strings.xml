@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="dismiss">বাদ দিন</string>
+    <string name="dismiss">বাতিল</string>
     <string name="settings_category_behavior">আচরণ</string>
     <string name="category_dates">তারিখগুলো</string>
     <string name="sort_by_artist">শিল্পী</string>
@@ -80,7 +80,7 @@
     <string name="settings_player_options_summary">আউটপুট গুণমান, প্লেব্যাক আচরণ</string>
     <string name="settings_album_round_corner_summary">পুরো প্লেয়ারে বৃত্তাকার কর্নার সক্ষম করুন</string>
     <string name="settings_lyrics_center">কেন্দ্র প্রান্তিককরণ</string>
-    <string name="opensource_info">GPL-3.0-এর অধীনে ওপেন-সোর্স।\nস্বত্ব © %s</string>
+    <string name="opensource_info">GPL-3.0-এর অধীনে ওপেন-সোর্স।\nস্বত্ব %s</string>
     <string name="playlist_favourite">প্রিয়</string>
     <string name="settings_content_based_color_summary">অ্যালবামের উপর ভিত্তি করে রঙ তৈরি সক্ষম করুন</string>
     <string name="settings_package_type">প্যাকেজের ধরন</string>
@@ -131,4 +131,25 @@
     <string name="details">বিবরণ</string>
     <string name="layout">ডিসপ্লে</string>
     <string name="settings_contributors_click">%s (আরও জানতে ক্লিক করুন!)</string>
+    <string name="app_name">গ্রামোফোন</string>
+    <string name="settings_blacklist_folder">ব্ল্যাকলিস্টেড ফোল্ডার</string>
+    <string name="settings_category_basic_info">বেসিক তথ্য</string>
+    <string name="preference_category_quality">মান</string>
+    <string name="settings_category_misc">অন্যান্য</string>
+    <string name="settings_preference_category_application">অ্যাপ্লিকেশন</string>
+    <string name="settings_category_filters">ফিল্টার</string>
+    <string name="settings_category_full_player">পুরো প্লেয়ার</string>
+    <string name="settings_crash_application">অ্যাপ্লিকেশন ক্র্যাশ করুন</string>
+    <string name="settings_crash_application_summary">ক্র্যাশ-ও-ম্যাটিক ৩০০০</string>
+    <string name="album_cover">অ্যালবাম কভার</string>
+    <string name="dialog_edit_metadata">সম্পাদনা করুন</string>
+    <string name="dialog_lyrics">লিরিক</string>
+    <string name="delete_failed">গানটি ডিলিট করা যায়নি</string>
+    <string name="delete_failed_playlist">প্লেলিস্টটি ডিলিট করা যায়নি</string>
+    <string name="album_covers_enhance">অ্যালবাম কভারের উন্নত লোডিং</string>
+    <string name="album_covers_enhance_desc">হাই-কোয়ালিটি কভার প্রদর্শন এবং ভিন্ন কভার ব্যবহার (ফটো অ্যাক্সেস প্রয়োজন)</string>
+    <string name="deny_images"><![CDATA[অনুগ্রহ করে \"ফটো এবং ভিডিও\" অনুমতিটি বাতিল করুন]]></string>
+    <string name="grant_images"><![CDATA[অনুগ্রহ করে \"ফটো এবং ভিডিও\" অনুমতিটি প্রদান করুন]]></string>
+    <string name="grant_audio"><![CDATA[অনুগ্রহ করে \"মিউজিক ও অডিও\" অনুমতিটি প্রদান করুন]]></string>
+    <string name="crash_clipboard">ক্র্যাশ লগ ক্লিপবোর্ডে কপি করা হয়েছে</string>
 </resources>
