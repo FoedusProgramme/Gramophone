@@ -283,7 +283,7 @@
     <string name="settings_pixel_perfect_measurement_legacy_title">Doskonały pomiar tekstu w pikselach</string>
     <string name="settings_pixel_perfect_measurement_legacy_summary">Przed Androidem 15 pomiary tekstu są oparte na \"advances\" zamiast \"bounding box\". Aby uniknąć przycinania gradientu w tekstach, dodajemy kilka pikseli po bokach. Może to jednak powodować niezamierzone artefakty, jeśli kerning jest włączony, które są łagodzone, jeśli ten przełącznik jest włączony poprzez renderowanie tekstu do mapy bitowej i analizowanie go w celu wyodrębnienia odpowiednich danych odstępów.</string>
     <string name="open_in_gramophone">Otwórz w Gramophone</string>
-    <string name="settings_trim_lyrics_summary">Spacje przed lub po pierwszej literze w linii tekstu mogą mieć wartość artystyczną. Jeśli się z tym nie zgadzasz, możesz włączyć ten przełącznik, aby automatycznie usunąć te spacje.</string>
+    <string name="settings_trim_lyrics_summary">Spacje przed pierwszą literą lub po końcu wersu tekstu mogą mieć wartość artystyczną. Jeśli się z tym nie zgadzasz, możesz włączyć tę opcję, aby automatycznie usuwać te spacje.</string>
     <string name="delete_really">Czy naprawdę chcesz usunąć „%s”? Tego działania nie można cofnąć.</string>
     <string name="cannot_play_file">Nie można odtworzyć tego pliku</string>
     <string name="settings_lyrics_no_animation">Wyłącz animacje</string>
@@ -442,7 +442,8 @@
     <string name="home_menu_quick_refresh">Szybkie odświeżanie</string>
     <string name="add_to_queue">Dodaj do kolejki</string>
     <string name="disabled">Wyłączono</string>
-    <string name="offload_enabled_if_supported">Włączono (jeśli format jest obsługiwany)</string>
+    <string name="offload_enabled_if_supported">Zawsze włączono</string>
     <string name="offload_enabled_if_gapless">Włączono, jeśli możliwe jest odtwarzanie bez przerw</string>
     <string name="settings_audio_offload">Odciążenie audio (oszczędza baterię)</string>
+    <string name="settings_telegram">Telegram</string>
 </resources>
