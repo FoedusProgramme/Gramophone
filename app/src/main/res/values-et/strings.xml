@@ -254,7 +254,7 @@
     <string name="spk_encoding_dts">DTS</string>
     <string name="spk_encoding_mp3">MP3</string>
     <string name="spk_encoding_aac_xhe">xHE-AAC</string>
-    <string name="settings_trim_lyrics_summary">Tühikud laulusõnade reas enne või pärast esimest tähte võivad omada kunstilist väärtust. Kui see sulle ei sobi, siis selle eelistuse sisselülitamisel eemaldame need tühikud automaatselt.</string>
+    <string name="settings_trim_lyrics_summary">Tühikud laulusõnade reas enne esimest tähte või rea lõpus võivad omada kunstilist väärtust. Kui see sulle ei sobi, siis selle eelistuse sisselülitamisel eemaldame need tühikud automaatselt.</string>
     <string name="settings_pixel_perfect_measurement_legacy_summary">Enne Androidi versiooni 15 põhines esitatava teksti mõõtmine piiritletud kasti asemel loo edenemisel. Selleks, et vältida üleminekute kärpimist tekstides, lisame mõned pikslid külgedele. See siiski võib tähesobitamise kasutamisel põhjustada soovimatuid moonutusi. Neid saabki leevendada selle eelistusega, mis renderdab teksti bittrastriks ja analüüsides seda eraldab õiged vahekauguse andmed.</string>
     <string name="device_type_wired_headset">Juhtmega kuular</string>
     <string name="device_type_bluetooth_a2dp">Bluetooth A2DP</string>
@@ -434,7 +434,8 @@
     <string name="add_to_queue">Lisa esitusjärjekorda</string>
     <string name="app_name">Gramophone</string>
     <string name="disabled">Pole kasutusel</string>
-    <string name="offload_enabled_if_supported">Kasutusel (kui vorming on toetatud)</string>
+    <string name="offload_enabled_if_supported">Alati kasutusel</string>
     <string name="offload_enabled_if_gapless">Kasutusel, kui katkestusteta taasesitus on võimalik</string>
     <string name="settings_audio_offload">Heli töötlus protsessoriväliselt (säästab akukasutust)</string>
+    <string name="settings_telegram">Telegram</string>
 </resources>
