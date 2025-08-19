@@ -770,8 +770,8 @@ private class TtmlTimeTracker(private val parser: XmlPullParser, private val isA
         tickRate = parser.getAttributeValue(ttp, "tickRate")?.toInt() ?: 1
     }
     // of course someone didn't conform to spec again :D - business as usual
-    private val appleTimeRegex = Regex("^(?:([0-9]+):)?(?:([0-9]+):)?([0-9]+\\.[0-9]+)?$")
-    private val clockTimeRegex = Regex("^([0-9][0-9]+):([0-9][0-9]):([0-9][0-9])(?:(\\.[0-9]+)|:([0-9][0-9])(?:\\.([0-9]+))?)?$")
+    private val appleTimeRegex = Regex("^(?:([0-9]+):)?(?:([0-9]+):)?([0-9]+(?:\\.[0-9]+)?)?$")
+    private val clockTimeRegex = Regex("^([0-9]{2,}):([0-9]{2}):([0-9]{2})(?:(\\.[0-9]+)|:([0-9]{2})(?:\\.([0-9]+))?)?$")
     private val offsetTimeRegex = Regex("^([0-9]+(?:\\.[0-9]+)?)(h|m|s|ms|f|t)$")
     var audioOffset: Long? = null
     fun parseTimestampMs(input: String?, offset: Long, negative: Boolean): Long? {
