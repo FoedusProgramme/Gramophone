@@ -152,4 +152,27 @@
     <string name="grant_images"><![CDATA[অনুগ্রহ করে \"ফটো এবং ভিডিও\" অনুমতিটি প্রদান করুন]]></string>
     <string name="grant_audio"><![CDATA[অনুগ্রহ করে \"মিউজিক ও অডিও\" অনুমতিটি প্রদান করুন]]></string>
     <string name="crash_clipboard">ক্র্যাশ লগ ক্লিপবোর্ডে কপি করা হয়েছে</string>
+    <string name="home_menu_quick_refresh">দ্রুত রিফ্রেশ</string>
+    <string name="add_to_queue">কিউতে যোগ করুন</string>
+    <string name="delete">ডিলিট</string>
+    <string name="delete_really">আপনি কি সত্যিই \"%s\" ডিলিট করতে চান? এই কাজটি আর ফেরানো যাবে না।</string>
+    <string name="dialog_bitrate">বিটরেট</string>
+    <string name="bitrate_unknown">অজানা বিটরেট</string>
+    <string name="still_refreshing">রিফ্রেশ হচ্ছে, ধাপ %1$d/%2$d: %3$s</string>
+    <string name="refreshing_wait">রিফ্রেশ হচ্ছে, অনুগ্রহ করে অপেক্ষা করুন…</string>
+    <string name="sort_by_release_date">প্রকাশের তারিখ</string>
+    <string name="sort_by_file_path">ফাইলের ঠিকানা</string>
+    <string name="play_all">সবগুলো প্লে করুন</string>
+    <string name="shuffle_all">সবগুলো শাফল করুন</string>
+    <string name="sort">ক্রম</string>
+    <string name="timer">স্লিপ টাইমার</string>
+    <string name="current_playlist">বর্তমান প্লেলিস্ট</string>
+    <string name="skip_previous">পূর্বের গান এ ফিরে যান</string>
+    <string name="skip_next">পরবর্তী গান এ যান</string>
+    <string name="play">প্লে</string>
+    <string name="package_type_explainer">গ্রামোফোন এপিকে যে কেউ তৈরি করতে পারে, কারণ গ্রামোফোন একটি ওপেন-সোর্স প্রজেক্ট। এপিকে-টি কোথা থেকে এসেছে তা মনে রাখতে সাহায্য করার জন্য, গ্রামোফোন প্যাকেজের ধরন উল্লেখ করে দেয়।\n\nসবচেয়ে প্রচলিত ধরন হলো রিলিজ, যা এফ-ড্রয়েড, গুগল প্লে, গিটহাব বা ইজিঅনড্রয়েড থেকে পাওয়া যায়।\nসিআই প্যাকেজ ধরনটি গিটহাবের প্রতিটি কমিটের জন্য তৈরি হওয়া স্বয়ংক্রিয় বিল্ডগুলোকে বোঝায়। এই বিল্ডগুলো আনস্ট্যাবল হতে পারে।\nঅন্যান্য প্যাকেজ ধরনের ক্ষেত্রে, নামটিই এপিকে-টির উৎস সম্পর্কে একটি ধারণা দিয়ে দেবে।</string>
+    <string name="settings_open_source_licenses">ওপেন সোর্স লাইসেন্স</string>
+    <string name="tab_order">ট্যাবের ক্রম সাজান</string>
+    <string name="tab_order_summary">অ্যাপটি চালু হওয়ার সময় প্রথম ট্যাবটি দেখাবে। ডিভাইডারের পরের ট্যাবগুলো লুকানো থাকবে।</string>
+    <string name="settings_audio_quality_info">অডিও কোয়ালিটি</string>
 </resources>
