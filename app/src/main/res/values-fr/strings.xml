@@ -303,4 +303,14 @@
     <string name="audio_signal_chain">Chaîne son spatial</string>
     <string name="settings_lyrics_no_animation_summary">Désactive la transition de toutes les lignes dans l\'animation des paroles</string>
     <string name="delete_failed_playlist">Suppression de la liste de lecture échouée</string>
+    <string name="mix_port_flag_unknown">Inconnu</string>
+    <string name="spk_encoding_pcm_8_24bit">24-bit (8,24) PCM</string>
+    <string name="spk_encoding_amr_wb">AMR-WB</string>
+    <string name="spk_encoding_aac">AAC</string>
+    <string name="spk_encoding_vorbis">Vorbis</string>
+    <string name="spk_encoding_iec61937">IEC 61937</string>
+    <string name="spk_encoding_amr_wb_plus">AMR-WB+</string>
+    <string name="spk_encoding_amr_nb">AMR-NB</string>
+    <string name="spk_encoding_evrc">EVRC</string>
+    <string name="spk_encoding_evrcb">EVRC-B</string>
 </resources>
