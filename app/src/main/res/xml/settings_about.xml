@@ -74,7 +74,7 @@
         <org.akanework.gramophone.ui.components.NoAppFallbackPreference
             android:layout="@layout/preference_basic"
             android:summary="@string/check_for_updates"
-            android:title="Telegram"
+            android:title="@string/settings_telegram"
             app:iconSpaceReserved="false">
             <intent
                 android:action="android.intent.action.VIEW"
