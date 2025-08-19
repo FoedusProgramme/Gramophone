@@ -445,4 +445,5 @@
     <string name="offload_enabled_if_supported">Увімкнено (якщо формат підтримується)</string>
     <string name="offload_enabled_if_gapless">Увімкнено, якщо можливе відтворення без пауз</string>
     <string name="settings_audio_offload">Розвантаження аудіо (економія заряду батареї)</string>
+    <string name="settings_telegram">Telegram</string>
 </resources>
