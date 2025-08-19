@@ -288,7 +288,7 @@
     <string name="send_email">فرستادن ایمیل</string>
     <string name="send_email_manually">لطفا گزارش را بفرستید به nift4dev@gmail.com - نمی‌توان برنامۀ ایمیل پیدا کرد</string>
     <string name="settings_contributors_click">%s (برای بیشتر کلیک کنید!)</string>
-    <string name="settings_trim_lyrics_summary">فاصله‌های پیش و پس از اولین حرف در یک خط ترانه ممکن است ارزش هنری داشته باشد. اگر موافق نیستید، می‌توانید این مورد را تغییر دهید تا این فاصله‌ها به‌طور خودکار برداشته شوند.</string>
+    <string name="settings_trim_lyrics_summary">فاصله‌های پیش از اولین واج یا پس از انتهای یک خط ترانه ممکن است ارزش هنری داشته باشد. اگر موافق نیستید، می‌توانید این مورد را تغییر دهید تا این فاصله‌ها به‌طور خودکار برداشته شوند.</string>
     <string name="package_type_explainer">‏APKهای گرامون می‌تواند توسط هر کسی ساخته شود، چون گرامافون منبع-باز است. برای یادآوری این‌که یک APK از کجا آمده، گرامافون نوع بسته را ارائه می‌دهد.\n\nمرسوم‌ترین نوع انتشار (Release) است، که از اف-دروید، گوگل پلی، گیت‌هاب یا IzzyOnDroid قابل دریافت است.\nنوع بسته CI به ساخت‌های خودکار که در هر commit ساخته می‌شود اشاره می‌کند. این ساخت‌ها ممکن از ناپایدار باشند.\nبرای نوع بسته‌ها، نام باید راهنمای معقولی از این‌که APK از کجا آمده بدهد.</string>
     <string name="mix_port_flag_none">هیچ</string>
     <string name="mix_port_flag_gapless_offload">تخلیۀ بی‌فاصله</string>
@@ -432,4 +432,9 @@
     <string name="home_menu_quick_refresh">بازخوانی سریع</string>
     <string name="add_to_queue">افزودن به صف</string>
     <string name="app_name">گرامافون</string>
+    <string name="disabled">غیرفعال</string>
+    <string name="offload_enabled_if_supported">همیشه فعال</string>
+    <string name="offload_enabled_if_gapless">فعال در صورت امکان پخش بی‌وقفه</string>
+    <string name="settings_audio_offload">تخلیۀ صدا (باتری را ذخیره می‌کند)</string>
+    <string name="settings_telegram">تلگرام</string>
 </resources>
