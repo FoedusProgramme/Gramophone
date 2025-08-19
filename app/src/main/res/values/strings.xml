@@ -452,7 +452,7 @@
 	<string name="home_menu_quick_refresh">Quick refresh</string>
     <string name="add_to_queue">Add to queue</string>
     <string name="disabled">Disabled</string>
-    <string name="offload_enabled_if_supported">Enabled (if format is supported)</string>
+    <string name="offload_enabled_if_supported">Always enable</string>
     <string name="offload_enabled_if_gapless">Enabled if gapless playback possible</string>
     <string name="settings_audio_offload">Audio offload (saves battery)</string>
     <string name="settings_telegram">Telegram</string>
