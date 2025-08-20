@@ -276,7 +276,7 @@
     <string name="settings_content_based_color">Cores en función do contido</string>
     <string name="settings_package_type">Tipo de paquete</string>
     <string name="cannot_play_file">Non se pode reproducir este ficheiro</string>
-    <string name="settings_trim_lyrics_summary">Os espazos antes ou despois da primeira letra na liña das letras da canción podería ter valor artístico. Se non estás de acordo podes activar isto para omitir estes espazos.</string>
+    <string name="settings_trim_lyrics_summary">Os espazos antes da primeira letra ou despois do final na liña das letras da canción podería ter valor artístico. Se non estás de acordo podes activar isto para omitir estes espazos.</string>
     <string name="settings_lyrics_no_animation_summary">Desactivar as animacións de transición de liñas nas letras</string>
     <string name="settings_lyrics_char_scaling_summary">Calcular o gradiente de velocidade da letra en caracteres por segundo no lugar de píxeles por segundo. Podería facer que a velocidade fose irregular debido á diferente lonxitude de caracteres en píxeles.</string>
     <string name="settings_lyrics_char_scaling">Gradiente da escala da letra baseado en caracteres</string>
@@ -433,6 +433,8 @@
     <string name="add_to_queue">Engadir á cola</string>
     <string name="app_name">Gramophone</string>
     <string name="disabled">Desactivado</string>
-    <string name="offload_enabled_if_supported">Activado (se o formato é compatible)</string>
+    <string name="offload_enabled_if_supported">Sempre activado</string>
     <string name="offload_enabled_if_gapless">Activado se é posible reproducir sen pausas</string>
+    <string name="settings_telegram">Telegram</string>
+    <string name="settings_audio_offload">Audio offload (para aforrar batería)</string>
 </resources>
