@@ -1,73 +1,67 @@
 #!/usr/bin/env python
-from lxml import etree
-import requests
-from requests.adapters import HTTPAdapter
-from concurrent.futures import ThreadPoolExecutor
-from urllib3.util.retry import Retry
-import sys
 import os
+import sys
 import shutil
+import asyncio
 from pathlib import Path
+from math import ceil
 
-WEBLATE_URL = "https://hosted.weblate.org"
+import aiohttp
+import aiohttp_retry
+from lxml import etree
+
+
+WEBLATE_API = "https://hosted.weblate.org/api"
 PROJECT_SLUG = "gramophone"
 API_TOKEN = os.getenv("WEBLATE_TOKEN")
-headers = {
+HEADERS = {
     "Authorization": f"Token {API_TOKEN}",
     "Accept": "application/json",
 }
+MAX_RETRIES = 4
 
-# Configure retry strategy
-retry_strategy = Retry(
-    total=3,
-    backoff_factor=1,
-    status_forcelist=[500, 502, 503, 504])
-session = requests.Session()
-adapter = HTTPAdapter(max_retries=retry_strategy)
-UNITS_COUNT = None
-session.mount("http://", adapter)
-session.mount("https://", adapter)
+UNITS_COUNT: int | None = None
 
 
-def get_languages(component_slug: str) -> list:
-    url = f"{WEBLATE_URL}/api/components/{PROJECT_SLUG}/{component_slug}/translations/"
-    response = session.get(url, headers=headers, timeout=5)
-    response.raise_for_status()  # Raise an error for bad responses
-    languages = response.json().get('results')
+async def get_languages(session: aiohttp.ClientSession, component_slug: str) -> list:
+    url = f"{WEBLATE_API}/components/{PROJECT_SLUG}/{component_slug}/translations/"
+    async with session.get(url, headers=HEADERS) as response:
+        result = await response.json()
+        languages = result.get('results')
     return languages
 
 
-def get_pages_units(page: int, language_code: str) -> list:
-    url = f"{WEBLATE_URL}/api/translations/{PROJECT_SLUG}/strings-xml/{language_code}/units/"
-    response = session.get(url, headers=headers, timeout=5, params={'page': page})
-    response.raise_for_status()
-    data = response.json()
-    return data.get("results")
+async def get_page_units(session: aiohttp.ClientSession, page: int, language_code: str) -> list:
+    url = f"{WEBLATE_API}/translations/{PROJECT_SLUG}/strings-xml/{language_code}/units/"
+    async with session.get(url, headers=HEADERS, params={'page': page}) as response:
+        data = await response.json()
+        return data.get("results")
 
 
-# Fetch all units
-def get_units_list(language_code: str, component_slug: str) -> list:
+async def get_units_list(session: aiohttp.ClientSession, language_code: str, component_slug: str) -> list:
     global UNITS_COUNT
+    url = f"{WEBLATE_API}/translations/{PROJECT_SLUG}/{component_slug}/{language_code}/units/"
     units = []
-    url = f"{WEBLATE_URL}/api/translations/{PROJECT_SLUG}/{component_slug}/{language_code}/units/"
 
     print(f'\nGetting {component_slug} units of language code "{language_code}"... ', end="")
+    # every weblate units data page has at most 50 units in results
     if not UNITS_COUNT or UNITS_COUNT <= 50:
-        response = session.get(url, headers=headers, timeout=5)
-        response.raise_for_status()
-        data = response.json()
-        units.extend(data.get("results"))
-        UNITS_COUNT = data.get("count")
+        # if UNITS_COUNT is not assigned make a single request and assign it
+        async with session.get(url, headers=HEADERS) as response:
+            data = await response.json()
+            units.extend(data.get("results"))
+            UNITS_COUNT = data.get("count")
 
     if UNITS_COUNT > 50:
+        # if units is not empty it means page 1's request has been sent
+        # to get UNITS_COUNT so it should start from page 2
+        start_page = 1 if not units else 2
+        pages_count = ceil(UNITS_COUNT / 50)
         pages_params = [{'page': i, 'language_code': language_code}
-                        for i in range(1 if not units else 2, UNITS_COUNT // 50 + 2)]
-        with ThreadPoolExecutor(max_workers=10) as executor:
-            futures = [executor.submit(get_pages_units, **params)
-                       for params in pages_params]
-
-        for future in futures:
-            units.extend(future.result())
+                        for i in range(start_page, pages_count + 1)]
+        tasks = [get_page_units(session, **page_param) for page_param in pages_params]
+        async for response in asyncio.as_completed(tasks):
+            units.extend(await response)
 
     print(f"Got {len(units)} units.")
     return units
@@ -78,6 +72,10 @@ def delete_strings(xml_file: Path, names_to_delete: list[str]) -> None:
     Deletes entire <string> elements from Android string resources XML
     while preserving all formatting, comments, and XML structure
     """
+    if not names_to_delete:
+        print(f"  No strings to delete in {xml_file}.")
+        return
+
     # Create parser with full preservation settings
     parser = etree.XMLParser(
         remove_blank_text=False,
@@ -96,25 +94,24 @@ def delete_strings(xml_file: Path, names_to_delete: list[str]) -> None:
     for elem in root.xpath('//string | //plurals | //string-array'):
         name = elem.get('name')
         if name in names_to_delete:
-            # Remove the entire element
             parent = elem.getparent()
             parent.remove(elem)
             print(name, end=", ")
     print()
 
-    original_encoding = tree.docinfo.encoding or 'utf-8'
     tree.write(
-        xml_file,
-        encoding=original_encoding,
+        str(xml_file),
+        encoding='utf-8',
         xml_declaration=True,
         pretty_print=False,
         with_comments=True,
         method="xml"
     )
+    print(f"  Updated XML file: {xml_file}")
 
 
-def filter_editings(language_code: str, component_slug: str) -> list[str]:
-    units = get_units_list(language_code, component_slug)
+async def filter_editings(session: aiohttp.ClientSession, language_code: str, component_slug: str) -> list[str]:
+    units = await get_units_list(session, language_code, component_slug)
     string_names = [u.get('context') for u in units if u.get('state') == 10]
     print(f"  Strings to delete: {string_names}")
     return string_names
@@ -124,13 +121,14 @@ def manage_fastlane_files(files_path: Path, editings: list[str]) -> None:
     """Deletes all of the files if any of them is missing or needs editing"""
     source_files_path = Path(sys.argv[1]).joinpath(files_path)
     if not source_files_path.exists():
-        print(f"  Directory does not exist: {source_files_path}")
+        print(f"  Fastlane directory does not exist: {source_files_path}")
         return
 
     if sys.argv[1] != os.getcwd():
         if Path(files_path).exists():
             shutil.rmtree(files_path)
         shutil.copytree(source_files_path, files_path)
+
     if not source_files_path.joinpath('title.txt').exists():
         with open(Path(files_path).joinpath('title.txt'), 'w') as title_file:
             title_file.write('Gramophone')
@@ -150,35 +148,50 @@ def manage_fastlane_files(files_path: Path, editings: list[str]) -> None:
             os.remove(file_path)
 
 
-def filter_strings_xml():
+async def filter_strings_xml(session: aiohttp.ClientSession):
     global UNITS_COUNT
     UNITS_COUNT = None
-    languages = get_languages("strings-xml")
+    languages = await get_languages(session, "strings-xml")
     for language in languages:
         if language.get('is_source'):
             continue
         language_code = language.get('language').get('code')
         xml_file = Path(language.get('filename'))
-        editings = filter_editings(language_code, "strings-xml")
+        editings = await filter_editings(session, language_code, "strings-xml")
         delete_strings(xml_file, editings)
 
 
-def filter_fastlane():
+async def filter_fastlane(session: aiohttp.ClientSession):
     global UNITS_COUNT
     UNITS_COUNT = None
-    fastlane_languages = get_languages('fastlane')
+    fastlane_languages = await get_languages(session, 'fastlane')
     for language in fastlane_languages:
         if language.get("is_source"):
             continue
         language_code = language.get('language').get('code')
         files_path = Path(language.get('filename'))
-        editings = filter_editings(language_code, "fastlane")
+        editings = await filter_editings(session, language_code, "fastlane")
         manage_fastlane_files(files_path, editings)
 
 
-if __name__ == "__main__":
-    print("Filtering strings-xml...")
-    filter_strings_xml()
+async def main():
+    if not API_TOKEN:
+        print("$WEBLATE_TOKEN environment variable is not set!")
+        sys.exit(1)
 
-    print("\n\nFiltering fastlane...")
-    filter_fastlane()
+    retry_options = aiohttp_retry.ExponentialRetry(
+        attempts=MAX_RETRIES,
+        start_timeout=1,
+        max_timeout=8,
+        factor=2,
+    )
+    async with aiohttp_retry.RetryClient(raise_for_status=False, retry_options=retry_options) as client:
+        print("Filtering strings-xml...")
+        await filter_strings_xml(client)
+
+        print("\n\nFiltering fastlane...")
+        await filter_fastlane(client)
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
