@@ -8,10 +8,12 @@ import android.content.SharedPreferences
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.TransitionDrawable
 import android.provider.MediaStore
 import android.text.format.DateFormat
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.Gravity
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -23,6 +25,7 @@ import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.activity.result.IntentSenderRequest
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.TooltipCompat
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -192,8 +195,10 @@ class FullBottomSheet
             }
         }
     private val formatUpdateRunnable = Runnable {
-        updateQualityIndicators(if (enableQualityInfo)
-            AudioFormatDetector.detectAudioFormat(currentFormat) else null)
+        updateQualityIndicators(
+            if (enableQualityInfo)
+                AudioFormatDetector.detectAudioFormat(currentFormat) else null
+        )
     }
     private val bottomSheetFullCover: ImageView
     private val bottomSheetFullTitle: TextView
@@ -363,14 +368,35 @@ class FullBottomSheet
 
         if (Flags.FORMAT_INFO_DIALOG) {
             bottomSheetFullQualityDetails.setOnClickListener {
-                MaterialAlertDialogBuilder(context)
+                val dialog = MaterialAlertDialogBuilder(context)
                     .setTitle(R.string.audio_signal_chain)
                     .setMessage(
                         currentFormat?.prettyToString(context)
                             ?: context.getString(R.string.audio_not_initialized)
                     )
-                    .setPositiveButton(android.R.string.ok) { _, _ -> }
-                    .show()
+                    .setPositiveButton(android.R.string.ok, null)
+                    .create()
+
+                dialog.setOnShowListener {
+                    val positive = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                    positive.setTextColor(colorOnSecondaryContainerFinalColor)
+                }
+                dialog.show()
+
+                val radius = TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP, 16f, context.resources.displayMetrics
+                )
+                val drawable = GradientDrawable().apply {
+                    shape = GradientDrawable.RECTANGLE
+                    cornerRadius = radius
+                    setColor(fullPlayerFinalColor)
+                }
+
+                dialog.window?.setBackgroundDrawable(drawable)
+                dialog.window?.setLayout(
+                    (context.resources.displayMetrics.widthPixels * 0.8).toInt(),
+                    (context.resources.displayMetrics.heightPixels * 0.6).toInt()
+                )
             }
         }
 
@@ -536,7 +562,7 @@ class FullBottomSheet
                     oldLeft: Int,
                     oldTop: Int,
                     oldRight: Int,
-                    oldBottom: Int
+                    oldBottom: Int,
                 ) {
                     deferredImageLoader?.invoke()
                     deferredImageLoader = null
@@ -583,8 +609,10 @@ class FullBottomSheet
         }
         if (key == null || key == "audio_quality_info") {
             enableQualityInfo = prefs.getBooleanStrict("audio_quality_info", true)
-            updateQualityIndicators(if (enableQualityInfo)
-                AudioFormatDetector.detectAudioFormat(currentFormat) else null)
+            updateQualityIndicators(
+                if (enableQualityInfo)
+                    AudioFormatDetector.detectAudioFormat(currentFormat) else null
+            )
         }
         if (key == null || key == "centered_title") {
             if (prefs.getBooleanStrict("centered_title", true)) {
@@ -674,7 +702,8 @@ class FullBottomSheet
     }
 
     private fun updateQualityIndicators(info: AudioFormatInfo?) {
-        val oldInfo = (bottomSheetFullQualityDetails.getTag(R.id.quality_details) as AudioFormatInfo?)
+        val oldInfo =
+            (bottomSheetFullQualityDetails.getTag(R.id.quality_details) as AudioFormatInfo?)
         if (oldInfo == info) return
         (bottomSheetFullQualityDetails.getTag(R.id.fade_in_animation) as ViewPropertyAnimator?)?.cancel()
         (bottomSheetFullQualityDetails.getTag(R.id.fade_out_animation) as ViewPropertyAnimator?)?.cancel()
@@ -695,12 +724,14 @@ class FullBottomSheet
             SpatialFormat.SURROUND_5_0,
             SpatialFormat.SURROUND_5_1,
             SpatialFormat.SURROUND_6_1,
-            SpatialFormat.SURROUND_7_1 -> R.drawable.ic_surround_sound
+            SpatialFormat.SURROUND_7_1,
+                -> R.drawable.ic_surround_sound
 
             SpatialFormat.DOLBY_AC3,
             SpatialFormat.DOLBY_AC4,
             SpatialFormat.DOLBY_EAC3,
-            SpatialFormat.DOLBY_EAC3_JOC -> R.drawable.ic_dolby
+            SpatialFormat.DOLBY_EAC3_JOC,
+                -> R.drawable.ic_dolby
 
             // TODO dts icon
 
@@ -938,19 +969,23 @@ class FullBottomSheet
             bottomSheetFullLyricView.updateTextColor(
                 androidx.core.graphics.ColorUtils.compositeColors(
                     androidx.core.graphics.ColorUtils.setAlphaComponent(colorPrimary, 77),
-                    fullPlayerFinalColor),
+                    fullPlayerFinalColor
+                ),
                 colorPrimary,
                 androidx.core.graphics.ColorUtils.compositeColors(
                     androidx.core.graphics.ColorUtils.setAlphaComponent(Color.BLUE, 77),
-                    fullPlayerFinalColor),
+                    fullPlayerFinalColor
+                ),
                 Color.BLUE,
                 androidx.core.graphics.ColorUtils.compositeColors(
                     androidx.core.graphics.ColorUtils.setAlphaComponent(Color.RED, 77),
-                    fullPlayerFinalColor),
+                    fullPlayerFinalColor
+                ),
                 Color.RED,
                 androidx.core.graphics.ColorUtils.compositeColors(
                     androidx.core.graphics.ColorUtils.setAlphaComponent(Color.MAGENTA, 77),
-                    fullPlayerFinalColor),
+                    fullPlayerFinalColor
+                ),
                 Color.MAGENTA
             )
 
@@ -986,7 +1021,7 @@ class FullBottomSheet
     @SuppressLint("NotifyDataSetChanged")
     override fun onMediaItemTransition(
         mediaItem: MediaItem?,
-        reason: Int
+        reason: Int,
     ) {
         if (instance?.mediaItemCount != 0) {
             lastDisposable?.dispose()
@@ -1073,7 +1108,8 @@ class FullBottomSheet
 
     override fun onMediaMetadataChanged(mediaMetadata: MediaMetadata) {
         bottomSheetFavoriteButton.removeOnCheckedChangeListener(this)
-        bottomSheetFavoriteButton.isChecked = (mediaMetadata.userRating as? HeartRating)?.isHeart == true
+        bottomSheetFavoriteButton.isChecked =
+            (mediaMetadata.userRating as? HeartRating)?.isHeart == true
         bottomSheetFavoriteButton.addOnCheckedChangeListener(this)
     }
 
@@ -1093,7 +1129,7 @@ class FullBottomSheet
     override fun onPositionDiscontinuity(
         oldPosition: Player.PositionInfo,
         newPosition: Player.PositionInfo,
-        reason: Int
+        reason: Int,
     ) {
         positionRunnable.run()
     }
@@ -1203,13 +1239,13 @@ class FullBottomSheet
     }
 
     private inner class PlaylistCardAdapter(
-        private val activity: MainActivity
+        private val activity: MainActivity,
     ) : MyRecyclerView.Adapter<ViewHolder>() {
 
         var playlist: Pair<MutableList<Int>, MutableList<MediaItem>> = dumpPlaylist()
         override fun onCreateViewHolder(
             parent: ViewGroup,
-            viewType: Int
+            viewType: Int,
         ): ViewHolder =
             ViewHolder(
                 LayoutInflater
@@ -1283,7 +1319,7 @@ class FullBottomSheet
         override fun onMove(
             recyclerView: RecyclerView,
             viewHolder: RecyclerView.ViewHolder,
-            target: RecyclerView.ViewHolder
+            target: RecyclerView.ViewHolder,
         ): Boolean {
             touchHelperContract(viewHolder.bindingAdapterPosition, target.bindingAdapterPosition)
             return false
