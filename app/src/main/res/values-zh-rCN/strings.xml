@@ -38,7 +38,7 @@
     <string name="dialog_title">标题</string>
     <string name="dialog_artist">艺术家</string>
     <string name="settings_category_behavior">行为</string>
-    <string name="settings_mediastore_filter">歌曲最小长度（秒）</string>
+    <string name="settings_mediastore_filter">歌曲最短时长（秒）</string>
     <string name="settings_repository">仓库地址</string>
     <string name="dialog_album">专辑</string>
     <string name="dialog_genre">流派</string>
@@ -73,11 +73,11 @@
     <string name="opensource_info">基于 GPL-3.0 协议开源
 \n版权所有 %s</string>
     <string name="settings_default_progress_bar">启用默认进度条</string>
-    <string name="settings_default_progress_bar_summary">使用 Material Design 默认样式的进度条</string>
+    <string name="settings_default_progress_bar_summary">使用 Material Design 默认的进度条样式</string>
     <string name="playlist_favourite">收藏</string>
     <string name="now_playing">正在播放</string>
-    <string name="settings_content_based_color">启用基于内容生成的颜色</string>
-    <string name="settings_content_based_color_summary">启用基于专辑封面生成的颜色方案</string>
+    <string name="settings_content_based_color">根据内容生成颜色</string>
+    <string name="settings_content_based_color_summary">启用根据专辑封面生成界面颜色</string>
     <string name="settings_package_type">软件包类型</string>
     <string name="no_lyric_found">未找到歌词</string>
     <string name="dialog_disc_number">碟号</string>
@@ -107,7 +107,7 @@
     <string name="settings_title_bold_summary">在播放器的标题上使用粗体</string>
     <string name="settings_experimental_settings">实验性内容</string>
     <string name="settings_color_accuracy">精确颜色</string>
-    <string name="settings_color_accuracy_summary">使颜色生成准确</string>
+    <string name="settings_color_accuracy_summary">提高颜色生成的精确度</string>
     <string name="settings_experimental_settings_summary">实验性功能、其他内容</string>
     <string name="sort_by_add_date">添加日期</string>
     <string name="sort_by_modified_date">修改日期</string>
@@ -239,10 +239,10 @@
     <string name="email_clipboard">已复制邮件地址以及文本到剪贴板</string>
     <string name="audio_signal_chain">音频信号链</string>
     <string name="delete_failed_playlist">删除播放列表失败</string>
-    <string name="settings_trim_lyrics_summary">歌词行首字母之前或之后的空格可能具有艺术价值。如果你不这么觉得，可以打开此开关以自动删除这些空格。</string>
+    <string name="settings_trim_lyrics_summary">歌词行首或行尾的空格可能具有艺术效果，若不需要可开启此开关自动移除。</string>
     <string name="failed_to_parse_lyric">歌词解析失败</string>
     <string name="audio_not_initialized">音频播放系统尚未初始化。试着播放些什么吧！</string>
-    <string name="package_type_explainer">留声机的安装包可以被任何人创建，因为留声机是开源的。为了帮助记忆每个安装包来自哪里，留声机提供了软件包类型。\n\n最常见的版本是 Release ，由 F-Droid、Google Play、GitHub 或 IzzyOnDroid 分发。\nCI（持续集成） 包类型指的是 GitHub 上每次提交时进行的自动构建。这些构建可能不稳定。\n对于其他软件包类型，这个名字会合理地提示软件包的来源。</string>
+    <string name="package_type_explainer">Gramophone 的安装包可以被任何人创建，因为 Gramophone 是开源的。为了帮助记忆每个安装包来自哪里，Gramophone 提供了软件包类型。\n\n最常见的版本是 Release ，由 F-Droid、Google Play、GitHub 或 IzzyOnDroid 分发。\nCI（持续集成） 包类型指的是 GitHub 上每次提交时进行的自动构建。这些构建可能不稳定。\n对于其他软件包类型，这个名字会合理地提示软件包的来源。</string>
     <string name="what_were_you_doing">崩溃发生时，您正在使用 Gramophone 做什么？请尽可能详细地提供详细信息，以便我更有效地修复问题。\n\n请注意，错误报告最好使用英语，但如果您使用其他语言提交错误报告，我会尝试使用机器翻译。</string>
     <string name="settings_lyrics_no_animation">禁用动画</string>
     <string name="settings_lyrics_no_animation_summary">禁用所有歌词换行动画</string>
@@ -376,4 +376,12 @@
     <string name="spk_encoding_mp2">动态影像专家组2层音频（MPEG-2 Audio）</string>
     <string name="spk_encoding_qcelp">高通码激励线性预测编码（QCELP）</string>
     <string name="app_name">Gramophone</string>
+    <string name="mix_port_flag_primary">默认输出</string>
+    <string name="mix_port_flag_direct">直通</string>
+    <string name="mix_port_flag_fast">低延迟</string>
+    <string name="spk_encoding_vorbis">Vorbis</string>
+    <string name="spk_encoding_amr_wb_plus">AMR-WB+</string>
+    <string name="spk_encoding_amr_nb">AMR-NB</string>
+    <string name="spk_encoding_dsd">Direct Stream Digital</string>
+    <string name="spk_encoding_alac">ALAC</string>
 </resources>
