@@ -60,8 +60,8 @@ async def get_units_list(session: aiohttp.ClientSession, language_code: str, com
         pages_params = [{'page': i, 'language_code': language_code}
                         for i in range(start_page, pages_count + 1)]
         tasks = [get_page_units(session, **page_param) for page_param in pages_params]
-        async for response in asyncio.as_completed(tasks):
-            units.extend(await response)
+        for future in asyncio.as_completed(tasks):
+            units.extend(await future)
 
     print(f"Got {len(units)} units.")
     return units
