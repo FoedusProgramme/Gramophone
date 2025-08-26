@@ -203,4 +203,7 @@
     <string name="timer_expiry">স্লিপ টাইমারটি %s-এ মিউজিককে সাময়িকভাবে বন্ধ করবে</string>
     <string name="open_in_gramophone">গ্রামোফোনে খুলুন</string>
     <string name="playlist_name">প্লেলিস্ট এর নাম</string>
+    <string name="rename">নাম পরিবর্তন</string>
+    <string name="rename_failed_playlist">প্লেলিস্টের নাম পরিবর্তন ব্যর্থ হয়েছে</string>
+    <string name="rename_playlist">প্লেলিস্টের নাম পরিবর্তন</string>
 </resources>
