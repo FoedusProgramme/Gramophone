@@ -431,4 +431,7 @@
     <string name="mix_port_flag_deep_buffer">Deep buffer</string>
     <string name="refreshing_wait">Aktualisierung, bitte warten…</string>
     <string name="still_refreshing">Aktualisierung, Schritt %1$d/%2$d: %3$s</string>
+    <string name="contributors_akanetan">Ursprünglicher Entwickler, im Ruhestand</string>
+    <string name="contributors_lambada10">Bereitstellung von Liedtextbeispielen &amp; SongSync</string>
+    <string name="contributors_code_contributions">Codebeiträge</string>
 </resources>
