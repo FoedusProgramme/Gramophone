@@ -1,0 +1,8 @@
+- Aktualisieren-Schaltfläche aktualisiert MediaStore
+- Einschränkungen für Audio-Sample-Formate entfernt
+- Audio-Vorschau-Dialog verbessert
+- Aktualisierung pausieren wenn App im Hintergrund um Akku zu sparen
+- ANR-Verhinderung
+- Fehler bei der Ansicht von Albuminterpreten behoben
+- einige Speicherlecks behoben
+- Viele Abstürze und Fehler behoben
