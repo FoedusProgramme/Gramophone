@@ -1,0 +1,4 @@
+- Redesign do player de arquivos
+- Mantém a tela ativa quando vendo as letras
+- Suporta cartões SD na aba de arquivos do sistema
+- Correção de bugs

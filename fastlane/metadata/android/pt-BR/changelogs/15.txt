@@ -1,0 +1,2 @@
+- Permite reordenar e esconder abas
+- Múltiplos crashes consertados
