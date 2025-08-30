@@ -1,0 +1,4 @@
+- Redesign del riproduttore file
+- Mantieni lo schermo attivo mentre il testo della canzone viene visualizzato
+- Supporto per la scheda SD nella tab Filesystem
+- Corretti alcuni bug
