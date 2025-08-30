@@ -414,7 +414,7 @@
     <string name="contributors_wstxda">Hat eine Variation des App-Icon gestaltet</string>
     <string name="contributors_pxeemo">Mithilfe &amp; Testen von neuen Liedtexten</string>
     <string name="app_name">Gramophone</string>
-    <string name="mix_port_flag_non_blocking">Non-blocking</string>
+    <string name="mix_port_flag_non_blocking">Nicht blockierend</string>
     <string name="mix_port_flag_compress_offload">Komprimierter Offload</string>
     <string name="spk_encoding_pcm_16bit_offload">16-bit PCM Offload</string>
     <string name="spk_encoding_pcm_24bit_offload">24-bit (8.24) PCM offload</string>
@@ -425,13 +425,16 @@
     <string name="add_to_queue">Zur Warteschlange hinzufügen</string>
     <string name="disabled">deaktiviert</string>
     <string name="offload_enabled_if_supported">Immer aktiviert</string>
-    <string name="offload_enabled_if_gapless">Aktiviert wenn lückenlose Wiedergabe möglich ist</string>
+    <string name="offload_enabled_if_gapless">Aktiviert, wenn lückenlose Wiedergabe möglich ist</string>
     <string name="settings_audio_offload">Audio offload (verringert Stromverbrauch)</string>
     <string name="settings_telegram">Telegram</string>
-    <string name="mix_port_flag_deep_buffer">Deep buffer</string>
+    <string name="mix_port_flag_deep_buffer">Tiefpuffer</string>
     <string name="refreshing_wait">Aktualisierung, bitte warten…</string>
     <string name="still_refreshing">Aktualisierung, Schritt %1$d/%2$d: %3$s</string>
-    <string name="contributors_akanetan">Ursprünglicher Entwickler, im Ruhestand</string>
+    <string name="contributors_akanetan">Ursprünglicher Schöpfer, pensionierter Entwickler</string>
     <string name="contributors_lambada10">Bereitstellung von Liedtextbeispielen &amp; SongSync</string>
     <string name="contributors_code_contributions">Codebeiträge</string>
+    <string name="mix_port_flag_fast">Schnell</string>
+    <string name="settings_mp3_index_seeking">MP3-Indexsuche</string>
+    <string name="settings_hq_output_summary">Verwendung beliebiger Abtastformate zulassen, anstatt sich auf 16-Bit-Ganzzahlen zu beschränken</string>
 </resources>
