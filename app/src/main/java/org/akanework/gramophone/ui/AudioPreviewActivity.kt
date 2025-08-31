@@ -231,8 +231,12 @@ class AudioPreviewActivity : AppCompatActivity(), View.OnClickListener {
             }
         })
         playPauseButton.setOnClickListener {
-            if (player.playbackState == Player.STATE_ENDED) player.seekToDefaultPosition()
-            player.playOrPause()
+            if (player.playbackState == Player.STATE_ENDED) {
+                player.seekToDefaultPosition()
+                player.play()
+            } else {
+                player.playOrPause()
+            }
         }
 
         timeSlider.addOnChangeListener { _, value, fromUser ->
