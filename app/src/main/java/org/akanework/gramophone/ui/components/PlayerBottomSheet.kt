@@ -101,7 +101,7 @@ class PlayerBottomSheet private constructor(
     private val lifecycleOwner: LifecycleOwner
         get() = activity
     private val handler = Handler(Looper.getMainLooper())
-    private val instance: MediaController?
+    private val instance: MediaPlayerWrapper?
         get() = activity.getPlayer()
     private var lastActuallyVisible: Boolean? = null
     private var lastMeasuredHeight: Int? = null
@@ -154,10 +154,10 @@ class PlayerBottomSheet private constructor(
 
         activity.controllerViewModel.addControllerCallback(activity.lifecycle) { _, _ ->
             instance?.addListener(this@PlayerBottomSheet)
-            onPlaybackStateChanged(instance?.playbackState ?: Player.STATE_IDLE)
+            onPlaybackStateChanged(instance?.playbackState ?: MediaPlayerWrapper.STATE_IDLE)
             onMediaItemTransition(
                 instance?.currentMediaItem,
-                Player.MEDIA_ITEM_TRANSITION_REASON_PLAYLIST_CHANGED
+                MediaPlayerWrapper.MEDIA_ITEM_TRANSITION_REASON_PLAYLIST_CHANGED
             )
             if ((activity.consumeAutoPlay() || prefs.getBooleanStrict(
                     "autoplay",
@@ -382,7 +382,7 @@ class PlayerBottomSheet private constructor(
     }
 
     override fun onMediaItemTransition(
-        mediaItem: MediaItem?,
+        mediaItem: TrackItem?,
         reason: Int,
     ) {
         if ((instance?.mediaItemCount ?: 0) > 0) {
@@ -393,13 +393,13 @@ class PlayerBottomSheet private constructor(
                 }, onError = {
                     bottomSheetPreviewCover.setImageDrawable(it?.asDrawable(context.resources))
                 }) // do not react to onStart() which sets placeholder
-                data(mediaItem?.mediaMetadata?.artworkUri)
+                data(mediaItem?.artworkUri)
                 scale(Scale.FILL)
                 error(R.drawable.ic_default_cover)
             }.build())
-            bottomSheetPreviewTitle.text = mediaItem?.mediaMetadata?.title
+            bottomSheetPreviewTitle.text = mediaItem?.title
             bottomSheetPreviewSubtitle.text =
-                mediaItem?.mediaMetadata?.artist ?: context.getString(R.string.unknown_artist)
+                mediaItem?.artist ?: context.getString(R.string.unknown_artist)
         } else {
             lastDisposable?.dispose()
             lastDisposable = null
@@ -420,11 +420,11 @@ class PlayerBottomSheet private constructor(
     }
 
     override fun onIsPlayingChanged(isPlaying: Boolean) {
-        onPlaybackStateChanged(instance?.playbackState ?: Player.STATE_IDLE)
+        onPlaybackStateChanged(instance?.playbackState ?: MediaPlayerWrapper.STATE_IDLE)
     }
 
     override fun onPlaybackStateChanged(playbackState: Int) {
-        if (playbackState == Player.STATE_BUFFERING) return
+        if (playbackState == MediaPlayerWrapper.STATE_BUFFERING) return
         val myTag = bottomSheetPreviewControllerButton.getTag(R.id.play_next) as Int?
         if (instance?.isPlaying == true && myTag != 1) {
             bottomSheetPreviewControllerButton.icon =

@@ -30,5 +30,5 @@ android {
 
 dependencies {
     implementation("androidx.annotation:annotation:1.9.1")
-    implementation("androidx.media3:media3-exoplayer")
+    // Removed media3-exoplayer dependency for MediaPlayer replacement
 }

@@ -404,9 +404,9 @@ class MainActivity : AppCompatActivity() {
 
     /**
      * getPlayer:
-     *   Returns a media controller.
+     *   Returns a media player wrapper.
      */
-    fun getPlayer() = controllerViewModel.get()
+    fun getPlayer() = controllerViewModel.getPlayer()
 
     fun consumeAutoPlay(): Boolean {
         return autoPlay.also { autoPlay = false }

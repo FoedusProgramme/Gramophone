@@ -32,8 +32,6 @@ import android.util.Size
 import android.webkit.MimeTypeMap
 import androidx.annotation.OptIn
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.media3.common.util.UnstableApi
-import androidx.media3.session.DefaultMediaNotificationProvider
 import androidx.preference.PreferenceManager
 import coil3.ImageLoader
 import coil3.PlatformContext
@@ -100,7 +98,6 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
     lateinit var uacManager: UacManager
         private set
 
-    @OptIn(UnstableApi::class)
     override fun onCreate() {
         super.onCreate()
         // disk read and write on first launch, but unavoidable as threads would race setDefaultNightMode
@@ -157,11 +154,7 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
             onSharedPreferenceChanged(prefs, null) // reload all values
             prefs.registerOnSharedPreferenceChangeListener(this@GramophoneApplication)
 
-            // https://github.com/androidx/media/issues/805
-            if (needsMissingOnDestroyCallWorkarounds()) {
-                val nm = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-                nm.cancel(DefaultMediaNotificationProvider.DEFAULT_NOTIFICATION_ID)
-            }
+            // Removed Media3 notification workaround for MediaPlayer replacement
 
             LyricWidgetProvider.update(this@GramophoneApplication)
         }

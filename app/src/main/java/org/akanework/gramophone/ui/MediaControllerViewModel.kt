@@ -18,6 +18,7 @@ import com.google.common.util.concurrent.ListenableFuture
 import java.util.concurrent.ExecutionException
 import org.akanework.gramophone.logic.GramophoneApplication
 import org.akanework.gramophone.logic.MediaPlayerPlaybackService
+import org.akanework.gramophone.logic.data.TrackItem
 import org.akanework.gramophone.logic.utils.LifecycleCallbackListImpl
 
 // Compatibility types to replace Media3
@@ -29,7 +30,7 @@ interface MediaPlayerListener {
     fun onPlaybackStateChanged(state: Int) {}
     fun onIsPlayingChanged(isPlaying: Boolean) {}
     fun onPositionDiscontinuity() {}
-    fun onMediaItemTransition() {}
+    fun onMediaItemTransition(mediaItem: TrackItem?, reason: Int) {}
 }
 
 class MediaPlayerWrapper(private val service: MediaPlayerPlaybackService) {
@@ -41,6 +42,9 @@ class MediaPlayerWrapper(private val service: MediaPlayerPlaybackService) {
         const val STATE_READY = 2
         const val STATE_BUFFERING = 3
         const val STATE_ENDED = 4
+        
+        // Media item transition reasons for compatibility
+        const val MEDIA_ITEM_TRANSITION_REASON_PLAYLIST_CHANGED = 1
     }
     
     private val listeners = mutableListOf<MediaPlayerListener>()
@@ -51,10 +55,17 @@ class MediaPlayerWrapper(private val service: MediaPlayerPlaybackService) {
     val isPlaying: Boolean get() = service.isPlaying()
     val currentPosition: Long get() = service.getCurrentPosition()
     val duration: Long get() = service.getDuration()
+    val mediaItemCount: Int get() = service.getPlaylist().size
+    val currentMediaItem: TrackItem? get() = service.getCurrentMediaUri()?.let { TrackItem.fromUri(it) }
     
     fun play() = service.play()
     fun pause() = service.pause()
+    fun playOrPause() {
+        if (isPlaying) pause() else play()
+    }
     fun seekTo(position: Long) = service.seekTo(position)
+    fun seekToNext() = service.skipToNext()
+    fun seekToPrevious() = service.skipToPrevious()
     fun setRepeatMode(mode: Int) = service.setRepeatMode(mode)
     fun setShuffleModeEnabled(enabled: Boolean) = service.setShuffleMode(enabled)
     
@@ -150,6 +161,10 @@ class MediaControllerViewModel(application: Application) : AndroidViewModel(appl
     fun get(): MediaBrowserWrapper? {
         return mediaBrowser
     }
+    
+    fun getPlayer(): MediaPlayerWrapper? {
+        return mediaPlayer
+    }
 
     override fun onStop(owner: LifecycleOwner) {
         context.unbindService(this)
@@ -231,47 +246,6 @@ class MediaControllerViewModel(application: Application) : AndroidViewModel(appl
         }
     }
 }
-
-interface MediaPlayerListener {
-    fun onPlaybackStateChanged(state: Int) {}
-    fun onIsPlayingChanged(isPlaying: Boolean) {}
-    fun onPositionDiscontinuity() {}
-    fun onMediaItemTransition() {}
-}
-
-class MediaPlayerWrapper(private val service: MediaPlayerPlaybackService) {
-    companion object {
-        const val REPEAT_MODE_OFF = 0
-        const val REPEAT_MODE_ONE = 1  
-        const val REPEAT_MODE_ALL = 2
-        const val STATE_IDLE = 1
-        const val STATE_READY = 2
-        const val STATE_BUFFERING = 3
-        const val STATE_ENDED = 4
-    }
-    
-    private val listeners = mutableListOf<MediaPlayerListener>()
-    
-    val repeatMode: Int get() = service.getRepeatMode()
-    val shuffleModeEnabled: Boolean get() = service.getShuffleMode()
-    val playbackState: Int get() = service.getPlaybackState()
-    val isPlaying: Boolean get() = service.isPlaying()
-    val currentPosition: Long get() = service.getCurrentPosition()
-    val duration: Long get() = service.getDuration()
-    
-    fun play() = service.play()
-    fun pause() = service.pause()
-    fun seekTo(position: Long) = service.seekTo(position)
-    fun setRepeatMode(mode: Int) = service.setRepeatMode(mode)
-    fun setShuffleModeEnabled(enabled: Boolean) = service.setShuffleMode(enabled)
-    
-    fun addListener(listener: MediaPlayerListener) {
-        listeners.add(listener)
-    }
-    
-    fun removeListener(listener: MediaPlayerListener) {
-        listeners.remove(listener)
-    }
 
 fun MediaPlayerWrapper.registerLifecycleCallback(lifecycle: Lifecycle, callback: MediaPlayerListener) {
     addListener(callback)
