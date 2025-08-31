@@ -56,6 +56,9 @@
     <string name="unknown_year">Unknown year</string>
     <string name="refreshed_songs">Refreshed %1$s songs</string>
     <string name="search">Search</string>
+    <string name="search_songs">Songs</string>
+    <string name="search_lyrics">Lyrics</string>
+    <string name="search_mode_toggle">Toggle search mode between songs and lyrics</string>
     <string name="share">Share</string>
     <string name="settings_app_name">App name</string>
     <string name="settings_contributors">Contributors</string>

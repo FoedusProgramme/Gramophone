@@ -28,16 +28,22 @@ import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.MediaItem
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.button.MaterialButtonToggleGroup
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.closeKeyboard
 import org.akanework.gramophone.logic.enableEdgeToEdgePaddingListener
+import org.akanework.gramophone.logic.getFile
 import org.akanework.gramophone.logic.showKeyboard
 import org.akanework.gramophone.logic.ui.MyRecyclerView
+import org.akanework.gramophone.logic.utils.LrcUtils
+import org.akanework.gramophone.logic.utils.SemanticLyrics
 import org.akanework.gramophone.ui.adapters.SongAdapter
 
 /**
@@ -51,6 +57,12 @@ class SearchFragment : BaseFragment(true) {
     // TODO this class leaks InsetSourceControl
     private val filteredList: MutableList<MediaItem> = mutableListOf()
     private lateinit var editText: EditText
+    private lateinit var searchModeToggle: MaterialButtonToggleGroup
+    private var isLyricsMode = false
+
+    enum class SearchMode {
+        SONGS, LYRICS
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -62,6 +74,7 @@ class SearchFragment : BaseFragment(true) {
         val appBarLayout = rootView.findViewById<AppBarLayout>(R.id.appbarlayout)
         appBarLayout.enableEdgeToEdgePaddingListener()
         editText = rootView.findViewById(R.id.edit_text)
+        searchModeToggle = rootView.findViewById(R.id.search_mode_toggle)
         val recyclerView = rootView.findViewById<MyRecyclerView>(R.id.recyclerview)
         val songList = MutableStateFlow(listOf<MediaItem>())
         val songAdapter =
@@ -80,29 +93,27 @@ class SearchFragment : BaseFragment(true) {
         // Build FastScroller.
         recyclerView.fastScroll(songAdapter, songAdapter.itemHeightHelper)
 
-        editText.addTextChangedListener { rawText ->
-            // TODO sort results by match quality? (using NaturalOrderHelper)
-            if (rawText.isNullOrBlank()) {
-                songList.value = listOf()
-            } else {
-                // make sure the user doesn't edit away our text while we are filtering
-                val text = rawText.toString()
-                // Launch a coroutine for searching in the library.
-                viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Default) {
-                    // Clear the list from the last search.
-                    filteredList.clear()
-                    // Filter the library.
-                    filteredList.addAll(mainActivity.reader.songListFlow.first().filter {
-                        val isMatchingTitle = it.mediaMetadata.title?.contains(text, true) == true
-                        val isMatchingAlbum =
-                            it.mediaMetadata.albumTitle?.contains(text, true) == true
-                        val isMatchingArtist =
-                            it.mediaMetadata.artist?.contains(text, true) == true
-                        isMatchingTitle || isMatchingAlbum || isMatchingArtist
-                    })
-                    songList.value = filteredList.toList()
+        // Set up search mode toggle listener
+        searchModeToggle.addOnButtonCheckedListener { _, checkedId, isChecked ->
+            if (isChecked) {
+                isLyricsMode = checkedId == R.id.button_lyrics
+                // Update search hint based on mode
+                editText.hint = if (isLyricsMode) {
+                    getString(R.string.search_lyrics)
+                } else {
+                    getString(R.string.search)
+                }
+                // Re-run search with current text if any
+                val currentText = editText.text?.toString()
+                if (!currentText.isNullOrBlank()) {
+                    performSearch(currentText, songList)
                 }
             }
+        }
+
+        editText.addTextChangedListener { rawText ->
+            val text = rawText?.toString() ?: ""
+            performSearch(text, songList)
         }
 
         returnButton.setOnClickListener {
@@ -110,6 +121,80 @@ class SearchFragment : BaseFragment(true) {
         }
 
         return rootView
+    }
+
+    private fun performSearch(text: String, songList: MutableStateFlow<List<MediaItem>>) {
+        if (text.isBlank()) {
+            songList.value = listOf()
+            return
+        }
+
+        // Launch a coroutine for searching in the library.
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Default) {
+            // Clear the list from the last search.
+            filteredList.clear()
+            
+            if (isLyricsMode) {
+                // Search lyrics content
+                filteredList.addAll(searchInLyrics(text))
+            } else {
+                // Search song metadata (existing functionality)
+                filteredList.addAll(mainActivity.reader.songListFlow.first().filter {
+                    val isMatchingTitle = it.mediaMetadata.title?.contains(text, true) == true
+                    val isMatchingAlbum =
+                        it.mediaMetadata.albumTitle?.contains(text, true) == true
+                    val isMatchingArtist =
+                        it.mediaMetadata.artist?.contains(text, true) == true
+                    isMatchingTitle || isMatchingAlbum || isMatchingArtist
+                })
+            }
+            
+            withContext(Dispatchers.Main) {
+                songList.value = filteredList.toList()
+            }
+        }
+    }
+
+    private suspend fun searchInLyrics(searchText: String): List<MediaItem> {
+        val allSongs = mainActivity.reader.songListFlow.first()
+        val matchingSongs = mutableListOf<MediaItem>()
+        
+        for (song in allSongs) {
+            try {
+                // Get lyrics from file if available
+                val lyrics = LrcUtils.loadAndParseLyricsFile(
+                    song.getFile(),
+                    LrcUtils.LrcParserOptions(
+                        trim = true,
+                        multiLine = false,
+                        errorText = null
+                    )
+                )
+                
+                // Check if lyrics contain the search text
+                val lyricsText = lyrics?.getAllLyricsText()
+                if (lyricsText?.contains(searchText, ignoreCase = true) == true) {
+                    matchingSongs.add(song)
+                }
+            } catch (e: Exception) {
+                // Skip songs with lyrics parsing errors
+                continue
+            }
+        }
+        
+        return matchingSongs
+    }
+
+    // Extension function to get all text from lyrics
+    private fun SemanticLyrics.getAllLyricsText(): String {
+        return when (this) {
+            is SemanticLyrics.UnsyncedLyrics -> {
+                unsyncedText.joinToString("\n") { it.first }
+            }
+            is SemanticLyrics.SyncedLyrics -> {
+                text.joinToString("\n") { it.text }
+            }
+        }
     }
 
     override fun onPause() {
