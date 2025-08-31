@@ -77,12 +77,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlin {
         compilerOptions {
-            jvmTarget = JvmTarget.JVM_21
+            jvmTarget = JvmTarget.JVM_17
             freeCompilerArgs = listOf(
                 "-Xno-param-assertions",
                 "-Xno-call-assertions",
@@ -267,7 +267,6 @@ aboutLibraries {
 
 dependencies {
     implementation(project(":hificore"))
-    implementation(project(":alacdecoder"))
     val composeBom = platform("androidx.compose:compose-bom:2025.05.00")
     implementation(composeBom)
     androidTestImplementation(composeBom)
@@ -287,7 +286,12 @@ dependencies {
     implementation("androidx.fragment:fragment-ktx:1.8.8")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.1")
     implementation("androidx.mediarouter:mediarouter:1.8.0")
-    // Removed Media3/ExoPlayer dependencies for MediaPlayer replacement
+    // Temporary Media3 dependencies until full replacement is complete
+    val media3Version = "1.7.1"
+    implementation("androidx.media3:media3-common-ktx:$media3Version")
+    implementation("androidx.media3:media3-exoplayer:$media3Version")
+    implementation("androidx.media3:media3-exoplayer-midi:$media3Version")
+    implementation("androidx.media3:media3-session:$media3Version")
     // Enhanced MediaPlayer service provides alternative to ExoPlayer
     //implementation("androidx.navigation:navigation-fragment-ktx:2.7.7") TODO consider it
     //implementation("androidx.paging:paging-runtime-ktx:3.2.1") TODO paged, partial, flow based library loading

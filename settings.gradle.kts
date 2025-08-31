@@ -1,8 +1,5 @@
 @file:Suppress("UnstableApiUsage")
 
-include(":alacdecoder")
-
-
 pluginManagement {
     repositories {
         google()
@@ -25,5 +22,6 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Gramophone"
-// Removed media3 includeBuild for MediaPlayer replacement
+// Temporary: keep media3 includeBuild for compatibility during transition
+includeBuild("media3")
 include(":hificore", ":app", ":baselineprofile")

@@ -23,12 +23,13 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 }
 
 dependencies {
     implementation("androidx.annotation:annotation:1.9.1")
-    // Removed media3-exoplayer dependency for MediaPlayer replacement
+    // Temporary Media3 dependency until ALAC decoder is replaced or removed
+    implementation("androidx.media3:media3-exoplayer:1.7.1")
 }
