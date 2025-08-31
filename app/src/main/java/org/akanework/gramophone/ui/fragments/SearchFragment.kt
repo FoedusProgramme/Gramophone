@@ -58,7 +58,7 @@ class SearchFragment : BaseFragment(true) {
     private val filteredList: MutableList<MediaItem> = mutableListOf()
     private lateinit var editText: EditText
     private lateinit var searchModeToggle: MaterialButtonToggleGroup
-    private var isLyricsMode = false
+    private var currentMode = SearchMode.SONGS
 
     enum class SearchMode {
         SONGS, LYRICS
@@ -96,9 +96,9 @@ class SearchFragment : BaseFragment(true) {
         // Set up search mode toggle listener
         searchModeToggle.addOnButtonCheckedListener { _, checkedId, isChecked ->
             if (isChecked) {
-                isLyricsMode = checkedId == R.id.button_lyrics
+                currentMode = if (checkedId == R.id.button_lyrics) SearchMode.LYRICS else SearchMode.SONGS
                 // Update search hint based on mode
-                editText.hint = if (isLyricsMode) {
+                editText.hint = if (currentMode == SearchMode.LYRICS) {
                     getString(R.string.search_lyrics_hint)
                 } else {
                     getString(R.string.search)
@@ -134,7 +134,7 @@ class SearchFragment : BaseFragment(true) {
             // Clear the list from the last search.
             filteredList.clear()
             
-            if (isLyricsMode) {
+            if (currentMode == SearchMode.LYRICS) {
                 // Search lyrics content
                 filteredList.addAll(searchInLyrics(text))
             } else {
@@ -175,30 +175,23 @@ class SearchFragment : BaseFragment(true) {
                     errorText = null
                 )
                 
-                var lyrics: SemanticLyrics? = null
+                // TODO: Add embedded lyrics search in future enhancement
+                // Note: We'd need access to track metadata here, but for now
+                // we'll focus on file-based lyrics which are more common
                 
-                // First, try to get lyrics from embedded metadata (faster)
-                try {
-                    // Note: We'd need access to track metadata here, but for now
-                    // we'll focus on file-based lyrics which are more common
-                    // TODO: Add embedded lyrics search in future enhancement
-                } catch (e: Exception) {
-                    // Continue to file-based search
-                }
-                
-                // Then try loading from external lyrics files
-                if (lyrics == null) {
-                    lyrics = LrcUtils.loadAndParseLyricsFile(song.getFile(), lyricsParserOptions)
-                }
+                // Load from external lyrics files
+                val lyrics = LrcUtils.loadAndParseLyricsFile(song.getFile(), lyricsParserOptions)
                 
                 // Check if lyrics contain the search text
                 val lyricsText = lyrics?.getAllLyricsText()
                 if (lyricsText?.contains(searchText, ignoreCase = true) == true) {
                     matchingSongs.add(song)
                 }
-            } catch (e: Exception) {
-                // Skip songs with lyrics parsing errors
-                // Could log this for debugging if needed
+            } catch (e: java.io.IOException) {
+                // Skip songs with file I/O errors (missing lyrics files, etc.)
+                continue
+            } catch (e: IllegalArgumentException) {
+                // Skip songs with parsing errors (malformed lyrics files)
                 continue
             }
         }
