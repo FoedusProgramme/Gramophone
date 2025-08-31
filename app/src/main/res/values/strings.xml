@@ -57,7 +57,8 @@
     <string name="refreshed_songs">Refreshed %1$s songs</string>
     <string name="search">Search</string>
     <string name="search_songs">Songs</string>
-    <string name="search_lyrics">Lyrics</string>
+    <string name="search_lyrics_mode">Lyrics</string>
+    <string name="search_lyrics_hint">Search lyrics content</string>
     <string name="search_mode_toggle">Toggle search mode between songs and lyrics</string>
     <string name="share">Share</string>
     <string name="settings_app_name">App name</string>

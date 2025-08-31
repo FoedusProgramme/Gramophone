@@ -99,7 +99,7 @@ class SearchFragment : BaseFragment(true) {
                 isLyricsMode = checkedId == R.id.button_lyrics
                 // Update search hint based on mode
                 editText.hint = if (isLyricsMode) {
-                    getString(R.string.search_lyrics)
+                    getString(R.string.search_lyrics_hint)
                 } else {
                     getString(R.string.search)
                 }
@@ -159,17 +159,37 @@ class SearchFragment : BaseFragment(true) {
         val allSongs = mainActivity.reader.songListFlow.first()
         val matchingSongs = mutableListOf<MediaItem>()
         
-        for (song in allSongs) {
+        // Limit search to prevent performance issues with large libraries
+        val maxSongsToSearch = 1000
+        val songsToSearch = if (allSongs.size > maxSongsToSearch) {
+            allSongs.take(maxSongsToSearch)
+        } else {
+            allSongs
+        }
+        
+        for (song in songsToSearch) {
             try {
-                // Get lyrics from file if available
-                val lyrics = LrcUtils.loadAndParseLyricsFile(
-                    song.getFile(),
-                    LrcUtils.LrcParserOptions(
-                        trim = true,
-                        multiLine = false,
-                        errorText = null
-                    )
+                val lyricsParserOptions = LrcUtils.LrcParserOptions(
+                    trim = true,
+                    multiLine = false,
+                    errorText = null
                 )
+                
+                var lyrics: SemanticLyrics? = null
+                
+                // First, try to get lyrics from embedded metadata (faster)
+                try {
+                    // Note: We'd need access to track metadata here, but for now
+                    // we'll focus on file-based lyrics which are more common
+                    // TODO: Add embedded lyrics search in future enhancement
+                } catch (e: Exception) {
+                    // Continue to file-based search
+                }
+                
+                // Then try loading from external lyrics files
+                if (lyrics == null) {
+                    lyrics = LrcUtils.loadAndParseLyricsFile(song.getFile(), lyricsParserOptions)
+                }
                 
                 // Check if lyrics contain the search text
                 val lyricsText = lyrics?.getAllLyricsText()
@@ -178,6 +198,7 @@ class SearchFragment : BaseFragment(true) {
                 }
             } catch (e: Exception) {
                 // Skip songs with lyrics parsing errors
+                // Could log this for debugging if needed
                 continue
             }
         }
