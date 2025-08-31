@@ -45,9 +45,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.findFragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import androidx.media3.common.MediaItem
-import androidx.media3.common.Player
-import androidx.media3.session.MediaController
+import org.akanework.gramophone.logic.data.TrackItem
+import org.akanework.gramophone.ui.MediaPlayerWrapper
 import androidx.preference.PreferenceManager
 import coil3.asDrawable
 import coil3.imageLoader
@@ -68,13 +67,14 @@ import org.akanework.gramophone.logic.getBooleanStrict
 import org.akanework.gramophone.logic.playOrPause
 import org.akanework.gramophone.logic.startAnimation
 import org.akanework.gramophone.logic.ui.MyBottomSheetBehavior
+import org.akanework.gramophone.ui.MediaPlayerListener
 import org.akanework.gramophone.ui.MainActivity
 
 
 class PlayerBottomSheet private constructor(
     context: Context, attributeSet: AttributeSet?, defStyleAttr: Int, defStyleRes: Int
 ) : FrameLayout(context, attributeSet, defStyleAttr, defStyleRes),
-    Player.Listener, DefaultLifecycleObserver {
+    MediaPlayerListener, DefaultLifecycleObserver {
     constructor(context: Context, attributeSet: AttributeSet?)
             : this(context, attributeSet, 0, 0)
 

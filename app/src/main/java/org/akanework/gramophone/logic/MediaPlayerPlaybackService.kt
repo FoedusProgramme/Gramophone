@@ -300,6 +300,18 @@ class MediaPlayerPlaybackService : Service(), MediaPlayer.OnPreparedListener,
     
     fun getRepeatMode(): Int = repeatMode
     
+    fun getShuffleMode(): Boolean = shuffleMode
+    
+    fun getPlaybackState(): Int {
+        return when {
+            mediaPlayer == null -> MediaPlayerWrapper.STATE_IDLE
+            isPlaying() -> MediaPlayerWrapper.STATE_READY
+            else -> MediaPlayerWrapper.STATE_READY
+        }
+    }
+    
+    fun getRepeatMode(): Int = repeatMode
+    
     // Progress tracking
     fun setProgressCallback(callback: (Long, Long) -> Unit) {
         progressCallback = callback
