@@ -144,7 +144,12 @@ class PlayerBottomSheet private constructor(
 
         bottomSheetPreviewControllerButton.setOnClickListener {
             ViewCompat.performHapticFeedback(it, HapticFeedbackConstantsCompat.CONTEXT_CLICK)
-            instance?.playOrPause()
+            if (instance?.playbackState == Player.STATE_ENDED) {
+                instance?.seekToDefaultPosition()
+                instance?.play()
+            } else {
+                instance?.playOrPause()
+            }
         }
 
         bottomSheetPreviewNextButton.setOnClickListener {
