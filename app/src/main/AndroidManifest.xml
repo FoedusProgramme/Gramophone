@@ -84,6 +84,16 @@
             </intent-filter>
         </service>
 
+        <!-- Enhanced MediaPlayer-based service as ExoPlayer replacement demonstration -->
+        <service
+            android:name=".logic.MediaPlayerPlaybackService"
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback">
+            <intent-filter>
+                <action android:name="android.media.session.MediaSessionService" />
+            </intent-filter>
+        </service>
+
         <activity
             android:name=".ui.MainActivity"
             android:theme="@style/Theme.Splash"
