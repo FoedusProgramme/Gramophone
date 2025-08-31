@@ -48,9 +48,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentManager.FragmentLifecycleCallbacks
 import androidx.fragment.app.commit
-import androidx.media3.common.C
-import androidx.media3.common.util.UnstableApi
-import androidx.media3.session.DefaultMediaNotificationProvider
 import coil3.imageLoader
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.CoroutineScope
@@ -298,7 +295,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun doPlayFromIntent(intent: Intent) {
         intent.extras?.getString(PLAYBACK_AUTO_PLAY_ID)?.let { id ->
-            val pos = intent.extras?.getLong(PLAYBACK_AUTO_PLAY_POSITION, C.TIME_UNSET) ?: C.TIME_UNSET
+            val pos = intent.extras?.getLong(PLAYBACK_AUTO_PLAY_POSITION, -1L) ?: -1L
             controllerViewModel.addControllerCallback(lifecycle) { controller, _ ->
                 runBlocking { reader.idMapFlow.firstOrNull() }
                     .let { col ->
@@ -387,15 +384,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    @OptIn(UnstableApi::class)
     override fun onDestroy() {
-        // https://github.com/androidx/media/issues/805
-        if (needsMissingOnDestroyCallWorkarounds()
-            && (getPlayer()?.playWhenReady != true || getPlayer()?.mediaItemCount == 0)
-        ) {
-            val nm = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-            nm.cancel(DefaultMediaNotificationProvider.DEFAULT_NOTIFICATION_ID)
-        }
+        // Removed Media3 notification workaround for MediaPlayer replacement
         super.onDestroy()
         // we don't ever want covers to be the cause of service being killed by too high mem usage
         // (this is placed after super.onDestroy() to make sure all ImageViews are dead)
