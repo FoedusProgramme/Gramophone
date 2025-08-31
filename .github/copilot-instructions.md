@@ -33,8 +33,10 @@ Always reference these instructions first and fallback to search or bash command
 
 ### Network Limitations
 - **CRITICAL**: If network access to Google/Maven repositories is blocked, ALL Gradle builds will fail
+- **CRITICAL**: If network access to JitPack.io is blocked, builds will fail with media3 dependency errors
 - **CRITICAL**: You cannot build or test Android code without internet access
 - Error pattern: "Plugin [id: 'com.android.application', version: 'X.X.X'] was not found"
+- JitPack error pattern: "jitpack.io: No address associated with hostname"
 - **WORKAROUND**: Document that builds require network access in any instructions you provide
 
 ## Validation Scenarios
@@ -70,6 +72,7 @@ Always reference these instructions first and fallback to search or bash command
 
 ## Common Issues and Fixes
 - **"Plugin not found" errors**: Requires internet access to Google repositories
+- **"jitpack.io: No address associated with hostname"**: Requires internet access to JitPack repository
 - **"git submodule" errors**: Run `git submodule update --init --recursive`
 - **"package.properties" errors**: Create file with `echo "releaseType=SelfBuilt" > package.properties`
 - **JDK version errors**: Ensure JDK 21 is installed and JAVA_HOME is set
@@ -141,6 +144,8 @@ bundle exec fastlane --version  # Should show fastlane version
 ## Network Requirements
 - **CRITICAL**: Google Maven repositories access required
 - **CRITICAL**: Maven Central repository access required  
+- **CRITICAL**: JitPack.io repository access required for media3 dependencies
 - **CRITICAL**: RubyGems.org access required for Fastlane
-- **URLs needed**: `dl.google.com`, `repo.maven.apache.org`, `rubygems.org`
+- **URLs needed**: `dl.google.com`, `repo.maven.apache.org`, `jitpack.io`, `rubygems.org`
 - **Failure mode**: All builds fail with plugin resolution errors if network blocked
+- **JitPack specific error**: "jitpack.io: No address associated with hostname" when accessing media3 dependencies
