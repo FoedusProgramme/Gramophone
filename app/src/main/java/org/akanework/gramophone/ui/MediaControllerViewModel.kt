@@ -2,136 +2,90 @@ package org.akanework.gramophone.ui
 
 import android.app.Application
 import android.content.ComponentName
-import android.content.Context
-import android.content.Intent
-import android.content.ServiceConnection
 import android.os.Bundle
-import android.os.IBinder
 import android.util.Log
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
+import androidx.media3.common.Player
+import androidx.media3.session.MediaBrowser
+import androidx.media3.session.MediaController
+import androidx.media3.session.SessionCommand
+import androidx.media3.session.SessionResult
+import androidx.media3.session.SessionToken
 import com.google.common.util.concurrent.ListenableFuture
 import java.util.concurrent.ExecutionException
 import org.akanework.gramophone.logic.GramophoneApplication
-import org.akanework.gramophone.logic.MediaPlayerPlaybackService
-import org.akanework.gramophone.logic.data.TrackItem
+import org.akanework.gramophone.logic.GramophonePlaybackService
 import org.akanework.gramophone.logic.utils.LifecycleCallbackListImpl
 
-// Compatibility types to replace Media3
-typealias Player = MediaPlayerWrapper
-typealias SessionCommand = String
-typealias SessionResult = Bundle
-
-interface MediaPlayerListener {
-    fun onPlaybackStateChanged(state: Int) {}
-    fun onIsPlayingChanged(isPlaying: Boolean) {}
-    fun onPositionDiscontinuity() {}
-    fun onMediaItemTransition(mediaItem: TrackItem?, reason: Int) {}
-}
-
-class MediaPlayerWrapper(private val service: MediaPlayerPlaybackService) {
-    companion object {
-        const val REPEAT_MODE_OFF = 0
-        const val REPEAT_MODE_ONE = 1  
-        const val REPEAT_MODE_ALL = 2
-        const val STATE_IDLE = 1
-        const val STATE_READY = 2
-        const val STATE_BUFFERING = 3
-        const val STATE_ENDED = 4
-        
-        // Media item transition reasons for compatibility
-        const val MEDIA_ITEM_TRANSITION_REASON_PLAYLIST_CHANGED = 1
-    }
-    
-    private val listeners = mutableListOf<MediaPlayerListener>()
-    
-    val repeatMode: Int get() = service.getRepeatMode()
-    val shuffleModeEnabled: Boolean get() = service.getShuffleMode()
-    val playbackState: Int get() = service.getPlaybackState()
-    val isPlaying: Boolean get() = service.isPlaying()
-    val currentPosition: Long get() = service.getCurrentPosition()
-    val duration: Long get() = service.getDuration()
-    val mediaItemCount: Int get() = service.getPlaylist().size
-    val currentMediaItem: TrackItem? get() = service.getCurrentMediaUri()?.let { TrackItem.fromUri(it) }
-    
-    fun play() = service.play()
-    fun pause() = service.pause()
-    fun playOrPause() {
-        if (isPlaying) pause() else play()
-    }
-    fun seekTo(position: Long) = service.seekTo(position)
-    fun seekToNext() = service.skipToNext()
-    fun seekToPrevious() = service.skipToPrevious()
-    fun setRepeatMode(mode: Int) = service.setRepeatMode(mode)
-    fun setShuffleModeEnabled(enabled: Boolean) = service.setShuffleMode(enabled)
-    
-    fun addListener(listener: MediaPlayerListener) {
-        listeners.add(listener)
-    }
-    
-    fun removeListener(listener: MediaPlayerListener) {
-        listeners.remove(listener)
-    }
-}
-
-class MediaBrowserWrapper(private val service: MediaPlayerPlaybackService) {
-    interface Listener {
-        fun onConnected() {}
-        fun onDisconnected() {}
-    }
-}
-
 class MediaControllerViewModel(application: Application) : AndroidViewModel(application),
-    DefaultLifecycleObserver, ServiceConnection {
+    DefaultLifecycleObserver, MediaBrowser.Listener {
 
     private val context: GramophoneApplication
         get() = getApplication()
     private var controllerLifecycle: LifecycleHost? = null
-    private var mediaService: MediaPlayerPlaybackService? = null
-    private var mediaBrowser: MediaBrowserWrapper? = null
-    private var mediaPlayer: MediaPlayerWrapper? = null
+    private var controllerFuture: ListenableFuture<MediaBrowser>? = null
     private val customCommandListenersImpl = LifecycleCallbackListImpl<
-                (MediaPlayerWrapper, SessionCommand, Bundle) -> ListenableFuture<SessionResult>>()
+                (MediaController, SessionCommand, Bundle) -> ListenableFuture<SessionResult>>()
     private val connectionListenersImpl =
-        LifecycleCallbackListImpl<LifecycleCallbackListImpl.Disposable.(MediaBrowserWrapper, Lifecycle) -> Unit>()
+        LifecycleCallbackListImpl<LifecycleCallbackListImpl.Disposable.(MediaBrowser, Lifecycle) -> Unit>()
     val customCommandListeners
         get() = customCommandListenersImpl.toBaseInterface()
     val connectionListeners
         get() = connectionListenersImpl.toBaseInterface()
 
     override fun onStart(owner: LifecycleOwner) {
-        val intent = Intent(context, MediaPlayerPlaybackService::class.java)
-        context.bindService(intent, this, Context.BIND_AUTO_CREATE)
-    }
-
-    override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
-        val localBinder = binder as? MediaPlayerPlaybackService.LocalBinder
-        mediaService = localBinder?.getService()
-        mediaService?.let { service ->
-            mediaBrowser = MediaBrowserWrapper(service)
-            mediaPlayer = MediaPlayerWrapper(service)
-            val lc = LifecycleHost()
-            controllerLifecycle = lc
-            connectionListenersImpl.callListeners { mediaBrowser, lc.lifecycle ->
-                this(mediaBrowser!!, lc.lifecycle)
-            }
-        }
-    }
-
-    override fun onServiceDisconnected(name: ComponentName?) {
-        mediaService = null
-        mediaBrowser = null
-        mediaPlayer = null
-        controllerLifecycle = null
+        val sessionToken =
+            SessionToken(context, ComponentName(context, GramophonePlaybackService::class.java))
+        val lc = LifecycleHost()
+        controllerLifecycle = lc
+        controllerFuture =
+            MediaBrowser
+                .Builder(context, sessionToken)
+                .setListener(this)
+                .buildAsync()
+                .apply {
+                    addListener(
+                        {
+                            if (isCancelled) return@addListener
+                            val instance = try {
+                                get()
+                            } catch (e: ExecutionException) {
+                                if (e.cause !is SecurityException)
+                                    throw e
+                                if (e.cause!!.message != "Session rejected the connection request.")
+                                    throw e
+                                Log.w("MediaControllerViewMdel", "Session rejected the connection" +
+                                        " request. Maybe controller.release() was called before" +
+                                        " connecting was done?")
+                                null
+                            }
+                            if (this == controllerFuture && instance == null) {
+                                controllerFuture = null
+                                controllerLifecycle = null
+                            }
+                            if (this != controllerFuture || instance == null) {
+                                // If there is a race condition that would cause this controller
+                                // to leak, which can happen, just make sure we don't leak.
+                                lc.destroy()
+                                instance?.release()
+                            } else {
+                                lc.lifecycleRegistry.currentState = Lifecycle.State.CREATED
+                                connectionListenersImpl.dispatch { it(instance, lc.lifecycle) }
+                            }
+                        }, ContextCompat.getMainExecutor(context)
+                    )
+                }
     }
 
     fun addControllerCallback(
         lifecycle: Lifecycle?,
-        callback: LifecycleCallbackListImpl.Disposable.(MediaBrowserWrapper, Lifecycle) -> Unit
+        callback: LifecycleCallbackListImpl.Disposable.(MediaBrowser, Lifecycle) -> Unit
     ) {
         // TODO migrate this to kt flows or LiveData?
         val instance = get()
@@ -146,33 +100,43 @@ class MediaControllerViewModel(application: Application) : AndroidViewModel(appl
         }
     }
 
-    fun addRecreationalPlayerListener(lifecycle: Lifecycle, callback: (MediaPlayerWrapper) -> MediaPlayerListener) {
+    fun addRecreationalPlayerListener(lifecycle: Lifecycle, callback: (Player) -> Player.Listener) {
         addControllerCallback(lifecycle) { controller, controllerLifecycle ->
-            val listener = callback(mediaPlayer!!)
-            mediaPlayer?.addListener(listener)
-            LifecycleIntersection(lifecycle, controllerLifecycle).lifecycle.addObserver(object : DefaultLifecycleObserver {
-                override fun onDestroy(owner: LifecycleOwner) {
-                    mediaPlayer?.removeListener(listener)
-                }
-            })
+            controller.registerLifecycleCallback(
+                LifecycleIntersection(lifecycle, controllerLifecycle).lifecycle,
+                callback(controller)
+            )
         }
     }
 
-    fun get(): MediaBrowserWrapper? {
-        return mediaBrowser
-    }
-    
-    fun getPlayer(): MediaPlayerWrapper? {
-        return mediaPlayer
+    fun get(): MediaBrowser? {
+        if (controllerFuture?.isDone == true && controllerFuture?.isCancelled == false) {
+            return controllerFuture!!.get()
+        }
+        return null
     }
 
-    override fun onStop(owner: LifecycleOwner) {
-        context.unbindService(this)
-        mediaService = null
-        mediaBrowser = null
-        mediaPlayer = null
+    override fun onDisconnected(controller: MediaController) {
         controllerLifecycle?.destroy()
         controllerLifecycle = null
+        controllerFuture = null
+    }
+
+    // TODO reconsider whether onStop is a good place, as getting stopped is quite easy and
+    //  predictive back makes it obvious that we are reconnecting
+    override fun onStop(owner: LifecycleOwner) {
+        if (controllerFuture?.isDone == true) {
+            if (controllerFuture?.isCancelled == false) {
+                controllerFuture?.get()?.release()
+            } else {
+                throw IllegalStateException("controllerFuture?.isCancelled != false")
+            }
+        } else {
+            controllerFuture?.cancel(true)
+            controllerLifecycle?.destroy()
+            controllerLifecycle = null
+            controllerFuture = null
+        }
     }
 
     override fun onDestroy(owner: LifecycleOwner) {
@@ -180,21 +144,19 @@ class MediaControllerViewModel(application: Application) : AndroidViewModel(appl
         connectionListenersImpl.release()
     }
 
-    fun onCustomCommand(
-        controller: MediaPlayerWrapper,
+    override fun onCustomCommand(
+        controller: MediaController,
         command: SessionCommand,
         args: Bundle
     ): ListenableFuture<SessionResult> {
         var future: ListenableFuture<SessionResult>? = null
         val listenerIterator = customCommandListenersImpl.iterator()
         while (listenerIterator.hasNext() && (future == null || (future.isDone &&
-                    future.get().getInt("resultCode") == -1))
+                    future.get().resultCode == SessionResult.RESULT_ERROR_NOT_SUPPORTED))
         ) {
             future = listenerIterator.next()(controller, command, args)
         }
-        return future ?: com.google.common.util.concurrent.Futures.immediateFuture(Bundle().apply {
-            putInt("resultCode", -1)
-        })
+        return future ?: super.onCustomCommand(controller, command, args)
     }
 
     private class LifecycleHost : LifecycleOwner {
@@ -247,7 +209,7 @@ class MediaControllerViewModel(application: Application) : AndroidViewModel(appl
     }
 }
 
-fun MediaPlayerWrapper.registerLifecycleCallback(lifecycle: Lifecycle, callback: MediaPlayerListener) {
+fun Player.registerLifecycleCallback(lifecycle: Lifecycle, callback: Player.Listener) {
     addListener(callback)
     lifecycle.addObserver(object : DefaultLifecycleObserver {
         override fun onDestroy(owner: LifecycleOwner) {

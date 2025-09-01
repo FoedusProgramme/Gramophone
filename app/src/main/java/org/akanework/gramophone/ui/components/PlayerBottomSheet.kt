@@ -45,8 +45,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.findFragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import org.akanework.gramophone.logic.data.TrackItem
-import org.akanework.gramophone.ui.MediaPlayerWrapper
+import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
+import androidx.media3.session.MediaController
 import androidx.preference.PreferenceManager
 import coil3.asDrawable
 import coil3.imageLoader
@@ -67,14 +68,13 @@ import org.akanework.gramophone.logic.getBooleanStrict
 import org.akanework.gramophone.logic.playOrPause
 import org.akanework.gramophone.logic.startAnimation
 import org.akanework.gramophone.logic.ui.MyBottomSheetBehavior
-import org.akanework.gramophone.ui.MediaPlayerListener
 import org.akanework.gramophone.ui.MainActivity
 
 
 class PlayerBottomSheet private constructor(
     context: Context, attributeSet: AttributeSet?, defStyleAttr: Int, defStyleRes: Int
 ) : FrameLayout(context, attributeSet, defStyleAttr, defStyleRes),
-    MediaPlayerListener, DefaultLifecycleObserver {
+    Player.Listener, DefaultLifecycleObserver {
     constructor(context: Context, attributeSet: AttributeSet?)
             : this(context, attributeSet, 0, 0)
 
@@ -101,7 +101,7 @@ class PlayerBottomSheet private constructor(
     private val lifecycleOwner: LifecycleOwner
         get() = activity
     private val handler = Handler(Looper.getMainLooper())
-    private val instance: MediaPlayerWrapper?
+    private val instance: MediaController?
         get() = activity.getPlayer()
     private var lastActuallyVisible: Boolean? = null
     private var lastMeasuredHeight: Int? = null
@@ -154,10 +154,10 @@ class PlayerBottomSheet private constructor(
 
         activity.controllerViewModel.addControllerCallback(activity.lifecycle) { _, _ ->
             instance?.addListener(this@PlayerBottomSheet)
-            onPlaybackStateChanged(instance?.playbackState ?: MediaPlayerWrapper.STATE_IDLE)
+            onPlaybackStateChanged(instance?.playbackState ?: Player.STATE_IDLE)
             onMediaItemTransition(
                 instance?.currentMediaItem,
-                MediaPlayerWrapper.MEDIA_ITEM_TRANSITION_REASON_PLAYLIST_CHANGED
+                Player.MEDIA_ITEM_TRANSITION_REASON_PLAYLIST_CHANGED
             )
             if ((activity.consumeAutoPlay() || prefs.getBooleanStrict(
                     "autoplay",
@@ -382,7 +382,7 @@ class PlayerBottomSheet private constructor(
     }
 
     override fun onMediaItemTransition(
-        mediaItem: TrackItem?,
+        mediaItem: MediaItem?,
         reason: Int,
     ) {
         if ((instance?.mediaItemCount ?: 0) > 0) {
@@ -393,13 +393,13 @@ class PlayerBottomSheet private constructor(
                 }, onError = {
                     bottomSheetPreviewCover.setImageDrawable(it?.asDrawable(context.resources))
                 }) // do not react to onStart() which sets placeholder
-                data(mediaItem?.artworkUri)
+                data(mediaItem?.mediaMetadata?.artworkUri)
                 scale(Scale.FILL)
                 error(R.drawable.ic_default_cover)
             }.build())
-            bottomSheetPreviewTitle.text = mediaItem?.title
+            bottomSheetPreviewTitle.text = mediaItem?.mediaMetadata?.title
             bottomSheetPreviewSubtitle.text =
-                mediaItem?.artist ?: context.getString(R.string.unknown_artist)
+                mediaItem?.mediaMetadata?.artist ?: context.getString(R.string.unknown_artist)
         } else {
             lastDisposable?.dispose()
             lastDisposable = null
@@ -420,11 +420,11 @@ class PlayerBottomSheet private constructor(
     }
 
     override fun onIsPlayingChanged(isPlaying: Boolean) {
-        onPlaybackStateChanged(instance?.playbackState ?: MediaPlayerWrapper.STATE_IDLE)
+        onPlaybackStateChanged(instance?.playbackState ?: Player.STATE_IDLE)
     }
 
     override fun onPlaybackStateChanged(playbackState: Int) {
-        if (playbackState == MediaPlayerWrapper.STATE_BUFFERING) return
+        if (playbackState == Player.STATE_BUFFERING) return
         val myTag = bottomSheetPreviewControllerButton.getTag(R.id.play_next) as Int?
         if (instance?.isPlaying == true && myTag != 1) {
             bottomSheetPreviewControllerButton.icon =

@@ -25,8 +25,18 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.ActivityCompat
 import androidx.core.net.toFile
 import androidx.core.net.toUri
-import android.media.AudioAttributes
-import android.media.MediaPlayer
+import androidx.media3.common.AudioAttributes
+import androidx.media3.common.C
+import androidx.media3.common.MediaItem
+import androidx.media3.common.MediaMetadata
+import androidx.media3.common.Player
+import androidx.media3.common.TrackSelectionParameters
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.datasource.DefaultDataSource
+import androidx.media3.exoplayer.DefaultRenderersFactory
+import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
+import androidx.media3.extractor.mp3.Mp3Extractor
 import androidx.preference.PreferenceManager
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -42,13 +52,21 @@ import org.akanework.gramophone.logic.hasAudioPermission
 import org.akanework.gramophone.logic.hasScopedStorageV1
 import org.akanework.gramophone.logic.hasScopedStorageV2
 import org.akanework.gramophone.logic.hasScopedStorageWithMediaTypes
+import org.akanework.gramophone.logic.playOrPause
+import org.akanework.gramophone.logic.startAnimation
 import org.akanework.gramophone.logic.utils.CalculationUtils.convertDurationToTimeStamp
+import org.akanework.gramophone.logic.utils.Flags
+import org.akanework.gramophone.logic.utils.exoplayer.GramophoneExtractorsFactory
+import org.akanework.gramophone.logic.utils.exoplayer.GramophoneMediaSourceFactory
+import org.akanework.gramophone.logic.utils.exoplayer.GramophoneRenderFactory
+import org.akanework.gramophone.ui.components.FullBottomSheet.Companion.SLIDER_UPDATE_INTERVAL
 import org.akanework.gramophone.ui.components.SquigglyProgress
 import uk.akane.libphonograph.toUriCompat
 import java.io.File
 
 private const val TAG = "AudioPreviewActivity"
 
+@OptIn(UnstableApi::class)
 class AudioPreviewActivity : AppCompatActivity(), View.OnClickListener {
 
     companion object {
@@ -56,7 +74,7 @@ class AudioPreviewActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private lateinit var d: AlertDialog
-    private lateinit var player: MediaPlayer
+    private lateinit var player: ExoPlayer
     private lateinit var audioTitle: TextView
     private lateinit var artistTextView: TextView
     private lateinit var currentPositionTextView: TextView
@@ -77,22 +95,18 @@ class AudioPreviewActivity : AppCompatActivity(), View.OnClickListener {
     private var askedForPermissionInSettings = false
     private val updateSliderRunnable = object : Runnable {
         override fun run() {
-            val duration = try {
-                player.duration.takeIf { it > 0 }?.toLong()
-            } catch (e: Exception) {
-                null
-            }
+            // TODO we may no longer need to poll duration because midi audio sink bugfix is released
+            val duration = player.contentDuration.let { if (it == C.TIME_UNSET) null else it }
+                ?: player.mediaMetadata.durationMs
             if (duration != null) {
                 timeSlider.valueTo = duration.toFloat().coerceAtLeast(1f)
                 timeSeekbar.max = duration.toInt()
-                durationTextView.text = convertDurationToTimeStamp(duration)
+                durationTextView.text = convertDurationToTimeStamp(
+                    player.contentDuration.let { if (it == C.TIME_UNSET) null else it }
+                        ?: player.mediaMetadata.durationMs ?: 0)
             }
-            val currentPosition = try {
-                player.currentPosition.toFloat().coerceAtMost(timeSlider.valueTo)
-                    .coerceAtLeast(timeSlider.valueFrom)
-            } catch (e: Exception) {
-                0f
-            }
+            val currentPosition = player.currentPosition.toFloat().coerceAtMost(timeSlider.valueTo)
+                .coerceAtLeast(timeSlider.valueFrom)
             if (!isUserTracking) {
                 timeSlider.value = currentPosition
                 timeSeekbar.progress = currentPosition.toInt()
@@ -152,41 +166,78 @@ class AudioPreviewActivity : AppCompatActivity(), View.OnClickListener {
             it.transitionEnabled = true
             it.animate = false
         }
-        // Initialize MediaPlayer
-        player = MediaPlayer().apply {
-            setAudioAttributes(
-                AudioAttributes.Builder()
-                    .setUsage(AudioAttributes.USAGE_MEDIA)
-                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                    .build()
+        // TODO de-dupe
+        player = ExoPlayer.Builder(
+            this,
+            GramophoneRenderFactory(this, {}, {})
+                .setPcmEncodingRestrictionLifted(
+                    prefs.getBooleanStrict("floatoutput", false)
+                )
+                .setEnableDecoderFallback(true)
+                .setEnableAudioTrackPlaybackParams(true)
+                .setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER),
+            GramophoneMediaSourceFactory(DefaultDataSource.Factory(this), GramophoneExtractorsFactory().also {
+                it.setConstantBitrateSeekingEnabled(true)
+                if (prefs.getBooleanStrict("mp3_index_seeking", false))
+                    it.setMp3ExtractorFlags(Mp3Extractor.FLAG_ENABLE_INDEX_SEEKING)
+            })
+        )
+            .setWakeMode(C.WAKE_MODE_LOCAL)
+            .setAudioAttributes(
+                AudioAttributes
+                    .Builder()
+                    .setUsage(C.USAGE_MEDIA)
+                    .setContentType(C.AUDIO_CONTENT_TYPE_MUSIC)
+                    .build(), true
             )
-            setOnPreparedListener {
-                runnableRunning = true
+            .setHandleAudioBecomingNoisy(true)
+            .setTrackSelector(DefaultTrackSelector(this).apply {
+                setParameters(buildUponParameters()
+                    .setAllowInvalidateSelectionsOnRendererCapabilitiesChange(true)
+                    .setAudioOffloadPreferences(
+                        TrackSelectionParameters.AudioOffloadPreferences.Builder()
+                            .apply {
+                                val config = prefs.getStringStrict("offload", "0")?.toIntOrNull()
+                                if (config != null && config > 0 && Flags.OFFLOAD) {
+                                    setAudioOffloadMode(TrackSelectionParameters.AudioOffloadPreferences.AUDIO_OFFLOAD_MODE_ENABLED)
+                                    setIsGaplessSupportRequired(config == 2)
+                                }
+                            }
+                            .build()))
+            })
+            .build()
+        player.addListener(object : Player.Listener {
+            override fun onIsPlayingChanged(isPlaying: Boolean) {
+                runnableRunning = isPlaying
                 handler.post(updateSliderRunnable)
                 updatePlayPauseButton()
             }
-            setOnCompletionListener {
-                updatePlayPauseButton()
+
+            override fun onPositionDiscontinuity(
+                oldPosition: Player.PositionInfo,
+                newPosition: Player.PositionInfo,
+                reason: Int
+            ) {
+                handler.post(updateSliderRunnable)
             }
-            setOnErrorListener { _, what, extra ->
-                Log.e(TAG, "MediaPlayer error: what=$what, extra=$extra")
-                Toast.makeText(this@AudioPreviewActivity, R.string.cannot_play_file, Toast.LENGTH_LONG).show()
-                finish()
-                true
+
+            override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+                if (mediaItem == null) return
+                updateMediaMetadata(player)
             }
-        }
+
+            override fun onMediaMetadataChanged(mediaMetadata: MediaMetadata) {
+                updateMediaMetadata(player)
+            }
+        })
         playPauseButton.setOnClickListener {
-            if (player.isPlaying) {
-                player.pause()
-            } else {
-                player.start()
-            }
-            updatePlayPauseButton()
+            if (player.playbackState == Player.STATE_ENDED) player.seekToDefaultPosition()
+            player.playOrPause()
         }
 
         timeSlider.addOnChangeListener { _, value, fromUser ->
             if (fromUser) {
-                player.seekTo(value.toInt())
+                player.seekTo(value.toLong())
                 currentPositionTextView.text = convertDurationToTimeStamp(value.toLong())
             }
         }
@@ -205,7 +256,7 @@ class AudioPreviewActivity : AppCompatActivity(), View.OnClickListener {
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
                 seekBar?.let {
-                    player.seekTo(it.progress)
+                    player.seekTo(it.progress.toLong())
                 }
                 isUserTracking = false
                 progressDrawable.animate = player.isPlaying
@@ -327,7 +378,7 @@ class AudioPreviewActivity : AppCompatActivity(), View.OnClickListener {
                         if (queryUri == null) arrayOf(fileUri!!.toFile().absolutePath) else null,
                         null
                     ) else null
-                    var trackTitle: String? = null
+                    val mediaItem = MediaItem.Builder()
                     var visible = false
                     run {
                         if (cursor?.moveToFirst() == true) {
@@ -335,13 +386,23 @@ class AudioPreviewActivity : AppCompatActivity(), View.OnClickListener {
                                 cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
                             )
                             if (id != 0L) {
-                                trackTitle = cursor.getString(
+                                val durationMs = cursor.getLong(
+                                    cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)
+                                )
+                                val title = cursor.getString(
                                     cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE)
                                 )
                                 val data = cursor.getString(
                                     cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)
                                 )
-                                // We'll use the uri directly instead of the data path
+                                mediaItem.setUri(File(data).toUriCompat())
+                                mediaItem.setMediaId(id.toString())
+                                mediaItem.setMediaMetadata(
+                                    MediaMetadata.Builder()
+                                        .setTitle(title)
+                                        .setDurationMs(durationMs)
+                                        .build()
+                                )
                                 visible = true
                                 Log.i(
                                     TAG,
@@ -371,21 +432,17 @@ class AudioPreviewActivity : AppCompatActivity(), View.OnClickListener {
                             openIcon.visibility = View.GONE
                             openText.visibility = View.GONE
                         }
-                        // Set basic metadata
-                        withContext(Dispatchers.Main) {
-                            audioTitle.text = trackTitle ?: getString(R.string.unknown_title)
-                            artistTextView.text = getString(R.string.unknown_artist)
-                            albumArt.setImageResource(R.drawable.ic_default_cover)
-                        }
                         try {
-                            player.setDataSource(this@AudioPreviewActivity, uri)
-                            player.prepareAsync()
-                        } catch (e: Exception) {
-                            Log.e(TAG, "Error setting data source", e)
+                            player.setMediaItem(mediaItem.build())
+                        } catch (e: IllegalStateException) {
+                            if (e.message?.startsWith("No suitable media source factory found for content type:") != true)
+                                throw e
                             Toast.makeText(this@AudioPreviewActivity, R.string.cannot_play_file, Toast.LENGTH_LONG).show()
                             finish()
                             return@withContext
                         }
+                        player.prepare()
+                        player.play()
                     }
                 }
             }
@@ -393,18 +450,24 @@ class AudioPreviewActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-        // TODO: Implement navigation to main app
-        // For now, just open the main activity
-        startActivity(Intent(this, MainActivity::class.java).also {
-            it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        })
+        player.currentMediaItem?.mediaId?.let {
+            if (it != MediaItem.DEFAULT_MEDIA_ID)
+                it else null
+        }?.let { id ->
+            startActivity(Intent(this, MainActivity::class.java).also {
+                it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                it.putExtra(MainActivity.PLAYBACK_AUTO_PLAY_ID, id)
+                player.contentPosition.let { pos ->
+                    if (pos != C.TIME_UNSET)
+                        it.putExtra(MainActivity.PLAYBACK_AUTO_PLAY_POSITION, pos)
+                }
+            })
+        }
     }
 
     override fun onPause() {
         super.onPause()
-        if (player.isPlaying) {
-            player.pause()
-        }
+        player.playWhenReady = false
     }
 
     override fun onDestroy() {
@@ -427,24 +490,38 @@ class AudioPreviewActivity : AppCompatActivity(), View.OnClickListener {
     private fun updatePlayPauseButton() {
         if (player.isPlaying) {
             if (playPauseButton.getTag(R.id.play_next) as Int? != 1) {
-                playPauseButton.icon = AppCompatResources.getDrawable(this, R.drawable.ic_pause)
+                playPauseButton.icon = AppCompatResources.getDrawable(this, R.drawable.play_anim)
+                playPauseButton.icon.startAnimation()
                 playPauseButton.setTag(R.id.play_next, 1)
             }
             if (!isUserTracking) {
                 progressDrawable.animate = true
             }
             if (!runnableRunning) {
-                handler.postDelayed(updateSliderRunnable, 100)
+                handler.postDelayed(updateSliderRunnable, SLIDER_UPDATE_INTERVAL)
                 runnableRunning = true
             }
-        } else {
+        } else if (player.playbackState != Player.STATE_BUFFERING) {
             if (playPauseButton.getTag(R.id.play_next) as Int? != 2) {
-                playPauseButton.icon = AppCompatResources.getDrawable(this, R.drawable.ic_play)
+                playPauseButton.icon =
+                    AppCompatResources.getDrawable(this, R.drawable.pause_anim)
+                playPauseButton.icon.startAnimation()
                 playPauseButton.setTag(R.id.play_next, 2)
             }
             if (!isUserTracking) {
                 progressDrawable.animate = false
             }
+        }
+    }
+
+    private fun updateMediaMetadata(player: Player) {
+        audioTitle.text = player.mediaMetadata.title ?: getString(R.string.unknown_title)
+        artistTextView.text = player.mediaMetadata.artist ?: getString(R.string.unknown_artist)
+        player.mediaMetadata.artworkData?.let {
+            val bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
+            albumArt.setImageBitmap(bitmap)
+        } ?: run {
+            albumArt.setImageResource(R.drawable.ic_default_cover)
         }
     }
 }

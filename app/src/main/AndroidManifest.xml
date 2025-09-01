@@ -72,24 +72,13 @@
             android:exported="false"
             android:taskAffinity="org.akanework.gramophone.crashLog" />
 
-        <!-- MediaPlayer-based service replacing ExoPlayer -->
         <service
-            android:name=".logic.MediaPlayerPlaybackService"
+            android:name=".logic.GramophonePlaybackService"
             android:exported="true"
             android:foregroundServiceType="mediaPlayback"
             tools:ignore="ExportedService">
             <intent-filter>
                 <action android:name="android.media.browse.MediaBrowserService" />
-                <action android:name="android.media.session.MediaSessionService" />
-            </intent-filter>
-        </service>
-
-        <!-- Original ExoPlayer service (backup) -->
-        <service
-            android:name=".logic.GramophonePlaybackService"
-            android:exported="false"
-            android:foregroundServiceType="mediaPlayback">
-            <intent-filter>
                 <action android:name="androidx.media3.session.MediaLibraryService" />
                 <action android:name="androidx.media3.session.MediaSessionService" />
             </intent-filter>

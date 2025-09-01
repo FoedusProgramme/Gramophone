@@ -1,0 +1,10 @@
+{
+  "uniqueId": "com.github.philburk:jsyn",
+  "name": "JSyn",
+  "website": "https://github.com/philburk/jsyn",
+  "description": "JSyn is a Real-time Audio Synthesis API for Java.",
+  "tag": "custom",
+  "licenses": [
+    "Apache-2.0"
+  ]
+}

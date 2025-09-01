@@ -30,6 +30,5 @@ android {
 
 dependencies {
     implementation("androidx.annotation:annotation:1.9.1")
-    // Temporary Media3 dependency until ALAC decoder is replaced or removed
-    implementation("androidx.media3:media3-exoplayer:1.7.1")
+    implementation("androidx.media3:media3-exoplayer")
 }
