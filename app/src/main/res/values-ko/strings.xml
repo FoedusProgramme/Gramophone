@@ -84,7 +84,7 @@
     <string name="settings_play_on_launch">앱을 실행할 때 재생</string>
     <string name="settings_play_on_launch_summary">앱을 실행하면 자동으로 음악 재생</string>
     <string name="album_covers_enhance">개선된 방식으로 앨범 커버 불러오기</string>
-    <string name="album_covers_enhance_desc">고품질 앨범 커버, 또는 앨범과 음악의 커버가 서로 다른 경우를 지원 (사진 접근 권한 필요)</string>
+    <string name="album_covers_enhance_desc">앨범 커버를 고품질로 표시하고 앨범과 음악의 커버가 서로 다른 경우를 지원 (사진 접근 권한 필요)</string>
     <string name="settings_trim_lyrics">가사 양 끝의 공백 제거</string>
     <string name="crash_clipboard">충돌 로그를 클립보드에 복사했습니다</string>
     <string name="home_menu_settings">설정</string>
@@ -389,4 +389,19 @@
     <string name="spk_encoding_pcm_16bit_offload">16비트 PCM 오프로드</string>
     <string name="spk_encoding_pcm_24bit_offload">24비트(8.24) PCM 오버로드</string>
     <string name="spk_encoding_dts_lbr">DTS Express</string>
+    <string name="app_name">Gramophone</string>
+    <string name="contributors_nift4">메인테이너 / 리드 개발자</string>
+    <string name="contributors_123duo3">리드 디자이너</string>
+    <string name="contributors_akanetan">기존 제작자, 그만둔 개발자</string>
+    <string name="contributors_developer">개발자</string>
+    <string name="contributors_wstxda">앱 아이콘 1종 디자인</string>
+    <string name="contributors_pxeemo">새 가사 지원 도움 및 테스트</string>
+    <string name="contributors_lambada10">가사 샘플 제공 및 SoncSync 개발</string>
+    <string name="contributors_code_contributions">코드 기여</string>
+    <string name="contributors_ghhccghk">상태 표시줄 가사</string>
+    <string name="add_to_queue">대기열에 추가</string>
+    <string name="home_menu_quick_refresh">빠른 새로고침</string>
+    <string name="disabled">꺼짐</string>
+    <string name="offload_enabled_if_supported">항상 켜짐</string>
+    <string name="settings_telegram">Telegram</string>
 </resources>
