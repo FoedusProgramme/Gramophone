@@ -118,7 +118,7 @@
     <string name="album_cover">Albumi kaanepilt</string>
     <string name="dialog_edit_metadata">Muuda</string>
     <string name="dialog_lyrics">Laulusõnad</string>
-    <string name="delete_failed">Pala kustutamine ei õnnestunud</string>
+    <string name="delete_failed">Pala kustutamine ei õnnestunud: %s</string>
     <string name="album_covers_enhance">Albumi tõhustatud kaanepiltide laadimine</string>
     <string name="album_covers_enhance_desc">Kasuta parema kvaliteediga kaanepilte ning luba albumi ja palade kaanepiltidel erineda (eeldab õigust avada fotosid ja pildifaile)</string>
     <string name="deny_images"><![CDATA[Palun keela \"Fotod ja videod\" õigused]]></string>
@@ -403,14 +403,14 @@
     <string name="do_not_enter_email_enter_msg">Palun sisesta sõnum, mitte e-posti aadress</string>
     <string name="log_will_auto_send">Logid saadame niikuinii automaatselt, pigem palun kirjelda probleemi olemust või vea tekkimist</string>
     <string name="log_attachment">Logid saadame automaatselt manusena</string>
-    <string name="delete_failed_playlist">Esitusloendi kustutamine ei õnnestunud</string>
+    <string name="delete_failed_playlist">Esitusloendi kustutamine ei õnnestunud: %s</string>
     <string name="rename">Muuda nime</string>
     <string name="create_playlist">Loo esitusloend…</string>
     <string name="did_you_know">Kas sa teadsid…</string>
     <string name="playlist_name">Esitusloendi nimi</string>
     <string name="rename_playlist">Muuda esitusloendi nime</string>
     <string name="add_to_playlist">Lisa esitusloendisse</string>
-    <string name="rename_failed_playlist">Ei õnnestunud muuta esitusloendi nime</string>
+    <string name="rename_failed_playlist">Esitusloendi nime muutmine ei õnnestunud: %s</string>
     <string name="edit_playlist_failed">Esitusloendi muutmine ei õnnestunud: %s</string>
     <string name="still_refreshing">Uuendan, %1$d/%2$d: %3$s</string>
     <string name="refreshing_wait">Uuendan, palun oota…</string>
