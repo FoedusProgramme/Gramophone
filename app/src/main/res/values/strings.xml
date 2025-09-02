@@ -166,8 +166,8 @@
     <string name="album_cover">Album cover</string>
     <string name="dialog_edit_metadata">Edit</string>
     <string name="dialog_lyrics">Lyrics</string>
-    <string name="delete_failed">Deleting song failed</string>
-    <string name="delete_failed_playlist">Deleting playlist failed</string>
+    <string name="delete_failed">Deleting song failed: %s</string>
+    <string name="delete_failed_playlist">Deleting playlist failed: %s</string>
     <string name="album_covers_enhance">Enhanced album cover loading</string>
     <string name="album_covers_enhance_desc">Display high quality song covers and allow album and song cover to differ (requires photos access)</string>
     <string name="deny_images"><![CDATA[Please deny \"Photos and videos\" permission]]></string>
@@ -433,7 +433,7 @@
     <string name="still_refreshing">Refreshing, step %1$d/%2$d: %3$s</string>
     <string name="did_you_know">Did you know…</string>
     <string name="refresh_did_you_know">Gramophone asks for an updated song list on every app start, and while Gramophone is running, it will detect new media automatically as well. This \"Refresh\" button will not reload the media in Gramophone, instead, it will ask your system to re-scan all files from all attached permanent storage devices (this is why it takes some time). This means, unless your system or other apps are malfunctioning, you will never need to use this feature.\n\nMissing some songs? Make sure to check "Settings > Behaviour" for the minimum length filter and folder blacklist, and confirm these settings are set to an expected value. For more possible reasons, please check our FAQ.</string>
-    <string name="rename_failed_playlist">Failed to rename playlist</string>
+    <string name="rename_failed_playlist">Failed to rename playlist: %s</string>
     <string name="playlist_name">Name of playlist</string>
     <string name="create_failed_playlist">Failed to create playlist: %s</string>
     <string name="rename_playlist">Rename playlist</string>
