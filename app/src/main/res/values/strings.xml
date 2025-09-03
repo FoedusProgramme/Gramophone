@@ -460,5 +460,7 @@
     <string name="offload_enabled_if_gapless">Enabled if gapless playback possible</string>
     <string name="settings_audio_offload">Audio offload (saves battery)</string>
     <string name="settings_telegram">Telegram</string>
+	<string name="spk_encoding_pcm_20bit">20-bit PCM</string>
+    <string name="spk_encoding_pcm_20bit_big_endian">20-bit PCM (big endian)</string>
 
 </resources>
