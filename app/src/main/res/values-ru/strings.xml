@@ -448,4 +448,8 @@
     <string name="offload_enabled_if_gapless">Включено, если возможно воспроизведение без пауз</string>
     <string name="settings_audio_offload">Аппаратная разгрузка аудио (экономит заряд батареи)</string>
     <string name="settings_telegram">Telegram</string>
+    <string name="timer_expiry_eos">Таймер сна приостановит воспроизведение, когда завершится композиция, которая будет играть в %s</string>
+    <string name="timer_expiry_end_of_this_song">Таймер сна приостановит музыку по окончании этой композиции</string>
+    <string name="spk_encoding_pcm_20bit">20-битный PCM</string>
+    <string name="spk_encoding_pcm_20bit_big_endian">20-битный PCM (с прямым порядком байтов)</string>
 </resources>
