@@ -448,4 +448,6 @@
     <string name="settings_telegram">Telegram</string>
     <string name="spk_encoding_pcm_20bit">20-бітна ІКМ</string>
     <string name="spk_encoding_pcm_20bit_big_endian">20-бітна PCM (від великого до великого байта)</string>
+    <string name="timer_expiry_eos">Таймер сну призупинить музику, коли відтворення пісні о %s закінчиться</string>
+    <string name="timer_expiry_end_of_this_song">Таймер сну призупинить музику в кінці цієї пісні</string>
 </resources>
