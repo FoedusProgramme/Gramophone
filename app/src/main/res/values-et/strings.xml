@@ -438,4 +438,8 @@
     <string name="offload_enabled_if_gapless">Kasutusel, kui katkestusteta taasesitus on võimalik</string>
     <string name="settings_audio_offload">Heli töötlus protsessoriväliselt (säästab akukasutust)</string>
     <string name="settings_telegram">Telegram</string>
+    <string name="timer_expiry_eos">Unetaimer peatab esituse, kui lugude esitamine lõppeb %s</string>
+    <string name="timer_expiry_end_of_this_song">Unetaimer peatab esituse selle loo esitamise lõppedes</string>
+    <string name="spk_encoding_pcm_20bit">20-bitine PCM</string>
+    <string name="spk_encoding_pcm_20bit_big_endian">20-bitine PCM (tavajärjestusega)</string>
 </resources>
