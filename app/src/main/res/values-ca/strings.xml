@@ -441,4 +441,6 @@
     <string name="offload_enabled_if_gapless">Activat si és possible la reproducció sense silencis</string>
     <string name="settings_audio_offload">Descarrega l\'àudio (estalvia bateria)</string>
     <string name="settings_telegram">Telegram</string>
+    <string name="spk_encoding_pcm_20bit">PCM de 20 bits</string>
+    <string name="spk_encoding_pcm_20bit_big_endian">PCM de 20 bits (endian gran)</string>
 </resources>
