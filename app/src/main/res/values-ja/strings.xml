@@ -129,7 +129,7 @@
     <string name="settings_category_full_player">フルプレーヤー</string>
     <string name="settings_category_misc">その他</string>
     <string name="preference_category_quality">音質</string>
-    <string name="delete_failed">曲の削除に失敗しました</string>
+    <string name="delete_failed">曲の削除に失敗しました: %s</string>
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
     <string name="settings_crash_application">アプリをクラッシュさせる</string>
     <string name="album_cover">アルバムカバー</string>
@@ -182,7 +182,7 @@
     <string name="yes">はい</string>
     <string name="sort_by_album_artist">アルバムアーティスト</string>
     <string name="sort_by_file_path">ファイルパス</string>
-    <string name="spk_encoding_pcm_16bit_big_endian">16-bit PCM (ビッグエンディアン)</string>
+    <string name="spk_encoding_pcm_16bit_big_endian">16 ビット PCM (ビッグエンディアン)</string>
     <string name="spk_channel_out_stereo">ステレオ</string>
     <string name="spk_channel_out_bottom_front_left">下部前方左</string>
     <string name="spk_encoding_ac3">AC-3</string>
@@ -191,7 +191,7 @@
     <string name="spk_channel_out_front_wide_right">前方左右範囲</string>
     <string name="spk_encoding_e_ac3">E-AC-3</string>
     <string name="spk_channel_out_front_right_of_center">中央右前方</string>
-    <string name="spk_encoding_pcm_32bit">32-bit (整数) PCM</string>
+    <string name="spk_encoding_pcm_32bit">32 ビット (整数) PCM</string>
     <string name="spk_channel_out_7point1point2">7.1.2</string>
     <string name="spk_channel_out_front_left_of_center">中央左前方</string>
     <string name="spk_encoding_dts">DTS</string>
@@ -216,12 +216,12 @@
     <string name="spk_channel_out_low_frequency_2">低周波 2</string>
     <string name="spk_channel_out_front_wide_left">前方左広範囲</string>
     <string name="spk_encoding_invalid">無効</string>
-    <string name="spk_encoding_pcm_8bit">8-bit PCM</string>
-    <string name="spk_encoding_pcm_16bit">16-bit PCM</string>
-    <string name="spk_encoding_pcm_24bit">24-bit PCM</string>
-    <string name="spk_encoding_pcm_24bit_big_endian">24-bit PCM (ビッグエンディアン)</string>
-    <string name="spk_encoding_pcm_32bit_big_endian">32-bit (整数) PCM (ビッグエンディアン)</string>
-    <string name="spk_encoding_pcm_float">32-bit (float) PCM</string>
+    <string name="spk_encoding_pcm_8bit">8 ビット PCM</string>
+    <string name="spk_encoding_pcm_16bit">16 ビット PCM</string>
+    <string name="spk_encoding_pcm_24bit">24 ビット PCM</string>
+    <string name="spk_encoding_pcm_24bit_big_endian">24 ビット PCM (ビッグエンディアン)</string>
+    <string name="spk_encoding_pcm_32bit_big_endian">32 ビット (整数) PCM (ビッグエンディアン)</string>
+    <string name="spk_encoding_pcm_float">32 ビット (float) PCM</string>
     <string name="spk_encoding_mp3">MP3</string>
     <string name="spk_encoding_aac_lc">AAC-LC</string>
     <string name="spk_encoding_aac_he_v1">HE-AAC v1</string>
@@ -299,7 +299,7 @@
     <string name="mix_port_flag_iec958_nonaudio">IEC 958 (非オーディオ)</string>
     <string name="mix_port_flag_hw_av_sync">ハードウェア A/V 同期</string>
     <string name="mix_port_flag_deep_buffer">ディープバッファ</string>
-    <string name="spk_encoding_pcm_8_24bit">24-bit (8.24) PCM</string>
+    <string name="spk_encoding_pcm_8_24bit">24 ビット (8.24) PCM</string>
     <string name="audio_signal_chain">オーディオ信号チェーン</string>
     <string name="mix_port_flag_ultrasound">超音波</string>
     <string name="mix_port_flag_spatializer">スペーシャライザー</string>
@@ -387,8 +387,8 @@
     <string name="settings_audio_quality_info_summary">プレーヤー画面にオーディオ品質、形式情報を表示します</string>
     <string name="what_were_you_doing">クラッシュの発生時に Gramophone で何をしていましたか？問題を解決できる可能性を高めるために、できるだけ多くの詳細情報を追加してください。\n\nバグレポートは英語を推奨しますが、別の言語でバグレポートを送信した場合は、翻訳サービスを使用するように努めます。</string>
     <string name="settings_audio_quality_info">オーディオ品質情報</string>
-    <string name="spk_encoding_pcm_16bit_offload">16-bit PCM オフロード</string>
-    <string name="spk_encoding_pcm_24bit_offload">24-bit (8.24) PCM オフロード</string>
+    <string name="spk_encoding_pcm_16bit_offload">16 ビット PCM オフロード</string>
+    <string name="spk_encoding_pcm_24bit_offload">24 ビット (8.24) PCM オフロード</string>
     <string name="spk_encoding_dts_lbr">DTS Express</string>
     <string name="cannot_find_file">ファイルが見つかりません</string>
     <string name="settings_translation_auto_word">翻訳を自動的にアニメーション</string>
@@ -396,7 +396,7 @@
     <string name="settings_mp3_index_seeking">MP3 インデックスシーク</string>
     <string name="settings_mp3_index_seeking_summary">VBR シークで Xing ヘッダーが欠落している可能性を考慮する代替としてシークに必要となる MP3 ファイル全体をメモリ上に読み込みます。このオプションを無効化すると Xing ヘッダーが欠落時に CBR シークを使用します。適切な形式の VBR MP3 ファイルは Xing ヘッダーが含まれているため、基本的にこのオプションを使う必要はありません (適用するにはアプリを再起動してください)。</string>
     <string name="log_attachment">ログは添付ファイルとして自動送信されます</string>
-    <string name="delete_failed_playlist">プレイリストの削除に失敗しました</string>
+    <string name="delete_failed_playlist">プレイリストの削除に失敗しました: %s</string>
     <string name="do_not_enter_email_enter_msg">メールアドレスではなくメッセージを入力してください</string>
     <string name="create_playlist">プレイリストを作成…</string>
     <string name="rename">名前を変更</string>
@@ -404,15 +404,15 @@
     <string name="log_will_auto_send">ログは自動送信されます、問題の説明をお願いします</string>
     <string name="did_you_know">ご存じですか…</string>
     <string name="playlist_name">プレイリスト名</string>
-    <string name="edit_playlist_failed">プレイリストの編集に失敗しました</string>
+    <string name="edit_playlist_failed">プレイリストの編集に失敗しました: %s</string>
     <string name="still_refreshing">更新中、ステップ %1$d/%2$d: %3$s</string>
     <string name="refreshing_wait">更新中、お待ちください…</string>
-    <string name="rename_failed_playlist">プレイリスト名の変更に失敗しました</string>
-    <string name="create_failed_playlist">プレイリストの作成に失敗しました</string>
+    <string name="rename_failed_playlist">プレイリスト名の変更に失敗しました: %s</string>
+    <string name="create_failed_playlist">プレイリストの作成に失敗しました: %s</string>
     <string name="rename_playlist">プレイリスト名を変更</string>
     <string name="add_to_playlist">プレイリストに追加</string>
     <string name="refresh_did_you_know">Gramophone はアプリを起動するたびに曲の一覧を要求して起動中に新しいメディアを自動的に検出します。この「更新」ボタンは Gramophone 内のメディアを再読み込みするのではなく、すべてのメディアストレージデバイスからすべてのファイルを再スキャンするようシステムに要求します (そのため、多少時間を要します)。つまり、システムや他のアプリに不具合がない限り、この機能を使用する必要はありません。\n\n曲が不足している場合は「設定」→「動作」から「曲の最小の長さ」と「フォルダのブラックリスト」を確認し、これらの設定が適切な値に設定されているか確認してください。その他の考えられる原因については FAQ をご確認ください。</string>
-    <string name="settings_hq_output_summary">16 ビット整数で制限せずに任意のサンプル形式を使用できるようにします</string>
+    <string name="settings_hq_output_summary">16 ビット整数で制限せずに任意のサンプルフォーマットを使用できるようにします</string>
     <string name="settings_hq_output">高音質な出力</string>
     <string name="playlist_editing_pref_desc">プレイリストに曲を追加可能にします (移動と削除は未実装です)</string>
     <string name="no_app_found">実行できるアプリが見つかりません</string>
@@ -434,4 +434,10 @@
     <string name="offload_enabled_if_gapless">ギャップレス再生が可能な場合に有効化されます</string>
     <string name="settings_audio_offload">オーディオオフロード (バッテリーを節約)</string>
     <string name="settings_telegram">Telegram</string>
+    <string name="timer_expiry_eos">スリープタイマーは %s で再生中の曲が終了すると音楽を一時停止します</string>
+    <string name="timer_expiry_end_of_this_song">スリープタイマーは、この曲の再生を終了後に音楽を一時停止します</string>
+    <string name="settings_cookie_summary">アルバムカバーをクッキー型にします</string>
+    <string name="settings_cookie_info">クッキーカバー</string>
+    <string name="spk_encoding_pcm_20bit">20 ビット PCM</string>
+    <string name="spk_encoding_pcm_20bit_big_endian">20 ビット PCM (ビッグエンディアン)</string>
 </resources>
