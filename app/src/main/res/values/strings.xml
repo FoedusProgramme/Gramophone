@@ -183,6 +183,8 @@
     <string name="fgs_failed_channel">Playback failed to resume</string>
     <string name="sort_by_release_date">Release date</string>
     <string name="timer_expiry">Sleep timer will pause music at %s</string>
+    <string name="timer_expiry_eos">Sleep timer will pause music when song playing at %s ends</string>
+    <string name="timer_expiry_end_of_this_song">Sleep timer will pause music at the end of this song</string>
     <string name="separator_dot">•</string>
 	<string name="settings_preference_category_home">Home screen</string>
     <string name="tab_order">Configure tab order</string>
