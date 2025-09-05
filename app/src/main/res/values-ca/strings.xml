@@ -172,7 +172,7 @@
     <string name="current_playlist">Llista de reproducció actual</string>
     <string name="sort_by_release_date">Data de publicació</string>
     <string name="fgs_failed_channel">La reproducció ha fallat en reprendre</string>
-    <string name="timer_expiry">El temporitzador d\'adormir-se farà pausa de la música a les %s</string>
+    <string name="timer_expiry">El temporitzador per a adormir-se farà pausa de la música a les %s</string>
     <string name="tab_order">Configuració de l\'ordre de les pestanyes</string>
     <string name="sort">Ordena</string>
     <string name="scroll_to_albums">Desplaça\'t als àlbums</string>
@@ -443,4 +443,8 @@
     <string name="settings_telegram">Telegram</string>
     <string name="spk_encoding_pcm_20bit">PCM de 20 bits</string>
     <string name="spk_encoding_pcm_20bit_big_endian">PCM de 20 bits (endian gran)</string>
+    <string name="timer_expiry_eos">El temporitzador per a adormir-se farà pausa de la música quan acabi la reproducció de la cançó a les %s</string>
+    <string name="timer_expiry_end_of_this_song">El temporitzador per a adormir-se farà pausa de la música al final d\'aquesta cançó</string>
+    <string name="settings_cookie_summary">Fes que la caràtula de l\'àlbum tingui forma de galeta</string>
+    <string name="settings_cookie_info">Caràtula de galeta</string>
 </resources>
