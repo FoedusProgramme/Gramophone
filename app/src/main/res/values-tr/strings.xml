@@ -128,7 +128,7 @@
     <string name="settings_crash_application_summary">Ç-0-kertici 3000</string>
     <string name="settings_lyrics_multiline">Çok satırlı şarkı sözlerini oku</string>
     <string name="deny_images"><![CDATA[Lütfen \"medya\" erişimini engelleyin]]></string>
-    <string name="delete_failed">Şarkı silinemedi</string>
+    <string name="delete_failed">Şarkı silinemedi: %s</string>
     <string name="settings_trim_lyrics">Şarkı sözleri arasındaki boşlukları kaldır</string>
     <string name="album_covers_enhance">Gelişmiş albüm kapağı yükleniyor</string>
     <string name="share">Paylaş</string>
