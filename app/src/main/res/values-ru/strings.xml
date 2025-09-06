@@ -452,4 +452,6 @@
     <string name="timer_expiry_end_of_this_song">Таймер сна приостановит музыку по окончании этой композиции</string>
     <string name="spk_encoding_pcm_20bit">20-битный PCM</string>
     <string name="spk_encoding_pcm_20bit_big_endian">20-битный PCM (с прямым порядком байтов)</string>
+    <string name="settings_cookie_summary">Делает обложку альбома в форме печенья</string>
+    <string name="settings_cookie_info">Обложка-печенье</string>
 </resources>
