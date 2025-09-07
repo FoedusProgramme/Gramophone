@@ -464,5 +464,7 @@
     <string name="settings_telegram">Telegram</string>
 	<string name="spk_encoding_pcm_20bit">20-bit PCM</string>
     <string name="spk_encoding_pcm_20bit_big_endian">20-bit PCM (big endian)</string>
+    <string name="settings_cookie_summary">Make album cover cookie shaped</string>
+    <string name="settings_cookie_info">Cookie cover</string>
 
 </resources>
