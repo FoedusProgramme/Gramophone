@@ -450,4 +450,12 @@
     <string name="timer_expiry_end_of_this_song">Czasomierz snu wstrzyma odtwarzanie muzyki po zakończeniu tego utworu</string>
     <string name="spk_encoding_pcm_20bit">20-bit PCM</string>
     <string name="spk_encoding_pcm_20bit_big_endian">20-bit PCM (big endian)</string>
+    <plurals name="folders_plural">
+        <item quantity="one">%d Folder</item>
+        <item quantity="few">%d Foldery</item>
+        <item quantity="many">%d Folderów</item>
+        <item quantity="other">%d Folderów</item>
+    </plurals>
+    <string name="settings_cookie_summary">Okładka albumu w kształcie ciastka</string>
+    <string name="settings_cookie_info">Okładka ciastko</string>
 </resources>
