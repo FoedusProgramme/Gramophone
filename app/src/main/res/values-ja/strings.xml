@@ -436,8 +436,6 @@
     <string name="settings_telegram">Telegram</string>
     <string name="timer_expiry_eos">スリープタイマーは %s で再生中の曲が終了すると音楽を一時停止します</string>
     <string name="timer_expiry_end_of_this_song">スリープタイマーは、この曲の再生を終了後に音楽を一時停止します</string>
-    <string name="settings_cookie_summary">アルバムカバーをクッキー型にします</string>
-    <string name="settings_cookie_info">クッキーカバー</string>
     <string name="spk_encoding_pcm_20bit">20 ビット PCM</string>
     <string name="spk_encoding_pcm_20bit_big_endian">20 ビット PCM (ビッグエンディアン)</string>
 </resources>

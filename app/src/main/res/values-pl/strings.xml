@@ -450,6 +450,4 @@
     <string name="timer_expiry_end_of_this_song">Czasomierz snu wstrzyma odtwarzanie muzyki po zakończeniu tego utworu</string>
     <string name="spk_encoding_pcm_20bit">20-bit PCM</string>
     <string name="spk_encoding_pcm_20bit_big_endian">20-bit PCM (big endian)</string>
-    <string name="settings_cookie_summary">Okładka albumu w kształcie ciastka</string>
-    <string name="settings_cookie_info">Okładka ciastko</string>
 </resources>

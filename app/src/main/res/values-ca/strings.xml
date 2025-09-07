@@ -445,6 +445,4 @@
     <string name="spk_encoding_pcm_20bit_big_endian">PCM de 20 bits (endian gran)</string>
     <string name="timer_expiry_eos">El temporitzador per a adormir-se farà pausa de la música quan acabi la reproducció de la cançó a les %s</string>
     <string name="timer_expiry_end_of_this_song">El temporitzador per a adormir-se farà pausa de la música al final d\'aquesta cançó</string>
-    <string name="settings_cookie_summary">Fes que la caràtula de l\'àlbum tingui forma de galeta</string>
-    <string name="settings_cookie_info">Caràtula de galeta</string>
 </resources>
