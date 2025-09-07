@@ -444,4 +444,8 @@
     <string name="spk_encoding_pcm_20bit_big_endian">20-bitine PCM (tavajärjestusega)</string>
     <string name="settings_cookie_summary">Näita albumite kaanepilte küpsisekujulistena</string>
     <string name="settings_cookie_info">Küpsiselaadsed kaanepildid</string>
+    <plurals name="folders_plural">
+        <item quantity="one">%d kaust</item>
+        <item quantity="other">%d kausta</item>
+    </plurals>
 </resources>
