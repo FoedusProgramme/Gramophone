@@ -39,7 +39,7 @@
         <item quantity="one">%d Item</item>
         <item quantity="other">%d Items</item>
     </plurals>
-    <plurals name="folders">
+    <plurals name="folders_plural">
         <item quantity="one">%d Folder</item>
         <item quantity="other">%d Folders</item>
     </plurals>
