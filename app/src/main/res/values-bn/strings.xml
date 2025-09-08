@@ -206,4 +206,8 @@
     <string name="rename">নাম পরিবর্তন</string>
     <string name="rename_failed_playlist">প্লেলিস্টের নাম পরিবর্তন ব্যর্থ হয়েছে</string>
     <string name="rename_playlist">প্লেলিস্টের নাম পরিবর্তন</string>
+    <plurals name="folders_plural">
+        <item quantity="one">%d টি ফোল্ডার</item>
+        <item quantity="other">%d টি ফোল্ডার</item>
+    </plurals>
 </resources>
