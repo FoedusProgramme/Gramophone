@@ -448,4 +448,8 @@
         <item quantity="one">%d kaust</item>
         <item quantity="other">%d kausta</item>
     </plurals>
+    <string name="settings_pure_dark">Täiesti must kujundus</string>
+    <string name="settings_pure_dark_summary">Kujundus, kus kõik tumedas pinnad on süsimusta värvu (OLED-ekraanidel võib tumedate värvide kadu)</string>
+    <string name="settings_stop_on_dismiss">Loobumisel peata</string>
+    <string name="settings_stop_on_dismiss_summary">Lõpeta meediaesitus rakenduse sugemisel Androidi viimatikasutatud rakenduste loendist</string>
 </resources>
