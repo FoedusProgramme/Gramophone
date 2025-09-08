@@ -458,4 +458,8 @@
     </plurals>
     <string name="settings_cookie_summary">Okładka albumu w kształcie ciastka</string>
     <string name="settings_cookie_info">Okładka ciastko</string>
+    <string name="settings_pure_dark">Czysty ciemny motyw</string>
+    <string name="settings_pure_dark_summary">Motyw, w którym wszystkie powierzchnie w aplikacji są czysto czarne (może powodować zniekształcenie czerni na wyświetlaczach OLED)</string>
+    <string name="settings_stop_on_dismiss">Zatrzymuj się przy odrzuceniu</string>
+    <string name="settings_stop_on_dismiss_summary">Zatrzymaj odtwarzanie, gdy zadanie aplikacji zostanie zamknięte z listy ostatnich</string>
 </resources>
