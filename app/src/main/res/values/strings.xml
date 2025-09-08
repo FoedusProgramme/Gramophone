@@ -466,5 +466,9 @@
     <string name="spk_encoding_pcm_20bit_big_endian">20-bit PCM (big endian)</string>
     <string name="settings_cookie_summary">Make album cover cookie shaped</string>
     <string name="settings_cookie_info">Cookie cover</string>
+    <string name="settings_pure_dark">Pure dark theme</string>
+    <string name="settings_pure_dark_summary">A theme where all surfaces in the app are pure black (may cause black crush on OLED displays)</string>
+    <string name="settings_stop_on_dismiss">Stop on dismiss</string>
+    <string name="settings_stop_on_dismiss_summary">Stop playback when app task is dismissed from recents</string>
 
 </resources>
