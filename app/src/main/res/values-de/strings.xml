@@ -399,11 +399,11 @@
     <string name="create_playlist">Wiedergabeliste erstellen…</string>
     <string name="rename">Umbenennen</string>
     <string name="did_you_know">Wusstest du…</string>
-    <string name="rename_failed_playlist">Umbenennen der Wiedergabeliste fehlgeschlagen</string>
+    <string name="rename_failed_playlist">Umbenennen der Wiedergabeliste fehlgeschlagen: %s</string>
     <string name="playlist_name">Name der Wiedergabeliste</string>
-    <string name="create_failed_playlist">Erstellen der Wiedergabeliste fehlgeschlagen</string>
+    <string name="create_failed_playlist">Erstellen der Wiedergabeliste fehlgeschlagen: %s</string>
     <string name="rename_playlist">Wiedergabeliste umbenennen</string>
-    <string name="edit_playlist_failed">Bearbeiten der Wiedergabeliste fehlgeschlagen</string>
+    <string name="edit_playlist_failed">Bearbeiten der Wiedergabeliste fehlgeschlagen: %s</string>
     <string name="add_to_playlist">Zur Wiedergabeliste hinzufügen</string>
     <string name="settings_hq_output">Hochqualitative Ausgabe</string>
     <string name="playlist_editing_pref_desc">Ermöglicht, Lieder zu Wiedergabelisten hinzuzufügen (bewegen/entfernen ist noch nicht implementiert)</string>
@@ -437,4 +437,14 @@
     <string name="mix_port_flag_fast">Schnell</string>
     <string name="settings_mp3_index_seeking">MP3-Indexsuche</string>
     <string name="settings_hq_output_summary">Verwendung beliebiger Abtastformate zulassen, anstatt sich auf 16-Bit-Ganzzahlen zu beschränken</string>
+    <plurals name="folders_plural">
+        <item quantity="one">%d Ordner</item>
+        <item quantity="other">%d Ordner</item>
+    </plurals>
+    <string name="timer_expiry_eos">Der Sleep-Timer pausiert die Musik, wenn der Titel, der gerade abgespielt wird, bei %s endet</string>
+    <string name="timer_expiry_end_of_this_song">Der Einschlaftimer pausiert die Musik am Ende dieses Titels</string>
+    <string name="spk_encoding_pcm_20bit">20-bit PCM</string>
+    <string name="spk_encoding_pcm_20bit_big_endian">20-bit PCM (big endian)</string>
+    <string name="settings_cookie_summary">Albumcover keksförmig anzeigen</string>
+    <string name="settings_cookie_info">Keksförmige Albumcover</string>
 </resources>
