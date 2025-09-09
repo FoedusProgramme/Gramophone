@@ -441,4 +441,14 @@
     <string name="spk_encoding_pcm_20bit_big_endian">20-bit PCM (big endian)</string>
     <string name="timer_expiry_eos">O temporizador deterá a música cando finalice a canción en reprodución en %s</string>
     <string name="timer_expiry_end_of_this_song">O temporizador deterá a música cando finalice esta canción</string>
+    <plurals name="folders_plural">
+        <item quantity="one">%d Cartafol</item>
+        <item quantity="other">%d Cartafoles</item>
+    </plurals>
+    <string name="settings_cookie_summary">Mostrar a portada do álbum con forma de galleta</string>
+    <string name="settings_cookie_info">Portada como galleta</string>
+    <string name="settings_pure_dark">Decorado escuro puro</string>
+    <string name="settings_pure_dark_summary">Un decorado onde todas as partes da app son de negro puro (pode estragar o negro en pantallas OLED)</string>
+    <string name="settings_stop_on_dismiss">Deter ao desbotar</string>
+    <string name="settings_stop_on_dismiss_summary">Detén a reprodución cando a tarefa da app se desbota das recentes</string>
 </resources>
