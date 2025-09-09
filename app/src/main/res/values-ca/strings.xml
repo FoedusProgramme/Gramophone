@@ -452,4 +452,8 @@
     </plurals>
     <string name="settings_cookie_summary">Fa que la caràtula d\'àlbum tingui forma de galeta</string>
     <string name="settings_cookie_info">Caràtula en forma de galeta</string>
+    <string name="settings_pure_dark">Tema fosc pur</string>
+    <string name="settings_pure_dark_summary">Un tema a on totes les superfícies de l\'aplicació són negres pures (pot provocar un trencament del negre a les pantalles OLED)</string>
+    <string name="settings_stop_on_dismiss">Atura en descartar</string>
+    <string name="settings_stop_on_dismiss_summary">Atura la reproducció quan la tasca de l\'aplicació es descarti de les recents</string>
 </resources>
