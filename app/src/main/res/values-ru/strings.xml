@@ -452,4 +452,16 @@
     <string name="timer_expiry_end_of_this_song">Таймер сна приостановит музыку по окончании этой композиции</string>
     <string name="spk_encoding_pcm_20bit">20-битный PCM</string>
     <string name="spk_encoding_pcm_20bit_big_endian">20-битный PCM (с прямым порядком байтов)</string>
+    <string name="settings_pure_dark">Чёрная тема</string>
+    <string name="settings_pure_dark_summary">Тема, в которой весь интерфейс приложения чёрный (может вызывать эффект проваливания теней на OLED-дисплеях)</string>
+    <string name="settings_stop_on_dismiss">Останавливать при закрытии</string>
+    <string name="settings_stop_on_dismiss_summary">Останавливает воспроизведение при закрытии приложения из списка недавних</string>
+    <plurals name="folders_plural">
+        <item quantity="one">%d папка</item>
+        <item quantity="few">%d папки</item>
+        <item quantity="many">%d папок</item>
+        <item quantity="other">%d папок</item>
+    </plurals>
+    <string name="settings_cookie_summary">Делает обложку альбома в форме печенья</string>
+    <string name="settings_cookie_info">Обложка-печенье</string>
 </resources>
