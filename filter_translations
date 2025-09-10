@@ -81,9 +81,9 @@ def delete_strings(xml_file: Path, names_to_delete: list[str]) -> None:
         resolve_entities=False
     )
 
+    source_file_path = Path(sys.argv[1]).joinpath(xml_file)
+    tree = etree.parse(source_file_path, parser)
     if names_to_delete:
-        source_file_path = Path(sys.argv[1]).joinpath(xml_file)
-        tree = etree.parse(source_file_path, parser)
         root = tree.getroot()
 
         # Find all string elements
