@@ -72,10 +72,6 @@ def delete_strings(xml_file: Path, names_to_delete: list[str]) -> None:
     Deletes entire <string> elements from Android string resources XML
     while preserving all formatting, comments, and XML structure
     """
-    if not names_to_delete:
-        print(f"  No strings to delete in {xml_file}.")
-        return
-
     # Create parser with full preservation settings
     parser = etree.XMLParser(
         remove_blank_text=False,
@@ -85,19 +81,22 @@ def delete_strings(xml_file: Path, names_to_delete: list[str]) -> None:
         resolve_entities=False
     )
 
-    source_file_path = Path(sys.argv[1]).joinpath(xml_file)
-    tree = etree.parse(source_file_path, parser)
-    root = tree.getroot()
+    if names_to_delete:
+        source_file_path = Path(sys.argv[1]).joinpath(xml_file)
+        tree = etree.parse(source_file_path, parser)
+        root = tree.getroot()
 
-    # Find all string elements
-    print("  Deleting: ", end="")
-    for elem in root.xpath('//string | //plurals | //string-array'):
-        name = elem.get('name')
-        if name in names_to_delete:
-            parent = elem.getparent()
-            parent.remove(elem)
-            print(name, end=", ")
-    print()
+        # Find all string elements
+        print("  Deleting: ", end="")
+        for elem in root.xpath('//string | //plurals | //string-array'):
+            name = elem.get('name')
+            if name in names_to_delete:
+                parent = elem.getparent()
+                parent.remove(elem)
+                print(name, end=", ")
+        print()
+    else:
+        print(f"  No strings to delete in {xml_file}.")
 
     tree.write(
         str(xml_file),
