@@ -133,7 +133,7 @@
     <string name="settings_blacklist_folder_summary">Filtrar canciones de determinadas carpetas</string>
     <string name="settings_category_basic_info">Información general</string>
     <string name="settings_preference_category_application">Aplicación</string>
-    <string name="delete_failed">Error al borrar la canción</string>
+    <string name="delete_failed">Error al borrar la canción: %s</string>
     <string name="settings_crash_application">La aplicación falló</string>
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
     <string name="album_cover">Portada del álbum</string>
@@ -272,7 +272,7 @@
     <string name="settings_open_source_licenses">Licencias de código abierto</string>
     <string name="spk_encoding_pcm_32bit">PCM de 32 bits (enteros)</string>
     <string name="spk_encoding_e_ac3">E-AC-3</string>
-    <string name="delete_failed_playlist">Borrado de lista de reproducción fallido</string>
+    <string name="delete_failed_playlist">Borrado de lista de reproducción fallido: %s</string>
     <string name="spk_channel_out_7point1point2">7.1.2</string>
     <string name="spk_channel_out_5point1point4">5.1.4</string>
     <string name="spk_channel_out_front_wide_left">Frontal izquierdo amplio</string>
@@ -371,4 +371,9 @@
     <string name="send_email_manually">Por favor, envía el registro a nift4dev@gmail.com - no pude encontrar la aplicación de correo</string>
     <string name="settings_contributors_click">%s (¡clic para más!)</string>
     <string name="app_name">Gramophone</string>
+    <plurals name="folders_plural">
+        <item quantity="one">%d Carpeta</item>
+        <item quantity="many">%d Carpetas</item>
+        <item quantity="other">%d Carpetas</item>
+    </plurals>
 </resources>
