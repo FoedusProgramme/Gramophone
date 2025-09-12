@@ -227,7 +227,7 @@
     <string name="spk_channel_out_top_back_left">Верхний Нижний Левый</string>
     <string name="spk_channel_out_bottom_front_center">Нижний Верхний Центральный</string>
     <string name="sort_by_file_path">Путь к файлу</string>
-    <string name="sort_by_album_artist">Альбом исполнителя</string>
+    <string name="sort_by_album_artist">Исполнитель альбома -&gt; Название</string>
     <string name="spk_channel_out_front_left_of_center">Передний Левый или Центральный</string>
     <string name="spk_channel_out_front_right_of_center">Передний Правый или Центральный</string>
     <string name="spk_channel_out_top_front_center">Верхний Передний Центральный</string>
@@ -464,4 +464,7 @@
     </plurals>
     <string name="settings_cookie_summary">Делает обложку альбома в форме печенья</string>
     <string name="settings_cookie_info">Обложка-печенье</string>
+    <string name="compact_grid">Сетка (компактная)</string>
+    <string name="sort_by_album_year">Год альбома</string>
+    <string name="sort_by_album_artist_year"><![CDATA[Исполнитель альбома -> Год]]></string>
 </resources>
