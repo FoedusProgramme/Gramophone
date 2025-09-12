@@ -192,7 +192,7 @@
     <string name="delete">Usuń</string>
     <string name="yes">Tak</string>
     <string name="no">Nie</string>
-    <string name="sort_by_album_artist">Wykonawca albumu</string>
+    <string name="sort_by_album_artist">Wykonawca albumu -&gt; tytuł</string>
     <string name="sort_by_file_path">Ścieżka do pliku</string>
     <string name="spk_channel_out_5point1">5.1</string>
     <string name="spk_channel_out_6point1">6.1</string>
@@ -462,4 +462,7 @@
     <string name="settings_pure_dark_summary">Motyw, w którym wszystkie powierzchnie w aplikacji są czysto czarne (może powodować zniekształcenie czerni na wyświetlaczach OLED)</string>
     <string name="settings_stop_on_dismiss">Zatrzymuj się przy odrzuceniu</string>
     <string name="settings_stop_on_dismiss_summary">Zatrzymaj odtwarzanie, gdy zadanie aplikacji zostanie zamknięte z listy ostatnich</string>
+    <string name="compact_grid">Siatka (kompaktowa)</string>
+    <string name="sort_by_album_year">Rok albumu</string>
+    <string name="sort_by_album_artist_year"><![CDATA[Album artist -> year]]></string>
 </resources>
