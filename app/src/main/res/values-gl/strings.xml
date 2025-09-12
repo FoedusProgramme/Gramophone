@@ -31,7 +31,7 @@
     <string name="dark">Escuro</string>
     <string name="light">Claro</string>
     <string name="sort_by_size">Tamaño</string>
-    <string name="sort_by_album_artist">Artista do álbum</string>
+    <string name="sort_by_album_artist">Artista do álbum -&gt; título</string>
     <string name="sort_by_name">Nome</string>
     <string name="sort_by_artist">Artista</string>
     <string name="dismiss">Desbotar</string>
@@ -451,4 +451,7 @@
     <string name="settings_pure_dark_summary">Un decorado onde todas as partes da app son de negro puro (pode estragar o negro en pantallas OLED)</string>
     <string name="settings_stop_on_dismiss">Deter ao desbotar</string>
     <string name="settings_stop_on_dismiss_summary">Detén a reprodución cando a tarefa da app se desbota das recentes</string>
+    <string name="compact_grid">Grella (compacta)</string>
+    <string name="sort_by_album_year">Ano do álbum</string>
+    <string name="sort_by_album_artist_year">Ano <![CDATA[Album artist ->]]></string>
 </resources>
