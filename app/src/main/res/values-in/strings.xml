@@ -288,4 +288,9 @@
     <string name="settings_lyrics_char_scaling">Skala berbasis karakter untuk gradien lirik</string>
     <string name="settings_open_source_licenses">Lisensi sumber terbuka</string>
     <string name="delete_failed_playlist">Menghapus daftar putar gagal</string>
+    <plurals name="folders_plural">
+        <item quantity="other">%d Folder</item>
+    </plurals>
+    <string name="timer_expiry_eos">Pengatur waktu tidur akan jeda musik saat lagu %s berakhir</string>
+    <string name="timer_expiry_end_of_this_song">Pengatur waktu tidur akan jeda music setelah musik ini selesai</string>
 </resources>
