@@ -50,7 +50,7 @@
     <string name="sort_by_name">Name</string>
     <string name="sort_by_artist">Artist</string>
     <string name="sort_by_album">Album</string>
-    <string name="sort_by_album_artist">Album artist</string>
+    <string name="sort_by_album_artist">Album artist -> title</string>
     <string name="dismiss">Dismiss</string>
     <string name="unknown_genre">Unknown genre</string>
     <string name="unknown_year">Unknown year</string>
@@ -470,5 +470,8 @@
     <string name="settings_pure_dark_summary">A theme where all surfaces in the app are pure black (may cause black crush on OLED displays)</string>
     <string name="settings_stop_on_dismiss">Stop on dismiss</string>
     <string name="settings_stop_on_dismiss_summary">Stop playback when app task is dismissed from recents</string>
+	<string name="compact_grid">Grid (compact)</string>
+    <string name="sort_by_album_year">Album year</string>
+    <string name="sort_by_album_artist_year"><![CDATA[Album artist -> year]]></string>
 
 </resources>
