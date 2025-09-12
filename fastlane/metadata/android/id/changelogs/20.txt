@@ -1,0 +1,8 @@
+- Membuat tombol segarkan menyegarkan Media store
+- Menghapus pembatasan untuk format sampel audio
+- Tingkatkan dialog pratinjau audio
+- Jeda penyegaran jika app di latar belakang untuk menghemat daya
+- Pencegahan ANR
+- Memperbaiki halaman album artis
+- Telah memperbaiki beberapa kebocoran memori
+- Memperbaiki banyak kerusakan dan galat
