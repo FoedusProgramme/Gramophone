@@ -1,0 +1,8 @@
+- Mostrar la tasa de bits en el cuadro de diálogo de detalles
+- Experimental: nuevo analizador de letras para sincronización de palabras LRC y TTML, SRT (IU disponible próximamente)
+- Información del formato de audio en la pantalla Reproduciendo
+- Actualización automática de la biblioteca
+- "Abrir en Gramophone" desde el reproductor de archivos
+- Widget de letras
+- Ordenación mejorada
+- Muchas correcciones de errores
