@@ -188,7 +188,7 @@
     <string name="delete">Suprimeix</string>
     <string name="no">No</string>
     <string name="sort_by_file_path">Camí del fitxer</string>
-    <string name="sort_by_album_artist">Artista de l\'àlbum</string>
+    <string name="sort_by_album_artist">Artista de l\'àlbum -&gt; títol</string>
     <string name="spk_channel_out_quad">Quadrafònic</string>
     <string name="spk_channel_out_surround">Envoltant (4.0)</string>
     <string name="spk_channel_out_5point1">5.1</string>
@@ -456,4 +456,7 @@
     <string name="settings_pure_dark_summary">Un tema a on totes les superfícies de l\'aplicació són negres pures (pot provocar un trencament del negre a les pantalles OLED)</string>
     <string name="settings_stop_on_dismiss">Atura en descartar</string>
     <string name="settings_stop_on_dismiss_summary">Atura la reproducció quan la tasca de l\'aplicació es descarti de les recents</string>
+    <string name="compact_grid">Quadrícula (compacta)</string>
+    <string name="sort_by_album_year">Any de l\'àlbum</string>
+    <string name="sort_by_album_artist_year"><![CDATA[Artista de l'àlbum -> any]]></string>
 </resources>
