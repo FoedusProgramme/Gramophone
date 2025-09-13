@@ -376,4 +376,16 @@
         <item quantity="many">%d Carpetas</item>
         <item quantity="other">%d Carpetas</item>
     </plurals>
+    <string name="timer_expiry_eos">El temporizador pausará la música cuando finalice la reproducción de la canción en %s</string>
+    <string name="timer_expiry_end_of_this_song">El temporizador pausará la música al final de esta canción</string>
+    <string name="what_were_you_doing">¿Qué estabas haciendo en Gramophone cuando ocurrió este fallo? Agrega tantos detalles como sea posible para que sea mas fácil solucionar el problema.\n\nTenga en cuenta que se prefiere el inglés para los informes de errores, pero intentaré utilizar la traducción automática si envía informes de errores en otro idioma.</string>
+    <string name="settings_translation_auto_word_summary">Aplicar un degradado lineal a las líneas de traducción en las letras sincronizadas si las traducciones no tienen metadatos de sincronización de palabras</string>
+    <string name="refreshing_wait">Actualizando, por favor espere…</string>
+    <string name="settings_hq_output">Salida de alta calidad</string>
+    <string name="settings_cookie_summary">Portada de álbum en forma de galleta</string>
+    <string name="settings_cookie_info">Portada de galleta</string>
+    <string name="settings_pure_dark">Tema negro puro</string>
+    <string name="settings_pure_dark_summary">Un tema en el que todas las superficies de la aplicación son completamente negras</string>
+    <string name="compact_grid">Cuadrícula (compacta)</string>
+    <string name="sort_by_album_year">Año del álbum</string>
 </resources>
