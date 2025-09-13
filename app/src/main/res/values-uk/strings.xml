@@ -192,7 +192,7 @@
     <string name="delete">Видалити</string>
     <string name="yes">Так</string>
     <string name="no">Ні</string>
-    <string name="sort_by_album_artist">Виконавець альбому</string>
+    <string name="sort_by_album_artist">Виконавець альбому -&gt; назва</string>
     <string name="sort_by_file_path">Шлях до файлу</string>
     <string name="spk_channel_out_surround">Об\'ємне звучання (4.0)</string>
     <string name="spk_channel_out_7point1_surround">Об\'ємне звучання (7.1)</string>
@@ -462,4 +462,7 @@
     <string name="settings_pure_dark_summary">Тема, де всі поверхні в додатку повністю чорні (може спричинити чорний ефект на OLED-дисплеях)</string>
     <string name="settings_stop_on_dismiss">Зупинити при закритті</string>
     <string name="settings_stop_on_dismiss_summary">Зупинити відтворення, коли завдання програми видалено з нещодавніх</string>
+    <string name="compact_grid">Сітка (компактна)</string>
+    <string name="sort_by_album_year">Рік випуску альбому</string>
+    <string name="sort_by_album_artist_year"><![CDATA[Album artist -> рік]]></string>
 </resources>
