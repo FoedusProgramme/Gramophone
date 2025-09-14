@@ -458,5 +458,5 @@
     <string name="settings_stop_on_dismiss_summary">Atura la reproducció quan la tasca de l\'aplicació es descarti de les recents</string>
     <string name="compact_grid">Quadrícula (compacta)</string>
     <string name="sort_by_album_year">Any de l\'àlbum</string>
-    <string name="sort_by_album_artist_year"><![CDATA[Artista de l'àlbum -> any]]></string>
+    <string name="sort_by_album_artist_year"><![CDATA[Artista de l\'àlbum -> any]]></string>
 </resources>
