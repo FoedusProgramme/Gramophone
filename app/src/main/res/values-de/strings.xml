@@ -114,7 +114,7 @@
     <string name="settings_category_basic_info">Basisinformation</string>
     <string name="settings_category_filters">Filter</string>
     <string name="settings_category_misc">Sonstiges</string>
-    <string name="delete_failed">Löschen des Titels fehlgeschlagen</string>
+    <string name="delete_failed">Löschen des Titels fehlgeschlagen: %s</string>
     <string name="settings_color_accuracy">Farbgenauigkeit</string>
     <string name="settings_content_based_color">Inhaltsbasierte Farben</string>
     <string name="settings_content_based_color_summary">Albumbasierte Farbgenerierung aktivieren</string>
@@ -385,7 +385,7 @@
     <string name="what_were_you_doing">Was hast du in Gramophone gemacht, bevor dieser Absturz passiert ist? Bitte erklär es so detailliert wie möglich, um die Chance zu erhöhen, dass ich das Problem beheben kann.\n\nEnglisch ist die bevorzugte Sprache für Fehlerberichte, aber ich werde versuchen, für andere Sprachen Maschinenübersetzung zu benutzen.</string>
     <string name="settings_audio_quality_info">Audioqualität anzeigen</string>
     <string name="settings_audio_quality_info_summary">Informationen über Audioformat/-qualität im Player anzeigen</string>
-    <string name="delete_failed_playlist">Löschen der Wiedergabeliste fehlgeschlagen</string>
+    <string name="delete_failed_playlist">Löschen der Wiedergabeliste fehlgeschlagen: %s</string>
     <string name="mix_port_flag_iec958_nonaudio">IEC 958 (nicht Audio)</string>
     <string name="mix_port_flag_gapless_offload">Lückenloser Offload</string>
     <string name="settings_translation_auto_word">Übersetzungen automatisch animieren</string>
@@ -447,4 +447,7 @@
     <string name="spk_encoding_pcm_20bit_big_endian">20-bit PCM (big endian)</string>
     <string name="settings_cookie_summary">Albumcover keksförmig anzeigen</string>
     <string name="settings_cookie_info">Keksförmige Albumcover</string>
+    <string name="compact_grid">Raster (kompakt)</string>
+    <string name="sort_by_album_year">Albumjahr</string>
+    <string name="sort_by_album_artist_year"><![CDATA[Albuminterpret -> Jahr]]></string>
 </resources>
