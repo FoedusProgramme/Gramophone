@@ -50,7 +50,7 @@
     <string name="layout">نمایش</string>
     <string name="home_menu_equalizer">اکولایزر</string>
     <string name="equalizer_not_found">اکولایزر یافت نشد!</string>
-    <string name="grid">شبکه</string>
+    <string name="grid">شبکه‌ای</string>
     <string name="list">فهرست</string>
     <string name="settings_content_based_color">رنگ‌های مبتنی بر محتوا</string>
     <string name="settings_default_progress_bar">نوار پیشرفت پیش‌گزیده</string>
@@ -271,7 +271,7 @@
     <string name="device_type_ble_broadcast">پخش بلوتوثی LE</string>
     <string name="device_type_dock">بارانداز</string>
     <string name="settings_pixel_perfect_measurement_legacy_title">اندازه‌گیری پیکسلی متن</string>
-    <string name="sort_by_album_artist">هنرمند آلبوم</string>
+    <string name="sort_by_album_artist">هنرمند آلبوم -&gt; نام</string>
     <string name="sort_by_file_path">مسیر پرونده</string>
     <string name="dialog_bitrate">میزان بیت</string>
     <string name="bitrate_format">%1$d kbps</string>
@@ -451,4 +451,7 @@
     <string name="settings_stop_on_dismiss">توقف در هنگام رد کردن</string>
     <string name="settings_stop_on_dismiss_summary">توقف پخش وقتی که برنامه از موارد اخیر برداشته می‌شود</string>
     <string name="spk_encoding_pcm_20bit_big_endian">PCM ‫۲۰-بیت ‬(big endian)</string>
+    <string name="sort_by_album_artist_year"><![CDATA[هنرمند آلبوم -> سال]]></string>
+    <string name="compact_grid">شبکه‌ای (جمع و جور)</string>
+    <string name="sort_by_album_year">سال آلبوم</string>
 </resources>
