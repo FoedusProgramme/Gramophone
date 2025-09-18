@@ -184,7 +184,7 @@
     <string name="no">Ei</string>
     <string name="delete">Kustuta</string>
     <string name="yes">Jah</string>
-    <string name="sort_by_album_artist">Albumi esitaja</string>
+    <string name="sort_by_album_artist">Albumi esitaja -&gt; Pealkiri</string>
     <string name="sort_by_file_path">Faili asukoht</string>
     <string name="spk_channel_out_mono">Mono</string>
     <string name="spk_channel_out_quad">Kvadro</string>
@@ -452,4 +452,7 @@
     <string name="settings_pure_dark_summary">Kujundus, kus kõik tumedas pinnad on süsimusta värvu (OLED-ekraanidel võib tumedate värvide kadu)</string>
     <string name="settings_stop_on_dismiss">Loobumisel peata</string>
     <string name="settings_stop_on_dismiss_summary">Lõpeta meediaesitus rakenduse sugemisel Androidi viimatikasutatud rakenduste loendist</string>
+    <string name="compact_grid">Ruudustik (kompaktne)</string>
+    <string name="sort_by_album_year">Albumi aasta</string>
+    <string name="sort_by_album_artist_year"><![CDATA[Albumi esitaja -> aasta]]></string>
 </resources>
