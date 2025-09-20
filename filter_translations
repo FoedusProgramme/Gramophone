@@ -39,12 +39,11 @@ async def get_units_list(session: aiohttp.ClientSession, language_code: str, com
     url = f"{WEBLATE_API}/translations/{PROJECT_SLUG}/{component_slug}/{language_code}/units/"
     params = {'q': 'state:needs-editing', 'page_size': 500}
 
-    print(f'\nGetting {component_slug} units of language code "{language_code}"... ', end="")
     async with session.get(url, headers=HEADERS, params=params) as response:
         data = await response.json()
         units = data.get("results")
 
-    print(f"Got {len(units)} units.")
+    print(f'\nGot {len(units)} {component_slug} units for language code "{language_code}".')
     return units
 
 
@@ -121,21 +120,19 @@ def manage_fastlane_files(files_path: Path, editings: list[str]) -> None:
             os.remove(file_path)
 
 
-async def filter_component(session: aiohttp.ClientSession, component_slug: str):
-    languages = await get_languages(session, component_slug)
-    for language in languages:
-        if language.get('is_source'):
-            continue
-        language_code = language.get('language').get('code')
-        filepath = Path(language.get('filename'))
-        units = await get_units_list(session, language_code, component_slug)
-        editings = [u.get('context') for u in units]
-        print(f"  Strings to delete: {editings}")
+async def filter_component(session: aiohttp.ClientSession, language: dict, component_slug: str):
+    if language.get('is_source'):
+        return
+    language_code = language.get('language').get('code')
+    filepath = Path(language.get('filename'))
+    units = await get_units_list(session, language_code, component_slug)
+    editings = [u.get('context') for u in units]
+    print(f"  Items to delete: {editings}")
 
-        if component_slug == "strings-xml":
-            delete_strings(filepath, editings)
-        elif component_slug == "fastlane":
-            manage_fastlane_files(filepath, editings)
+    if component_slug == "strings-xml":
+        delete_strings(filepath, editings)
+    elif component_slug == "fastlane":
+        manage_fastlane_files(filepath, editings)
 
 
 async def main():
@@ -150,11 +147,19 @@ async def main():
         factor=2,
     )
     async with aiohttp_retry.RetryClient(raise_for_status=False, retry_options=retry_options) as client:
-        print("Filtering strings-xml...")
-        await filter_component(client, "strings-xml")
+        sem = asyncio.Semaphore(10)
+        async with sem:
+            print("Filtering strings-xml...")
+            languages = await get_languages(client, "strings-xml")
+            tasks = [asyncio.create_task(filter_component(client, language, "strings-xml"))
+                     for language in languages]
+            await asyncio.gather(*tasks, return_exceptions=True)
 
-        print("\n\nFiltering fastlane...")
-        await filter_component(client, "fastlane")
+            print("\n\nFiltering fastlane...")
+            fastlane_languages = await get_languages(client, "fastlane")
+            fastlane_tasks = [asyncio.create_task(filter_component(client, language, "fastlane"))
+                              for language in fastlane_languages]
+            await asyncio.gather(*fastlane_tasks, return_exceptions=True)
 
 
 if __name__ == "__main__":
