@@ -18,6 +18,7 @@ HEADERS = {
     "Accept": "application/json",
 }
 MAX_RETRIES = 4
+MIN_TRANSLATED_PERCENT = 60
 
 
 async def get_languages(session: aiohttp.ClientSession, component_slug: str) -> list:
@@ -67,16 +68,14 @@ def delete_strings(xml_file: Path, names_to_delete: list[str]) -> None:
         root = tree.getroot()
 
         # Find all string elements
-        print("  Deleting: ", end="")
         for elem in root.xpath('//string | //plurals | //string-array'):
             name = elem.get('name')
             if name in names_to_delete:
                 parent = elem.getparent()
                 parent.remove(elem)
-                print(name, end=", ")
-        print()
+        print("  Deleted strings:", ", ".join(names_to_delete))
     else:
-        print(f"  No strings to delete in {xml_file}.")
+        print("  No strings to delete")
 
     tree.write(
         str(xml_file),
@@ -121,17 +120,30 @@ def manage_fastlane_files(files_path: Path, editings: list[str]) -> None:
 
 
 async def filter_component(session: aiohttp.ClientSession, language: dict, component_slug: str):
-    if language.get('is_source'):
+    if language['is_source']:
         return
-    language_code = language.get('language').get('code')
-    filepath = Path(language.get('filename'))
+
+    total = language["total"]
+    translated = language["translated"]
+    language_code = language['language']['code']
+    filepath = Path(language['filename'])
+
     units = await get_units_list(session, language_code, component_slug)
     editings = [u.get('context') for u in units]
-    print(f"  Items to delete: {editings}")
+    translated_percent = (translated - len(editings)) / total * 100
 
     if component_slug == "strings-xml":
-        delete_strings(filepath, editings)
+        if translated_percent < MIN_TRANSLATED_PERCENT:
+            print(f"  Translations amount ({translated_percent:.2f}%) "
+                  f"is below the minimum ({MIN_TRANSLATED_PERCENT}%)")
+            if filepath.exists():
+                shutil.rmtree(filepath.parent)
+                print(f"  Deleted {filepath.parent}/")
+        else:
+            delete_strings(filepath, editings)
+
     elif component_slug == "fastlane":
+        print(f"  Files to delete: {editings}")
         manage_fastlane_files(filepath, editings)
 
 
