@@ -54,7 +54,7 @@
     <string name="dismiss">Dismiss</string>
     <string name="unknown_genre">Unknown genre</string>
     <string name="unknown_year">Unknown year</string>
-    <string name="refreshed_songs">Refreshed %1$s songs</string>
+    <string name="refreshed_songs">Refreshed %1$d songs</string>
     <string name="search">Search</string>
     <string name="share">Share</string>
     <string name="settings_app_name">App name</string>
