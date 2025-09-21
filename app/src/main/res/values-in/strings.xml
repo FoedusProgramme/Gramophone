@@ -151,7 +151,6 @@
     <string name="album_cover">Sampul album</string>
     <string name="dialog_edit_metadata">Edit</string>
     <string name="dialog_lyrics">Lirik</string>
-    <string name="separator_dot">•</string>
     <string name="settings_preference_category_home">Layar utama</string>
     <string name="tab_order">Konfigurasi urutan tab</string>
     <string name="tab_order_summary">Aplikasi akan menampilkan tab pertama saat pengaktifan. Tab setelah pembatas akan disembunyikan.</string>

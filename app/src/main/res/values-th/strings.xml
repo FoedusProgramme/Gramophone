@@ -57,7 +57,6 @@
     <string name="dialog_lyrics">เนื้อเพลง</string>
     <string name="dialog_edit_metadata">แก้ไข</string>
     <string name="preference_category_quality">คุณภาพ</string>
-    <string name="separator_dot">•</string>
     <string name="settings_preference_category_home">หน้าแรก</string>
     <string name="back">กลับ</string>
     <string name="remove">ลบ</string>

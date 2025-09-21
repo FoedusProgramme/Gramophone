@@ -260,7 +260,6 @@
     <string name="crash_report">Relatório de crash</string>
     <string name="email_clipboard">E-mail e texto copiados para a área de transferência</string>
     <string name="settings_export_logs">Exportar registo da app</string>
-    <string name="separator_dot">•</string>
     <string name="position_slider">Controle deslizante</string>
     <string name="play">Reproduzir</string>
     <string name="more">Mais</string>

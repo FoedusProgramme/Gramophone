@@ -154,7 +154,6 @@
     <string name="fgs_failed_channel">ازسرگیری پخش شکست خورد</string>
     <string name="timer_expiry">زمان‌سنج خواب پخش را در %s نگه خواهد داشت</string>
     <string name="fgs_failed_title">ازسرگیری پخش آهنگ شکست خورد</string>
-    <string name="separator_dot">•</string>
     <string name="grant_audio"><![CDATA[لطفا اجازۀ دسترسی به «صدا و موسیقی» را بپذیرید]]></string>
     <string name="play">پخش</string>
     <string name="more">بیشتر</string>
@@ -393,7 +392,6 @@
     <string name="settings_translation_auto_word_summary">اعمال گرادیان خطی برای پخش خطوط ترجمه در ترانۀ همگام شدۀ کلمه‌ای اگر ترجمه‌ها ابردادۀ همگام کلمه‌ای ندارند</string>
     <string name="settings_translation_auto_word">متحرک‌سازی خودکار ترجمه‌ها</string>
     <string name="spk_encoding_pcm_16bit_offload">تخلیۀ ۱۶-بیت PCM</string>
-    <string name="spk_encoding_dts_lbr">DTS Express</string>
     <string name="spk_encoding_pcm_24bit_offload">تخلیۀ ۲۴-بیت (۸.۲۴) PCM</string>
     <string name="cannot_find_file">نمی‌توان این پرونده را پیدا کرد</string>
     <string name="settings_mp3_index_seeking">جویش فهرست MP3</string>

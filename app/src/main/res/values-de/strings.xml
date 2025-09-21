@@ -155,7 +155,6 @@
     <string name="settings_lyrics_multiline">Lese mehrzeilige Liedtexte</string>
     <string name="settings_lyrics_multiline_summary">Behandele alle Zeilen zwischen Synchronisationspunkten als ein Liedtext</string>
     <string name="timer">Einschlaftimer</string>
-    <string name="separator_dot">•</string>
     <string name="scroll_to_albums">Zu den Alben scrollen</string>
     <string name="position_slider">Positionsschieberegler</string>
     <string name="grant_audio"><![CDATA[Bitte die Berechtigung „Musik und Audio“ erteilen]]></string>
@@ -418,7 +417,6 @@
     <string name="mix_port_flag_compress_offload">Komprimierter Offload</string>
     <string name="spk_encoding_pcm_16bit_offload">16-bit PCM Offload</string>
     <string name="spk_encoding_pcm_24bit_offload">24-bit (8.24) PCM offload</string>
-    <string name="spk_encoding_dts_lbr">DTS Express</string>
     <string name="contributors_yuyuko1024">Verschnörkelter Fortschrittsbalken</string>
     <string name="contributors_ghhccghk">Liedtexte in der Statusleiste</string>
     <string name="home_menu_quick_refresh">Schnelles Aktualisieren</string>

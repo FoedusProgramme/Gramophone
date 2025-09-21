@@ -160,7 +160,6 @@
     <string name="fgs_failed_channel">பின்னணி மீண்டும் தொடங்கத் தவறிவிட்டது</string>
     <string name="sort_by_release_date">வெளியீட்டு தேதி</string>
     <string name="timer_expiry">ச்லீப் நேரங்குறிகருவி %s இல் இசையை இடைநிறுத்தும்</string>
-    <string name="separator_dot">•</string>
     <string name="settings_preference_category_home">முகப்புத் திரை</string>
     <string name="tab_order">தாவல் வரிசையை உள்ளமைக்கவும்</string>
     <string name="tab_order_summary">பயன்பாடு தொடக்கத்தில் முதல் தாவலைக் காண்பிக்கும். வகுப்பாளருக்குப் பிறகு தாவல்கள் மறைக்கப்படும்.</string>
@@ -393,7 +392,6 @@
     <string name="settings_audio_quality_info_summary">பிளேயர் திரையில் ஆடியோ தரம்/வடிவமைப்பு தகவல்களைக் காட்டு</string>
     <string name="spk_encoding_pcm_16bit_offload">16-பிட் பிசிஎம் ஆஃப்லோட்</string>
     <string name="spk_encoding_pcm_24bit_offload">24-பிட் (8.24) பிசிஎம் ஆஃப்லோட்</string>
-    <string name="spk_encoding_dts_lbr">டி.டி.எச் எக்ச்பிரச்</string>
     <string name="settings_translation_auto_word">ஆட்டோ-மோச்ட் மொழிபெயர்ப்புகள்</string>
     <string name="settings_translation_auto_word_summary">மொழிபெயர்ப்பு சொற்கள்-ஒத்திசைவு மேனிலை தரவு இல்லையென்றால் சொல்-ஒத்திசைக்கப்பட்ட பாடல் பின்னணியில் மொழிபெயர்ப்பு வரிகளுக்கு நேரியல் சாய்வைப் பயன்படுத்துங்கள்</string>
     <string name="cannot_find_file">இந்த கோப்பைக் கண்டுபிடிக்க முடியவில்லை</string>

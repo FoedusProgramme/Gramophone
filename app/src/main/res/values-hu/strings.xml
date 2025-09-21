@@ -335,7 +335,6 @@
     <string name="spk_encoding_pcm_32bit">32-bit (int) PCM</string>
     <string name="spk_channel_out_front_center">Center</string>
     <string name="mix_port_flag_ultrasound">Ultrahang</string>
-    <string name="separator_dot">•</string>
     <string name="spk_channel_out_bottom_front_center">Alsó center</string>
     <string name="spk_encoding_opus">Opus</string>
     <string name="spk_channel_out_low_frequency">Alacsony Frekvencia</string>

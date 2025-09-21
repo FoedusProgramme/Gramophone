@@ -164,7 +164,6 @@
     <string name="lyric_widget_description">Widget que mostra as letras da mídia que está sendo reproduzida</string>
     <string name="seekbar">Barra de busca</string>
     <string name="divider">Divisor</string>
-    <string name="separator_dot">•</string>
     <string name="settings_preference_category_home">Tela inicial</string>
     <string name="back">Voltar</string>
     <string name="skip_previous">Pular para o anterior</string>

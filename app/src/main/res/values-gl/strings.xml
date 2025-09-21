@@ -162,7 +162,6 @@
     <string name="fgs_failed_channel">Fallou retomar a reprodución</string>
     <string name="sort_by_release_date">Data de publicación</string>
     <string name="timer_expiry">O temporizador deterá a música ás %s</string>
-    <string name="separator_dot">•</string>
     <string name="settings_preference_category_home">Inicio</string>
     <string name="tab_order">Establecer orde das pestanas</string>
     <string name="tab_order_summary">A app mostrará a primeira pestana no inicio. As pestanas após o divisor estarán ocultas.</string>
@@ -391,7 +390,6 @@
     <string name="settings_audio_quality_info">Info da calidade do audio</string>
     <string name="settings_audio_quality_info_summary">Mostra info sobre o formato/calidade na pantalla de reprodución</string>
     <string name="spk_encoding_pcm_24bit_offload">24-bit (8.24) PCM offload</string>
-    <string name="spk_encoding_dts_lbr">DTS Express</string>
     <string name="spk_encoding_pcm_16bit_offload">16-bit PCM Offload</string>
     <string name="settings_translation_auto_word">Tradución automática</string>
     <string name="settings_translation_auto_word_summary">Aplicar un gradiente lineal ás liñas traducidas na reprodución con letra sincronizada se a tradución non ten metadatos sincronizados por palabras</string>

@@ -165,7 +165,6 @@
     <string name="fgs_failed_text">Нажмите здесь, чтобы открыть приложение и продолжить воспроизведение</string>
     <string name="fgs_failed_channel">Не удалось возобновить воспроизведение</string>
     <string name="timer_expiry">Таймер сна приостановит музыку на %s</string>
-    <string name="separator_dot">•</string>
     <string name="grant_audio"><![CDATA[Пожалуйста, предоставьте разрешение \"Музыка и аудио\"]]></string>
     <string name="settings_preference_category_home">Главный экран</string>
     <string name="tab_order">Настроить порядок вкладок</string>
@@ -407,7 +406,6 @@
     <string name="spk_encoding_mpegh_sub_bl_l4">MPEG-H Базовый профиль L4</string>
     <string name="spk_encoding_mpegh_sub_lc_l3">MPEG-H Низкая сложность L3</string>
     <string name="what_were_you_doing">Что вы делали в Gramophone, когда произошёл этот сбой? Пожалуйста, добавьте как можно больше деталей, чтобы увеличить шансы на то, что я смогу решить проблему.\n\nОбратите внимание, что для отчётов об ошибках предпочтителен английский язык, но я постараюсь использовать машинный перевод, если вы отправите отчёты на другом языке.</string>
-    <string name="spk_encoding_dts_lbr">DTS Express</string>
     <string name="settings_translation_auto_word">Автоматически анимировать переводы</string>
     <string name="refreshing_wait">Обновление, пожалуйста, подождите…</string>
     <string name="still_refreshing">Обновление, шаг %1$d/%2$d: %3$s</string>

@@ -133,7 +133,6 @@
     <string name="settings_trim_lyrics">Elimina els espais de les lletres</string>
     <string name="fgs_failed_title">Ha fallat en reprendre la reproducció de música</string>
     <string name="fgs_failed_text">Feu clic aquí per obrir l\'aplicació i continuar la reproducció</string>
-    <string name="separator_dot">•</string>
     <string name="settings_preference_category_home">Pantalla d\'inici</string>
     <string name="seekbar">Barra de cerca</string>
     <string name="tab_order_summary">L’aplicació mostrarà la primera pestanya en iniciar. Les pestanyes després del separador s\'amagaran.</string>
@@ -394,7 +393,6 @@
     <string name="settings_export_logs">Exporta els registres de l\'aplicació</string>
     <string name="settings_audio_quality_info">Informació de la qualitat de l\'àudio</string>
     <string name="settings_audio_quality_info_summary">Mostra informació de la qualitat/format de l\'àudio a la pantalla del reproductor</string>
-    <string name="spk_encoding_dts_lbr">DTS Express</string>
     <string name="spk_encoding_pcm_16bit_offload">PCM offload de 16 bits</string>
     <string name="spk_encoding_pcm_24bit_offload">PCM offload de 24 bits (8.24)</string>
     <string name="settings_translation_auto_word">Traduccions animades automàticament</string>

@@ -159,7 +159,6 @@
     <string name="album_covers_enhance_desc">Mostrar portadas de canciones de alta calidad y permite que la portada del álbum y la canción sean diferentes (requiere acceso a las fotos)</string>
     <string name="sort_by_release_date">Fecha de lanzamiento</string>
     <string name="timer_expiry">El temporizador de apagado pausará la música en %s</string>
-    <string name="separator_dot">•</string>
     <string name="grant_audio"><![CDATA[Por favor, permite los permisos "Música y audio"]]></string>
     <string name="seekbar">Barra de búsqueda</string>
     <string name="divider">Divisor</string>
@@ -355,7 +354,6 @@
     <string name="email_clipboard">Dirección de correo y texto copiado al portapapeles</string>
     <string name="settings_audio_quality_info">Información de la calidad de audio</string>
     <string name="settings_audio_quality_info_summary">Mostrar información de calidad de audio/formato en la pantalla del reproductor</string>
-    <string name="spk_encoding_dts_lbr">DTS Express</string>
     <string name="cannot_find_file">No se puede encontrar este archivo</string>
     <string name="log_attachment">Los registros se enviarán como anexo automáticamente</string>
     <string name="create_playlist">Crear una lista de reproducción…</string>

@@ -213,7 +213,6 @@
     <string name="fgs_failed_text">Klikněte zde pro otevření aplikace a pro pokračování poslechu</string>
     <string name="fgs_failed_channel">Pokračování poslechu se nezdrařilo</string>
     <string name="timer_expiry">Spánkový časovač pozastaví hudbu za %s</string>
-    <string name="separator_dot">•</string>
     <string name="settings_preference_category_home">Domovská obrazovka</string>
     <string name="seekbar">Seekbar</string>
     <string name="scroll_to_songs">Přejít do skladeb</string>

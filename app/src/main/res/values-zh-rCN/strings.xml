@@ -156,7 +156,6 @@
     <string name="play">播放</string>
     <string name="sort">排序</string>
     <string name="play_all">播放所有</string>
-    <string name="separator_dot">•</string>
     <string name="settings_preference_category_home">主屏幕</string>
     <string name="tab_order">配置标签顺序</string>
     <string name="tab_order_summary">应用将在启动时显示第一个标签。分隔符后的标签将被隐藏。</string>
@@ -341,7 +340,6 @@
     <string name="settings_mp3_index_seeking_summary">根据需要将 MP3 文件的全部内容读入内存，而不是依靠可能丢失的 Xing 标头进行 VBR 查找。若不开启该选项，在缺少 Xing 标头时将使用 CBR 查找。格式正确的 VBR MP3 文件都有 Xing 标头，因此几乎在几乎所有的情况下都无需启用此选项。(需要重新启动应用程序才能应用此选项）</string>
     <string name="settings_translation_auto_word_summary">如果逐字歌词的翻译中没有逐字同步元数据，则在逐字歌词播放中对翻译行使用线性渐变动画</string>
     <string name="settings_translation_auto_word">自动翻译</string>
-    <string name="spk_encoding_dts_lbr">DTS Express</string>
     <string name="spk_encoding_pcm_24bit_offload">24-bit (8.24) PCM offload</string>
     <string name="mix_port_flag_unknown">未知</string>
     <string name="spk_encoding_pcm_8_24bit">24-bit (8.24) 脉冲编码调制</string>

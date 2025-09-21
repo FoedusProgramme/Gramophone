@@ -152,7 +152,6 @@
     <string name="fgs_failed_text">Uygulamayı açmak ve çalmaya devam etmek için dokunun</string>
     <string name="fgs_failed_channel">Müzik sürdürülemedi</string>
     <string name="timer_expiry">Uyku zamanlayıcısı müziği %s de durduracak</string>
-    <string name="separator_dot">•</string>
     <string name="settings_preference_category_home">Ana ekran</string>
     <string name="tab_order">Sekmeleri sırala</string>
     <string name="tab_order_summary">Uygulama başlangıçta ilk sekmeyi açacak. Ayırıcıdan sonraki sekmeler gizlenecek.</string>
