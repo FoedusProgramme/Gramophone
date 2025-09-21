@@ -45,7 +45,7 @@
     <string name="dismiss">Отмена</string>
     <string name="unknown_genre">Неизвестный жанр</string>
     <string name="unknown_year">Неизвестный год</string>
-    <string name="refreshed_songs">Обновлены %1$d треки</string>
+    <string name="refreshed_songs">Обновлено треков: %1$d</string>
     <string name="search">Поиск</string>
     <string name="settings_app_name">Название приложения</string>
     <string name="settings_contributors">Разработчики</string>
