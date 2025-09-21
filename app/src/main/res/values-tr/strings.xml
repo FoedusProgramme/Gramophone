@@ -53,7 +53,7 @@
     <string name="album_artist">Albüm sanatçısı</string>
     <string name="sort_by_album">Albüm</string>
     <string name="category_albums">Albümler</string>
-    <string name="refreshed_songs">%1$s şarkıları yenilendi</string>
+    <string name="refreshed_songs">%1$d şarkıları yenilendi</string>
     <string name="dark">Koyu</string>
     <string name="sort_by_name">İsim</string>
     <string name="check_for_updates">Güncellemeler için kanalımız ziyaret edin!</string>

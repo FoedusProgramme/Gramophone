@@ -20,7 +20,7 @@
     <string name="dismiss">忽略</string>
     <string name="unknown_genre">未知流派</string>
     <string name="unknown_year">未知年份</string>
-    <string name="refreshed_songs">刷新了 %1$s 首歌曲</string>
+    <string name="refreshed_songs">刷新了 %1$d 首歌曲</string>
     <string name="search">搜索</string>
     <string name="settings_app_name">应用名称</string>
     <string name="settings_contributors">贡献者</string>

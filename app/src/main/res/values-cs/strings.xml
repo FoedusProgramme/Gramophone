@@ -128,7 +128,7 @@
     <string name="sort_by_size">Velikost</string>
     <string name="unknown_genre">Neznámý žánr</string>
     <string name="unknown_year">Neznámý rok vydání</string>
-    <string name="refreshed_songs">Aktualitováno %1$s skladeb</string>
+    <string name="refreshed_songs">Aktualitováno %1$d skladeb</string>
     <string name="search">Vyhledat</string>
     <string name="go_to_artist">Přejít k interpretovi</string>
     <string name="dialog_title">Název</string>

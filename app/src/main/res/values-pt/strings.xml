@@ -68,7 +68,7 @@
     <string name="dismiss">Ok</string>
     <string name="unknown_genre">Gênero desconhecido</string>
     <string name="unknown_year">Ano desconhecido</string>
-    <string name="refreshed_songs">Músicas %1$s atualizadas</string>
+    <string name="refreshed_songs">Músicas %1$d atualizadas</string>
     <string name="search">Pesquisar</string>
     <string name="settings_app_name">Nome da app</string>
     <string name="settings_contributors">Colaboradores</string>

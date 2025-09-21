@@ -20,7 +20,7 @@
         <item quantity="other">%d개 곡</item>
     </plurals>
     <string name="dismiss">닫기</string>
-    <string name="refreshed_songs">%1$s개 곡 새로고침</string>
+    <string name="refreshed_songs">%1$d개 곡 새로고침</string>
     <string name="settings_contributors">기여자</string>
     <string name="play_next">다음 곡 재생</string>
     <string name="go_to_album">앨범으로 이동</string>

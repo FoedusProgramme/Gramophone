@@ -18,7 +18,7 @@
     <string name="dismiss">Ausblenden</string>
     <string name="unknown_genre">Unbekanntes Genre</string>
     <string name="unknown_year">Unbekanntes Jahr</string>
-    <string name="refreshed_songs">%1$s Titel aktualisiert</string>
+    <string name="refreshed_songs">%1$d Titel aktualisiert</string>
     <string name="search">Suche</string>
     <string name="settings_app_name">App-Name</string>
     <string name="settings_contributors">Mitwirkende</string>

@@ -30,7 +30,7 @@
     <string name="sort_by_size">Dimension</string>
     <string name="sort_by_name">Nomine</string>
     <string name="unknown_year">Anno incognite</string>
-    <string name="refreshed_songs">%1$s cantos actualisate</string>
+    <string name="refreshed_songs">%1$d cantos actualisate</string>
     <string name="search">Cercar</string>
     <string name="details">Detalios</string>
     <string name="repeat_mode">Modo de repetition</string>

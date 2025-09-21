@@ -37,7 +37,7 @@
     <string name="dismiss">Desbotar</string>
     <string name="unknown_genre">Xénero descoñecido</string>
     <string name="unknown_year">Ano descoñecido</string>
-    <string name="refreshed_songs">Actualizáronse %1$s cancións</string>
+    <string name="refreshed_songs">Actualizáronse %1$d cancións</string>
     <string name="search">Buscar</string>
     <string name="share">Compartir</string>
     <string name="settings_app_name">Nome da app</string>

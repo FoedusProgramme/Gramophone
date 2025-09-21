@@ -29,7 +29,7 @@
     <string name="settings_contributors">Contribuitori</string>
     <string name="details">Detalii</string>
     <string name="go_to_album">Mergi la album</string>
-    <string name="refreshed_songs">Reîmprospătate %1$s piese</string>
+    <string name="refreshed_songs">Reîmprospătate %1$d piese</string>
     <string name="repeat_mode">Mod repetare</string>
     <string name="search">Caută</string>
     <string name="shuffle">Redă aleatoriu</string>

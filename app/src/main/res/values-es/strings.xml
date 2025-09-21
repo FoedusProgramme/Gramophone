@@ -56,7 +56,7 @@
     <string name="album_artist">Artista de Álbum</string>
     <string name="sort_by_album">Álbum</string>
     <string name="category_albums">Álbumes</string>
-    <string name="refreshed_songs">%1$s canciones actualizadas</string>
+    <string name="refreshed_songs">%1$d canciones actualizadas</string>
     <string name="dark">Oscuro</string>
     <string name="sort_by_name">Nombre</string>
     <string name="check_for_updates">¡Consulte nuestro canal para estar al día!</string>

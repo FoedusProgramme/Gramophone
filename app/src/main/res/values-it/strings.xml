@@ -115,7 +115,7 @@
     <string name="dismiss">Rifiuta</string>
     <string name="unknown_genre">Genere sconosciuto</string>
     <string name="unknown_year">Anno sconosciuto</string>
-    <string name="refreshed_songs">Ricaricati %1$s brani</string>
+    <string name="refreshed_songs">Ricaricati %1$d brani</string>
     <string name="search">Cerca</string>
     <string name="settings_app_name">Nome app</string>
     <string name="category_dates">Date</string>

@@ -62,7 +62,7 @@
     <string name="unknown_genre">Gènere desconegut</string>
     <string name="search">Cerca</string>
     <string name="go_to_artist">Ves a l\'artista</string>
-    <string name="refreshed_songs">S\'han actualitzat %1$s cançons</string>
+    <string name="refreshed_songs">S\'han actualitzat %1$d cançons</string>
     <string name="share">Comparteix</string>
     <string name="settings_app_name">Nom de l\'aplicació</string>
     <string name="settings_contributors">Col·laboradors</string>

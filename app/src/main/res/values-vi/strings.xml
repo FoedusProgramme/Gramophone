@@ -26,7 +26,7 @@
     <string name="home_menu_equalizer">Bộ chỉnh âm</string>
     <string name="settings_version">Phiên bản</string>
     <string name="category_albums">Album</string>
-    <string name="refreshed_songs">Đã làm mới %1$s bài hát</string>
+    <string name="refreshed_songs">Đã làm mới %1$d bài hát</string>
     <string name="sort_by_name">Tên</string>
     <string name="check_for_updates">Theo dõi cập nhật trên kênh của chúng tôi!</string>
     <string name="shuffle">Ngẫu nhiên</string>

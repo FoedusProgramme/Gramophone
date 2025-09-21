@@ -94,7 +94,7 @@
     <string name="category_albums">الألبومات</string>
     <string name="settings_color_accuracy_summary">جعل عمليَّة صناعة الألوان دقيقة</string>
     <string name="filesystem">نظام الملفات</string>
-    <string name="refreshed_songs">%1$sأغنية</string>
+    <string name="refreshed_songs">%1$dأغنية</string>
     <string name="dark">داكن</string>
     <string name="settings_appearance_summary">مظهر التّطبيق وأوضاع السِّمات</string>
     <string name="sort_by_name">الاسم</string>

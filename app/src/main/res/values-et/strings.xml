@@ -22,7 +22,7 @@
     <string name="sort_by_album">Albumi järgi</string>
     <string name="dismiss">Katkesta</string>
     <string name="unknown_year">Teadmata aasta</string>
-    <string name="refreshed_songs">Värskendasime %1$s pala</string>
+    <string name="refreshed_songs">Värskendasime %1$d pala</string>
     <string name="share">Jaga</string>
     <string name="shuffle">Sega lood</string>
     <string name="repeat_mode">Taasesituse viis</string>

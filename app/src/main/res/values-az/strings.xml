@@ -67,7 +67,7 @@
     <string name="sort_by_size">Ölçü üzrə</string>
     <string name="light">Ağ</string>
     <string name="follow_system">Sistemə uyğun</string>
-    <string name="refreshed_songs">%1$s mahnı yeniləndi</string>
+    <string name="refreshed_songs">%1$d mahnı yeniləndi</string>
     <string name="dismiss">Bağla</string>
     <string name="unknown_genre">Naməlum janr</string>
     <string name="settings_app_name">Tətbiqin adı</string>

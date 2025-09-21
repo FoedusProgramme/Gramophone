@@ -48,7 +48,7 @@
     <string name="dismiss">தள்ளுபடி</string>
     <string name="unknown_genre">தெரியாத வகை</string>
     <string name="unknown_year">தெரியாத ஆண்டு</string>
-    <string name="refreshed_songs">புத்துணர்ச்சியற்ற %1$s பாடல்கள்</string>
+    <string name="refreshed_songs">புத்துணர்ச்சியற்ற %1$d பாடல்கள்</string>
     <string name="search">தேடல்</string>
     <string name="share">பங்கு</string>
     <string name="settings_app_name">பயன்பாட்டு பெயர்</string>

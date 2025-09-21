@@ -3,7 +3,7 @@
     <string name="light">Gaišs</string>
     <string name="unknown_genre">Nezināms žanrs</string>
     <string name="sort_by_name">Nosaukums</string>
-    <string name="refreshed_songs">Atsvaidzinātas %1$s dziesmas</string>
+    <string name="refreshed_songs">Atsvaidzinātas %1$d dziesmas</string>
     <string name="sort_by_album">Albums</string>
     <plurals name="songs">
         <item quantity="zero">%d Dziesmas</item>

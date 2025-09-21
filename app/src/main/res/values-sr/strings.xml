@@ -106,7 +106,7 @@
     <string name="sort_by_name">Naziv</string>
     <string name="sort_by_album">Album</string>
     <string name="unknown_year">Nepoznata godina</string>
-    <string name="refreshed_songs">Osveženo %1$s pesama</string>
+    <string name="refreshed_songs">Osveženo %1$d pesama</string>
     <string name="share">Podeli</string>
     <string name="settings_app_name">Naziv aplikacije</string>
     <string name="play_next">Pusti sledeće</string>

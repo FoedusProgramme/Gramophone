@@ -50,7 +50,7 @@
     <string name="home_menu_equalizer">ইকুয়ালাইজার</string>
     <string name="dialog_path">ফাইলের ঠিকানা</string>
     <string name="settings_version">ভার্সন</string>
-    <string name="refreshed_songs">%1$s টি গান রিফ্রেশ করা হয়েছে</string>
+    <string name="refreshed_songs">%1$d টি গান রিফ্রেশ করা হয়েছে</string>
     <string name="sort_by_name">নাম</string>
     <string name="shuffle">শাফল করুন</string>
     <string name="category_playlists">প্লেলিস্টগুলো</string>

@@ -26,7 +26,7 @@
     <string name="share">แชร์</string>
     <string name="settings_app_name">ชื่อแอป</string>
     <string name="search">ค้นหา</string>
-    <string name="refreshed_songs">รีเฟรช %1$s เพลงแล้ว</string>
+    <string name="refreshed_songs">รีเฟรช %1$d เพลงแล้ว</string>
     <string name="dialog_artist">ศิลปิน</string>
     <string name="details">รายละเอียด</string>
     <string name="go_to_artist">ไปที่ศิลปิน</string>

@@ -62,7 +62,7 @@
     <string name="sort_by_album">За альбомом</string>
     <string name="category_albums">Альбоми</string>
     <string name="filesystem">Файли</string>
-    <string name="refreshed_songs">Оновлено %1$s треки</string>
+    <string name="refreshed_songs">Оновлено %1$d треки</string>
     <string name="dark">Темна</string>
     <string name="sort_by_name">За імьям</string>
     <string name="check_for_updates">Слідкуйте за оновленнями в нашому каналі!</string>

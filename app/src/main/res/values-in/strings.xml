@@ -4,7 +4,7 @@
     <string name="compact_list">Daftar (ringkas)</string>
     <string name="settings_customization_summary">Kelola opsi kustomisasi</string>
     <string name="settings_play_on_launch_summary">Putar musik saat dibuka</string>
-    <string name="refreshed_songs">Berhasil memuat %1$s lagu</string>
+    <string name="refreshed_songs">Berhasil memuat %1$d lagu</string>
     <string name="home_menu_settings">Pengaturan</string>
     <string name="unknown_playlist">Playlist tidak dikenal</string>
     <string name="settings_version">Versi</string>

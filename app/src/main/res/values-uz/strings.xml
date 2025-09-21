@@ -17,7 +17,7 @@
     <string name="sort_by_album">Albom</string>
     <string name="dismiss">Rad etish</string>
     <string name="unknown_genre">Noma\'lum janr</string>
-    <string name="refreshed_songs">%1$s ta qoʻshiq yangilandi</string>
+    <string name="refreshed_songs">%1$d ta qoʻshiq yangilandi</string>
     <string name="search">Qidirish</string>
     <string name="share">Ulashish</string>
     <string name="settings_contributors">hissa qo\'shuvchilar</string>

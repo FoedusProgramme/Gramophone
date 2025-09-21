@@ -20,7 +20,7 @@
     <string name="dismiss">關</string>
     <string name="unknown_genre">未知主題</string>
     <string name="unknown_year">未知年份</string>
-    <string name="refreshed_songs">重整了 %1$s 首歌</string>
+    <string name="refreshed_songs">重整了 %1$d 首歌</string>
     <string name="search">搜尋</string>
     <string name="settings_app_name">應用名</string>
     <string name="settings_contributors">貢獻者</string>

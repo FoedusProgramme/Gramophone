@@ -35,7 +35,7 @@
     <string name="sort_by_album">Albumi</string>
     <string name="unknown_genre">Tuntematon genre</string>
     <string name="unknown_year">Tuntematon vuosi</string>
-    <string name="refreshed_songs">Virkistetty %1$s kappaletta</string>
+    <string name="refreshed_songs">Virkistetty %1$d kappaletta</string>
     <string name="search">Etsi</string>
     <string name="share">Jaa</string>
     <string name="settings_app_name">Sovelluksen nimi</string>

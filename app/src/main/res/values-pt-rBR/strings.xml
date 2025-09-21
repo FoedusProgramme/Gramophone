@@ -76,7 +76,7 @@
     <string name="category_albums">Álbuns</string>
     <string name="settings_color_accuracy_summary">Tornar a geração de cores mais precisas</string>
     <string name="filesystem">Arquivos</string>
-    <string name="refreshed_songs">%1$s música(s) atualizada(s)</string>
+    <string name="refreshed_songs">%1$d música(s) atualizada(s)</string>
     <string name="dark">Escuro</string>
     <string name="settings_appearance_summary">Aparência do aplicativo, temas</string>
     <string name="sort_by_name">Nome</string>

@@ -37,7 +37,7 @@
     <string name="sort_by_artist">アーティスト</string>
     <string name="sort_by_album">アルバム</string>
     <string name="dismiss">OK</string>
-    <string name="refreshed_songs">%1$s 個の曲を更新しました</string>
+    <string name="refreshed_songs">%1$d 個の曲を更新しました</string>
     <string name="search">検索</string>
     <string name="play_next">次に再生</string>
     <string name="go_to_album">アルバムを開く</string>

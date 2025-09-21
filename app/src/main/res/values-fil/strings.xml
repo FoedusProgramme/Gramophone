@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="refreshed_songs">Na-refresh ang %1$s na mga kanta</string>
+    <string name="refreshed_songs">Na-refresh ang %1$d na mga kanta</string>
     <string name="search">I-hanap</string>
     <string name="settings_contributors">Mga kontribyutor</string>
     <string name="go_to_artist">Pumunta sa artista</string>

@@ -135,7 +135,7 @@
     <string name="settings_play_on_launch">پخش در اجرا</string>
     <string name="grant_images"><![CDATA[لطفا اجازۀ دسترسی به «تصاویر و ویدیوها» را بپذیرید]]></string>
     <string name="home_menu_refresh">بازخوانی</string>
-    <string name="refreshed_songs">%1$s آهنگ بازخوانی شد</string>
+    <string name="refreshed_songs">%1$d آهنگ بازخوانی شد</string>
     <string name="home_menu_search">جست‌وجو</string>
     <string name="settings_experimental_settings_summary">قابلیت‌های آزمایشی، متفرقه</string>
     <string name="dialog_track_number">شمارۀ اثر</string>
