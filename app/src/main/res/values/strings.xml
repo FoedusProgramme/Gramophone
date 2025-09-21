@@ -185,7 +185,6 @@
     <string name="timer_expiry">Sleep timer will pause music at %s</string>
     <string name="timer_expiry_eos">Sleep timer will pause music when song playing at %s ends</string>
     <string name="timer_expiry_end_of_this_song">Sleep timer will pause music at the end of this song</string>
-    <string name="separator_dot">•</string>
 	<string name="settings_preference_category_home">Home screen</string>
     <string name="tab_order">Configure tab order</string>
     <string name="tab_order_summary">The app will show the first tab on startup. Tabs after the divider will be hidden.</string>
@@ -419,7 +418,6 @@
     <string name="settings_audio_quality_info_summary">Show audio quality/format information on the player screen</string>
     <string name="spk_encoding_pcm_16bit_offload">16-bit PCM Offload</string>
     <string name="spk_encoding_pcm_24bit_offload">24-bit (8.24) PCM offload</string>
-    <string name="spk_encoding_dts_lbr">DTS Express</string>
     <string name="settings_translation_auto_word">Auto-animate translations</string>
     <string name="settings_translation_auto_word_summary">Apply linear gradient to translation lines in word-synced lyric playback if translations do not have word-sync metadata</string>
     <string name="cannot_find_file">Cannot find this file</string>
