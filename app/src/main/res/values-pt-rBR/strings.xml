@@ -332,4 +332,5 @@
     <string name="device_type_ble_headset">Headset Bluetooth LE</string>
     <string name="settings_open_source_licenses">Licenças de código aberto</string>
     <string name="send_email_manually">Por favor envie o registro para nift4dev@gmail.com - não é possível encontrar o aplicativo de e-mail</string>
+    <string name="app_name">Gramophone</string>
 </resources>
