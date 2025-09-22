@@ -472,6 +472,9 @@
     <string name="compact_grid">Grid (compact)</string>
     <string name="sort_by_album_year">Album year</string>
     <string name="sort_by_album_artist_year"><![CDATA[Album artist -> year]]></string>
+    <string name="media_control_text">System Media Controller</string>
+    <string name="media_control_text_error">Unable to open media output settings</string>
+
     <string name="forbidden_symbol_error">Invalid character in the name</string>
     <string name="translators">Translators</string>
     <string name="settings_replaygain">ReplayGain</string>

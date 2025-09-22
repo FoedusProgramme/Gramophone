@@ -4,7 +4,10 @@ import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.ContentUris
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.graphics.drawable.BitmapDrawable
@@ -416,9 +419,15 @@ class FullBottomSheet
 
         bottomSheetFavoriteButton.addOnCheckedChangeListener(this)
 
-        bottomSheetMediaControl.setOnClickListener {
-            SystemMediaControlResolver(context).intentSystemMediaDialog()
+        if (isMediaOutputPanelSupported(context)){
+            bottomSheetMediaControl.setOnClickListener {
+                SystemMediaControlResolver(context).intentSystemMediaDialog()
+            }
+        } else {
+            bottomSheetMediaControl.visibility = GONE
         }
+
+
 
         bottomSheetPlaylistButton.setOnClickListener {
             ViewCompat.performHapticFeedback(it, HapticFeedbackConstantsCompat.CONTEXT_CLICK)
@@ -1338,5 +1347,56 @@ class FullBottomSheet
             }
         }
     }
+
+    fun isMediaOutputPanelSupported(context: Context): Boolean {
+        return when {
+            Build.VERSION.SDK_INT >= 34 -> {
+                // Android 14+ 系统一定支持
+                true
+            }
+            Build.VERSION.SDK_INT >= 31 -> {
+                // Android 12~13
+                val intent = Intent().apply {
+                    action = "com.android.systemui.action.LAUNCH_MEDIA_OUTPUT_DIALOG"
+                    setPackage("com.android.systemui")
+                    putExtra("package_name", context.packageName)
+                }
+                isSystemIntentAvailable(context, intent)
+            }
+            Build.VERSION.SDK_INT == 30 -> {
+                // Android 11
+                val intent = Intent().apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    action = "com.android.settings.panel.action.MEDIA_OUTPUT"
+                    putExtra("com.android.settings.panel.extra.PACKAGE_NAME", context.packageName)
+                }
+                isSystemIntentAvailable(context, intent)
+            }
+            else -> {
+                // Android 10 及以下
+                val intent = Intent().apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    action = "com.android.settings.panel.action.MEDIA_OUTPUT"
+                    putExtra("com.android.settings.panel.extra.PACKAGE_NAME", context.packageName)
+                }
+                isSystemIntentAvailable(context, intent)
+            }
+        }
+    }
+
+    private fun isSystemIntentAvailable(context: Context, intent: Intent): Boolean {
+        val resolveInfoList = context.packageManager.queryIntentActivities(intent, 0)
+        for (resolveInfo in resolveInfoList) {
+            val activityInfo = resolveInfo.activityInfo
+            val applicationInfo: ApplicationInfo? = activityInfo?.applicationInfo
+            if (applicationInfo != null && (applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0) {
+                return true
+            }
+        }
+        return false
+    }
+
+
+
 
 }
