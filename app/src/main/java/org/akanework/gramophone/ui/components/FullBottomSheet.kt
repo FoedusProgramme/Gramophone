@@ -415,6 +415,16 @@ class FullBottomSheet
 
         bottomSheetFavoriteButton.addOnCheckedChangeListener(this)
 
+        if (isMediaOutputPanelSupported(context)){
+            bottomSheetMediaControl.setOnClickListener {
+                SystemMediaControlResolver(context).intentSystemMediaDialog()
+            }
+        } else {
+            bottomSheetMediaControl.visibility = GONE
+        }
+
+
+
         bottomSheetPlaylistButton.setOnClickListener {
             ViewCompat.performHapticFeedback(it, HapticFeedbackConstantsCompat.CONTEXT_CLICK)
             if (instance != null)
