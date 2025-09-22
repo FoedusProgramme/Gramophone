@@ -29,13 +29,6 @@ async def get_languages(session: aiohttp.ClientSession, component_slug: str) -> 
     return languages
 
 
-async def get_page_units(session: aiohttp.ClientSession, page: int, language_code: str) -> list:
-    url = f"{WEBLATE_API}/translations/{PROJECT_SLUG}/strings-xml/{language_code}/units/"
-    async with session.get(url, headers=HEADERS, params={'page': page}) as response:
-        data = await response.json()
-        return data.get("results")
-
-
 async def get_units_list(session: aiohttp.ClientSession, language_code: str, component_slug: str) -> list:
     url = f"{WEBLATE_API}/translations/{PROJECT_SLUG}/{component_slug}/{language_code}/units/"
     params = {'q': 'state:needs-editing', 'page_size': 500}
@@ -123,18 +116,15 @@ async def filter_component(session: aiohttp.ClientSession, language: dict, compo
     if language['is_source']:
         return
 
-    total = language["total"]
-    translated = language["translated"]
     language_code = language['language']['code']
+    translated_percent = language['translated_percent']
     filepath = Path(language['filename'])
-
     units = await get_units_list(session, language_code, component_slug)
     editings = [u.get('context') for u in units]
-    translated_percent = (translated - len(editings)) / total * 100
 
     if component_slug == "strings-xml":
         if translated_percent < MIN_TRANSLATED_PERCENT:
-            print(f"  Translations amount ({translated_percent:.2f}%) "
+            print(f"  Translations amount ({translated_percent}%) "
                   f"is below the minimum ({MIN_TRANSLATED_PERCENT}%)")
             if filepath.exists():
                 shutil.rmtree(filepath.parent)
