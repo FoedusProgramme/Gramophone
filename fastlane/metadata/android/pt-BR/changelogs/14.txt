@@ -1,0 +1,1 @@
+Correção rápida para travamento quando o celular é colocado na linguagem Filipino

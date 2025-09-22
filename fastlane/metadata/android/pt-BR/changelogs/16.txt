@@ -1,0 +1,3 @@
+- Corrigido alguns bugs relacionado à reordenação de guias
+- Corrigido suporte de equalizador
+- Corrigido alguns problemas de acessibilidade (por favor deixe me saber se tiver mais!)

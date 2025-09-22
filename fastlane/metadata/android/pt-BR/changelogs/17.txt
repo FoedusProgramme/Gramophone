@@ -1,0 +1,3 @@
+- Adicionado letras para a barra de status para dispositivos MeiZu, selecione custom ROMs e Lyric Getter Xposed (agradecimento para @ghhccghk)
+- Corrigido vários bugs & travamentos
+- Traduções atualizadas como de costume (obrigado aos nossos tradutores trabalhadores!)
