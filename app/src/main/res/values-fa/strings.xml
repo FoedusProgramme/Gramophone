@@ -6,7 +6,7 @@
     <string name="category_genres">سبک‌ها</string>
     <string name="home_menu_settings">تنظیمات</string>
     <string name="category_songs">آهنگ‌ها</string>
-    <string name="unknown_artist">هنرمند ناشناخته</string>
+    <string name="unknown_artist">هنرمند ناشناس</string>
     <string name="sort_by_artist">هنرمند</string>
     <string name="dismiss">رد</string>
     <plurals name="items">
