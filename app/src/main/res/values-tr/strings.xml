@@ -191,7 +191,7 @@
     <string name="spk_channel_out_back_right">Arka Sağ</string>
     <string name="device_type_usb_device">USB cihazı</string>
     <string name="device_type_usb_accessory">USB aksesuarı</string>
-    <string name="sort_by_album_artist">Albüm sanatçısı</string>
+    <string name="sort_by_album_artist">Albüm sanatçısı -&gt; başlık</string>
     <string name="delete">Sil</string>
     <string name="yes">Evet</string>
     <string name="sort_by_file_path">Dosya yolu</string>
@@ -216,4 +216,9 @@
     <string name="spk_encoding_unknown">Bilinmeyen format %s</string>
     <string name="spk_encoding_unknown_d">Bilinmeyen format %d</string>
     <string name="device_type_unknown">Bilinmeyen</string>
+    <string name="app_name">Gramophone</string>
+    <plurals name="folders_plural">
+        <item quantity="one">%d Klasör</item>
+        <item quantity="other">%d Klasör</item>
+    </plurals>
 </resources>
