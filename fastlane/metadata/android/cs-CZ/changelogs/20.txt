@@ -1,0 +1,8 @@
+- Tlačítko Obnovit obnoví MediaStore
+- Odstranění omezení pro formáty zvukových vzorků
+- Vylepšení dialogového okna pro náhled zvuku
+- Pozastavení obnovování, pokud je aplikace na pozadí, aby se šetřila baterie
+- Prevence ANR
+- Oprava stránky umělce alba
+- Oprava některých úniků paměti
+- Oprava mnoha pádů a chyb

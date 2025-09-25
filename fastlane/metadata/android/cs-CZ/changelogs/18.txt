@@ -1,0 +1,8 @@
+- Zobrazení datového toku v dialogovém okně s podrobnostmi
+- Experimentální: nový parser textů pro synchronizaci slov LRC & TTML, SRT (uživatelské rozhraní brzy k dispozici)
+- Informace o formátu zvuku na obrazovce „Právě přehráváno“
+- Automatické obnovení knihovny
+- „Otevřít v Gramophone“ z přehrávače souborů
+- Widget textů
+- Vylepšené třídění
+- Mnoho oprav chyb
