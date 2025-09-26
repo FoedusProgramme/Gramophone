@@ -386,4 +386,22 @@
     <string name="settings_pure_dark_summary">Un tema en el que todas las superficies de la aplicación son completamente negras</string>
     <string name="compact_grid">Cuadrícula (compacta)</string>
     <string name="sort_by_album_year">Año del álbum</string>
+    <string name="playlist_editing_pref_desc">Permite agregar canciones a listas de reproducción (mover/eliminar aún no está implementado)</string>
+    <string name="no_app_found">No se encontró ninguna aplicación que pueda hacer esto</string>
+    <string name="contributors_nift4">Mantenedor / Desarrollador líder</string>
+    <string name="contributors_123duo3">Diseñador principal</string>
+    <string name="contributors_akanetan">Creador original, desarrollador retirado</string>
+    <string name="contributors_developer">Desarrollador</string>
+    <string name="contributors_wstxda">Diseñó una variación del ícono de la aplicación</string>
+    <string name="contributors_pxeemo">Ayuda y Tester de las nuevas letras</string>
+    <string name="contributors_lambada10">Proporciona muestras de letras y SongSync</string>
+    <string name="contributors_code_contributions">Contribuciones al código</string>
+    <string name="contributors_yuyuko1024">Barra de progreso ondulada</string>
+    <string name="contributors_ghhccghk">Letras en la barra de estado</string>
+    <string name="home_menu_quick_refresh">Escaneo rápido</string>
+    <string name="add_to_queue">Añadir a la cola</string>
+    <string name="disabled">Deshabilitado</string>
+    <string name="offload_enabled_if_supported">Siempre habilitado</string>
+    <string name="settings_stop_on_dismiss">Detenerse al descartar</string>
+    <string name="settings_stop_on_dismiss_summary">Detener la reproducción cuando la aplicación se descarta de recientes</string>
 </resources>
