@@ -1,0 +1,8 @@
+- Faça o botão "refresh" recarregar a MediaStore
+- Remove restrições para formatos de amostras de áudio
+- Melhora a prévia do diálogode áudio
+- Pausa o recarregamento se o app estiver em segundo plano para salvar bateria
+- Prevenção ANR
+- Correção da página artista do álbum
+- Corrigido alguns vazamentos de memória
+- Correção de vários bugs e falhas

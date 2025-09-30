@@ -1,0 +1,9 @@
+Hotfix. Permite desativar a informação do formato de áudio. Último changelog:
+- Mostrar em detalhes diálogo de bitrate
+- Experimental: novo parser de letras para sincronização palavra por palavra LRC & TTML, SRT (UI em breve)
+- Informação de formato de áudio disponível na tela Tocando Agora
+- Atualização automática de biblioteca
+- "Abrir em Gramophone" de player de arquivos
+- Widget de letras
+- Melhoria na classificação
+- Várias correções de bugs
