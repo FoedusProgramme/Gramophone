@@ -45,7 +45,7 @@
     <string name="playlist_favourite">Favorito</string>
     <string name="home_menu_settings">Ajustes</string>
     <string name="home_menu_refresh">Refrescar</string>
-    <string name="settings_contributors">Contribuidores</string>
+    <string name="settings_contributors">Colaboradores</string>
     <string name="settings_category_appearance">Apariencia</string>
     <string name="dialog_album">Álbum</string>
     <string name="settings_default_progress_bar">Habilitar barra de progreso predeterminado</string>
@@ -404,4 +404,5 @@
     <string name="offload_enabled_if_supported">Siempre habilitado</string>
     <string name="settings_stop_on_dismiss">Detenerse al descartar</string>
     <string name="settings_stop_on_dismiss_summary">Detener la reproducción cuando la aplicación se descarta de recientes</string>
+    <string name="settings_hq_output_summary">Permitir el uso de cualquier formato de muestreo en lugar de restringirlo a 16 bits</string>
 </resources>
