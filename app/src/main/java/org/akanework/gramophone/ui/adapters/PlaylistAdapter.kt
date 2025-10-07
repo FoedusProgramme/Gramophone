@@ -29,7 +29,6 @@ import androidx.media3.common.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowInsets
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.result.IntentSenderRequest
 import androidx.appcompat.app.AlertDialog
@@ -38,10 +37,8 @@ import androidx.core.app.DialogCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import androidx.core.view.isVisible
 import androidx.core.view.iterator
 import androidx.core.widget.addTextChangedListener
-import androidx.core.widget.doAfterTextChanged
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -310,7 +307,7 @@ class PlaylistAdapter(
             d.window!!.setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, d.window!!.decorView.measuredHeight)
             et.addTextChangedListener(afterTextChanged = {
                 val tmp = et.editableText.toString()
-                val hasForbidden = tmp.any { it in listOf('/', '\u0000', ':', '*', '?', '"', '<', '>', '|') }
+                val hasForbidden = tmp.any { it in "/\\:*?\"<>|" || it.code <= 0x1F || it.code == 0x7F }
                 if (hasForbidden) {
                     inL.error = context.getString(R.string.forbidden_symbol_error)
                 } else {
