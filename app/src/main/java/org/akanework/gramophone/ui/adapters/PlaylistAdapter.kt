@@ -41,8 +41,10 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
 import androidx.core.view.iterator
 import androidx.core.widget.addTextChangedListener
+import androidx.core.widget.doAfterTextChanged
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -299,17 +301,21 @@ class PlaylistAdapter(
                 .show()
             val et = DialogCompat.requireViewById(d, R.id.editText) as TextInputEditText
             val b = d.getButton(DialogInterface.BUTTON_POSITIVE)
-            val err = DialogCompat.requireViewById(d, R.id.errorBox) as LinearLayout
-            err.isVisible = false
+            val inL = DialogCompat.requireViewById(d, R.id.inputLayout) as TextInputLayout
             et.editableText.append(initialValue)
             b.isEnabled = !initialValue.isBlank()
+            inL.error = null
             d.window!!.decorView.measure(View.MeasureSpec.UNSPECIFIED,View.MeasureSpec.UNSPECIFIED)
             // TODO: why on earth is this even needed? "Small Phone" emu otherwise cant type
-            d.window!!.setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            d.window!!.setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, d.window!!.decorView.measuredHeight)
             et.addTextChangedListener(afterTextChanged = {
                 val tmp = et.editableText.toString()
                 val hasForbidden = tmp.any { it in listOf('/', '\u0000', ':', '*', '?', '"', '<', '>', '|') }
-                err.isVisible = hasForbidden
+                if (hasForbidden) {
+                    inL.error = context.getString(R.string.forbidden_symbol_error)
+                } else {
+                    inL.error = null
+                }
                 b.isEnabled = !tmp.isBlank() && !hasForbidden
             })
             et.requestFocus()
