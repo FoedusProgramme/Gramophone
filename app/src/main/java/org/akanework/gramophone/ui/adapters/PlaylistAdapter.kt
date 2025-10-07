@@ -29,6 +29,7 @@ import androidx.media3.common.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowInsets
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.result.IntentSenderRequest
 import androidx.appcompat.app.AlertDialog
@@ -37,6 +38,7 @@ import androidx.core.app.DialogCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.core.view.isVisible
 import androidx.core.view.iterator
 import androidx.core.widget.addTextChangedListener
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -297,14 +299,18 @@ class PlaylistAdapter(
                 .show()
             val et = DialogCompat.requireViewById(d, R.id.editText) as TextInputEditText
             val b = d.getButton(DialogInterface.BUTTON_POSITIVE)
+            val err = DialogCompat.requireViewById(d, R.id.errorBox) as LinearLayout
+            err.isVisible = false
             et.editableText.append(initialValue)
             b.isEnabled = !initialValue.isBlank()
             d.window!!.decorView.measure(View.MeasureSpec.UNSPECIFIED,View.MeasureSpec.UNSPECIFIED)
             // TODO: why on earth is this even needed? "Small Phone" emu otherwise cant type
-            d.window!!.setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, d.window!!.decorView.measuredHeight)
+            d.window!!.setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             et.addTextChangedListener(afterTextChanged = {
-                val name = et.editableText.toString()
-                b.isEnabled = !name.isBlank()
+                val tmp = et.editableText.toString()
+                val hasForbidden = tmp.any { it in listOf('/', '\u0000', ':', '*', '?', '"', '<', '>', '|') }
+                err.isVisible = hasForbidden
+                b.isEnabled = !tmp.isBlank() && !hasForbidden
             })
             et.requestFocus()
             et.post {
