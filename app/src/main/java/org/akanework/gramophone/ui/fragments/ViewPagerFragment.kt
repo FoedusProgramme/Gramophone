@@ -186,29 +186,31 @@ class ViewPagerFragment : BaseFragment(true) {
                 viewPager2
             )
         viewPager2.adapter = adapter
+
+        TabLayoutMediator(tabLayout, viewPager2) { tab, position ->
+            tab.text = getString(adapter.getLabelResId(position))
+            tab.view.post {
+                try {
+                    /*
+                     * Add margin to last and first tab.
+                     * There's no attribute to let you set margin
+                     * to the last tab.
+                     */
+                    val lp = tab.view.layoutParams as ViewGroup.MarginLayoutParams
+                    lp.marginStart = if (position == 0)
+                        resources.getDimension(R.dimen.tab_layout_content_padding).toInt() else 0
+                    lp.marginEnd = if (position == tabLayout.tabCount - 1)
+                        resources.getDimension(R.dimen.tab_layout_content_padding).toInt() else 0
+                    tab.view.layoutParams = lp
+                } catch (_: IllegalStateException) {
+                }
+            }
+        }.attach()
+
         if (adapter.itemCount < 2) {
             tabLayout.visibility = View.GONE
         } else {
             tabLayout.visibility = View.VISIBLE
-            TabLayoutMediator(tabLayout, viewPager2) { tab, position ->
-                tab.text = getString(adapter.getLabelResId(position))
-                tab.view.post {
-                    try {
-                        /*
-                         * Add margin to last and first tab.
-                         * There's no attribute to let you set margin
-                         * to the last tab.
-                         */
-                        val lp = tab.view.layoutParams as ViewGroup.MarginLayoutParams
-                        lp.marginStart = if (position == 0)
-                            resources.getDimension(R.dimen.tab_layout_content_padding).toInt() else 0
-                        lp.marginEnd = if (position == tabLayout.tabCount - 1)
-                            resources.getDimension(R.dimen.tab_layout_content_padding).toInt() else 0
-                        tab.view.layoutParams = lp
-                    } catch (_: IllegalStateException) {
-                    }
-                }
-            }.attach()
         }
 
         return rootView
