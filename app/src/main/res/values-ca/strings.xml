@@ -421,7 +421,7 @@
     <string name="settings_hq_output_summary">Permet utilitzar qualsevol format de mostra en lloc de restringir a enters de 16 bits</string>
     <string name="playlist_editing_pref_desc">Permet afegir cançons a les llistes de reproducció (encara no s\'ha implementat moure/eliminar)</string>
     <string name="no_app_found">No s\'ha trobat cap aplicació que pugui fer això</string>
-    <string name="contributors_ghhccghk">Lletres a la barra d\'estat</string>
+    <string name="contributors_ghhccghk">Lletres a la barra d\'estat i altres millores</string>
     <string name="contributors_nift4">Mantenidor / Desenvolupador principal</string>
     <string name="contributors_123duo3">Dissenyador principal</string>
     <string name="contributors_akanetan">Creador original, desenvolupador jubilat</string>
@@ -458,4 +458,5 @@
     <string name="sort_by_album_year">Any de l\'àlbum</string>
     <string name="sort_by_album_artist_year"><![CDATA[Artista de l\'àlbum -> any]]></string>
     <string name="forbidden_symbol_error">Caràcter no vàlid en el nom</string>
+    <string name="translators">Traductors</string>
 </resources>
