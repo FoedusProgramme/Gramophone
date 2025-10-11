@@ -134,7 +134,7 @@
     <string name="settings_category_basic_info">Основна інформація</string>
     <string name="settings_color_accuracy_summary">Більш точна генерація кольорів</string>
     <string name="sort_by_add_date">Додати дату</string>
-    <string name="settings_lyric">Текст пісні</string>
+    <string name="settings_lyric">Текст пісня</string>
     <string name="settings_lyrics_configuration">Налаштування текстів пісень</string>
     <string name="settings_category_full_player">Програвач</string>
     <string name="dialog_lyrics">Текст пісні</string>
@@ -435,7 +435,7 @@
     <string name="contributors_lambada10">Забезпечення ліричних зразків та пісні</string>
     <string name="contributors_code_contributions">Внески коду</string>
     <string name="contributors_yuyuko1024">Бруски прогресу</string>
-    <string name="contributors_ghhccghk">Текст стану статусу</string>
+    <string name="contributors_ghhccghk">Текст пісень у рядку стану та інші покращення</string>
     <string name="home_menu_quick_refresh">Швидке оновлення</string>
     <string name="add_to_queue">Додати до черги</string>
     <string name="app_name">Gramophone</string>
@@ -464,4 +464,5 @@
     <string name="sort_by_album_year">Рік випуску альбому</string>
     <string name="sort_by_album_artist_year"><![CDATA[Album artist -> рік]]></string>
     <string name="forbidden_symbol_error">Недійсний символ в імені</string>
+    <string name="translators">Перекладачі</string>
 </resources>
