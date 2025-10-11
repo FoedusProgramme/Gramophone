@@ -4,7 +4,6 @@
     <eat-comment/>
 
     <string name="default_time" translatable="false">0:00</string>
-    <string name="settings_contributors_detail" translatable="false">nift4, 123Duo3, AkaneTan, imjyotiraditya, WSTxda</string>
     <string name="upper_folder" translatable="false">..</string>
 
     <!-- Translatable -->
@@ -452,7 +451,7 @@
     <string name="contributors_lambada10">providing lyric samples &amp; SongSync</string>
     <string name="contributors_code_contributions">Code contributions</string>
     <string name="contributors_yuyuko1024">Squiggly progress bar</string>
-    <string name="contributors_ghhccghk">Status Bar lyrics</string>
+    <string name="contributors_ghhccghk">Status Bar lyrics &amp; other improvements</string>
 	<string name="home_menu_quick_refresh">Quick refresh</string>
     <string name="add_to_queue">Add to queue</string>
     <string name="disabled">Disabled</string>
@@ -472,5 +471,6 @@
     <string name="sort_by_album_year">Album year</string>
     <string name="sort_by_album_artist_year"><![CDATA[Album artist -> year]]></string>
     <string name="forbidden_symbol_error">Invalid character in the name</string>
+    <string name="translators">Translators</string>
 
 </resources>
