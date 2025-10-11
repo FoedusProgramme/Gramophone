@@ -65,21 +65,18 @@ class SongAdapter(
     isSubFragment: Int? = null,
     allowDiffUtils: Boolean = false,
     rawOrderExposed: Sorter.Type? = if (isSubFragment == null) Sorter.Type.ByTitleAscending else null,
-    isEdit: Boolean = false,
     val folder: Boolean = false
 ) : BaseAdapter<MediaItem>
     (
     fragment,
     liveData = songList,
     sortHelper = MediaItemHelper,
-    naturalOrderHelper = if (!isEdit) helper else null,
-    initialSortType = if (!isEdit)
+    naturalOrderHelper = helper,
+    initialSortType =
         (if (helper != null) Sorter.Type.NaturalOrder else (rawOrderExposed ?:
-        if (folder) Sorter.Type.ByFilePathAscending else Sorter.Type.ByTitleAscending))
-    else Sorter.Type.None,
-    canSort = !isEdit,
+        if (folder) Sorter.Type.ByFilePathAscending else Sorter.Type.ByTitleAscending)),
+    canSort = true,
     pluralStr = R.plurals.songs,
-    isEdit = isEdit,
     defaultLayoutType = LayoutType.COMPACT_LIST,
     isSubFragment = isSubFragment,
     rawOrderExposed = rawOrderExposed,
@@ -122,38 +119,34 @@ class SongAdapter(
         }
 
     init {
-        if (!isEdit) {
-            mediaControllerViewModel.addRecreationalPlayerListener(
-                fragment.viewLifecycleOwner.lifecycle
-            ) {
-                currentMediaItem = it.currentMediaItem?.mediaId
-                currentIsPlaying =
-                    it.playWhenReady && it.playbackState != Player.STATE_ENDED && it.playbackState != Player.STATE_IDLE
-                object : Player.Listener {
-                    override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
-                        currentMediaItem = mediaItem?.mediaId
-                    }
+        mediaControllerViewModel.addRecreationalPlayerListener(
+            fragment.viewLifecycleOwner.lifecycle
+        ) {
+            currentMediaItem = it.currentMediaItem?.mediaId
+            currentIsPlaying =
+                it.playWhenReady && it.playbackState != Player.STATE_ENDED && it.playbackState != Player.STATE_IDLE
+            object : Player.Listener {
+                override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+                    currentMediaItem = mediaItem?.mediaId
+                }
 
-                    override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
-                        currentIsPlaying =
-                            playWhenReady && it.playbackState != Player.STATE_ENDED && it.playbackState != Player.STATE_IDLE
-                    }
+                override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
+                    currentIsPlaying =
+                        playWhenReady && it.playbackState != Player.STATE_ENDED && it.playbackState != Player.STATE_IDLE
+                }
 
-                    override fun onPlaybackStateChanged(playbackState: Int) {
-                        currentIsPlaying =
-                            it.playWhenReady && playbackState != Player.STATE_ENDED && it.playbackState != Player.STATE_IDLE
-                    }
+                override fun onPlaybackStateChanged(playbackState: Int) {
+                    currentIsPlaying =
+                        it.playWhenReady && playbackState != Player.STATE_ENDED && it.playbackState != Player.STATE_IDLE
                 }
             }
         }
     }
 
     override fun onListUpdated() {
-        if (!isEdit) {
-            // TODO run this method on a different thread / in advance
-            idToPosMap = hashMapOf()
-            list!!.second.forEachIndexed { i, item -> idToPosMap!![item.mediaId] = i }
-        }
+        // TODO run this method on a different thread / in advance
+        idToPosMap = hashMapOf()
+        list!!.second.forEachIndexed { i, item -> idToPosMap!![item.mediaId] = i }
     }
 
     override fun virtualTitleOf(item: MediaItem): String {
@@ -165,14 +158,12 @@ class SongAdapter(
     }
 
     override fun onClick(item: MediaItem) {
-        if (!isEdit) {
-            val mediaController = mainActivity.getPlayer()
-            mediaController?.apply {
-                val songList = getSongList()
-                setMediaItems(songList, songList.indexOf(item), C.TIME_UNSET)
-                prepare()
-                play()
-            }
+        val mediaController = mainActivity.getPlayer()
+        mediaController?.apply {
+            val songList = getSongList()
+            setMediaItems(songList, songList.indexOf(item), C.TIME_UNSET)
+            prepare()
+            play()
         }
     }
 

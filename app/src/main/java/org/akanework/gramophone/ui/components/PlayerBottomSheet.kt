@@ -140,7 +140,7 @@ class PlayerBottomSheet private constructor(
             if ((activity.consumeAutoPlay() || prefs.getBooleanStrict(
                     "autoplay",
                     false
-                )) && instance?.isPlaying != true
+                )) && instance?.playWhenReady != true
             ) {
                 instance?.play()
             }

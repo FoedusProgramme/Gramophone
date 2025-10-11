@@ -463,4 +463,5 @@
     <string name="compact_grid">Сітка (компактна)</string>
     <string name="sort_by_album_year">Рік випуску альбому</string>
     <string name="sort_by_album_artist_year"><![CDATA[Album artist -> рік]]></string>
+    <string name="forbidden_symbol_error">Недійсний символ в імені</string>
 </resources>

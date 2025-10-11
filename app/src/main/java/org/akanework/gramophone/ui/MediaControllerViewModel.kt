@@ -39,6 +39,14 @@ class MediaControllerViewModel(application: Application) : AndroidViewModel(appl
     val connectionListeners
         get() = connectionListenersImpl.toBaseInterface()
 
+    init {
+        addControllerCallback(null) { controller, _ ->
+            if (controller.playbackState == Player.STATE_IDLE) {
+                controller.prepare()
+            }
+        }
+    }
+
     override fun onStart(owner: LifecycleOwner) {
         val sessionToken =
             SessionToken(context, ComponentName(context, GramophonePlaybackService::class.java))

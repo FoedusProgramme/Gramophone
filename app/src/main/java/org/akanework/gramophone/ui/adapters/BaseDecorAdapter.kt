@@ -59,9 +59,9 @@ open class BaseDecorAdapter<T : AdapterFragment.BaseInterface<*>>(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val count = adapter.itemCountForDecor
         holder.playAll.visibility =
-            if ((adapter is SongAdapter || adapter is AlbumAdapter) && !adapter.isEdit) View.VISIBLE else View.GONE
+            if (adapter is SongAdapter || adapter is AlbumAdapter) View.VISIBLE else View.GONE
         holder.shuffleAll.visibility =
-            if ((adapter is SongAdapter || adapter is AlbumAdapter) && !adapter.isEdit) View.VISIBLE else View.GONE
+            if (adapter is SongAdapter || adapter is AlbumAdapter) View.VISIBLE else View.GONE
         holder.counter.text = context.resources.getQuantityString(pluralStr, count, count)
         holder.sortButton.visibility =
             if (adapter.sortType.value != Sorter.Type.None || adapter.canChangeLayout) View.VISIBLE else View.GONE

@@ -543,10 +543,6 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                     }
                     if (endedWorkaroundPlayer?.nextShuffleOrder != null)
                         throw IllegalStateException("shuffleFactory was not consumed during restore")
-                    handler.post {
-                        // Prepare Player after UI thread is less busy (loads tracks, required for lyric)
-                        controller?.prepare()
-                    }
                 }
                 lastPlayedManager.allowSavingState = true
             }

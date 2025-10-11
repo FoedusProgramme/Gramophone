@@ -13,7 +13,6 @@ import android.os.Build
 import android.provider.MediaStore
 import android.text.format.DateFormat
 import android.util.AttributeSet
-import androidx.media3.common.util.Log
 import android.view.Gravity
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -41,8 +40,7 @@ import androidx.media3.common.HeartRating
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
-import androidx.media3.common.Timeline
-import androidx.media3.common.Tracks
+import androidx.media3.common.util.Log
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionError
 import androidx.media3.session.SessionResult
@@ -86,7 +84,6 @@ import org.akanework.gramophone.logic.fadInAnimation
 import org.akanework.gramophone.logic.fadOutAnimation
 import org.akanework.gramophone.logic.getAudioFormat
 import org.akanework.gramophone.logic.getBooleanStrict
-import org.akanework.gramophone.logic.getFile
 import org.akanework.gramophone.logic.getIntStrict
 import org.akanework.gramophone.logic.getLyrics
 import org.akanework.gramophone.logic.getTimer
@@ -447,8 +444,7 @@ class FullBottomSheet
                     .build()
             }
             val playlistAdapter = PlaylistCardAdapter(activity)
-            val callback: ItemTouchHelper.Callback =
-                PlaylistCardMoveCallback(playlistAdapter::onRowMoved)
+            val callback = PlaylistCardMoveCallback(playlistAdapter::onRowMoved)
             val touchHelper = ItemTouchHelper(callback)
             touchHelper.attachToRecyclerView(recyclerView)
             playlistNowPlaying = playlistBottomSheet.findViewById(R.id.now_playing)
@@ -727,9 +723,9 @@ class FullBottomSheet
             SpatialFormat.SURROUND_7_1 -> R.drawable.ic_surround_sound
 
             SpatialFormat.DOLBY_AC3,
-            SpatialFormat.DOLBY_AC4,
             SpatialFormat.DOLBY_EAC3,
-            SpatialFormat.DOLBY_EAC3_JOC -> R.drawable.ic_dolby
+            SpatialFormat.DOLBY_EAC3_JOC,
+            SpatialFormat.DOLBY_AC4 -> R.drawable.ic_dolby
 
             // TODO dts icon
 
@@ -1086,7 +1082,6 @@ class FullBottomSheet
         Log.d(TAG, "load cover for " + mediaItem?.mediaMetadata?.title + " considered")
         if (bottomSheetFullCover.width != 0 && bottomSheetFullCover.height != 0) {
             Log.d(TAG, "load cover for " + mediaItem?.mediaMetadata?.title + " at " + bottomSheetFullCover.width + " " + bottomSheetFullCover.height)
-            val file = mediaItem?.getFile()
             lastDisposable = context.imageLoader.enqueue(
                 ImageRequest.Builder(context).apply {
                     data(mediaItem?.mediaMetadata?.artworkUri)
@@ -1306,7 +1301,6 @@ class FullBottomSheet
         }
     }
 
-
     private class PlaylistCardMoveCallback(private val touchHelperContract: (Int, Int) -> Unit) :
         ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0) {
         override fun isLongPressDragEnabled(): Boolean {
@@ -1322,7 +1316,12 @@ class FullBottomSheet
             viewHolder: RecyclerView.ViewHolder,
             target: RecyclerView.ViewHolder
         ): Boolean {
-            touchHelperContract(viewHolder.bindingAdapterPosition, target.bindingAdapterPosition)
+            val vhBap = viewHolder.bindingAdapterPosition
+            val tBap = target.bindingAdapterPosition
+            if (vhBap != RecyclerView.NO_POSITION && tBap != RecyclerView.NO_POSITION) {
+                touchHelperContract(vhBap, tBap)
+                return true
+            }
             return false
         }
 

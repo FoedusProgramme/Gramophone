@@ -82,12 +82,11 @@ abstract class BaseAdapter<T : Any>(
     defaultLayoutType: LayoutType,
     val isSubFragment: Int? = null,
     rawOrderExposed: Sorter.Type? = null,
-    val isEdit: Boolean = false,
     private val allowDiffUtils: Boolean = false,
     private val canSort: Boolean = true
 ) : AdapterFragment.BaseInterface<BaseAdapter.ViewHolder>(), PopupTextProvider, ItemHeightHelper {
 
-    override val canChangeLayout = !isEdit
+    override val canChangeLayout = true
     override val context = fragment.requireContext()
     protected val liveDataAgent = MutableStateFlow(liveData)
     protected inline val mainActivity
@@ -127,7 +126,7 @@ abstract class BaseAdapter<T : Any>(
     }
 
     private val prefLayoutType: LayoutType by lazy {
-        if (canChangeLayout) try {
+        try {
             LayoutType.valueOf(
                 prefs.getStringStrict(
                     "L" + getAdapterType(this).toString(),
@@ -135,7 +134,6 @@ abstract class BaseAdapter<T : Any>(
                 )!!
             )
         } catch (_: IllegalArgumentException) { LayoutType.NONE }
-        else LayoutType.NONE
     }
 
     override var layoutType: LayoutType? = null
@@ -324,13 +322,11 @@ abstract class BaseAdapter<T : Any>(
                 }
             }
             holder.trackCount!!.text = trackCountOf(item)
-            if (!isEdit) {
-                holder.itemView.setOnLongClickListener {
-                    val popupMenu = PopupMenu(it.context, it)
-                    onMenu(item, popupMenu)
-                    popupMenu.show()
-                    true
-                }
+            holder.itemView.setOnLongClickListener {
+                val popupMenu = PopupMenu(it.context, it)
+                onMenu(item, popupMenu)
+                popupMenu.show()
+                true
             }
         }
         holder.title.text = titleOf(item) ?: virtualTitleOf(item)
@@ -341,14 +337,10 @@ abstract class BaseAdapter<T : Any>(
             error(defaultCover)
         }
         holder.itemView.setOnClickListener { onClick(item) }
-        if (isEdit) {
-            holder.moreButton?.visibility = View.GONE
-        } else {
-            holder.moreButton?.setOnClickListener {
-                val popupMenu = PopupMenu(it.context, it)
-                onMenu(item, popupMenu)
-                popupMenu.show()
-            }
+        holder.moreButton?.setOnClickListener {
+            val popupMenu = PopupMenu(it.context, it)
+            onMenu(item, popupMenu)
+            popupMenu.show()
         }
     }
 
