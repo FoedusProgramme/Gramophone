@@ -21,6 +21,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.DefaultLifecycleObserver
@@ -29,9 +30,11 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.preference.PreferenceManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.tabs.TabLayout
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.getStringStrict
 import org.akanework.gramophone.logic.hasImprovedMediaStore
+import org.akanework.gramophone.ui.MainActivity
 import org.akanework.gramophone.ui.fragments.AdapterFragment
 
 /**
@@ -40,7 +43,7 @@ import org.akanework.gramophone.ui.fragments.AdapterFragment
 class ViewPager2Adapter(
     fragmentManager: FragmentManager,
     lifecycle: Lifecycle,
-    context: Context,
+    private val context: Context,
     private val viewPager2: ViewPager2
 ) : FragmentStateAdapter(fragmentManager, lifecycle),
     SharedPreferences.OnSharedPreferenceChangeListener, DefaultLifecycleObserver {
@@ -67,6 +70,10 @@ class ViewPager2Adapter(
             val newPosition = tabs.indexOfFirst { it == currentItemId }
             viewPager2.setCurrentItem(newPosition, false)
         }
+
+        (context as? MainActivity)
+            ?.findViewById<TabLayout>(R.id.tab_layout)
+            ?.visibility = if (getItemCount() < 2) View.GONE else View.VISIBLE
     }
 
     fun getLabelResId(position: Int) = tabs[position]!!.label

@@ -58,39 +58,7 @@
             app:tabRippleColor="@android:color/transparent"
             app:tabSelectedTextColor="?colorOnSecondaryContainer"
             app:tabTextColor="?attr/colorOnSurfaceVariant"
-            app:tabTextAppearance="@style/TabTextAppearance">
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/category_songs" />
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/category_albums" />
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/category_artists" />
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/category_genres" />
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/category_dates" />
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/category_playlists" />
-
-        </com.google.android.material.tabs.TabLayout>
+            app:tabTextAppearance="@style/TabTextAppearance"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 
