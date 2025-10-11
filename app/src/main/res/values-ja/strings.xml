@@ -448,4 +448,5 @@
     <string name="compact_grid">グリッド (コンパクト)</string>
     <string name="sort_by_album_year">アルバムの年</string>
     <string name="sort_by_album_artist_year"><![CDATA[アルバムアーティスト -> 年]]></string>
+    <string name="forbidden_symbol_error">名前に無効な文字が含まれています</string>
 </resources>
