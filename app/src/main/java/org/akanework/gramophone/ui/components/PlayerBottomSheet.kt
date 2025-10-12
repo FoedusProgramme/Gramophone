@@ -21,19 +21,18 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
+import android.view.MotionEvent
 import androidx.media3.common.util.Log
 import android.view.View
 import android.view.WindowInsets
 import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.activity.BackEventCompat
 import androidx.activity.OnBackPressedCallback
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.graphics.Insets
 import androidx.core.view.HapticFeedbackConstantsCompat
 import androidx.core.view.ViewCompat
@@ -41,20 +40,12 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnLayout
 import androidx.core.view.doOnNextLayout
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.findFragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.session.MediaController
 import androidx.preference.PreferenceManager
-import coil3.asDrawable
-import coil3.imageLoader
-import coil3.request.Disposable
-import coil3.request.ImageRequest
-import coil3.request.error
-import coil3.size.Scale
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.google.android.material.button.MaterialButton
@@ -62,11 +53,8 @@ import com.google.android.material.motion.MaterialBottomContainerBackHelper
 import org.akanework.gramophone.BuildConfig
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.clone
-import org.akanework.gramophone.logic.fadInAnimation
 import org.akanework.gramophone.logic.fadOutAnimation
 import org.akanework.gramophone.logic.getBooleanStrict
-import org.akanework.gramophone.logic.playOrPause
-import org.akanework.gramophone.logic.startAnimation
 import org.akanework.gramophone.logic.ui.MyBottomSheetBehavior
 import org.akanework.gramophone.ui.MainActivity
 
@@ -99,6 +87,15 @@ class PlayerBottomSheet private constructor(
         get() = activity.getPlayer()
     private var lastActuallyVisible: Boolean? = null
     private var lastMeasuredHeight: Int? = null
+    private var x0 = 0f
+    private var seekSwipeEnabled = false
+    private val prefsListener =
+        SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+            if (key == "seek_swipe") {
+                seekSwipeEnabled = prefs.getBooleanStrict("seek_swipe", false)
+                findViewById<MaterialButton>(R.id.preview_next).visibility = if (seekSwipeEnabled) View.GONE else View.VISIBLE;
+            }
+        }
     var visible = false
         set(value) {
             if (field != value) {
@@ -125,9 +122,33 @@ class PlayerBottomSheet private constructor(
         previewPlayer = findViewById(R.id.preview_player)
         fullPlayer = findViewById(R.id.full_player)
 
+        seekSwipeEnabled = prefs.getBooleanStrict("seek_swipe", false)
+        findViewById<MaterialButton>(R.id.preview_next).visibility = if (seekSwipeEnabled) View.GONE else View.VISIBLE;
+
         setOnClickListener {
             if (standardBottomSheetBehavior!!.state == BottomSheetBehavior.STATE_COLLAPSED) {
                 standardBottomSheetBehavior!!.state = BottomSheetBehavior.STATE_EXPANDED
+            }
+        }
+
+        setOnTouchListener { v, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    x0 = event.x
+                    false
+                }
+                MotionEvent.ACTION_UP -> {
+                    if (!seekSwipeEnabled) return@setOnTouchListener false
+
+                    val dx = event.x - x0
+                    when {
+                        dx > 100 -> onSwipeRight()
+                        dx < -100 -> onSwipeLeft()
+                        else -> v.performClick()
+                    }
+                    true
+                }
+                else -> false
             }
         }
 
@@ -147,6 +168,20 @@ class PlayerBottomSheet private constructor(
         }
     }
 
+    private fun onSwipeLeft() {
+        if (instance?.hasNextMediaItem() == true){
+            ViewCompat.performHapticFeedback(previewPlayer, HapticFeedbackConstantsCompat.CONTEXT_CLICK)
+            instance?.seekToNext()
+        }
+    }
+
+    private fun onSwipeRight() {
+        if (instance?.hasPreviousMediaItem() == true) {
+            ViewCompat.performHapticFeedback(previewPlayer, HapticFeedbackConstantsCompat.CONTEXT_CLICK)
+            instance?.seekToPrevious()
+        }
+    }
+
     private val bottomSheetCallback = object : BottomSheetCallback() {
         override fun onStateChanged(
             bottomSheet: View,
@@ -159,6 +194,7 @@ class PlayerBottomSheet private constructor(
                     previewPlayer.alpha = 1f
                     fullPlayer.alpha = 0f
                     bottomSheetBackCallback!!.isEnabled = false
+                    seekSwipeEnabled = prefs.getBooleanStrict("seek_swipe", false)
                 }
 
                 BottomSheetBehavior.STATE_DRAGGING, BottomSheetBehavior.STATE_SETTLING -> {
@@ -172,6 +208,7 @@ class PlayerBottomSheet private constructor(
                     previewPlayer.alpha = 0f
                     fullPlayer.alpha = 1f
                     bottomSheetBackCallback!!.isEnabled = true
+                    seekSwipeEnabled = false
                 }
 
                 BottomSheetBehavior.STATE_HIDDEN -> {
@@ -203,6 +240,7 @@ class PlayerBottomSheet private constructor(
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         doOnLayout { // wait for CoordinatorLayout to finish to allow getting behaviour
+            prefs.registerOnSharedPreferenceChangeListener(prefsListener)
             standardBottomSheetBehavior = MyBottomSheetBehavior.from(this)
             fullPlayer.minimize = {
                 standardBottomSheetBehavior!!.state = BottomSheetBehavior.STATE_COLLAPSED
@@ -282,6 +320,7 @@ class PlayerBottomSheet private constructor(
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
+        prefs.unregisterOnSharedPreferenceChangeListener(prefsListener)
         lastActuallyVisible = null
         lastMeasuredHeight = null
         fullPlayer.minimize = null

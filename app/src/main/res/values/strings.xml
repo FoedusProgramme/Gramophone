@@ -472,5 +472,6 @@
     <string name="sort_by_album_artist_year"><![CDATA[Album artist -> year]]></string>
     <string name="forbidden_symbol_error">Invalid character in the name</string>
     <string name="translators">Translators</string>
-
+    <string name="seek_swipe_preference_desc">Allow skipping to the next or previous track by swiping on the mini player</string>
+    <string name="seek_swipe_preference">Swipe to change tracks</string>
 </resources>

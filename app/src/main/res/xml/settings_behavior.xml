@@ -71,6 +71,15 @@
             android:widgetLayout="@layout/preference_switch_widget"
             app:iconSpaceReserved="false" />
 
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="seek_swipe"
+            android:layout="@layout/preference_switch"
+            android:title="@string/seek_swipe_preference"
+            android:summary="@string/seek_swipe_preference_desc"
+            android:widgetLayout="@layout/preference_switch_widget"
+            app:iconSpaceReserved="false" />
+
     </PreferenceCategory>
 
 </PreferenceScreen>
