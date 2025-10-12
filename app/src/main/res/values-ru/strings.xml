@@ -437,7 +437,7 @@
     <string name="contributors_lambada10">Предоставление образцов текстов песен и данных SongSync</string>
     <string name="contributors_code_contributions">Вклад в разработку</string>
     <string name="contributors_yuyuko1024">Волнистая полоса прогресса</string>
-    <string name="contributors_ghhccghk">Текст песен в строке состояния</string>
+    <string name="contributors_ghhccghk">Текст песни в строке состояния и другие улучшения</string>
     <string name="home_menu_quick_refresh">Быстрое обновление</string>
     <string name="add_to_queue">Добавить в очередь</string>
     <string name="app_name">Gramophоne</string>
@@ -466,4 +466,5 @@
     <string name="sort_by_album_year">Год альбома</string>
     <string name="sort_by_album_artist_year"><![CDATA[Исполнитель альбома -> Год]]></string>
     <string name="forbidden_symbol_error">Недопустимый символ в названии</string>
+    <string name="translators">Переводчики</string>
 </resources>
