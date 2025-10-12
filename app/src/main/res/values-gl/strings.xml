@@ -426,7 +426,7 @@
     <string name="contributors_lambada10">proporciona exemplos de letra e SongSync</string>
     <string name="contributors_code_contributions">Colaboración no código</string>
     <string name="contributors_yuyuko1024">A barra de progreso con ondas</string>
-    <string name="contributors_ghhccghk">Letras na barra de estado</string>
+    <string name="contributors_ghhccghk">Letras na barra de estado e outras melloras</string>
     <string name="home_menu_quick_refresh">Actualización rápida</string>
     <string name="add_to_queue">Engadir á cola</string>
     <string name="app_name">Gramophone</string>
@@ -453,4 +453,5 @@
     <string name="sort_by_album_year">Ano do álbum</string>
     <string name="sort_by_album_artist_year">Ano <![CDATA[Album artist ->]]></string>
     <string name="forbidden_symbol_error">Carácter non válido no nome</string>
+    <string name="translators">Traducións</string>
 </resources>
