@@ -427,7 +427,7 @@
     <string name="contributors_lambada10">laulusõnade näited ja SongSync</string>
     <string name="contributors_code_contributions">Kaastöö koodi kirjutamisel</string>
     <string name="contributors_yuyuko1024">Vingerdav edenemisriba</string>
-    <string name="contributors_ghhccghk">Laulusõnad olekuribal</string>
+    <string name="contributors_ghhccghk">Laulusõnad olekuribal ja muud täiendused</string>
     <string name="home_menu_quick_refresh">Kiirvärskendus</string>
     <string name="add_to_queue">Lisa esitusjärjekorda</string>
     <string name="app_name">Gramophone</string>
@@ -454,4 +454,5 @@
     <string name="sort_by_album_year">Albumi aasta</string>
     <string name="sort_by_album_artist_year"><![CDATA[Albumi esitaja -> aasta]]></string>
     <string name="forbidden_symbol_error">Nimes on mittelubatud tähemärk</string>
+    <string name="translators">Tõlkijad</string>
 </resources>
