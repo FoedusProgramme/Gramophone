@@ -155,7 +155,6 @@
     <string name="settings_blacklist_folder_summary">Filter songs from certain folders</string>
     <string name="settings_blacklist_folder">Blacklist folders</string>
     <string name="settings_category_basic_info">Basic info</string>
-    <string name="preference_category_quality">Quality</string>
     <string name="settings_category_misc">Misc</string>
     <string name="settings_category_filters">Filters</string>
     <string name="settings_preference_category_application">Application</string>
@@ -438,8 +437,6 @@
     <string name="rename_playlist">Rename playlist</string>
     <string name="edit_playlist_failed">Editing playlist failed: %s</string>
     <string name="add_to_playlist">Add to playlist</string>
-    <string name="settings_hq_output">High-quality output</string>
-    <string name="settings_hq_output_summary">Allow using any sample format instead of restricting to 16-bit int</string>
     <string name="playlist_editing_pref_desc">Allows to add songs to playlists (moving / removing not yet implemented)</string>
     <string name="no_app_found">No app found that can do this</string>
     <string name="contributors_nift4">Maintainer / Lead Developer</string>
