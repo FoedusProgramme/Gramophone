@@ -137,7 +137,6 @@
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
     <string name="delete_failed">Не атрымалася выдаліць песню</string>
     <string name="settings_blacklist_folder_summary">Фільтраваць песні з пэўных тэчак</string>
-    <string name="preference_category_quality">Якасць</string>
     <string name="settings_lyrics_configuration">Наладка тэксту песень</string>
     <string name="settings_player_options_summary">Якасць вываду, паводзіны прайгравання</string>
     <string name="settings_lyrics_bold_summary">Выкарыстоўваць для тэкстаў большы шрыфт</string>

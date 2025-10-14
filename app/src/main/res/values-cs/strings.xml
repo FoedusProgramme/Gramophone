@@ -141,7 +141,6 @@
     <string name="settings_customization_summary">Správa vlastních nastavení</string>
     <string name="sort_by_modified_date">Datum modifikace</string>
     <string name="settings_lyric">Lyric</string>
-    <string name="preference_category_quality">Kvalita</string>
     <string name="album_covers_enhance_desc">Zobraz vysoce kvalitní obaly skladeb a možnost odlišit obal alba a skladby (vyžaduje přístup k fotografiím)</string>
     <string name="grant_audio"><![CDATA[Prosím povolte \"Hudba a Audio\" povolení]]></string>
     <string name="crash_clipboard">Byl zkopírován záznam o havárii do schránky</string>

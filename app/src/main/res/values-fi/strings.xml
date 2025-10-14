@@ -147,7 +147,6 @@
     <string name="settings_lyrics_center_summary">Käytä sanoituksissa keskitettyä tasausta</string>
     <string name="settings_lyrics_multiline">Lue monirivisiä sanoituksia</string>
     <string name="settings_lyrics_multiline_summary">Käsittele kaikkia synkronointipisteiden välisiä rivejä yhtenä sanoitustekstinä</string>
-    <string name="preference_category_quality">Laatu</string>
     <string name="album_cover">Albumin kansi</string>
     <string name="dialog_lyrics">Sanoitukset</string>
     <string name="delete_failed_playlist">Soittolistan poistaminen epäonnistui</string>

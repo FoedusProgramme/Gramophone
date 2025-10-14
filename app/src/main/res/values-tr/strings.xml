@@ -111,7 +111,6 @@
     <string name="album_cover">Albüm kapağı</string>
     <string name="settings_lyrics_configuration">Şarkı sözleri yapılandırması</string>
     <string name="settings_preference_category_application">Uygulama</string>
-    <string name="preference_category_quality">Kalite</string>
     <string name="settings_category_filters">Filtreler</string>
     <string name="settings_category_misc">Diğer</string>
     <string name="settings_player_ui">Oynatıcı arayüzü</string>

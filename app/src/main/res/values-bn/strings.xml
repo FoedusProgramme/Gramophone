@@ -134,7 +134,6 @@
     <string name="app_name">গ্রামোফোন</string>
     <string name="settings_blacklist_folder">ব্ল্যাকলিস্টেড ফোল্ডার</string>
     <string name="settings_category_basic_info">বেসিক তথ্য</string>
-    <string name="preference_category_quality">মান</string>
     <string name="settings_category_misc">অন্যান্য</string>
     <string name="settings_preference_category_application">অ্যাপ্লিকেশন</string>
     <string name="settings_category_filters">ফিল্টার</string>
@@ -183,8 +182,6 @@
     <string name="settings_audio_quality_info_summary">প্লেয়ার স্ক্রিনে অডিও কোয়ালিটি/ফরম্যাট তথ্য প্রদর্শন করুন</string>
     <string name="settings_trim_lyrics">লিরিকের চারপাশের ফাঁকা জায়গা সরান</string>
     <string name="settings_trim_lyrics_summary">লিরিকের লাইনের প্রথম অক্ষরের আগে বা লাইনের শেষের পরে থাকা ফাঁকা জায়গার শৈল্পিক তাৎপর্য থাকতে পারে। আপনি এর সাথে একমত না হলে, এই স্পেসগুলো স্বয়ংক্রিয়ভাবে সরানোর জন্য টগলটি চালু করতে পারেন।</string>
-    <string name="settings_hq_output">হাই-কোয়ালিটি আউটপুট</string>
-    <string name="settings_hq_output_summary">১৬-বিট ইন্ট-এ সীমাবদ্ধ না রেখে যেকোনো স্যাম্পল ফরম্যাট ব্যবহারের অনুমতি দিন</string>
     <string name="settings_mp3_index_seeking_summary">ভিবিআর (VBR) সিকিংয়ের জন্য সম্ভাব্য অনুপস্থিত জিং (Xing) হেডারের উপর নির্ভর না করে, সিকিংয়ের প্রয়োজনে সম্পূর্ণ এমপিথ্রি (MP3) ফাইল মেমোরিতে রিড করার সুবিধা। যদি এটি বন্ধ থাকে, জিং (Xing) হেডার অনুপস্থিত থাকলে সিবিআর (CBR) সিকিং ব্যবহার করা হবে। একটি সঠিকভাবে তৈরি ভিবিআর এমপিথ্রি (VBR MP3) ফাইলে জিং (Xing) হেডার থাকে, তাই বেশিরভাগ ক্ষেত্রে এই অপশনের প্রয়োজন হয় না। (প্রয়োগ করার জন্য অ্যাপ রিস্টার্ট প্রয়োজন)</string>
     <string name="settings_mp3_index_seeking">এমপিথ্রি ইনডেক্স সিকিং</string>
     <string name="settings_export_logs">অ্যাপের লগগুলো এক্সপোর্ট করুন</string>

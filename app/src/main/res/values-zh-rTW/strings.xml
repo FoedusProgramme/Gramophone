@@ -123,7 +123,6 @@
     <string name="share">分享</string>
     <string name="settings_experimental_settings_summary">測試功能、雜項</string>
     <string name="settings_color_accuracy_summary">使色彩生成準確</string>
-    <string name="preference_category_quality">高質量</string>
     <string name="settings_category_misc">雜項</string>
     <string name="settings_preference_category_application">應用程式</string>
     <string name="settings_category_full_player">完整播放器</string>
@@ -211,8 +210,6 @@
     <string name="settings_lyrics_no_animation_summary">停用所有行過渡歌詞動畫</string>
     <string name="settings_audio_quality_info">音訊品質資訊</string>
     <string name="settings_audio_quality_info_summary">在播放器螢幕上顯示音訊品質／格式資訊</string>
-    <string name="settings_hq_output">高品質輸出</string>
-    <string name="settings_hq_output_summary">允許使用任何取樣格式，而非僅限於 16 位元整數</string>
     <string name="settings_mp3_index_seeking">MP3 索引搜尋</string>
     <string name="playlist_editing_pref_desc">可將歌曲新增至播放清單（移動／移除功能尚未實作）</string>
     <string name="app_name">Gramophone</string>

@@ -75,6 +75,5 @@
     <string name="settings_category_basic_info">Bazaj informoj</string>
     <string name="settings_category_filters">Filtroj</string>
     <string name="settings_preference_category_application">Aplikaĵo</string>
-    <string name="preference_category_quality">Kvalito</string>
     <string name="settings_category_misc">Diversaj</string>
 </resources>

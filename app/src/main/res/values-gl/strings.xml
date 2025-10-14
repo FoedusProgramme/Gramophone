@@ -137,7 +137,6 @@
     <string name="settings_blacklist_folder_summary">Filtrar as cancións de certos cartafoles</string>
     <string name="settings_blacklist_folder">Omitir cartafoles</string>
     <string name="settings_category_basic_info">Info básica</string>
-    <string name="preference_category_quality">Calidade</string>
     <string name="settings_category_misc">Varios</string>
     <string name="settings_category_filters">Filtros</string>
     <string name="settings_preference_category_application">Aplicación</string>
@@ -413,8 +412,6 @@
     <string name="create_failed_playlist">Fallou a creación da lista: %s</string>
     <string name="refreshing_wait">Actualizando, agarda…</string>
     <string name="refresh_did_you_know">Gramophone mira se hai actualizacións nas listas cada vez que se inicia, e mentras está a funcionar, tamén detectará se hai novas cancións. Este botón «Actualizar» non volve a cargar o multimedia en Gramophone, se non que lle pide ao sistema volver a escanear todos os ficheiros das almacenaxes permanentes (por iso lle leva un pouco de tempo). Isto significa que, a non ser que o sistema ou outras apps non estean a funcionar correctamente, non precisarás usar nunca esta característica.\n\nFaltan algunhas cancións? Comproba o filtro de lonxitude mínima e os cartafoles ignorados en Axustes &gt; Comportamento, e confirma que teñen os valores agardados. Para outras posibles razóns mira as nósas PMF.</string>
-    <string name="settings_hq_output_summary">Permitir usar calquera formato de mostra en lugar de restrinxir a 16-bit int</string>
-    <string name="settings_hq_output">Saída de Alta-calidade</string>
     <string name="playlist_editing_pref_desc">Permite engadir cancións ás listas (aínda non se pode mover / retirar)</string>
     <string name="no_app_found">Non atopamos unha app para iso</string>
     <string name="contributors_nift4">Mantemento / Desenvolvedora principal</string>

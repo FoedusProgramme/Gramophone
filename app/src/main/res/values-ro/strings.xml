@@ -142,7 +142,6 @@
     <string name="settings_play_on_launch">Redă la lansare</string>
     <string name="recently_added">Adăugate recent</string>
     <string name="natural_order">În ordine naturală</string>
-    <string name="preference_category_quality">Calitate</string>
     <string name="current_playlist">Playlist-ul curent</string>
     <string name="fgs_failed_channel">Redarea nu a putut fi reluată</string>
     <string name="crash_clipboard">Copiază crash log-ul în clipboard</string>

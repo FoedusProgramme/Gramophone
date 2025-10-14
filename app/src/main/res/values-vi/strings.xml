@@ -128,7 +128,6 @@
     <string name="settings_category_misc">Khác</string>
     <string name="settings_play_on_launch_summary">Tự động phát khi mở ứng dụng</string>
     <string name="settings_play_on_launch">Phát khi mở ứng dụng</string>
-    <string name="preference_category_quality">Chất lượng</string>
     <string name="album_cover">Ảnh album</string>
     <string name="delete_failed">Không thể xóa bài hát</string>
     <string name="dialog_edit_metadata">Chỉnh sửa</string>

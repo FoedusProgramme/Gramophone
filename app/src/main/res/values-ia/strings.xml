@@ -82,7 +82,6 @@
     <string name="settings_category_filters">Filtros</string>
     <string name="settings_category_full_player">Reproductor plen</string>
     <string name="settings_category_misc">Miscellanea</string>
-    <string name="preference_category_quality">Qualitate</string>
     <string name="dialog_edit_metadata">Modificar</string>
     <string name="dialog_lyrics">Parolas de canto</string>
     <string name="home_menu_search">Cerca</string>

@@ -94,7 +94,6 @@
     <string name="settings_category_filters">پالایش‌ها</string>
     <string name="settings_category_full_player">پخش کنندۀ کامل</string>
     <string name="settings_category_misc">متفرقه</string>
-    <string name="preference_category_quality">کیفیت</string>
     <string name="crash_clipboard">گزارش ازکار افتادن در کلیپ‌بورد ذخیره شد</string>
     <string name="dialog_edit_metadata">ویرایش</string>
     <string name="dialog_lyrics">ترانه‌ها</string>
@@ -413,8 +412,6 @@
     <string name="refresh_did_you_know">گرامافون در هر بار شروع برنامه، لیست آهنگ‌های به‌روز شده را درخواست می‌کند و در حالی که گرامافون در حال اجرا است، رسانه‌های جدید را نیز به‌طور خودکار شناسایی می‌کند. دکمه «بازخوانی» رسانه‌ها را در گرامافون بارگیری مجدد نمی‌کند، در عوض، از سیستم شما می‌خواهد که تمام فایل‌ها را از تمام دستگاه‌های ذخیره‌سازی دائمی متصل دوباره اسکن کند (به همین دلیل است که مدتی طول می‌کشد). این یعنی هرگز نیازی به استفاده از این ویژگی نخواهید داشت، مگر این‌که سیستم یا برنامه‌های دیگر شما دچار نقص شوند.\n\nآیا برخی از آهنگ‌ها را از دست داده‌اید؟ حتماً «تنظیمات &gt; رفتار» را برای پالایۀ کمینۀ مدت زمان و لیست سیاه پوشه بررسی کنید و تأیید کنید که این تنظیمات روی مقدار مورد انتظار تنظیم شده‌اند. برای دلایل احتمالی بیشتر، لطفا سوالات پرتکرار ما را بررسی کنید.</string>
     <string name="delete_failed_playlist">پاک کردن فهرست پخش شکست خورد: %s</string>
     <string name="rename">تغییر نام</string>
-    <string name="settings_hq_output">خروجی کیفیت بالا</string>
-    <string name="settings_hq_output_summary">اجازۀ استفاده از هر قالب نمونه‌ای به جای محدود کردن به عدد صحیح ۱۶ بیتی</string>
     <string name="playlist_editing_pref_desc">امکان افزودن آهنگ‌ها به لیست‌های پخش (جابه‌جایی/حذف هنوز پیاده‌سازی نشده است)</string>
     <string name="no_app_found">هیچ برنامه‌ای پیدا نشد که بتواند این کار را انجام دهد</string>
     <string name="contributors_nift4">نگه‌دارنده / توسعه‌دهندۀ راهبر</string>

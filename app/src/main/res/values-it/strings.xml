@@ -57,7 +57,6 @@
     </plurals>
     <string name="settings_blacklist_folder_summary">Filtra brani da alcune cartelle</string>
     <string name="settings_category_basic_info">Info di base</string>
-    <string name="preference_category_quality">Qualità</string>
     <string name="settings_category_misc">Varie</string>
     <string name="settings_category_filters">Filtri</string>
     <string name="settings_blacklist_folder">Lista nera cartelle</string>

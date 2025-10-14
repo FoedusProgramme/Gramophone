@@ -121,7 +121,6 @@
     <string name="settings_blacklist">Llista negra</string>
     <string name="settings_category_basic_info">Informació bàsica</string>
     <string name="settings_play_on_launch_summary">Reprodueix música en el llançament</string>
-    <string name="preference_category_quality">Qualitat</string>
     <string name="settings_crash_application">Aplicació de fallades</string>
     <string name="album_cover">Caràtules d\'àlbums</string>
     <string name="dialog_edit_metadata">Edita</string>
@@ -417,8 +416,6 @@
     <string name="rename_playlist">Canvia el nom de la llista de reproducció</string>
     <string name="add_to_playlist">Afegeix a la llista de reproducció</string>
     <string name="refresh_did_you_know">El Gramophone demana una llista de cançons actualitzada en cada inici d\'aplicació, i mentre el Gramophone s\'està executant, també detectarà automàticament mitjans nous. Aquest botó «Actualitza» no tornarà a carregar el mitjà al Gramophone, sinó que demanarà al vostre sistema que torni a explorar tots els fitxers de tots els dispositius d\'emmagatzematge permanent connectats (per això triga una estona). Això vol dir que, tret que el vostre sistema o altres aplicacions estiguin funcionant malament, mai haureu d\'utilitzar aquesta funció.\n\nFalten algunes cançons? Assegureu-vos de comprovar la Configuració &gt; Comportament per al filtre de longitud mínima i la llista negra de carpetes, i confirmeu que aquests paràmetres estan definits amb el valor esperat. Per altres motius possibles, consulteu les nostres PMF.</string>
-    <string name="settings_hq_output">Sortida d\'alta qualitat</string>
-    <string name="settings_hq_output_summary">Permet utilitzar qualsevol format de mostra en lloc de restringir a enters de 16 bits</string>
     <string name="playlist_editing_pref_desc">Permet afegir cançons a les llistes de reproducció (encara no s\'ha implementat moure/eliminar)</string>
     <string name="no_app_found">No s\'ha trobat cap aplicació que pugui fer això</string>
     <string name="contributors_ghhccghk">Lletres a la barra d\'estat i altres millores</string>

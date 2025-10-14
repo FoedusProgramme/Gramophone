@@ -87,7 +87,6 @@
     <string name="dialog_edit_metadata">ویرایش</string>
     <string name="settings_blacklist_folder">پوشه های بلک لیست</string>
     <string name="settings_category_basic_info">اطلاعات پایه</string>
-    <string name="preference_category_quality">کیفیت</string>
     <string name="settings_crash_application">کرش شدن برنامه</string>
     <string name="dialog_lyrics">متن ترانه ها</string>
     <string name="settings_preference_category_application">برنامه</string>

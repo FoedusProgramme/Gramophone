@@ -151,7 +151,6 @@
     <string name="settings_category_filters">فَلَاتِر</string>
     <string name="settings_category_full_player">المُشغِّل الكامل</string>
     <string name="settings_category_misc">مُنوَّعات</string>
-    <string name="preference_category_quality">الدِّقَّة</string>
     <string name="delete_failed">فشل حذف الأغنية</string>
     <string name="settings_crash_application_summary">كراشوماتيك ٣٠٠٠</string>
     <string name="deny_images"><![CDATA[رجاءً ألغِ \"إذن الصور\" والڤيديوهات]]></string>

@@ -143,7 +143,6 @@
     <string name="settings_lyrics_bold">Vārdi treknrakstā</string>
     <string name="settings_play_on_launch">Atskaņot palaižot</string>
     <string name="settings_play_on_launch_summary">Atskaņot mūziku palaižot</string>
-    <string name="preference_category_quality">Kvalitāte</string>
     <string name="settings_category_misc">Dažādi</string>
     <string name="settings_crash_application">Nokrašot aplikāciju</string>
     <string name="settings_crash_application_summary">Krašotājs-3000</string>

@@ -142,7 +142,6 @@
     <string name="settings_blacklist_folder_summary">Muayyan papkalardan qo\'shiqlarni filtrlang</string>
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
     <string name="album_cover">Albom qopqog\'i</string>
-    <string name="preference_category_quality">Sifat</string>
     <string name="settings_category_misc">Boshqa</string>
     <string name="settings_preference_category_application">Ilova</string>
     <string name="dialog_edit_metadata">O\'zgartirish</string>

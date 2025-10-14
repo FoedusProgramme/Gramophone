@@ -104,7 +104,6 @@
     <string name="settings_color_accuracy">Rəng dəqiqliyi</string>
     <string name="settings_lyrics_bold">Qalın şriftli sözlər</string>
     <string name="settings_lyrics_configuration">Sözlərin konfiqurasiyası</string>
-    <string name="preference_category_quality">Keyfiyyət</string>
     <string name="settings_preference_category_application">Tətbiq</string>
     <string name="settings_category_filters">Filtrlər</string>
     <string name="album_cover">Albom örtüyü</string>
