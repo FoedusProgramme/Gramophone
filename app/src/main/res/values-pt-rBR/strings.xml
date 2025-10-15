@@ -407,6 +407,8 @@
     <string name="settings_translation_auto_word">Animar traduções automaticamente</string>
     <string name="settings_translation_auto_word_summary">Aplicar gradiente linear para linhas de tradução em letras com sincronização por palavra se as traduções não possuem metadados com sincronização por palavras</string>
     <string name="cannot_find_file">Não foi possível encontrar esse arquivo</string>
+    <string name="settings_mp3_index_seeking_summary">Ler todos os arquivos MP3 na memória conforme necessário para procurar, em vez de confiar em um cabeçalho Xing potencialmente ausente para busca VBR. Se isso for desativado, a busca CBR será usada no caso de um cabeçalho Xing estiver faltando. Um arquivo VBR MP3 bem formado possui um cabeçalho Xing, portanto, essa opção não é necessária na maioria dos casos. (Requer o reinicio do app para aplicar)</string>
+    <string name="settings_mp3_index_seeking">Busca de índice de MP3</string>
     <string name="enter_msg_for_dev_here">Coloque uma mensagem para o desenvolvedor aqui</string>
     <string name="do_not_enter_email_enter_msg">Digite uma mensagem, não um endereço de e-mail</string>
     <string name="log_will_auto_send">Os registros serão enviados automaticamente, em vez disso explique o problema</string>

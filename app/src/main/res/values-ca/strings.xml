@@ -397,6 +397,8 @@
     <string name="settings_translation_auto_word">Traduccions animades automàticament</string>
     <string name="settings_translation_auto_word_summary">Aplica un degradat lineal a les línies de traducció en la reproducció de lletres sincronitzada de paraules si les traduccions no tenen metadades de sincronització de paraules</string>
     <string name="cannot_find_file">No s\'ha pogut trobar aquest fitxer</string>
+    <string name="settings_mp3_index_seeking">Cerca de l\'índex MP3</string>
+    <string name="settings_mp3_index_seeking_summary">Llegeix tot el fitxer MP3 a la memòria segons sigui necessari per a la cerca, en lloc de confiar en la capçalera Xing potencialment absent per a la cerca VBR. Si això està desactivat, s\'utilitzarà la cerca CBR si manca la capçalera Xing. Un fitxer VBR MP3 amb format correcte té una capçalera Xing, per tant aquesta opció no hauria de ser necessària en gairebé cap cas. (Cal reiniciar l\'aplicació per a aplicar-ho)</string>
     <string name="enter_msg_for_dev_here">Introduïu aquí un missatge per al desenvolupador</string>
     <string name="log_will_auto_send">Els registres s\'enviaran automàticament, expliqueu el problema</string>
     <string name="do_not_enter_email_enter_msg">Introduïu un missatge, no una adreça de correu</string>

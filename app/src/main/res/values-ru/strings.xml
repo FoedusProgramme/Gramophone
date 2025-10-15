@@ -361,6 +361,7 @@
     <string name="spk_encoding_pcm_16bit_offload">Выгрузка 16-битного PCM</string>
     <string name="spk_encoding_pcm_24bit_offload">24-разрядный (8.24) PCM выгрузка</string>
     <string name="cannot_find_file">Файл не найден</string>
+    <string name="settings_mp3_index_seeking">Поиск индекса MP3</string>
     <string name="failed_to_parse_lyric">При парсинге текста произошла ошибка</string>
     <string name="spk_encoding_aac_he_v1">HE-AAC v1</string>
     <string name="settings_lyrics_char_scaling_summary">Рассчитывает скорость градиента текста в символах в секунду, а не в пикселях в секунду. Это может привести к тому, что скорость будет выглядеть неравномерной из-за различной длины символов в пикселях.</string>
@@ -398,6 +399,7 @@
     <string name="spk_encoding_aac_latm_lc">AAC-LC в LATM</string>
     <string name="spk_encoding_unknown">Неизвестный формат %s</string>
     <string name="spk_encoding_mpegh_sub_bl_l3">MPEG-H Базовый профиль L3</string>
+    <string name="settings_mp3_index_seeking_summary">Считывание всего MP3-файла в память для обеспечения корректной перемотки, вместо того чтобы полагаться на заголовок Xing для перемотки в файлах с переменным битрейтом (VBR), который может отсутствовать. Если эта опция отключена, при отсутствии заголовка Xing будет использована перемотка, предназначенная для файлов с постоянным битрейтом (CBR). Корректно сформированный VBR MP3-файл содержит заголовок Xing, поэтому в подавляющем большинстве случаев данная опция не требуется. (Для вступления изменений в силу требуется перезапуск приложения)</string>
     <string name="spk_encoding_aac_adts_he_v1">HE-AAC v1 в ADTS</string>
     <string name="spk_encoding_aac_latm_he_v1">HE-AAC v1 в LATM</string>
     <string name="spk_encoding_mpegh_sub_bl_l4">MPEG-H Базовый профиль L4</string>

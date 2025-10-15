@@ -393,6 +393,8 @@
     <string name="spk_encoding_pcm_16bit_offload">تخلیۀ ۱۶-بیت PCM</string>
     <string name="spk_encoding_pcm_24bit_offload">تخلیۀ ۲۴-بیت (۸.۲۴) PCM</string>
     <string name="cannot_find_file">نمی‌توان این پرونده را پیدا کرد</string>
+    <string name="settings_mp3_index_seeking">جویش فهرست MP3</string>
+    <string name="settings_mp3_index_seeking_summary">خواندن تمامی پرونده MP3 به حافظه لازم برای جویش، بحای اتکا به سری Xing بالقوه گم شده برای جویش VBR. اگر این از کار افتاده باشد، جویش CBR اگر سری Xing گم شده باشد استفاده می‌شود. یک پرونده MP3 خوش ساختع VBR یک سری Xing دارد، پس این گزینه در اکثر موارد نباید مورد نیاز باشد. (نیاز به ازسرگیری برنامه برای اعمال دارد)</string>
     <string name="create_playlist">ایجاد فهرست پخش…</string>
     <string name="refreshing_wait">درحال بازخوانی، لطفا صبر کنید…</string>
     <string name="still_refreshing">درحال بازخوانی، گام %1$d/%2$d: %3$s</string>
