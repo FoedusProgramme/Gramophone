@@ -393,8 +393,6 @@
     <string name="settings_translation_auto_word">Tradución automática</string>
     <string name="settings_translation_auto_word_summary">Aplicar un gradiente lineal ás liñas traducidas na reprodución con letra sincronizada se a tradución non ten metadatos sincronizados por palabras</string>
     <string name="cannot_find_file">Non se atopa o ficheiro</string>
-    <string name="settings_mp3_index_seeking_summary">Ler o ficheiro MP3 ao completo na memoria como requerimento para buscar, no lugar de confiar na posible falta da cabeceira Xing na busca VBR. Se está desactivado, usarase a busca CBR se a cabeceira Xing non está presente. Un ficheiro VBR MP3 co formato correcto ten unha cabeceira Xing, polo que esta opción non debería ser necesaria na maioría dos casos. (Require reiniciar a app)</string>
-    <string name="settings_mp3_index_seeking">Busca no índice MP3</string>
     <string name="enter_msg_for_dev_here">Escribe aquí a mensaxe para o desenvolvedor</string>
     <string name="do_not_enter_email_enter_msg">Escribe a mensaxe, non un enderezo de correo</string>
     <string name="log_attachment">O rexistros vanse enviar automaticamente como un anexo</string>

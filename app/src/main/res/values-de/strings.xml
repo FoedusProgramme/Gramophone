@@ -389,7 +389,6 @@
     <string name="settings_translation_auto_word">Übersetzungen automatisch animieren</string>
     <string name="settings_translation_auto_word_summary">Linearen Farbverlauf auf übersetzte Verse bei der Wiedergabe wortsynchroner Liedtexte anwenden wenn die Übersetzungen keine wortsynchronen Metadaten haben</string>
     <string name="cannot_find_file">Datei kann nicht gefunden werden</string>
-    <string name="settings_mp3_index_seeking_summary">Die gesamte MP3-Datei in den Speicher lesen, wie es für das Seeking erforderlich ist, anstatt einen potenziell fehlenden Xing-Header für VBR-Seeking zu verwenden. Wenn dies deaktiviert ist, wird CBR-Seeking verwendet, wenn der Xing-Header fehlt. Eine gut kodierte VBR MP3-Datei hat einen Xing Header, daher sollte diese Option in fast allen Fällen nicht benötigt werden. (Benötigt App-Neustart zum Anwenden)</string>
     <string name="enter_msg_for_dev_here">Nachricht an den Entwickler hier eingeben</string>
     <string name="do_not_enter_email_enter_msg">Nachricht eingeben, keine E-Mail-Adresse</string>
     <string name="log_will_auto_send">Protokolle werden automatisch gesendet, erkläre stattdessen das Problem</string>
@@ -431,7 +430,6 @@
     <string name="contributors_lambada10">Bereitstellung von Liedtextbeispielen &amp; SongSync</string>
     <string name="contributors_code_contributions">Codebeiträge</string>
     <string name="mix_port_flag_fast">Schnell</string>
-    <string name="settings_mp3_index_seeking">MP3-Indexsuche</string>
     <plurals name="folders_plural">
         <item quantity="one">%d Ordner</item>
         <item quantity="other">%d Ordner</item>
