@@ -419,6 +419,8 @@
     <string name="settings_translation_auto_word">Auto-animate translations</string>
     <string name="settings_translation_auto_word_summary">Apply linear gradient to translation lines in word-synced lyric playback if translations do not have word-sync metadata</string>
     <string name="cannot_find_file">Cannot find this file</string>
+    <string name="settings_mp3_index_seeking_summary">Read all of the MP3 file into memory as required for seeking, instead of relying on potentially missing Xing header for VBR seeking. If this is disabled, CBR seeking will be used if Xing header is missing. A well-formed VBR MP3 file has a Xing header, hence this option shouldn\'t be needed in almost all cases. (Requires app restart to apply)</string>
+    <string name="settings_mp3_index_seeking">MP3 index seeking</string>
     <string name="enter_msg_for_dev_here">Enter message for developer here</string>
     <string name="do_not_enter_email_enter_msg">Enter message, not an e-mail address</string>
     <string name="log_will_auto_send">Logs will be sent automatically, explain the issue instead</string>
