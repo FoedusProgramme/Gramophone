@@ -462,4 +462,10 @@
     <string name="sort_by_album_artist_year"><![CDATA[Album artist -> year]]></string>
     <string name="forbidden_symbol_error">Nieprawidłowy znak w nazwie</string>
     <string name="translators">Tłumacze</string>
+    <string name="settings_replaygain_mode">Tryb</string>
+    <string name="settings_replaygain_preamp">Przedwzmacniacz</string>
+    <string name="settings_replaygain_no_rg_amp">Tłumienie (bez RG)</string>
+    <string name="settings_replaygain_drc">Włącz DRC</string>
+    <string name="settings_replaygain_drc_desc">Używaj funkcji „Kompresja zakresu dynamicznego” jako zabezpieczenia przed przesterowaniem (zalecane). Jeśli funkcja zostanie wyłączona, głośność zostanie zmniejszona (głośność nie będzie na tym samym poziomie, co zniweczy efekt normalizacji).</string>
+    <string name="settings_replaygain">Powtórz wzmocnienie</string>
 </resources>
