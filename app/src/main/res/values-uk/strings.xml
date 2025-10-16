@@ -462,4 +462,10 @@
     <string name="sort_by_album_artist_year"><![CDATA[Album artist -> рік]]></string>
     <string name="forbidden_symbol_error">Недійсний символ в імені</string>
     <string name="translators">Перекладачі</string>
+    <string name="settings_replaygain">ReplayGain</string>
+    <string name="settings_replaygain_mode">Режим</string>
+    <string name="settings_replaygain_preamp">Передпідсилювач</string>
+    <string name="settings_replaygain_no_rg_amp">Затухання (без RG)</string>
+    <string name="settings_replaygain_drc">Увімкнути динамічний контроль</string>
+    <string name="settings_replaygain_drc_desc">Використовуйте \"Стиснення динамічного діапазону\" як захист від обрізання (рекомендовано). Якщо вимкнено, гучність буде зменшена (гучність не буде на тому ж рівні, що знищить ефект нормалізації).</string>
 </resources>
