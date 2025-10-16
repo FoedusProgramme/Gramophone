@@ -475,5 +475,7 @@
     <string name="settings_replaygain_no_rg_amp">Attenuation (no RG)</string>
     <string name="settings_replaygain_drc">Enable DRC</string>
     <string name="settings_replaygain_drc_desc">Use \"Dynamic Range Compression\" as clipping protection (recommended). If disabled, volume will be reduced instead (volume will not be at the same level, destroying normalization effect).</string>
-
+    <string name="track_gain">Track gain</string>
+    <string name="album_gain">Album gain</string>
+    <string name="smart">Smart</string>
 </resources>
