@@ -451,4 +451,10 @@
     <string name="sort_by_album_artist_year">Ano <![CDATA[Album artist ->]]></string>
     <string name="forbidden_symbol_error">Carácter non válido no nome</string>
     <string name="translators">Traducións</string>
+    <string name="settings_replaygain">ReplayGain</string>
+    <string name="settings_replaygain_mode">Modo</string>
+    <string name="settings_replaygain_preamp">Pre amp</string>
+    <string name="settings_replaygain_no_rg_amp">Atenuación (non RG)</string>
+    <string name="settings_replaygain_drc">Activar DRC</string>
+    <string name="settings_replaygain_drc_desc">Usar «Compresión do Rango Dinámico» como protección para o *clipping* (recomendado). Se está desactivado baixarase o volume (o volume non estará ao mesmo nivel, desfacendo o efecto de normalización).</string>
 </resources>
