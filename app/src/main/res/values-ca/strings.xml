@@ -456,4 +456,10 @@
     <string name="sort_by_album_artist_year"><![CDATA[Artista de l\'àlbum -> any]]></string>
     <string name="forbidden_symbol_error">Caràcter no vàlid en el nom</string>
     <string name="translators">Traductors</string>
+    <string name="settings_replaygain">ReplayGain</string>
+    <string name="settings_replaygain_mode">Mode</string>
+    <string name="settings_replaygain_preamp">Preamplificador</string>
+    <string name="settings_replaygain_no_rg_amp">Atenuació (no RG)</string>
+    <string name="settings_replaygain_drc">Activa la DRC</string>
+    <string name="settings_replaygain_drc_desc">Utilitza la «Compressió dinàmica de l\'interval» (DRC) com a protecció del retallat (recomanat). Si està desactivat, el volum es reduirà (el volum no serà al mateix nivell, destruint l\'efecte de normalització).</string>
 </resources>
