@@ -452,4 +452,10 @@
     <string name="sort_by_album_artist_year"><![CDATA[Albumi esitaja -> aasta]]></string>
     <string name="forbidden_symbol_error">Nimes on mittelubatud tähemärk</string>
     <string name="translators">Tõlkijad</string>
+    <string name="settings_replaygain">Esitusvaljuse tundlikkus</string>
+    <string name="settings_replaygain_mode">Režiim</string>
+    <string name="settings_replaygain_preamp">Eelvõimendus</string>
+    <string name="settings_replaygain_drc">Kasuta DRC-d</string>
+    <string name="settings_replaygain_no_rg_amp">Sumbumine (ilma EVT-ta)</string>
+    <string name="settings_replaygain_drc_desc">Kasuta dünaamilise ulatuse tihendamist (DRC - Dynamic range compression) kaitseks ülevõimendamise vastu (soovituslik). Kui see eelistus on lülitatud välja, siis selle asemel vähendatakse helivajust (helivaljus pole enam samal tasemel ja see olemuslikult kaotab EVT normaliseerimise mõju).</string>
 </resources>
