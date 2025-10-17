@@ -464,4 +464,10 @@
     <string name="sort_by_album_artist_year"><![CDATA[Исполнитель альбома -> Год]]></string>
     <string name="forbidden_symbol_error">Недопустимый символ в названии</string>
     <string name="translators">Переводчики</string>
+    <string name="settings_replaygain_drc_desc">Использовать \"Компрессию динамического диапазона\" для защиты от клиппинга (рекомендуется). Если отключено, громкость будет просто понижена (из-за чего она не будет оставаться на одном уровне, что сведёт на нет эффект нормализации).</string>
+    <string name="settings_replaygain">ReplayGain</string>
+    <string name="settings_replaygain_mode">Режим</string>
+    <string name="settings_replaygain_preamp">Предусиление</string>
+    <string name="settings_replaygain_no_rg_amp">Ослабление (без RG)</string>
+    <string name="settings_replaygain_drc">Включено DRC</string>
 </resources>
