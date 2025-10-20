@@ -468,4 +468,7 @@
     <string name="settings_replaygain_drc">Włącz DRC</string>
     <string name="settings_replaygain_drc_desc">Używaj funkcji „Kompresja zakresu dynamicznego” jako zabezpieczenia przed przesterowaniem (zalecane). Jeśli funkcja zostanie wyłączona, głośność zostanie zmniejszona (głośność nie będzie na tym samym poziomie, co zniweczy efekt normalizacji).</string>
     <string name="settings_replaygain">Powtórz wzmocnienie</string>
+    <string name="track_gain">Wzmocnienie ścieżki</string>
+    <string name="album_gain">Wzmocnienie albumu</string>
+    <string name="smart">Inteligentny</string>
 </resources>
