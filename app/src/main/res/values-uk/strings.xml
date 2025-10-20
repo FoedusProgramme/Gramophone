@@ -468,4 +468,7 @@
     <string name="settings_replaygain_no_rg_amp">Затухання (без RG)</string>
     <string name="settings_replaygain_drc">Увімкнути динамічний контроль</string>
     <string name="settings_replaygain_drc_desc">Використовуйте \"Стиснення динамічного діапазону\" як захист від обрізання (рекомендовано). Якщо вимкнено, гучність буде зменшена (гучність не буде на тому ж рівні, що знищить ефект нормалізації).</string>
+    <string name="track_gain">Підсилення треку</string>
+    <string name="album_gain">Посилення альбому</string>
+    <string name="smart">Смарт</string>
 </resources>
