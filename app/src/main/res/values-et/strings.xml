@@ -458,4 +458,7 @@
     <string name="settings_replaygain_drc">Kasuta DRC-d</string>
     <string name="settings_replaygain_no_rg_amp">Sumbumine (ilma EVT-ta)</string>
     <string name="settings_replaygain_drc_desc">Kasuta dünaamilise ulatuse tihendamist (DRC - Dynamic range compression) kaitseks ülevõimendamise vastu (soovituslik). Kui see eelistus on lülitatud välja, siis selle asemel vähendatakse helivajust (helivaljus pole enam samal tasemel ja see olemuslikult kaotab EVT normaliseerimise mõju).</string>
+    <string name="track_gain">Loo esitusvaljuse tundlikkus</string>
+    <string name="album_gain">Albumi esitusvaljuse tundlikkus</string>
+    <string name="smart">Nutikas</string>
 </resources>
