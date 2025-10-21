@@ -120,8 +120,8 @@
     <string name="settings_experimental_settings_summary">Probas, varios</string>
     <string name="settings_color_accuracy_summary">Mellorar a creación da cor</string>
     <string name="settings_color_accuracy">Exactitude da cor</string>
-    <string name="sort_by_add_date">Engadir data</string>
-    <string name="sort_by_modified_date">Data modificada</string>
+    <string name="sort_by_add_date">Data de adición</string>
+    <string name="sort_by_modified_date">Data de modificación</string>
     <string name="settings_lyric">Letras</string>
     <string name="settings_lyrics_configuration">Configuración das letras</string>
     <string name="settings_lyrics_configuration_summary">Configurar aspecto das letras</string>
@@ -457,4 +457,7 @@
     <string name="settings_replaygain_no_rg_amp">Atenuación (non RG)</string>
     <string name="settings_replaygain_drc">Activar DRC</string>
     <string name="settings_replaygain_drc_desc">Usar «Compresión do Rango Dinámico» como protección para o *clipping* (recomendado). Se está desactivado baixarase o volume (o volume non estará ao mesmo nivel, desfacendo o efecto de normalización).</string>
+    <string name="track_gain">Gañancia da pista</string>
+    <string name="album_gain">Gañancia do álbum</string>
+    <string name="smart">Intelixente</string>
 </resources>
