@@ -125,7 +125,7 @@
     <string name="spk_encoding_aac_adts_scalable">AAC Scalable ใน ADTS</string>
     <string name="crash_report">รายงานข้อบกพร่อง</string>
     <string name="home_menu_settings">ตั้งค่า</string>
-    <string name="folders">โฟลเดอร์</string>
+    <string name="folders">แฟ้ม</string>
     <string name="sort_by_album">อัลบั้ม</string>
     <string name="device_type_hdmi">HDMI</string>
     <string name="home_menu_refresh">รีเฟรช</string>
@@ -197,7 +197,7 @@
         <item quantity="other">%d รายการ</item>
     </plurals>
     <string name="unknown_genre">ไม่ทราบแนวเพลง</string>
-    <string name="sort_by_album_artist">ศิลปินอัลบั้ม</string>
+    <string name="sort_by_album_artist">ศิลปินอัลบั้ม -&gt; ชื่อเพลง</string>
     <string name="unknown_playlist">เพลย์ลิสต์ที่ไม่รู้จัก</string>
     <string name="album_artist">ศิลปินอัลบั้ม</string>
     <string name="settings_category_behavior">พฤติกรรม</string>
@@ -211,4 +211,13 @@
     <string name="list">ลิสต์</string>
     <string name="dialog_disc_number">หมายเลขดิสก์</string>
     <string name="settings_experimental_settings_summary">ฟีเจอร์ทดสอบและอื่นๆ</string>
+    <string name="app_name">แกรโมโฟน</string>
+    <plurals name="folders_plural">
+        <item quantity="other">%d แฟ้ม</item>
+    </plurals>
+    <string name="settings_contributors">ผู้มีส่วนร่วม</string>
+    <string name="play_next">เล่นเพลงถัดไป</string>
+    <string name="settings_mediastore_filter">ความยาวเพลงสั้นสุด (วินาที)</string>
+    <string name="layout">แสดง</string>
+    <string name="compact_list">รายการ (บีบ)</string>
 </resources>
