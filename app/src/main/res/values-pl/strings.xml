@@ -471,4 +471,6 @@
     <string name="track_gain">Wzmocnienie ścieżki</string>
     <string name="album_gain">Wzmocnienie albumu</string>
     <string name="smart">Inteligentny</string>
+    <string name="scroll_to_playing">Przewiń do odtwarzanego utworu</string>
+    <string name="duration_queue">%s godzin</string>
 </resources>
