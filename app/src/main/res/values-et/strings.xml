@@ -461,4 +461,6 @@
     <string name="track_gain">Loo esitusvaljuse tundlikkus</string>
     <string name="album_gain">Albumi esitusvaljuse tundlikkus</string>
     <string name="smart">Nutikas</string>
+    <string name="scroll_to_playing">Loo esitamiseks keri</string>
+    <string name="duration_queue">%s tundi</string>
 </resources>
