@@ -460,4 +460,6 @@
     <string name="track_gain">Gañancia da pista</string>
     <string name="album_gain">Gañancia do álbum</string>
     <string name="smart">Intelixente</string>
+    <string name="scroll_to_playing">Desprazarse á canción en reprodución</string>
+    <string name="duration_queue">%s horas</string>
 </resources>
