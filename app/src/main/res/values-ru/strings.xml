@@ -473,4 +473,6 @@
     <string name="track_gain">Усиление трека</string>
     <string name="album_gain">Усиление альбома</string>
     <string name="smart">Умный</string>
+    <string name="duration_queue">%s ч</string>
+    <string name="scroll_to_playing">Перейти к текущему треку</string>
 </resources>
