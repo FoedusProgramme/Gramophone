@@ -3,14 +3,15 @@ package org.akanework.gramophone.ui.components
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.HapticFeedbackConstantsCompat
 import androidx.core.view.ViewCompat
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
+import androidx.media3.common.Timeline
 import androidx.media3.session.MediaController
+import androidx.viewpager2.widget.ViewPager2
 import coil3.asDrawable
 import coil3.imageLoader
 import coil3.request.Disposable
@@ -23,18 +24,22 @@ import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.playOrPause
 import org.akanework.gramophone.logic.startAnimation
 import org.akanework.gramophone.ui.MainActivity
+import org.akanework.gramophone.ui.adapters.TrackInfoAdapter
 
 class PreviewBottomSheet(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) :
 	ConstraintLayout(context, attrs, defStyleAttr, defStyleRes), Player.Listener {
+
 	private val activity
 		get() = context as MainActivity
 	private val instance: MediaController?
 		get() = activity.getPlayer()
+
 	private val bottomSheetPreviewCover: ImageView
-	private val bottomSheetPreviewTitle: TextView
-	private val bottomSheetPreviewSubtitle: TextView
 	private val bottomSheetPreviewControllerButton: MaterialButton
 	private val bottomSheetPreviewNextButton: MaterialButton
+	private val trackInfoPager: ViewPager2
+	private val trackAdapter: TrackInfoAdapter
+
 	private var lastDisposable: Disposable? = null
 
 	constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
@@ -44,11 +49,31 @@ class PreviewBottomSheet(context: Context, attrs: AttributeSet?, defStyleAttr: I
 
 	init {
 		inflate(context, R.layout.preview_player, this)
-		bottomSheetPreviewTitle = findViewById(R.id.preview_song_name)
-		bottomSheetPreviewSubtitle = findViewById(R.id.preview_artist_name)
+
 		bottomSheetPreviewCover = findViewById(R.id.preview_album_cover)
 		bottomSheetPreviewControllerButton = findViewById(R.id.preview_control)
 		bottomSheetPreviewNextButton = findViewById(R.id.preview_next)
+		trackInfoPager = findViewById(R.id.track_info_pager)
+
+		trackAdapter = TrackInfoAdapter(context)
+		trackInfoPager.adapter = trackAdapter
+		trackInfoPager.offscreenPageLimit = 1
+
+		trackInfoPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+			override fun onPageSelected(position: Int) {
+				super.onPageSelected(position)
+				instance?.let { controller ->
+					if (position != trackAdapter.getCurrentPosition() &&
+						position < trackAdapter.itemCount) {
+						ViewCompat.performHapticFeedback(
+							trackInfoPager,
+							HapticFeedbackConstantsCompat.CONFIRM
+						)
+						controller.seekTo(trackAdapter.getCurrentIndex(position), 0)
+					}
+				}
+			}
+		})
 
 		bottomSheetPreviewControllerButton.setOnClickListener {
 			ViewCompat.performHapticFeedback(it, HapticFeedbackConstantsCompat.CONTEXT_CLICK)
@@ -93,7 +118,8 @@ class PreviewBottomSheet(context: Context, attrs: AttributeSet?, defStyleAttr: I
 		mediaItem: MediaItem?,
 		reason: @Player.MediaItemTransitionReason Int
 	) {
-		if ((instance?.mediaItemCount ?: 0) > 0) {
+		val controller = instance
+		if (controller != null && controller.mediaItemCount > 0) {
 			lastDisposable?.dispose()
 			lastDisposable = context.imageLoader.enqueue(ImageRequest.Builder(context).apply {
 				target(onSuccess = {
@@ -106,12 +132,43 @@ class PreviewBottomSheet(context: Context, attrs: AttributeSet?, defStyleAttr: I
 				allowHardware(bottomSheetPreviewCover.isHardwareAccelerated)
 				error(R.drawable.ic_default_cover)
 			}.build())
-			bottomSheetPreviewTitle.text = mediaItem?.mediaMetadata?.title
-			bottomSheetPreviewSubtitle.text =
-				mediaItem?.mediaMetadata?.artist ?: context.getString(R.string.unknown_artist)
+
+			if (trackAdapter.itemCount == 0) {
+				trackAdapter.updatePlaylist(controller)
+				trackInfoPager.setCurrentItem(trackAdapter.getCurrentPosition(), false)
+			} else {
+				post {
+					trackAdapter.updatePlaylist(controller)
+					if (trackInfoPager.currentItem != trackAdapter.getCurrentPosition()) {
+						trackInfoPager.setCurrentItem(
+							trackAdapter.getCurrentPosition(),
+							true
+						)
+					}
+				}
+			}
 		} else {
 			lastDisposable?.dispose()
 			lastDisposable = null
+			post {
+				trackAdapter.updatePlaylist(null)
+			}
 		}
+	}
+
+	override fun onTimelineChanged(timeline: Timeline, reason: Int) {
+		post {
+			trackAdapter.updatePlaylist(instance)
+			instance?.let { controller ->
+				if (controller.mediaItemCount > 0 &&
+					trackInfoPager.currentItem != trackAdapter.getCurrentPosition()) {
+					trackInfoPager.setCurrentItem(trackAdapter.getCurrentPosition(), false)
+				}
+			}
+		}
+	}
+
+	fun setSwipeEnabled(enabled: Boolean) {
+		trackInfoPager.isUserInputEnabled = enabled
 	}
 }
