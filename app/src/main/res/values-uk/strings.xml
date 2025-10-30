@@ -471,4 +471,6 @@
     <string name="track_gain">Підсилення треку</string>
     <string name="album_gain">Посилення альбому</string>
     <string name="smart">Смарт</string>
+    <string name="scroll_to_playing">Прокрутіть до відтворення пісні</string>
+    <string name="duration_queue">%s годин</string>
 </resources>
