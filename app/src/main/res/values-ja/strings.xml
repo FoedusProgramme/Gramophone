@@ -447,4 +447,15 @@
     <string name="sort_by_album_artist_year"><![CDATA[アルバムアーティスト -> 年]]></string>
     <string name="forbidden_symbol_error">名前に無効な文字が含まれています</string>
     <string name="translators">翻訳者</string>
+    <string name="settings_replaygain">リプレイゲイン</string>
+    <string name="settings_replaygain_mode">モード</string>
+    <string name="settings_replaygain_preamp">プリアンプ</string>
+    <string name="settings_replaygain_no_rg_amp">減衰 (リプレイゲインなし)</string>
+    <string name="settings_replaygain_drc">DRC を有効化する</string>
+    <string name="settings_replaygain_drc_desc">クリッピング防止として「ダイナミックレンジ圧縮」を使用します (推奨)。無効化すると、音量が下げられます (音量が一定レベルにならず、正規化効果が損なわれます)。</string>
+    <string name="track_gain">トラックゲイン</string>
+    <string name="album_gain">アルバムゲイン</string>
+    <string name="smart">スマート</string>
+    <string name="scroll_to_playing">再生中の曲までスクロール</string>
+    <string name="duration_queue">%s 時間</string>
 </resources>
