@@ -26,7 +26,7 @@ class MyGradientSpan(grdWidth: Float, val color: Int, highlightColor: Int,
         set(value) {
             if (field != value) {
                 field = value
-                invalidateShader() // TODO: can we avoid thrashing GC?
+                invalidateShader() // TODO(ASAP): can we avoid thrashing GC?
             }
         }
     init {

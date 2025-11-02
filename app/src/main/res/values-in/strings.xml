@@ -129,7 +129,6 @@
     <string name="grant_images"><![CDATA[Mohon berikan izin \"Foto dan video\"]]></string>
     <string name="settings_preference_category_application">Aplikasi</string>
     <string name="settings_category_basic_info">Info dasar</string>
-    <string name="preference_category_quality">Kualitas</string>
     <string name="settings_category_misc">Lainnya</string>
     <string name="settings_category_filters">Filter</string>
     <string name="settings_category_full_player">Pemutar penuh</string>

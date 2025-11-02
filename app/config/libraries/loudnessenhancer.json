@@ -1,0 +1,15 @@
+{
+  "uniqueId": "android.media.audiofx:loudnessenhancer",
+  "developers": [{
+    "name": "The Android Open Source Project",
+    "organisationUrl": "https://source.android.com"
+  }],
+  "artifactVersion": "b7e5a25",
+  "description": "Dynamic Range Compression software effect",
+  "name": "LoudnessEnhancer",
+  "tag": "custom",
+  "website": "https://cs.android.com/android/platform/superproject/+/android-latest-release:frameworks/av/media/libeffects/loudness/;bpv=0",
+  "licenses": [
+    "Apache-2.0"
+  ]
+}

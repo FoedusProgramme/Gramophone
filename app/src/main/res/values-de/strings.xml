@@ -85,7 +85,6 @@
     <string name="settings_behavior_summary">Filter, Startverhalten</string>
     <string name="settings_lyrics_configuration_summary">Aussehen von Liedtexten konfigurieren</string>
     <string name="settings_color_accuracy_summary">Für eine präzise Farberzeugung sorgen</string>
-    <string name="preference_category_quality">Qualität</string>
     <string name="settings_category_full_player">Vollbildmodus</string>
     <string name="settings_preference_category_application">Anwendung</string>
     <string name="settings_lyrics_center_summary">Zentrierte Ausrichtung für Liedtexte verwenden</string>
@@ -402,7 +401,6 @@
     <string name="rename_playlist">Wiedergabeliste umbenennen</string>
     <string name="edit_playlist_failed">Bearbeiten der Wiedergabeliste fehlgeschlagen: %s</string>
     <string name="add_to_playlist">Zur Wiedergabeliste hinzufügen</string>
-    <string name="settings_hq_output">Hochqualitative Ausgabe</string>
     <string name="playlist_editing_pref_desc">Ermöglicht, Lieder zu Wiedergabelisten hinzuzufügen (bewegen/entfernen ist noch nicht implementiert)</string>
     <string name="no_app_found">Keine passende App gefunden</string>
     <string name="contributors_nift4">Maintainer / Hauptentwickler</string>
@@ -431,7 +429,6 @@
     <string name="contributors_code_contributions">Codebeiträge</string>
     <string name="mix_port_flag_fast">Schnell</string>
     <string name="settings_mp3_index_seeking">MP3-Indexsuche</string>
-    <string name="settings_hq_output_summary">Verwendung beliebiger Abtastformate zulassen, anstatt sich auf 16-Bit-Ganzzahlen zu beschränken</string>
     <plurals name="folders_plural">
         <item quantity="one">%d Ordner</item>
         <item quantity="other">%d Ordner</item>

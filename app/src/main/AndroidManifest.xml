@@ -163,6 +163,10 @@
             android:exported="false" />
 
         <activity
+            android:name=".ui.fragments.settings.ReplayGainSettingsActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".ui.fragments.settings.AboutSettingsActivity"
             android:exported="false" />
 

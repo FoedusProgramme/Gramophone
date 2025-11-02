@@ -372,13 +372,13 @@ private fun splitBidirectionalWords(syncedLyrics: SyncedLyrics) {
         bidirectionalBarriers.forEach { barrier ->
             val evilWordIndex =
                 if (barrier.first == -1) -1 else line.words.indexOfFirst {
-                    it.charRange.contains(barrier.first) && it.charRange.start != barrier.first
+                    it.charRange.contains(barrier.first) && it.charRange.first != barrier.first
                 }
             if (evilWordIndex == -1) {
                 // Propagate the new direction (if there is a barrier after that, direction will
                 // be corrected after it).
                 val wordIndex = if (barrier.first == -1) 0 else
-                    line.words.indexOfFirst { it.charRange.start == barrier.first }
+                    line.words.indexOfFirst { it.charRange.first == barrier.first }
                 line.words.forEachSupport(skipFirst = wordIndex) {
                     it.isRtl = barrier.second
                 }
@@ -560,13 +560,13 @@ fun parseLrc(lyricText: String, trimEnabled: Boolean, multiLineEnabled: Boolean)
             syncPointStreak++
         else
             syncPointStreak = 0
-        when {
-            element is SyntacticLrc.Metadata && element.name == "offset" -> {
+        when (element) {
+            is SyntacticLrc.Metadata if element.name == "offset" -> {
                 // positive offset means lyric played earlier in lrc, hence multiply with -1
                 offset = element.value.toLong() * -1
             }
 
-            element is SyntacticLrc.SyncPoint -> {
+            is SyntacticLrc.SyncPoint -> {
                 val ts = (element.timestamp.toLong() + offset).coerceAtLeast(0).toULong()
                 if (syncPointStreak > 1) {
                     compressed.add(ts)
@@ -577,11 +577,11 @@ fun parseLrc(lyricText: String, trimEnabled: Boolean, multiLineEnabled: Boolean)
                 }
             }
 
-            element is SyntacticLrc.SpeakerTag -> {
+            is SyntacticLrc.SpeakerTag -> {
                 speaker = element.speaker
             }
 
-            element is SyntacticLrc.WordSyncPoint -> {
+            is SyntacticLrc.WordSyncPoint -> {
                 if (!hadLyricSinceWordSync && lastWordSyncPoint != null)
                 // add a dummy word for preserving end timing of previous word
                     currentLine.add(Pair(lastWordSyncPoint, null))
@@ -592,12 +592,12 @@ fun parseLrc(lyricText: String, trimEnabled: Boolean, multiLineEnabled: Boolean)
                 hadWordSyncSinceNewLine = true
             }
 
-            element is SyntacticLrc.LyricText -> {
+            is SyntacticLrc.LyricText -> {
                 hadLyricSinceWordSync = true
                 currentLine.add(Pair(lastWordSyncPoint ?: lastSyncPoint!!, element.text))
             }
 
-            element is SyntacticLrc.NewLine -> {
+            is SyntacticLrc.NewLine -> {
                 val words = if (currentLine.size > 1 || hadWordSyncSinceNewLine) {
                     val wout = mutableListOf<Word>()
                     var idx = 0
@@ -673,8 +673,8 @@ fun parseLrc(lyricText: String, trimEnabled: Boolean, multiLineEnabled: Boolean)
                                 iter.remove()
                             else
                                 it.charRange = (it.charRange.first - startDiff)
-                                        .coerceAtLeast(0)..(it.charRange.last - startDiff)
-                                        .coerceAtMost(text.length - 1)
+                                    .coerceAtLeast(0)..(it.charRange.last - startDiff)
+                                    .coerceAtMost(text.length - 1)
                         }
                     }
                     val start = if (currentLine.isNotEmpty()) currentLine.first().first
@@ -686,7 +686,7 @@ fun parseLrc(lyricText: String, trimEnabled: Boolean, multiLineEnabled: Boolean)
                         val diff = it - start
                         out.add(out.last().copy(start = it, words = words?.map {
                             it.copy(
-                                it.timeRange.start + diff..it.timeRange.last + diff
+                                timeRange = it.timeRange.first + diff..it.timeRange.last + diff
                             )
                         }?.toMutableList()))
                     }
@@ -702,13 +702,15 @@ fun parseLrc(lyricText: String, trimEnabled: Boolean, multiLineEnabled: Boolean)
                     speaker = null
                 hadLyricSinceWordSync = true
             }
+
+            else -> {}
         }
     }
     out.sortBy { it.start }
     var previousTimestamp = ULong.MAX_VALUE
     val defaultIsWalaokeM = out.find { it.speaker?.isWalaoke == true } != null &&
             out.find { it.speaker?.isWalaoke == false } == null
-    out.forEachIndexed { i, lyric ->
+    out.forEach { lyric ->
         if (defaultIsWalaokeM && lyric.speaker == null)
             lyric.speaker = SpeakerEntity.Male
         lyric.end = lyric.end.takeIf { it != 0uL }
@@ -951,7 +953,7 @@ fun UsltFrameDecoder.Result.Sylt.toSyncedLyrics(trimEnabled: Boolean): SyncedLyr
         }
         var string = text.subList(i, j).joinToString("") { it.text }
         val nli1 = string.indexOf('\n')
-        if (nli1 != -1 && string.substring(0, nli1)
+        if (nli1 != -1 && string.take(nli1)
                 .trimStart { it == '\t' || it == ' ' || it == '\r' }.isEmpty()
         ) {
             // remove last line's trailing whitespace (and eat newline)
@@ -997,7 +999,7 @@ fun UsltFrameDecoder.Result.Sylt.toSyncedLyrics(trimEnabled: Boolean): SyncedLyr
     }
     out.sortBy { it.start }
     var previousTimestamp = ULong.MAX_VALUE
-    out.forEachIndexed { i, lyric ->
+    out.forEach { lyric ->
         lyric.end = lyric.end.takeIf { it != 0uL }
             ?: lyric.words?.lastOrNull()?.timeRange?.last
                     ?: (if (lyric.start == previousTimestamp) out.find { it.start == lyric.start }
@@ -1014,11 +1016,11 @@ fun UsltFrameDecoder.Result.Sylt.toSyncedLyrics(trimEnabled: Boolean): SyncedLyr
     return SyncedLyrics(out).also { splitBidirectionalWords(it) }
 }
 
-private val tt = "http://www.w3.org/ns/ttml"
-private val ttm = "http://www.w3.org/ns/ttml#metadata"
-private val ttp = "http://www.w3.org/ns/ttml#parameter"
-private val itunes = "http://itunes.apple.com/lyric-ttml-extensions"
-private val itunesInternal = "http://music.apple.com/lyric-ttml-internal"
+private const val tt = "http://www.w3.org/ns/ttml"
+private const val ttm = "http://www.w3.org/ns/ttml#metadata"
+private const val ttp = "http://www.w3.org/ns/ttml#parameter"
+private const val itunes = "http://itunes.apple.com/lyric-ttml-extensions"
+private const val itunesInternal = "http://music.apple.com/lyric-ttml-internal"
 private fun XmlPullParser.skipToEndOfTag() {
     if (eventType != XmlPullParser.START_TAG)
         throw XmlPullParserException("expected start tag in skipToEndOfTag()")
@@ -1267,72 +1269,89 @@ fun parseTtml(audioMimeType: String?, lyricText: String): SemanticLyrics? {
                     }
                 } else if (parser.name == "iTunesMetadata") {
                     while (parser.nextTag() != XmlPullParser.END_TAG) {
-                        if (parser.name == "songwriters") {
-                            while (parser.nextTag() != XmlPullParser.END_TAG) {
-                                if (parser.name == "songwriter") {
-                                    parser.nextAndThrowIfNotText()
-                                    // val songwriter = parser.text
-                                    parser.nextAndThrowIfNotEnd()
-                                } else {
-                                    throw XmlPullParserException(
-                                        "expected <songwriter>, got " +
-                                                "<${(parser.prefix?.plus(":") ?: "") + parser.name}> " +
-                                                "in <songwriters> in <iTunesMetadata>"
-                                    )
+                        when (parser.name) {
+                            "songwriters" -> {
+                                while (parser.nextTag() != XmlPullParser.END_TAG) {
+                                    if (parser.name == "songwriter") {
+                                        parser.nextAndThrowIfNotText()
+                                        // val songwriter = parser.text
+                                        parser.nextAndThrowIfNotEnd()
+                                    } else {
+                                        throw XmlPullParserException(
+                                            "expected <songwriter>, got " +
+                                                    "<${(parser.prefix?.plus(":") ?: "") + parser.name}> " +
+                                                    "in <songwriters> in <iTunesMetadata>"
+                                        )
+                                    }
                                 }
                             }
-                        } else if (parser.name == "audio") {
-                            val role = parser.getAttributeValue(null, "role")
-                            if (role != "spatial") {
-                                throw XmlPullParserException("unsupported offset role $role, can't decide whether to apply offset")
-                            }
-                            if (audioMimeType == MimeTypes.AUDIO_AC3 ||
-                                audioMimeType == MimeTypes.AUDIO_E_AC3 ||
-                                audioMimeType == MimeTypes.AUDIO_AC4) {
-                                timer.audioOffset = timer.parseTimestampMs(
-                                    parser.getAttributeValue(
-                                        null,
-                                        "lyricOffset"
-                                    ), 0L, true
-                                )
-                            }
-                            parser.nextAndThrowIfNotEnd()
-                        } else if (parser.name == "translations") {
-                            while (parser.nextTag() != XmlPullParser.END_TAG) {
-                                if (parser.name == "translation") {
-                                    val type = parser.getAttributeValue(null, "type")
-                                    if (type != "subtitle") {
-                                        throw XmlPullParserException("unsupported translation type $type")
+                            "audio" -> {
+                                val role = parser.getAttributeValue(null, "role")
+                                if (when (role) {
+                                        "spatial" -> audioMimeType == MimeTypes.AUDIO_AC3 ||
+                                                audioMimeType == MimeTypes.AUDIO_E_AC3 ||
+                                                audioMimeType == MimeTypes.AUDIO_AC4
+                                        // ext- are Gramophone extensions
+                                        "ext-not-spatial" -> !(audioMimeType == MimeTypes.AUDIO_AC3 ||
+                                                audioMimeType == MimeTypes.AUDIO_E_AC3 ||
+                                                audioMimeType == MimeTypes.AUDIO_AC4)
+
+                                        "ext-always" -> true
+                                        else -> throw XmlPullParserException(
+                                            "unsupported offset " +
+                                                    "role $role, can't decide whether to apply offset"
+                                        )
                                     }
-                                    val lang = parser.getAttributeValue("http://www.w3.org/XML/1998/namespace", "lang")
-                                    val out = hashMapOf<String, String>()
-                                    while (parser.nextTag() != XmlPullParser.END_TAG) {
-                                        if (parser.name == "text") {
-                                            val `for` = parser.getAttributeValue(null, "for")
-                                            if (`for` == null) {
-                                                throw XmlPullParserException("missing attribute for at $parser")
-                                            }
-                                            parser.nextAndThrowIfNotText()
-                                            out[`for`] = parser.text
-                                            parser.nextAndThrowIfNotEnd()
-                                        } else {
-                                            throw XmlPullParserException(
-                                                "expected <text>, got " +
-                                                        "<${(parser.prefix?.plus(":") ?: "") + parser.name}> " +
-                                                        "in <translation> in <translations> in <iTunesMetadata>"
-                                            )
+                                ) {
+                                    val parsed = timer.parseTimestampMs(
+                                        parser.getAttributeValue(
+                                            null,
+                                            "lyricOffset"
+                                        ), 0L, true
+                                    )
+                                    if (timer.audioOffset != null)
+                                        timer.audioOffset = timer.audioOffset!! + (parsed ?: 0L)
+                                    else
+                                        timer.audioOffset = parsed
+                                }
+                                parser.nextAndThrowIfNotEnd()
+                            }
+                            "translations" -> {
+                                while (parser.nextTag() != XmlPullParser.END_TAG) {
+                                    if (parser.name == "translation") {
+                                        val type = parser.getAttributeValue(null, "type")
+                                        if (type != "subtitle") {
+                                            throw XmlPullParserException("unsupported translation type $type")
                                         }
+                                        val lang = parser.getAttributeValue("http://www.w3.org/XML/1998/namespace", "lang")
+                                        val out = hashMapOf<String, String>()
+                                        while (parser.nextTag() != XmlPullParser.END_TAG) {
+                                            if (parser.name == "text") {
+                                                val `for` = parser.getAttributeValue(null, "for")
+                                                    ?: throw XmlPullParserException("missing attribute for at $parser")
+                                                parser.nextAndThrowIfNotText()
+                                                out[`for`] = parser.text
+                                                parser.nextAndThrowIfNotEnd()
+                                            } else {
+                                                throw XmlPullParserException(
+                                                    "expected <text>, got " +
+                                                            "<${(parser.prefix?.plus(":") ?: "") + parser.name}> " +
+                                                            "in <translation> in <translations> in <iTunesMetadata>"
+                                                )
+                                            }
+                                        }
+                                        itunesTranslations[lang] = out
+                                    } else {
+                                        throw XmlPullParserException(
+                                            "expected <translation>, got " +
+                                                    "<${(parser.prefix?.plus(":") ?: "") + parser.name}> " +
+                                                    "in <translations> in <iTunesMetadata>"
+                                        )
                                     }
-                                    itunesTranslations[lang] = out
-                                } else {
-                                    throw XmlPullParserException(
-                                        "expected <translation>, got " +
-                                                "<${(parser.prefix?.plus(":") ?: "") + parser.name}> " +
-                                                "in <translations> in <iTunesMetadata>"
-                                    )
                                 }
                             }
-                        } else parser.skipToEndOfTag() // there are some others
+                            else -> parser.skipToEndOfTag()
+                        } // there are some others
                     }
                 } else parser.skipToEndOfTag()
             }
@@ -1382,7 +1401,7 @@ fun parseTtml(audioMimeType: String?, lyricText: String): SemanticLyrics? {
                     }
                     out.add(
                         it.copy(
-                            t,
+                            texts = t,
                             time = t.lastOrNull()?.time?.last?.let { other ->
                                 t.firstOrNull()?.time?.first?.rangeTo(other)
                             } ?: it.time, role = t.firstOrNull()?.role ?: it.role))

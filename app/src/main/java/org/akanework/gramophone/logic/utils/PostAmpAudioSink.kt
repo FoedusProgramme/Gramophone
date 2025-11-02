@@ -8,123 +8,55 @@ import android.content.IntentFilter
 import android.media.AudioDeviceInfo
 import android.media.AudioManager
 import android.media.AudioTrack
+import android.media.audiofx.AudioEffect
+import android.media.audiofx.DynamicsProcessing
 import android.os.Build
-import androidx.media3.common.util.Log
+import android.os.Handler
+import android.os.Looper
+import android.os.StrictMode
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
+import androidx.media3.common.C
 import androidx.media3.common.Format
+import androidx.media3.common.audio.AudioManagerCompat
+import androidx.media3.common.util.Log
 import androidx.media3.exoplayer.audio.AudioSink
 import androidx.media3.exoplayer.audio.DefaultAudioSink
 import androidx.media3.exoplayer.audio.ForwardingAudioSink
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.akanework.gramophone.logic.utils.AudioFormatDetector.audioDeviceTypeToString
+import org.nift4.gramophone.hificore.AudioSystemHiddenApi
+import org.nift4.gramophone.hificore.ReflectionAudioEffect
 import java.nio.ByteBuffer
-import kotlin.math.log10
 import kotlin.math.max
+import kotlin.math.min
 
 /*
- * some notes:
- * - https://developer.android.com/reference/android/media/AudioManager#getStreamVolumeDb(int,%20int,%20int)
- *   - problems: sdk 28 required; I read on SO that samsung broke it and it returns values 0~1
- *   - on O you can use it via AudioSystem C++; on O MR1 you can use it via AudioSystem java reflection
- * - AudioSystem::getStreamVolume() in C++
- *   - it was removed recently but exists everywhere I need it https://cs.android.com/android/_/android/platform/frameworks/av/+/38c45a4438915c73434558be9ffc2d4f73516cf2
- *   - interpretation of data changed in M https://android.googlesource.com/platform/frameworks/av/+/ffbc80f5908eaf67a033c6e93a343c39dd6894eb%5E!/
- *
- * if boost is <=3dB, could also use https://cs.android.com/android/platform/superproject/main/+/main:system/media/audio/include/system/audio.h;l=561;drc=8063e42c30fdde36835c1862cf413d8faeadcf45
- * but that has risk of clipping when system volume is high so that's a bad idea.
- *
- * also need to disable LoudnessController and MPEG-4/MPEG-D DRC and normalization
- * https://github.com/androidx/media/tree/media_codec_param
- * prototype upstream to edit these kind of things ^^^
- *
- * Boost has two primary purposes: make ReplayGain sound louder to make it more enjoyable, and free
- * up headroom for advanced EQ (DSP plugins or AudioEffect DPE/Equalizer/BassBoost/etc both). For
- * practical reasons boost is all or nothing - the boost value does not change between songs for any
- * reason!! Songs that shouldn't be boosted instead get negative boost gain before volume control
- * stage. For one, doing that prevents bugs blasting away user ears. And doing it differently is
- * useless for RG because we can't increase volume if gain is positive but clipping-safe through low
- * peaks, and also useless for EQ because we can either apply negative boost gain through
- * DPE/Equalizer or we don't have any EQ available anyway... (with BassBoost being the only possible
- * exception, but if there is BassBoost but not DPE/Equalizer then either they're busy because
- * external EQ app in which case our BassBoost should be disabled, or the SoC vendor is really weird
- * and decided we only need BassBoost but no Equalizer or DPE, but afaik none of them did).
- * The entire Boost feature will not be possible to enable in combination with offload, unless of
- * course Boost during offload (means both Volume and DPE or LoudnessEnhancer) is supported on this
- * device, i.e. you can't set Boost to apply just during non-offload while offload is enabled.
- *
- * A negative-gain-only ReplayGain in offload is allowed, if so desired. The user will be shown a
- * warning dialog when enabling the later of two settings.
- *
- * Also, it turns out Boost can be influenced with Equalizer/BassBoost/Virtualizer, because if at
- * max volume or if volume control isn't granted to LVM, the added energy by these effects will be
- * compensated through gain correction that will instead just make the signal less loud
- * (no DRC, yay! at least in AOSP impl). So using Boost while someone else is setting Equalizer to
- * high values can also lead to reduced gain. That however isn't a problem and hence can be safely
- * ignored, everything's WAI.
- *
- * for ReplayGain non-offload:
- * - if non-RG track, boost gain but inverted, hence negative, should be applied via GainProcessor
- * - negative RG gain could be applied either via GainProcessor
- *     setVolume() would mean I'd need to consider it in boost calculations, so let's skip that
- * - positive RG gain would be applied via GainProcessor
- *     if gain is positive and peaks are so high that it'd clip, reduce gain or use DRC like DPE can
- * - boost would be added via Volume effect
- *
- * offload ReplayGain (DPE effect is offloadable):
- * - if non-RG track, set DPE effect to apply inverted boost gain
- * - negative RG gain should be applied either via setVolume()
- * - positive RG gain could be applied via DPE.Limiter.postGain/LoudnessEnhancer effect
- *     if gain is positive and peaks are so high that it'd clip, reduce gain or use the effect's DRC
- *     DPE has optional DRC via Limiter stage (MBC is not suitable)
- * - boost would be added via Volume effect (if volume isn't offloadable, boost can't be enabled)
- * TODO: another problem with using DPE is that it can be busy. EQ apps could work in offload as
- *  long as there's no conflict between apps. So what to do if DPE and LoudnessEnhancer+Volume are
- *  both not free? Just fall back to no boost and setVolume()? Or hide our session ID from EQ apps?
- *  Or can we use priority constructor arg to win against EQ apps?
- * LoudnessEnhancer shouldn't be used due to it's aggressive DRC starting at -8dBFS in the best
- * case. Useless DRC defeats much of ReplayGain in the first place. Equalizer can't be used because
- * a 5 or 10-band biquad filter is not suitable to increase gain linearly, and distortions defeat
- * much of the purpose of ReplayGain.
- *
- * offload ReplayGain (LoudnessEnhancer+Volume is offloadable):
- * LoudnessEnhancer target gain may at most be -8dBFS unless DRC is desired. If we FORCE operation
- * similar to boost mode using additional headroom gain (16dB should be very safe), we can still do
- * RG adjustment.
- * - if non-RG track, set LoudnessEnhancer effect to apply inverted boost gain
- * - negative RG gain should be applied via LoudnessEnhancer, set lower than -8dBFS
- * - positive RG gain should still be applied via LoudnessEnhancer, set close to but at most -8dBFS
- * - positive RG gain with desired DRC is applied via LoudnessEnhancer, but set higher than -8dBFS
- * - boost and additional headroom gain would be added via Volume effect
- * The big advantage of this weird scheme is wide compatibility with equalizer apps. But whether
- * it's worth implementing would be decided by how often LoudnessEnhancer+Volume combo is
- * offloadable.
- *
- * offload ReplayGain (volume but no DPE or LoudnessEnhancer effect available):
- * Problem: can't increase volume if there is unused headroom (low peak) but positive RG gain.
- *          that defeats much of the purpose of RG.
- * Hence we can't use Volume effect alone if offloaded, proceed below.
- *
- * offload ReplayGain (no effects): just use setVolume() for negative gain, and give up on
- * positive gain (has to be acknowledged by user when enabling RG+offload combination on those
- * devices).
- *
  * For "smart album/track gain selection": the used gain is always determined at audio track init.
  * Album gain will be used if track from same album is either prev or next in playlist. If user adds
  * same album track after we started playing we shall hold onto chosen gain until seek or next
  * track happens. Also that implies that if there are two songs that could be played gaplessly, they
- * should NOT be played gaplessly unless RG gain is also same. (TODO: for offload only, or always?)
+ * should NOT be played gaplessly unless RG gain is also same.
+ * TODO(ASAP): for offload only, or always? if only for offload, then RGAP needs to apply gain
+ *  outside of flush somehow (do AudioProcessors even get told the config is now to be applied?)
+ *  https://github.com/androidx/media/issues/2855
  * That effectively avoids audible volume jumps, and allows to change effect settings for offloaded
  * RG in synchronized way as well, avoiding wrong gain applied to audio frame.
- *
- * ID3 variations to support: RVA2 (ID3v2.4), XRVA (ID3v2.3), RGAD (ID3v2.3), TXXX with ReplayGain
- * info. see https://wiki.hydrogenaudio.org/index.php?title=ReplayGain_2.0_specification#ID3v2
  */
 // TODO: what is com.lge.media.EXTRA_VOLUME_STREAM_HIFI_VALUE
+// TODO: less hacky https://github.com/nift4/media/commit/22d2156bec74542a0764bf0ec27c839cc70874ed
+// TODO(ASAP): setting in UI for boost gain
+// TODO(ASAP): fix summary to subtract 15 in settings UI
+// TODO(ASAP): impl isEffectTypeOffloadable()
+// TODO(ASAP): figure out if we can influence or detect the precedence between volume and DPE
+//  and decide on a strategy. so far it seems DPE always works, so one possibility is to just use it
+//  or maybe I just don't create DPE if offload is off and always use volume
 class PostAmpAudioSink(
-	val sink: DefaultAudioSink, val context: Context
-) : ForwardingAudioSink(sink) {
+	val sink: DefaultAudioSink, val rgAp: ReplayGainAudioProcessor, val context: Context
+) : ForwardingAudioSink(sink), AudioSystemHiddenApi.VolumeChangeListener {
 	companion object {
 		private const val TAG = "PostAmpAudioSink"
 	}
@@ -139,32 +71,109 @@ class PostAmpAudioSink(
 		}
 	}
 	private val audioManager = context.getSystemService<AudioManager>()!!
+	private var handler: Handler? = null
+	private val isVolumeAvailable by lazy {
+		try {
+			Volume.isAvailable()
+		} catch (e: Throwable) {
+			Log.e(TAG, "failed to check if volume is available", e)
+			false
+		}
+	}
+	private val isDpeAvailable by lazy {
+		try {
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+				ReflectionAudioEffect.isEffectTypeAvailable(
+					AudioEffect.EFFECT_TYPE_DYNAMICS_PROCESSING,
+                    ReflectionAudioEffect.EFFECT_TYPE_NULL
+				)
+			} else {
+				false
+			}
+		} catch (e: Throwable) {
+			Log.e(TAG, "failed to check if DPE is available", e)
+			false
+		}
+	}
+	private val isVolumeOffloadable by lazy {
+		try {
+			Volume.isOffloadable()
+		} catch (e: Throwable) {
+			Log.e(TAG, "failed to check if volume is offloadable", e)
+			false
+		}
+	}
+	private val isDpeOffloadable by lazy {
+		try {
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+				ReflectionAudioEffect.isEffectTypeOffloadable(
+					AudioEffect.EFFECT_TYPE_DYNAMICS_PROCESSING,
+                    ReflectionAudioEffect.EFFECT_TYPE_NULL
+				)
+			} else {
+				false
+			}
+		} catch (e: Throwable) {
+			Log.e(TAG, "failed to check if DPE is offloadable", e)
+			false
+		}
+	}
 	private var volumeEffect: Volume? = null
+	private var dpeEffect: DynamicsProcessing? = null
+	private var dpeCanary: ReflectionAudioEffect? = null
+	private var hasVolume = false
+	private var hasDpe = false
+	private var offloadEnabled: Boolean? = null
 	private var format: Format? = null
 	private var pendingFormat: Format? = null
+	private var tags: ReplayGainUtil.ReplayGainInfo? = null
+	private var deviceType: Int? = null
 	private var audioSessionId = 0
 	private var volume = 1f
 	private var rgVolume = 1f
 
 	init {
-		ContextCompat.registerReceiver(
-			context,
-			receiver,
-			IntentFilter().apply {
-				addAction("android.media.VOLUME_CHANGED_ACTION")
-				addAction("android.media.MASTER_VOLUME_CHANGED_ACTION")
-				addAction("android.media.MASTER_MUTE_CHANGED_ACTION")
-				addAction("android.media.STREAM_MUTE_CHANGED_ACTION")
-			},
-			@SuppressLint("WrongConstant") // why is this needed?
-			ContextCompat.RECEIVER_NOT_EXPORTED
-		)
+        var forVolumeChanged = false
+        try {
+            AudioSystemHiddenApi.addVolumeCallback(context, this)
+        } catch (e: Exception) {
+            Log.e(TAG, "failed to register volume cb", e)
+            forVolumeChanged = true
+        }
+        ContextCompat.registerReceiver(
+            context,
+            receiver,
+            IntentFilter().apply {
+                if (forVolumeChanged) // only register if better native callback doesn't work
+                    addAction("android.media.VOLUME_CHANGED_ACTION")
+                addAction("android.media.MASTER_VOLUME_CHANGED_ACTION")
+                addAction("android.media.MASTER_MUTE_CHANGED_ACTION")
+                addAction("android.media.STREAM_MUTE_CHANGED_ACTION")
+            },
+            @SuppressLint("WrongConstant") // why is this needed?
+            ContextCompat.RECEIVER_NOT_EXPORTED
+        )
+		synchronized(rgAp) {
+			rgAp.boostGainChangedListener = {
+				handler?.post { // if null, there are no effects that need to be notified anyway
+					updateVolumeEffect()
+					calculateGain(false)
+				}
+			}
+			rgAp.offloadEnabledChangedListener = {
+				if (offloadEnabled != null) {
+					handler!!.post {
+						mySetAudioSessionId(null)
+					}
+				}
+			}
+		}
 	}
 
 	override fun setListener(listener: AudioSink.Listener) {
 		super.setListener(object : AudioSink.Listener by listener {
 			override fun onPositionAdvancing(playoutStartSystemTimeMs: Long) {
-				onAudioTrackPlayStateChanging()
+				updateVolumeEffect()
 				listener.onPositionAdvancing(playoutStartSystemTimeMs)
 			}
 
@@ -202,8 +211,9 @@ class PostAmpAudioSink(
 				listener.onAudioSessionIdChanged(audioSessionId)
 			}
 
+			@RequiresApi(Build.VERSION_CODES.M)
 			override fun onRoutingChanged(router: AudioTrack, routedDevice: AudioDeviceInfo?) {
-				myOnRoutingChanged(router, routedDevice)
+				myOnRoutingChanged(routedDevice)
 				listener.onRoutingChanged(router, routedDevice)
 			}
 		})
@@ -220,24 +230,134 @@ class PostAmpAudioSink(
 
 	override fun setVolume(volume: Float) {
 		this.volume = volume
-		setVolumeInternal()
+		setVolumeInternal(false)
 	}
 
-	private fun setVolumeInternal() {
+	private fun setVolumeInternal(force: Boolean) {
 		super.setVolume(volume * rgVolume)
+		updateVolumeEffect(force)
 	}
 
 	private fun myOnReceiveBroadcast(intent: Intent) {
-		Log.i("hi", "got $intent")
-		onAudioTrackPlayStateChanging()
-		// TODO
+		updateVolumeEffect()
+		if (intent.action == "android.media.VOLUME_CHANGED_ACTION") {
+			onVolumeChanged()
+		}
 	}
+
+    override fun onVolumeChanged(
+        groupId: Int,
+        flags: Int
+    ) {
+        // TODO use below class to find out which group id corresponds to music and only listen to
+        //  those change events
+        // https://cs.android.com/android/platform/superproject/main/+/main:frameworks/base/media/java/android/media/audiopolicy/AudioProductStrategy.java;l=80?q=getAudioProductStrategies&ss=android%2Fplatform%2Fsuperproject%2Fmain
+        Log.i(TAG, "volume changed: $groupId, $flags")
+        onVolumeChanged()
+    }
+
+    private fun onVolumeChanged() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && hasDpe) {
+            calculateGain(false)
+        }
+    }
 
 	private fun myApplyPendingConfig() {
 		format = pendingFormat
-		Log.i(TAG, "set format to $format")
-		onAudioTrackPlayStateChanging()
-		// TODO
+		tags = ReplayGainUtil.parse(format)
+		calculateGain(false)
+		updateVolumeEffect()
+	}
+
+	private fun calculateGain(force: Boolean) {
+		// Nonchalantly borrow settings from ReplayGainAudioProcessor
+		val mode: ReplayGainUtil.Mode
+		val rgGain: Int
+		val nonRgGain: Int
+		val boostGainDb: Int
+		val reduceGain: Boolean
+		synchronized(rgAp) {
+			mode = rgAp.mode
+			rgGain = rgAp.rgGain
+			nonRgGain = rgAp.nonRgGain
+			boostGainDb = rgAp.boostGain
+			reduceGain = rgAp.reduceGain
+		}
+		val useDpe = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && hasDpe
+		val isOffload = true//format?.let { it.sampleMimeType != MimeTypes.AUDIO_RAW } == true TODO(ASAP)
+		if (useDpe) {
+			try {
+				dpeEffect!!.enabled = isOffload || boostGainDb > 0/* && !hasVolume*/
+			} catch (e: IllegalStateException) {
+				Log.e(TAG, "dpe enable=$isOffload failed", e)
+			}
+		}
+        // prefer volume over DPE because volume may result in too low volume only, DPE may result
+        // in too high volume / clipping for a short moment.
+		val boostGainDbLimited = if (useDpe && boostGainDb > 0 && /*!hasVolume && */deviceType != null
+            && !isAbsoluteVolume(deviceType!!, false)) {
+			val maxIndex = AudioManagerCompat.getStreamMaxVolume(audioManager, C.STREAM_TYPE_MUSIC)
+			val curIndex = AudioManagerCompat.getStreamVolume(audioManager, C.STREAM_TYPE_MUSIC)
+			val minIndex = AudioManagerCompat.getStreamMinVolume(audioManager, C.STREAM_TYPE_MUSIC)
+			val minVolumeDb =
+				max(
+					audioManager.getStreamVolumeDb(
+						AudioManager.STREAM_MUSIC, minIndex,
+						deviceType!!
+					), -96f
+				)
+			var maxVolumeDb = audioManager.getStreamVolumeDb(
+				AudioManager.STREAM_MUSIC, maxIndex,
+				deviceType!!
+			)
+			var curVolumeDb = max(audioManager.getStreamVolumeDb(
+				AudioManager.STREAM_MUSIC, curIndex,
+				deviceType!!
+			), -96f)
+			if (maxVolumeDb - minVolumeDb == 1f && curVolumeDb <= 1f && curVolumeDb >= 0f) {
+				maxVolumeDb = ReplayGainUtil.amplToDb(maxVolumeDb)
+				curVolumeDb = ReplayGainUtil.amplToDb(curVolumeDb)
+			}
+			val headroomDb = maxVolumeDb - curVolumeDb
+			Log.d(TAG, "dpe gain boost: headroom $headroomDb, boost $boostGainDb")
+			min(headroomDb, boostGainDb.toFloat())
+		} else 0f
+		if (isOffload) {
+			val calcGain = ReplayGainUtil.calculateGain(tags, mode, rgGain, reduceGain || !useDpe,
+				if (useDpe) ReplayGainUtil.RATIO else null)
+			val gain = calcGain?.first ?: ReplayGainUtil.dbToAmpl(nonRgGain.toFloat())
+			val kneeThresholdDb = calcGain?.second
+			rgVolume = if (useDpe) 1f else min(gain, 1f)
+			try {
+				if (useDpe) {
+					dpeEffect!!.setInputGainAllChannelsTo(ReplayGainUtil.amplToDb(gain) + boostGainDbLimited)
+                    dpeEffect!!.setLimiterAllChannelsTo(
+                        DynamicsProcessing.Limiter(
+                            true, kneeThresholdDb != null, 0,
+                            ReplayGainUtil.TAU_ATTACK * 1000f,
+                            ReplayGainUtil.TAU_RELEASE * 1000f,
+                            ReplayGainUtil.RATIO, kneeThresholdDb ?: 999999f, 0f
+                        )
+                    )
+				}
+			} catch (e: UnsupportedOperationException) {
+				Log.e(TAG, "we raced with someone else about DPE and we lost", e)
+			}
+		} else {
+			if (useDpe && /*(!hasVolume || force) && */boostGainDb > 0) {
+                dpeEffect!!.setInputGainAllChannelsTo(boostGainDbLimited)
+                dpeEffect!!.setLimiterAllChannelsTo(
+                    DynamicsProcessing.Limiter(
+                        true, false, 0,
+                        ReplayGainUtil.TAU_ATTACK * 1000f,
+                        ReplayGainUtil.TAU_RELEASE * 1000f,
+                        ReplayGainUtil.RATIO, 999999f, 0f
+                    )
+                )
+			}
+			rgVolume = 1f
+		}
+		setVolumeInternal(force)
 	}
 
 	override fun setAudioSessionId(audioSessionId: Int) {
@@ -245,82 +365,331 @@ class PostAmpAudioSink(
 		super.setAudioSessionId(audioSessionId)
 	}
 
-	private fun mySetAudioSessionId(id: Int) {
-		if (id != audioSessionId) {
+	private fun mySetAudioSessionId(id: Int?) {
+		if (handler == null)
+			handler = Handler(Looper.myLooper()!!)
+		val offloadEnabled: Boolean
+		synchronized(rgAp) {
+			offloadEnabled = rgAp.offloadEnabled
+		}
+		if (id != null && id != audioSessionId || offloadEnabled != this.offloadEnabled) {
 			Log.i(TAG, "set session id to $id")
 			if (audioSessionId != 0) {
-				volumeEffect!!.let {
-					CoroutineScope(Dispatchers.Default).launch {
-						it.enabled = false
-						it.release()
+				if (volumeEffect != null) {
+					volumeEffect!!.let {
+						CoroutineScope(Dispatchers.Default).launch {
+							try {
+								it.enabled = false
+								it.release()
+							} catch (e: Throwable) {
+								Log.e(TAG, "failed to release Volume effect", e)
+							}
+						}
+					}
+					volumeEffect = null
+				}
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && dpeEffect != null) {
+					// DPE must be released synchronously to avoid getting the old effect instance
+					// again, with its old inUse values.
+					dpeEffect!!.let {
+						try {
+							it.enabled = false
+							it.release()
+						} catch (e: Throwable) {
+							Log.e(TAG, "failed to release DPE effect", e)
+						}
+					}
+					dpeEffect = null
+				}
+			}
+			hasVolume = false
+			hasDpe = false
+			this.offloadEnabled = offloadEnabled
+			audioSessionId = id ?: audioSessionId
+            // Set a lower priority when creating effects - we are willing to share.
+            // (User story "EQ is not working and I have to change a obscure setting to fix it"
+            // is worse than user story "it's too quiet when I enable my EQ, but gets louder
+            // when I disable it").
+			if (audioSessionId != 0) {
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    if (isDpeAvailable &&
+                        (!offloadEnabled || isDpeOffloadable)
+                    ) {
+                        createDpeEffect()
+                    } else {
+                        Log.i(TAG, "didn't init DPE, e=$isDpeAvailable o=$isDpeOffloadable O=$offloadEnabled")
+                    }
+                }
+                if (isVolumeAvailable && (!offloadEnabled || isVolumeOffloadable)) {
+                    try {
+                        volumeEffect = Volume(-100000, audioSessionId)
+                        volumeEffect!!.setControlStatusListener { _, hasControl ->
+                            Log.i(TAG, "volume control state is now: $hasControl")
+                            hasVolume = hasControl
+                            updateVolumeEffect()
+                        }
+                        hasVolume = volumeEffect!!.hasControl()
+                        Log.i(TAG, "init volume, control state is: $hasVolume")
+                    } catch (e: Throwable) {
+                        Log.e(TAG, "failed to init Volume effect", e)
+                    }
+                } else {
+                    Log.i(TAG, "didn't init volume, e=$isVolumeAvailable o=$isVolumeOffloadable O=$offloadEnabled")
+                }
+			}
+		}
+	}
+
+	@RequiresApi(Build.VERSION_CODES.M)
+	private fun myOnRoutingChanged(routedDevice: AudioDeviceInfo?) {
+		Log.d(TAG, "routed device is now ${routedDevice?.productName} " +
+				"(${routedDevice?.type?.let { audioDeviceTypeToString(context, it) }})")
+		deviceType = routedDevice?.type
+		calculateGain(false)
+		updateVolumeEffect()
+	}
+
+	@RequiresApi(Build.VERSION_CODES.P)
+	private fun createDpeEffect() {
+		hasDpe = false
+		// DPE has this behaviour which I can really only call a bug, where inUse values are carried
+		// over from other apps and the only way to reset it is to entirely release all instances
+		// of the effect in ALL apps in this session ID at the same time. Also, sometimes if the
+		// effect is busy the constructor randomly throws because it doesn't support priority well
+		// - it always tries to set values even if we don't have control. Amazing work, Google. For
+		// the DynamicsProcessing DSP to be the best thing ever, the parameter implementation is so
+		// stupid I can't even put it into words.
+		try {
+			try {
+				dpeEffect = DynamicsProcessing(
+					-100000, audioSessionId,
+					DynamicsProcessing.Config.Builder(
+						DynamicsProcessing.VARIANT_FAVOR_FREQUENCY_RESOLUTION,
+						1, false, 0,
+						false, 0, false,
+						0, true
+					)
+						.setAllChannelsTo(DynamicsProcessing.Channel(0f, false,
+							0, false, 0,
+							false, 0, true
+						).apply {
+							mbc = DynamicsProcessing.Mbc(
+								false, false, 0
+							)
+							limiter = DynamicsProcessing.Limiter(
+								true, false, 0,
+								ReplayGainUtil.TAU_ATTACK * 1000f,
+								ReplayGainUtil.TAU_RELEASE * 1000f,
+								ReplayGainUtil.RATIO, 0f, 0f
+							)
+							preEq = DynamicsProcessing.Eq(
+								false, false, 0
+							)
+							postEq = DynamicsProcessing.Eq(
+								false, false, 0
+							)
+						})
+						.build()
+				)
+			} catch (t: Throwable) {
+				// DynamicsProcessing does not release() the instance if illegal arguments are
+				// passed to the constructor. We have to rely on finalize to avoid conflicts with
+				// ourselves, hence do a GC. This API is so broken...
+				val policy = StrictMode.getThreadPolicy()
+				try {
+					StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.LAX)
+					System.gc()
+				} finally {
+					StrictMode.setThreadPolicy(policy)
+				}
+				throw t
+			}
+			dpeEffect!!.setControlStatusListener { effect, hasControl ->
+				if (effect != dpeEffect) {
+					try {
+						effect.release()
+					} catch (_: Throwable) {}
+					return@setControlStatusListener // stale event
+				}
+				Log.i(TAG, "dpe control state is now: $hasControl")
+				try {
+					effect.release()
+				} catch (_: Throwable) {}
+				dpeEffect = null
+				hasDpe = false
+				if (hasControl) createDpeEffect()
+				else {
+					createDpeCanary()
+					calculateGain(false) // switch from DPE to setVolume()
+				}
+			}
+			hasDpe = dpeEffect!!.hasControl()
+			// wow, we got here. very good.
+			if (dpeCanary != null) {
+				Log.i(TAG, "release dpe canary because we got real dpe")
+				try {
+					dpeCanary!!.release()
+				} catch (e: Throwable) {
+					Log.e(TAG, "failed to release DPE canary", e)
+				}
+				dpeCanary = null
+			}
+			Log.i(TAG, "init dpe, control state is: $hasDpe")
+		} catch (e: Throwable) {
+			if (e is UnsupportedOperationException)
+				Log.w(TAG, "failed to init DPE effect: $e")
+			else
+				Log.e(TAG, "failed to init DPE effect", e)
+			try {
+				dpeEffect?.release()
+			} catch (_: Throwable) {}
+			dpeEffect = null
+			hasDpe = false
+			createDpeCanary()
+		}
+		calculateGain(hasDpe) // switch from setVolume() to DPE (or don't if we did not succeed)
+	}
+
+	@RequiresApi(Build.VERSION_CODES.P)
+	private fun createDpeCanary() {
+		// The bug where constructor sets parameters (which crashes, and hence we can't register a
+		// control listener) can be worked around by using AudioEffect class raw via reflection to
+		// check when we regain control. (Set lower prio to avoid conflicting with ourselves.)
+		if (dpeCanary == null) {
+			try {
+				dpeCanary = ReflectionAudioEffect(
+					AudioEffect.EFFECT_TYPE_DYNAMICS_PROCESSING,
+					ReflectionAudioEffect.EFFECT_TYPE_NULL, -100001, audioSessionId
+				)
+				dpeCanary!!.setControlStatusListener { _, controlGranted ->
+					Log.i(TAG, "dpe canary control state is now: $controlGranted")
+					if (controlGranted) {
+						try {
+							dpeCanary!!.release()
+						} catch (e: Throwable) {
+							Log.e(TAG, "failed to release DPE canary", e)
+						}
+						dpeCanary = null
+						createDpeEffect()
+					} else {
+						Log.e(TAG, "DPE canary control, but why did it ever have it?")
+						calculateGain(true)
 					}
 				}
-				volumeEffect = null
-			}
-			if (id != 0) {
-				// TODO: make sure Volume effect is disabled if it can't be offloaded, to prevent
-				//  false negatives in offload detection.
-				volumeEffect = Volume(99999, id)
-				// TODO: is enabling actually needed to change volume? if not, can we keep effect in
-				//  disabled state to avoid offload detection false negatives?
-				volumeEffect!!.enabled = true
+				Log.i(TAG, "init dpe canary")
+				if (dpeCanary!!.hasControl()) {
+					Log.w(TAG, "release dpe canary because we suddenly have control")
+					try {
+						dpeCanary!!.release()
+					} catch (e: Throwable) {
+						Log.e(TAG, "failed to release DPE canary", e)
+					}
+					dpeCanary = null
+					createDpeEffect()
+				}
+			} catch (e: Throwable) {
+				Log.e(TAG, "failed to init DPE canary", e)
+				try {
+					dpeCanary?.release()
+				} catch (_: Throwable) {}
+				dpeCanary = null
+				// whatever, I give up.
 			}
 		}
 	}
 
-	private fun myOnRoutingChanged(router: AudioTrack, routedDevice: AudioDeviceInfo?) {
-		onAudioTrackPlayStateChanging()
-		// TODO
-	}
-
-	private fun onAudioTrackPlayStateChanging() {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-			val minIndex = audioManager.getStreamMinVolume(AudioManager.STREAM_MUSIC)
-			val maxIndex = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
-			val curIndex = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
-			val minVolume =
-				max(audioManager.getStreamVolumeDb(
-					AudioManager.STREAM_MUSIC, minIndex,
-					AudioDeviceInfo.TYPE_BUILTIN_SPEAKER
-				), -96f)
-			val maxVolume =
-				audioManager.getStreamVolumeDb(
-					AudioManager.STREAM_MUSIC, maxIndex,
-					AudioDeviceInfo.TYPE_BUILTIN_SPEAKER
-				)
-			val curVolume =
-				audioManager.getStreamVolumeDb(
-					AudioManager.STREAM_MUSIC, curIndex,
-					AudioDeviceInfo.TYPE_BUILTIN_SPEAKER
-				)
-			val curVolumeS = if (maxVolume - minVolume == 1f) {
-				if (curVolume <= 0f) -9600 else (2000 * log10(curVolume)).toInt().toShort()
-			} else if (curVolume < -96) -9600 else (curVolume.toInt() * 100).toShort()
-			Log.i("hi", "min=$minVolume max=$maxVolume cur=$curVolume --> $curVolumeS")
-			for (i in 0..20) {
-				volumeEffect?.level = maxOf(curVolumeS, (-5300).toShort())
-			}
+	private fun updateVolumeEffect(force: Boolean = false) {
+		val boostGainDb: Int
+		synchronized(rgAp) {
+			boostGainDb = rgAp.boostGain
 		}
-		// TODO
+		try {
+			try {
+				if (hasVolume) volumeEffect!!.enabled = boostGainDb > 0 && deviceType != null && !hasDpe
+			} catch (e: IllegalStateException) {
+				Log.e(TAG, "volume enable failed", e)
+			}
+			if (!hasVolume || deviceType == null || hasDpe && !force || boostGainDb <= 0) return
+            val boostGainDb = if (hasDpe) 0 else boostGainDb
+			var minVolumeDb: Float
+			var maxVolumeDb: Float
+			var curVolumeDb: Float
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+				val minIndex = AudioManagerCompat.getStreamMinVolume(audioManager, C.STREAM_TYPE_MUSIC)
+				val maxIndex = AudioManagerCompat.getStreamMaxVolume(audioManager, C.STREAM_TYPE_MUSIC)
+				val curIndex = AudioManagerCompat.getStreamVolume(audioManager, C.STREAM_TYPE_MUSIC)
+				minVolumeDb =
+					max(
+						audioManager.getStreamVolumeDb(
+							AudioManager.STREAM_MUSIC, minIndex,
+							deviceType!!
+						), -96f
+					)
+				maxVolumeDb =
+					audioManager.getStreamVolumeDb(
+						AudioManager.STREAM_MUSIC, maxIndex,
+						deviceType!!
+					)
+				curVolumeDb =
+					max(
+						audioManager.getStreamVolumeDb(
+							AudioManager.STREAM_MUSIC, curIndex,
+							deviceType!!
+						), -96f
+					)
+				if (maxVolumeDb - minVolumeDb == 1f) {
+					maxVolumeDb = ReplayGainUtil.amplToDb(maxVolumeDb)
+					minVolumeDb = ReplayGainUtil.amplToDb(minVolumeDb)
+					curVolumeDb = ReplayGainUtil.amplToDb(curVolumeDb)
+				}
+			} else {
+				// TODO(ASAP) support <28 for boost here
+				// - https://developer.android.com/reference/android/media/AudioManager#getStreamVolumeDb(int,%20int,%20int)
+				//   - problems: sdk 28 required; I read on SO that samsung broke it and it returns values 0~1
+				//   - on O you can use it via AudioSystem C++; on O MR1 you can use it via AudioSystem java reflection
+				// - AudioSystem::getStreamVolume() in C++
+				//   - it was removed recently but exists everywhere I need it https://cs.android.com/android/_/android/platform/frameworks/av/+/38c45a4438915c73434558be9ffc2d4f73516cf2
+				//   - interpretation of data changed in M https://android.googlesource.com/platform/frameworks/av/+/ffbc80f5908eaf67a033c6e93a343c39dd6894eb%5E!/
+				minVolumeDb = -96f
+				maxVolumeDb = 0f
+				curVolumeDb = max(-96f, 0f)
+            }
+			val theVolume = min(
+				volumeEffect!!.maxLevel.toInt().toFloat(),
+				(curVolumeDb + ReplayGainUtil.amplToDb(volume) +
+						boostGainDb) * 100f
+			).toInt().toShort()
+			Log.d(TAG, "min=$minVolumeDb max=$maxVolumeDb cur=$curVolumeDb --> $theVolume")
+			repeat(20) {
+				//volumeEffect!!.level = theVolume
+			}
+		} catch (e: Throwable) {
+			Log.e(TAG, "failed to update volume effect state", e)
+		}
 	}
 
 	override fun play() {
-		onAudioTrackPlayStateChanging()
+		updateVolumeEffect()
 		super.play()
 	}
 
 	override fun pause() {
-		onAudioTrackPlayStateChanging()
+		updateVolumeEffect()
 		super.pause()
 	}
 
 	override fun flush() {
-		onAudioTrackPlayStateChanging()
+		updateVolumeEffect()
 		super.flush()
 	}
 
 	override fun release() {
 		context.unregisterReceiver(receiver)
+        try {
+            AudioSystemHiddenApi.removeVolumeCallback(context, this)
+        } catch (e: Exception) {
+            Log.w(TAG, "failed to remove volume cb", e)
+        }
 		super.release()
 	}
 
@@ -332,15 +701,9 @@ class PostAmpAudioSink(
 		val prev = sink.isAudioTrackStopped()
 		val ret = super.handleBuffer(buffer, presentationTimeUs, encodedAccessUnitCount)
 		if (sink.isAudioTrackStopped() != prev) {
-			onAudioTrackPlayStateChanging()
+			updateVolumeEffect()
 		}
 		return ret
-	}
-
-	private val audioTrackField by lazy {
-		DefaultAudioSink::class.java.getDeclaredField("audioTrack").apply {
-			isAccessible = true
-		}
 	}
 
 	private val audioTrackStoppedField by lazy {
@@ -349,11 +712,44 @@ class PostAmpAudioSink(
 		}
 	}
 
-	private fun DefaultAudioSink.getAudioTrack(): AudioTrack? {
-		return audioTrackField.get(this) as AudioTrack?
-	}
-
 	private fun DefaultAudioSink.isAudioTrackStopped(): Boolean {
 		return audioTrackStoppedField.get(this) as Boolean
+	}
+
+    // To get the real volume of mixer taking into account absolute volume:
+    // - 15 QPR0 and earlier: use AudioFlinger.streamVolume() to get volume after any prescale or
+    //                        force to max done in java (A2DP/HDMI/LEA/ASHA). Returns dB since M.
+    //  also, just on 15 QPR0, getStreamVolumeDb(publicApiIndex) will return real volume (ie 0dB) for
+	//  A2DP/LEA/ASHA, but not HDMI. but can't differentiate between 15 QPR0 and 15 QPR1 in public
+	//  API so this is not useful fallback for case where private API bypass somehow ends up broken.
+    // - 15 QPR1 and later: HDMI can no longer be detected at all, so got to be pessimistic.
+    //   - 15 QPR1: have to apply adjustDeviceAttenuationForAbsVolume(), ie force 0dB except if the
+    //              index is zero and device is not BLE broadcast, then min volume dB, in app code
+    //              based on the result of this function.
+    //   - 15 QPR2: getOutputForAttr() returns real volume as amplification, but it's reserved for
+    //              AudioFlinger - no luck here. do same as QPR1.
+    // Alternatively, to avoid pessimism on 15 QPR1 and later, if Volume is offloadable (or offload
+    // is disabled) we can create a stopped mixed track (mustn't be offload to avoid wasting
+    // resources) and Volume effect and read Volume.level property. TODO: how well does that actually work?
+    // If hidden API is not available, we have to be pessimistic and assume no prescale and apply
+    // force max based on result of this function.
+	// TODO(ASAP): impl the above
+	private fun isAbsoluteVolume(deviceType: Int, isA2dpAbsoluteVolumeOff: Boolean, isHdmiCecVolumeOff: Boolean = false): Boolean {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            throw IllegalStateException("isAbsoluteVolume($deviceType) before M")
+        }
+		// LEA having abs vol is a safe assumption, as LEA absolute volume is forced. Same for ASHA.
+        return !isA2dpAbsoluteVolumeOff && deviceType == AudioDeviceInfo.TYPE_BLUETOOTH_A2DP ||
+                !isHdmiCecVolumeOff && (deviceType == AudioDeviceInfo.TYPE_LINE_DIGITAL ||
+                deviceType == AudioDeviceInfo.TYPE_HDMI ||
+                deviceType == AudioDeviceInfo.TYPE_HDMI_ARC) ||
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.P &&
+                deviceType == AudioDeviceInfo.TYPE_HEARING_AID ||
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+                ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                        && deviceType == AudioDeviceInfo.TYPE_BLE_BROADCAST) ||
+                        deviceType == AudioDeviceInfo.TYPE_BLE_SPEAKER ||
+                        deviceType == AudioDeviceInfo.TYPE_BLE_HEADSET ||
+                        !isHdmiCecVolumeOff && deviceType == AudioDeviceInfo.TYPE_HDMI_EARC)
 	}
 }

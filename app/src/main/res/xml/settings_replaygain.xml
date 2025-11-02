@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~     Copyright (C) 2024 Akane Foundation
+  ~
+  ~     Gramophone is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, either version 3 of the License, or
+  ~     (at your option) any later version.
+  ~
+  ~     Gramophone is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto">
+
+	<DropDownPreference
+		android:defaultValue="0"
+		android:entries="@array/rg_mode_switch"
+		android:entryValues="@array/rg_mode_switch_val"
+		android:key="rg_mode"
+		android:layout="@layout/preference_dropdown_md"
+		android:title="@string/settings_replaygain_mode"
+		app:iconSpaceReserved="false"
+		app:useSimpleSummaryProvider="true" />
+
+	<SeekBarPreference
+		android:defaultValue="15"
+		android:icon="@drawable/outline_volume_up_24"
+		android:key="rg_rg_gain"
+		android:layout="@layout/preference_seekbar"
+		android:max="30"
+		android:title="@string/settings_replaygain_preamp"
+		app:showSeekBarValue="true"
+		/>
+
+	<SeekBarPreference
+		android:defaultValue="0"
+		android:icon="@drawable/outline_volume_down_24"
+		android:key="rg_no_rg_gain"
+		android:layout="@layout/preference_seekbar"
+		android:max="15"
+		android:title="@string/settings_replaygain_no_rg_amp"
+		app:showSeekBarValue="true"
+		/>
+
+	<SwitchPreferenceCompat
+		android:defaultValue="true"
+		android:key="rg_drc"
+		android:layout="@layout/preference_switch"
+		android:widgetLayout="@layout/preference_switch_widget"
+		app:iconSpaceReserved="false"
+		android:summary="@string/settings_replaygain_drc_desc"
+		android:title="@string/settings_replaygain_drc" />
+
+
+</PreferenceScreen>

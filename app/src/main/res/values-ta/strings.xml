@@ -135,7 +135,6 @@
     <string name="settings_blacklist_folder_summary">சில கோப்புறைகளிலிருந்து பாடல்களை வடிகட்டவும்</string>
     <string name="settings_blacklist_folder">தடுப்புப்பட்டியல் கோப்புறைகள்</string>
     <string name="settings_category_basic_info">அடிப்படை செய்தி</string>
-    <string name="preference_category_quality">தகுதி</string>
     <string name="settings_category_misc">இதர</string>
     <string name="settings_category_filters">வடிப்பான்கள்</string>
     <string name="settings_preference_category_application">பயன்பாடு</string>
@@ -406,8 +405,6 @@
     <string name="playlist_name">பிளேலிச்ட்டின் பெயர்</string>
     <string name="rename_playlist">பிளேலிச்ட்டை மறுபெயரிடுங்கள்</string>
     <string name="add_to_playlist">பிளேலிச்ட்டில் சேர்க்கவும்</string>
-    <string name="settings_hq_output">உயர்தர வெளியீடு</string>
-    <string name="settings_hq_output_summary">16-பிட் இன்டுக்கு கட்டுப்படுத்துவதற்கு பதிலாக எந்த மாதிரி வடிவமைப்பையும் பயன்படுத்த அனுமதிக்கவும்</string>
     <string name="playlist_editing_pref_desc">பிளேலிச்ட்களில் பாடல்களைச் சேர்க்க அனுமதிக்கிறது (இன்னும் செயல்படுத்தப்படவில்லை)</string>
     <string name="no_app_found">இதைச் செய்யக்கூடிய எந்த பயன்பாடும் கிடைக்கவில்லை</string>
     <string name="contributors_nift4">பராமரிப்பாளர் / முன்னணி உருவாக்குபவர்</string>

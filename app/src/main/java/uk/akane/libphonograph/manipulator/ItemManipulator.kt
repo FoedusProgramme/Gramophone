@@ -30,8 +30,8 @@ import java.io.IOException
 object ItemManipulator {
     private const val TAG = "ItemManipulator"
     // TODO: generally migrate writing IO to MediaStore on R+ (not on legacy!) in order to get rich
-    //  error messages instead of FUSE just saying ENOPERM (reading is more complicated but should
-    //  also be considered)
+	//  error messages instead of FUSE just saying ENOPERM (reading is more complicated because the
+	//  database can be out of sync for whatever reasons)
     //  i.e. do not use FUSE for insert, delete, or anything else
     //  also fallback to ContentProvider.delete() with RecoverableSecurityException if
     //   createDeleteRequest throws the all items need to be specified unique id stuff
@@ -93,7 +93,7 @@ object ItemManipulator {
 
     fun setFavorite(context: Context, uris: Set<Uri>, favorite: Boolean): IntentSender? {
         if (!hasImprovedMediaStore()) {
-            // TODO Q- support
+            // TODO(ASAP) Q- support
             return null
         }
         if (hasMarkIsFavouriteStatus()) {

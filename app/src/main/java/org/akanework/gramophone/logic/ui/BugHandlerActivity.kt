@@ -25,6 +25,7 @@ import android.content.Intent
 import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
+import android.os.StrictMode
 import android.text.Editable
 import android.text.TextWatcher
 import androidx.media3.common.util.Log
@@ -201,8 +202,15 @@ class BugHandlerActivity : BaseActivity() {
 
     private fun sendEmail() {
         Log.w("Gramophone", "Exporting logs due to crash...")
-        val crashLogDir = File(cacheDir, "CrashLog")
-        val f = File(crashLogDir, "GramophoneLog${System.currentTimeMillis()}.txt")
+	    val policy = StrictMode.allowThreadDiskWrites()
+	    val crashLogDir: File
+	    val f: File
+	    try {
+		    crashLogDir = File(cacheDir, "CrashLog")
+		    f = File(crashLogDir, "GramophoneLog${System.currentTimeMillis()}.txt")
+	    } finally {
+		    StrictMode.setThreadPolicy(policy)
+		}
         val d = MaterialAlertDialogBuilder(this)
             .setTitle(R.string.crash_report)
             .setView(R.layout.crash_dialog_content)

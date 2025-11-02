@@ -135,18 +135,11 @@ class DetailedFolderAdapter(
 
     fun onChanged(value: FileNode) {
         root = value
+        var value = value
         if (fileNodePath.isEmpty() && isDetailed) {
-            val stg = value.folderList.values.firstOrNull { it.folderName == "storage" }
-            val emu = stg?.folderList?.values?.firstOrNull { it.folderName == "emulated" }
-            val usr = emu?.folderList?.values?.firstOrNull()
-            if (stg != null) {
-                fileNodePath.add(stg.folderName)
-            }
-            if (emu != null) {
-                fileNodePath.add(emu.folderName)
-            }
-            if (usr != null) {
-                fileNodePath.add(usr.folderName)
+            while (value.folderList.size == 1) {
+                fileNodePath.add(value.folderList.keys.first())
+                value = value.folderList.values.first()
             }
         }
         update(null)

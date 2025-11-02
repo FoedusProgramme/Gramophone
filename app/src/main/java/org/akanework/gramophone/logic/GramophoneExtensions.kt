@@ -308,8 +308,7 @@ fun MediaController.getAudioFormat(): AudioFormatDetector.AudioFormats? =
                         bundle.getInt("type", C.TRACK_TYPE_UNKNOWN) to
                                 Format.fromBundle(bundle.getBundle("format")!!) } },
             it.getBundle("sink_format")?.let { bundle -> Format.fromBundle(bundle) },
-            BundleCompat.getParcelableArrayList(it, "track_format",
-                AudioTrackInfo::class.java),
+            BundleCompat.getParcelable(it, "track_format", AudioTrackInfo::class.java),
             BundleCompat.getParcelable(it, "hal_format", AfFormatInfo::class.java),
             BundleCompat.getParcelable(it, "bt", BtCodecInfo::class.java)
         )
@@ -398,7 +397,6 @@ fun View.enableEdgeToEdgePaddingListener(
                     WindowInsetsCompat.Type.displayCutout() or
                     if (ime) WindowInsetsCompat.Type.ime() else 0
             val i = insets.getInsets(mask)
-            // TODO is this really the best way lol?
             val pbsp = (context as? MainActivity)?.playerBottomSheet?.getBottomPadding() ?: 0
             v.setPadding(
                 pl + i.left, pt + (if (top) i.top else 0), pr + i.right,

@@ -12,6 +12,7 @@ import androidx.media3.exoplayer.analytics.AnalyticsListener
 import androidx.media3.exoplayer.audio.AudioSink.AudioTrackConfig
 import androidx.media3.exoplayer.audio.DefaultAudioSink
 import kotlinx.parcelize.Parcelize
+import org.nift4.gramophone.hificore.AudioSystemHiddenApi
 import org.nift4.gramophone.hificore.AudioTrackHiddenApi
 
 @Parcelize
@@ -173,8 +174,8 @@ class AfFormatTracker(
             val ioHandle = AudioTrackHiddenApi.getOutput(audioTrack)
             val halSampleRate = AudioTrackHiddenApi.getHalSampleRate(audioTrack)
             val grantedFlags = AudioTrackHiddenApi.getGrantedFlags(audioTrack)
-            val mixPort = AudioTrackHiddenApi.getMixPortForThread(ioHandle)
-            val primaryHw = AudioTrackHiddenApi.getPrimaryMixPort()?.hwModule
+            val mixPort = AudioSystemHiddenApi.getMixPortForThread(ioHandle)
+            val primaryHw = AudioSystemHiddenApi.getPrimaryMixPort()?.hwModule
             val latency = try {
                 // this call writes to mAfLatency and mLatency fields, hence call dump after this
                 AudioTrack::class.java.getMethod("getLatency").invoke(audioTrack) as Int

@@ -90,7 +90,7 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:padding="12dp"
-        app:tint="?attr/colorControlNormal"
+        app:tint="?attr/colorOnSurface"
         android:contentDescription="@string/now_playing"
         android:visibility="gone"
         app:layout_constraintTop_toTopOf="@id/linearLayout"

@@ -1,23 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:clipToPadding="false"
-    tools:ignore="MergeRootFrame">
-
-    <!-- TODO is this FrameLayout needed? I vaguely remember a bug related to this,
-              which led to me ignoring the warning here -->
-    <org.akanework.gramophone.logic.ui.MyRecyclerView
-        android:id="@+id/recyclerview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:contentDescription="@string/list"
-        android:scrollbars="none"
-        app:hasFixedSize="true"
-        app:useGridPaddingDecoration="true"
-        app:layoutManager="org.akanework.gramophone.ui.components.CustomGridLayoutManager" />
-
-</FrameLayout>
+<org.akanework.gramophone.logic.ui.MyRecyclerView
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:id="@+id/recyclerview"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:clipToPadding="false"
+	android:contentDescription="@string/list"
+	android:scrollbars="none"
+	app:hasFixedSize="true"
+	app:useGridPaddingDecoration="true"
+	app:layoutManager="org.akanework.gramophone.ui.components.CustomGridLayoutManager" />

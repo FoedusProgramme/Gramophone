@@ -83,6 +83,6 @@ fun getAdapterType(adapter: AdapterFragment.BaseInterface<*>) =
         }
 
         else -> {
-            throw IllegalArgumentException()
+            throw IllegalStateException()
         }
     }

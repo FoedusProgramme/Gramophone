@@ -4,7 +4,9 @@ import android.content.Context
 import android.media.MediaScannerConnection
 import android.net.Uri
 import androidx.media3.common.util.Log
+import okio.Path.Companion.toOkioPath
 import java.io.File
+import java.io.IOException
 
 object PlaylistSerializer {
     private const val TAG = "PlaylistSerializer"
@@ -37,8 +39,8 @@ object PlaylistSerializer {
         return when (format) {
             PlaylistFormat.M3u -> {
                 val lines = outFile.readLines()
-                lines.filter { !it.startsWith('#') }.map { Uri.decode(it) }
-                    .map { outFile.resolveSibling(it) }
+                lines.filter { !it.startsWith('#') }.map { Uri.decode(it) }.map {
+					outFile.resolveSibling(it).toOkioPath(normalize = true).toFile() }
             }
             PlaylistFormat.Xspf -> TODO()
             PlaylistFormat.Wpl -> TODO()

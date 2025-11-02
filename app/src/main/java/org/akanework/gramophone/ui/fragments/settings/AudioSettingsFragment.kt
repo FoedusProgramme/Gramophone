@@ -18,6 +18,7 @@
 package org.akanework.gramophone.ui.fragments.settings
 
 import android.os.Bundle
+import androidx.preference.Preference
 import org.akanework.gramophone.R
 import org.akanework.gramophone.ui.fragments.BasePreferenceFragment
 import org.akanework.gramophone.ui.fragments.BaseSettingsActivity
@@ -28,5 +29,14 @@ class AudioSettingsActivity : BaseSettingsActivity(R.string.settings_audio,
 class AudioSettingsFragment : BasePreferenceFragment() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.settings_audio, rootKey)
+    }
+
+    override fun onPreferenceTreeClick(preference: Preference): Boolean {
+        when (preference.key) {
+            "replaygain" -> {
+                startActivity(ReplayGainSettingsActivity::class.java)
+            }
+        }
+        return super.onPreferenceTreeClick(preference)
     }
 }

@@ -31,14 +31,12 @@ import java.util.UUID
  */
 @Suppress("unused")
 class Volume(priority: Int, audioSession: Int) : ReflectionAudioEffect(
-	EFFECT_TYPE_VOLUME, EFFECT_UUID_SWVOLUME, priority, audioSession) {
+	EFFECT_TYPE_VOLUME, EFFECT_TYPE_NULL, priority, audioSession) {
 	companion object {
 		private val EFFECT_TYPE_VOLUME =
 			UUID.fromString("09e8ede0-ddde-11db-b4f6-0002a5d5c51b")
-		private val EFFECT_UUID_SWVOLUME =
-			UUID.fromString("119341a0-8469-11df-81f9-0002a5d5c51b")
-		fun isAvailable() = isEffectTypeAvailable(EFFECT_TYPE_VOLUME, EFFECT_UUID_SWVOLUME)
-		fun isOffloadable() = isEffectTypeOffloadable(EFFECT_TYPE_VOLUME, EFFECT_UUID_SWVOLUME)
+		fun isAvailable() = isEffectTypeAvailable(EFFECT_TYPE_VOLUME, EFFECT_TYPE_NULL)
+		fun isOffloadable() = isEffectTypeOffloadable(EFFECT_TYPE_VOLUME, EFFECT_TYPE_NULL)
 	}
 
 	var level: Short // SLmillibel

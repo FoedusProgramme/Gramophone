@@ -72,7 +72,6 @@
     <string name="settings_blacklist_folder_summary">지정한 폴더의 음악 제외</string>
     <string name="settings_blacklist_folder">블랙리스트 폴더</string>
     <string name="settings_category_basic_info">기본 정보</string>
-    <string name="preference_category_quality">품질</string>
     <string name="settings_category_misc">기타</string>
     <string name="settings_crash_application">애플리케이션 충돌</string>
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
@@ -376,7 +375,6 @@
     <string name="rename">이름 바꾸기</string>
     <string name="rename_playlist">재생 목록 이름 바꾸기</string>
     <string name="add_to_playlist">재생 목록에 추가</string>
-    <string name="settings_hq_output">고품질 출력</string>
     <string name="refresh_did_you_know">Gramophone은 앱을 시작할 때마다 곡 목록을 업데이트하며, 실행 중에도 새로운 곡을 자동으로 감지합니다. 이 \"새로고침\" 버튼은 Gramophone 내부에서 곡을 다시 불러오는 것이 아니라, 시스템에 연결된 모든 저장소(이동식 저장소 제외)의 파일을 다시 스캔하도록 시스템에 요청하는 버튼입니다. 따라서 이 작업은 시간이 걸릴 수 있으며, 시스템이나 다른 앱에 문제가 없는 이상 이 기능은 사용할 일이 없습니다.\n\n일부 곡이 보이지 않을 경우, 설정 &gt; 동작 메뉴에서 \"최소 길이 필터\" 및 \"폴더 블랙리스트\" 옵션의 값이 제대로 설정되어 있는지 확인해 보세요. 그 외에 있을 수 있는 원인은 FAQ를 참고해 주세요.</string>
     <string name="spk_encoding_pcm_16bit_offload">16비트 PCM 오프로드</string>
     <string name="spk_encoding_pcm_24bit_offload">24비트(8.24) PCM 오버로드</string>

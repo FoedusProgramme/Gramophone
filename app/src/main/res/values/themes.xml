@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <!-- TODO stop using tools:targetApi here, it's dangerous -->
+    <!-- TODO(ASAP) stop using tools:targetApi here, it's dangerous -->
     <style name="Base.Theme.Gramophone" parent="Theme.Material3.DynamicColors.DayNight.NoActionBar">
         <!-- fixes some UI issues on MIUI devices -->
         <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>

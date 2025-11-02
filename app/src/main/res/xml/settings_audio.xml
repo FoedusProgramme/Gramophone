@@ -20,22 +20,14 @@
 
     <PreferenceCategory
         android:layout="@layout/preference_category_md"
-        android:title="@string/preference_category_quality">
-
-        <SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="floatoutput"
-            android:layout="@layout/preference_switch"
-            android:summary="@string/settings_hq_output_summary"
-            android:title="@string/settings_hq_output"
-            android:widgetLayout="@layout/preference_switch_widget"
-            app:iconSpaceReserved="false" />
-
-    </PreferenceCategory>
-
-    <PreferenceCategory
-        android:layout="@layout/preference_category_md"
         android:title="@string/settings_category_misc">
+
+        <Preference
+            app:iconSpaceReserved="false"
+            android:key="replaygain"
+            android:layout="@layout/preference_basic"
+            android:title="@string/settings_replaygain" />
+
 
         <SwitchPreferenceCompat
             android:defaultValue="false"

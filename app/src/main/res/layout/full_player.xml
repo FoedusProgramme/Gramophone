@@ -111,7 +111,7 @@
 
 		</LinearLayout>
 
-		<!-- TODO remove useless FrameLayout, stop inflating both, create wrapper view -->
+		<!-- TODO remove FrameLayout, don't inflate both sliders, instead make wrapper to swap -->
 		<FrameLayout
 			android:id="@+id/slider"
 			android:layout_width="match_parent"

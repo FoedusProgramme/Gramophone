@@ -23,7 +23,6 @@ import android.content.ContentUris
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
-import android.media.AudioManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -31,7 +30,6 @@ import android.os.Looper
 import android.os.PersistableBundle
 import android.provider.MediaStore
 import android.provider.Settings
-import androidx.media3.common.util.Log
 import android.view.Choreographer
 import android.view.ViewGroup
 import android.widget.TextView
@@ -48,6 +46,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentManager.FragmentLifecycleCallbacks
 import androidx.fragment.app.commit
 import androidx.media3.common.C
+import androidx.media3.common.util.Log
 import androidx.media3.session.DefaultMediaNotificationProvider
 import coil3.imageLoader
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -203,14 +202,20 @@ class MainActivity : BaseActivity() {
     @kotlin.OptIn(FlowPreview::class)
     fun addToPlaylistDialog(song: File?) {
         if (song == null) {
-            Toast.makeText(this@MainActivity, getString(R.string.edit_playlist_failed, "song == null"), Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                this@MainActivity,
+                getString(R.string.edit_playlist_failed, "song == null"),
+                Toast.LENGTH_LONG
+            ).show()
             return
         }
         val playlists = runBlocking { reader.playlistListFlow.first().filter { it.id != null } }
         MaterialAlertDialogBuilder(this)
             .setTitle(R.string.add_to_playlist)
             .setIcon(R.drawable.ic_playlist_play)
-            .setItems((playlists.map { it.title ?: it.path?.absolutePath ?: it.id.toString() } + getString(R.string.create_playlist)).toTypedArray())
+            .setItems((playlists.map {
+                it.title ?: it.path?.absolutePath ?: it.id.toString()
+            } + getString(R.string.create_playlist)).toTypedArray())
             { d, item ->
                 if (playlists.size == item) {
                     PlaylistAdapter.playlistNameDialog(this, R.string.create_playlist, "") { name ->
@@ -220,16 +225,34 @@ class MainActivity : BaseActivity() {
                             } catch (e: Exception) {
                                 Log.e("MainActivity", Log.getThrowableString(e)!!)
                                 withContext(Dispatchers.Main) {
-                                    Toast.makeText(this@MainActivity, getString(R.string.create_failed_playlist, e.javaClass.name + ": " + e.message), Toast.LENGTH_LONG).show()
+                                    Toast.makeText(
+                                        this@MainActivity,
+                                        getString(
+                                            R.string.create_failed_playlist,
+                                            e.javaClass.name + ": " + e.message
+                                        ),
+                                        Toast.LENGTH_LONG
+                                    ).show()
                                 }
                                 return@launch
                             }
                             try {
-                                ItemManipulator.setPlaylistContent(this@MainActivity, f, listOf(song))
+                                ItemManipulator.setPlaylistContent(
+                                    this@MainActivity,
+                                    f,
+                                    listOf(song)
+                                )
                             } catch (e: Exception) {
                                 Log.e("MainActivity", Log.getThrowableString(e)!!)
                                 withContext(Dispatchers.Main) {
-                                    Toast.makeText(this@MainActivity, getString(R.string.edit_playlist_failed, e.javaClass.name + ": " + e.message), Toast.LENGTH_LONG).show()
+                                    Toast.makeText(
+                                        this@MainActivity,
+                                        getString(
+                                            R.string.edit_playlist_failed,
+                                            e.javaClass.name + ": " + e.message
+                                        ),
+                                        Toast.LENGTH_LONG
+                                    ).show()
                                 }
                             }
                         }
@@ -237,9 +260,12 @@ class MainActivity : BaseActivity() {
                     return@setItems
                 }
                 val pl = playlists[item]
-                setPlaylist(pl.path!!, ContentUris.withAppendedId(
-                    @Suppress("deprecation") MediaStore.Audio.Playlists.getContentUri("external"), pl.id!!
-                ), true, listOf(song))
+                setPlaylist(
+                    pl.path!!, ContentUris.withAppendedId(
+                        @Suppress("deprecation") MediaStore.Audio.Playlists.getContentUri("external"),
+                        pl.id!!
+                    ), true, listOf(song)
+                )
             }
             .setNegativeButton(android.R.string.cancel) { _, _ -> }
             .show()
@@ -281,12 +307,23 @@ class MainActivity : BaseActivity() {
             } catch (e: Exception) {
                 Log.e("MainActivity", Log.getThrowableString(e)!!)
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(this@MainActivity, getString(R.string.edit_playlist_failed, e.javaClass.name + ": " + e.message), Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this@MainActivity,
+                        getString(
+                            R.string.edit_playlist_failed,
+                            e.javaClass.name + ": " + e.message
+                        ),
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
         } else {
             withContext(Dispatchers.Main) {
-                Toast.makeText(this@MainActivity, getString(R.string.edit_playlist_failed, "$resultCode"), Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    this@MainActivity,
+                    getString(R.string.edit_playlist_failed, "$resultCode"),
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
     }
@@ -308,20 +345,34 @@ class MainActivity : BaseActivity() {
 
     private fun doPlayFromIntent(intent: Intent) {
         intent.extras?.getString(PLAYBACK_AUTO_PLAY_ID)?.let { id ->
-            val pos = intent.extras?.getLong(PLAYBACK_AUTO_PLAY_POSITION, C.TIME_UNSET) ?: C.TIME_UNSET
+            val pos =
+                intent.extras?.getLong(PLAYBACK_AUTO_PLAY_POSITION, C.TIME_UNSET) ?: C.TIME_UNSET
             controllerViewModel.addControllerCallback(lifecycle) { controller, _ ->
-                runBlocking { reader.idMapFlow.firstOrNull() }
-                    .let { col ->
-                        val mediaItem = id.toLongOrNull()?.let { col?.let { it2 -> it2[it] } }
+                CoroutineScope(Dispatchers.Main).launch {
+                    withContext(Dispatchers.Default) {
+                        val col = reader.idMapFlow.firstOrNull()
+                        val item = id.toLongOrNull()?.let { col?.let { it2 -> it2[it] } }
+                        if (item == null) {
+                            Log.e(
+                                "MainActivity",
+                                "can't find file with ID $id in library with ${col?.size} items"
+                            )
+                        }
+                        item
+                    }.let { mediaItem ->
                         if (mediaItem != null) {
                             controller.setMediaItem(mediaItem, pos)
                             controller.prepare()
                             controller.play()
                         } else {
-                            Log.e("MainActivity", "can't find file with ID $id in library with ${col?.size} items")
-                            Toast.makeText(this@MainActivity, R.string.cannot_find_file, Toast.LENGTH_LONG).show()
+                            Toast.makeText(
+                                this@MainActivity,
+                                R.string.cannot_find_file,
+                                Toast.LENGTH_LONG
+                            ).show()
                         }
                     }
+                }
                 dispose()
             }
         }

@@ -140,7 +140,6 @@
     <string name="dialog_edit_metadata">Editar</string>
     <string name="dialog_lyrics">Letras</string>
     <string name="settings_category_filters">Filtros</string>
-    <string name="preference_category_quality">Calidad</string>
     <string name="settings_category_misc">Varias</string>
     <string name="settings_category_full_player">Reproductor entero</string>
     <string name="deny_images"><![CDATA[Por favor, quite el permiso a "Fotos y vídeos"]]></string>
@@ -374,7 +373,6 @@
     <string name="what_were_you_doing">¿Qué estabas haciendo en Gramophone cuando ocurrió este fallo? Agrega tantos detalles como sea posible para que sea mas fácil solucionar el problema.\n\nTenga en cuenta que se prefiere el inglés para los informes de errores, pero intentaré utilizar la traducción automática si envía informes de errores en otro idioma.</string>
     <string name="settings_translation_auto_word_summary">Aplicar un degradado lineal a las líneas de traducción en las letras sincronizadas si las traducciones no tienen metadatos de sincronización de palabras</string>
     <string name="refreshing_wait">Actualizando, por favor espere…</string>
-    <string name="settings_hq_output">Salida de alta calidad</string>
     <string name="settings_cookie_summary">Portada de álbum en forma de galleta</string>
     <string name="settings_pure_dark">Tema negro puro</string>
     <string name="settings_pure_dark_summary">Un tema en el que todas las superficies de la aplicación son completamente negras</string>
@@ -397,5 +395,4 @@
     <string name="offload_enabled_if_supported">Siempre habilitado</string>
     <string name="settings_stop_on_dismiss">Detenerse al descartar</string>
     <string name="settings_stop_on_dismiss_summary">Detener la reproducción cuando la aplicación se descarta de recientes</string>
-    <string name="settings_hq_output_summary">Permitir el uso de cualquier formato de muestreo en lugar de restringirlo a 16 bits</string>
 </resources>

@@ -64,7 +64,7 @@ object LrcUtils {
         val out = mutableListOf<SemanticLyrics>()
         for (i in 0..<metadata.length()) {
             val meta = metadata.get(i)
-            if (meta is BinaryFrame && meta.id == "SYLT") {
+            if (meta is BinaryFrame && (meta.id == "SYLT" || meta.id == "SLT")) {
                 val syltData = UsltFrameDecoder.decodeSylt(sampleRate, ParsableByteArray(meta.data))
                 if (syltData != null) {
                     if (syltData.contentType == 1 || syltData.contentType == 2) {
@@ -74,11 +74,13 @@ object LrcUtils {
                 }
             }
             val plainTextData =
-                if (meta is VorbisComment && meta.key == "LYRICS") // ogg / flac
+                if (meta is VorbisComment && meta.key == "LYRICS") // vorbis comments
                     meta.value
-                else if (meta is BinaryFrame && (meta.id == "USLT" || meta.id == "SYLT" /* out-of-spec */)) // mp3 / other id3 based
+                else if (meta is BinaryFrame && (meta.id == "USLT" || meta.id == "ULT"
+                            || meta.id == "SLT" /* out-of-spec */
+                            || meta.id == "SYLT" /* out-of-spec */)) // ID3
                     UsltFrameDecoder.decode(ParsableByteArray(meta.data))?.text
-                else if (meta is TextInformationFrame && (meta.id == "USLT" || meta.id == "SYLT")) // m4a
+                else if (meta is TextInformationFrame && meta.id == "USLT") // mp4
                     meta.values.joinToString("\n")
                 else null
             if (plainTextData != null) {

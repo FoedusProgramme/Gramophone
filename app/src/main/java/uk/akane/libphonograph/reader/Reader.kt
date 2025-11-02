@@ -555,7 +555,7 @@ internal object Reader {
                     }
                 }
                 val paths = try {
-                    playlistPath?.let { p -> PlaylistSerializer.read(p).map { if (it.isFile) it else null } }
+                    playlistPath?.let { p -> PlaylistSerializer.read(p) }
                 } catch (_: PlaylistSerializer.UnsupportedPlaylistFormatException) {
                     null
                 } catch (e: IOException) {

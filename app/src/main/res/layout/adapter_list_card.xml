@@ -6,7 +6,7 @@
     android:layout_height="@dimen/list_height"
     android:clickable="true"
     android:focusable="true"
-    android:paddingStart="24dp"
+    android:paddingStart="6dp"
     android:paddingEnd="6dp"
     tools:ignore="RtlSymmetry">
 
@@ -16,6 +16,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_gravity="center_vertical"
+        android:layout_marginStart="18dp"
         app:cardCornerRadius="@dimen/list_round_corner_size"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -33,48 +34,47 @@
 
     </com.google.android.material.card.MaterialCardView>
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
+        android:singleLine="true"
+        android:textColor="?attr/colorOnSurface"
+        app:textFontWeight="400"
+        android:fontFamily="sans-serif"
+        android:textSize="17sp"
+        tools:text="Example Title"
         android:layout_marginStart="18dp"
-        android:layout_weight="1"
-        android:orientation="vertical"
+        app:layout_constrainedHeight="true"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintBottom_toTopOf="@id/artist"
+        app:layout_constraintStart_toEndOf="@id/coverCardView"
+        app:layout_constraintEnd_toStartOf="@id/now_playing"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/artist"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:textColor="?attr/colorOnSurfaceVariant"
+        app:textFontWeight="400"
+        android:fontFamily="sans-serif"
+        android:textSize="14sp"
+        tools:text="Example Artist"
+        android:layout_marginStart="18dp"
+        app:layout_constrainedHeight="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/coverCardView"
         app:layout_constraintEnd_toStartOf="@id/now_playing"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:textColor="?attr/colorOnSurface"
-            app:textFontWeight="400"
-            android:fontFamily="sans-serif"
-            android:textSize="17sp"
-            tools:text="Example Title" />
-
-        <TextView
-            android:id="@+id/artist"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:textColor="?attr/colorOnSurfaceVariant"
-            app:textFontWeight="400"
-            android:fontFamily="sans-serif"
-            android:textSize="14sp"
-            tools:text="Example Artist" />
-
-    </LinearLayout>
+        app:layout_constraintTop_toBottomOf="@id/title" />
 
     <ImageView
         android:id="@+id/now_playing"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:padding="12dp"
-        app:tint="?attr/colorControlNormal"
+        app:tint="?attr/colorOnSurface"
         android:layout_gravity="end|center_vertical"
         android:contentDescription="@string/now_playing"
         android:visibility="gone"

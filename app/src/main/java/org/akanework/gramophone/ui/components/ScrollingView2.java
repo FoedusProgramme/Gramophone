@@ -1082,7 +1082,7 @@ public abstract class ScrollingView2 extends View implements NestedScrollingChil
 		if (pointerId == mActivePointerId) {
 			// This was our active pointer going up. Choose a new
 			// active pointer and adjust accordingly.
-			// TODO: Make this decision more intelligent.
+			// AOSP: Make this decision more intelligent.
 			final int newPointerIndex = pointerIndex == 0 ? 1 : 0;
 			mLastMotionY = (int) ev.getY(newPointerIndex);
 			mActivePointerId = ev.getPointerId(newPointerIndex);
@@ -1668,14 +1668,14 @@ public abstract class ScrollingView2 extends View implements NestedScrollingChil
 
 		int fadingEdge = getVerticalFadingEdgeLength();
 
-		// TODO: screenTop should be incremented by fadingEdge * getTopFadingEdgeStrength (but for
+		// AOSP: screenTop should be incremented by fadingEdge * getTopFadingEdgeStrength (but for
 		// the target scroll distance).
 		// leave room for top fading edge as long as rect isn't at very top
 		if (rect.top > 0) {
 			screenTop += fadingEdge;
 		}
 
-		// TODO: screenBottom should be decremented by fadingEdge * getBottomFadingEdgeStrength (but
+		// AOSP: screenBottom should be decremented by fadingEdge * getBottomFadingEdgeStrength (but
 		// for the target scroll distance).
 		// leave room for bottom fading edge as long as rect isn't at very bottom
 		if (rect.bottom < mChildHeight) {

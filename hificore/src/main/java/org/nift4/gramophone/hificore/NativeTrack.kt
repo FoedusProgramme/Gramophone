@@ -45,7 +45,6 @@ import java.nio.ByteBuffer
  * this class or its methods. However, you should always be prepared to handle such an exception, as everything can
  * fail.
  * TODO: tone down the magic numbers a bit.
- * TODO: check AudioSystem for more methods we are interested in. (like track descriptors)
  */
 @Suppress("unused")
 class NativeTrack(context: Context, attributes: AudioAttributes, streamType: Int, sampleRate: Int,
@@ -144,9 +143,7 @@ class NativeTrack(context: Context, attributes: AudioAttributes, streamType: Int
                                 hasGaplessOffloadCurrently, hasDirect)
                         } else
                         // Either offload is prevented by master mono or props, or it doesn't exist.
-                        // TODO: use AudioSystem.getMasterMono, getprop(audio.offload.disable),
-                        //  getprop(audio.offload.min.duration.secs) to report that offload is
-                        //  probably not working.
+                        // TODO: use AudioSystem.getMasterMono to report that offload is not working
                         if (profiles.size > 1) {
                             // While possible, odds are that there is a direct port instead of two
                             // offload ports.
@@ -228,7 +225,7 @@ class NativeTrack(context: Context, attributes: AudioAttributes, streamType: Int
                         encapsulationMode = ENCAPSULATION_MODE_NONE,
                         sharedMem = null
                     )
-                    val port = AudioTrackHiddenApi.getMixPortForThread(track.getOutput())
+                    val port = AudioSystemHiddenApi.getMixPortForThread(track.getOutput())
                     val flags = track.flags()
                     track.release()
                     if (port == null) {
@@ -270,7 +267,7 @@ class NativeTrack(context: Context, attributes: AudioAttributes, streamType: Int
                     encapsulationMode = ENCAPSULATION_MODE_NONE,
                     sharedMem = null
                 )
-                val port = AudioTrackHiddenApi.getMixPortForThread(track.getOutput())
+                val port = AudioSystemHiddenApi.getMixPortForThread(track.getOutput())
                 val flags = track.flags()
                 track.release()
                 if (port == null) {
@@ -298,6 +295,8 @@ class NativeTrack(context: Context, attributes: AudioAttributes, streamType: Int
         /*private external fun getDirectPlaybackSupport(usage: Int, contentType: Int, attrFlags: Int,
                                                       sampleRate: Int, format: Int, channelMask: Int,
                                                       bitRate: Int, bitWidth: Int, offloadBufferSize: Int) TODO*/
+        // TODO implement native getDirectProfilesForAttributes
+        // TODO implement native isDirectOutputSupported
         @RequiresApi(Build.VERSION_CODES.Q)
         private fun getPlaybackOffloadSupportPlatformCompat(format: AudioFormat, attributes: AudioAttributes): Int {
             return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {

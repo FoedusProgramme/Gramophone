@@ -137,7 +137,6 @@
     <string name="settings_category_full_player">Player completo</string>
     <string name="settings_category_misc">Diversos</string>
     <string name="settings_category_filters">Filtros</string>
-    <string name="preference_category_quality">Qualidade</string>
     <string name="dialog_lyrics">Letras</string>
     <string name="settings_crash_application">Travar o aplicativo</string>
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
@@ -426,8 +425,6 @@
     <string name="rename_playlist">Renomear playlist</string>
     <string name="edit_playlist_failed">Edição de playlist falhou: %s</string>
     <string name="add_to_playlist">Adicione a playlist</string>
-    <string name="settings_hq_output">Saída de alta qualidade</string>
-    <string name="settings_hq_output_summary">Permitir uso de qualquer formato de amostra em vez de restringir a 16-bits</string>
     <string name="playlist_editing_pref_desc">Permite adicionar músicas a playlists (mover/remover ainda não implementado)</string>
     <string name="no_app_found">Nenhum aplicativo encontrado pode fazer isso</string>
     <string name="contributors_nift4">Mantedor/ Desenvolvedor Líder</string>

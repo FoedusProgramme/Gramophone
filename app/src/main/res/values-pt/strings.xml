@@ -150,7 +150,6 @@
     <string name="deny_images">Negue a permissão \"imagens e vídeos\"</string>
     <string name="grant_images">Conceda permissão para \"imagens e vídeos\"</string>
     <string name="settings_category_basic_info">Informação básica</string>
-    <string name="preference_category_quality">Qualidade</string>
     <string name="settings_category_filters">Filtros</string>
     <string name="settings_preference_category_application">Aplicação</string>
     <string name="settings_category_full_player">Player completo</string>

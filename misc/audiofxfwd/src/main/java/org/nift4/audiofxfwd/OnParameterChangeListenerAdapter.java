@@ -5,7 +5,7 @@ import android.media.audiofx.AudioEffect;
 import java.lang.reflect.Method;
 
 @SuppressWarnings("unused")
-public class OnParameterChangeListenerAdapter implements AudioEffect.OnParameterChangeListener {
+/* package */ class OnParameterChangeListenerAdapter implements AudioEffect.OnParameterChangeListener {
 	private final OnParameterChangeListener delegate;
 
 	public OnParameterChangeListenerAdapter(OnParameterChangeListener delegate) {
@@ -17,8 +17,8 @@ public class OnParameterChangeListenerAdapter implements AudioEffect.OnParameter
 		delegate.onParameterChange(effect, status, param, value);
 	}
 
-	@SuppressWarnings("PrivateApi")
-	public static Method getGetter() throws NoSuchMethodException {
+	@SuppressWarnings("BlockedPrivateApi")
+	public static Method getSetter() throws NoSuchMethodException {
 		return AudioEffect.class.getDeclaredMethod("setParameterListener",
 				AudioEffect.OnParameterChangeListener.class);
 	}

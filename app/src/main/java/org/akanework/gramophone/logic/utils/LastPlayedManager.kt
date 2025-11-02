@@ -32,6 +32,7 @@ import androidx.media3.common.Player
 import androidx.media3.session.MediaSession.MediaItemsWithStartPosition
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.akanework.gramophone.BuildConfig
@@ -62,6 +63,7 @@ class LastPlayedManager(
     }
 
     var allowSavingState = true
+    private var job: Job? = null
     private val prefs by lazy { context.getSharedPreferences("LastPlayedManager", 0) }
 
     private fun dumpPlaylist(): MediaItemsWithStartPosition {
@@ -96,7 +98,8 @@ class LastPlayedManager(
             CircularShuffleOrder.Persistent(controller.exoPlayer.shuffleOrder as CircularShuffleOrder)
         else null
         val ended = controller.playbackState == Player.STATE_ENDED
-        CoroutineScope(Dispatchers.Default).launch {
+        job?.cancel()
+        job = CoroutineScope(Dispatchers.Default).launch {
             if (BuildConfig.DEBUG) {
                 Log.d(
                     TAG, "saving playlist (${data.mediaItems.size} items, repeat $repeatMode, " +

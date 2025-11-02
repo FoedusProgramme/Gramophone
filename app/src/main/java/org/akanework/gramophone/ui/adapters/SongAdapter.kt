@@ -120,11 +120,7 @@ class SongAdapter(
 
     init {
         mediaControllerViewModel.addRecreationalPlayerListener(
-            fragment.viewLifecycleOwner.lifecycle
-        ) {
-            currentMediaItem = it.currentMediaItem?.mediaId
-            currentIsPlaying =
-                it.playWhenReady && it.playbackState != Player.STATE_ENDED && it.playbackState != Player.STATE_IDLE
+            fragment.viewLifecycleOwner.lifecycle,
             object : Player.Listener {
                 override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
                     currentMediaItem = mediaItem?.mediaId
@@ -132,14 +128,22 @@ class SongAdapter(
 
                 override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
                     currentIsPlaying =
-                        playWhenReady && it.playbackState != Player.STATE_ENDED && it.playbackState != Player.STATE_IDLE
+                        playWhenReady &&
+		                        mediaControllerViewModel.get()!!.playbackState != Player.STATE_ENDED
+		                        && mediaControllerViewModel.get()!!.playbackState != Player.STATE_IDLE
                 }
 
                 override fun onPlaybackStateChanged(playbackState: Int) {
                     currentIsPlaying =
-                        it.playWhenReady && playbackState != Player.STATE_ENDED && it.playbackState != Player.STATE_IDLE
+	                    mediaControllerViewModel.get()!!.playWhenReady
+			                    && playbackState != Player.STATE_ENDED &&
+			                    mediaControllerViewModel.get()!!.playbackState != Player.STATE_IDLE
                 }
             }
+        ) {
+	        currentMediaItem = it.currentMediaItem?.mediaId
+	        currentIsPlaying =
+		        it.playWhenReady && it.playbackState != Player.STATE_ENDED && it.playbackState != Player.STATE_IDLE
         }
     }
 
@@ -312,7 +316,7 @@ class SongAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>) {
         if (payloads.isNotEmpty()) {
             if (payloads.none { it is Boolean && it }) {
-                holder.nowPlaying.drawable.level = if (currentIsPlaying == true) 1 else 0
+                holder.nowPlaying.drawable?.level = if (currentIsPlaying == true) 1 else 0
                 return
             }
             if (currentMediaItem == null || getSongList()[position].mediaId != currentMediaItem) {
@@ -325,7 +329,7 @@ class SongAdapter(
             }
         } else {
             super.onBindViewHolder(holder, position, payloads)
-            if (currentMediaItem == null || getSongList().getOrNull(position)?.mediaId != currentMediaItem)
+            if (currentMediaItem == null || getSongList()[position].mediaId != currentMediaItem)
                 return
         }
         holder.nowPlaying.setImageDrawable(NowPlayingDrawable(context)

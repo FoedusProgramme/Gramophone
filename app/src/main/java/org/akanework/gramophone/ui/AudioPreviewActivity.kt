@@ -58,6 +58,7 @@ import org.akanework.gramophone.logic.ui.BaseActivity
 import org.akanework.gramophone.logic.ui.placeholderScaleToFit
 import org.akanework.gramophone.logic.utils.CalculationUtils.convertDurationToTimeStamp
 import org.akanework.gramophone.logic.utils.Flags
+import org.akanework.gramophone.logic.utils.ReplayGainAudioProcessor
 import org.akanework.gramophone.logic.utils.exoplayer.GramophoneExtractorsFactory
 import org.akanework.gramophone.logic.utils.exoplayer.GramophoneMediaSourceFactory
 import org.akanework.gramophone.logic.utils.exoplayer.GramophoneRenderFactory
@@ -159,12 +160,12 @@ class AudioPreviewActivity : BaseActivity(), View.OnClickListener {
             it.animate = false
         }
         // TODO de-dupe
+	    val rgAp = ReplayGainAudioProcessor()
         player = ExoPlayer.Builder(
             this,
-            GramophoneRenderFactory(this, {}, {})
-                .setPcmEncodingRestrictionLifted(
-                    prefs.getBooleanStrict("floatoutput", false)
-                )
+            GramophoneRenderFactory(this,
+                rgAp, {}, {})
+                .setPcmEncodingRestrictionLifted(true)
                 .setEnableDecoderFallback(true)
                 .setEnableAudioTrackPlaybackParams(true)
                 .setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER),
@@ -191,6 +192,7 @@ class AudioPreviewActivity : BaseActivity(), View.OnClickListener {
                             .apply {
                                 val config = prefs.getStringStrict("offload", "0")?.toIntOrNull()
                                 if (config != null && config > 0 && Flags.OFFLOAD) {
+	                                rgAp.setOffloadEnabled(true)
                                     setAudioOffloadMode(TrackSelectionParameters.AudioOffloadPreferences.AUDIO_OFFLOAD_MODE_ENABLED)
                                     setIsGaplessSupportRequired(config == 2)
                                 }

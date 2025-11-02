@@ -273,7 +273,7 @@ struct audio_gain_config {
 
 extern "C"
 JNIEXPORT jintArray JNICALL
-Java_org_nift4_gramophone_hificore_AudioTrackHiddenApi_findAfFlagsForPortInternal(
+Java_org_nift4_gramophone_hificore_AudioSystemHiddenApi_findAfFlagsForPortInternal(
         JNIEnv *env, jobject, jint id, jint io) {
     if (!initLib(env))
         return nullptr;
@@ -338,7 +338,7 @@ Java_org_nift4_gramophone_hificore_AudioTrackHiddenApi_findAfFlagsForPortInterna
 		    return nullptr;
 	    }
 #undef BUFFER_SIZE
-	    if (android_get_device_api_level() < 33) {
+	    if (android_get_device_api_level() < 33) { // not populated by AudioAidlConversion on T+
 		    out[5] = (int32_t) (*((uint32_t *) maxPos)); // port.ext.mix.latency_class
 	    }
         /*
@@ -354,8 +354,7 @@ Java_org_nift4_gramophone_hificore_AudioTrackHiddenApi_findAfFlagsForPortInterna
         out[4] = (int32_t) (*((uint32_t *) pos));
         if (android_get_device_api_level() >= 30) {
             pos -= sizeof(uint32_t) / sizeof(uint8_t); // union audio_io_flags (flags)
-            // R added flags field to struct, but it is only populated since T. But app side may
-            // want to bet on OEM modification that populates it in R/S.
+            // R added flags field to struct, but it is only populated since T.
             out[3] = (int32_t) (*((uint32_t *) pos));
         }
         pos -= sizeof(struct audio_gain_config) / sizeof(uint8_t); // audio_gain_config (gain)
@@ -709,7 +708,7 @@ struct audio_config_base {
 
 extern "C"
 JNIEXPORT jint JNICALL
-Java_org_nift4_gramophone_hificore_AudioTrackHiddenApi_getEffectConfigs(JNIEnv *env, jobject,
+Java_org_nift4_gramophone_hificore_ReflectionAudioEffect_00024Companion_getEffectConfigs(JNIEnv *env, jobject,
                                                                         jlong ptr, jintArray out) {
 	if (!initLib(env))
 		return 1;

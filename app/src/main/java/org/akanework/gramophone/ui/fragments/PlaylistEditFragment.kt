@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
+import androidx.media3.common.MediaItem
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
@@ -21,9 +22,12 @@ import org.akanework.gramophone.logic.enableEdgeToEdgePaddingListener
 import org.akanework.gramophone.logic.ui.MyRecyclerView
 import org.akanework.gramophone.ui.adapters.SongAdapter
 import org.akanework.gramophone.ui.adapters.Sorter
+import org.akanework.gramophone.ui.components.EditSongAdapter
 import uk.akane.libphonograph.items.Playlist
 
 class PlaylistEditFragment : BaseFragment(false) {
+    private lateinit var touchHelper: ItemTouchHelper
+
 	override fun onCreateView(
 		inflater: LayoutInflater,
 		container: ViewGroup?,
@@ -52,71 +56,49 @@ class PlaylistEditFragment : BaseFragment(false) {
 			theItem.emit(item)
 		}
 
-		// TODO: if there is a pending playlist edit, ask whether it should be restored
-		// TODO: maybe use something like PlaylistCardAdapter instead of SongAdapter? if I add
-		//  drag handles and delete buttons to SongAdapter it would be kinda weird and sorting or
-		//  layouts really aren't needed here...
-		val songAdapter =
-			SongAdapter(
-				this,
-				flowOf(), //songList,
-				rawOrderExposed = Sorter.Type.NaturalOrder,
-				isSubFragment = R.id.edit
-			)
-
+		// TODO(ASAP): if there is a pending playlist edit, ask whether it should be restored
+        val adapter = PlaylistEditAdapter()
 		recyclerView.enableEdgeToEdgePaddingListener()
 		recyclerView.setAppBar(appBarLayout)
-		recyclerView.adapter = songAdapter.concatAdapter
-
-		// TODO: some sorta delete button for songs
-		val callback = PlaylistCardMoveCallback { from, to ->
-			/*val list = runBlocking { songList.first() }.toMutableList()
-			val item = list.removeAt(from)
-			list.add(to, item)
-			songList.tryEmit(list)*/
-			// TODO: store pending playlist
-		}
-		val touchHelper = ItemTouchHelper(callback)
+		recyclerView.adapter = adapter
+		touchHelper = ItemTouchHelper(adapter.PlaylistCardMoveCallback())
 		touchHelper.attachToRecyclerView(recyclerView)
 
 		// Build FastScroller.
-		recyclerView.fastScroll(songAdapter, songAdapter.itemHeightHelper)
+		recyclerView.fastScroll(null, null)
 
 		topAppBar.setNavigationOnClickListener {
-			// TODO: ask "are you sure" and delete pending edit
+			// TODO(ASAP): ask "are you sure" and delete pending edit
 			requireActivity().supportFragmentManager.popBackStack()
 		}
 
 		return rootView
 	}
 
-	private class PlaylistCardMoveCallback(private val touchHelperContract: (Int, Int) -> Unit) :
-		ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0) {
-		override fun isLongPressDragEnabled(): Boolean {
-			return true
-		}
+    // TODO(ASAP): finish it
+    private inner class PlaylistEditAdapter : EditSongAdapter(requireContext()) {
+        override fun getItemCount(): Int {
+            TODO("Not yet implemented")
+        }
 
-		override fun isItemViewSwipeEnabled(): Boolean {
-			return false
-		}
+        override fun startDrag(holder: ViewHolder) {
+            touchHelper.startDrag(holder)
+        }
 
-		override fun onMove(
-			recyclerView: RecyclerView,
-			viewHolder: RecyclerView.ViewHolder,
-			target: RecyclerView.ViewHolder
-		): Boolean {
-			val vhBap = viewHolder.bindingAdapterPosition
-			val tBap = target.bindingAdapterPosition
-			if (vhBap != RecyclerView.NO_POSITION && tBap != RecyclerView.NO_POSITION) {
-				touchHelperContract(vhBap, tBap)
-				return true
-			}
-			return false
-		}
+        override fun onClick(pos: Int) {
+            TODO("Not yet implemented")
+        }
 
-		override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-			throw IllegalStateException()
-		}
-	}
+        override fun getItem(pos: Int): MediaItem {
+            TODO("Not yet implemented")
+        }
 
+        override fun onRowMoved(from: Int, to: Int) {
+            TODO("Not yet implemented")
+        }
+
+        override fun removeItem(pos: Int) {
+            TODO("Not yet implemented")
+        }
+    }
 }

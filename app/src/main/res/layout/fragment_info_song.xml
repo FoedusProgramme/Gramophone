@@ -294,41 +294,6 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginStart="24dp"
-                android:layout_marginEnd="24dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/dialog_bitrate"
-                    android:layout_gravity="center_vertical"
-                    android:textColor="?colorPrimary"
-                    app:textFontWeight="500"
-                    android:fontFamily="sans-serif"
-                    android:textSize="17sp" />
-
-                <TextView
-                    android:id="@+id/bit_rate"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:textIsSelectable="true"
-                    android:textSize="16sp"
-                    app:textFontWeight="500"
-                    android:textColor="?colorOnSurface"
-                    tools:text="0"
-                    android:layout_marginStart="50dp"
-                    android:fontFamily="sans-serif"
-                    android:gravity="end" />
-
-            </LinearLayout>
-
-            <LinearLayout
                 android:id="@+id/genre_box"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -435,6 +400,41 @@
                     android:textIsSelectable="true"
                     android:textSize="16sp"
                     app:textFontWeight="500"
+                    android:layout_marginStart="50dp"
+                    android:fontFamily="sans-serif"
+                    android:gravity="end" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/dialog_bitrate"
+                    android:layout_gravity="center_vertical"
+                    android:textColor="?colorPrimary"
+                    app:textFontWeight="500"
+                    android:fontFamily="sans-serif"
+                    android:textSize="17sp" />
+
+                <TextView
+                    android:id="@+id/bit_rate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:textIsSelectable="true"
+                    android:textSize="16sp"
+                    app:textFontWeight="500"
+                    android:textColor="?colorOnSurface"
+                    tools:text="0"
                     android:layout_marginStart="50dp"
                     android:fontFamily="sans-serif"
                     android:gravity="end" />

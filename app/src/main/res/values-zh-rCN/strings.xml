@@ -123,7 +123,6 @@
     <string name="settings_blacklist_folder">排除的文件夹</string>
     <string name="settings_blacklist">排除列表</string>
     <string name="settings_category_misc">杂项</string>
-    <string name="preference_category_quality">质量</string>
     <string name="settings_category_basic_info">基本信息</string>
     <string name="settings_category_filters">过滤器</string>
     <string name="settings_blacklist_folder_summary">从某些文件夹中过滤歌曲</string>
@@ -344,8 +343,6 @@
     <string name="playlist_name">播放列表名称</string>
     <string name="rename_playlist">重命名播放列表</string>
     <string name="add_to_playlist">添加到播放列表</string>
-    <string name="settings_hq_output">高品质输出</string>
-    <string name="settings_hq_output_summary">允许使用任意采样格式，而非仅限于16位整型</string>
     <string name="still_refreshing">正在刷新，第%1$d/%2$d步：%3$s</string>
     <string name="home_menu_quick_refresh">快速刷新</string>
     <string name="add_to_queue">添加到队列</string>

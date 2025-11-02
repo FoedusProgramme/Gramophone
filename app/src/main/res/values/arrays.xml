@@ -12,6 +12,20 @@
         <item>2</item>
     </string-array>
 
+    <string-array name="rg_mode_switch" translatable="false">>
+        <item>@string/disabled</item>
+        <item>@string/track_gain</item>
+        <item>@string/album_gain</item>
+        <item>@string/smart</item>
+    </string-array>
+
+    <string-array name="rg_mode_switch_val" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
     <string-array name="offload_switch" translatable="false">>
         <item>@string/disabled</item>
         <item>@string/offload_enabled_if_gapless</item>

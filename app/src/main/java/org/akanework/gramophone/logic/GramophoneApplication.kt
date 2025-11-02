@@ -148,6 +148,7 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
                             it.detectNonSdkApiUsage()
                         } else it
                     }
+                    .permitNonSdkApiUsage()
                     .penaltyDeath()
                     .build()
             )
@@ -156,7 +157,7 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
                 .detectFragmentTagUsage()
                 .detectRetainInstanceUsage()
                 .detectSetUserVisibleHint()
-                .detectTargetFragmentUsage()
+                //.detectTargetFragmentUsage() TODO onDisplayPreferenceDialog()
                 .detectWrongFragmentContainer()
                 .detectWrongNestedHierarchy()
                 .penaltyDeath()
