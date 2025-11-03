@@ -379,4 +379,11 @@
     <string name="spk_encoding_amr_nb">AMR-NB</string>
     <string name="spk_encoding_dsd">Direct Stream Digital</string>
     <string name="spk_encoding_alac">ALAC</string>
+    <string name="duration_queue">%s 小时</string>
+    <string name="scroll_to_playing">滚动以播放歌曲</string>
+    <plurals name="folders_plural">
+        <item quantity="other">%d 个文件夹</item>
+    </plurals>
+    <string name="timer_expiry_eos">睡眠计时器将在 %s 后暂停歌曲</string>
+    <string name="timer_expiry_end_of_this_song">睡眠计时器将在歌曲结束后暂停</string>
 </resources>
