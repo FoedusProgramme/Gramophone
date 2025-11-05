@@ -182,6 +182,8 @@
     <string name="tempo_pitch_value">%s: %.2fx</string>
     <string name="lock_tempo_pitch">Lock tempo and pitch</string>
     <string name="reset">Reset</string>
+    <string name="playback_speed">Playback speed</string>
+    <string name="reset">Reset</string>
     <string name="current_playlist">Current playlist</string>
     <string name="fgs_failed_title">Failed to resume music playback</string>
     <string name="fgs_failed_text">Click here to open the app and continue playback</string>

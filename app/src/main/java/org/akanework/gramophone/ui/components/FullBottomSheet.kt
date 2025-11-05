@@ -411,12 +411,6 @@ class FullBottomSheet
             }
         }
 
-        bottomSheetPlaybackSpeedButton.setOnClickListener {
-            ViewCompat.performHapticFeedback(it, HapticFeedbackConstantsCompat.CONTEXT_CLICK)
-            if (instance != null)
-                showPlaybackSpeedDialog()
-        }
-
         bottomSheetFavoriteButton.addOnCheckedChangeListener(this)
 
         if (isMediaOutputPanelSupported(context)){
