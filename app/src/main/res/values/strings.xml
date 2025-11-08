@@ -298,15 +298,11 @@
     <string name="device_type_line_digital">Digital line</string>
     <string name="device_type_ble_speaker">Bluetooth LE Speaker</string>
     <string name="device_type_ble_broadcast">Bluetooth LE Broadcast</string>
-    <string name="settings_pixel_perfect_measurement_legacy_title">Pixel perfect text measurement</string>
-    <string name="settings_pixel_perfect_measurement_legacy_summary">Before Android 15, text measurements are based on advances instead of bounding box. To avoid gradient clipping in lyrics, we add a few pixels to the sides. This however may cause unintended artifacts if kerning is enabled, which are mitigated if this toggle is enabled by rendering text to a bitmap and analysing it to extract proper spacing data.</string>
     <string name="open_in_gramophone">Open in Gramophone</string>
     <string name="settings_trim_lyrics_summary">Spaces before the first letter or after the end of a lyric line may have artistic value. If you disagree, you can turn on this toggle to remove these spaces automatically.</string>
     <string name="cannot_play_file">Cannot play this file</string>
     <string name="settings_lyrics_no_animation">Disable animations</string>
     <string name="settings_lyrics_no_animation_summary">Disable all line transition lyric animations</string>
-    <string name="settings_lyrics_char_scaling_summary">Calculate lyric gradient velocity in characters per second instead of pixels per second. Might cause speed to look irregular due to differing character length in pixels.</string>
-    <string name="settings_lyrics_char_scaling">Character-based scaling for lyric gradient</string>
     <string name="dialog_bitrate">Bitrate</string>
     <string name="bitrate_format">%1$d kbps</string>
     <string name="bitrate_unknown">Unknown bitrate</string>
