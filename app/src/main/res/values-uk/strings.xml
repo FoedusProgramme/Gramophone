@@ -278,16 +278,12 @@
     <string name="device_type_ble_speaker">Колонка Bluetooth LE</string>
     <string name="device_type_dock_digital">Цифрова док-станція</string>
     <string name="device_type_dock_analog">Аналоговий док</string>
-    <string name="settings_pixel_perfect_measurement_legacy_summary">До Android 15 вимірювання тексту базувалися на прогресі, а не на обмежувальній рамці. Щоб уникнути градієнтного обрізання тексту, ми додаємо кілька пікселів з боків. Однак це може спричинити ненавмисні артефакти, якщо ввімкнено кернінг, які пом’якшуються, якщо ввімкнути цей перемикач, відтворюючи текст у растровому зображенні та аналізуючи його для отримання правильних даних про інтервали.</string>
-    <string name="settings_pixel_perfect_measurement_legacy_title">Вимірювання ідеального піксельного тексту</string>
     <string name="open_in_gramophone">Відкрити в Gramophone</string>
     <string name="settings_trim_lyrics_summary">Пробіли перед першою літерою або після кінця рядка пісні можуть мати художню цінність. Якщо ви не згодні, ви можете ввімкнути цей перемикач, щоб ці пробіли автоматично видалялися.</string>
     <string name="delete_really">Ви справді хочете видалити \"%s\"? Цю дію не можна скасувати.</string>
     <string name="cannot_play_file">Неможливо відтворити цей файл</string>
     <string name="settings_lyrics_no_animation">Вимкнути анімацію</string>
     <string name="settings_lyrics_no_animation_summary">Вимкнути всі анімації переходу між рядками</string>
-    <string name="settings_lyrics_char_scaling">Масштабування на основі символів для ліричного градієнта</string>
-    <string name="settings_lyrics_char_scaling_summary">Обчисліть швидкість градієнта лірики в символах на секунду замість пікселів на секунду. Швидкість може виглядати неправильно через різну довжину символів у пікселях.</string>
     <string name="dialog_bitrate">Бітрейт</string>
     <string name="bitrate_unknown">Невідомий бітрейт</string>
     <string name="bitrate_format">%1$d кбіт/с</string>

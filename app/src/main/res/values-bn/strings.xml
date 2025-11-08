@@ -191,8 +191,6 @@
     <string name="playlist_editing_pref_desc">প্লেলিস্টে গান যোগ করার সুবিধা (সরানো / বাদ দেওয়া এখনও যোগ করা হয়নি)</string>
     <string name="settings_status_bar_lyrics_title">স্ট্যাটাস বারে লিরিক</string>
     <string name="settings_status_bar_lyrics_summary">স্ট্যাটাস বারে লিরিক প্রদর্শনের জন্য মেইজু (MeiZu) পদ্ধতি চালু করুন (শুধুমাত্র কিছু ডিভাইসে বিদ্যমান)</string>
-    <string name="settings_lyrics_char_scaling">লিরিক গ্রেডিয়েন্টের জন্য অক্ষর-ভিত্তিক স্কেলিং</string>
-    <string name="settings_lyrics_char_scaling_summary">লিরিক গ্রেডিয়েন্টের গতিবেগ পিক্সেল প্রতি সেকেন্ডের পরিবর্তে অক্ষর প্রতি সেকেন্ডে গণনা করুন। পিক্সেলে অক্ষরের দৈর্ঘ্যের ভিন্নতার কারণে গতি অনিয়মিত মনে হতে পারে।</string>
     <string name="settings_audio_offload">অডিও অফলোড (ব্যাটারি সাশ্রয় করে)</string>
     <string name="offload_enabled_if_supported">সর্বদা চালু</string>
     <string name="offload_enabled_if_gapless">চালু (যদি গ্যাপলেস প্লেব্যাক সম্ভব হয়)</string>

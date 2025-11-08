@@ -259,7 +259,6 @@
     <string name="device_type_dock">Dok</string>
     <string name="device_type_dock_analog">Dok Analog</string>
     <string name="device_type_dock_digital">Dok Digital</string>
-    <string name="settings_pixel_perfect_measurement_legacy_title">Pengukuran tepat teks piksel</string>
     <string name="device_type_line_analog">Jalur analog</string>
     <string name="settings_lyrics_no_animation">Matikan animasi</string>
     <string name="device_type_builtin_speaker">Speaker internal</string>
@@ -282,8 +281,6 @@
     <string name="failed_to_parse_lyric">Gagal mengurai lirik</string>
     <string name="settings_lyrics_no_animation_summary">Matikan semua animasi transisi baris lirik</string>
     <string name="package_type_explainer">APK Gramophone dapat dibuat oleh siapa saja, karena Gramophone bersifat sumber terbuka. Untuk membantu mengingat APK berasal, Gramophone menyediakan jenis paket.\n\nJenis yang paling umum adalah Release, yang merupakan dari F-Droid, Google Play, GitHub, atau IzzyOnDroid.\nTipe paket CI berasal dari build otomatis yang dibuat dari setiap commit pada GitHub. Build tersebut mungkin tidak stabil.\nUntuk tipe paket lainnya, namanya harus memberikan alasan petunjuk di mana APK berasal.</string>
-    <string name="settings_lyrics_char_scaling_summary">Hitung kecepatan gradien lirik dalam karakter per detik, bukan piksel per detik. Mungkin menyebabkan kecepatan terlihat tidak teratur karena panjang karakter yang berbeda dalam piksel.</string>
-    <string name="settings_lyrics_char_scaling">Skala berbasis karakter untuk gradien lirik</string>
     <string name="settings_open_source_licenses">Lisensi sumber terbuka</string>
     <string name="delete_failed_playlist">Menghapus daftar putar gagal</string>
     <plurals name="folders_plural">

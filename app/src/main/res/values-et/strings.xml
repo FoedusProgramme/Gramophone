@@ -253,7 +253,6 @@
     <string name="spk_encoding_mp3">MP3</string>
     <string name="spk_encoding_aac_xhe">xHE-AAC</string>
     <string name="settings_trim_lyrics_summary">Tühikud laulusõnade reas enne esimest tähte või rea lõpus võivad omada kunstilist väärtust. Kui see sulle ei sobi, siis selle eelistuse sisselülitamisel eemaldame need tühikud automaatselt.</string>
-    <string name="settings_pixel_perfect_measurement_legacy_summary">Enne Androidi versiooni 15 põhines esitatava teksti mõõtmine piiritletud kasti asemel loo edenemisel. Selleks, et vältida üleminekute kärpimist tekstides, lisame mõned pikslid külgedele. See siiski võib tähesobitamise kasutamisel põhjustada soovimatuid moonutusi. Neid saabki leevendada selle eelistusega, mis renderdab teksti bittrastriks ja analüüsides seda eraldab õiged vahekauguse andmed.</string>
     <string name="device_type_wired_headset">Juhtmega kuular</string>
     <string name="device_type_bluetooth_a2dp">Bluetooth A2DP</string>
     <string name="device_type_wired_headphones">Juhtmega kõrvaklapid</string>
@@ -273,13 +272,10 @@
     <string name="device_type_line_digital">Digisisend/väljund</string>
     <string name="device_type_ble_speaker">Bluetooth LE kõlar</string>
     <string name="device_type_ble_broadcast">Bluetooth LE leviedastus</string>
-    <string name="settings_pixel_perfect_measurement_legacy_title">Tekstimõõtmine piksli täpsusega</string>
     <string name="delete_really">Kas sa kindlasti soovid „%s“ kustutada? Seda tegevust ei saa tagasi pöörata.</string>
     <string name="cannot_play_file">Selle faili esitamine ei õnnestu</string>
     <string name="settings_lyrics_no_animation_summary">Ära kasuta laulusõnade näitamisel reavahetusega seotud animatsioone</string>
     <string name="settings_lyrics_no_animation">Lülita animatsioonid välja</string>
-    <string name="settings_lyrics_char_scaling">Tähemärkide põhine laulusõnade gradiendi skaleerimine</string>
-    <string name="settings_lyrics_char_scaling_summary">Selle asemel, et kasutada piksleid sekundi kohta arvuta laulusõnade gradiendi kiirus tähemärkides sekundi kohta. Kuna tähemärkidel on pikslites erinevad pikkused, siis võib tekitada mulje, et kiirus pole ühtlane.</string>
     <string name="bitrate_unknown">Tundmatu bitikiirus</string>
     <string name="dialog_bitrate">Bitikiirus</string>
     <string name="bitrate_format">%1$d kb/s</string>

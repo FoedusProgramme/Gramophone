@@ -233,7 +233,6 @@
     <string name="spk_encoding_dolby_truehd">Dolby TrueHD</string>
     <string name="spk_encoding_opus">Opus</string>
     <string name="spk_encoding_dts_uhd_p2">DTS-X</string>
-    <string name="settings_pixel_perfect_measurement_legacy_summary">پیش از اندروید ۱۵، اندازه‌گیری‌های متن جای جعبه مرزی بر اساس پیشرفت‌ها هستند. برای جلوگیری از بریده شده گرادیان در ترانه‌ها، چند پیکسل به لبه‌ها اضافه می‌کنیم. با این حال این ممکن است مصنوعات ناخواسته اضافه کند اگر kerning راه‌اندازی شده باشد، که با راه‌اندازی این تغییر، با پرداخت کردن متن به یک بیت‌مپ و تجزیه و تحلیل آن برای استخراج داده‌های فاصله‌گذاری مناسب، کاهش می‌یابند.</string>
     <string name="spk_channel_out_7point1_surround">احاطه (۷.۱)</string>
     <string name="spk_channel_out_6point1">۶.۱</string>
     <string name="spk_channel_out_7point1point4">۷.۱.۴</string>
@@ -268,7 +267,6 @@
     <string name="device_type_line_digital">خط دیجیتال</string>
     <string name="device_type_ble_broadcast">پخش بلوتوثی LE</string>
     <string name="device_type_dock">بارانداز</string>
-    <string name="settings_pixel_perfect_measurement_legacy_title">اندازه‌گیری پیکسلی متن</string>
     <string name="sort_by_album_artist">هنرمند آلبوم -&gt; نام</string>
     <string name="sort_by_file_path">مسیر پرونده</string>
     <string name="dialog_bitrate">میزان بیت</string>
@@ -279,8 +277,6 @@
     <string name="settings_lyrics_no_animation">از کار انداختن انیمیشن‌ها</string>
     <string name="settings_lyrics_no_animation_summary">از کار انداختن همۀ انیمیشن‌های تغییر خط ترانه</string>
     <string name="cannot_play_file">نمی‌توان این پرونده را پخش کرد</string>
-    <string name="settings_lyrics_char_scaling_summary">محاسبۀ سرعت گرادیان ترانه به حروف بر ثانیه جای پیکسل بر ثانیه. ممکن است باعث شود سرعت به‌خاطر تفاوت طول حروف در پیکسل غیرطبیعی به‌نظر برسد.</string>
-    <string name="settings_lyrics_char_scaling">پیمایش بر اساس حروف برای گرادیان ترانه</string>
     <string name="settings_open_source_licenses">پروانۀ منبع باز</string>
     <string name="oh_no">وای نه!</string>
     <string name="send_email">فرستادن ایمیل</string>

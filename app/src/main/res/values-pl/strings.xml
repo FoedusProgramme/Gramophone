@@ -278,16 +278,12 @@
     <string name="spk_encoding_pcm_float">32-bit (float) PCM</string>
     <string name="spk_encoding_e_ac3_joc">E-AC-3-JOC</string>
     <string name="device_type_ble_headset">Zestaw słuchawkowy Bluetooth LE</string>
-    <string name="settings_pixel_perfect_measurement_legacy_title">Doskonały pomiar tekstu w pikselach</string>
-    <string name="settings_pixel_perfect_measurement_legacy_summary">Przed Androidem 15 pomiary tekstu są oparte na \"advances\" zamiast \"bounding box\". Aby uniknąć przycinania gradientu w tekstach, dodajemy kilka pikseli po bokach. Może to jednak powodować niezamierzone artefakty, jeśli kerning jest włączony, które są łagodzone, jeśli ten przełącznik jest włączony poprzez renderowanie tekstu do mapy bitowej i analizowanie go w celu wyodrębnienia odpowiednich danych odstępów.</string>
     <string name="open_in_gramophone">Otwórz w Gramophone</string>
     <string name="settings_trim_lyrics_summary">Spacje przed pierwszą literą lub po końcu wersu tekstu mogą mieć wartość artystyczną. Jeśli się z tym nie zgadzasz, możesz włączyć tę opcję, aby automatycznie usuwać te spacje.</string>
     <string name="delete_really">Czy naprawdę chcesz usunąć „%s”? Tego działania nie można cofnąć.</string>
     <string name="cannot_play_file">Nie można odtworzyć tego pliku</string>
     <string name="settings_lyrics_no_animation">Wyłącz animacje</string>
     <string name="settings_lyrics_no_animation_summary">Wyłączenie wszystkich animacji przejść między wierszami</string>
-    <string name="settings_lyrics_char_scaling">Skalowanie oparte na znakach dla gradientu tekstu</string>
-    <string name="settings_lyrics_char_scaling_summary">Obliczanie prędkości gradientu tekstu w znakach na sekundę zamiast w pikselach na sekundę. Może to spowodować, że prędkość będzie wyglądać nieregularnie z powodu różnej długości znaków w pikselach.</string>
     <string name="dialog_bitrate">Szybkość transmisji</string>
     <string name="bitrate_unknown">Nieznana szybkość transmisji</string>
     <string name="bitrate_format">%1$d kbps</string>

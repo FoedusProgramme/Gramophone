@@ -260,7 +260,6 @@
     <string name="device_type_unknown">Desconhecido</string>
     <string name="device_type_hdmi_arc">Canal de retorno de áudio HDMI</string>
     <string name="device_type_ble_broadcast">Transmissão Bluetooth LE</string>
-    <string name="settings_pixel_perfect_measurement_legacy_title">Medição de texto pixel perfect</string>
     <string name="device_type_line_analog">Linha analógica</string>
     <string name="device_type_line_digital">Linha digital</string>
     <string name="device_type_ble_speaker">Auto-falante Bluetooth LE</string>
@@ -276,8 +275,6 @@
     <string name="mix_port_flag_direct">Direto</string>
     <string name="spk_encoding_iec61937">IEC 61937</string>
     <string name="spk_encoding_unknown">Formato Desconhecido %s</string>
-    <string name="settings_lyrics_char_scaling_summary">Calcular a velocidade do gradiente da letra em caracteres por segundo em vez de pixels por segundo. Pode fazer com que a velocidade pareça irregular devido à diferença no comprimento dos caracteres em pixels.</string>
-    <string name="settings_lyrics_char_scaling">Dimensionamento baseado em caracteres para gradiente de letras</string>
     <string name="mix_port_flag_gapless_offload">Descarga sem intervalos</string>
     <string name="spk_encoding_pcm_8_24bit">24-bit (8.24) PCM</string>
     <string name="mix_port_flag_direct_pcm">PCM Direto</string>
@@ -309,7 +306,6 @@
     <string name="device_type_usb_headset">Headset USB</string>
     <string name="device_type_dock">Dock</string>
     <string name="device_type_aux_line">Entrada auxiliar</string>
-    <string name="settings_pixel_perfect_measurement_legacy_summary">Antes do Android 15, as medidas de texto eram baseadas em avanços em vez de caixa delimitadoras. Para evitar gradient clipping nas letras, adicionamos alguns pixels às laterais. No entanto, isso pode causar artefatos não intencionais se o kerning estiver ativado, o que é mitigado se essa opção estiver ativada, renderizando o texto em um bitmap e analisando-o para extrair os dados de espaçamento adequados.</string>
     <string name="failed_to_parse_lyric">Falha ao analisar a letra da música</string>
     <string name="spk_encoding_pcm_float">32-bit (float) PCM</string>
     <string name="spk_encoding_aac_he_v2">HE-AAC v2</string>

@@ -298,7 +298,6 @@
     <string name="settings_lyrics_ui">Új dalszöveg felület bekapcsolása</string>
     <string name="delete">Törlés</string>
     <string name="settings_lyrics_multiline">Többsoros dalszövegek beolvasása</string>
-    <string name="settings_lyrics_char_scaling">Karakter alapú átmenet méretezés dalszövegeknél</string>
     <string name="device_type_builtin_speaker">Beépített hangszóró</string>
     <string name="device_type_usb_device">USB eszköz</string>
     <string name="device_type_usb_accessory">USB kellék</string>
@@ -312,8 +311,6 @@
     <string name="device_type_hdmi_earc">HDMI Enhanced Audio Return Channel</string>
     <string name="device_type_unknown">Ismeretlen</string>
     <string name="device_type_dock_analog">Analóg dokkoló</string>
-    <string name="settings_pixel_perfect_measurement_legacy_title">Pixel pontos szöveg méretezés</string>
-    <string name="settings_pixel_perfect_measurement_legacy_summary">Az Android 15 előtt a szöveg méretezések a közelségen alapult a behatároló keret helyett. Hogy az átmenet ne lógjon túl, hozzáadtunk néhány pixelt a szélekhez. Azonban ez érdekes képi hibákat eredményezhet, ha az alávágás be van kapcsolva. Ezzel a kapcsolóval ezek enyhíthetőek azzal, hogy a szöveg bitmapként jelenik meg, és megfelelő távolság adat analizálás társul hozzá.</string>
     <string name="fgs_failed_channel">Lejátszás nem folytatódott</string>
     <string name="timer_expiry">Az elalvás időzítő megállítja a zenét %s-kor</string>
     <string name="back">Vissza</string>
@@ -347,7 +344,6 @@
     <string name="spk_channel_out_9point1point4">9.1.4</string>
     <string name="spk_channel_out_5point1point2">5.1.2</string>
     <string name="spk_encoding_aac_latm_lc">AAC-LC LATM-ben</string>
-    <string name="settings_lyrics_char_scaling_summary">Karakter/mp alapú dalszöveg átmenet kalkuláció a pixel/mp helyett. A karakterek méretkülönbsége miatt lehet, hogy furán fog festeni.</string>
     <string name="spk_channel_invalid">Érvénytelen</string>
     <string name="spk_encoding_aac_xhe">xHE-AAC</string>
     <string name="spk_encoding_e_ac3">E-AC-3</string>

@@ -222,8 +222,6 @@
     <string name="spk_encoding_pcm_32bit">32-bittinen (int) PCM</string>
     <string name="spk_encoding_pcm_32bit_big_endian">32-bittinen (int) PCM (big endian)</string>
     <string name="spk_encoding_pcm_float">32-bittinen (kelluva) PCM</string>
-    <string name="settings_pixel_perfect_measurement_legacy_title">Pikselin täydellinen tekstimittaus</string>
-    <string name="settings_pixel_perfect_measurement_legacy_summary">Ennen Android 15:tä tekstin mittaukset perustuvat tekstin etenemiseen rajaavan laatikon sijaan. Välttääksemme liukuvärien leikkauksen sanoituksissa, lisäämme muutaman pikselin sivuille. Tämä voi kuitenkin aiheuttaa tahattomia virheitä, jos välistys on käytössä. Näitä ongelmia voidaan lieventää, jos tämä kytkin otetaan käyttöön renderöimällä teksti bittikarttana ja analysoimalla se oikeiden välistystietojen poimimiseksi.</string>
     <string name="open_in_gramophone">Avaa Gramophonessa</string>
     <string name="settings_trim_lyrics_summary">Sanoitusrivin ensimmäisen kirjaimen edessä tai jälkeen olevilla välilyönneillä voi olla taiteellista arvoa. Jos olet eri mieltä, voit ottaa tämän asetuksen käyttöön poistaaksesi välilyönnit automaattisesti.</string>
     <string name="cannot_play_file">Tätä tiedostoa ei voida toistaa</string>

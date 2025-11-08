@@ -191,7 +191,6 @@
     <string name="device_type_dock">Dock</string>
     <string name="device_type_hdmi_arc">Zpětný kanál zvuku HDMI</string>
     <string name="device_type_line_digital">Digitální vstup</string>
-    <string name="settings_pixel_perfect_measurement_legacy_title">Perfektní měření textu Pixel</string>
     <string name="open_in_gramophone">Otevřít v Gramophone</string>
     <string name="cannot_play_file">Tento soubor nelze přehrát</string>
     <string name="settings_status_bar_lyrics_title">Texty na stavovém řádku</string>
@@ -219,7 +218,6 @@
     <string name="settings_play_on_launch_summary">Začít hrát hudbu při spuštění aplikace</string>
     <string name="settings_category_full_player">Plný přehrávač</string>
     <string name="deny_images"><![CDATA[Prosím odmítněte \"Fotky a Videa\" povolení]]></string>
-    <string name="settings_lyrics_char_scaling_summary">Výpočet rychlosti gradientu textu ve znacích za sekundu místo v pixelech za sekundu. Může to způsobit, že rychlost bude vypadat nepravidelně kvůli rozdílné délce znaků v pixelech.</string>
     <string name="device_type_bluetooth_a2dp">Bluetooth A2DP</string>
     <string name="device_type_usb_device">USB zařízení</string>
     <string name="device_type_hdmi">HDMI</string>
@@ -285,10 +283,8 @@
     <string name="remove">Odstranit</string>
     <string name="settings_status_bar_lyrics_summary">Povolit MeiZu metodu zobrazování textu skladby ve stavovém řádku (možné pouze na nějakých zařízeních)</string>
     <string name="delete">Smazat</string>
-    <string name="settings_pixel_perfect_measurement_legacy_summary">Před systémem Android 15 je měření textu založeno na zálohách místo na ohraničujícím rámečku. Abychom se vyhnuli ořezávání gradientu v textech, přidáme několik pixelů po stranách. To však může při zapnutém kerningu způsobit nechtěné artefakty, které se při zapnutí tohoto přepínače zmírní vykreslením textu do bitmapy a její analýzou pro získání správných distančních údajů.</string>
     <string name="spk_encoding_pcm_32bit">32bitový (int) PCM</string>
     <string name="spk_channel_out_9point1point4">9.1.4</string>
-    <string name="settings_lyrics_char_scaling">Škálování na základě znaků pro lyrický gradient</string>
     <string name="spk_channel_invalid">Neplatné</string>
     <string name="app_name">Gramophone</string>
     <string name="timer_expiry_end_of_this_song">Časovač spánku zastaví hudbu na konci této skladby</string>

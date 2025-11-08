@@ -261,10 +261,8 @@
     <string name="spk_encoding_ac3">AC-3</string>
     <string name="spk_encoding_e_ac3_joc">E-AC-3-JOC</string>
     <string name="device_type_line_analog">Entrada analógica</string>
-    <string name="settings_pixel_perfect_measurement_legacy_title">Medición de precisión a perfección de píxel</string>
     <string name="open_in_gramophone">Abrir en Gramophone</string>
     <string name="settings_lyrics_no_animation_summary">Desactivar todas las animaciones de transición de línea en las letras de canciones</string>
-    <string name="settings_lyrics_char_scaling">Escalado de gradiente basado en caracteres para letras de canciones</string>
     <string name="bitrate_format">%1$d kbps</string>
     <string name="bitrate_unknown">Tasa de bits desconocida</string>
     <string name="settings_open_source_licenses">Licencias de código abierto</string>
@@ -290,10 +288,8 @@
     <string name="package_type_explainer">Los archivos de instalación APK de Gramophone pueden ser creados por cualquiera porque Gramophone es de código abierto. Para ayudarte a recordar de dónde viene un paquete de instalación Gramophone provee el tipo de paquete\n\nEl tipo más común es \"Release\", que puede ser obtenido de F-Droid, Google Play, GitHub o IzzyOnDroid.\nEl tipo CI se refiere a compilaciones automáticas hechas para cada versión de código en GitHub. Estas versiones pueden ser inestables.\nPara otros tipos de paquetes, el nombre debería dar una idea razonable de su origen.</string>
     <string name="spk_encoding_aac_he_v2">HE-AAC v2</string>
     <string name="spk_encoding_ac4">AC-4</string>
-    <string name="settings_pixel_perfect_measurement_legacy_summary">En versiones previas a Android 15, las métricas de texto eran basadas en cuadros en lugar de delimitadores. Para evitar errores de gradiente en las letras, añadimos algunos píxeles alrededor. Sin embargo, esto puede causar errores visuales no deseados si el kerning está activado. Dichos errores se mitigan si se activa esta opción renderizando el texto en un mapa de bits y analizándolo para extraer los datos de espaciado correctos.</string>
     <string name="spk_channel_out_front_center">Frontal Central</string>
     <string name="spk_channel_out_front_left_of_center">Frontal izquierdo del centro</string>
-    <string name="settings_lyrics_char_scaling_summary">Calcular la velocidad del gradiente de letras en caracteres por segundo en lugar de píxeles por segundo. Puede causar que la velocidad se vea irregular debido a caracteres de diferente longitud en píxeles.</string>
     <string name="spk_encoding_wma_pro">WMA Pro</string>
     <string name="spk_encoding_flac">FLAC</string>
     <string name="spk_encoding_wma">WMA</string>

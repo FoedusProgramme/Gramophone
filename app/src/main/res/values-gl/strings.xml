@@ -268,7 +268,6 @@
     <string name="device_type_line_digital">Liña dixital</string>
     <string name="device_type_ble_speaker">Altofalante Bluetooth LE</string>
     <string name="device_type_ble_broadcast">Emisión Bluetooth LE</string>
-    <string name="settings_pixel_perfect_measurement_legacy_title">Medida do texto Pixel perfect</string>
     <string name="open_in_gramophone">Abrir con Gramophone</string>
     <string name="settings_content_based_color_summary">Activar creación da cor en función do álbum</string>
     <string name="settings_content_based_color">Cores en función do contido</string>
@@ -276,8 +275,6 @@
     <string name="cannot_play_file">Non se pode reproducir este ficheiro</string>
     <string name="settings_trim_lyrics_summary">Os espazos antes da primeira letra ou despois do final na liña das letras da canción podería ter valor artístico. Se non estás de acordo podes activar isto para omitir estes espazos.</string>
     <string name="settings_lyrics_no_animation_summary">Desactivar as animacións de transición de liñas nas letras</string>
-    <string name="settings_lyrics_char_scaling_summary">Calcular o gradiente de velocidade da letra en caracteres por segundo no lugar de píxeles por segundo. Podería facer que a velocidade fose irregular debido á diferente lonxitude de caracteres en píxeles.</string>
-    <string name="settings_lyrics_char_scaling">Gradiente da escala da letra baseado en caracteres</string>
     <string name="oh_no">Vaia!</string>
     <string name="send_email">Enviar correo</string>
     <string name="mix_port_flag_gapless_offload">Sen espazos</string>
@@ -290,7 +287,6 @@
     <string name="spk_encoding_aptx_hd">aptX HD</string>
     <string name="spk_encoding_ldac">LDAC</string>
     <string name="spk_encoding_mat">Dolby MAT</string>
-    <string name="settings_pixel_perfect_measurement_legacy_summary">Antes de Android 15, as medidas do texto estaban baseadas nos avances no lugar da caixa contedora. Para evitar o gradiente de recorte das letras, nós engadimos uns poucos píxeles nos laterais. Porén isto podería causar artefactos visuais se «kerning» está activado, que estaría minorado se activas esta opción mostrando texto nun mapa de bits e analizándoo para extraer os datos relevantes dos espazos.</string>
     <string name="settings_lyrics_no_animation">Desactivar animacións</string>
     <string name="dialog_bitrate">Taxa de bits</string>
     <string name="bitrate_format">%1$d kbps</string>

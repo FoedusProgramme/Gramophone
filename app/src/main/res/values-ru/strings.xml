@@ -330,7 +330,6 @@
     <string name="device_type_line_analog">Аналоговая линия</string>
     <string name="device_type_line_digital">Цифровая линия</string>
     <string name="cannot_play_file">Невозможно проиграть данный файл</string>
-    <string name="settings_lyrics_char_scaling">Масштабирование по символам для градиента букв</string>
     <string name="settings_open_source_licenses">Лицензия с открытым исходным кодом</string>
     <string name="mix_port_flag_raw">Сырой</string>
     <string name="mix_port_flag_tts">TTS</string>
@@ -364,17 +363,14 @@
     <string name="settings_mp3_index_seeking">Поиск индекса MP3</string>
     <string name="failed_to_parse_lyric">При парсинге текста произошла ошибка</string>
     <string name="spk_encoding_aac_he_v1">HE-AAC v1</string>
-    <string name="settings_lyrics_char_scaling_summary">Рассчитывает скорость градиента текста в символах в секунду, а не в пикселях в секунду. Это может привести к тому, что скорость будет выглядеть неравномерной из-за различной длины символов в пикселях.</string>
     <string name="device_type_hearing_aid">Слуховой аппарат</string>
     <string name="settings_lyrics_no_animation_summary">Отключает все анимации, которые используются для перехода между строками текста</string>
-    <string name="settings_pixel_perfect_measurement_legacy_summary">До Android 15, текстовые измерения основывались на достижениях, а не на ограничительных полях. Чтобы избежать градиентной вырезки в тексте, мы добавляем несколько пикселей на боках. Однако, это может привести к непредвиденным артефактам при включении kerning, которые смягчаются, если этот переключатель включен путем отображения текста в топовую карту и его анализа для извлечения данных о правильном интервале.</string>
     <string name="spk_channel_out_front_wide_right">Передняя широкая правая</string>
     <string name="spk_channel_out_low_frequency_2">Низкая частота 2</string>
     <string name="package_type_explainer">Gramophone APK может быть создан любым, потому что Граммофон является открытым исходным кодом. Чтобы помочь запомнить, откуда взялся APK, Граммофон предоставляет тип пакета.\n\nНаиболее распространенный тип - Release, который получают от F-Droid, Google Play, GitHub или IzzyOnDroid.\nТип пакета CI относится к автоматическим сборкам, сделанным для каждого перевода на GitHub. Эти сборки могут быть нестабильными.\nВ случае других типов упаковок наименование должно давать разумное указание на то, откуда был получен АРК.</string>
     <string name="send_email">Отправить email</string>
     <string name="spk_encoding_unknown_d">Неизвестный формат %d</string>
     <string name="spk_encoding_qcelp">QCELP</string>
-    <string name="settings_pixel_perfect_measurement_legacy_title">Измерение идеального пиксельного текста</string>
     <string name="oh_no">О нет!</string>
     <string name="device_type_usb_headset">USB гарнитура</string>
     <string name="spk_channel_out_front_wide_left">Передняя широкая левая</string>

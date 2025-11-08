@@ -248,10 +248,7 @@
     <string name="settings_export_logs">导出应用日志</string>
     <string name="settings_audio_quality_info">音频质量信息</string>
     <string name="settings_audio_quality_info_summary">在播放器界面展示音频质量、格式信息</string>
-    <string name="settings_pixel_perfect_measurement_legacy_summary">在 Android 15 之前，文本测量是基于字符宽度而非边界框。为了避免歌词中的渐变裁剪问题，我们在两侧添加了几个像素。然而，如果启用了字距调整，这可能会导致意外的瑕疵。通过启用此开关，可以将文本渲染到位图并对其进行分析以提取正确的间距数据，从而缓解这些瑕疵。</string>
     <string name="cannot_play_file">无法播放该文件</string>
-    <string name="settings_lyrics_char_scaling_summary">以字符每秒计算歌词渐变速度，而非像素每秒。这可能会导致速度看起来不规律，因为不同字符的像素长度不同。</string>
-    <string name="settings_lyrics_char_scaling">基于字符缩放的歌词渐变效果</string>
     <string name="dialog_bitrate">比特率</string>
     <string name="bitrate_format">%1$d kbps</string>
     <string name="bitrate_unknown">未知比特率</string>
@@ -312,7 +309,6 @@
     <string name="device_type_line_analog">模拟线</string>
     <string name="device_type_line_digital">数据线</string>
     <string name="device_type_ble_broadcast">BLE 广播</string>
-    <string name="settings_pixel_perfect_measurement_legacy_title">完美的像素文本测量</string>
     <string name="mix_port_flag_bit_perfect">完美</string>
     <string name="mix_port_flag_ultrasound">超声波</string>
     <string name="mix_port_flag_spatializer">空间音频</string>

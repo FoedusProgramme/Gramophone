@@ -264,12 +264,9 @@
     <string name="spk_encoding_pcm_24bit">24-bit PCM</string>
     <string name="spk_encoding_pcm_float">32-bit (float) PCM</string>
     <string name="device_type_line_digital">Digitaler Anschluss</string>
-    <string name="settings_pixel_perfect_measurement_legacy_title">Pixelgenaue Textabmessung</string>
     <string name="settings_lyrics_no_animation">Animationen deaktivieren</string>
-    <string name="settings_lyrics_char_scaling">Buchstabenbasierte Skalierung für den Liedtextfarbverlauf</string>
     <string name="device_type_aux_line">AUX-Anschluss</string>
     <string name="device_type_line_analog">Analoger Anschluss</string>
-    <string name="settings_pixel_perfect_measurement_legacy_summary">Vor Android 15 basierten Textabmessungen auf Fortschritt anstatt Begrenzungsrahmen. Um Überschneidungen Farbverläufen in Liedtexten zu vermeiden, haben wir seitlich einige Pixel hinzugefügt. Dies kann jedoch unbeabsichtigte Artefakte verursachen, wenn Kerning aktiviert ist, was diese Einstellung verhindert, indem Text zu einer Bitmap gerendert und analysiert wird, um die richtigen Abstandsdaten zu extrahieren.</string>
     <string name="spk_channel_out_top_back_left">Oben Hinten Links</string>
     <string name="spk_channel_out_bottom_front_left">Unten Vorne Links</string>
     <string name="spk_encoding_pcm_24bit_big_endian">24-bit PCM (big endian)</string>
@@ -284,7 +281,6 @@
     <string name="send_email_manually">Bitte schick das Protokoll an nift4dev@gmail.com - E-Mail-App wurde nicht gefunden</string>
     <string name="spk_channel_out_top_front_right">Oben Vorne Rechts</string>
     <string name="device_type_ble_broadcast">Bluetooth LE Broadcast</string>
-    <string name="settings_lyrics_char_scaling_summary">Liedtextfarbverlaufgeschwindigkeit in Buchstaben pro Sekunde anstatt Pixeln pro Sekunde berechnen. Die Geschwindigkeit könnte aufgrund unterschiedlicher Länge von Buchstaben in Pixeln unregelmäßig aussehen.</string>
     <string name="spk_channel_out_bottom_front_center">Unten Vorne Center</string>
     <string name="spk_channel_out_top_front_center">Oben Vorne Mitte</string>
     <string name="settings_lyrics_no_animation_summary">Alle Zeilenübergangsanimationen deaktivieren</string>

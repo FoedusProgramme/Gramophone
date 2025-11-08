@@ -266,16 +266,12 @@
     <string name="device_type_ble_speaker">Bluetooth LE スピーカー</string>
     <string name="device_type_ble_broadcast">Bluetooth LE ブロードキャスト</string>
     <string name="spk_channel_out_7point1_surround">サラウンド (7.1)</string>
-    <string name="settings_pixel_perfect_measurement_legacy_summary">Android 15 以前では、テキストの測定は境界ボックスではなくアドバンスに基づいています。歌詞のグラデーションクリッピングを回避するために、側面にいくつかのピクセルを追加します。ただし、カーニングが有効化されていると意図しないアーティファクトが発生する可能性があります。この機能に切り替えるとテキストをビットマップにレンダリングと分析をして適切な間隔データを抽出することでアーティファクトを軽減させます。</string>
-    <string name="settings_pixel_perfect_measurement_legacy_title">ピクセルパーフェクトなテキスト測定</string>
     <string name="open_in_gramophone">Gramophone で開く</string>
     <string name="delete_really">本当に「%s」を削除しますか？この操作は元に戻せません。</string>
     <string name="settings_trim_lyrics_summary">歌詞の最初の文字の前や行末のスペースには芸術的な価値がある場合があります。もし気に入らない場合は、このスイッチを ON にして、スペースを自動で削除できます。</string>
     <string name="cannot_play_file">このファイルは再生できません</string>
     <string name="settings_lyrics_no_animation_summary">歌詞の遷移アニメーションをすべて無効化します</string>
-    <string name="settings_lyrics_char_scaling">文字ベースの歌詞のグラデーションのスケーリング</string>
     <string name="settings_lyrics_no_animation">アニメーションを無効化</string>
-    <string name="settings_lyrics_char_scaling_summary">歌詞のグラデーション速度をピクセル/秒ではなく文字/秒で計算します。ピクセル単位の文字長が異なるため、速度が不規則に見える場合があります。</string>
     <string name="dialog_bitrate">ビットレート</string>
     <string name="bitrate_format">%1$d kbps</string>
     <string name="bitrate_unknown">不明なビットレート</string>

@@ -272,15 +272,11 @@
     <string name="device_type_line_digital">டிசிட்டல் வரி</string>
     <string name="device_type_ble_speaker">ஊடலை லு ச்பீக்கர்</string>
     <string name="device_type_ble_broadcast">ஊடலை லே ஒளிபரப்பு</string>
-    <string name="settings_pixel_perfect_measurement_legacy_title">படப்புள்ளி சரியான உரை அளவீட்டு</string>
-    <string name="settings_pixel_perfect_measurement_legacy_summary">ஆண்ட்ராய்டு 15 க்கு முன், உரை அளவீடுகள் எல்லை பெட்டிக்கு பதிலாக முன்னேற்றங்களை அடிப்படையாகக் கொண்டவை. பாடல் வரிகளில் சாய்வு கிளிப்பிங்கைத் தவிர்க்க, நாங்கள் சில பிக்சல்களை பக்கங்களில் சேர்க்கிறோம். எவ்வாறாயினும், கெர்னிங் இயக்கப்பட்டிருந்தால் இது திட்டமிடப்படாத கலைப்பொருட்களை ஏற்படுத்தக்கூடும், இது உரையை ஒரு பிட்மேப்பிற்கு வழங்குவதன் மூலமும், சரியான இடைவெளி தரவைப் பிரித்தெடுக்க பகுப்பாய்வு செய்வதன் மூலமும் இந்த மாற்று இயக்கப்பட்டிருந்தால் குறைக்கப்படும்.</string>
     <string name="open_in_gramophone">கிராமபோனில் திறக்கவும்</string>
     <string name="settings_trim_lyrics_summary">ஒரு பாடல் வரியில் முதல் கடிதத்திற்கு முன் அல்லது அதற்குப் பின் உள்ள இடங்கள் கலை மதிப்பைக் கொண்டிருக்கலாம். நீங்கள் உடன்படவில்லை என்றால், இந்த இடங்களை தானாக அகற்ற இந்த மாற்றத்தை இயக்கலாம்.</string>
     <string name="cannot_play_file">இந்த கோப்பை இயக்க முடியாது</string>
     <string name="settings_lyrics_no_animation">அனிமேசன்களை முடக்கு</string>
     <string name="settings_lyrics_no_animation_summary">அனைத்து வரி மாற்றம் பாடல் அனிமேசன்களையும் முடக்கு</string>
-    <string name="settings_lyrics_char_scaling_summary">நொடிக்கு பிக்சல்களுக்கு பதிலாக நொடிக்கு எழுத்துக்களில் பாடல் சாய்வு வேகத்தை கணக்கிடுங்கள். பிக்சல்களில் மாறுபட்ட எழுத்து நீளம் காரணமாக விரைவு ஒழுங்கற்றதாக இருக்கும்.</string>
-    <string name="settings_lyrics_char_scaling">பாடல் சாய்வுக்கான எழுத்து அடிப்படையிலான அளவிடுதல்</string>
     <string name="dialog_bitrate">பிட்ரேட்</string>
     <string name="bitrate_format">%1$d KBPS</string>
     <string name="bitrate_unknown">தெரியாத பிட்ரேட்</string>

@@ -238,13 +238,11 @@
     <string name="device_type_line_digital">Ligne digitale</string>
     <string name="cannot_play_file">Impossible de jouer ce fichier</string>
     <string name="settings_lyrics_no_animation">Désactiver les animations</string>
-    <string name="settings_lyrics_char_scaling">Mise à l\'échelle basée sur les caractères pour les gradients de paroles</string>
     <string name="package_type_explainer">Les APKs de Gramophone peuvent être créés par tout le monde, car Gramophone est open source. Pour vous aider à vous souvenir d\'où provient un APK, Gramophone indique le type de paquet.\n\nLe type le plus courant est Release, qui est obtenu depuis F-Droid, Google Play, GitHub ou IzzyOnDroid.\nLe type de paquet CI fait référence aux builds automatisés effectués pour chaque commit sur GitHub.Ces builds peuvent être instables.\nPour les autres types de paquets, le nom devrait donner une indication raisonnable de la provenance de l\'APK.</string>
     <string name="spk_encoding_aac_xhe">xHE-AAC</string>
     <string name="settings_trim_lyrics_summary">Les espaces avant ou après les premières lettres dans des paroles peuvent avoir une valeur artistique. Si vous n\'êtes pas d\'accord, vous pouvez activer ce bouton pour supprimer ces espaces automatiquement.</string>
     <string name="device_type_dock">Station d\'accueil</string>
     <string name="settings_contributors_click">%S (cliquez pour en savoir plus!)</string>
-    <string name="settings_lyrics_char_scaling_summary">Calculer la vélocité des gradient des paroles en caractères par seconde au lieu de pixel par seconde. Peut rendre la vitesse apparemment irrégulière à cause des différentes tailles de caractères en pixels.</string>
     <string name="dialog_bitrate">Bitrate</string>
     <string name="device_type_bluetooth_a2dp">Bluetooth A2DP</string>
     <string name="device_type_builtin_speaker">Haut-parleur intégré</string>
@@ -254,8 +252,6 @@
     <string name="device_type_hdmi_arc">Canal de retour audio HDMI</string>
     <string name="device_type_ble_speaker">Haut-parleur Bluetooth LE</string>
     <string name="device_type_ble_broadcast">Diffusion Bluetooth LE</string>
-    <string name="settings_pixel_perfect_measurement_legacy_title">Mesure de texte au pixel près</string>
-    <string name="settings_pixel_perfect_measurement_legacy_summary">Avant Android 15, les mesures de texte sont basées sur les approches plutôt que sur le cadre de délimitation. Pour éviter l\'écrêtage du gradient dans les paroles, nous ajoutons quelques pixels sur les côtés. Cependant, cela peut entraîner des artefacts involontaires si le crénelage est activé, qui sont atténués si cette option est activée en rendant le texte dans un bitmap et en l\'analysant pour extraire les données d\'espacement appropriées.</string>
     <string name="sort_by_album_artist">Artiste de l\'album</string>
     <string name="sort_by_file_path">Chemin d\'accès au fichiers</string>
     <string name="failed_to_parse_lyric">Impossible d\'analyser les paroles</string>
