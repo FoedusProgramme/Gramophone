@@ -469,4 +469,10 @@
     <string name="smart">Смарт</string>
     <string name="scroll_to_playing">Прокрутіть до відтворення пісні</string>
     <string name="duration_queue">%s годин</string>
+    <string name="playback_speed">Швидкість відтворення</string>
+    <string name="tempo">Темп</string>
+    <string name="pitch">Крок</string>
+    <string name="tempo_pitch_value">%s: %.2fx</string>
+    <string name="lock_tempo_pitch">Фіксуйте темп і висоту звуку</string>
+    <string name="reset">Скинути</string>
 </resources>
