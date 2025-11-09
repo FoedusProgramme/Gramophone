@@ -459,4 +459,10 @@
     <string name="smart">Nutikas</string>
     <string name="scroll_to_playing">Loo esitamiseks keri</string>
     <string name="duration_queue">%s tundi</string>
+    <string name="playback_speed">Taasesituse kiirus</string>
+    <string name="tempo">Tempo</string>
+    <string name="pitch">Helivaljus</string>
+    <string name="tempo_pitch_value">%s: %.2fx</string>
+    <string name="lock_tempo_pitch">Lukusta tempo ja helivaljus</string>
+    <string name="reset">Lähtesta</string>
 </resources>
