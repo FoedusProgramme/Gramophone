@@ -463,4 +463,10 @@
     <string name="smart">Intel·ligent</string>
     <string name="scroll_to_playing">Desplaceu per reproduir la cançó</string>
     <string name="duration_queue">%s hores</string>
+    <string name="reset">Reinicialitza</string>
+    <string name="playback_speed">Velocitat de reproducció</string>
+    <string name="tempo">Tempo</string>
+    <string name="pitch">To</string>
+    <string name="tempo_pitch_value">%s: %.2fx</string>
+    <string name="lock_tempo_pitch">Bloqueja el tempo i el to</string>
 </resources>
