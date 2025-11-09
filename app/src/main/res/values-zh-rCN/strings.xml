@@ -382,4 +382,8 @@
     </plurals>
     <string name="timer_expiry_eos">睡眠计时器将在 %s 后暂停歌曲</string>
     <string name="timer_expiry_end_of_this_song">睡眠计时器将在歌曲结束后暂停</string>
+    <string name="playback_speed">播放速度</string>
+    <string name="tempo">速度</string>
+    <string name="lock_tempo_pitch">锁定节奏和音调</string>
+    <string name="reset">重置</string>
 </resources>
