@@ -469,4 +469,10 @@
     <string name="smart">Inteligentny</string>
     <string name="scroll_to_playing">Przewiń do odtwarzanego utworu</string>
     <string name="duration_queue">%s godzin</string>
+    <string name="playback_speed">Prędkość odtwarzania</string>
+    <string name="tempo">Tempo</string>
+    <string name="pitch">Ton</string>
+    <string name="tempo_pitch_value">%s: %.2fx</string>
+    <string name="lock_tempo_pitch">Zablokuj tempo i tonację</string>
+    <string name="reset">Zresetuj</string>
 </resources>
