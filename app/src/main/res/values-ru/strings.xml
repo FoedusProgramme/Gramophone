@@ -471,4 +471,10 @@
     <string name="smart">Умный</string>
     <string name="duration_queue">%s ч</string>
     <string name="scroll_to_playing">Перейти к текущему треку</string>
+    <string name="playback_speed">Скорость воспроизведения</string>
+    <string name="tempo">Темп</string>
+    <string name="pitch">Высота тона</string>
+    <string name="tempo_pitch_value">%s: %.2fx</string>
+    <string name="lock_tempo_pitch">Зафиксировать темп и высоту тона</string>
+    <string name="reset">Сброс</string>
 </resources>
