@@ -454,4 +454,10 @@
     <string name="smart">スマート</string>
     <string name="scroll_to_playing">再生中の曲までスクロール</string>
     <string name="duration_queue">%s 時間</string>
+    <string name="playback_speed">再生速度</string>
+    <string name="tempo">テンポ</string>
+    <string name="pitch">ピッチ</string>
+    <string name="tempo_pitch_value">%s: %.2fx</string>
+    <string name="lock_tempo_pitch">テンポとピッチをロック</string>
+    <string name="reset">リセット</string>
 </resources>
