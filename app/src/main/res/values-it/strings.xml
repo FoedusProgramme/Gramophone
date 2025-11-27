@@ -253,4 +253,10 @@
     <string name="send_email">Invia email</string>
     <string name="device_type_hdmi">HDMI</string>
     <string name="oh_no">Oh no!</string>
+    <plurals name="folders_plural">
+        <item quantity="one">% Cartella</item>
+        <item quantity="many">% Cartelle</item>
+        <item quantity="other"></item>
+    </plurals>
+    <string name="playback_speed">Velocità riproduzione</string>
 </resources>
