@@ -292,7 +292,7 @@
     <string name="audio_not_initialized">Le système de lecture audio n\'a pas été initialisé. Essaye de jouer quelque chose !</string>
     <string name="mix_port_flag_spatializer">Son spatial</string>
     <string name="mix_port_flag_ultrasound">Ultrason</string>
-    <string name="gramophone_crashed_explainer2">Gramophone à crasher :(\n\nMerci de m\'envoyer un rapport de bug pour que les problèmes comme celle qui a conduit à ce crash peut être résolu !\n\nChaques situations aussi unique que la musique, sans votre aide il est probable que ce bug ne sera <b>PAS</b> résolu !</string>
+    <string name="gramophone_crashed_explainer2">Gramophone a crashé :(\n\nMerci de m\'envoyer un rapport de bug pour que les problèmes comme celui qui a conduit à ce crash puissent être résolu !\n\nChaque situation est aussi unique que la musique, sans votre aide il est probable que ce bug ne sera <b>PAS</b> résolu !</string>
     <string name="spk_encoding_opus">Opus</string>
     <string name="audio_signal_chain">Chaîne son spatial</string>
     <string name="settings_lyrics_no_animation_summary">Désactive la transition de toutes les lignes dans l\'animation des paroles</string>
