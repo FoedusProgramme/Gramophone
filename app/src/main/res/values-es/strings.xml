@@ -186,7 +186,7 @@
     <string name="delete">Borrar</string>
     <string name="yes">Sí</string>
     <string name="no">No</string>
-    <string name="sort_by_album_artist">Álbum del artista</string>
+    <string name="sort_by_album_artist">Artista del álbum - &gt; título</string>
     <string name="delete_really">¿Seguro/a que querés borrar \"%s\"? Esta acción no puede ser cambiada.</string>
     <string name="sort_by_file_path">Ruta del archivo</string>
     <string name="spk_channel_out_mono">Mono</string>
@@ -398,4 +398,9 @@
     <string name="offload_enabled_if_supported">Siempre habilitado</string>
     <string name="settings_stop_on_dismiss">Detenerse al descartar</string>
     <string name="settings_stop_on_dismiss_summary">Detener la reproducción cuando la aplicación se descarta de recientes</string>
+    <string name="playback_speed">Velocidad de reproducción</string>
+    <string name="tempo">Tempo</string>
+    <string name="pitch">Tono</string>
+    <string name="lock_tempo_pitch">bloquear el tempo y el tono</string>
+    <string name="reset">Restablecer</string>
 </resources>
