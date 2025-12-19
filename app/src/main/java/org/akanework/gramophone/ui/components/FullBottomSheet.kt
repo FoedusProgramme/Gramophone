@@ -43,7 +43,7 @@ import androidx.media3.common.MediaMetadata
 import androidx.media3.common.PlaybackParameters
 import androidx.media3.common.Player
 import androidx.media3.common.util.Log
-import androidx.media3.session.MediaController
+import androidx.media3.session.MediaBrowser
 import androidx.media3.session.SessionError
 import androidx.media3.session.SessionResult
 import androidx.preference.PreferenceManager
@@ -96,7 +96,6 @@ import org.akanework.gramophone.logic.utils.AudioFormatDetector.SpatialFormat
 import org.akanework.gramophone.logic.utils.CalculationUtils
 import org.akanework.gramophone.logic.utils.ColorUtils
 import org.akanework.gramophone.logic.utils.Flags
-import org.akanework.gramophone.logic.utils.convertDurationToTimeStamp
 import org.akanework.gramophone.logic.utils.exoplayer.oem.SystemMediaControlResolver
 import org.akanework.gramophone.ui.MainActivity
 import org.akanework.gramophone.ui.fragments.ArtistSubFragment
@@ -109,7 +108,6 @@ import kotlin.math.min
 import androidx.core.content.edit
 import androidx.core.widget.NestedScrollView
 import androidx.media3.common.PlaybackParameters
-import androidx.media3.session.MediaBrowser
 import com.google.android.material.checkbox.MaterialCheckBox
 
 @SuppressLint("NotifyDataSetChanged")
@@ -224,8 +222,6 @@ class FullBottomSheet
     private var colorSecondaryContainerFinalColor: Int = -1
     private var colorOnSecondaryContainerFinalColor: Int = -1
     private var colorContrastFaintedFinalColor: Int = -1
-    private var playlistNowPlaying: TextView? = null
-    private var playlistNowPlayingCover: ImageView? = null
     private var lastDisposable: Disposable? = null
 
     init {
@@ -416,6 +412,12 @@ class FullBottomSheet
                 Player.REPEAT_MODE_ONE -> Player.REPEAT_MODE_OFF
                 else -> throw IllegalStateException()
             }
+        }
+
+        bottomSheetPlaybackSpeedButton.setOnClickListener {
+            ViewCompat.performHapticFeedback(it, HapticFeedbackConstantsCompat.CONTEXT_CLICK)
+            if (instance != null)
+                showPlaybackSpeedDialog()
         }
 
         bottomSheetFavoriteButton.addOnCheckedChangeListener(this)
@@ -1094,6 +1096,8 @@ class FullBottomSheet
             )
 
             bottomSheetTimerButton.iconTint =
+                ColorStateList.valueOf(colorOnSurface)
+            bottomSheetPlaybackSpeedButton.iconTint =
                 ColorStateList.valueOf(colorOnSurface)
             bottomSheetPlaylistButton.iconTint =
                 ColorStateList.valueOf(colorOnSurface)
