@@ -106,6 +106,11 @@ import uk.akane.libphonograph.items.albumId
 import uk.akane.libphonograph.items.artistId
 import uk.akane.libphonograph.manipulator.ItemManipulator
 import kotlin.math.min
+import androidx.core.content.edit
+import androidx.core.widget.NestedScrollView
+import androidx.media3.common.PlaybackParameters
+import androidx.media3.session.MediaBrowser
+import com.google.android.material.checkbox.MaterialCheckBox
 
 @SuppressLint("NotifyDataSetChanged")
 class FullBottomSheet
