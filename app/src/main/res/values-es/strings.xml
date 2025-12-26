@@ -361,7 +361,7 @@
     <string name="spk_encoding_alac">ALAC</string>
     <string name="spk_encoding_aac_adts_lc">AAC-LC en ADTS</string>
     <string name="send_email">Enviar un correo</string>
-    <string name="send_email_manually">Por favor, envía el registro a nift4dev@gmail.com - no pude encontrar la aplicación de correo</string>
+    <string name="send_email_manually">Por favor, envía el registro a nift4dev@gmail.com - No se encontró una aplicación de correo</string>
     <string name="settings_contributors_click">%s (¡clic para más!)</string>
     <string name="app_name">Gramophone</string>
     <plurals name="folders_plural">
@@ -403,4 +403,12 @@
     <string name="pitch">Tono</string>
     <string name="lock_tempo_pitch">bloquear el tempo y el tono</string>
     <string name="reset">Restablecer</string>
+    <string name="offload_enabled_if_gapless">Activado si la reproducción sin pausas es posible</string>
+    <string name="settings_audio_offload">Audio offload (ahorra batería)</string>
+    <string name="settings_telegram">Telegram</string>
+    <string name="translators">Traductores</string>
+    <string name="settings_replaygain_mode">Modo</string>
+    <string name="settings_replaygain_no_rg_amp">Atenuación (no RG)</string>
+    <string name="settings_replaygain_drc">Habilita DRC</string>
+    <string name="settings_replaygain_drc_desc">\"Usar compresión de rango dinámico (DRC) para evitar saturación (recomendado). Si se desactiva, se bajará el volumen general, perdiendo la uniformidad de la normalización.</string>
 </resources>
