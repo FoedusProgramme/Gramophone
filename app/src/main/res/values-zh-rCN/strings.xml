@@ -308,7 +308,7 @@
     <string name="device_type_line_analog">模拟线</string>
     <string name="device_type_line_digital">数据线</string>
     <string name="device_type_ble_broadcast">BLE 广播</string>
-    <string name="mix_port_flag_bit_perfect">完美</string>
+    <string name="mix_port_flag_bit_perfect">位元完美</string>
     <string name="mix_port_flag_ultrasound">超声波</string>
     <string name="mix_port_flag_spatializer">空间音频</string>
     <string name="mix_port_flag_gapless_offload">Gapless offload</string>
