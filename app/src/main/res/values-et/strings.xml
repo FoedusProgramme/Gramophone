@@ -454,8 +454,8 @@
     <string name="settings_replaygain_drc">Kasuta DRC-d</string>
     <string name="settings_replaygain_no_rg_amp">Sumbumine (ilma EVT-ta)</string>
     <string name="settings_replaygain_drc_desc">Kasuta dünaamilise ulatuse tihendamist (DRC - Dynamic range compression) kaitseks ülevõimendamise vastu (soovituslik). Kui see eelistus on lülitatud välja, siis selle asemel vähendatakse helivajust (helivaljus pole enam samal tasemel ja see olemuslikult kaotab EVT normaliseerimise mõju).</string>
-    <string name="track_gain">Loo esitusvaljuse tundlikkus</string>
-    <string name="album_gain">Albumi esitusvaljuse tundlikkus</string>
+    <string name="track_gain">Kõikide lugude esitusvaljus on sama</string>
+    <string name="album_gain">Säilita albumite esitusvaljus</string>
     <string name="smart">Nutikas</string>
     <string name="scroll_to_playing">Loo esitamiseks keri</string>
     <string name="duration_queue">%s tundi</string>
@@ -465,4 +465,10 @@
     <string name="tempo_pitch_value">%s: %.2fx</string>
     <string name="lock_tempo_pitch">Lukusta tempo ja helivaljus</string>
     <string name="reset">Lähtesta</string>
+    <string name="settings_replaygain_boost">Eelvõimendatud</string>
+    <string name="d_db">%d dB</string>
+    <string name="settings_replaygain_boost_desc">"„Eelvõimendatud“ tagab et muusika heli on valjem, kui esitusvaljuse tundlikkus määrab ja sinu seadmes on seadistatud. (Aga ta ei ületa 100% valjust, kui see on seadmes määratud.) Selle režiimiga saad kuulata muusikat sama valjult, kui muude rakenduste, nagu mängude, helisid. Palun arvesta, et see funktsionaalsus on katseline ja võib tekitada segadust, kui kasutad täiendavaid ekvalaiserirakendusi ning ei toimi Bluetoothi kõrvaklappidega. Kui heli esitamises tekib probleeme, siis lülita ta välja määrates valjuseks 0 dB. "</string>
+    <string name="settings_replaygain_no_rg_amp_desc">Vähenda valjute lugude heli, kuid seal pole esitusvaljuse tundlikkuse silte</string>
+    <string name="settings_replaygain_preamp_desc">Suurenda või vähenda valjute lugude heli esitusvaljuse tundlikkuse siltide alusel. Ülevõimenduse kaitse sekkumise tõttu võivad suured väärtused tekitada kadu helide dünaamikas.</string>
+    <string name="settings_replaygain_mode_desc">Valik „Nutikas“ säilitab automaatselt albumi dünaamikat, kuid ühe albumi lood on järjest esitamisel.</string>
 </resources>
