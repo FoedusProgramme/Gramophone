@@ -264,7 +264,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         nm = NotificationManagerCompat.from(this)
         prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         setListener(this)
-        setMediaNotificationProvider(MeiZuLyricsMediaNotificationProvider(this,{ lastSentHighlightedLyric },nfBundle))
+        setMediaNotificationProvider(MeiZuLyricsMediaNotificationProvider(this){ lastSentHighlightedLyric })
         setForegroundServiceTimeoutMs(120000)
         setShowNotificationForEmptyPlayer(SHOW_NOTIFICATION_FOR_EMPTY_PLAYER_AFTER_STOP_OR_ERROR)
         if (mayThrowForegroundServiceStartNotAllowed()
@@ -598,21 +598,6 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         Log.i(TAG, "onStartCommand(): $intent, ${extras?.toString()}")
 	    return super.onStartCommand(intent, flags, startId)
     }
-
-    override fun onMediaMetadataChanged(metadata: MediaMetadata) {
-        val title = metadata.title.toString()
-        val artist = metadata.artist.toString()
-
-        val bundle = IsLandHelp.isLandMusicShare(
-            addpic = Bundle(),
-            title = title,
-            content = artist,
-            shareContent = "$title - $artist"
-        )
-        nfBundle.putAll(bundle)
-    }
-
-
 
     override fun onSetRating(
         session: MediaSession,

@@ -10,6 +10,7 @@ import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
 import com.google.common.collect.ImmutableList
 import org.akanework.gramophone.R
+import org.akanework.gramophone.logic.utils.exoplayer.oem.xiaomi.IsLandHelp
 
 var isManualNotificationUpdate = false
 private const val FLAG_ALWAYS_SHOW_TICKER = 0x01000000
@@ -17,8 +18,7 @@ private const val FLAG_ONLY_UPDATE_TICKER = 0x02000000
 
 private class InnerMeiZuLyricsMediaNotificationProvider(
     context: Context,
-    private val tickerProvider: () -> CharSequence?,
-    private val bundleProvider: Bundle
+    private val tickerProvider: () -> CharSequence?
 ) : DefaultMediaNotificationProvider(context) {
     override fun addNotificationActions(
         mediaSession: MediaSession,
@@ -27,8 +27,17 @@ private class InnerMeiZuLyricsMediaNotificationProvider(
         actionFactory: MediaNotification.ActionFactory
     ): IntArray {
         val ticker = tickerProvider()
+        val title = mediaSession.player.mediaMetadata.title.toString()
+        val artist = mediaSession.player.mediaMetadata.artist.toString()
+
+        val bundle = IsLandHelp.isLandMusicShare(
+            addpic = Bundle(),
+            title = title,
+            content = artist,
+            shareContent = "$title - $artist"
+        )
+        builder.extras.putAll(bundle)
         builder.setTicker(ticker)
-        builder.addExtras(bundleProvider)
         if (ticker != null) {
             builder.addExtras(Bundle().apply {
                 putInt("ticker_icon", R.drawable.ic_gramophone_mono16)
@@ -43,9 +52,8 @@ private class InnerMeiZuLyricsMediaNotificationProvider(
 class MeiZuLyricsMediaNotificationProvider(
     context: MediaSessionService,
     private val tickerProvider: () -> CharSequence?,
-    private val bundleProvider: Bundle
 ) : MediaNotification.Provider {
-    private val inner = InnerMeiZuLyricsMediaNotificationProvider(context, tickerProvider,bundleProvider).apply {
+    private val inner = InnerMeiZuLyricsMediaNotificationProvider(context, tickerProvider).apply {
         setSmallIcon(R.drawable.ic_gramophone_monochrome)
     }
 
