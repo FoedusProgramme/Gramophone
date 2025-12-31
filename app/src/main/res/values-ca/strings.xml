@@ -458,8 +458,8 @@
     <string name="settings_replaygain_no_rg_amp">Atenuació (no RG)</string>
     <string name="settings_replaygain_drc">Activa la DRC</string>
     <string name="settings_replaygain_drc_desc">Utilitza la «Compressió dinàmica de l\'interval» (DRC) com a protecció del retallat (recomanat). Si està desactivat, el volum es reduirà (el volum no serà al mateix nivell, destruint l\'efecte de normalització).</string>
-    <string name="track_gain">Guany de pista</string>
-    <string name="album_gain">Guany d\'àlbum</string>
+    <string name="track_gain">Totes les pistes amb la mateixa sonoritat</string>
+    <string name="album_gain">Mantén la dinàmica de l\'àlbum</string>
     <string name="smart">Intel·ligent</string>
     <string name="scroll_to_playing">Desplaceu per reproduir la cançó</string>
     <string name="duration_queue">%s hores</string>
@@ -469,4 +469,10 @@
     <string name="pitch">To</string>
     <string name="tempo_pitch_value">%s: %.2fx</string>
     <string name="lock_tempo_pitch">Bloqueja el tempo i el to</string>
+    <string name="settings_replaygain_boost">Accentuació</string>
+    <string name="d_db">%d dB</string>
+    <string name="settings_replaygain_boost_desc">"«Accentuació» donarà sortida tant a ReplayGain com a altres músiques a un volum més alt que l\'establert al dispositiu. (Si el volum del dispositiu s\'estableix a prop del 100%, Accentuació no augmentarà el volum). Amb Accentuació, podeu gaudir de la música que té una sonoritat similar a altres aplicacions, com ara jocs. Tingueu en compte que aquesta funció és experimental i pot interferir amb aplicacions externes d\'equalització. Accentuació no funciona amb auriculars Bluetooth. En cas de qualsevol problema relacionat amb el volum, desactiveu Accentuació establint-lo a 0 dB. "</string>
+    <string name="settings_replaygain_no_rg_amp_desc">Redueix el volum de les cançons fortes que no tenen etiquetes ReplayGain</string>
+    <string name="settings_replaygain_preamp_desc">Augmenta o disminueix el volum de cançons amb etiquetes ReplayGain. Els valors més alts poden causar pèrdua de la dinàmica a causa de la prevenció del retallat.</string>
+    <string name="settings_replaygain_mode_desc">«Intel·ligent» manté automàticament la dinàmica de l\'àlbum només quan reprodueix cançons d\'un àlbum consecutivament.</string>
 </resources>
