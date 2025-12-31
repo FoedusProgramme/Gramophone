@@ -456,7 +456,13 @@
     <string name="settings_replaygain_no_rg_amp">衰减（无回放增益）</string>
     <string name="settings_replaygain_drc">启用动态范围压缩</string>
     <string name="settings_replaygain_drc_desc">使用“动态范围压缩”作为削波保护（推荐）。如果禁用，音量将降低（音量无法保持一致，破坏标准化效果）。</string>
-    <string name="track_gain">曲目增益</string>
-    <string name="album_gain">专辑增益</string>
+    <string name="track_gain">所有曲目音量均衡</string>
+    <string name="album_gain">保留专辑动态范围</string>
     <string name="smart">智能</string>
+    <string name="settings_replaygain_boost">增强</string>
+    <string name="d_db">%d dB</string>
+    <string name="settings_replaygain_boost_desc">"启用“增强”后，无论音乐是否带有回放增益，输出音量都会高于您设备当前设置的音量。（如果您的设备音量设置接近 100%，此功能不会增加音量）。通过此功能，您可以让音乐与游戏等其他应用的音量保持一致。请注意，此功能尚处于实验阶段，可能与外部均衡器应用冲突，且不支持蓝牙耳机。如果出现任何音量相关问题，请将“增强”设置为 0 dB 以禁用此功能。 "</string>
+    <string name="settings_replaygain_no_rg_amp_desc">对无回放增益标签的过响歌曲自动降低音量</string>
+    <string name="settings_replaygain_preamp_desc">带有回放增益标签的歌曲自动增大或减小音量。较高的值可能会因削波预防而导致动态范围损失。</string>
+    <string name="settings_replaygain_mode_desc">“智能”仅在连续播放同一专辑中的歌曲时才会自动保留专辑动态范围。</string>
 </resources>
