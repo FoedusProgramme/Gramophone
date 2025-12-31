@@ -119,6 +119,7 @@ import org.akanework.gramophone.logic.utils.exoplayer.EndedWorkaroundPlayer
 import org.akanework.gramophone.logic.utils.exoplayer.GramophoneExtractorsFactory
 import org.akanework.gramophone.logic.utils.exoplayer.GramophoneMediaSourceFactory
 import org.akanework.gramophone.logic.utils.exoplayer.GramophoneRenderFactory
+import org.akanework.gramophone.logic.utils.exoplayer.oem.xiaomi.IsLandHelp
 import org.akanework.gramophone.ui.LyricWidgetProvider
 import org.akanework.gramophone.ui.MainActivity
 import uk.akane.libphonograph.items.albumId
@@ -190,6 +191,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
     private val scope = CoroutineScope(Dispatchers.Default)
     private val lyricsFetcher = CoroutineScope(Dispatchers.IO.limitedParallelism(1))
     private val bitrateFetcher = CoroutineScope(Dispatchers.IO.limitedParallelism(1))
+    private val nfBundle : Bundle = Bundle()
 
     private fun getRepeatCommand() =
         when (controller!!.repeatMode) {
@@ -262,9 +264,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         nm = NotificationManagerCompat.from(this)
         prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         setListener(this)
-        setMediaNotificationProvider(
-            MeiZuLyricsMediaNotificationProvider(this) { lastSentHighlightedLyric }
-        )
+        setMediaNotificationProvider(MeiZuLyricsMediaNotificationProvider(this,{ lastSentHighlightedLyric },nfBundle))
         setForegroundServiceTimeoutMs(120000)
         setShowNotificationForEmptyPlayer(SHOW_NOTIFICATION_FOR_EMPTY_PLAYER_AFTER_STOP_OR_ERROR)
         if (mayThrowForegroundServiceStartNotAllowed()
@@ -598,6 +598,21 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         Log.i(TAG, "onStartCommand(): $intent, ${extras?.toString()}")
 	    return super.onStartCommand(intent, flags, startId)
     }
+
+    override fun onMediaMetadataChanged(metadata: MediaMetadata) {
+        val title = metadata.title.toString()
+        val artist = metadata.artist.toString()
+
+        val bundle = IsLandHelp.isLandMusicShare(
+            addpic = Bundle(),
+            title = title,
+            content = artist,
+            shareContent = "$title - $artist"
+        )
+        nfBundle.putAll(bundle)
+    }
+
+
 
     override fun onSetRating(
         session: MediaSession,
