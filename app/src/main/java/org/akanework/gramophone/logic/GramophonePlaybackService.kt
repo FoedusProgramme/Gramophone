@@ -191,7 +191,6 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
     private val scope = CoroutineScope(Dispatchers.Default)
     private val lyricsFetcher = CoroutineScope(Dispatchers.IO.limitedParallelism(1))
     private val bitrateFetcher = CoroutineScope(Dispatchers.IO.limitedParallelism(1))
-    private val nfBundle : Bundle = Bundle()
 
     private fun getRepeatCommand() =
         when (controller!!.repeatMode) {

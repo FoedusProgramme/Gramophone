@@ -5,14 +5,14 @@ import org.json.JSONObject
 
 object IsLandHelp {
     /**
-     * 小米超级岛之音乐岛分享配置
-     * @param addpic 添加图标
-     * @param pic 分享卡片图标
-     * @param content 分享卡片内容
-     * @param title 分享卡片标题
-     * @param shareContent 分享到应用的内容
-     * @param sharePic 分享到应用的图片 (目前不知道怎么分享图片，未测试)
-     * @return 直接注入到媒体通知即可 */
+     * Xiaomi Super Island - Music Island Share Configuration
+     * @param addpic Add icon
+     * @param pic Share card icon
+     * @param content Share card content
+     * @param title Share card title
+     * @param shareContent Content to share to the app
+     * @param sharePic Image to share to the app (currently unknown how to share images, untested)
+     * @return Directly inject into media notification */
     fun isLandMusicShare(
         addpic: Bundle? = null,
         pic: String = "miui_media_album_icon",
@@ -44,12 +44,12 @@ object IsLandHelp {
 
 
     /**
-     * 小米超级岛分享信息
-     * @param content 内容
-     * @param title 标题
-     * @param pic 图片
-     * @param shareContent 分享内容
-     * @param sharePic 分享图片
+     * Xiaomi Super Island Share Information
+     * @param content Content
+     * @param title Title
+     * @param pic Image
+     * @param shareContent Share Content
+     * @param sharePic Share Image
      * */
     fun shareData(
         content: String,
