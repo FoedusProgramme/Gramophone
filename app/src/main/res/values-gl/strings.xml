@@ -453,8 +453,8 @@
     <string name="settings_replaygain_no_rg_amp">Atenuación (non RG)</string>
     <string name="settings_replaygain_drc">Activar DRC</string>
     <string name="settings_replaygain_drc_desc">Usar «Compresión do Rango Dinámico» como protección para o *clipping* (recomendado). Se está desactivado baixarase o volume (o volume non estará ao mesmo nivel, desfacendo o efecto de normalización).</string>
-    <string name="track_gain">Gañancia da pista</string>
-    <string name="album_gain">Gañancia do álbum</string>
+    <string name="track_gain">Todas as cancións co mesmo volume</string>
+    <string name="album_gain">Manter a dinámica do álbum</string>
     <string name="smart">Intelixente</string>
     <string name="scroll_to_playing">Desprazarse á canción en reprodución</string>
     <string name="duration_queue">%s horas</string>
@@ -464,4 +464,10 @@
     <string name="tempo_pitch_value">%s: %.2fx</string>
     <string name="lock_tempo_pitch">Fixar tempo e tono</string>
     <string name="reset">Restablecer</string>
+    <string name="settings_replaygain_boost">Aumentar</string>
+    <string name="d_db">%d dB</string>
+    <string name="settings_replaygain_boost_desc">"«Aumentar» fará que a saída de ReplayGain e outra música teña máis volume do establecido no teu dispositivo. (Se o volume no dispositivo está preto do 100%, Aumentar non aumentará o volume). Con Aumentar podes desfrutar de música que ten un volume parecido noutras apps, como os xogos. Ten enconta que esta é unha ferramenta experimental e podería interferir con aplicacións de equalización. Aumentar non funciona para os auriculares Bluetooth. En caso de problemas relacionados co volume, desactiva Aumentar establecendo o valor a 0 dB. "</string>
+    <string name="settings_replaygain_no_rg_amp_desc">Reducir o volume para cancións que soan moi alto e que non teñen etiquetas ReplayGain</string>
+    <string name="settings_replaygain_preamp_desc">Aumentar ou diminuír o volume das cancións con etiquetas ReplayGain. Os valores máis altos poderían causar perdas no rango dináminco para evitar solapamentos.</string>
+    <string name="settings_replaygain_mode_desc">«Intelixente» conserva automáticamente a dinámica do álbum so cando se reproducen cancións de xeito consecutivo dun álbum.</string>
 </resources>
