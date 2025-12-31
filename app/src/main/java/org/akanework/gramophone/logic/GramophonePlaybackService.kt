@@ -119,7 +119,6 @@ import org.akanework.gramophone.logic.utils.exoplayer.EndedWorkaroundPlayer
 import org.akanework.gramophone.logic.utils.exoplayer.GramophoneExtractorsFactory
 import org.akanework.gramophone.logic.utils.exoplayer.GramophoneMediaSourceFactory
 import org.akanework.gramophone.logic.utils.exoplayer.GramophoneRenderFactory
-import org.akanework.gramophone.logic.utils.exoplayer.oem.xiaomi.IsLandHelp
 import org.akanework.gramophone.ui.LyricWidgetProvider
 import org.akanework.gramophone.ui.MainActivity
 import uk.akane.libphonograph.items.albumId
@@ -263,7 +262,9 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         nm = NotificationManagerCompat.from(this)
         prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         setListener(this)
-        setMediaNotificationProvider(MeiZuLyricsMediaNotificationProvider(this){ lastSentHighlightedLyric })
+        setMediaNotificationProvider(
+            MeiZuLyricsMediaNotificationProvider(this) { lastSentHighlightedLyric }
+        )
         setForegroundServiceTimeoutMs(120000)
         setShowNotificationForEmptyPlayer(SHOW_NOTIFICATION_FOR_EMPTY_PLAYER_AFTER_STOP_OR_ERROR)
         if (mayThrowForegroundServiceStartNotAllowed()
