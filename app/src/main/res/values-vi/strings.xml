@@ -25,7 +25,7 @@
     <string name="settings_contributors">Người đóng góp</string>
     <string name="home_menu_equalizer">Bộ chỉnh âm</string>
     <string name="settings_version">Phiên bản</string>
-    <string name="category_albums">Album</string>
+    <string name="category_albums">Albums</string>
     <string name="refreshed_songs">Đã làm mới %1$d bài hát</string>
     <string name="sort_by_name">Tên</string>
     <string name="check_for_updates">Theo dõi cập nhật trên kênh của chúng tôi!</string>
@@ -72,7 +72,7 @@
     <string name="settings_default_progress_bar_summary">Thanh thời lượng kiểu Material You</string>
     <string name="recently_added">Thêm gần đây</string>
     <string name="settings_content_based_color_summary">Tạo màu nền dựa trên ảnh album</string>
-    <string name="play_next">Bài sau</string>
+    <string name="play_next">Phát tiếp theo</string>
     <plurals name="artists">
         <item quantity="other">%d Nghệ sĩ</item>
     </plurals>
@@ -166,4 +166,7 @@
     <string name="sort_by_album_artist">Album nghệ sĩ</string>
     <string name="cannot_play_file">Không thể phát file này</string>
     <string name="tab_order_summary">Ứng dụng sẽ hiển thị tab đầu tiên khi khởi chạy. Những tabs sau thanh chia màn hình sẽ bị ẩn.</string>
+    <plurals name="folders_plural">
+        <item quantity="other">%d Thư mục</item>
+    </plurals>
 </resources>
