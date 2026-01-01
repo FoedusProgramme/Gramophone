@@ -464,8 +464,8 @@
     <string name="settings_replaygain_drc">Włącz DRC</string>
     <string name="settings_replaygain_drc_desc">Używaj funkcji „Kompresja zakresu dynamicznego” jako zabezpieczenia przed przesterowaniem (zalecane). Jeśli funkcja zostanie wyłączona, głośność zostanie zmniejszona (głośność nie będzie na tym samym poziomie, co zniweczy efekt normalizacji).</string>
     <string name="settings_replaygain">Powtórz wzmocnienie</string>
-    <string name="track_gain">Wzmocnienie ścieżki</string>
-    <string name="album_gain">Wzmocnienie albumu</string>
+    <string name="track_gain">Wszystkie utwory mają taką samą głośność</string>
+    <string name="album_gain">Zachowaj dynamikę albumu</string>
     <string name="smart">Inteligentny</string>
     <string name="scroll_to_playing">Przewiń do odtwarzanego utworu</string>
     <string name="duration_queue">%s godzin</string>
@@ -475,4 +475,10 @@
     <string name="tempo_pitch_value">%s: %.2fx</string>
     <string name="lock_tempo_pitch">Zablokuj tempo i tonację</string>
     <string name="reset">Zresetuj</string>
+    <string name="settings_replaygain_boost">Wzmocnienie</string>
+    <string name="d_db">%d dB</string>
+    <string name="settings_replaygain_boost_desc">"Funkcja „Wzmocnienie” zwiększa głośność zarówno ReplayGain, jak i innych utworów muzycznych powyżej poziomu ustawionego w urządzeniu. (Jeśli głośność urządzenia jest ustawiona na poziomie bliskim 100%, funkcja Wzmocnienie nie zwiększy głośności). Dzięki funkcji Wzmocnienie można cieszyć się muzyką o podobnej głośności jak w innych aplikacjach, np. grach. Należy pamiętać, że ta funkcja jest eksperymentalna i może kolidować z zewnętrznymi aplikacjami korektora dźwięku. Funkcja Wzmocnienie nie działa ze słuchawkami Bluetooth. W przypadku jakichkolwiek problemów związanych z głośnością należy wyłączyć funkcję Wzmocnienie, ustawiając ją na 0 dB. "</string>
+    <string name="settings_replaygain_no_rg_amp_desc">Zmniejsz głośność głośnych utworów, które nie mają znaczników ReplayGain</string>
+    <string name="settings_replaygain_preamp_desc">Zwiększ lub zmniejsz głośność utworów ze znacznikami ReplayGain. Wyższe wartości mogą powodować utratę dynamiki z powodu zapobiegania przesterowaniu.</string>
+    <string name="settings_replaygain_mode_desc">Funkcja „Inteligentny” automatycznie zachowuje dynamikę albumu tylko podczas odtwarzania utworów z albumu jeden po drugim.</string>
 </resources>
