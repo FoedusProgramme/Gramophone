@@ -464,8 +464,8 @@
     <string name="settings_replaygain_no_rg_amp">Затухання (без RG)</string>
     <string name="settings_replaygain_drc">Увімкнути динамічний контроль</string>
     <string name="settings_replaygain_drc_desc">Використовуйте \"Стиснення динамічного діапазону\" як захист від обрізання (рекомендовано). Якщо вимкнено, гучність буде зменшена (гучність не буде на тому ж рівні, що знищить ефект нормалізації).</string>
-    <string name="track_gain">Підсилення треку</string>
-    <string name="album_gain">Посилення альбому</string>
+    <string name="track_gain">Усі треки однакової гучності</string>
+    <string name="album_gain">Збереження динаміки альбому</string>
     <string name="smart">Смарт</string>
     <string name="scroll_to_playing">Прокрутіть до відтворення пісні</string>
     <string name="duration_queue">%s годин</string>
@@ -475,4 +475,10 @@
     <string name="tempo_pitch_value">%s: %.2fx</string>
     <string name="lock_tempo_pitch">Фіксуйте темп і висоту звуку</string>
     <string name="reset">Скинути</string>
+    <string name="settings_replaygain_boost">Підвищення</string>
+    <string name="d_db">%d dB</string>
+    <string name="settings_replaygain_boost_desc">"Функція «Boost» відтворюватиме ReplayGain та іншу музику з гучністю, вищою за ту, що встановлена на вашому пристрої. (Якщо гучність вашого пристрою близька до 100%, Boost не збільшить гучність). За допомогою Boost ви можете насолоджуватися музикою, гучність якої подібна до гучності інших програм, таких як ігри. Зверніть увагу, що ця функція є експериментальною та може перешкоджати роботі зовнішніх програм еквалайзера. Boost не працює з навушниками Bluetooth. У разі виникнення проблем, пов’язаних із гучністю, вимкніть Boost, встановивши значення 0 дБ. "</string>
+    <string name="settings_replaygain_no_rg_amp_desc">Зменште гучність гучних пісень, які не мають тегів ReplayGain</string>
+    <string name="settings_replaygain_preamp_desc">Збільшуйте або зменшуйте гучність пісень за допомогою тегів ReplayGain. Вищі значення можуть призвести до втрати динаміки через запобігання обрізанню.</string>
+    <string name="settings_replaygain_mode_desc">«Smart» автоматично зберігає динаміку альбому лише під час послідовного відтворення пісень з альбому.</string>
 </resources>
