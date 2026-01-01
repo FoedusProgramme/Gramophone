@@ -682,8 +682,7 @@ fun parseLrc(lyricText: String, trimEnabled: Boolean, multiLineEnabled: Boolean)
                     }
                     val start = if (currentLine.isNotEmpty()) currentLine.first().first
                     else lastWordSyncPoint ?: lastSyncPoint!!
-                    val end = lastWordSyncPoint ?:
-                        words?.lastOrNull()?.timeRange?.last?.let { it - 1uL }
+                    val end = words?.lastOrNull()?.timeRange?.last
                     // if we had trailing sync point only with whitespace line, it's explicit line
                     // end ts, use it.
                     // if we have words, use it's last sync point (possibly estimated) as end time,
