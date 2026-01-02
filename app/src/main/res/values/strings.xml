@@ -483,11 +483,12 @@
     <string name="album_gain">Preserve album dynamics</string>
     <string name="smart">Smart</string>
     <string name="scroll_to_playing">Scroll to playing song</string>
-    <string name="duration_queue">%s hours</string>
+    <string name="duration_queue">%s remaining, %s total</string>
     <string name="d_db">%d dB</string>
     <string name="settings_replaygain_boost_desc">"\"Boost\" will output both ReplayGain and other music at a higher volume than what is set in your device. (If your device volume is set close to 100%, Boost will not increase the volume). With Boost, you can enjoy music that has similar loudness to other apps, such as games. Please note that this feature is experimental and may interfere with external equalizer apps. Boost does not work with Bluetooth headphones. In case of any volume-related issues, please disable Boost by setting it to 0 dB. "</string>
     <string name="settings_replaygain_no_rg_amp_desc">Reduce volume for loud songs that do not have ReplayGain tags</string>
     <string name="settings_replaygain_preamp_desc">Increase or decrease the volume of songs with ReplayGain tags. Higher values may cause loss of dynamics due to clipping prevention.</string>
     <string name="settings_replaygain_mode_desc">\"Smart\" automatically preserves album dynamics only when playing songs from an album consecutively.</string>
     <string name="sort_by_artist_year"><![CDATA[Artist -> year]]></string>
+    <string name="clear_queue">Clear queue</string>
 </resources>
