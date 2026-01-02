@@ -76,7 +76,7 @@
     <string name="settings_default_progress_bar_summary">Activar la barra de progreso con estilo de material desingn</string>
     <string name="recently_added">Recientemente añadido</string>
     <string name="dialog_genre">Género</string>
-    <string name="settings_content_based_color_summary">Activar la generación de colores basada en álbumes</string>
+    <string name="settings_content_based_color_summary">Colores dinámicos basados en el álbum</string>
     <string name="unknown_genre">Género desconocido</string>
     <string name="category_artists">Artistas</string>
     <string name="settings_package_type">Tipo de paquete</string>
@@ -119,7 +119,7 @@
     <string name="sort_by_modified_date">Fecha de modificación</string>
     <string name="settings_customization_summary">Gestionar las opciones de personalización</string>
     <string name="settings_play_on_launch_summary">Reproducir la música al iniciar</string>
-    <string name="settings_player_ui_summary">Interfaz de usuario completa, letras de canciones</string>
+    <string name="settings_player_ui_summary">Interfaz del reproductor completo y letras</string>
     <string name="settings_lyrics_center_summary">Centrar las letras de las canciones</string>
     <string name="settings_title_bold_summary">Poner en negrita el título para ver el reproductor completo</string>
     <string name="settings_play_on_launch">Reproducir al iniciar</string>
@@ -415,11 +415,11 @@
     <string name="settings_mp3_index_seeking">Indexación para búsqueda en MP3</string>
     <string name="log_will_auto_send">Los registros se enviarán de forma automática; por favor, describa el problema a continuación</string>
     <string name="forbidden_symbol_error">El nombre contiene caracteres no válidos</string>
-    <string name="track_gain">Por pista</string>
-    <string name="album_gain">Por álbum</string>
+    <string name="track_gain">Igual sonoridad en todas las pistas</string>
+    <string name="album_gain">Preservar la dinamica del album</string>
     <string name="smart">Inteligente</string>
     <string name="scroll_to_playing">Ir a la canción actual</string>
-    <string name="gramophone_crashed_explainer2">Gramophone se detuvo :(\n&lt;b&gt;&lt;b&gt;\n¡Por favor, envía un informe de error para que los fallos como este puedan solucionarse!\n\nCada situación es tan única como la música; sin tu ayuda, es probable que este error &lt;b&gt;NO&lt;/b&gt; se solucione</string>
+    <string name="gramophone_crashed_explainer2">Gramophone se detuvo :(\n\n¡Por favor, envía un informe de error para que los fallos como este puedan solucionarse!\n\nCada situación es tan única como la música; sin tu ayuda, es probable que este error <b>NO</b> se solucione</string>
     <string name="failed_to_parse_lyric">Error al analizar la letra</string>
     <string name="audio_not_initialized">El sistema de reproducción de audio no está inicializado. ¡Intenta reproducir algo!</string>
     <string name="enter_msg_for_dev_here">Escriba aquí el mensaje para el desarrollador</string>
@@ -429,4 +429,24 @@
     <string name="duration_queue">%s horas</string>
     <string name="edit_playlist_failed">Fallo al editar la playlist: %s</string>
     <string name="refresh_did_you_know">Gramophone solicita una lista de canciones actualizada cada vez que se inicia la aplicación y, mientras está en ejecución, también detectará automáticamente el nuevo contenido multimedia. Este botón de \"Actualizar\" no recarga los archivos dentro de Gramophone; en su lugar, solicita al sistema que vuelva a escanear todos los archivos de todos los dispositivos de almacenamiento permanente conectados (por eso tarda un poco). Esto significa que, a menos que el sistema u otras aplicaciones fallen, nunca necesitarás usar esta función.\n\n¿Faltan algunas canciones? Asegúrate de revisar Ajustes &gt; Comportamiento para verificar el filtro de duración mínima y la lista negra de carpetas, y confirma que estos parámetros tengan los valores esperados. Para conocer otros motivos posibles, consulta nuestras Preguntas Frecuentes (FAQ).</string>
+    <string name="settings_replaygain_mode_desc">El modo \"Inteligente\" preserva automáticamente la dinámica del álbum solo cuando las canciones se reproducen de forma consecutiva.</string>
+    <string name="settings_replaygain_boost_desc">"\"Boost\" emitirá tanto el contenido con ReplayGain como el resto de la música a un volumen superior al configurado en tu dispositivo. (Si el volumen del dispositivo está cerca del 100%, Boost no aumentará el sonido). Con Boost, puedes disfrutar de la música con una intensidad similar a la de otras aplicaciones, como los juegos. Ten en cuenta que esta función es experimental y podría interferir con ecualizadores externos. Boost no funciona con auriculares Bluetooth. En caso de presentar problemas con el volumen, desactiva Boost configurándolo en 0dB. "</string>
+    <string name="settings_replaygain_no_rg_amp_desc">Reducir el volumen de canciones con sonido alto que no tengan etiquetas ReplayGain</string>
+    <string name="settings_replaygain_preamp_desc">Aumenta o disminuye el volumen de las canciones con etiquetas ReplayGain. Valores más altos pueden causar una pérdida de dinámica debido a la prevención de saturación (clipping).</string>
+    <string name="settings_translation_auto_word">Animar traducciones automáticamente</string>
+    <string name="still_refreshing">Actualizando, paso %1$d/%2$d: %3$s</string>
+    <string name="did_you_know">Sabías que…</string>
+    <string name="mix_port_flag_bit_perfect">Bit-perfect</string>
+    <string name="settings_replaygain_preamp">Pre amp</string>
+    <string name="sort_by_album_artist_year">Artista del álbum - &gt; año</string>
+    <string name="mix_port_flag_gapless_offload">Offload sin pausas</string>
+    <string name="mix_port_flag_tts">TTS</string>
+    <string name="mix_port_flag_compress_offload">Offload comprimido</string>
+    <string name="mix_port_flag_primary">Salida principal</string>
+    <string name="spk_encoding_pcm_8_24bit">24-bit (8.24) PCM</string>
+    <string name="spk_encoding_aac">AAC</string>
+    <string name="spk_encoding_vorbis">Vorbis</string>
+    <string name="spk_encoding_dsd">Direct Stream Digital (DSD)</string>
+    <string name="spk_encoding_ape">Monkey\'s Audio</string>
+    <string name="spk_encoding_aptx_adaptive">aptX Adaptive</string>
 </resources>
