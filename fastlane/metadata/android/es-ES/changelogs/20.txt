@@ -1,0 +1,8 @@
+- Hacer que el botón de actualizar refresque MediaStore
+- Eliminar restricciones para los formatos de muestreo de audio
+- Mejorar el diálogo de vista previa de audio
+- Pausar la actualización si la app está en segundo plano para ahorrar batería
+- Prevención de errores ANR (la aplicación no responde)
+- Corregir la página del artista del álbum
+- Se corrigieron algunas fugas de memoria (memory leaks)
+- Corrección de numerosos fallos y errores
