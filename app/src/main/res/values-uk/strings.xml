@@ -468,7 +468,7 @@
     <string name="album_gain">Збереження динаміки альбому</string>
     <string name="smart">Смарт</string>
     <string name="scroll_to_playing">Прокрутіть до відтворення пісні</string>
-    <string name="duration_queue">%s годин</string>
+    <string name="duration_queue">Залишилося %s, всього %s</string>
     <string name="playback_speed">Швидкість відтворення</string>
     <string name="tempo">Темп</string>
     <string name="pitch">Крок</string>
@@ -481,4 +481,6 @@
     <string name="settings_replaygain_no_rg_amp_desc">Зменште гучність гучних пісень, які не мають тегів ReplayGain</string>
     <string name="settings_replaygain_preamp_desc">Збільшуйте або зменшуйте гучність пісень за допомогою тегів ReplayGain. Вищі значення можуть призвести до втрати динаміки через запобігання обрізанню.</string>
     <string name="settings_replaygain_mode_desc">«Smart» автоматично зберігає динаміку альбому лише під час послідовного відтворення пісень з альбому.</string>
+    <string name="sort_by_artist_year"><![CDATA[Виконавець -> рік]]></string>
+    <string name="clear_queue">Очистити чергу</string>
 </resources>
