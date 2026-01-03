@@ -374,7 +374,7 @@
     <string name="spk_encoding_amr_nb">AMR-NB</string>
     <string name="spk_encoding_dsd">DSD</string>
     <string name="spk_encoding_alac">ALAC</string>
-    <string name="duration_queue">%s 小时</string>
+    <string name="duration_queue">还剩 %s，总计 %s</string>
     <string name="scroll_to_playing">滚动以播放歌曲</string>
     <plurals name="folders_plural">
         <item quantity="other">%d 个文件夹</item>
@@ -465,4 +465,6 @@
     <string name="settings_replaygain_no_rg_amp_desc">对无回放增益标签的过响歌曲自动降低音量</string>
     <string name="settings_replaygain_preamp_desc">带有回放增益标签的歌曲自动增大或减小音量。较高的值可能会因削波预防而导致动态范围损失。</string>
     <string name="settings_replaygain_mode_desc">“智能”仅在连续播放同一专辑中的歌曲时才会自动保留专辑动态范围。</string>
+    <string name="sort_by_artist_year"><![CDATA[艺术家 -> 年份]]></string>
+    <string name="clear_queue">清除队列</string>
 </resources>
