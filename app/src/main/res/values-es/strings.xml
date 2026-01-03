@@ -94,7 +94,7 @@
     <string name="dialog_mime">Tipo MIME</string>
     <string name="dialog_duration">Duración</string>
     <string name="settings_album_round_corner">Esquinas redondeadas del álbum</string>
-    <string name="sort_by_add_date">Añadir una fecha</string>
+    <string name="sort_by_add_date">Fecha de agregado</string>
     <string name="settings_player_ui">Interfaz del reproductor</string>
     <string name="settings_about_gramophone">Acerca de la aplicación</string>
     <string name="settings_title_bold">Título en negrita</string>
@@ -426,7 +426,7 @@
     <string name="do_not_enter_email_enter_msg">Escriba un mensaje, no una dirección de correo electrónico</string>
     <string name="audio_signal_chain">Cadena de audio</string>
     <string name="settings_replaygain">ReplayGain</string>
-    <string name="duration_queue">%s horas</string>
+    <string name="duration_queue">%s restante, %s total</string>
     <string name="edit_playlist_failed">Fallo al editar la playlist: %s</string>
     <string name="refresh_did_you_know">Gramophone solicita una lista de canciones actualizada cada vez que se inicia la aplicación y, mientras está en ejecución, también detectará automáticamente el nuevo contenido multimedia. Este botón de \"Actualizar\" no recarga los archivos dentro de Gramophone; en su lugar, solicita al sistema que vuelva a escanear todos los archivos de todos los dispositivos de almacenamiento permanente conectados (por eso tarda un poco). Esto significa que, a menos que el sistema u otras aplicaciones fallen, nunca necesitarás usar esta función.\n\n¿Faltan algunas canciones? Asegúrate de revisar Ajustes &gt; Comportamiento para verificar el filtro de duración mínima y la lista negra de carpetas, y confirma que estos parámetros tengan los valores esperados. Para conocer otros motivos posibles, consulta nuestras Preguntas Frecuentes (FAQ).</string>
     <string name="settings_replaygain_mode_desc">El modo \"Inteligente\" preserva automáticamente la dinámica del álbum solo cuando las canciones se reproducen de forma consecutiva.</string>
@@ -449,4 +449,6 @@
     <string name="spk_encoding_dsd">Direct Stream Digital (DSD)</string>
     <string name="spk_encoding_ape">Monkey\'s Audio</string>
     <string name="spk_encoding_aptx_adaptive">aptX Adaptive</string>
+    <string name="clear_queue">Vaciar cola</string>
+    <string name="sort_by_artist_year">Artista -&gt; año</string>
 </resources>
