@@ -27,9 +27,8 @@ import android.content.Intent
 import android.content.pm.PackageManager
 
 /**
- * 小米妙播适配
+ *  MiPlay Audio Support
  */
-@UnstableMediaKitApi
 object MiPlayAudioSupport {
     private const val ACTION_MIPLAY_DETAIL = "miui.intent.action.ACTIVITY_MIPLAY_DETAIL"
     private const val AUDIO_RECORD_CLASS = "miui.media.MiuiAudioPlaybackRecorder"
@@ -38,7 +37,7 @@ object MiPlayAudioSupport {
     private const val WHITE_TARGET = "com.milink.service:hide_foreground"
 
     /**
-     * 查询是否支持妙播服务
+     * Check if MiaoBo service is supported
      *
      * https://dev.mi.com/xiaomihyperos/documentation/detail?pId=1944
      */
@@ -62,7 +61,7 @@ object MiPlayAudioSupport {
     }
 
     /**
-     * 是否为国际版
+     * Is it the international version
      */
     private fun isInternationalBuild(): Boolean =
         try {
@@ -75,7 +74,7 @@ object MiPlayAudioSupport {
         }
 
     /**
-     * 检查 SystemUI 是否包含处理妙播意图的 Activity
+     * Check whether SystemUI contains an Activity that handles the Miaobo intent.
      */
     private fun systemUIReady(context: Context): Boolean {
         val intent =
@@ -92,7 +91,7 @@ object MiPlayAudioSupport {
     }
 
     /**
-     * 检查妙播服务是否在 SystemUI 的前台服务通知白名单中
+     * Check whether the Miaobo service is included in the SystemUI foreground service notification whitelist.
      */
     private fun notificationReady(context: Context): Boolean =
         try {
