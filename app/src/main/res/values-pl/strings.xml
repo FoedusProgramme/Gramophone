@@ -468,7 +468,7 @@
     <string name="album_gain">Zachowaj dynamikę albumu</string>
     <string name="smart">Inteligentny</string>
     <string name="scroll_to_playing">Przewiń do odtwarzanego utworu</string>
-    <string name="duration_queue">%s godzin</string>
+    <string name="duration_queue">%s pozostało, %s ogółem</string>
     <string name="playback_speed">Prędkość odtwarzania</string>
     <string name="tempo">Tempo</string>
     <string name="pitch">Ton</string>
@@ -481,4 +481,6 @@
     <string name="settings_replaygain_no_rg_amp_desc">Zmniejsz głośność głośnych utworów, które nie mają znaczników ReplayGain</string>
     <string name="settings_replaygain_preamp_desc">Zwiększ lub zmniejsz głośność utworów ze znacznikami ReplayGain. Wyższe wartości mogą powodować utratę dynamiki z powodu zapobiegania przesterowaniu.</string>
     <string name="settings_replaygain_mode_desc">Funkcja „Inteligentny” automatycznie zachowuje dynamikę albumu tylko podczas odtwarzania utworów z albumu jeden po drugim.</string>
+    <string name="sort_by_artist_year"><![CDATA[Artist -> rok]]></string>
+    <string name="clear_queue">Wyczyść kolejkę</string>
 </resources>
