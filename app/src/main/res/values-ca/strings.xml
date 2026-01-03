@@ -462,7 +462,7 @@
     <string name="album_gain">Mantén la dinàmica de l\'àlbum</string>
     <string name="smart">Intel·ligent</string>
     <string name="scroll_to_playing">Desplaceu per reproduir la cançó</string>
-    <string name="duration_queue">%s hores</string>
+    <string name="duration_queue">%s restants, %s totals</string>
     <string name="reset">Reinicialitza</string>
     <string name="playback_speed">Velocitat de reproducció</string>
     <string name="tempo">Tempo</string>
@@ -475,4 +475,6 @@
     <string name="settings_replaygain_no_rg_amp_desc">Redueix el volum de les cançons fortes que no tenen etiquetes ReplayGain</string>
     <string name="settings_replaygain_preamp_desc">Augmenta o disminueix el volum de cançons amb etiquetes ReplayGain. Els valors més alts poden causar pèrdua de la dinàmica a causa de la prevenció del retallat.</string>
     <string name="settings_replaygain_mode_desc">«Intel·ligent» manté automàticament la dinàmica de l\'àlbum només quan reprodueix cançons d\'un àlbum consecutivament.</string>
+    <string name="sort_by_artist_year"><![CDATA[Artista -> any]]></string>
+    <string name="clear_queue">Neteja la cua</string>
 </resources>
