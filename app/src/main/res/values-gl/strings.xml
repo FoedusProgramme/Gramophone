@@ -457,7 +457,7 @@
     <string name="album_gain">Manter a dinámica do álbum</string>
     <string name="smart">Intelixente</string>
     <string name="scroll_to_playing">Desprazarse á canción en reprodución</string>
-    <string name="duration_queue">%s horas</string>
+    <string name="duration_queue">quedan %s, de %s en total</string>
     <string name="playback_speed">Velocidade de reprodución</string>
     <string name="tempo">Tempo</string>
     <string name="pitch">Tono</string>
@@ -470,4 +470,6 @@
     <string name="settings_replaygain_no_rg_amp_desc">Reducir o volume para cancións que soan moi alto e que non teñen etiquetas ReplayGain</string>
     <string name="settings_replaygain_preamp_desc">Aumentar ou diminuír o volume das cancións con etiquetas ReplayGain. Os valores máis altos poderían causar perdas no rango dináminco para evitar solapamentos.</string>
     <string name="settings_replaygain_mode_desc">«Intelixente» conserva automáticamente a dinámica do álbum so cando se reproducen cancións de xeito consecutivo dun álbum.</string>
+    <string name="sort_by_artist_year"><![CDATA[Artist -> ano]]></string>
+    <string name="clear_queue">Limpar cola</string>
 </resources>
