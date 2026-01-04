@@ -180,7 +180,7 @@
     <string name="home_menu_shuffle">Alle zufällig abspielen</string>
     <string name="lyric_widget_description">Widget, das den Liedtext des aktuellen Titels anzeigt</string>
     <string name="sort_by_file_path">Dateipfad</string>
-    <string name="sort_by_album_artist">Interpret des Albums</string>
+    <string name="sort_by_album_artist">Album-Interpret -&gt; Titel</string>
     <string name="delete">Löschen</string>
     <string name="yes">Ja</string>
     <string name="no">Nein</string>
@@ -412,7 +412,7 @@
     <string name="spk_encoding_pcm_16bit_offload">16-bit PCM Offload</string>
     <string name="spk_encoding_pcm_24bit_offload">24-bit (8.24) PCM offload</string>
     <string name="contributors_yuyuko1024">Verschnörkelter Fortschrittsbalken</string>
-    <string name="contributors_ghhccghk">Liedtexte in der Statusleiste</string>
+    <string name="contributors_ghhccghk">Liedtexte in der Statusleiste &amp; andere Verbesserungen</string>
     <string name="home_menu_quick_refresh">Schnelles Aktualisieren</string>
     <string name="add_to_queue">Zur Warteschlange hinzufügen</string>
     <string name="disabled">deaktiviert</string>
@@ -441,4 +441,15 @@
     <string name="compact_grid">Raster (kompakt)</string>
     <string name="sort_by_album_year">Albumjahr</string>
     <string name="sort_by_album_artist_year"><![CDATA[Albuminterpret -> Jahr]]></string>
+    <string name="d_db">%d dB</string>
+    <string name="playback_speed">Wiedergabegeschwindigkeit</string>
+    <string name="tempo">Tempo</string>
+    <string name="tempo_pitch_value">%s: %.2fx</string>
+    <string name="reset">Zurücksetzen</string>
+    <string name="forbidden_symbol_error">Ungültiges Zeichen im Namen</string>
+    <string name="translators">Übersetzer</string>
+    <string name="settings_replaygain">ReplayGain</string>
+    <string name="settings_replaygain_mode">Modus</string>
+    <string name="duration_queue">Noch %s, %s insgesamt</string>
+    <string name="clear_queue">Warteschlange leeren</string>
 </resources>
