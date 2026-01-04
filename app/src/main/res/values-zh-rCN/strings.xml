@@ -467,4 +467,5 @@
     <string name="settings_replaygain_mode_desc">“智能”仅在连续播放同一专辑中的歌曲时才会自动保留专辑动态范围。</string>
     <string name="sort_by_artist_year"><![CDATA[艺术家 -> 年份]]></string>
     <string name="clear_queue">清除队列</string>
+    <string name="contributors_saladnoober">质量保证</string>
 </resources>
