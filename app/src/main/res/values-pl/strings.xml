@@ -483,4 +483,5 @@
     <string name="settings_replaygain_mode_desc">Funkcja „Inteligentny” automatycznie zachowuje dynamikę albumu tylko podczas odtwarzania utworów z albumu jeden po drugim.</string>
     <string name="sort_by_artist_year"><![CDATA[Artist -> rok]]></string>
     <string name="clear_queue">Wyczyść kolejkę</string>
+    <string name="contributors_saladnoober">Kontrola jakości</string>
 </resources>
