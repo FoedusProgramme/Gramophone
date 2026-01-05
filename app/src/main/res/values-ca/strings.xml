@@ -477,4 +477,5 @@
     <string name="settings_replaygain_mode_desc">«Intel·ligent» manté automàticament la dinàmica de l\'àlbum només quan reprodueix cançons d\'un àlbum consecutivament.</string>
     <string name="sort_by_artist_year"><![CDATA[Artista -> any]]></string>
     <string name="clear_queue">Neteja la cua</string>
+    <string name="contributors_saladnoober">Control de qualitat</string>
 </resources>
