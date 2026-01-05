@@ -473,4 +473,5 @@
     <string name="settings_replaygain_mode_desc">Valik „Nutikas“ säilitab automaatselt albumi dünaamikat, kuid ühe albumi lood on järjest esitamisel.</string>
     <string name="sort_by_artist_year"><![CDATA[Esitaja -> aasta]]></string>
     <string name="clear_queue">Tühjenda esitusjärjekord</string>
+    <string name="contributors_saladnoober">Kvaliteeditagamine</string>
 </resources>
