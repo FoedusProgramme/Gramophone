@@ -472,4 +472,5 @@
     <string name="settings_replaygain_mode_desc">«Intelixente» conserva automáticamente a dinámica do álbum so cando se reproducen cancións de xeito consecutivo dun álbum.</string>
     <string name="sort_by_artist_year"><![CDATA[Artist -> ano]]></string>
     <string name="clear_queue">Limpar cola</string>
+    <string name="contributors_saladnoober">Control da calidade</string>
 </resources>
