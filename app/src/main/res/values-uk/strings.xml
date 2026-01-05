@@ -483,4 +483,5 @@
     <string name="settings_replaygain_mode_desc">«Smart» автоматично зберігає динаміку альбому лише під час послідовного відтворення пісень з альбому.</string>
     <string name="sort_by_artist_year"><![CDATA[Виконавець -> рік]]></string>
     <string name="clear_queue">Очистити чергу</string>
+    <string name="contributors_saladnoober">Гарантія якості</string>
 </resources>
