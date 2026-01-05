@@ -160,11 +160,13 @@ class PlayerBottomSheet private constructor(
                     previewPlayer.alpha = 1f
                     fullPlayer.alpha = 0f
                     bottomSheetBackCallback!!.isEnabled = false
+                    (previewPlayer as? PreviewBottomSheet)?.setSwipeEnabled(true)
                 }
 
                 BottomSheetBehavior.STATE_DRAGGING, BottomSheetBehavior.STATE_SETTLING -> {
                     fullPlayer.visibility = VISIBLE
                     previewPlayer.visibility = VISIBLE
+                    (previewPlayer as? PreviewBottomSheet)?.setSwipeEnabled(false)
                 }
 
                 BottomSheetBehavior.STATE_EXPANDED, BottomSheetBehavior.STATE_HALF_EXPANDED -> {
@@ -173,6 +175,7 @@ class PlayerBottomSheet private constructor(
                     previewPlayer.alpha = 0f
                     fullPlayer.alpha = 1f
                     bottomSheetBackCallback!!.isEnabled = true
+                    (previewPlayer as? PreviewBottomSheet)?.setSwipeEnabled(false)
                 }
 
                 BottomSheetBehavior.STATE_HIDDEN -> {
