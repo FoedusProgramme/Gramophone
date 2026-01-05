@@ -466,10 +466,10 @@
     <string name="settings_replaygain_preamp">Предусиление</string>
     <string name="settings_replaygain_no_rg_amp">Ослабление (без RG)</string>
     <string name="settings_replaygain_drc">Включить DRC</string>
-    <string name="track_gain">Усиление трека</string>
-    <string name="album_gain">Усиление альбома</string>
+    <string name="track_gain">Одинаковая громкость всех треков</string>
+    <string name="album_gain">Сохранять динамику альбома</string>
     <string name="smart">Умный</string>
-    <string name="duration_queue">%s ч</string>
+    <string name="duration_queue">Осталось: %s, всего: %s</string>
     <string name="scroll_to_playing">Перейти к текущему треку</string>
     <string name="playback_speed">Скорость воспроизведения</string>
     <string name="tempo">Темп</string>
@@ -477,4 +477,13 @@
     <string name="tempo_pitch_value">%s: %.2fx</string>
     <string name="lock_tempo_pitch">Зафиксировать темп и высоту тона</string>
     <string name="reset">Сброс</string>
+    <string name="contributors_saladnoober">Контроль качества</string>
+    <string name="settings_replaygain_boost">Усиление</string>
+    <string name="d_db">%d дБ</string>
+    <string name="settings_replaygain_boost_desc">"«Усиление» повышает громкость как для треков с ReplayGain, так и для обычной музыки, превышая стандартный уровень громкости устройства. (Если громкость устройства уже близка к 100%, «Усиление» не сработает). С этой функцией музыка будет звучать на одном уровне с другими приложениями, например, играми. Обратите внимание: функция экспериментальная и может конфликтовать со сторонними эквалайзерами. «Усиление» не работает с Bluetooth-наушниками. Если возникнут проблемы со звуком, отключите эту функцию, установив значение 0 дБ. "</string>
+    <string name="settings_replaygain_no_rg_amp_desc">Снижать громкость для громких треков без тегов ReplayGain</string>
+    <string name="settings_replaygain_preamp_desc">Увеличение или уменьшение громкости треков с тегами ReplayGain. Слишком высокие значения могут привести к потере динамики из-за защиты от клиппинга.</string>
+    <string name="settings_replaygain_mode_desc">Режим «Умный» автоматически сохраняет динамику альбома только при последовательном прослушивании треков из него.</string>
+    <string name="sort_by_artist_year"><![CDATA[Исполнитель -> год]]></string>
+    <string name="clear_queue">Очистить очередь</string>
 </resources>
