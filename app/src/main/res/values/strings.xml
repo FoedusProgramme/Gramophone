@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <!-- Not translatable -->
-    <eat-comment/>
+    <eat-comment />
 
     <string name="default_time" translatable="false">0:00</string>
     <string name="upper_folder" translatable="false">..</string>
     <string name="artist_time" translatable="false">%s • %s</string>
 
     <!-- Translatable -->
-    <eat-comment/>
+    <eat-comment />
 
     <!-- If your language uses a latin script: use "Gramophone", please do not translate. If your language uses a different script: translate "Gramophone" into your language. -->
     <string name="app_name">Gramophone</string>
@@ -190,22 +190,22 @@
     <string name="timer_expiry">Sleep timer will pause music at %s</string>
     <string name="timer_expiry_eos">Sleep timer will pause music when song playing at %s ends</string>
     <string name="timer_expiry_end_of_this_song">Sleep timer will pause music at the end of this song</string>
-	<string name="settings_preference_category_home">Home screen</string>
+    <string name="settings_preference_category_home">Home screen</string>
     <string name="tab_order">Configure tab order</string>
     <string name="tab_order_summary">The app will show the first tab on startup. Tabs after the divider will be hidden.</string>
-	<string name="seekbar">Seekbar</string>
+    <string name="seekbar">Seekbar</string>
     <string name="divider">Divider</string>
     <string name="back">Back</string>
-	<string name="play_all">Play all</string>
+    <string name="play_all">Play all</string>
     <string name="shuffle_all">Shuffle all</string>
     <string name="sort">Sort</string>
     <string name="scroll_to_albums">Scroll to albums</string>
     <string name="scroll_to_songs">Scroll to songs</string>
-	<string name="play">Play</string>
-	<string name="more">More</string>
+    <string name="play">Play</string>
+    <string name="more">More</string>
     <string name="remove">Remove</string>
     <string name="skip_next">Skip to next</string>
-	<string name="expand_less">Close</string>
+    <string name="expand_less">Close</string>
     <string name="skip_previous">Skip to previous</string>
     <string name="position_slider">Position slider</string>
     <string name="settings_lyrics_ui">Enable new lyric UI</string>
@@ -318,10 +318,10 @@
     <string name="gramophone_crashed_explainer2">Gramophone crashed :(\n\nPlease send me a bug report so issues like what lead to this crash can be fixed!\n\nEach situation as unique as music, without your help it is likely this bug will <b>NOT</b> be fixed!</string>
     <string name="send_email">Send email</string>
     <string name="send_email_manually">Please send log to nift4dev@gmail.com - can\'t find mail app</string>
-	<string name="failed_to_parse_lyric">Failed to parse lyrics</string>
-	<string name="audio_signal_chain">Audio signal chain</string>
+    <string name="failed_to_parse_lyric">Failed to parse lyrics</string>
+    <string name="audio_signal_chain">Audio signal chain</string>
     <string name="audio_not_initialized">The audio playback system is not initialized. Try playing something!</string>
-	<string name="mix_port_flag_none">None</string>
+    <string name="mix_port_flag_none">None</string>
     <string name="mix_port_flag_bit_perfect">Bit perfect</string>
     <string name="mix_port_flag_ultrasound">Ultrasound</string>
     <string name="mix_port_flag_spatializer">Spatializer</string>
@@ -353,7 +353,7 @@
     <string name="spk_encoding_evrcb">EVRC-B</string>
     <string name="spk_encoding_evrcwb">EVRC WB</string>
     <string name="spk_encoding_evrcnw">EVRC NW</string>
-	<string name="spk_encoding_aac_adif">AAC ADIF</string>
+    <string name="spk_encoding_aac_adif">AAC ADIF</string>
     <string name="spk_encoding_wma">WMA</string>
     <string name="spk_encoding_wma_pro">WMA Pro</string>
     <string name="spk_encoding_mp2">MPEG-2</string>
@@ -453,14 +453,14 @@
     <string name="contributors_yuyuko1024">Squiggly progress bar</string>
     <string name="contributors_ghhccghk">Status Bar lyrics &amp; other improvements</string>
     <string name="contributors_saladnoober">Quality assurance</string>
-	<string name="home_menu_quick_refresh">Quick refresh</string>
+    <string name="home_menu_quick_refresh">Quick refresh</string>
     <string name="add_to_queue">Add to queue</string>
     <string name="disabled">Disabled</string>
     <string name="offload_enabled_if_supported">Always enabled</string>
     <string name="offload_enabled_if_gapless">Enabled if gapless playback possible</string>
     <string name="settings_audio_offload">Audio offload (saves battery)</string>
     <string name="settings_telegram">Telegram</string>
-	<string name="spk_encoding_pcm_20bit">20-bit PCM</string>
+    <string name="spk_encoding_pcm_20bit">20-bit PCM</string>
     <string name="spk_encoding_pcm_20bit_big_endian">20-bit PCM (big endian)</string>
     <string name="settings_cookie_summary">Make album cover cookie shaped</string>
     <string name="settings_cookie_info">Cookie cover</string>
@@ -468,12 +468,12 @@
     <string name="settings_pure_dark_summary">A theme where all surfaces in the app are pure black (may cause black crush on OLED displays)</string>
     <string name="settings_stop_on_dismiss">Stop on dismiss</string>
     <string name="settings_stop_on_dismiss_summary">Stop playback when app task is dismissed from recents</string>
-	<string name="compact_grid">Grid (compact)</string>
+    <string name="compact_grid">Grid (compact)</string>
     <string name="sort_by_album_year">Album year</string>
     <string name="sort_by_album_artist_year"><![CDATA[Album artist -> year]]></string>
     <string name="forbidden_symbol_error">Invalid character in the name</string>
     <string name="translators">Translators</string>
-	<string name="settings_replaygain">ReplayGain</string>
+    <string name="settings_replaygain">ReplayGain</string>
     <string name="settings_replaygain_mode">Mode</string>
     <string name="settings_replaygain_preamp">Pre amp</string>
     <string name="settings_replaygain_no_rg_amp">Attenuation (no RG)</string>
