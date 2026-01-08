@@ -449,15 +449,24 @@
     <string name="settings_replaygain_no_rg_amp">減衰 (リプレイゲインなし)</string>
     <string name="settings_replaygain_drc">DRC を有効化する</string>
     <string name="settings_replaygain_drc_desc">クリッピング防止として「ダイナミックレンジ圧縮」を使用します (推奨)。無効化すると、音量が下げられます (音量が一定レベルにならず、正規化効果が損なわれます)。</string>
-    <string name="track_gain">トラックゲイン</string>
-    <string name="album_gain">アルバムゲイン</string>
+    <string name="track_gain">すべてのトラックでラウドネス等化</string>
+    <string name="album_gain">アルバムのダイナミクスを維持</string>
     <string name="smart">スマート</string>
     <string name="scroll_to_playing">再生中の曲までスクロール</string>
-    <string name="duration_queue">%s 時間</string>
+    <string name="duration_queue">残り %s、合計 %s</string>
     <string name="playback_speed">再生速度</string>
     <string name="tempo">テンポ</string>
     <string name="pitch">ピッチ</string>
     <string name="tempo_pitch_value">%s: %.2fx</string>
     <string name="lock_tempo_pitch">テンポとピッチをロック</string>
     <string name="reset">リセット</string>
+    <string name="contributors_saladnoober">音質の保証</string>
+    <string name="settings_replaygain_boost">ブースト</string>
+    <string name="d_db">%d dB</string>
+    <string name="settings_replaygain_no_rg_amp_desc">リプレイゲインタグのない大音量な曲の音量を下げます</string>
+    <string name="settings_replaygain_mode_desc">「スマート」は、アルバムの曲を連続して再生する場合にのみ、アルバムのダイナミクスを自動的に維持します。</string>
+    <string name="sort_by_artist_year"><![CDATA[アーティスト -> 年]]></string>
+    <string name="clear_queue">キューを消去</string>
+    <string name="settings_replaygain_preamp_desc">リプレイゲインタグ付きの曲の音量を上下できます。値を大きくすると、クリッピング防止のためダイナミクスが失われる可能性があります。</string>
+    <string name="settings_replaygain_boost_desc">"「ブースト」は、リプレイゲインとその他の音楽の両方をデバイスで設定されている音量よりも高い音量で出力します (デバイスの音量が 100% に近い場合、ブーストは音量を上げません) 。ブーストを使用すると、ゲームなどの他のアプリと同程度の音量で音楽をお楽しみいただけます。この機能は試験的なものであり、外部のイコライザーアプリと干渉する可能性がありますのでご注意ください。ブーストは Bluetooth ヘッドホンでは動作しません。音量に関する問題が発生した場合は、ブーストを 0dB に設定して無効にしてください。 "</string>
 </resources>
