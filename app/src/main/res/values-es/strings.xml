@@ -73,7 +73,7 @@
         <item quantity="many">%d Canciones</item>
         <item quantity="other">%d Canciones</item>
     </plurals>
-    <string name="settings_default_progress_bar_summary">Activar la barra de progreso con estilo de material desingn</string>
+    <string name="settings_default_progress_bar_summary">Activar la barra de progreso plana con estilo de material design</string>
     <string name="recently_added">Recientemente añadido</string>
     <string name="dialog_genre">Género</string>
     <string name="settings_content_based_color_summary">Colores dinámicos basados en el álbum</string>
@@ -106,7 +106,7 @@
     <string name="settings_color_accuracy">Precisión del color</string>
     <string name="settings_lyrics_center">Centrado</string>
     <string name="settings_appearance_summary">Aspecto de la aplicación, modos de los temas</string>
-    <string name="settings_title_center_summary">Utilice el título centrado para ver el reproductor completo</string>
+    <string name="settings_title_center_summary">Utilice el título centrado en el reproductor completo</string>
     <string name="settings_experimental_settings">Experimental</string>
     <string name="settings_behavior_summary">Filtros, comportamiento de inicio</string>
     <string name="settings_lyrics_configuration_summary">Configurar la apariencia de las letras</string>
@@ -121,7 +121,7 @@
     <string name="settings_play_on_launch_summary">Reproducir la música al iniciar</string>
     <string name="settings_player_ui_summary">Interfaz del reproductor completo y letras</string>
     <string name="settings_lyrics_center_summary">Centrar las letras de las canciones</string>
-    <string name="settings_title_bold_summary">Poner en negrita el título para ver el reproductor completo</string>
+    <string name="settings_title_bold_summary">Poner en negrita el título en el reproductor completo</string>
     <string name="settings_play_on_launch">Reproducir al iniciar</string>
     <string name="settings_lyric">Letra</string>
     <string name="settings_category_links">Enlaces</string>
@@ -141,7 +141,7 @@
     <string name="dialog_lyrics">Letras</string>
     <string name="settings_category_filters">Filtros</string>
     <string name="settings_category_misc">Varias</string>
-    <string name="settings_category_full_player">Reproductor entero</string>
+    <string name="settings_category_full_player">Pantalla de reproducción</string>
     <string name="deny_images"><![CDATA[Por favor, quite el permiso a "Fotos y vídeos"]]></string>
     <string name="grant_images"><![CDATA[Conceda permiso para "Fotos y vídeos"]]></string>
     <string name="settings_trim_lyrics">Eliminar los espacios alrededor de las letras</string>
