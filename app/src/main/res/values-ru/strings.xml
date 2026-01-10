@@ -486,4 +486,12 @@
     <string name="settings_replaygain_mode_desc">Режим «Умный» автоматически сохраняет динамику альбома только при последовательном прослушивании треков из него.</string>
     <string name="sort_by_artist_year"><![CDATA[Исполнитель -> год]]></string>
     <string name="clear_queue">Очистить очередь</string>
+    <string name="actions_query_shuffle_all_songs">Перемешать все песни</string>
+    <string name="actions_query_shuffle_everything">Перемешать всё</string>
+    <string name="actions_query_play_random_songs">Воспроизвести случайные песни</string>
+    <string name="actions_query_play_random_stuff">Воспроизвести случайное</string>
+    <string name="actions_query_play_randomly">Воспроизвести в случайном порядке</string>
+    <string name="actions_query_start_random_music">Включить случайную музыку</string>
+    <string name="actions_query_start_random_songs">Включить случайные песни</string>
+    <string name="actions_query_shuffle_specific">Перемешать $item_name</string>
 </resources>
