@@ -478,4 +478,12 @@
     <string name="sort_by_artist_year"><![CDATA[Artista -> any]]></string>
     <string name="clear_queue">Neteja la cua</string>
     <string name="contributors_saladnoober">Control de qualitat</string>
+    <string name="actions_query_shuffle_all_songs">barreja totes les cançons</string>
+    <string name="actions_query_shuffle_everything">barreja-ho tot</string>
+    <string name="actions_query_play_random_songs">reprodueix cançons a l\'atzar</string>
+    <string name="actions_query_play_random_stuff">reprodueix coses a l\'atzar</string>
+    <string name="actions_query_play_randomly">reprodueix a l\'atzar</string>
+    <string name="actions_query_start_random_music">inicia música a l\'atzar</string>
+    <string name="actions_query_start_random_songs">inicia cançons a l\'atzar</string>
+    <string name="actions_query_shuffle_specific">barreja $item_name</string>
 </resources>
