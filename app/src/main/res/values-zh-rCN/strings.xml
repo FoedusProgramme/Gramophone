@@ -468,4 +468,12 @@
     <string name="sort_by_artist_year"><![CDATA[艺术家 -> 年份]]></string>
     <string name="clear_queue">清除队列</string>
     <string name="contributors_saladnoober">质量保证</string>
+    <string name="actions_query_shuffle_all_songs">随机播放所有歌曲</string>
+    <string name="actions_query_shuffle_everything">随机播放所有内容</string>
+    <string name="actions_query_play_random_songs">播放随机歌曲</string>
+    <string name="actions_query_play_random_stuff">播放随机内容</string>
+    <string name="actions_query_play_randomly">随机播放</string>
+    <string name="actions_query_start_random_music">开始随机播放音乐</string>
+    <string name="actions_query_start_random_songs">开始随机播放歌曲</string>
+    <string name="actions_query_shuffle_specific">随机播放 $item_name</string>
 </resources>
