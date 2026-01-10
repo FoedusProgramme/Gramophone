@@ -484,4 +484,12 @@
     <string name="sort_by_artist_year"><![CDATA[Виконавець -> рік]]></string>
     <string name="clear_queue">Очистити чергу</string>
     <string name="contributors_saladnoober">Гарантія якості</string>
+    <string name="actions_query_shuffle_all_songs">перемішати всі пісні</string>
+    <string name="actions_query_shuffle_everything">перетасувати все</string>
+    <string name="actions_query_play_random_songs">відтворювати випадкові пісні</string>
+    <string name="actions_query_play_random_stuff">грати випадкові речі</string>
+    <string name="actions_query_play_randomly">грати випадковим чином</string>
+    <string name="actions_query_start_random_music">увімкнути випадкову музику</string>
+    <string name="actions_query_start_random_songs">запускати випадкові пісні</string>
+    <string name="actions_query_shuffle_specific">перетасувати $item_name</string>
 </resources>
