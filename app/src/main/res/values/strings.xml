@@ -492,4 +492,12 @@
     <string name="settings_replaygain_mode_desc">\"Smart\" automatically preserves album dynamics only when playing songs from an album consecutively.</string>
     <string name="sort_by_artist_year"><![CDATA[Artist -> year]]></string>
     <string name="clear_queue">Clear queue</string>
+    <string name="actions_query_shuffle_all_songs">shuffle all songs</string>
+    <string name="actions_query_shuffle_everything">shuffle everything</string>
+    <string name="actions_query_play_random_songs">play random songs</string>
+    <string name="actions_query_play_random_stuff">play random stuff</string>
+    <string name="actions_query_play_randomly">play randomly</string>
+    <string name="actions_query_start_random_music">start random music</string>
+    <string name="actions_query_start_random_songs">start random songs</string>
+    <string name="actions_query_shuffle_specific">shuffle $item_name</string>
 </resources>
