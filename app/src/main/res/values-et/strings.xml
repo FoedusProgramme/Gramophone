@@ -474,4 +474,12 @@
     <string name="sort_by_artist_year"><![CDATA[Esitaja -> aasta]]></string>
     <string name="clear_queue">Tühjenda esitusjärjekord</string>
     <string name="contributors_saladnoober">Kvaliteeditagamine</string>
+    <string name="actions_query_shuffle_all_songs">sega kõik lood</string>
+    <string name="actions_query_shuffle_everything">sega kõik</string>
+    <string name="actions_query_play_random_songs">esita juhuslikke lugusid</string>
+    <string name="actions_query_play_random_stuff">esita juhuslikku sisu</string>
+    <string name="actions_query_play_randomly">esita juhuslikult</string>
+    <string name="actions_query_start_random_music">käivita juhuslik muusikavalik</string>
+    <string name="actions_query_start_random_songs">käivita juhuslik lugude valik</string>
+    <string name="actions_query_shuffle_specific">sega $item_name</string>
 </resources>
