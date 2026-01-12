@@ -44,7 +44,7 @@ public class AlacFile {
     public int setinfo_max_samples_per_frame = 0; // 0x1000 = 4096
     public int max_frame_bytes = 0;
     int ibIdx = 0;
-    int input_buffer_bitaccumulator = 0; /* used so we can do arbitary
+    int input_buffer_bitaccumulator = 0; /* used so we can do arbitrary
 						bit reads */
     LeadingZeros lz = new LeadingZeros();
     /* buffers */

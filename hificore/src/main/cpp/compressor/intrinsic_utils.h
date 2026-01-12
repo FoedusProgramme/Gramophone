@@ -1184,7 +1184,7 @@ namespace android::audio_utils::intrinsics {
  * Evaluate f(v1 [, v2 [, v3]]) and return an intrinsic struct result.
  *
  * The veval method returns the vector result by element-wise
- * evaulating a functional f to one or more intrinsic struct inputs.
+ * evaluating a functional f to one or more intrinsic struct inputs.
  * Compare this method with the single argument vapply,
  * which can modify a single struct argument in-place.
  */
@@ -1378,7 +1378,7 @@ namespace android::audio_utils::intrinsics {
 
             ret_t ret = a[0];
             // array_like is not the same as an array, so we use sizeof here
-            // to handle neon instrinsics.
+            // to handle neon intrinsics.
 #pragma unroll
             for (size_t i = 1; i < sizeof(a) / sizeof(a[0]); ++i) {
                 ret = f(ret, a[i]);

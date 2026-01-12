@@ -73,7 +73,7 @@ Then, try to reboot your phone, then wait a few minutes (this will rescan the sy
 If it's still not visible, your system version may not support scanning this file extension: this most commonly is observed for .opus, which will only be scanned since Android 10 (pro tip: rename your .opus file to .ogg, and it will be detected on Android 6 and later).
 
 **My song isn't playing! / My song is playing, but it's completely silent, yet the volume is turned up!**
-Please note that Gramophone relys on system media codecs to make the app smaller. This means
+Please note that Gramophone relies on system media codecs to make the app smaller. This means
 - int32 (32-bit) FLAC files will only work on Android 14 or later
 - FLAC files often do work even on versions prior to Android 8, but are only officially supported on Android 8 or later
 - xHE-AAC files in general will only work on Android 9 or later
