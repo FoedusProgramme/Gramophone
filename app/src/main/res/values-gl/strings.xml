@@ -473,4 +473,12 @@
     <string name="sort_by_artist_year"><![CDATA[Artist -> ano]]></string>
     <string name="clear_queue">Limpar cola</string>
     <string name="contributors_saladnoober">Control da calidade</string>
+    <string name="actions_query_shuffle_all_songs">barallar todas as cancións</string>
+    <string name="actions_query_shuffle_everything">barallar todo</string>
+    <string name="actions_query_play_random_songs">reproducir cancións ao chou</string>
+    <string name="actions_query_play_random_stuff">reproducir as cousas ao chou</string>
+    <string name="actions_query_play_randomly">reproducir ao chou</string>
+    <string name="actions_query_start_random_music">comezar coa música ao chou</string>
+    <string name="actions_query_start_random_songs">comezar con cancións ao chou</string>
+    <string name="actions_query_shuffle_specific">barallar $item_name</string>
 </resources>
