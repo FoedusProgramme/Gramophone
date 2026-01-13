@@ -469,4 +469,12 @@
     <string name="clear_queue">キューを消去</string>
     <string name="settings_replaygain_preamp_desc">リプレイゲインタグ付きの曲の音量を上下できます。値を大きくすると、クリッピング防止のためダイナミクスが失われる可能性があります。</string>
     <string name="settings_replaygain_boost_desc">"「ブースト」は、リプレイゲインとその他の音楽の両方をデバイスで設定されている音量よりも高い音量で出力します (デバイスの音量が 100% に近い場合、ブーストは音量を上げません) 。ブーストを使用すると、ゲームなどの他のアプリと同程度の音量で音楽をお楽しみいただけます。この機能は試験的なものであり、外部のイコライザーアプリと干渉する可能性がありますのでご注意ください。ブーストは Bluetooth ヘッドホンでは動作しません。音量に関する問題が発生した場合は、ブーストを 0dB に設定して無効にしてください。 "</string>
+    <string name="actions_query_shuffle_all_songs">すべての曲をシャッフル</string>
+    <string name="actions_query_shuffle_everything">すべてシャッフル</string>
+    <string name="actions_query_play_random_songs">ランダムで曲を再生</string>
+    <string name="actions_query_play_random_stuff">ランダムなものを再生</string>
+    <string name="actions_query_play_randomly">ランダムに再生</string>
+    <string name="actions_query_start_random_music">音楽をランダムで開始</string>
+    <string name="actions_query_start_random_songs">曲をランダムで開始</string>
+    <string name="actions_query_shuffle_specific">$item_name をシャッフル</string>
 </resources>
