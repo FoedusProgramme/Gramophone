@@ -458,6 +458,7 @@
     <string name="disabled">Disabled</string>
     <string name="offload_enabled_if_supported">Always enabled</string>
     <string name="offload_enabled_if_gapless">Enabled if gapless playback possible</string>
+    <string name="offload_enabled_no_gapless">Always enabled, but without gapless offload</string>
     <string name="settings_audio_offload">Audio offload (saves battery)</string>
     <string name="settings_telegram">Telegram</string>
     <string name="spk_encoding_pcm_20bit">20-bit PCM</string>
