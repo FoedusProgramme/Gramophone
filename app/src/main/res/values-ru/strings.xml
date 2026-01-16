@@ -494,4 +494,5 @@
     <string name="actions_query_start_random_music">Включить случайную музыку</string>
     <string name="actions_query_start_random_songs">Включить случайные песни</string>
     <string name="actions_query_shuffle_specific">Перемешать $item_name</string>
+    <string name="offload_enabled_no_gapless">Всегда включено, но без бесшовной аппаратной разгрузки</string>
 </resources>
