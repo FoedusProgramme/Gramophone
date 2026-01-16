@@ -5,17 +5,17 @@
     <string name="home_menu_refresh">刷新</string>
     <string name="category_songs">歌曲</string>
     <string name="category_albums">专辑</string>
-    <string name="category_artists">艺术家</string>
+    <string name="category_artists">音乐人</string>
     <string name="category_genres">流派</string>
     <string name="category_playlists">播放列表</string>
-    <string name="unknown_artist">未知艺术家</string>
+    <string name="unknown_artist">未知音乐人</string>
     <string name="category_dates">发行日期</string>
     <string name="follow_system">跟随系统</string>
     <string name="dark">深色</string>
     <string name="light">浅色</string>
     <string name="sort_by_size">大小</string>
     <string name="sort_by_name">名称</string>
-    <string name="sort_by_artist">艺术家</string>
+    <string name="sort_by_artist">音乐人</string>
     <string name="sort_by_album">专辑</string>
     <string name="dismiss">关闭</string>
     <string name="unknown_genre">未知流派</string>
@@ -26,23 +26,23 @@
     <string name="settings_contributors">贡献者</string>
     <string name="play_next">下一首播放</string>
     <string name="go_to_album">专辑</string>
-    <string name="go_to_artist">艺术家</string>
+    <string name="go_to_artist">音乐人</string>
     <string name="details">详情</string>
     <string name="shuffle">随机</string>
     <string name="repeat_mode">循环模式</string>
     <string name="unknown_playlist">未知播放列表</string>
     <string name="settings_category_appearance">外观</string>
-    <string name="album_artist">专辑艺术家</string>
+    <string name="album_artist">专辑音乐人</string>
     <string name="unknown_version">未知版本</string>
     <string name="settings_version">版本</string>
     <string name="dialog_title">标题</string>
-    <string name="dialog_artist">艺术家</string>
+    <string name="dialog_artist">音乐人</string>
     <string name="settings_category_behavior">行为</string>
     <string name="settings_mediastore_filter">歌曲最短时长（秒）</string>
     <string name="settings_repository">仓库</string>
     <string name="dialog_album">专辑</string>
     <string name="dialog_genre">流派</string>
-    <string name="dialog_album_artist">专辑艺术家</string>
+    <string name="dialog_album_artist">专辑音乐人</string>
     <string name="dialog_track_number">音轨号</string>
     <string name="dialog_year">年份</string>
     <string name="dialog_path">路径</string>
@@ -58,7 +58,7 @@
         <item quantity="other">%d 张专辑</item>
     </plurals>
     <plurals name="artists">
-        <item quantity="other">%d 位艺术家</item>
+        <item quantity="other">%d 位音乐人</item>
     </plurals>
     <plurals name="items">
         <item quantity="other">%d 个条目</item>
@@ -145,7 +145,7 @@
     <string name="fgs_failed_title">无法恢复音乐播放</string>
     <string name="fgs_failed_channel">播放无法恢复</string>
     <string name="album_covers_enhance_desc">展示高品质歌曲封面，并允许专辑和歌曲封面有所不同（需要照片访问权限）</string>
-    <string name="album_covers_enhance">增强的专辑封面加载</string>
+    <string name="album_covers_enhance">增强型专辑封面加载</string>
     <string name="share">分享</string>
     <string name="sort_by_release_date">发布日期</string>
     <string name="timer_expiry">睡眠定时器将在 %s 时暂停音乐</string>
@@ -178,7 +178,7 @@
     <string name="yes">是</string>
     <string name="no">否</string>
     <string name="sort_by_file_path">文件路径</string>
-    <string name="sort_by_album_artist">专辑艺术家 -&gt; 标题</string>
+    <string name="sort_by_album_artist">专辑音乐人 -&gt; 标题</string>
     <string name="delete_really">是否确定要删除“%s”？此操作无法撤销。</string>
     <string name="settings_contributors_click">%s（点击查看更多！）</string>
     <string name="spk_channel_out_9point1point6">9.1.6 声道</string>
@@ -310,8 +310,8 @@
     <string name="device_type_ble_broadcast">BLE 广播</string>
     <string name="mix_port_flag_bit_perfect">位元完美</string>
     <string name="mix_port_flag_ultrasound">超声波</string>
-    <string name="mix_port_flag_spatializer">空间音频</string>
-    <string name="mix_port_flag_gapless_offload">Gapless offload</string>
+    <string name="mix_port_flag_spatializer">空间化程序</string>
+    <string name="mix_port_flag_gapless_offload">无间隙分流</string>
     <string name="mix_port_flag_incall_music">通话期间播放音乐</string>
     <string name="mix_port_flag_voip_rx">VoIP 接收</string>
     <string name="mix_port_flag_mmap_noirq">MMAP (没有 IRQ)</string>
@@ -321,9 +321,9 @@
     <string name="mix_port_flag_raw">原始</string>
     <string name="mix_port_flag_tts">TTS</string>
     <string name="mix_port_flag_hw_av_sync">硬件 A/V 同步</string>
-    <string name="mix_port_flag_non_blocking">Non-blocking</string>
-    <string name="mix_port_flag_compress_offload">Compressed offload</string>
-    <string name="mix_port_flag_deep_buffer">Deep buffer</string>
+    <string name="mix_port_flag_non_blocking">非阻塞</string>
+    <string name="mix_port_flag_compress_offload">压缩分流</string>
+    <string name="mix_port_flag_deep_buffer">深度缓冲区</string>
     <string name="refreshing_wait">正在刷新，请稍等…</string>
     <string name="create_playlist">新建播放列表…</string>
     <string name="log_attachment">日志将会自动作为附件发送</string>
@@ -351,7 +351,7 @@
     <string name="spk_encoding_amr_wb">AMR-WB</string>
     <string name="offload_enabled_if_supported">始终启用</string>
     <string name="offload_enabled_if_gapless">启用（如果无缝播放可用）</string>
-    <string name="settings_audio_offload">卸载音频（省电）</string>
+    <string name="settings_audio_offload">音频分流（省电）</string>
     <string name="disabled">禁用</string>
     <string name="spk_encoding_flac">FLAC</string>
     <string name="spk_encoding_aac">AAC</string>
@@ -366,7 +366,7 @@
     <string name="spk_encoding_mp2">MPEG-2</string>
     <string name="spk_encoding_qcelp">QCELP</string>
     <string name="app_name">Gramophone</string>
-    <string name="mix_port_flag_primary">默认输出</string>
+    <string name="mix_port_flag_primary">主要输出</string>
     <string name="mix_port_flag_direct">直通</string>
     <string name="mix_port_flag_fast">低延迟</string>
     <string name="spk_encoding_vorbis">Vorbis</string>
@@ -448,7 +448,7 @@
     <string name="settings_stop_on_dismiss_summary">从最近任务中关闭应用时停止播放</string>
     <string name="compact_grid">网格（紧凑）</string>
     <string name="sort_by_album_year">专辑年份</string>
-    <string name="sort_by_album_artist_year"><![CDATA[专辑艺术家 -> 年份]]></string>
+    <string name="sort_by_album_artist_year"><![CDATA[专辑音乐人 -> 年份]]></string>
     <string name="forbidden_symbol_error">名称中包含无效字符</string>
     <string name="settings_replaygain">回放增益</string>
     <string name="settings_replaygain_mode">模式</string>
@@ -465,7 +465,7 @@
     <string name="settings_replaygain_no_rg_amp_desc">对无回放增益标签的过响歌曲自动降低音量</string>
     <string name="settings_replaygain_preamp_desc">带有回放增益标签的歌曲自动增大或减小音量。较高的值可能会因削波预防而导致动态范围损失。</string>
     <string name="settings_replaygain_mode_desc">“智能”仅在连续播放同一专辑中的歌曲时才会自动保留专辑动态范围。</string>
-    <string name="sort_by_artist_year"><![CDATA[艺术家 -> 年份]]></string>
+    <string name="sort_by_artist_year"><![CDATA[音乐人 -> 年份]]></string>
     <string name="clear_queue">清除队列</string>
     <string name="contributors_saladnoober">质量保证</string>
     <string name="actions_query_shuffle_all_songs">随机播放所有歌曲</string>
@@ -476,4 +476,5 @@
     <string name="actions_query_start_random_music">开始随机播放音乐</string>
     <string name="actions_query_start_random_songs">开始随机播放歌曲</string>
     <string name="actions_query_shuffle_specific">随机播放 $item_name</string>
+    <string name="offload_enabled_no_gapless">始终启用，但没有无间隙分流</string>
 </resources>
