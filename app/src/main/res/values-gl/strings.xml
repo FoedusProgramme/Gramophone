@@ -481,4 +481,5 @@
     <string name="actions_query_start_random_music">comezar coa música ao chou</string>
     <string name="actions_query_start_random_songs">comezar con cancións ao chou</string>
     <string name="actions_query_shuffle_specific">barallar $item_name</string>
+    <string name="offload_enabled_no_gapless">Sempre activado, pero sen evitar o espazo</string>
 </resources>
