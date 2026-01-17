@@ -310,7 +310,7 @@
     <string name="mix_port_flag_bit_perfect">Bit perfect (reprodukcija bez promjena)</string>
     <string name="mix_port_flag_ultrasound">Ultrasound</string>
     <string name="mix_port_flag_spatializer">Dodatak prostornog zvuka</string>
-    <string name="mix_port_flag_gapless_offload">Prebacivanje signala bez prekida</string>
+    <string name="mix_port_flag_gapless_offload">Prebacivanje bezprekidnih signala</string>
     <string name="mix_port_flag_incall_music">Glazba tijekom poziva</string>
     <string name="mix_port_flag_voip_rx">VoIP RX</string>
     <string name="mix_port_flag_mmap_noirq">MMAP (bez irq)</string>
@@ -437,7 +437,7 @@
     <string name="add_to_queue">Dodaj u red čekanja</string>
     <string name="disabled">Isključeno</string>
     <string name="offload_enabled_if_supported">Uvijek uključeno</string>
-    <string name="offload_enabled_if_gapless">Uključeno je ako je reprodukcija bez prekida moguća</string>
+    <string name="offload_enabled_if_gapless">Uključeno, ako je bezprekidna reprodukcija moguća</string>
     <string name="settings_telegram">Telegram</string>
     <string name="spk_encoding_pcm_20bit">20-bit PCM</string>
     <string name="spk_encoding_pcm_20bit_big_endian">20-bit PCM (big endian)</string>
@@ -478,4 +478,13 @@
     <string name="settings_replaygain_boost_desc">"„Pojačanje glasnoće” (Boost) će reproducirati „Ujednačavanje glasnoće” i drugu glazbu pri većoj glasnoći od one postavljene na tvom uređaju. (Ako je glasnoća uređaja postavljena blizu 100 %, „Pojačanje glasnoće” neće dodatno povećati glasnoću.) Uz „Pojačanje glasnoće” možeš uživati u glazbi koja ima sličnu glasnoću kao i druge aplikacije, na primjer igre. Imaj na umu da je ova funkcija eksperimentalna i može ometati rad eksternih ekvilajzer aplikacija. „Pojačanje glasnoće” ne radi s Bluetooth slušalicama. U slučaju problema povezanih s glasnoćom, isključi „Pojačanje glasnoće” tako da opciju postaviš na 0 dB. "</string>
     <string name="sort_by_artist_year"><![CDATA[Izvođač -> godina]]></string>
     <string name="clear_queue">Isprazni red čekanja</string>
+    <string name="actions_query_shuffle_all_songs">promiješaj sve pjesme</string>
+    <string name="actions_query_shuffle_everything">promiješaj sve</string>
+    <string name="actions_query_play_random_songs">reproduciraj pjesme nasumice</string>
+    <string name="actions_query_play_random_stuff">reproduciraj stvari nasumice</string>
+    <string name="actions_query_play_randomly">reproduciraj nasumice</string>
+    <string name="actions_query_start_random_music">pokreni nasumičnu glazbu</string>
+    <string name="actions_query_start_random_songs">pokreni nasumične glazbe</string>
+    <string name="actions_query_shuffle_specific">primiješaj $item_name</string>
+    <string name="offload_enabled_no_gapless">Uvijek uključeno, ali bez bezprekidnog DSP-a</string>
 </resources>
