@@ -309,7 +309,7 @@
     <string name="mix_port_flag_sync">Synchronizuj</string>
     <string name="mix_port_flag_non_blocking">Bez blokowania</string>
     <string name="audio_signal_chain">Łańcuch sygnału audio</string>
-    <string name="mix_port_flag_gapless_offload">wspracie Gapless</string>
+    <string name="mix_port_flag_gapless_offload">Wsparcie gapless</string>
     <string name="mix_port_flag_fast">Szybki</string>
     <string name="mix_port_flag_primary">Główne wyjście</string>
     <string name="spk_encoding_pcm_8_24bit">24-bit (8.24) PCM</string>
@@ -434,7 +434,7 @@
     <string name="add_to_queue">Dodaj do kolejki</string>
     <string name="disabled">Wyłączono</string>
     <string name="offload_enabled_if_supported">Zawsze włączono</string>
-    <string name="offload_enabled_if_gapless">Włączono, jeśli możliwe jest odtwarzanie bez przerw</string>
+    <string name="offload_enabled_if_gapless">Włączono, jeśli możliwe jest odtwarzanie gapless</string>
     <string name="settings_audio_offload">Odciążenie audio (oszczędza baterię)</string>
     <string name="settings_telegram">Telegram</string>
     <string name="timer_expiry_eos">Czasomierz snu wstrzyma odtwarzanie muzyki po zakończeniu utworu w %s</string>
@@ -492,4 +492,5 @@
     <string name="actions_query_start_random_music">uruchom losową muzykę</string>
     <string name="actions_query_start_random_songs">uruchom losowe piosenki</string>
     <string name="actions_query_shuffle_specific">mieszaj $item_name</string>
+    <string name="offload_enabled_no_gapless">Zawsze włączone, ale bez wsparcia gapless</string>
 </resources>
