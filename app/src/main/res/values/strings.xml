@@ -501,4 +501,6 @@
     <string name="actions_query_start_random_music">start random music</string>
     <string name="actions_query_start_random_songs">start random songs</string>
     <string name="actions_query_shuffle_specific">shuffle $item_name</string>
+    <string name="please_allow_to_delete">Press allow to delete files</string>
+    <string name="choose_sd">Choose %s</string>
 </resources>
