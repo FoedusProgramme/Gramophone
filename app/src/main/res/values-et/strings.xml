@@ -483,4 +483,6 @@
     <string name="actions_query_start_random_songs">käivita juhuslik lugude valik</string>
     <string name="actions_query_shuffle_specific">sega $item_name</string>
     <string name="offload_enabled_no_gapless">Alati kasutusel, kuid katkestusteta taasesituseta protsessorivälise töötlusega</string>
+    <string name="please_allow_to_delete">Failide kustutamiseks klõpsa „Luba“</string>
+    <string name="choose_sd">Vali %s</string>
 </resources>
