@@ -477,4 +477,6 @@
     <string name="actions_query_start_random_songs">开始随机播放歌曲</string>
     <string name="actions_query_shuffle_specific">随机播放 $item_name</string>
     <string name="offload_enabled_no_gapless">始终启用，但没有无间隙分流</string>
+    <string name="please_allow_to_delete">按允许删除文件</string>
+    <string name="choose_sd">选择 %s</string>
 </resources>
