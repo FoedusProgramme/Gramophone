@@ -493,4 +493,6 @@
     <string name="actions_query_start_random_songs">uruchom losowe piosenki</string>
     <string name="actions_query_shuffle_specific">mieszaj $item_name</string>
     <string name="offload_enabled_no_gapless">Zawsze włączone, ale bez wsparcia gapless</string>
+    <string name="please_allow_to_delete">Zezwól na usuwanie plików</string>
+    <string name="choose_sd">Wybierz %s</string>
 </resources>
