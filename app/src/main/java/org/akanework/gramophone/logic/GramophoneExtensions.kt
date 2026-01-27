@@ -59,6 +59,7 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.children
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updateMargins
+import androidx.media3.common.BundleListRetriever
 import androidx.media3.common.C
 import androidx.media3.common.Format
 import androidx.media3.common.MediaItem
@@ -75,6 +76,11 @@ import org.akanework.gramophone.BuildConfig
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_GET_AUDIO_FORMAT
 import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_GET_LYRICS
+import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QB_DEL
+import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QB_ENQUEUE
+import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QB_GET_ALL
+import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QB_LOAD_QUEUE
+import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QB_REORDER
 import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QUERY_TIMER
 import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_SET_TIMER
 import org.akanework.gramophone.logic.utils.AfFormatInfo
@@ -336,6 +342,70 @@ fun MediaController.getAudioFormat(): AudioFormatDetector.AudioFormats =
             BundleCompat.getParcelable(it, "bt", BtCodecInfo::class.java)
         )
     }
+
+fun MediaController.getQueues(): List<MultiQueueObject>? =
+    sendCustomCommand(
+        SessionCommand(SERVICE_QB_GET_ALL, Bundle.EMPTY),
+        Bundle.EMPTY
+    ).get().extras.run {
+        if (containsKey("allQueues")) {
+            val binder = getBinder("allQueues")!!
+            BundleListRetriever.getList(binder).map {
+                MultiQueueObject.fromBundle(it)
+            }
+        } else {
+            throw IllegalArgumentException("expected allQueues to be set")
+        }
+    }
+
+fun MediaController.loadQueue(index: Int) {
+    sendCustomCommand(
+        SessionCommand(SERVICE_QB_LOAD_QUEUE, Bundle.EMPTY).apply {
+            customExtras.putInt("index", index)
+        }, Bundle.EMPTY
+    )
+}
+
+fun MediaController.deleteQueue(index: Int): Boolean =
+    sendCustomCommand(
+        SessionCommand(SERVICE_QB_DEL, Bundle.EMPTY).apply {
+            customExtras.putInt("index", index)
+        }, Bundle.EMPTY
+    ).get().extras.run {
+        if (containsKey("status"))
+            getBoolean("status")
+        else throw IllegalArgumentException("expected status to be set")
+    }
+
+fun MediaController.reorderQueue(from: Int, to: Int): Boolean =
+    sendCustomCommand(
+        SessionCommand(SERVICE_QB_REORDER, Bundle.EMPTY).apply {
+            customExtras.putInt("from", from)
+            customExtras.putInt("to", to)
+        }, Bundle.EMPTY
+    ).get().extras.run {
+        if (containsKey("status"))
+            getBoolean("status")
+        else throw IllegalArgumentException("expected status to be set")
+    }
+
+// TODO: shuffle and repeat mode
+fun MediaController.playQueue(
+    title: String?,
+    mediaList: List<MediaItem>,
+    mediaItemIndex: Int,
+    isOriginal: Boolean
+) {
+    sendCustomCommand(
+        SessionCommand(SERVICE_QB_ENQUEUE, Bundle.EMPTY).apply {
+            customExtras.putString("title", title)
+            customExtras.putInt("mediaItemIndex", mediaItemIndex)
+            customExtras.putBoolean("isOriginal", isOriginal)
+            val binder = BundleListRetriever(mediaList.map { it.toBundleIncludeLocalConfiguration() })
+            customExtras.putBinder("mediaList", binder)
+        }, Bundle.EMPTY
+    )
+}
 
 fun Tracks.getFirstSelectedTrackFormatByType(type: @C.TrackType Int): Format? {
     for (i in groups) {

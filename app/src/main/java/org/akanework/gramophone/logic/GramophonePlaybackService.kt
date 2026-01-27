@@ -45,8 +45,10 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.IntentCompat
+import androidx.core.os.BundleCompat.getBinder
 import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.AudioAttributes
+import androidx.media3.common.BundleListRetriever
 import androidx.media3.common.C
 import androidx.media3.common.DeviceInfo
 import androidx.media3.common.Format
@@ -153,11 +155,19 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         const val PENDING_INTENT_NOTIFY_ID = 1
         const val PENDING_INTENT_WIDGET_ID = 2
         const val PENDING_INTENT_FAVE_ID = 3
+
         const val SERVICE_SET_TIMER = "set_timer"
         const val SERVICE_QUERY_TIMER = "query_timer"
         const val SERVICE_GET_AUDIO_FORMAT = "get_audio_format"
         const val SERVICE_GET_LYRICS = "get_lyrics"
         const val SERVICE_TIMER_CHANGED = "changed_timer"
+
+        const val SERVICE_QB_GET_ALL = "qb_get_all"
+        const val SERVICE_QB_LOAD_QUEUE = "qb_load"
+        const val SERVICE_QB_DEL = "qb_delete"
+        const val SERVICE_QB_REORDER = "qb_reorder"
+        const val SERVICE_QB_ENQUEUE = "qb_enqueue"
+
         var instanceForWidgetAndLyricsOnly: GramophonePlaybackService? = null
     }
 
@@ -168,6 +178,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
     val endedWorkaroundPlayer
         get() = mediaSession?.player as EndedWorkaroundPlayer?
     private var controller: MediaBrowser? = null
+    val qb: QueueBoard = QueueBoard(this)
     private val sendLyrics = Runnable { scheduleSendingLyrics(false) }
     var lyrics: SemanticLyrics? = null
         private set
@@ -777,6 +788,11 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         availableSessionCommands.add(SessionCommand(SERVICE_QUERY_TIMER, Bundle.EMPTY))
         availableSessionCommands.add(SessionCommand(SERVICE_GET_LYRICS, Bundle.EMPTY))
         availableSessionCommands.add(SessionCommand(SERVICE_GET_AUDIO_FORMAT, Bundle.EMPTY))
+        availableSessionCommands.add(SessionCommand(SERVICE_QB_GET_ALL, Bundle.EMPTY))
+        availableSessionCommands.add(SessionCommand(SERVICE_QB_LOAD_QUEUE, Bundle.EMPTY))
+        availableSessionCommands.add(SessionCommand(SERVICE_QB_DEL, Bundle.EMPTY))
+        availableSessionCommands.add(SessionCommand(SERVICE_QB_REORDER, Bundle.EMPTY))
+        availableSessionCommands.add(SessionCommand(SERVICE_QB_ENQUEUE, Bundle.EMPTY))
         return builder.setAvailableSessionCommands(availableSessionCommands.build()).build()
     }
 
@@ -957,6 +973,33 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                     SessionResult(SessionResult.RESULT_SUCCESS).also {
                         it.extras.putParcelable("lyrics", lyrics)
                     }
+                }
+
+                SERVICE_QB_GET_ALL -> {
+                    SessionResult(SessionResult.RESULT_SUCCESS).also { res ->
+                        val queueList: List<MultiQueueObject> = qb.getAllQueues()
+                        val binder = BundleListRetriever(queueList.map { it.toBundle() })
+                        res.extras.putBinder("allQueues", binder)
+                    }
+                }
+
+                SERVICE_QB_ENQUEUE -> {
+                    val title = customCommand.customExtras.getString("title") ?: "Queue"
+                    val mediaItemIndex = customCommand.customExtras.getInt("mediaItemIndex")
+                    val isOriginal = customCommand.customExtras.getBoolean("isOriginal")
+                    val binder = customCommand.customExtras.getBinder("mediaList")!!
+                    val mediaList = BundleListRetriever.getList(binder).map {
+                        MediaItem.fromBundle(it)
+                    }
+
+                    val mq = qb.addQueue(title, mediaList, mediaItemIndex, isOriginal)
+                    qb.commitQueue(mq)
+                    if (!mq.queue.isEmpty()) {
+                        endedWorkaroundPlayer!!.prepare()
+                        endedWorkaroundPlayer!!.play()
+                    }
+
+                    SessionResult(SessionResult.RESULT_SUCCESS)
                 }
 
                 else -> {
