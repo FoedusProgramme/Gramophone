@@ -477,4 +477,7 @@
     <string name="actions_query_start_random_music">音楽をランダムで開始</string>
     <string name="actions_query_start_random_songs">曲をランダムで開始</string>
     <string name="actions_query_shuffle_specific">$item_name をシャッフル</string>
+    <string name="offload_enabled_no_gapless">常に有効化しますが、ギャップレスオフロードはありません</string>
+    <string name="please_allow_to_delete">ファイルを削除するには許可してください</string>
+    <string name="choose_sd">「%s」を選択</string>
 </resources>
