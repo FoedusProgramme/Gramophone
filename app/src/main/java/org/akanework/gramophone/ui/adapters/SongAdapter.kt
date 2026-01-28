@@ -20,16 +20,13 @@ package org.akanework.gramophone.ui.adapters
 import android.net.Uri
 import android.view.View
 import android.widget.Toast
-import androidx.activity.result.IntentSenderRequest
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.app.ShareCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
-import androidx.media3.common.util.Log
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -37,7 +34,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.akanework.gramophone.R
+import org.akanework.gramophone.logic.GramophonePlaybackService
+import org.akanework.gramophone.logic.playQueue
 import org.akanework.gramophone.logic.getFile
+import org.akanework.gramophone.logic.getQueues
 import org.akanework.gramophone.logic.requireMediaStoreId
 import org.akanework.gramophone.logic.utils.Flags
 import org.akanework.gramophone.ui.MainActivity
@@ -177,9 +177,12 @@ class SongAdapter(
         val mediaController = mainActivity.getPlayer()
         mediaController?.apply {
             val songList = getSongList()
-            setMediaItems(songList, position, C.TIME_UNSET)
-            prepare()
-            play()
+            playQueue(
+                title = "Song: " + item.mediaMetadata.title, // TODO: title
+                mediaList = songList,
+                mediaItemIndex = position,
+                isOriginal = true,
+            )
         }
     }
 
