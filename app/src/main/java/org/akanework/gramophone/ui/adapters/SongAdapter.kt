@@ -34,10 +34,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.akanework.gramophone.R
-import org.akanework.gramophone.logic.GramophonePlaybackService
 import org.akanework.gramophone.logic.playQueue
 import org.akanework.gramophone.logic.getFile
-import org.akanework.gramophone.logic.getQueues
 import org.akanework.gramophone.logic.requireMediaStoreId
 import org.akanework.gramophone.logic.utils.Flags
 import org.akanework.gramophone.ui.MainActivity

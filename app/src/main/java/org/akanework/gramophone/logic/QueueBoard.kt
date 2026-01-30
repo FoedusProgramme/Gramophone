@@ -1,18 +1,17 @@
 package org.akanework.gramophone.logic
 
+import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.ui.util.fastFirstOrNull
 import androidx.compose.ui.util.fastSumBy
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player.REPEAT_MODE_OFF
 import org.akanework.gramophone.logic.utils.CircularShuffleOrder
-import org.akanework.gramophone.logic.utils.exoplayer.EndedWorkaroundPlayer
-import java.util.LinkedList
-import kotlin.math.max
-import kotlin.math.min
+import java.time.LocalDateTime
 import kotlin.random.Random
 
 
@@ -21,34 +20,28 @@ import kotlin.random.Random
  *
  * Queues are ordered most recent modification,
  */
+//@RequiresApi(Build.VERSION_CODES.O) // TODO: LocalDateTime methods requires API level 26... but I don't think so...?
 class QueueBoard(
     private val player: GramophonePlaybackService,
     val masterQueues: MutableList<MultiQueueObject> = mutableListOf(),
     queues: MutableList<MultiQueueObject> = ArrayList(),
-    private var maxQueues: Int = 20
 ) {
     private val QUEUE_DEBUG = true
     private val TAG = QueueBoard::class.simpleName.toString()
 
     init {
         masterQueues.clear()
-        if (maxQueues < 0) {
-            maxQueues = 1
-        }
         if (!queues.isEmpty()) {
-            masterQueues.addAll(
-                queues.subList(
-                    (queues.size - maxQueues).coerceAtLeast(0),
-                    queues.size
-                )
-            )
+            masterQueues.addAll(queues)
         }
 
         // todo: remove when figure out persist and load
         masterQueues.add(
             MultiQueueObject(
                 id = Random.nextLong(),
-                title = "[Existing queue]",
+                index = 0,
+                title = "[LastPlayedManager]",
+                expiry = null,
                 queue = ArrayList(),
                 startIndex = C.INDEX_UNSET,
                 startPositionMs = C.TIME_UNSET,
@@ -81,16 +74,18 @@ class QueueBoard(
      *
      * @param index
      */
-    fun commitQueue(index: Int, shouldResume: Boolean = true) {
+    fun commitQueue(index: Int, shouldResume: Boolean = true, saveLast: Boolean = true) {
         if (index < 0 || index >= masterQueues.size) {
             Log.w(TAG, "commitQueue() index out of bounds. Aborting")
             return
         }
 
         // assume last == active queue, second last == to load. No save when no active queue
-        val old = masterQueues.lastIndex
-        if (masterQueues.size > 1 && old >= 0) {
-            syncQueueFromPlayer(masterQueues[old])
+        if (saveLast) {
+            val old = masterQueues.lastIndex
+            if (masterQueues.size > 1 && old >= 0) {
+                syncQueueFromPlayer(masterQueues[old])
+            }
         }
 
         val new = masterQueues[index]
@@ -98,6 +93,15 @@ class QueueBoard(
         masterQueues.add(new)
         setCurrQueue(new, false, shouldResume)
     }
+
+    fun pinQueue(index: Int) {
+        masterQueues[index].expiry = null
+    }
+
+    fun unpinQueue(index: Int) {
+        masterQueues[index].expiry = LocalDateTime.now()
+    }
+
 
     /**
      * Add a new queue to the QueueBoard, or add to a queue if it exists.
@@ -190,13 +194,12 @@ class QueueBoard(
             // (4) add new queue
             if (QUEUE_DEBUG)
                 Log.d(TAG, "Adding: (4) new queue")
-            if (masterQueues.size >= maxQueues) {
-                deleteQueue(masterQueues.first())
-            }
 
             val newQueue = MultiQueueObject(
                 id = Random.nextLong(),
+                index = -1,
                 title = title,
+                expiry = LocalDateTime.now().plusHours(10L),
                 queue = ArrayList(mediaList),
                 startIndex = mediaItemIndex,
                 startPositionMs = C.TIME_UNSET,
@@ -225,6 +228,32 @@ class QueueBoard(
             masterQueues.remove(match)
         } else {
             Log.w(TAG, "Cannot find queue to delete: ${mq.title}")
+        }
+
+        return masterQueues.size
+    }
+
+    /**
+     * Deletes a queue.
+     *
+     * When deleting the active queue,
+     *
+     * @param mq
+     */
+    fun deleteQueue(index: Int): Int {
+        if (QUEUE_DEBUG)
+            Log.d(TAG, "DELETING QUEUE AT INDEX: $index")
+        if (index == masterQueues.lastIndex) {
+            masterQueues.removeAt(index)
+            if (index <= 0) {
+                player.pauseAllPlayersAndStopSelf() // TODO: correct way to stop playback
+            } else {
+                commitQueue(index - 1, false)
+            }
+        } else if (index < masterQueues.lastIndex - 1) {
+            masterQueues.removeAt(index)
+        } else {
+            throw IndexOutOfBoundsException("Index of queue $index to delete OOB of 0-${masterQueues.size - 1}")
         }
 
         return masterQueues.size
@@ -260,7 +289,18 @@ class QueueBoard(
     /**
      * Get all copy of all queues
      */
-    fun getAllQueues() = masterQueues.dropLast(1)
+    fun getInactiveQueues() = masterQueues.dropLast(1)
+
+    /**
+     * Get a single queue (or several queues in the future)
+     */
+    fun getQueue(index: Int): List<MultiQueueObject> {
+        return if (index == C.INDEX_UNSET) {
+            masterQueues.lastOrNull()
+        } else {
+            masterQueues.getOrNull(index)
+        }?.let { listOf(it) } ?: emptyList()
+    }
 
 
     fun renameQueue(mq: MultiQueueObject, newName: String): Boolean {
@@ -420,6 +460,9 @@ private fun MutableList<MultiQueueObject>.bubbleUp(mq: MultiQueueObject) {
     if (lastIndex >= 0) {
         add(lastIndex, mq)
     }
+    forEachIndexed { index, mq ->
+        mq.index = index
+    }
 }
 
 
@@ -428,9 +471,10 @@ private fun MutableList<MultiQueueObject>.bubbleUp(mq: MultiQueueObject) {
  * @param queue List of media items
  */
 data class MultiQueueObject(
-    val id: Long,
-//    var index: Int, // order of queue if saved to database
+    val id: Long, // queue uid
+    var index: Int, // order of queue
     var title: String,
+    var expiry: LocalDateTime?,
     /**
      * The order of songs are dynamic. This should not be accessed from outside QueueBoard.
      */
@@ -494,7 +538,9 @@ data class MultiQueueObject(
 //            val binder = BundleListRetriever(queue.map { it.toBundle() })
 
             putLong("id", id)
+            putInt("index", index)
             putString("title", title)
+            putString("expiry", expiry?.toString())
 
 //            putBinder("queue", binder)
             putParcelableArrayList("queue", ArrayList<Parcelable>(queue.map { it.toBundle() }))
@@ -513,11 +559,12 @@ data class MultiQueueObject(
 //            val binder = bundle.getBinder("queue")!!
 //            val queue = BundleListRetriever.getList(binder).map { MediaItem.fromBundle(it) }
 //                .toMutableList()
-
+//            val epochMillis = bundle.getLong("expiry")
             return MultiQueueObject(
                 id = bundle.getLong("id"),
+                index = bundle.getInt("index"),
                 title = bundle.getString("title") ?: "",
-
+                expiry = bundle.getString("expiry")?.let { LocalDateTime.parse(it) },
 //                queue = queue,
                 queue = (bundle.getParcelableArrayList<Bundle>("queue")
                     ?: emptyList()).map { MediaItem.fromBundle(it) }.toMutableList(),

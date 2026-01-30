@@ -66,6 +66,7 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.Tracks
 import androidx.media3.common.util.Log
+import androidx.media3.exoplayer.source.ShuffleOrder
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionCommand
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
@@ -78,9 +79,12 @@ import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVIC
 import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_GET_LYRICS
 import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QB_DEL
 import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QB_ENQUEUE
-import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QB_GET_ALL
+import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QB_GET_INACTIVE
+import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QB_GET_QUEUE
 import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QB_LOAD_QUEUE
+import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QB_PIN_QUEUE
 import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QB_REORDER
+import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QB_UNPIN_QUEUE
 import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QUERY_TIMER
 import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_SET_TIMER
 import org.akanework.gramophone.logic.utils.AfFormatInfo
@@ -94,6 +98,7 @@ import org.akanework.gramophone.ui.MainActivity
 import org.jetbrains.annotations.Contract
 import java.io.File
 import java.io.FileInputStream
+import java.util.LinkedList
 import java.util.Locale
 import kotlin.math.max
 
@@ -343,9 +348,9 @@ fun MediaController.getAudioFormat(): AudioFormatDetector.AudioFormats =
         )
     }
 
-fun MediaController.getQueues(): List<MultiQueueObject>? =
+fun MediaController.getInactiveQueues(): List<MultiQueueObject> =
     sendCustomCommand(
-        SessionCommand(SERVICE_QB_GET_ALL, Bundle.EMPTY),
+        SessionCommand(SERVICE_QB_GET_INACTIVE, Bundle.EMPTY),
         Bundle.EMPTY
     ).get().extras.run {
         if (containsKey("allQueues")) {
@@ -358,6 +363,78 @@ fun MediaController.getQueues(): List<MultiQueueObject>? =
         }
     }
 
+fun MediaController.getQueue(index: Int = C.INDEX_UNSET): MultiQueueObject? =
+    sendCustomCommand(
+        SessionCommand(SERVICE_QB_GET_QUEUE, Bundle.EMPTY).apply {
+            customExtras.putInt("index", index)
+        }, Bundle.EMPTY
+    ).get().extras.run {
+        if (containsKey("allQueues")) {
+            val binder = getBinder("allQueues")!!
+            BundleListRetriever.getList(binder).map {
+                MultiQueueObject.fromBundle(it)
+            }
+        } else {
+            throw IllegalArgumentException("expected allQueues to be set")
+        }.firstOrNull()
+    }
+
+
+fun shuffledItems(
+    items: List<MediaItem>,
+    order: ShuffleOrder
+): List<MediaItem> {
+    val result = mutableListOf<MediaItem>()
+
+    var i = order.firstIndex
+    while (i != C.INDEX_UNSET) {
+        result.add(items[i])
+        i = order.getNextIndex(i)
+    }
+
+    return result
+}
+
+fun shuffledIndices(order: ShuffleOrder): MutableList<Int> {
+    val result = mutableListOf<Int>()
+
+    var i = order.firstIndex
+    while (i != C.INDEX_UNSET) {
+        result.add(i)
+        i = order.getNextIndex(i)
+    }
+
+    return result
+}
+
+fun MediaController.getQueueForUi(index: Int = C.INDEX_UNSET): Pair<MutableList<Int>, MutableList<MediaItem>>? {
+    if (index == -1) {
+        return null
+    }
+    return sendCustomCommand(
+        SessionCommand(SERVICE_QB_GET_QUEUE, Bundle.EMPTY).apply {
+            customExtras.putInt("index", index)
+        }, Bundle.EMPTY
+    ).get().extras.run {
+        if (containsKey("allQueues")) {
+            val binder = getBinder("allQueues")!!
+            BundleListRetriever.getList(binder).map {
+                val mq = MultiQueueObject.fromBundle(it)
+                val items = mq.queue
+                val indexes: MutableList<Int> = if (mq.shuffleOrder == null) {
+                    (0 until mq.getSize()).toMutableList()
+                } else {
+                    shuffledIndices(mq.shuffleOrder!!)
+                }
+
+                Pair(indexes, items)
+            }
+        } else {
+            throw IllegalArgumentException("expected allQueues to be set")
+        }.firstOrNull()
+    }
+}
+
 fun MediaController.loadQueue(index: Int) {
     sendCustomCommand(
         SessionCommand(SERVICE_QB_LOAD_QUEUE, Bundle.EMPTY).apply {
@@ -365,6 +442,24 @@ fun MediaController.loadQueue(index: Int) {
         }, Bundle.EMPTY
     )
 }
+
+fun MediaController.pinQueue(index: Int) {
+    sendCustomCommand(
+        SessionCommand(SERVICE_QB_PIN_QUEUE, Bundle.EMPTY).apply {
+            customExtras.putInt("index", index)
+        }, Bundle.EMPTY
+    )
+}
+
+
+fun MediaController.unQueue(index: Int) {
+    sendCustomCommand(
+        SessionCommand(SERVICE_QB_UNPIN_QUEUE, Bundle.EMPTY).apply {
+            customExtras.putInt("index", index)
+        }, Bundle.EMPTY
+    )
+}
+
 
 fun MediaController.deleteQueue(index: Int): Boolean =
     sendCustomCommand(

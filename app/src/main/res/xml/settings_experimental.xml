@@ -73,6 +73,14 @@
             app:iconSpaceReserved="false"
             app:useSimpleSummaryProvider="true" />
 
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="mq_preview"
+            android:layout="@layout/preference_switch"
+            android:title="@string/settings_mq_preview"
+            android:widgetLayout="@layout/preference_switch_widget"
+            app:iconSpaceReserved="false" />
+
     </PreferenceCategory>
 
 

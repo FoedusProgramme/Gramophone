@@ -508,4 +508,5 @@
     <string name="favorite_failed_title">Failed to change favourite state of song</string>
     <string name="favorite_failed_text">Please click here to apply changes, by granting permission to the favourite playlist file</string>
     <string name="error_in_bg">Errors occuring in the background</string>
+    <string name="settings_mq_preview">Enable multiple queues preview</string>
 </resources>

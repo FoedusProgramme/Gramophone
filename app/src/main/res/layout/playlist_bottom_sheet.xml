@@ -12,45 +12,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/clearQueue"
-        android:layout_width="wrap_content"
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/queue_head"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="-16dp"
-        android:text="@string/clear_queue"
-        app:icon="@drawable/baseline_delete_sweep_24"
         app:layout_constrainedWidth="true"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/scrollToPlaying"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/bottomSheetDragHandle" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/scrollToPlaying"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:layout_marginTop="-16dp"
-        android:layout_marginEnd="8dp"
-        android:text="@string/scroll_to_playing"
-        app:icon="@drawable/ic_unfold_double"
-        app:layout_constrainedWidth="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1"
-        app:layout_constraintStart_toEndOf="@id/clearQueue"
-        app:layout_constraintTop_toBottomOf="@id/bottomSheetDragHandle" />
-
-    <org.akanework.gramophone.ui.components.Chronometer
-        android:id="@+id/duration"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/scrollToPlaying" />
 
     <com.google.android.material.divider.MaterialDivider
         android:id="@+id/divider"
@@ -59,7 +31,7 @@
         android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/duration" />
+        app:layout_constraintTop_toBottomOf="@id/queue_head" />
 
     <org.akanework.gramophone.logic.ui.MyRecyclerView
         android:id="@+id/recyclerview"

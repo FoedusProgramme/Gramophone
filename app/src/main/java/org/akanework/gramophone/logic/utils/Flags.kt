@@ -15,4 +15,7 @@ object Flags {
     // It uses MediaStore favorites and I'm not sure if that was a good idea
     const val FAVORITE_SONGS = false // TODO(ASAP)
     var PLAYLIST_EDITING: Boolean? = null // TODO(ASAP)
+
+    // Multiple queues
+    const val MQ_PREVIEW: Boolean = false
 }

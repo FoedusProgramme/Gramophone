@@ -98,7 +98,7 @@ android {
         // bottom sheet padding, ExoPlayer requiring multidex, vector drawables and poor SD support
         // That said, supporting Android 5.0 costs tolerable amounts of tech debt, and we plan to
         // keep support for it for a while.
-        minSdk = 21
+        minSdk = 26 // TODO: revert later
         targetSdk = 35
         versionCode = 20
         versionName = "1.0.17"

@@ -1,26 +1,60 @@
 package org.akanework.gramophone.ui.components
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.SystemClock
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.graphics.Insets
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
+import androidx.media3.common.Timeline
 import androidx.media3.session.MediaBrowser
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import kotlinx.coroutines.launch
 import org.akanework.gramophone.R
+import org.akanework.gramophone.logic.getQueueForUi
 import org.akanework.gramophone.logic.replaceAllSupport
 import org.akanework.gramophone.logic.ui.MyRecyclerView
 import org.akanework.gramophone.logic.utils.convertDurationToTimeStamp
+import org.akanework.gramophone.ui.GramophoneTheme
 import org.akanework.gramophone.ui.MainActivity
 import java.util.LinkedList
+import kotlin.text.format
 
 // TODO: support listening to externally caused changes to playlist (ie MCT).
 class PlaylistQueueSheet(
@@ -30,13 +64,13 @@ class PlaylistQueueSheet(
         get() = activity.getPlayer()
     private val playlistAdapter: PlaylistCardAdapter
     private val touchHelper: ItemTouchHelper
-    private val durationView: Chronometer
+    private val queueHead: ComposeView
+
+    private val durationState = mutableStateOf(false)
 
     init {
         setContentView(R.layout.playlist_bottom_sheet)
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
-        durationView = findViewById(R.id.duration)!!
-        durationView.isCountDown = true
         val recyclerView = findViewById<MyRecyclerView>(R.id.recyclerview)!!
         ViewCompat.setOnApplyWindowInsetsListener(recyclerView) { v, ic ->
             val i = ic.getInsets(
@@ -74,21 +108,149 @@ class PlaylistQueueSheet(
             (context.resources.getDimensionPixelOffset(R.dimen.list_height) * 0.5f).toInt()
         )
         recyclerView.fastScroll(null, null)
-        findViewById<Button>(R.id.clearQueue)!!.setOnClickListener {
-            dismiss()
-            instance?.clearMediaItems()
-        }
-        findViewById<Button>(R.id.scrollToPlaying)!!.setOnClickListener {
-            recyclerView.smoothScrollToPosition(playlistAdapter.playlist.first.indexOfFirst { i ->
-                i == (instance?.currentMediaItemIndex ?: 0)
-            })
-        }
+        recyclerView.isNestedScrollingEnabled = false // required for queueHead list scrolling
         activity.controllerViewModel.addRecreationalPlayerListener(lifecycle, this) {
             onMediaItemTransition(
                 instance?.currentMediaItem,
                 Player.MEDIA_ITEM_TRANSITION_REASON_PLAYLIST_CHANGED
             )
             onIsPlayingChanged(instance?.isPlaying ?: false)
+        }
+
+        queueHead = findViewById(R.id.queue_head)!!
+        queueHead.apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                @Composable
+                fun HeadActions(
+                    modifier: Modifier = Modifier
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                    ) {
+                        AndroidView(
+                            modifier = Modifier.fillMaxWidth(),
+                            factory = { context ->
+                                val layout = LayoutInflater.from(context)
+                                    .inflate(R.layout.playlist_bottom_sheet_actions, null)
+                                val durationView: Chronometer = findViewById(R.id.duration)!!
+                                durationView.isCountDown = true
+
+                                layout.findViewById<Button>(R.id.clearQueue)!!
+                                    .setOnClickListener {
+                                        dismiss()
+                                        instance?.clearMediaItems()
+                                    }
+                                layout.findViewById<Button>(R.id.scrollToPlaying)!!
+                                    .setOnClickListener {
+                                        recyclerView.smoothScrollToPosition(
+                                            playlistAdapter.playlist.first.indexOfFirst { i ->
+                                                i == (instance?.currentMediaItemIndex ?: 0)
+                                            })
+                                    }
+
+                                playlistAdapter.updateList()
+                                durationView.start()
+                                setOnDismissListener {
+                                    durationView.stop()
+                                }
+
+                                layout
+                            },
+                            update = { view ->
+                                val trigger = durationState.value
+                                val durationView: Chronometer = view.findViewById(R.id.duration)
+                                val pl = playlistAdapter.playlist
+
+                                val current = instance?.currentMediaItemIndex?.let {
+                                    pl.first.indexOf(it)
+                                } ?: 0
+                                val elapsedCurrentMs = (instance?.currentPosition ?: 0)
+                                durationView.format = context.getString(
+                                    R.string.duration_queue,
+                                    "%s",
+                                    pl.second.sumOf { it.mediaMetadata.durationMs ?: 0L }
+                                        .convertDurationToTimeStamp(true))
+                                if (instance?.isPlaying == true) {
+                                    durationView.start()
+                                } else {
+                                    durationView.stop()
+                                }
+                                durationView.base = SystemClock.elapsedRealtime() +
+                                        pl.second.subList(current, pl.second.size)
+                                            .sumOf { it.mediaMetadata.durationMs ?: 0L
+                                            } - elapsedCurrentMs + 1000
+                            }
+                        )
+                    }
+                }
+
+                val coroutineScope = rememberCoroutineScope()
+                val haptic = LocalHapticFeedback.current
+
+                GramophoneTheme(
+                    pureDark = false, // TODO: I don't want to do this rn. Does not respect light/dark mode
+                ) {
+                    val mqState =
+                        rememberMqState(coroutineScope, instance, this@PlaylistQueueSheet)
+                    val pagerState = rememberPagerState(pageCount = { 2 })
+                    Box {
+                        HorizontalPager(
+                            state = pagerState,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 14.dp),
+                            beyondViewportPageCount = 1,
+                            userScrollEnabled = !mqState.expanded
+                        ) { page ->
+                            when (page) {
+                                0 -> {
+                                    MqContent(
+                                        mqState = mqState,
+                                    )
+                                }
+
+                                1 -> {
+                                    HeadActions()
+                                }
+                            }
+                        }
+
+                        Row(
+                            horizontalArrangement = Arrangement.Center,
+                            modifier = Modifier
+                                .wrapContentHeight()
+                                .fillMaxWidth()
+                                .align(Alignment.BottomCenter)
+                                .alpha(if (!mqState.expanded) 1f else 0f)
+                        ) {
+                            repeat(pagerState.pageCount) { iteration ->
+                                val color = if (pagerState.currentPage == iteration) {
+                                    MaterialTheme.colorScheme.onSurface
+                                } else {
+                                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
+                                }
+                                Box(
+                                    modifier = Modifier
+                                        .padding(horizontal = 4.dp)
+                                        .clip(CircleShape)
+                                        .background(color)
+                                        .size(8.dp)
+                                        .clickable(
+                                            onClick = {
+                                                coroutineScope.launch {
+                                                    haptic.performHapticFeedback(HapticFeedbackType.ContextClick)
+                                                    pagerState.animateScrollToPage(iteration)
+                                                }
+                                            }
+                                        )
+                                )
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -97,7 +259,7 @@ class PlaylistQueueSheet(
         reason: @Player.MediaItemTransitionReason Int
     ) {
         val i = instance?.currentMediaItemIndex
-        playlistAdapter.currentMediaItemIndex = i?.let { playlistAdapter.playlist.first.indexOf(i)}
+        playlistAdapter.currentMediaItemIndex = i?.let { playlistAdapter.playlist.first.indexOf(i) }
     }
 
     override fun onPositionDiscontinuity(
@@ -112,17 +274,19 @@ class PlaylistQueueSheet(
         playlistAdapter.currentIsPlaying = isPlaying
     }
 
+    override fun onTimelineChanged(
+        timeline: Timeline,
+        reason: @Player.TimelineChangeReason Int
+    ) {
+        playlistAdapter.updateList()
+    }
+
+    fun forceUpdate(mq: Int) {
+        playlistAdapter.updateList(true, mq)
+    }
+
     private inner class PlaylistCardAdapter : EditSongAdapter(activity) {
         var playlist: Pair<MutableList<Int>, MutableList<MediaItem>> = dumpPlaylist()
-
-        init {
-            updateList()
-            durationView.start()
-            setOnDismissListener {
-                durationView.stop()
-            }
-        }
-
         var currentMediaItemIndex: Int? = null
             set(value) {
                 if (field != value) {
@@ -235,26 +399,16 @@ class PlaylistQueueSheet(
             return Pair(indexes, items)
         }
 
-        private fun updateList() {
+        fun updateList(nuke: Boolean = false, index: Int = -1) {
             updateTimer()
+            if (nuke) {
+                playlist = instance?.getQueueForUi(index) ?: dumpPlaylist()
+                notifyDataSetChanged()
+            }
         }
 
         fun updateTimer() {
-            val current = instance?.currentMediaItemIndex?.let {
-                playlist.first.indexOf(it) } ?: 0
-            val elapsedCurrentMs = (instance?.currentPosition ?: 0)
-            durationView.format = context.getString(
-                R.string.duration_queue,
-                "%s", playlist.second.sumOf { it.mediaMetadata.durationMs ?: 0L }
-                    .convertDurationToTimeStamp(true))
-            if (instance?.isPlaying == true) {
-                durationView.start()
-            } else {
-                durationView.stop()
-            }
-            durationView.base = SystemClock.elapsedRealtime() +
-                    playlist.second.subList(current, playlist.second.size)
-                        .sumOf { it.mediaMetadata.durationMs ?: 0L } - elapsedCurrentMs + 1000
+            durationState.value = !durationState.value
         }
     }
 }
