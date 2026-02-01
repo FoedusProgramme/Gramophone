@@ -452,4 +452,6 @@
     <string name="settings_replaygain_mode">Modus</string>
     <string name="duration_queue">Noch %s, %s insgesamt</string>
     <string name="clear_queue">Warteschlange leeren</string>
+    <string name="choose_sd">%s auswählen</string>
+    <string name="contributors_saladnoober">Qualitätssicherung</string>
 </resources>
