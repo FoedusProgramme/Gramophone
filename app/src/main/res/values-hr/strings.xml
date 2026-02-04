@@ -487,4 +487,6 @@
     <string name="actions_query_start_random_songs">pokreni nasumične glazbe</string>
     <string name="actions_query_shuffle_specific">primiješaj $item_name</string>
     <string name="offload_enabled_no_gapless">Uvijek uključeno, ali bez bezprekidnog DSP-a</string>
+    <string name="please_allow_to_delete">Pritisni „Dozvoli” za brisanje datoteka</string>
+    <string name="choose_sd">Odaberi %s</string>
 </resources>
