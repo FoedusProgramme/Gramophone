@@ -22,6 +22,7 @@ import android.app.PendingIntent
 import android.bluetooth.BluetoothCodecStatus
 import android.bluetooth.BluetoothProfile
 import android.content.BroadcastReceiver
+import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -74,6 +75,7 @@ import androidx.media3.exoplayer.util.EventLogger
 import androidx.media3.extractor.mp3.Mp3Extractor
 import androidx.media3.session.CacheBitmapLoader
 import androidx.media3.session.CommandButton
+import androidx.media3.session.LibraryResult
 import androidx.media3.session.MediaBrowser
 import androidx.media3.session.MediaConstants
 import androidx.media3.session.MediaLibraryService
@@ -113,6 +115,7 @@ import org.akanework.gramophone.logic.utils.LastPlayedManager
 import org.akanework.gramophone.logic.utils.LrcUtils.LrcParserOptions
 import org.akanework.gramophone.logic.utils.LrcUtils.extractAndParseLyrics
 import org.akanework.gramophone.logic.utils.LrcUtils.loadAndParseLyricsFile
+import org.akanework.gramophone.logic.utils.PlayerListHelp.dumpPlaylist
 import org.akanework.gramophone.logic.utils.ReplayGainAudioProcessor
 import org.akanework.gramophone.logic.utils.ReplayGainUtil
 import org.akanework.gramophone.logic.utils.SemanticLyrics
@@ -580,6 +583,101 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
             }
         }
         Log.i(TAG, "-onCreate()")
+    }
+
+    override fun onGetLibraryRoot(
+        session: MediaLibrarySession,
+        browser: MediaSession.ControllerInfo,
+        params: LibraryParams?
+    ): ListenableFuture<LibraryResult<MediaItem>> {
+        val rootItem = MediaItem.Builder()
+            .setMediaId("ROOT_ID")
+            .setMediaMetadata(MediaMetadata.Builder()
+                .setIsBrowsable(true)
+                .setIsPlayable(false)
+                .build())
+            .build()
+        return Futures.immediateFuture(LibraryResult.ofItem(rootItem, params))
+    }
+
+    // 在你的 MediaLibraryService.Callback 中
+    override fun onGetChildren(
+        session: MediaLibrarySession,
+        browser: MediaSession.ControllerInfo,
+        parentId: String,
+        page: Int,
+        pageSize: Int,
+        params: LibraryParams?
+    ): ListenableFuture<LibraryResult<ImmutableList<MediaItem>>> {
+
+        return when (parentId) {
+            "ROOT_ID" -> {
+                val rootItems = mutableListOf<MediaItem>()
+                // 添加一个“当前播放队列”的文件夹
+                rootItems.add(createFolder("RECENT_QUEUE", "当前播放队列", R.drawable.ic_folder))
+                // ... 其他文件夹
+                Futures.immediateFuture(LibraryResult.ofItemList(rootItems, params))
+            }
+            else -> {
+                // 这里复用你 PlaylistCardAdapter 里的 dumpPlaylist() 逻辑
+                val playlistPair = dumpPlaylist(session.player)
+                // 解决类型不匹配：将 Pair 转换为 ImmutableList<MediaItem>
+                val orderedSongs: List<MediaItem> = playlistPair.first.map { index ->
+                    val originalItem = playlistPair.second[index]
+
+                    val contentArtUri = originalItem.mediaMetadata.artworkUri?.let { gramophoneSongCoverToContentUri(it) }
+
+                    originalItem.buildUpon()
+                        .setMediaMetadata(
+                            originalItem.mediaMetadata.buildUpon()
+                                .setArtworkUri(contentArtUri)
+                                .setIsBrowsable(false)
+                                .setIsPlayable(true)
+                                .build()
+                        )
+                        .build()
+                }
+
+                Futures.immediateFuture(LibraryResult.ofItemList(orderedSongs, params))
+            }
+        }
+    }
+
+    fun gramophoneSongCoverToContentUri(original: Uri): Uri {
+        require(original.scheme == "gramophoneSongCover") {
+            "只能转换 gramophoneSongCover:// URI"
+        }
+
+        val id = original.authority ?: "0"
+        val path = original.path ?: ""
+
+        return Uri.Builder()
+            .scheme(ContentResolver.SCHEME_CONTENT)
+            .authority("org.akanework.gramophone.albumart")
+            .appendPath("song")              // 类型 song / album
+            .appendPath(id)                  // albumId 或 songId
+            .appendPath(Uri.encode(path))    // 文件路径编码
+            .build()
+    }
+
+
+    private fun createFolder(
+        mediaId: String,
+        title: String,
+        iconResId: Int
+    ): MediaItem {
+        val metadata = MediaMetadata.Builder()
+            .setTitle(title)
+            .setIsBrowsable(true)  // 关键：设为 true，Android Auto 会将其显示为可点击进入的文件夹
+            .setIsPlayable(false)  // 文件夹通常不可直接播放（除非你想实现“点击文件夹即随机播放全部”）
+            // 将本地资源 ID 转换为 Uri，这样车机才能显示图标
+            .setArtworkUri(Uri.parse("android.resource://${packageName}/$iconResId"))
+            .build()
+
+        return MediaItem.Builder()
+            .setMediaId(mediaId)
+            .setMediaMetadata(metadata)
+            .build()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {

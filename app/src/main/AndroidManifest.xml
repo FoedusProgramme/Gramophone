@@ -69,11 +69,11 @@
         <meta-data
             android:name="com.google.android.gms.car.application.theme"
             android:resource="@style/Theme.Gramophone"/>
-<!-- TODO uncomment to enable Android Auto when library browsing is implemented
+
         <meta-data
             android:name="com.google.android.gms.car.application"
             android:resource="@xml/automotive_app_desc"/>
--->
+
         <activity
             android:name=".logic.ui.BugHandlerActivity"
             android:exported="false"
@@ -162,6 +162,13 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
+        <provider
+            android:name=".logic.GramophoneAlbumArtProvider"
+            android:authorities="org.akanework.gramophone.albumart"
+            android:exported="true"
+            android:grantUriPermissions="true" />
+
+
         <receiver android:name=".ui.LyricWidgetProvider"
             android:exported="false">
             <intent-filter>
@@ -225,6 +232,7 @@
         <!-- allow multi-resume for some Android 9 devices in multi-window -->
         <meta-data android:name="android.allow_multiple_resumed_activities" android:value="true" />
     </application>
+
 
     <queries>
         <intent>
