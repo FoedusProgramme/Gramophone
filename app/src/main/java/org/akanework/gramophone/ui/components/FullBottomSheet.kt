@@ -4,10 +4,7 @@ import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.ContentUris
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
-import android.content.pm.ApplicationInfo
-import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.graphics.drawable.BitmapDrawable
@@ -105,10 +102,6 @@ import uk.akane.libphonograph.items.albumId
 import uk.akane.libphonograph.items.artistId
 import uk.akane.libphonograph.manipulator.ItemManipulator
 import kotlin.math.min
-import androidx.core.content.edit
-import androidx.core.widget.NestedScrollView
-import androidx.media3.common.PlaybackParameters
-import com.google.android.material.checkbox.MaterialCheckBox
 
 @SuppressLint("NotifyDataSetChanged")
 class FullBottomSheet
@@ -1350,7 +1343,5 @@ class FullBottomSheet
             }
         }
     }
-
-
 
 }
