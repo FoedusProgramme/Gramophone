@@ -178,7 +178,6 @@ android {
             isJniDebuggable = true
             isPseudoLocalesEnabled = true
             matchingFallbacks += "release"
-            signingConfig = signingConfigs.getByName("debug")
         }
         debug {
             isPseudoLocalesEnabled = true
