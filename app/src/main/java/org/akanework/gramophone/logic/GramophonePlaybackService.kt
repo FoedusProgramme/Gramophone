@@ -600,6 +600,25 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         return Futures.immediateFuture(LibraryResult.ofItem(rootItem, params))
     }
 
+    override fun onGetItem(
+        session: MediaLibrarySession,
+        browser: MediaSession.ControllerInfo,
+        mediaId: String
+    ): ListenableFuture<LibraryResult<MediaItem>> {
+
+        val item = findMediaItemFromPlayer(session, mediaId)
+            ?: return Futures.immediateFuture(
+                LibraryResult.ofError(LibraryResult.RESULT_ERROR_BAD_VALUE)
+            )
+
+        val fixed = item.fixArtworkForAuto()
+
+        return Futures.immediateFuture(
+            LibraryResult.ofItem(fixed, null)
+        )
+    }
+
+
     // 在你的 MediaLibraryService.Callback 中
     override fun onGetChildren(
         session: MediaLibrarySession,
@@ -619,26 +638,47 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                 Futures.immediateFuture(LibraryResult.ofItemList(rootItems, params))
             }
             else -> {
-                // 这里复用你 PlaylistCardAdapter 里的 dumpPlaylist() 逻辑
-                val playlistPair = dumpPlaylist(session.player)
-                // 解决类型不匹配：将 Pair 转换为 ImmutableList<MediaItem>
-                val orderedSongs: List<MediaItem> = playlistPair.first.map { index ->
-                    val originalItem = playlistPair.second[index]
+                val future = SettableFuture.create<LibraryResult<ImmutableList<MediaItem>>>()
 
-                    val contentArtUri = originalItem.mediaMetadata.artworkUri?.let { gramophoneSongCoverToContentUri(it) }
+                lifecycleScope.launch(Dispatchers.Default) {
 
-                    originalItem.buildUpon()
-                        .setMediaMetadata(
-                            originalItem.mediaMetadata.buildUpon()
-                                .setArtworkUri(contentArtUri)
-                                .setIsBrowsable(false)
-                                .setIsPlayable(true)
+                    try {
+                        val songList = gramophoneApplication.reader.songListFlow.first()
+
+                        val orderedSongs: List<MediaItem> = songList.map { item ->
+
+                            val contentArtUri = item.mediaMetadata.artworkUri?.let {
+                                if (it.scheme == "gramophoneSongCover")
+                                    gramophoneSongCoverToContentUri(it)
+                                else
+                                    it
+                            }
+
+                            item.buildUpon()
+                                .setMediaMetadata(
+                                    item.mediaMetadata.buildUpon()
+                                        .setArtworkUri(contentArtUri)
+                                        .setIsBrowsable(false)
+                                        .setIsPlayable(true)
+                                        .build()
+                                )
                                 .build()
+                        }
+
+                        future.set(
+                            LibraryResult.ofItemList(
+                                ImmutableList.copyOf(orderedSongs),
+                                params
+                            )
                         )
-                        .build()
+
+                    } catch (e: Exception) {
+                        future.setException(e)
+                    }
                 }
 
-                Futures.immediateFuture(LibraryResult.ofItemList(orderedSongs, params))
+                future
+
             }
         }
     }
@@ -660,6 +700,24 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
             .build()
     }
 
+    private fun findMediaItemFromPlayer(
+        session: MediaLibrarySession,
+        mediaId: String
+    ): MediaItem? {
+
+        val player = session.player
+
+        for (i in 0 until player.mediaItemCount) {
+            val item = player.getMediaItemAt(i)
+            if (item.mediaId == mediaId) {
+                return item
+            }
+        }
+
+        return null
+    }
+
+
 
     private fun createFolder(
         mediaId: String,
@@ -679,6 +737,28 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
             .setMediaMetadata(metadata)
             .build()
     }
+
+    private fun MediaItem.fixArtworkForAuto(): MediaItem {
+        val art = mediaMetadata.artworkUri
+
+        if (art == null) return this
+
+        val newArt = if (art.scheme == "gramophoneSongCover") {
+            gramophoneSongCoverToContentUri(art)
+        } else {
+            art
+        }
+        Log.d(TAG, "fixArtworkForAuto: $newArt")
+
+        return buildUpon()
+            .setMediaMetadata(
+                mediaMetadata.buildUpon()
+                    .setArtworkUri(newArt)
+                    .build()
+            )
+            .build()
+    }
+
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         var extras = intent?.extras
@@ -1305,19 +1385,27 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         controller: MediaSession.ControllerInfo,
         mediaItems: List<MediaItem>
     ): ListenableFuture<List<MediaItem>> {
-        if (mediaItems.find { it.localConfiguration == null } == null) // fast path
+        if (mediaItems.all { item ->
+                item.localConfiguration != null &&
+                        (
+                                item.mediaMetadata.artworkUri == null ||
+                                        item.mediaMetadata.artworkUri?.scheme != "gramophoneSongCover"
+                                )
+            }) {
             return Futures.immediateFuture(mediaItems)
+        } // fast path
+
         val completion = SettableFuture.create<List<MediaItem>>()
         lifecycleScope.launch(Dispatchers.Default) {
             try {
                 val result = mediaItems.flatMap {
                     if (it.localConfiguration != null)
-                        listOf(it)
+                        listOf(it.fixArtworkForAuto())
                     else if (it.mediaId != MediaItem.DEFAULT_MEDIA_ID)
                         gramophoneApplication.reader.songListFlow.first()
                             .filter { m -> m.mediaId == it.mediaId }
                     else if (it.requestMetadata.searchQuery != null)
-                        searchForMediaItem(it)
+                        searchForMediaItem(it.fixArtworkForAuto())
                     else
                         throw UnsupportedOperationException("can't do anything with $it")
                 }

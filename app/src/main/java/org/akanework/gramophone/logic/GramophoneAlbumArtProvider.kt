@@ -11,6 +11,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.ParcelFileDescriptor
 import android.provider.MediaStore
+import android.util.Log
 import android.util.Size
 import uk.akane.libphonograph.Constants
 import uk.akane.libphonograph.utils.MiscUtils
@@ -18,6 +19,7 @@ import java.io.File
 import java.io.IOException
 
 class GramophoneAlbumArtProvider : ContentProvider() {
+    private val TAG = "GramophoneProvider"
 
     override fun onCreate() = true
 
@@ -70,6 +72,7 @@ class GramophoneAlbumArtProvider : ContentProvider() {
                 )
             } else null
         } catch (e: IOException) {
+            Log.d(TAG, "failed to generate song cover",e)
             null
         }
 
@@ -90,7 +93,8 @@ class GramophoneAlbumArtProvider : ContentProvider() {
                     input.copyTo(output)
                 }
             }
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            Log.d(TAG, "failed to generate song cover",e)
         }
     }
 
@@ -122,7 +126,8 @@ class GramophoneAlbumArtProvider : ContentProvider() {
                     input.copyTo(output)
                 }
             }
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            Log.d(TAG, "failed to generate album cover",e)
         }
     }
 
