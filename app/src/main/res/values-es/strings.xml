@@ -450,4 +450,6 @@
     <string name="spk_encoding_aptx_adaptive">aptX Adaptive</string>
     <string name="clear_queue">Vaciar cola</string>
     <string name="sort_by_artist_year">Artista -&gt; año</string>
+    <string name="please_allow_to_delete">Presione permitir para eliminar archivos</string>
+    <string name="actions_query_shuffle_everything">mezclar todo</string>
 </resources>
