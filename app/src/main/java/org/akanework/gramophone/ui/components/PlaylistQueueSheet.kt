@@ -41,15 +41,18 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.Timeline
 import androidx.media3.session.MediaBrowser
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.launch
 import org.akanework.gramophone.R
+import org.akanework.gramophone.logic.getBooleanStrict
 import org.akanework.gramophone.logic.getQueueForUi
 import org.akanework.gramophone.logic.replaceAllSupport
 import org.akanework.gramophone.logic.ui.MyRecyclerView
+import org.akanework.gramophone.logic.utils.Flags
 import org.akanework.gramophone.logic.utils.convertDurationToTimeStamp
 import org.akanework.gramophone.ui.GramophoneTheme
 import org.akanework.gramophone.ui.MainActivity
@@ -60,6 +63,7 @@ import kotlin.text.format
 class PlaylistQueueSheet(
     context: Context, private val activity: MainActivity
 ) : BottomSheetDialog(context), Player.Listener {
+    private var prefs: SharedPreferences
     private val instance: MediaBrowser?
         get() = activity.getPlayer()
     private val playlistAdapter: PlaylistCardAdapter
@@ -67,8 +71,12 @@ class PlaylistQueueSheet(
     private val queueHead: ComposeView
 
     private val durationState = mutableStateOf(false)
+    private val mqEnabled: Boolean
 
     init {
+        prefs = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
+        mqEnabled = Flags.MQ_PREVIEW && prefs.getBooleanStrict("mq_preview", false)
+
         setContentView(R.layout.playlist_bottom_sheet)
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
         val recyclerView = findViewById<MyRecyclerView>(R.id.recyclerview)!!
@@ -208,6 +216,7 @@ class PlaylistQueueSheet(
                                 0 -> {
                                     MqContent(
                                         mqState = mqState,
+                                        mqEnabled = mqEnabled
                                     )
                                 }
 

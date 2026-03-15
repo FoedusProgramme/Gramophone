@@ -57,6 +57,7 @@ import org.akanework.gramophone.logic.deleteQueue
 import org.akanework.gramophone.logic.getInactiveQueues
 import org.akanework.gramophone.logic.getQueue
 import org.akanework.gramophone.logic.loadQueue
+import org.akanework.gramophone.logic.utils.Flags.MQ_PREVIEW
 
 @Composable
 fun MqListItem(
@@ -138,6 +139,7 @@ fun MqListItem(
 fun MqContent(
     mqState: MqState,
     modifier: Modifier = Modifier,
+    mqEnabled: Boolean = false,
 ) {
     val haptic = LocalHapticFeedback.current
 
@@ -174,7 +176,7 @@ fun MqContent(
                     )
                     .padding(2.dp)
                     .weight(1f)
-                    .clickable(enabled = !landscape) {
+                    .clickable(enabled = mqEnabled && !landscape) {
                         mqState.toggleExpand()
                         haptic.performHapticFeedback(HapticFeedbackType.ContextClick)
                     }
@@ -188,7 +190,7 @@ fun MqContent(
                         .padding(horizontal = 8.dp)
                 )
                 IconButton(
-                    enabled = !landscape,
+                    enabled = mqEnabled && !landscape,
                     onClick = {
                         mqState.toggleExpand()
                         haptic.performHapticFeedback(HapticFeedbackType.ContextClick)

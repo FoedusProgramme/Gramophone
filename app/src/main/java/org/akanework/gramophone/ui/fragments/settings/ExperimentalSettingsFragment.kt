@@ -49,6 +49,8 @@ class ExperimentalSettingsFragment : BasePreferenceFragment() {
         findPreference<Preference>("crash")!!.isVisible = BuildConfig.DEBUG
         if (!Flags.OFFLOAD)
             findPreference<Preference>("offload")!!.isVisible = false
+        if (!Flags.MQ_PREVIEW)
+            findPreference<Preference>("mq_preview")!!.isVisible = false
         if (BuildConfig.DEBUG)
             e = RuntimeException("skill issue")
     }

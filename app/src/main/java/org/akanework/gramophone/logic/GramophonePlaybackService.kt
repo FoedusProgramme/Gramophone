@@ -1014,6 +1014,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                             endedWorkaroundPlayer!!.play()
                         }
                     } else {
+                        endedWorkaroundPlayer!!.setMediaItems(mediaList, mediaItemIndex, C.TIME_UNSET)
                         endedWorkaroundPlayer!!.prepare()
                         endedWorkaroundPlayer!!.play()
                     }
