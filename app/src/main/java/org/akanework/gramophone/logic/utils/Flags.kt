@@ -3,7 +3,7 @@ package org.akanework.gramophone.logic.utils
 object Flags {
     const val TEST_RG_OFFLOAD = false // test only
     // TODO: swap sides if a lot of text is on right and not a lot is on the left
-    const val TTML_AGENT_SMART_SIDES = true
+    const val TTML_AGENT_SMART_SIDES = false
 
     // Before turning it on in prod we need i18n.
     const val FORMAT_INFO_DIALOG = true // TODO(ASAP)
