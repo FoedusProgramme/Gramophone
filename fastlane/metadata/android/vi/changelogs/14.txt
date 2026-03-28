@@ -1,0 +1,1 @@
+Sửa lỗi nhanh cho sự cố sập ứng dụng khi điện thoại được thiết lập ngôn ngữ Philippines

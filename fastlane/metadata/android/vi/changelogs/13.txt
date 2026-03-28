@@ -1,0 +1,4 @@
+- Thiết kế lại trình phát tệp
+- Giữ màn hình luôn bật trong khi xem lời bài hát
+- Hỗ trợ thẻ SD trong tab Hệ thống tệp ( Filesystem )
+- Sửa một vài lỗi

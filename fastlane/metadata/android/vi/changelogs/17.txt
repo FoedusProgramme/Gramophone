@@ -1,0 +1,3 @@
+- Thêm lời bài hát trên thanh trạng thái cho các thiết bị Meizu, các bản ROM tùy chỉnh được chọn và Lyric Getter Xposed (cảm ơn @ghhccghk)
+- Đã sửa nhiều lỗi và sự cố sập
+- Cập nhật các bản dịch như thường lệ (cảm ơn các biên dịch viên chăm chỉ của chúng tôi!)

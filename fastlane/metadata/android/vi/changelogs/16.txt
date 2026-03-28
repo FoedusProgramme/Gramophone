@@ -1,0 +1,3 @@
+- Sửa một số lỗi liên quan đến việc sắp xếp lại tab
+- Đã sửa lỗi hỗ trợ bộ chỉnh âm
+- Sửa một số vấn đề về khả năng truy cập (vui lòng cho tôi biết nếu có thêm lỗi!)
