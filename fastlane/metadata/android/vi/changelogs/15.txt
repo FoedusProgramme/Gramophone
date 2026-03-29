@@ -1,0 +1,2 @@
+- Cho phép sắp xếp lại và ẩn các tab
+- Đã sửa nhiều lỗi gây sập ứng dụng

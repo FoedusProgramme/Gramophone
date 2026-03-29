@@ -1,0 +1,8 @@
+- Cập nhật nút làm mới để đồng bộ trực tiếp với MediaStore
+- Loại bỏ hạn chế cho các định dạng mẫu âm thanh
+- Cải thiện hộp thoại xem trước âm thanh
+- Tạm dừng làm mới nếu ứng dụng ở chế độ nền để tiết kiệm pin
+- Ngăn chặn ANR (Ứng dụng không phản hồi)
+- Sửa trang nghệ sĩ album
+- Đã sửa một số lỗi rò rỉ bộ nhớ
+- Sửa rất nhiều sự cố sập và lỗi

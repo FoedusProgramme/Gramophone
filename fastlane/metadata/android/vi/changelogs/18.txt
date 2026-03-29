@@ -1,0 +1,8 @@
+- Hiển thị chi tiết tốc độ bit trong hộp thoại
+- Thử nghiệm: trình phân tích lời bài hát mới cho LRC & TTML đồng bộ từ, SRT (giao diện sẽ sớm ra mắt)
+- Thông tin định dạng âm thanh trong màn hình Đang phát (Now Playing)
+- Tự động làm mới thư viện
+- "Mở trong Gramophone" từ trình phát tệp
+- Tiện ích lời bài hát
+- Cải thiện sắp xếp
+- Rất nhiều bản sửa lỗi
