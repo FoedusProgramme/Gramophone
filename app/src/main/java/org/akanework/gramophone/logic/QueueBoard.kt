@@ -91,7 +91,7 @@ class QueueBoard(
         val new = masterQueues[index]
         masterQueues.remove(new)
         masterQueues.add(new)
-        setCurrQueue(new, false, shouldResume)
+        setCurrQueue(new, true, shouldResume)
     }
 
     fun pinQueue(index: Int) {
@@ -236,9 +236,10 @@ class QueueBoard(
     /**
      * Deletes a queue.
      *
-     * When deleting the active queue,
+     * When deleting the active queue, the last inactive queue is loaded. When the active queue is
+     * the only queue, playback is stopped.
      *
-     * @param mq
+     * @param index
      */
     fun deleteQueue(index: Int): Int {
         if (QUEUE_DEBUG)
@@ -246,7 +247,7 @@ class QueueBoard(
         if (index == masterQueues.lastIndex) {
             masterQueues.removeAt(index)
             if (index <= 0) {
-                player.pauseAllPlayersAndStopSelf() // TODO: correct way to stop playback
+                player.endedWorkaroundPlayer?.removeMediaItems(0, Int.MAX_VALUE)
             } else {
                 commitQueue(index - 1, false)
             }
@@ -353,8 +354,6 @@ class QueueBoard(
             return null
         }
 
-        // I have no idea why this value gets reset to 0 by the end... but ig this works
-        val startPositionMs = if (shouldResume) mq.startPositionMs else C.TIME_UNSET
         val startIndex = mq.startIndex
 
         val mediaItems: MutableList<MediaItem> = mq.queue
@@ -373,20 +372,11 @@ class QueueBoard(
             val playerIndex = plr.currentMediaItemIndex
 
             if (startIndex == 0) {
-                val playerItemCount = plr.mediaItemCount
-                // player.player.replaceMediaItems seems to stop playback so we
-                // remove all songs except the currently playing one and then add the list of new items
-                if (playerIndex < playerItemCount - 1) {
-                    plr.removeMediaItems(
-                        playerIndex + 1,
-                        playerItemCount
-                    )
-                }
+                // remove all songs before the currently playing one and then replace all the items after
                 if (playerIndex > 0) {
                     plr.removeMediaItems(0, playerIndex)
                 }
-                // add all songs except the first one since it is already present and playing
-                plr.addMediaItems(mediaItems.drop(1))
+                plr.replaceMediaItems(1, Int.MAX_VALUE, mediaItems.drop(1))
             } else {
                 // replace items up to current playing, then replace items after current
                 plr.replaceMediaItems(
@@ -400,7 +390,10 @@ class QueueBoard(
             }
         } else {
             Log.d(TAG, "Seamless is not supported. Loading songs in directly")
-            plr.setMediaItems(mediaItems, startIndex, startPositionMs)
+            plr.setMediaItems(
+                mediaItems, startIndex,
+                if (shouldResume) mq.startPositionMs else C.TIME_UNSET
+            )
         }
 
         if (plr.shuffleModeEnabled != mq.shuffleModeEnabled) {

@@ -171,9 +171,7 @@ class PlaylistQueueSheet(
                                 val durationView: Chronometer = view.findViewById(R.id.duration)
                                 val pl = playlistAdapter.playlist
 
-                                val current = instance?.currentMediaItemIndex?.let {
-                                    pl.first.indexOf(it)
-                                } ?: 0
+                                val current = (instance?.currentMediaItemIndex ?: 0)
                                 val elapsedCurrentMs = (instance?.currentPosition ?: 0)
                                 durationView.format = context.getString(
                                     R.string.duration_queue,

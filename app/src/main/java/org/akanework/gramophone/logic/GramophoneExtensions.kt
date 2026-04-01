@@ -353,13 +353,9 @@ fun MediaController.getInactiveQueues(): List<MultiQueueObject> =
         SessionCommand(SERVICE_QB_GET_INACTIVE, Bundle.EMPTY),
         Bundle.EMPTY
     ).get().extras.run {
-        if (containsKey("allQueues")) {
-            val binder = getBinder("allQueues")!!
-            BundleListRetriever.getList(binder).map {
-                MultiQueueObject.fromBundle(it)
-            }
-        } else {
-            throw IllegalArgumentException("expected allQueues to be set")
+        val binder = getBinder("allQueues")!!
+        BundleListRetriever.getList(binder).map {
+            MultiQueueObject.fromBundle(it)
         }
     }
 
@@ -369,13 +365,9 @@ fun MediaController.getQueue(index: Int = C.INDEX_UNSET): MultiQueueObject? =
             customExtras.putInt("index", index)
         }, Bundle.EMPTY
     ).get().extras.run {
-        if (containsKey("allQueues")) {
-            val binder = getBinder("allQueues")!!
-            BundleListRetriever.getList(binder).map {
-                MultiQueueObject.fromBundle(it)
-            }
-        } else {
-            throw IllegalArgumentException("expected allQueues to be set")
+        val binder = getBinder("allQueues")!!
+        BundleListRetriever.getList(binder).map {
+            MultiQueueObject.fromBundle(it)
         }.firstOrNull()
     }
 
@@ -416,21 +408,17 @@ fun MediaController.getQueueForUi(index: Int = C.INDEX_UNSET): Pair<MutableList<
             customExtras.putInt("index", index)
         }, Bundle.EMPTY
     ).get().extras.run {
-        if (containsKey("allQueues")) {
-            val binder = getBinder("allQueues")!!
-            BundleListRetriever.getList(binder).map {
-                val mq = MultiQueueObject.fromBundle(it)
-                val items = mq.queue
-                val indexes: MutableList<Int> = if (mq.shuffleOrder == null) {
-                    (0 until mq.getSize()).toMutableList()
-                } else {
-                    shuffledIndices(mq.shuffleOrder!!)
-                }
-
-                Pair(indexes, items)
+        val binder = getBinder("allQueues")!!
+        BundleListRetriever.getList(binder).map {
+            val mq = MultiQueueObject.fromBundle(it)
+            val items = mq.queue
+            val indexes: MutableList<Int> = if (mq.shuffleOrder == null) {
+                (0 until mq.getSize()).toMutableList()
+            } else {
+                shuffledIndices(mq.shuffleOrder!!)
             }
-        } else {
-            throw IllegalArgumentException("expected allQueues to be set")
+
+            Pair(indexes, items)
         }.firstOrNull()
     }
 }

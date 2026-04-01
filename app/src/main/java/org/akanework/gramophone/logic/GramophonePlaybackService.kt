@@ -180,7 +180,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
     val endedWorkaroundPlayer
         get() = mediaSession?.player as EndedWorkaroundPlayer?
     private var controller: MediaBrowser? = null
-    val qb: QueueBoard = QueueBoard(this)
+    lateinit var qb: QueueBoard
     private val sendLyrics = Runnable { scheduleSendingLyrics(false) }
     var lyrics: SemanticLyrics? = null
         private set
@@ -280,6 +280,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
     override fun onCreate() {
         Log.i(TAG, "+onCreate()")
         super.onCreate()
+        qb = QueueBoard(this)
         instanceForWidgetAndLyricsOnly = this
         internalPlaybackThread.start()
         playbackHandler = Handler(internalPlaybackThread.looper)
