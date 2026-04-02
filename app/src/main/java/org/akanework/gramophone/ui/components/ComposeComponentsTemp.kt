@@ -23,6 +23,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.List
 import androidx.compose.material.icons.rounded.DragHandle
+import androidx.compose.material.icons.rounded.ExpandLess
+import androidx.compose.material.icons.rounded.ExpandMore
 import androidx.compose.material.icons.rounded.MusicNote
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -198,7 +200,7 @@ fun MqContent(
                     modifier = Modifier.padding(vertical = 6.dp)
                 ) {
                     Icon(
-                        painter = painterResource(if (mqExpand) R.drawable.baseline_arrow_upward_24 else R.drawable.ic_expand_more),
+                        imageVector = if (mqExpand) Icons.Rounded.ExpandLess else Icons.Rounded.ExpandMore,
                         contentDescription = null,
                     )
                 }
@@ -437,6 +439,9 @@ class MqState(
 
     fun removeQueue(index: Int) {
         instance?.deleteQueue(index)
+        coroutineScope.launch {
+            init()
+        }
     }
 
     fun loadDetached() {

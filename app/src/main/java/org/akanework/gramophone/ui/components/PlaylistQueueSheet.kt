@@ -21,6 +21,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -57,7 +58,6 @@ import org.akanework.gramophone.logic.utils.convertDurationToTimeStamp
 import org.akanework.gramophone.ui.GramophoneTheme
 import org.akanework.gramophone.ui.MainActivity
 import java.util.LinkedList
-import kotlin.text.format
 
 // TODO: support listening to externally caused changes to playlist (ie MCT).
 class PlaylistQueueSheet(
@@ -72,6 +72,7 @@ class PlaylistQueueSheet(
 
     private val durationState = mutableStateOf(false)
     private val mqEnabled: Boolean
+    private var detachedHead: Boolean = false
 
     init {
         prefs = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
@@ -168,6 +169,7 @@ class PlaylistQueueSheet(
                             },
                             update = { view ->
                                 val trigger = durationState.value
+                                if (detachedHead) return@AndroidView // chromometer is never shown for inactive queues
                                 val durationView: Chronometer = view.findViewById(R.id.duration)
                                 val pl = playlistAdapter.playlist
 
@@ -201,6 +203,35 @@ class PlaylistQueueSheet(
                     val mqState =
                         rememberMqState(coroutineScope, instance, this@PlaylistQueueSheet)
                     val pagerState = rememberPagerState(pageCount = { 2 })
+
+                    LaunchedEffect(mqState) {
+                        detachedHead = mqState.isDetached()
+                    }
+
+                    LaunchedEffect(mqState.detachedQueue) {
+                        coroutineScope.launch {
+                            if (mqState.isDetached()) {
+                                playlistAdapter.currentMediaItemIndex =
+                                    mqState.detachedQueue?.startIndex
+                                recyclerView.smoothScrollToPosition(
+                                    playlistAdapter.playlist.first.indexOfFirst { i ->
+                                        i == (mqState.detachedQueue?.startIndex ?: 0)
+                                    })
+                            } else {
+                                playlistAdapter.currentMediaItemIndex =
+                                    instance?.currentMediaItemIndex.let {
+                                        playlistAdapter.playlist.first.indexOf(
+                                            it
+                                        )
+                                    }
+                                recyclerView.smoothScrollToPosition(
+                                    playlistAdapter.playlist.first.indexOfFirst { i ->
+                                        i == (instance?.currentMediaItemIndex ?: 0)
+                                    })
+                            }
+                        }
+                    }
+
                     Box {
                         HorizontalPager(
                             state = pagerState,

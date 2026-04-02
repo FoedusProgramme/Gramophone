@@ -31,23 +31,6 @@ class QueueBoard(
         if (!queues.isEmpty()) {
             masterQueues.addAll(queues)
         }
-
-        // todo: remove when figure out persist and load
-        masterQueues.add(
-            MultiQueueObject(
-                id = Random.nextLong(),
-                index = 0,
-                title = "[LastPlayedManager]",
-                expiry = null,
-                queue = ArrayList(),
-                startIndex = C.INDEX_UNSET,
-                startPositionMs = C.TIME_UNSET,
-                repeatMode = REPEAT_MODE_OFF,
-                shuffleModeEnabled = false,
-                shuffleOrder = null,
-                ended = false,
-            )
-        )
     }
 
     /**
@@ -72,8 +55,9 @@ class QueueBoard(
      * @param index
      */
     fun commitQueue(index: Int, shouldResume: Boolean = true, saveLast: Boolean = true) {
+        Log.v(TAG, "commitQueue() called")
         if (index < 0 || index >= masterQueues.size) {
-            Log.w(TAG, "commitQueue() index out of bounds. Aborting")
+            Log.w(TAG, "commitQueue() index $index out of bounds (size = ${masterQueues.size}). Aborting")
             return
         }
 
@@ -144,7 +128,9 @@ class QueueBoard(
         title: String,
         mediaList: List<MediaItem>,
         mediaItemIndex: Int = 0,
-        isOriginal: Boolean = false,
+        startPositionMs: Long?,
+        isOriginal: Boolean = true,
+        shouldPin: Boolean = false,
     ): MultiQueueObject {
         if (QUEUE_DEBUG)
             Log.d(TAG, "Queue data: $masterQueues")
@@ -166,28 +152,18 @@ class QueueBoard(
                 // (1) perfect match
                 if (QUEUE_DEBUG)
                     Log.d(TAG, "Adding: (1) perfect match")
-
-                match.startIndex = mediaItemIndex
-
-                masterQueues.bubbleUp(match)
-                return match
             } else if (isOriginal) {
                 // (2) replace all in queue
                 if (QUEUE_DEBUG)
                     Log.d(TAG, "Adding: (2) perfect match")
 
-                match.startIndex = mediaItemIndex
                 match.queue.clear()
                 match.queue.addAll(mediaList)
-
-                masterQueues.bubbleUp(match)
-                return match
             } else {
                 // (3) add all to end of the queue. Create extension queue
                 if (QUEUE_DEBUG)
                     Log.d(TAG, "Adding: (3) perfect match")
 
-                match.startIndex = mediaItemIndex
                 match.queue.addAll(mediaList)
 
                 // Titles ending in "+​" aka \u200B signify a extension queue
@@ -195,10 +171,15 @@ class QueueBoard(
                 if (!match.title.endsWith("(+\u200B)")) {
                     match.title = match.title + "(+\u200B)"
                 }
-
-                masterQueues.bubbleUp(match)
-                return match
             }
+
+            match.startIndex = mediaItemIndex
+            startPositionMs?.let {
+                match.startPositionMs = it
+            }
+
+            masterQueues.bubbleUp(match)
+            return match
         } else {
             // (4) add new queue
             if (QUEUE_DEBUG)
@@ -208,10 +189,10 @@ class QueueBoard(
                 id = Random.nextLong(),
                 index = -1,
                 title = title,
-                expiry = System.currentTimeMillis() + QUEUE_EXPIRY_MS,
+                expiry = if (!shouldPin) System.currentTimeMillis() + QUEUE_EXPIRY_MS else null,
                 queue = ArrayList(mediaList),
                 startIndex = mediaItemIndex,
-                startPositionMs = C.TIME_UNSET,
+                startPositionMs = startPositionMs ?: C.TIME_UNSET,
                 repeatMode = player.endedWorkaroundPlayer!!.repeatMode,
                 shuffleModeEnabled = false,
                 shuffleOrder = null,
@@ -260,7 +241,7 @@ class QueueBoard(
             } else {
                 commitQueue(index - 1, false)
             }
-        } else if (index < masterQueues.lastIndex - 1) {
+        } else if (index <= masterQueues.lastIndex - 1) {
             masterQueues.removeAt(index)
         } else {
             throw IndexOutOfBoundsException("Index of queue $index to delete OOB of 0-${masterQueues.size - 1}")
@@ -359,7 +340,7 @@ class QueueBoard(
         val plr = player.endedWorkaroundPlayer!!
 
         if (mq == null || mq.queue.isEmpty()) {
-            plr.setMediaItems(ArrayList())
+            plr.realSetMediaItems(ArrayList(), C.INDEX_UNSET, C.TIME_UNSET)
             return null
         }
 
@@ -371,6 +352,14 @@ class QueueBoard(
             TAG,
             "Setting current queue; $mq; ids: ${plr.currentMediaItem?.mediaId}, ${mediaItems[startIndex].mediaId}"
         )
+
+        val seed = try {
+            CircularShuffleOrder.Persistent.deserialize(mq.shuffleOrder)
+        } catch (e: Exception) {
+            plr.nextShuffleOrder = null
+            throw e
+        }
+
         /**
          * current playing == jump target, do seamlessly
          */
@@ -380,6 +369,7 @@ class QueueBoard(
             Log.d(TAG, "Trying seamless queue switch. Is first song?: ${startIndex == 0}")
             val playerIndex = plr.currentMediaItemIndex
 
+            plr.replaceMediaItem(playerIndex, mediaItems[playerIndex]) // update current's metadata
             if (startIndex == 0) {
                 // remove all songs before the currently playing one and then replace all the items after
                 if (playerIndex > 0) {
@@ -397,28 +387,29 @@ class QueueBoard(
                     mediaItems.subList(startIndex + 1, mediaItems.size)
                 )
             }
+
+            plr.exoPlayer.setShuffleOrder(seed.toFactory()(mq.startIndex, mq.getSize(), plr))
         } else {
             Log.d(TAG, "Seamless is not supported. Loading songs in directly")
-            plr.setMediaItems(
+
+            if (plr.shuffleModeEnabled && mq.shuffleOrder == null)
+                Log.w(TAG, "Shuffle mode is enabled but no shuffle order is provided")
+
+            if (plr.nextShuffleOrder != null)
+                throw IllegalStateException("shuffleFactory was found orphaned")
+
+            plr.nextShuffleOrder = seed.toFactory()
+
+            plr.realSetMediaItems(
                 mediaItems, startIndex,
                 if (shouldResume) mq.startPositionMs else C.TIME_UNSET
             )
+            if (plr.nextShuffleOrder != null)
+                throw IllegalStateException("shuffleFactory was not consumed during restore")
         }
 
-        if (plr.shuffleModeEnabled != mq.shuffleModeEnabled) {
-            if (plr.shuffleModeEnabled && mq.shuffleOrder == null) {
-                Log.w(TAG, "Shuffle mode is enabled but no shuffle order is provided")
-            }
-            plr.shuffleModeEnabled = mq.shuffleModeEnabled
-            mq.shuffleOrder?.let {
-                if (it != plr.exoPlayer.shuffleOrder) {
-                    plr.exoPlayer.setShuffleOrder(it)
-                }
-            }
-        }
-        if (plr.repeatMode != mq.repeatMode) {
-            plr.repeatMode = mq.repeatMode
-        }
+        plr.shuffleModeEnabled = mq.shuffleModeEnabled
+        plr.repeatMode = mq.repeatMode
 
         return startIndex
     }
@@ -441,13 +432,21 @@ class QueueBoard(
         return items
     }
 
+    /**
+     * Update the queue in QueueBoard with player attributes
+     */
     private fun syncQueueFromPlayer(mq: MultiQueueObject) {
         val plr = player.endedWorkaroundPlayer!!
         mq.startIndex = plr.currentMediaItemIndex
         mq.startPositionMs = plr.currentPosition
         mq.repeatMode = plr.repeatMode
         mq.shuffleModeEnabled = plr.shuffleModeEnabled
-        mq.shuffleOrder = plr.exoPlayer.shuffleOrder as CircularShuffleOrder
+        val persistent = if (mq.shuffleModeEnabled) {
+            CircularShuffleOrder.Persistent(plr.exoPlayer.shuffleOrder as CircularShuffleOrder)
+        } else {
+            null
+        }
+        mq.shuffleOrder = persistent?.toString()
         mq.queue.clear()
         mq.queue.addAll(dumpPlaylist())
     }
@@ -455,12 +454,17 @@ class QueueBoard(
 }
 
 /**
- * Move this queue to the last non-active spot
+ * Move this queue to the last non-active spot. If there are no queues, this queue gets added to the
+ * active slot
  */
 private fun MutableList<MultiQueueObject>.bubbleUp(mq: MultiQueueObject) {
-    remove(mq)
-    if (lastIndex >= 0) {
-        add(lastIndex, mq)
+    if (!isEmpty()) {
+        remove(mq)
+        if (lastIndex >= 0) {
+            add(lastIndex, mq)
+        }
+    } else {
+        add(mq)
     }
     forEachIndexed { index, mq ->
         mq.index = index
@@ -487,7 +491,7 @@ data class MultiQueueObject(
     var repeatMode: Int = 0,
     var shuffleModeEnabled: Boolean = false,
 
-    var shuffleOrder: CircularShuffleOrder? = null,
+    var shuffleOrder: String? = null,
     var ended: Boolean = false,
 ) {
     override fun toString() =
@@ -511,11 +515,6 @@ data class MultiQueueObject(
         }
 
         return queue.fastFirstOrNull { it.mediaId == mediaId }
-    }
-
-    fun setCurrentQueuePos(index: Int) {
-        // TODO: uhhh figure out shffle
-        startIndex = index
     }
 
     /**
@@ -552,8 +551,7 @@ data class MultiQueueObject(
             putInt("repeatMode", repeatMode)
             putBoolean("shuffleModeEnabled", shuffleModeEnabled)
             putBoolean("ended", ended)
-
-//              TODO:  shuffleOrder 
+            putString("shuffleOrder", shuffleOrder)
         }
 
     companion object {
@@ -576,8 +574,7 @@ data class MultiQueueObject(
                 repeatMode = bundle.getInt("repeatMode", REPEAT_MODE_OFF),
                 shuffleModeEnabled = bundle.getBoolean("shuffleModeEnabled"),
                 ended = bundle.getBoolean("ended"),
-
-//              TODO:  shuffleOrder =
+                shuffleOrder = bundle.getString("shuffleOrder"),
             )
         }
     }

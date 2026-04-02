@@ -25,6 +25,7 @@ import androidx.core.app.ShareCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -34,7 +35,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.akanework.gramophone.R
-import org.akanework.gramophone.logic.playQueue
 import org.akanework.gramophone.logic.getFile
 import org.akanework.gramophone.logic.requireMediaStoreId
 import org.akanework.gramophone.logic.utils.Flags
@@ -175,12 +175,9 @@ class SongAdapter(
         val mediaController = mainActivity.getPlayer()
         mediaController?.apply {
             val songList = getSongList()
-            playQueue(
-                title = "Song: " + item.mediaMetadata.title, // TODO: title
-                mediaList = songList,
-                mediaItemIndex = position,
-                isOriginal = true,
-            )
+            setMediaItems(songList, position, C.TIME_UNSET)
+            prepare()
+            play()
         }
     }
 

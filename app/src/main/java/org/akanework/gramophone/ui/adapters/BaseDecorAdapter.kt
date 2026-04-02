@@ -31,7 +31,6 @@ import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import org.akanework.gramophone.R
-import org.akanework.gramophone.logic.playQueue
 import org.akanework.gramophone.logic.ui.ItemHeightHelper
 import org.akanework.gramophone.logic.ui.MyRecyclerView
 import org.akanework.gramophone.ui.fragments.AdapterFragment
@@ -164,12 +163,11 @@ open class BaseDecorAdapter<T : AdapterFragment.BaseInterface<*>>(
                 mediaController?.apply {
                     shuffleModeEnabled = false
                     repeatMode = REPEAT_MODE_OFF
-                    playQueue(
-                        title = "All Songs", // TODO: title
-                        mediaList = songList,
-                        mediaItemIndex = position,
-                        isOriginal = true,
-                    )
+                    setMediaItems(songList)
+                    if (songList.isNotEmpty()) {
+                        prepare()
+                        play()
+                    }
                 }
             } else if (adapter is AlbumAdapter) {
                 val list = adapter.getAlbumList()
@@ -177,12 +175,9 @@ open class BaseDecorAdapter<T : AdapterFragment.BaseInterface<*>>(
                 controller?.repeatMode = REPEAT_MODE_OFF
                 controller?.shuffleModeEnabled = false
                 list.takeIf { it.isNotEmpty() }?.also { albums ->
-                    controller?.playQueue(
-                        title = "All Albums", // TODO: title
-                        mediaList = albums.flatMap { it.songList },
-                        mediaItemIndex = position,
-                        isOriginal = true,
-                    )
+                    controller?.setMediaItems(albums.flatMap { it.songList })
+                    controller?.prepare()
+                    controller?.play()
                 } ?: controller?.setMediaItems(listOf())
             }
         }
@@ -192,24 +187,20 @@ open class BaseDecorAdapter<T : AdapterFragment.BaseInterface<*>>(
                 val songList = adapter.getSongList()
                 val controller = adapter.getActivity().getPlayer()
                 controller?.shuffleModeEnabled = true
-                controller?.playQueue(
-                    title = "Shuffle All Songs", // TODO: title
-                    mediaList = songList,
-                    mediaItemIndex = position,
-                    isOriginal = true,
-                )
+                controller?.setMediaItems(songList)
+                if (songList.isNotEmpty()) {
+                    controller?.prepare()
+                    controller?.play()
+                }
             } else if (adapter is AlbumAdapter) {
                 val list = adapter.getAlbumList()
                 val controller = adapter.getActivity().getPlayer()
                 controller?.repeatMode = REPEAT_MODE_OFF
                 controller?.shuffleModeEnabled = false
                 list.takeIf { it.isNotEmpty() }?.also { albums ->
-                    controller?.playQueue(
-                        title = "Shuffle All Albums", // TODO: title
-                        mediaList = albums.shuffled().flatMap { it.songList },
-                        mediaItemIndex = position,
-                        isOriginal = true,
-                    )
+                    controller?.setMediaItems(albums.shuffled().flatMap { it.songList })
+                    controller?.prepare()
+                    controller?.play()
                 } ?: controller?.setMediaItems(listOf())
             }
         }

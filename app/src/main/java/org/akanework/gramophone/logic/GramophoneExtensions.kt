@@ -92,6 +92,7 @@ import org.akanework.gramophone.logic.utils.AudioFormatDetector
 import org.akanework.gramophone.logic.utils.AudioTrackInfo
 import org.akanework.gramophone.logic.utils.BtCodecInfo
 import org.akanework.gramophone.logic.utils.CalculationUtils
+import org.akanework.gramophone.logic.utils.CircularShuffleOrder
 import org.akanework.gramophone.logic.utils.ReplayGainUtil
 import org.akanework.gramophone.logic.utils.SemanticLyrics
 import org.akanework.gramophone.ui.MainActivity
@@ -415,7 +416,7 @@ fun MediaController.getQueueForUi(index: Int = C.INDEX_UNSET): Pair<MutableList<
             val indexes: MutableList<Int> = if (mq.shuffleOrder == null) {
                 (0 until mq.getSize()).toMutableList()
             } else {
-                shuffledIndices(mq.shuffleOrder!!)
+                getIntArray("shuffleIndexes")!!.toMutableList()
             }
 
             Pair(indexes, items)
@@ -472,6 +473,7 @@ fun MediaController.reorderQueue(from: Int, to: Int): Boolean =
         else throw IllegalArgumentException("expected status to be set")
     }
 
+/*
 // TODO: shuffle and repeat mode
 fun MediaController.playQueue(
     title: String?,
@@ -489,6 +491,7 @@ fun MediaController.playQueue(
         }, Bundle.EMPTY
     )
 }
+*/
 
 fun Tracks.getFirstSelectedTrackFormatByType(type: @C.TrackType Int): Format? {
     for (i in groups) {
