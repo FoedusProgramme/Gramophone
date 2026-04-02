@@ -1,26 +1,23 @@
 package org.akanework.gramophone.logic
 
-import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.compose.ui.util.fastFirstOrNull
 import androidx.compose.ui.util.fastSumBy
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player.REPEAT_MODE_OFF
 import org.akanework.gramophone.logic.utils.CircularShuffleOrder
-import java.time.LocalDateTime
 import kotlin.random.Random
 
+private const val QUEUE_EXPIRY_MS = 10 * 36000000 // 10 hrs
 
 /**
  * Multiple queues manager.
  *
  * Queues are ordered most recent modification,
  */
-//@RequiresApi(Build.VERSION_CODES.O) // TODO: LocalDateTime methods requires API level 26... but I don't think so...?
 class QueueBoard(
     private val player: GramophonePlaybackService,
     val masterQueues: MutableList<MultiQueueObject> = mutableListOf(),
@@ -99,7 +96,19 @@ class QueueBoard(
     }
 
     fun unpinQueue(index: Int) {
-        masterQueues[index].expiry = LocalDateTime.now()
+        masterQueues[index].expiry = System.currentTimeMillis() + QUEUE_EXPIRY_MS
+    }
+
+    /**
+     * Remove expired queues from the QueueBoard
+     */
+    fun trimQB() {
+        val currentTimeMillis = System.currentTimeMillis()
+        val newQueueList = masterQueues.filter {
+            it.expiry == null || it.expiry!! > currentTimeMillis
+        }
+        masterQueues.clear()
+        masterQueues.addAll(newQueueList)
     }
 
 
@@ -199,7 +208,7 @@ class QueueBoard(
                 id = Random.nextLong(),
                 index = -1,
                 title = title,
-                expiry = LocalDateTime.now().plusHours(10L),
+                expiry = System.currentTimeMillis() + QUEUE_EXPIRY_MS,
                 queue = ArrayList(mediaList),
                 startIndex = mediaItemIndex,
                 startPositionMs = C.TIME_UNSET,
@@ -467,7 +476,7 @@ data class MultiQueueObject(
     val id: Long, // queue uid
     var index: Int, // order of queue
     var title: String,
-    var expiry: LocalDateTime?,
+    var expiry: Long?,
     /**
      * The order of songs are dynamic. This should not be accessed from outside QueueBoard.
      */
@@ -557,7 +566,7 @@ data class MultiQueueObject(
                 id = bundle.getLong("id"),
                 index = bundle.getInt("index"),
                 title = bundle.getString("title") ?: "",
-                expiry = bundle.getString("expiry")?.let { LocalDateTime.parse(it) },
+                expiry = bundle.getString("expiry")?.toLongOrNull(),
 //                queue = queue,
                 queue = (bundle.getParcelableArrayList<Bundle>("queue")
                     ?: emptyList()).map { MediaItem.fromBundle(it) }.toMutableList(),
