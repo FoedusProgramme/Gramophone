@@ -165,9 +165,7 @@ class AudioPreviewActivity : BaseActivity(), View.OnClickListener {
             this,
             GramophoneRenderFactory(
                 this,
-                rgAp, {}, {},
-                Flags.OFFLOAD && prefs.getStringStrict("offload", "0")?.toIntOrNull() == 3
-            )
+                rgAp, {}, {})
                 .setPcmEncodingRestrictionLifted(true)
                 .setEnableDecoderFallback(true)
                 .setEnableAudioTrackPlaybackParams(true)

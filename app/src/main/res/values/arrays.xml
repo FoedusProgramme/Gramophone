@@ -30,14 +30,12 @@
         <item>@string/disabled</item>
         <item>@string/offload_enabled_if_gapless</item>
         <item>@string/offload_enabled_if_supported</item>
-        <item>@string/offload_enabled_no_gapless</item>
     </string-array>
 
     <string-array name="offload_switch_val" translatable="false">
         <item>0</item>
         <item>2</item>
         <item>1</item>
-        <item>3</item>
     </string-array>
 
     <string-array name="shuffle_all_queries" translatable="false">

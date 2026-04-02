@@ -345,8 +345,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                 this,
                 GramophoneRenderFactory(
                     this, rgAp, this::onAudioSinkInputFormatChanged,
-                    afFormatTracker::setAudioSink,
-                    Flags.OFFLOAD && prefs.getStringStrict("offload", "0")?.toIntOrNull() == 3,
+                    afFormatTracker::setAudioSink
                 )
                     .setPcmEncodingRestrictionLifted(true)
                     .setEnableDecoderFallback(true)
