@@ -439,7 +439,6 @@
     <string name="disabled">முடக்கப்பட்டது</string>
     <string name="offload_enabled_if_supported">எப்போதும் இயக்கப்பட்டிருக்கும்</string>
     <string name="offload_enabled_if_gapless">இடைவெளியில்லாமல் பிளேபேக் முடிந்தால் இயக்கப்படும்</string>
-    <string name="offload_enabled_no_gapless">எப்போதும் இயக்கப்படும், ஆனால் இடைவெளியற்ற ஆஃப்லோடு இல்லாமல்</string>
     <string name="settings_audio_offload">ஆடியோ ஆஃப்லோட் (பேட்டரியைச் சேமிக்கிறது)</string>
     <string name="settings_telegram">தந்தி</string>
     <string name="spk_encoding_pcm_20bit">20-பிட் பிசிஎம்</string>
