@@ -1,5 +1,5 @@
 plugins {
-    id("com.android.library")
+    alias(libs.plugins.android.library)
 }
 
 android {
@@ -34,6 +34,6 @@ android {
 }
 
 dependencies {
-    implementation("androidx.annotation:annotation:1.9.1")
-    implementation("androidx.media3:media3-exoplayer")
+    implementation(libs.androidx.annotation)
+    implementation(libs.androidx.media3.exoplayer)
 }

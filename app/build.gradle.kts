@@ -5,18 +5,15 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.util.removeSuffixIfPresent
 import java.util.Properties
 
-val aboutLibsVersion = "13.1.0" // keep in sync with plugin version
-val kotlinVersion = "2.3.0"
-
 plugins {
-    id("com.android.application")
-    id("com.android.built-in-kotlin")
-    id("androidx.baselineprofile")
-    kotlin("plugin.parcelize")
-    kotlin("plugin.compose")
-    id("com.mikepenz.aboutlibraries.plugin")
-    id("com.mikepenz.aboutlibraries.plugin.android")
-    id("pt.jcosta.resourceplaceholders")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.android.builtin.kotlin)
+    alias(libs.plugins.baselineprofile)
+    alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.aboutlibraries)
+    alias(libs.plugins.aboutlibraries.android)
+    alias(libs.plugins.resourceplaceholders)
 }
 
 android {
@@ -272,48 +269,46 @@ aboutLibraries {
 dependencies {
     implementation(project(":hificore"))
     implementation(project(":misc:alacdecoder"))
-    val composeBom = platform("androidx.compose:compose-bom:2025.05.00")
-    implementation(composeBom)
-    androidTestImplementation(composeBom)
-    implementation("androidx.compose.material:material-icons-extended")
-    implementation("androidx.compose.material3:material3")
-    implementation("androidx.compose.material3.adaptive:adaptive")
-    implementation("androidx.compose.ui:ui-tooling-preview")
-    debugImplementation("androidx.compose.ui:ui-tooling")
-    implementation("androidx.activity:activity-compose:1.11.0")
-    implementation("androidx.appcompat:appcompat:1.7.1")
-    implementation("androidx.collection:collection-ktx:1.5.0")
-    implementation("androidx.concurrent:concurrent-futures-ktx:1.3.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.2.1")
-    implementation("androidx.core:core-ktx:1.17.0")
-    implementation("androidx.core:core-splashscreen:1.2.0")
-    implementation("androidx.fragment:fragment-ktx:1.8.9")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.4")
-    implementation("androidx.mediarouter:mediarouter:1.8.1")
-    val media3Version = "1.9.1"
-    implementation("androidx.media3:media3-common-ktx:$media3Version")
-    implementation("androidx.media3:media3-exoplayer:$media3Version")
-    implementation("androidx.media3:media3-exoplayer-midi:$media3Version")
-    implementation("androidx.media3:media3-session:$media3Version")
+    implementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.compose.material.icons.extended)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.material3.adaptive)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    debugImplementation(libs.androidx.compose.ui.tooling)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.collection.ktx)
+    implementation(libs.androidx.concurrent.futures.ktx)
+    implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.core.splashscreen)
+    implementation(libs.androidx.fragment.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.mediarouter)
+    implementation(libs.androidx.media3.common.ktx)
+    implementation(libs.androidx.media3.exoplayer)
+    implementation(libs.androidx.media3.exoplayer.midi)
+    implementation(libs.androidx.media3.session)
     //implementation("androidx.paging:paging-runtime-ktx:3.2.1") TODO paged, partial, flow based library loading
     //implementation("androidx.paging:paging-guava:3.2.1") TODO do we have guava? do we need this?
-    implementation("androidx.preference:preference-ktx:1.2.1")
-    implementation("androidx.transition:transition-ktx:1.6.0") // <-- for predictive back TODO can we remove explicit dep now?
-    implementation("com.mikepenz:aboutlibraries-compose-m3:$aboutLibsVersion")
-    implementation("com.google.android.material:material:1.13.0")
-    implementation("me.zhanghai.android.fastscroll:library:1.3.0")
-    implementation("io.coil-kt.coil3:coil-compose:3.3.0")
-    implementation("org.lsposed.hiddenapibypass:hiddenapibypass:6.1")
+    implementation(libs.androidx.preference.ktx)
+    implementation(libs.androidx.transition.ktx) // <-- for predictive back TODO can we remove explicit dep now?
+    implementation(libs.aboutlibraries.compose.m3)
+    implementation(libs.material)
+    implementation(libs.fastscroll)
+    implementation(libs.coil.compose)
+    implementation(libs.hiddenapibypass)
     //noinspection GradleDependency newer versions need java.nio which is api 26+
     //implementation("com.github.albfernandez:juniversalchardet:2.0.3") TODO
-    implementation("androidx.profileinstaller:profileinstaller:1.4.1")
+    implementation(libs.androidx.profileinstaller)
     "baselineProfile"(project(":baselineprofile"))
     // --- below does not apply to release builds ---
-    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.14")
-    testImplementation("junit:junit:4.13.2")
-    testImplementation("org.robolectric:robolectric:4.16.1")
-    "userdebugImplementation"(kotlin("reflect", kotlinVersion)) // who thought String.invoke() is a good idea?????
-    debugImplementation(kotlin("reflect", kotlinVersion))
+    debugImplementation(libs.leakcanary.android)
+    testImplementation(libs.junit)
+    testImplementation(libs.robolectric)
+    "userdebugImplementation"(libs.kotlin.reflect) // who thought String.invoke() is a good idea?????
+    debugImplementation(libs.kotlin.reflect)
 }
 
 fun String.runCommand(

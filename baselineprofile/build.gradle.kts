@@ -4,9 +4,9 @@ import com.android.build.api.dsl.ManagedVirtualDevice
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-	id("com.android.test")
-    id("com.android.built-in-kotlin")
-	id("androidx.baselineprofile")
+	alias(libs.plugins.android.test)
+    alias(libs.plugins.android.builtin.kotlin)
+	alias(libs.plugins.baselineprofile)
 }
 
 android {
@@ -58,10 +58,10 @@ baselineProfile {
 }
 
 dependencies {
-	implementation("androidx.test.ext:junit:1.3.0")
-	implementation("androidx.test.espresso:espresso-core:3.7.0")
-	implementation("androidx.test.uiautomator:uiautomator:2.3.0")
-	implementation("androidx.benchmark:benchmark-macro-junit4:1.4.1")
+	implementation(libs.androidx.test.ext.junit)
+	implementation(libs.androidx.test.espresso.core)
+	implementation(libs.androidx.test.uiautomator)
+	implementation(libs.androidx.benchmark.macro.junit4)
 }
 
 androidComponents {
