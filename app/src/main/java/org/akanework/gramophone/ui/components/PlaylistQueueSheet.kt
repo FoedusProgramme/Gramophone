@@ -246,7 +246,8 @@ class PlaylistQueueSheet(
         }
 
         fun updateTimer() {
-            val current = (instance?.currentMediaItemIndex ?: 0)
+            val current = instance?.currentMediaItemIndex?.let {
+                playlistAdapter.playlist.first.indexOf(it) } ?: 0
             val elapsedCurrentMs = (instance?.currentPosition ?: 0)
             durationView.format = context.getString(
                 R.string.duration_queue,
