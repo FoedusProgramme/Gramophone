@@ -438,7 +438,7 @@
     <string name="did_you_know">Sabías que…</string>
     <string name="mix_port_flag_bit_perfect">Bit-perfect</string>
     <string name="settings_replaygain_preamp">Pre amp</string>
-    <string name="sort_by_album_artist_year">Artista del álbum - &gt; año</string>
+    <string name="sort_by_album_artist_year"><![CDATA[Artista del álbum - &gt; año]]></string>
     <string name="mix_port_flag_gapless_offload">Offload sin pausas</string>
     <string name="mix_port_flag_tts">TTS</string>
     <string name="mix_port_flag_compress_offload">Offload comprimido</string>
@@ -450,7 +450,7 @@
     <string name="spk_encoding_ape">Monkey\'s Audio</string>
     <string name="spk_encoding_aptx_adaptive">aptX Adaptive</string>
     <string name="clear_queue">Vaciar cola</string>
-    <string name="sort_by_artist_year">Artista -&gt; año</string>
+    <string name="sort_by_artist_year"><![CDATA[Artista -&gt; año]]></string>
     <string name="please_allow_to_delete">Presione permitir para eliminar archivos</string>
     <string name="actions_query_shuffle_everything">mezclar todo</string>
 </resources>
