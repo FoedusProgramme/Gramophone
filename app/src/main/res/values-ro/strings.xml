@@ -154,9 +154,9 @@
     <string name="settings_lyrics_multiline_summary">Consideră toate rândurile între punctele de sincronizare ca un singur vers</string>
     <string name="album_covers_enhance_desc">Suportă coperți de album la calitate înaltă și permite coperții de album și piesă să difere (necesită acces la galerie)</string>
     <string name="timer">Cronometru de somn</string>
-    <string name="deny_images">Vă rugăm refuzați permisiunea \"Imagini &amp; Clipuri video\"</string>
+    <string name="deny_images"><![CDATA[Vă rugăm refuzați permisiunea \"Imagini & Clipuri video\"]]></string>
     <string name="settings_trim_lyrics">Elimină spațiul din jurul versurilor</string>
-    <string name="grant_images">Vă rugăm permiteți accesul la \"Imagini &amp; Clipuri Video\"</string>
+    <string name="grant_images"><![CDATA[Vă rugăm permiteți accesul la \"Imagini & Clipuri Video\"]]></string>
     <string name="timer_expiry">Cronometrul de somn va opri muzica la %s</string>
     <string name="home_menu_shuffle">Redă pe toate</string>
     <string name="seekbar">Seekbar.</string>
@@ -183,7 +183,7 @@
     <string name="delete">Șterge definitive</string>
     <string name="yes">Da</string>
     <string name="no">Nu</string>
-    <string name="grant_audio">Vă rugăm permiteți \"muzică și audio\"</string>
+    <string name="grant_audio"><![CDATA[Vă rugăm permiteți \"muzică și audio\"]]></string>
     <string name="tab_order_summary">Aplicația va arăta prima secțiune la pornire. Celelalte se vor ascunde după divizare.</string>
     <string name="settings_lyrics_ui_summary">Interfață experimentală care arată cuvânt cu cuvânt versuri cu abilități avansate</string>
     <string name="spk_channel_out_9point1point4">9.1.4</string>
