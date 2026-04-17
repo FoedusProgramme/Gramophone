@@ -449,7 +449,7 @@
     <string name="settings_stop_on_dismiss_summary">Atura la reproducció quan la tasca de l\'aplicació es descarti de les recents</string>
     <string name="compact_grid">Quadrícula (compacta)</string>
     <string name="sort_by_album_year">Any de l\'àlbum</string>
-    <string name="sort_by_album_artist_year"><![CDATA[Artista de l\'àlbum -> any]]></string>
+    <string name="sort_by_album_artist_year"><![CDATA[Artista de l\'àlbum -&gt; any]]></string>
     <string name="forbidden_symbol_error">Caràcter no vàlid en el nom</string>
     <string name="translators">Traductors</string>
     <string name="settings_replaygain">ReplayGain</string>
@@ -475,7 +475,7 @@
     <string name="settings_replaygain_no_rg_amp_desc">Redueix el volum de les cançons fortes que no tenen etiquetes ReplayGain</string>
     <string name="settings_replaygain_preamp_desc">Augmenta o disminueix el volum de cançons amb etiquetes ReplayGain. Els valors més alts poden causar pèrdua de la dinàmica a causa de la prevenció del retallat.</string>
     <string name="settings_replaygain_mode_desc">«Intel·ligent» manté automàticament la dinàmica de l\'àlbum només quan reprodueix cançons d\'un àlbum consecutivament.</string>
-    <string name="sort_by_artist_year"><![CDATA[Artista -> any]]></string>
+    <string name="sort_by_artist_year"><![CDATA[Artista -&gt; any]]></string>
     <string name="clear_queue">Neteja la cua</string>
     <string name="contributors_saladnoober">Control de qualitat</string>
     <string name="actions_query_shuffle_all_songs">barreja totes les cançons</string>
