@@ -1,6 +1,7 @@
 package org.akanework.gramophone.ui.components
 
 import android.content.Context
+import android.os.Build
 import android.os.SystemClock
 import android.view.View
 import android.widget.Button
@@ -37,7 +38,11 @@ class PlaylistQueueSheet(
         setContentView(R.layout.playlist_bottom_sheet)
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
         durationView = findViewById(R.id.duration)!!
-        durationView.isCountDown = true
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            durationView.isCountDown = true
+        } else {
+            //TODO(ASAP) ???
+        }
         val recyclerView = findViewById<MyRecyclerView>(R.id.recyclerview)!!
         ViewCompat.setOnApplyWindowInsetsListener(recyclerView) { v, ic ->
             val i = ic.getInsets(

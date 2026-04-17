@@ -5,8 +5,10 @@ import android.app.ForegroundServiceStartNotAllowedException
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.media3.common.util.Log
@@ -40,6 +42,7 @@ class MediaButtonReceiver : MediaButtonReceiver() {
         return ret
     }
 
+    @RequiresApi(Build.VERSION_CODES.S)
     override fun onForegroundServiceStartNotAllowedException(
         context: Context,
         intent: Intent,

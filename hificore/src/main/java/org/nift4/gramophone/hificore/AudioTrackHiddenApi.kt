@@ -57,7 +57,7 @@ object AudioTrackHiddenApi {
                         Build.DEVICE == "dm1q") // Samsung Galaxy S23
     }
 
-    @SuppressLint("PrivateApi")
+    @SuppressLint("PrivateApi", "DiscouragedPrivateApi")
     private fun getAudioTrackPtr(audioTrack: AudioTrack): Long {
         if (audioTrack.state == AudioTrack.STATE_UNINITIALIZED)
             throw IllegalArgumentException("cannot get pointer for released AudioTrack")

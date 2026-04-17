@@ -43,9 +43,9 @@ object CalculationUtils {
         val minutes = duration / 1000 / 60 % 60
         val seconds = duration / 1000 % 60
         if (hours > 0) {
-            return String.format("%d:%02d:%02d", hours, minutes, seconds)
+            return String.format(Locale.getDefault(), "%d:%02d:%02d", hours, minutes, seconds)
         }
-        return String.format(if (zero) "%02d:%02d" else "%d:%02d", minutes, seconds)
+        return String.format(Locale.getDefault(), if (zero) "%02d:%02d" else "%d:%02d", minutes, seconds)
     }
 
     /**

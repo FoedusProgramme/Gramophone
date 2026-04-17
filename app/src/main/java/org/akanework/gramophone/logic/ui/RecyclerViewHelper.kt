@@ -28,6 +28,7 @@ import me.zhanghai.android.fastscroll.PopupTextProvider
 import me.zhanghai.android.fastscroll.Predicate
 import kotlin.math.max
 import kotlin.math.min
+import androidx.core.view.isEmpty
 
 // Changes:
 // - Kotlin
@@ -169,7 +170,7 @@ internal class RecyclerViewHelper(
         }
     private val itemHeight: Int
         get() {
-            if (mView.childCount == 0) {
+            if (mView.isEmpty()) {
                 return 0
             }
             val itemView = mView.getChildAt(0)
@@ -188,7 +189,7 @@ internal class RecyclerViewHelper(
         }
     private val firstItemAdapterPosition: Int
         get() {
-            if (mView.childCount == 0) {
+            if (mView.isEmpty()) {
                 return RecyclerView.NO_POSITION
             }
             val itemView = mView.getChildAt(0)
@@ -198,7 +199,7 @@ internal class RecyclerViewHelper(
         }
     private val firstItemOffset: Int
         get() {
-            if (mView.childCount == 0) {
+            if (mView.isEmpty()) {
                 return RecyclerView.NO_POSITION
             }
             val itemView = mView.getChildAt(0)

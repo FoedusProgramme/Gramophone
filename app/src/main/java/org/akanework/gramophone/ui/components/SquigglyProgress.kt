@@ -36,6 +36,7 @@ import org.akanework.gramophone.logic.utils.CalculationUtils.lerpInvSat
 import org.akanework.gramophone.logic.utils.CalculationUtils.setAlphaComponent
 import kotlin.math.abs
 import kotlin.math.cos
+import androidx.core.graphics.withClip
 
 class SquigglyProgress : Drawable() {
 
@@ -209,10 +210,9 @@ class SquigglyProgress : Drawable() {
         if (transitionEnabled) {
             // If there's a smooth transition, we draw the rest of the
             // path in a different color (using different clip params)
-            canvas.save()
-            canvas.clipRect(totalProgressPx, -1f * clipTop, totalWidth, clipTop)
-            canvas.drawPath(path, linePaint)
-            canvas.restore()
+            canvas.withClip(totalProgressPx, -1f * clipTop, totalWidth, clipTop) {
+                drawPath(path, linePaint)
+            }
         } else {
             // No transition, just draw a flat line to the end of the region.
             // The discontinuity is hidden by the progress bar thumb shape.
