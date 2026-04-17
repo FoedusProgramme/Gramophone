@@ -138,8 +138,8 @@
     <string name="settings_lyrics_center">Alineamento centrate</string>
     <string name="settings_lyrics_center_summary">Usar alineamento centrate pro le parolas</string>
     <string name="settings_lyrics_bold">Parolas in grasse</string>
-    <string name="deny_images">Refusa le permission a \"Imagines e videos\"</string>
-    <string name="grant_images">Concede le permission a \"Imagines e videos\"</string>
+    <string name="deny_images"><![CDATA[Refusa le permission a \"Imagines e videos\"]]></string>
+    <string name="grant_images"><![CDATA[Concede le permission a \"Imagines e videos\"]]></string>
     <string name="crash_clipboard">Registro de fallimentos copiate al area de transferentia</string>
     <string name="settings_trim_lyrics">Remover spatios circum le parolas</string>
     <string name="timer">Temporisator de somno</string>
@@ -153,7 +153,7 @@
     <string name="album_covers_enhance">Carga meliorate del copertura de album</string>
     <string name="album_covers_enhance_desc">Supporta coperturas de cantos de alte qualitate e permitte haber coperturas de album e canto different (require accesso al photos)</string>
     <string name="settings_lyrics_multiline">Leger le parolas de canto multilinea</string>
-    <string name="grant_audio">Concede le permission de \"Musica e audio\"</string>
+    <string name="grant_audio"><![CDATA[Concede le permission de \"Musica e audio\"]]></string>
     <string name="settings_lyrics_multiline_summary">Tractar tote le lineas inter le punctos de synchronisation como un sol parola de canto</string>
     <string name="settings_preference_category_home">Schermo de initio</string>
     <string name="more">Plus</string>
