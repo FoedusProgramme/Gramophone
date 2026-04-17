@@ -14,6 +14,7 @@ import android.text.format.DateFormat
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.KeyEvent
+import android.view.View
 import android.view.ViewPropertyAnimator
 import android.view.WindowInsets
 import android.widget.LinearLayout
@@ -404,6 +405,9 @@ class FullBottomSheet
             }
         }
 
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            bottomSheetPlaybackSpeedButton.visibility = View.GONE
+        }
         bottomSheetPlaybackSpeedButton.setOnClickListener {
             ViewCompat.performHapticFeedback(it, HapticFeedbackConstantsCompat.CONTEXT_CLICK)
             if (instance != null)

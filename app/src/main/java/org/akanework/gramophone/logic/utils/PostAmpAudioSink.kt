@@ -40,6 +40,29 @@ class PostAmpAudioSink(
 ) : ForwardingAudioSink(sink), AudioSystemHiddenApi.VolumeChangeListener {
     companion object {
         private const val TAG = "PostAmpAudioSink"
+        val isVolumeAvailable by lazy {
+            try {
+                Volume.isAvailable()
+            } catch (e: Throwable) {
+                Log.e(TAG, "failed to check if volume is available", e)
+                false
+            }
+        }
+        val isDpeAvailable by lazy {
+            try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    ReflectionAudioEffect.isEffectTypeAvailable(
+                        AudioEffect.EFFECT_TYPE_DYNAMICS_PROCESSING,
+                        ReflectionAudioEffect.EFFECT_TYPE_NULL
+                    )
+                } else {
+                    false
+                }
+            } catch (e: Throwable) {
+                Log.e(TAG, "failed to check if DPE is available", e)
+                false
+            }
+        }
     }
 
     private val receiver = object : BroadcastReceiver() {
@@ -57,29 +80,6 @@ class PostAmpAudioSink(
     }
     private val audioManager = context.getSystemService<AudioManager>()!!
     private var handler: Handler? = null
-    private val isVolumeAvailable by lazy {
-        try {
-            Volume.isAvailable()
-        } catch (e: Throwable) {
-            Log.e(TAG, "failed to check if volume is available", e)
-            false
-        }
-    }
-    private val isDpeAvailable by lazy {
-        try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                ReflectionAudioEffect.isEffectTypeAvailable(
-                    AudioEffect.EFFECT_TYPE_DYNAMICS_PROCESSING,
-                    ReflectionAudioEffect.EFFECT_TYPE_NULL
-                )
-            } else {
-                false
-            }
-        } catch (e: Throwable) {
-            Log.e(TAG, "failed to check if DPE is available", e)
-            false
-        }
-    }
     private val isDpeOffloadable by lazy {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {

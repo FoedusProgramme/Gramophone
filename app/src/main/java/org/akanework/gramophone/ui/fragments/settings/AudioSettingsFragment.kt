@@ -20,6 +20,7 @@ package org.akanework.gramophone.ui.fragments.settings
 import android.os.Bundle
 import androidx.preference.Preference
 import org.akanework.gramophone.R
+import org.akanework.gramophone.logic.utils.PostAmpAudioSink
 import org.akanework.gramophone.ui.fragments.BasePreferenceFragment
 import org.akanework.gramophone.ui.fragments.BaseSettingsActivity
 
@@ -30,6 +31,8 @@ class AudioSettingsActivity : BaseSettingsActivity(
 class AudioSettingsFragment : BasePreferenceFragment() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.settings_audio, rootKey)
+        findPreference<Preference>("rg_boost_gain_category")!!.isVisible =
+            PostAmpAudioSink.isVolumeAvailable || PostAmpAudioSink.isDpeAvailable
     }
 
     override fun onPreferenceTreeClick(preference: Preference): Boolean {

@@ -41,6 +41,7 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+        android:key="rg_boost_gain_category"
         android:title="@string/settings_replaygain_boost"
         app:iconSpaceReserved="false">
 
