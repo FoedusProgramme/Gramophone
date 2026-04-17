@@ -64,7 +64,7 @@
     <string name="settings_crash_application">Crash applicazione</string>
     <string name="dialog_lyrics">Testi</string>
     <string name="delete_failed">Eliminazione brano fallita</string>
-    <string name="grant_images">Per favore consenti l\'autorizzazione \"Foto e video\"</string>
+    <string name="grant_images"><![CDATA[Per favore consenti l\'autorizzazione \"Foto e video\"]]></string>
     <string name="crash_clipboard">Registro crash copiato negli appunti</string>
     <string name="settings_trim_lyrics">Rimuovi spazi nei testi</string>
     <string name="category_songs">Brani</string>
@@ -89,7 +89,7 @@
     <string name="settings_title_center">Titolo centrato</string>
     <string name="settings_about_gramophone">Riguardo all\'applicazione</string>
     <string name="settings_library">Libreria</string>
-    <string name="deny_images">Per favore nega l\'autorizzazione \"Foto e video\"</string>
+    <string name="deny_images"><![CDATA[Per favore nega l\'autorizzazione \"Foto e video\"]]></string>
     <string name="settings_player_ui_summary">UI player intero, testi</string>
     <string name="settings_library_summary">Gestisci libreria media</string>
     <string name="settings_lyrics_multiline_summary">Tratta tutte le righe tra i punti di sincronizzazione come un unico testo</string>
@@ -157,7 +157,7 @@
     <string name="album_covers_enhance_desc">Supporto per copertine di alta qualità delle canzoni e possibilità di differenziare tra copertine di album e canzoni (richiede l\'accesso alle foto)</string>
     <string name="sort_by_release_date">Data di pubblicazione</string>
     <string name="timer_expiry">Timer riposo fermerà la musica a %s</string>
-    <string name="grant_audio">Per favore consenti l\'autorizzazione \"Musica e audio\"</string>
+    <string name="grant_audio"><![CDATA[Per favore consenti l\'autorizzazione \"Musica e audio\"]]></string>
     <string name="skip_next">Salta al prossimo</string>
     <string name="expand_less">Chiudi</string>
     <string name="settings_preference_category_home">Schermata principale</string>
@@ -256,7 +256,7 @@
     <plurals name="folders_plural">
         <item quantity="one">% Cartella</item>
         <item quantity="many">% Cartelle</item>
-        <item quantity="other"></item>
+        <item quantity="other"/>
     </plurals>
     <string name="playback_speed">Velocità riproduzione</string>
 </resources>
