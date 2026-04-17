@@ -146,11 +146,11 @@
     <string name="settings_blacklist_folder">黑名單資料夾</string>
     <string name="timer">睡眠定時器</string>
     <string name="current_playlist">當前播放清單</string>
-    <string name="deny_images">請拒絕「相片與影片」權限</string>
-    <string name="grant_images">請授予「相片與影片」權限</string>
+    <string name="deny_images"><![CDATA[請拒絕「相片與影片」權限]]></string>
+    <string name="grant_images"><![CDATA[請授予「相片與影片」權限]]></string>
     <string name="timer_expiry">睡眠計時器會在 %s 時暫停音樂</string>
     <string name="settings_lyrics_configuration">歌詞配置</string>
-    <string name="grant_audio">請授予「音樂與音訊」權限</string>
+    <string name="grant_audio"><![CDATA[請授予「音樂與音訊」權限]]></string>
     <string name="settings_preference_category_home">主畫面</string>
     <string name="tab_order">配置標籤順序</string>
     <string name="tab_order_summary">應用將在啟動時顯示第一個標籤。分隔符後的標籤將被隱藏。</string>
