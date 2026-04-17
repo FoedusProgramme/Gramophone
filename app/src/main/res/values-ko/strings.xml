@@ -423,5 +423,5 @@
     <plurals name="folders_plural">
         <item quantity="other">%d 폴더</item>
     </plurals>
-    <string name="sort_by_album_artist_year">&lt;![CDATA[Album artist -&gt; 년]</string>
+    <string name="sort_by_album_artist_year"><![CDATA[<![CDATA[Album artist -> 년]]]></string>
 </resources>
