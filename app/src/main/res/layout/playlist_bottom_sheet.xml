@@ -43,7 +43,7 @@
         app:layout_constraintStart_toEndOf="@id/clearQueue"
         app:layout_constraintTop_toBottomOf="@id/bottomSheetDragHandle" />
 
-    <Chronometer
+    <org.akanework.gramophone.ui.components.Chronometer
         android:id="@+id/duration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
