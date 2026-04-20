@@ -143,8 +143,8 @@
     <string name="album_cover">অ্যালবাম কভার</string>
     <string name="dialog_edit_metadata">সম্পাদনা করুন</string>
     <string name="dialog_lyrics">লিরিক</string>
-    <string name="delete_failed">গানটি ডিলিট করা যায়নি</string>
-    <string name="delete_failed_playlist">প্লেলিস্টটি ডিলিট করা যায়নি</string>
+    <string name="delete_failed">%s গানটি ডিলিট করা যায়নি</string>
+    <string name="delete_failed_playlist">%s প্লেলিস্টটি ডিলিট করা যায়নি</string>
     <string name="album_covers_enhance">অ্যালবাম কভারের উন্নত লোডিং</string>
     <string name="album_covers_enhance_desc">হাই-কোয়ালিটি কভার প্রদর্শন এবং ভিন্ন কভার ব্যবহার (ফটো অ্যাক্সেস প্রয়োজন)</string>
     <string name="deny_images"><![CDATA[অনুগ্রহ করে \"ফটো এবং ভিডিও\" অনুমতিটি বাতিল করুন]]></string>
@@ -199,7 +199,7 @@
     <string name="open_in_gramophone">গ্রামোফোনে খুলুন</string>
     <string name="playlist_name">প্লেলিস্ট এর নাম</string>
     <string name="rename">নাম পরিবর্তন</string>
-    <string name="rename_failed_playlist">প্লেলিস্টের নাম পরিবর্তন ব্যর্থ হয়েছে</string>
+    <string name="rename_failed_playlist">%s প্লেলিস্টের নাম পরিবর্তন ব্যর্থ হয়েছে</string>
     <string name="rename_playlist">প্লেলিস্টের নাম পরিবর্তন</string>
     <plurals name="folders_plural">
         <item quantity="one">%d টি ফোল্ডার</item>
