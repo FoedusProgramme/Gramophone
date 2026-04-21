@@ -444,7 +444,7 @@
     <string name="settings_stop_on_dismiss_summary">Detén a reprodución cando a tarefa da app se desbota das recentes</string>
     <string name="compact_grid">Grella (compacta)</string>
     <string name="sort_by_album_year">Ano do álbum</string>
-    <string name="sort_by_album_artist_year">Ano <![CDATA[Album artist ->]]></string>
+    <string name="sort_by_album_artist_year"><![CDATA[Artista do album -&gt; ano]]></string>
     <string name="forbidden_symbol_error">Carácter non válido no nome</string>
     <string name="translators">Traducións</string>
     <string name="settings_replaygain">ReplayGain</string>
