@@ -69,11 +69,9 @@
         <meta-data
             android:name="com.google.android.gms.car.application.theme"
             android:resource="@style/Theme.Gramophone"/>
-<!-- TODO uncomment to enable Android Auto when library browsing is implemented
         <meta-data
             android:name="com.google.android.gms.car.application"
             android:resource="@xml/automotive_app_desc"/>
--->
         <activity
             android:name=".logic.ui.BugHandlerActivity"
             android:exported="false"
