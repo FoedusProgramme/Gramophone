@@ -1,8 +1,8 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    id("com.android.library")
-    id("com.android.built-in-kotlin")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.android.builtin.kotlin)
 }
 
 android {
@@ -59,9 +59,9 @@ kotlin {
 }
 
 dependencies {
-    implementation("androidx.core:core-ktx:1.17.0")
-    implementation("androidx.media3:media3-common:1.9.0")
-    implementation("io.github.nift4.dlfunc:dlfunc:0.1.6")
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.media3.common)
+    implementation(libs.dlfunc)
     implementation(project(":misc:audiofxfwd"))
     // stub project that provides hidden SDK classes, which themselves depend on public SDK
     compileOnly(project(":misc:audiofxstub2"))
