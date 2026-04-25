@@ -6,6 +6,7 @@ import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -60,6 +61,7 @@ import org.akanework.gramophone.ui.MainActivity
 import java.util.LinkedList
 
 // TODO: support listening to externally caused changes to playlist (ie MCT).
+// TODO: Playing indicator does not update when shuffling
 class PlaylistQueueSheet(
     context: Context, private val activity: MainActivity
 ) : BottomSheetDialog(context), Player.Listener {
@@ -197,7 +199,7 @@ class PlaylistQueueSheet(
                     pureDark = false, // TODO: I don't want to do this rn. Does not respect light/dark mode
                 ) {
                     val mqState =
-                        rememberMqState(coroutineScope, instance, this@PlaylistQueueSheet)
+                        rememberMqState(coroutineScope, instance!!, this@PlaylistQueueSheet, )
                     val pagerState = rememberPagerState(pageCount = { 2 })
 
                     LaunchedEffect(mqState) {
@@ -233,7 +235,8 @@ class PlaylistQueueSheet(
                             state = pagerState,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(bottom = 14.dp),
+                                .padding(bottom = if (mqState.expanded) 0.dp else 20.dp)
+                                .animateContentSize(),
                             beyondViewportPageCount = 1,
                             userScrollEnabled = !mqState.expanded
                         ) { page ->
@@ -256,8 +259,10 @@ class PlaylistQueueSheet(
                             modifier = Modifier
                                 .wrapContentHeight()
                                 .fillMaxWidth()
+                                .padding(bottom = 8.dp)
                                 .align(Alignment.BottomCenter)
                                 .alpha(if (!mqState.expanded) 1f else 0f)
+                                .animateContentSize()
                         ) {
                             repeat(pagerState.pageCount) { iteration ->
                                 val color = if (pagerState.currentPage == iteration) {

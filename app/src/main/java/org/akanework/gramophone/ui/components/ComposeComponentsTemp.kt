@@ -1,5 +1,6 @@
 package org.akanework.gramophone.ui.components
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -28,9 +30,11 @@ import androidx.compose.material.icons.rounded.ExpandMore
 import androidx.compose.material.icons.rounded.MusicNote
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -48,10 +52,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.media3.common.Player
+import androidx.media3.common.Player.REPEAT_MODE_ALL
+import androidx.media3.common.Player.REPEAT_MODE_OFF
+import androidx.media3.common.Player.REPEAT_MODE_ONE
+import androidx.media3.common.util.Log
 import androidx.media3.session.MediaBrowser
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.MultiQueueObject
@@ -59,7 +68,7 @@ import org.akanework.gramophone.logic.deleteQueue
 import org.akanework.gramophone.logic.getInactiveQueues
 import org.akanework.gramophone.logic.getQueue
 import org.akanework.gramophone.logic.loadQueue
-import org.akanework.gramophone.logic.utils.Flags.MQ_PREVIEW
+import org.akanework.gramophone.logic.playOrPause
 
 @Composable
 fun MqListItem(
@@ -144,6 +153,10 @@ fun MqContent(
     mqEnabled: Boolean = false,
 ) {
     val haptic = LocalHapticFeedback.current
+
+    val isPlaying by mqState.isPlaying.collectAsState()
+    val repeatMode by mqState.repeatMode.collectAsState()
+    val shuffleModeEnabled by mqState.shuffleModeEnabled.collectAsState()
 
     val mqExpand = mqState.expanded
     val animatedMinHeight by animateDpAsState(
@@ -267,27 +280,126 @@ fun MqContent(
                     )
                 }
             }
-            if (mqState.isDetached())
-                item {
+
+            // action bar
+            item {
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                        .animateContentSize(),
+                ) {
+                    // left options
                     Row(
                         horizontalArrangement = Arrangement.End,
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
-                            .fillMaxWidth()
+                    ) {
+                        IconButton(
+                            onClick = {
+                                mqState.toggleRepeatMode()
+                            },
+                            enabled = !mqState.isDetached(),
+                        ) {
+                            Icon(
+                                painter = painterResource(
+                                    when (repeatMode) {
+                                        REPEAT_MODE_OFF, REPEAT_MODE_ALL -> R.drawable.ic_repeat
+                                        else -> R.drawable.ic_repeat_one
+                                    }
+                                ),
+                                contentDescription = null,
+                                tint = LocalContentColor.current.copy(if (repeatMode == REPEAT_MODE_OFF) 0.5f else 1f)
+                            )
+                        }
+                        IconButton(
+                            onClick = {
+                                mqState.toggleShuffleMode()
+                            },
+                            enabled = !mqState.isDetached(),
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_shuffle),
+                                contentDescription = null,
+                                tint = LocalContentColor.current.copy(if (shuffleModeEnabled) 1f else 0.5f)
+                            )
+                        }
+                    }
+
+                    // center options
+                    Row(
+                        horizontalArrangement = Arrangement.End,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
                             .padding(horizontal = 16.dp)
                     ) {
                         IconButton(
                             onClick = {
-                                mqState.loadDetached()
+                                mqState.seekPrev()
                             },
+                            enabled = !mqState.isDetached(),
                         ) {
                             Icon(
-                                painter = painterResource(R.drawable.ic_play_arrow),
-                                contentDescription = null
+                                painter = painterResource(R.drawable.ic_skip_previous),
+                                contentDescription = null,
+                            )
+                        }
+                        IconButton(
+                            onClick = {
+                                mqState.togglePlayPause()
+                            },
+                            enabled = !mqState.isDetached(),
+                        ) {
+                            Icon(
+                                painter = painterResource(if (isPlaying) R.drawable.ic_pause_filled else R.drawable.ic_play_arrow),
+                                contentDescription = null,
+                            )
+                        }
+                        IconButton(
+                            onClick = {
+                                mqState.seekNext()
+                            },
+                            enabled = !mqState.isDetached(),
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_skip_next),
+                                contentDescription = null,
                             )
                         }
                     }
+
+                    // right options
+                    Row(
+                        horizontalArrangement = Arrangement.End,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                    ) {
+                        IconButton(
+                            onClick = {
+                            },
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_more_vert_alt),
+                                contentDescription = null,
+                            )
+                        }
+                        if (mqState.isDetached()) {
+                            IconButton(
+                                onClick = {
+                                    mqState.loadDetached()
+                                },
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_play_arrow),
+                                    contentDescription = null,
+                                )
+                            }
+                        }
+                    }
                 }
+            }
         }
     }
 }
@@ -342,9 +454,14 @@ fun EmptyPlaceholder(
 
 class MqState(
     private val coroutineScope: CoroutineScope,
-    private val instance: MediaBrowser?,
+    private val instance: MediaBrowser,
     private val playlistQueueSheet: PlaylistQueueSheet?,
-) {
+) : Player.Listener {
+    val isPlaying = MutableStateFlow(instance.isPlaying)
+
+    // shuffle and repeat modes do not need to be manually set for queue loads, they will be set automatically
+    val shuffleModeEnabled = MutableStateFlow(instance.shuffleModeEnabled)
+    val repeatMode = MutableStateFlow(instance.repeatMode)
     var expanded by mutableStateOf(false)
         private set
 
@@ -358,6 +475,7 @@ class MqState(
         private set
 
     init {
+        instance.addListener(this)
         init()
     }
 
@@ -367,10 +485,10 @@ class MqState(
             detachedQueue = null
             inactiveQueues.clear()
 
-            instance?.getQueue()?.let {
+            instance.getQueue()?.let {
                 activeQueue = it
             }
-            instance?.getInactiveQueues()?.toMutableList()?.let {
+            instance.getInactiveQueues().toMutableList().let {
                 inactiveQueues.addAll(it)
             }
         }
@@ -395,7 +513,7 @@ class MqState(
     fun getQueuePositionStr(): String {
         return if (!isDetached()) {
             activeQueue?.let {
-                "${(instance?.currentMediaItemIndex ?: -1) + 1} / ${it.getSize()}"
+                "${(instance.currentMediaItemIndex) + 1} / ${it.getSize()}"
             }
         } else {
             detachedQueue?.let {
@@ -408,16 +526,34 @@ class MqState(
 
     fun detach(index: Int) {
         detachedQueue = inactiveQueues.getOrNull(index)
+        detachedQueue?.repeatMode?.let {
+            onRepeatModeChanged(it)
+        }
+        detachedQueue?.shuffleModeEnabled?.let {
+            onShuffleModeEnabledChanged(it)
+        }
     }
 
     fun detach(mq: MultiQueueObject) {
         detachedQueue = mq
         playlistQueueSheet?.forceUpdate(inactiveQueues.indexOf(mq))
+        detachedQueue?.repeatMode?.let {
+            onRepeatModeChanged(it)
+        }
+        detachedQueue?.shuffleModeEnabled?.let {
+            onShuffleModeEnabledChanged(it)
+        }
     }
 
     fun resetHead() {
         detachedQueue = null
         playlistQueueSheet?.forceUpdate(-1)
+        detachedQueue?.repeatMode?.let {
+            onRepeatModeChanged(it)
+        }
+        detachedQueue?.shuffleModeEnabled?.let {
+            onShuffleModeEnabledChanged(it)
+        }
     }
 
     fun toggleExpand() {
@@ -438,14 +574,20 @@ class MqState(
     }
 
     fun removeQueue(index: Int) {
-        instance?.deleteQueue(index)
+        instance.deleteQueue(index)
         coroutineScope.launch {
             init()
+        }
+        detachedQueue?.repeatMode?.let {
+            onRepeatModeChanged(it)
+        }
+        detachedQueue?.shuffleModeEnabled?.let {
+            onShuffleModeEnabledChanged(it)
         }
     }
 
     fun loadDetached() {
-        instance?.loadQueue(inactiveQueues.indexOf(detachedQueue))
+        instance.loadQueue(inactiveQueues.indexOf(detachedQueue))
         expanded = false
         resetHead()
         coroutineScope.launch {
@@ -453,12 +595,43 @@ class MqState(
             init()
         }
     }
+
+
+    fun togglePlayPause() = instance.playOrPause()
+    fun seekPrev() = instance.seekToPrevious()
+    fun seekNext() = instance.seekToNext()
+
+    fun toggleRepeatMode() {
+        instance.repeatMode = when (instance.repeatMode) {
+            REPEAT_MODE_OFF -> REPEAT_MODE_ALL
+            REPEAT_MODE_ALL -> REPEAT_MODE_ONE
+            REPEAT_MODE_ONE -> REPEAT_MODE_OFF
+            else -> REPEAT_MODE_OFF
+        }
+    }
+
+    fun toggleShuffleMode() {
+        instance.shuffleModeEnabled = !instance.shuffleModeEnabled
+    }
+
+
+    override fun onIsPlayingChanged(isPlaying: Boolean) {
+        this.isPlaying.value = isPlaying
+    }
+
+    override fun onRepeatModeChanged(repeatMode: @Player.RepeatMode Int) {
+        this.repeatMode.value = repeatMode
+    }
+
+    override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
+        this.shuffleModeEnabled.value = shuffleModeEnabled
+    }
 }
 
 @Composable
 fun rememberMqState(
     coroutineScope: CoroutineScope,
-    instance: MediaBrowser?,
+    instance: MediaBrowser,
     playlistQueueSheet: PlaylistQueueSheet?,
 ): MqState {
     return remember {
