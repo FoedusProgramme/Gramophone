@@ -320,4 +320,5 @@
     <string name="spk_encoding_opus">Opus</string>
     <string name="spk_encoding_dts_uhd_p2">DTS-X</string>
     <string name="device_type_hdmi">HDMI</string>
+    <string name="audio_signal_chain">অডিও সিগন্যাল চেইন</string>
 </resources>
