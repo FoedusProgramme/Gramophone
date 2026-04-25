@@ -160,6 +160,12 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
+        <provider
+            android:name=".logic.GramophoneAlbumArtProvider"
+            android:authorities="${applicationId}.albumart"
+            android:exported="true"
+            android:permission="com.google.android.finsky.permission.GEARHEAD_SERVICE" />
+
         <receiver android:name=".ui.LyricWidgetProvider"
             android:exported="false">
             <intent-filter>

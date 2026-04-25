@@ -118,6 +118,7 @@ import org.akanework.gramophone.logic.utils.LrcUtils.loadAndParseLyricsFile
 import org.akanework.gramophone.logic.utils.ReplayGainAudioProcessor
 import org.akanework.gramophone.logic.utils.ReplayGainUtil
 import org.akanework.gramophone.logic.utils.SemanticLyrics
+import org.akanework.gramophone.logic.utils.GramophoneArtResolver
 import org.akanework.gramophone.logic.utils.exoplayer.EndedWorkaroundPlayer
 import org.akanework.gramophone.logic.utils.exoplayer.GramophoneExtractorsFactory
 import org.akanework.gramophone.logic.utils.exoplayer.GramophoneMediaSourceFactory
@@ -159,28 +160,10 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
     val endedWorkaroundPlayer
         get() = internalPlayer
 
-    private fun convertMetadata(metadata: MediaMetadata, albumIdFallback: Long? = null): MediaMetadata {
+    private fun convertMetadata(metadata: MediaMetadata): MediaMetadata {
         val artworkUri = metadata.artworkUri ?: return metadata
-        val scheme = artworkUri.scheme
-        if (scheme == "gramophoneSongCover" || scheme == "gramophoneAlbumCover") {
-            val albumId = metadata.extras?.getLong(uk.akane.libphonograph.items.EXTRA_ALBUM_ID)
-                ?: albumIdFallback
-                ?: (if (scheme == "gramophoneAlbumCover") artworkUri.authority?.toLongOrNull() else null)
-            if (albumId != null) {
-                val uri = android.content.ContentUris.withAppendedId(uk.akane.libphonograph.Constants.baseAlbumCoverUri, albumId)
-                return metadata.buildUpon().setArtworkUri(uri).build()
-            } else if (scheme == "gramophoneSongCover") {
-                val songId = artworkUri.authority?.toLongOrNull()
-                if (songId != null) {
-                    val uri = android.content.ContentUris.appendId(
-                        android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI.buildUpon(),
-                        songId
-                    ).appendPath("albumart").build()
-                    return metadata.buildUpon().setArtworkUri(uri).build()
-                }
-            }
-        }
-        return metadata
+        val providerUri = GramophoneArtResolver.toProviderUri(artworkUri) ?: return metadata
+        return metadata.buildUpon().setArtworkUri(providerUri).build()
     }
 
     private fun convertItem(item: MediaItem?): MediaItem? {
@@ -433,9 +416,11 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
             override fun getCurrentMediaItem(): MediaItem? {
                 return convertItem(super.getCurrentMediaItem())
             }
+            override fun getMediaItemAt(index: Int): MediaItem {
+                return convertItem(super.getMediaItemAt(index)) ?: super.getMediaItemAt(index)
+            }
             override fun getMediaMetadata(): MediaMetadata {
-                val albumIdFallback = super.getCurrentMediaItem()?.mediaMetadata?.extras?.getLong(uk.akane.libphonograph.items.EXTRA_ALBUM_ID)
-                return convertMetadata(super.getMediaMetadata(), albumIdFallback)
+                return convertMetadata(super.getMediaMetadata())
             }
             override fun getCurrentTimeline(): androidx.media3.common.Timeline {
                 val original = super.getCurrentTimeline()
@@ -1050,15 +1035,15 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                             putInt(MediaConstants.EXTRAS_KEY_CONTENT_STYLE_PLAYABLE, MediaConstants.EXTRAS_VALUE_CONTENT_STYLE_GRID_ITEM)
                         }
                         listOf(
-                            // createFolderItem("songs", getString(R.string.category_songs), MediaMetadata.MEDIA_TYPE_FOLDER_MIXED),
                             createFolderItem("albums", getString(R.string.category_albums), MediaMetadata.MEDIA_TYPE_FOLDER_ALBUMS, extras = gridExtras),
                             createFolderItem("artists", getString(R.string.category_artists), MediaMetadata.MEDIA_TYPE_FOLDER_ARTISTS, extras = gridExtras),
+                            createFolderItem("songs", getString(R.string.category_songs), MediaMetadata.MEDIA_TYPE_FOLDER_MIXED),
                             createFolderItem("playlists", getString(R.string.category_playlists), MediaMetadata.MEDIA_TYPE_FOLDER_PLAYLISTS)
                         )
                     }
-                    // "songs" -> gramophoneApplication.reader.songListFlow.first()
                     "albums" -> gramophoneApplication.reader.albumListFlow.first().map { createFolderItem("album_${it.id}", it.title ?: "", MediaMetadata.MEDIA_TYPE_FOLDER_MIXED, subtitle = it.albumArtist ?: it.songList.firstOrNull()?.mediaMetadata?.artist?.toString(), artworkUri = it.cover, isPlayable = true, isBrowsable = false) }
                     "artists" -> gramophoneApplication.reader.artistListFlow.first().map { createFolderItem("artist_${it.title}", it.title ?: "", MediaMetadata.MEDIA_TYPE_FOLDER_MIXED, subtitle = resources.getQuantityString(R.plurals.songs, it.songList.size, it.songList.size), artworkUri = it.albumList.firstOrNull()?.cover, isPlayable = true, isBrowsable = false) }
+                    "songs" -> gramophoneApplication.reader.songListFlow.first()
                     "playlists" -> gramophoneApplication.reader.playlistListFlow.first().map {
                         val title = when (it) {
                             is uk.akane.libphonograph.dynamicitem.RecentlyAdded -> getString(R.string.recently_added)
@@ -1075,7 +1060,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                             is uk.akane.libphonograph.dynamicitem.Favorite -> "playlist_favorite"
                             else -> "playlist_${it.id}"
                         }
-                        createFolderItem(id, title, MediaMetadata.MEDIA_TYPE_FOLDER_MIXED, artworkUri = icon)
+                        createFolderItem(id, title, MediaMetadata.MEDIA_TYPE_FOLDER_MIXED, artworkUri = icon, isPlayable = true, isBrowsable = false)
                     }
                     else -> {
                         if (parentId.startsWith("album_")) {
@@ -1098,13 +1083,13 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                     }
                 }
 
-                val startIndex = (page * pageSize).coerceIn(0, list.size)
-                val endIndex = ((page + 1) * pageSize).coerceIn(0, list.size)
-                val pagedList = (if (page == 0 && pageSize == Int.MAX_VALUE) list else list.subList(startIndex, endIndex)).map { convertItem(it)!! }
+                val finalPageSize = pageSize.coerceAtMost(200)
+                val pagedList = list.drop(page * finalPageSize).take(finalPageSize).map { convertItem(it)!! }
 
-                completion.set(LibraryResult.ofItemList(pagedList, params))
+                completion.set(LibraryResult.ofItemList(ImmutableList.copyOf(pagedList), params))
             } catch (e: Exception) {
-                completion.setException(e)
+                Log.w(TAG, "onGetChildren failed for $parentId", e)
+                completion.set(LibraryResult.ofError(SessionError.ERROR_UNKNOWN))
             }
         }
         return completion
@@ -1127,8 +1112,8 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                             .setMediaType(MediaMetadata.MEDIA_TYPE_FOLDER_MIXED)
                             .build())
                         .build()
-                // } else if (mediaId == "songs") {
-                //     createFolderItem("songs", getString(R.string.category_songs), MediaMetadata.MEDIA_TYPE_FOLDER_MIXED)
+                } else if (mediaId == "songs") {
+                    createFolderItem("songs", getString(R.string.category_songs), MediaMetadata.MEDIA_TYPE_FOLDER_MIXED)
                 } else if (mediaId == "albums") {
                     val gridExtras = android.os.Bundle().apply {
                         putInt(MediaConstants.EXTRAS_KEY_CONTENT_STYLE_BROWSABLE, MediaConstants.EXTRAS_VALUE_CONTENT_STYLE_GRID_ITEM)
@@ -1183,7 +1168,8 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                     completion.set(LibraryResult.ofError(SessionError.ERROR_BAD_VALUE))
                 }
             } catch (e: Exception) {
-                completion.setException(e)
+                Log.w(TAG, "onGetItem failed for $mediaId", e)
+                completion.set(LibraryResult.ofError(SessionError.ERROR_UNKNOWN))
             }
         }
         return completion
@@ -1225,7 +1211,8 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                 session.notifySearchResultChanged(browser, query, 0, params)
                 completion.set(LibraryResult.ofVoid())
             } catch (e: Exception) {
-                completion.setException(e)
+                Log.w(TAG, "onSearch failed for $query", e)
+                completion.set(LibraryResult.ofError(SessionError.ERROR_UNKNOWN))
             }
         }
         return completion
@@ -1243,12 +1230,12 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         lifecycleScope.launch(Dispatchers.Default) {
             try {
                 val list = searchForMediaItemSync(query)
-                val startIndex = (page * pageSize).coerceIn(0, list.size)
-                val endIndex = ((page + 1) * pageSize).coerceIn(0, list.size)
-                val pagedList = (if (page == 0 && pageSize == Int.MAX_VALUE) list else list.subList(startIndex, endIndex)).map { convertItem(it)!! }
-                completion.set(LibraryResult.ofItemList(pagedList, params))
+                val finalPageSize = pageSize.coerceAtMost(200)
+                val pagedList = list.drop(page * finalPageSize).take(finalPageSize).map { convertItem(it)!! }
+                completion.set(LibraryResult.ofItemList(ImmutableList.copyOf(pagedList), params))
             } catch (e: Exception) {
-                completion.setException(e)
+                Log.w(TAG, "onGetSearchResult failed for $query", e)
+                completion.set(LibraryResult.ofError(SessionError.ERROR_UNKNOWN))
             }
         }
         return completion
@@ -1495,11 +1482,14 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         controller: MediaSession.ControllerInfo,
         mediaItems: List<MediaItem>
     ): ListenableFuture<List<MediaItem>> {
-        if (mediaItems.find { it.localConfiguration == null } == null) // fast path
-            return Futures.immediateFuture(mediaItems)
+        if (mediaItems.find { it.localConfiguration == null } == null)
+            return Futures.immediateFuture(mediaItems.map { convertItem(it)!! })
         val completion = SettableFuture.create<List<MediaItem>>()
         lifecycleScope.launch(Dispatchers.Default) {
             try {
+                // Track which item was clicked (used to set starting index)
+                var clickedItemIndex = 0
+
                 val result = mediaItems.flatMap {
                     if (it.localConfiguration != null)
                         listOf(it)
@@ -1508,7 +1498,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                         gramophoneApplication.reader.albumListFlow.first().find { a -> a.id == albumId }?.songList ?: emptyList()
                     } else if (it.mediaId.startsWith("artist_")) {
                         val artistName = it.mediaId.removePrefix("artist_")
-                        gramophoneApplication.reader.artistListFlow.first().find { a -> a.title == artistName }?.songList?.shuffled() ?: emptyList()
+                        gramophoneApplication.reader.artistListFlow.first().find { a -> a.title == artistName }?.songList ?: emptyList()
                     } else if (it.mediaId.startsWith("playlist_")) {
                         val playlistIdStr = it.mediaId.removePrefix("playlist_")
                         gramophoneApplication.reader.playlistListFlow.first().find { p ->
@@ -1518,15 +1508,26 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                                 else -> p.id?.toString() == playlistIdStr
                             }
                         }?.songList ?: emptyList()
-                    } else if (it.mediaId != MediaItem.DEFAULT_MEDIA_ID)
-                        gramophoneApplication.reader.songListFlow.first()
-                            .filter { m -> m.mediaId == it.mediaId }
+                    } else if (it.mediaId != MediaItem.DEFAULT_MEDIA_ID) {
+                        // Load entire song list, track which item was clicked
+                        val fullSongList = gramophoneApplication.reader.songListFlow.first()
+                        clickedItemIndex = fullSongList.indexOfFirst { m -> m.mediaId == it.mediaId }
+                        fullSongList
+                    }
                     else if (it.requestMetadata.searchQuery != null)
                         searchForMediaItem(it)
                     else
                         throw UnsupportedOperationException("can't do anything with $it")
                 }
-                completion.set(result.map { convertItem(it)!! })
+                val convertedResult = result.map { convertItem(it)!! }
+                completion.set(convertedResult)
+
+                // Set the clicked item as the starting point (must be done on main thread)
+                if (clickedItemIndex > 0 && convertedResult.isNotEmpty()) {
+                    withContext(Dispatchers.Main) {
+                        mediaSession.player.setMediaItems(convertedResult, clickedItemIndex, androidx.media3.common.C.TIME_UNSET)
+                    }
+                }
             } catch (e: UnsupportedOperationException) {
                 completion.setException(e)
             }
