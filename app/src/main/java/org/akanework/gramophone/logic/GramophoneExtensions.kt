@@ -400,7 +400,7 @@ fun shuffledIndices(order: ShuffleOrder): MutableList<Int> {
     return result
 }
 
-fun MediaController.getQueueForUi(index: Int = C.INDEX_UNSET): Pair<MutableList<Int>, MutableList<MediaItem>>? {
+fun MediaController.getQueueForUi(index: Int = -1): Pair<MutableList<Int>, MultiQueueObject>? {
     if (index == -1) {
         return null
     }
@@ -412,14 +412,13 @@ fun MediaController.getQueueForUi(index: Int = C.INDEX_UNSET): Pair<MutableList<
         val binder = getBinder("allQueues")!!
         BundleListRetriever.getList(binder).map {
             val mq = MultiQueueObject.fromBundle(it)
-            val items = mq.queue
             val indexes: MutableList<Int> = if (mq.shuffleOrder == null) {
                 (0 until mq.getSize()).toMutableList()
             } else {
                 getIntArray("shuffleIndexes")!!.toMutableList()
             }
 
-            Pair(indexes, items)
+            Pair(indexes, mq)
         }.firstOrNull()
     }
 }

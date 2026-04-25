@@ -22,7 +22,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -70,7 +70,7 @@ class PlaylistQueueSheet(
     private val touchHelper: ItemTouchHelper
     private val queueHead: ComposeView
 
-    private val durationState = mutableStateOf(false)
+    private val durationState = mutableLongStateOf(-1)
     private val mqEnabled: Boolean
     private var detachedHead: Boolean = false
 
@@ -143,7 +143,7 @@ class PlaylistQueueSheet(
                             factory = { context ->
                                 val layout = LayoutInflater.from(context)
                                     .inflate(R.layout.playlist_bottom_sheet_actions, null)
-                                val durationView: Chronometer = findViewById(R.id.duration)!!
+                                val durationView: Chronometer = layout.findViewById(R.id.duration)!!
                                 durationView.isCountDown = true
 
                                 layout.findViewById<Button>(R.id.clearQueue)!!
@@ -168,13 +168,12 @@ class PlaylistQueueSheet(
                                 layout
                             },
                             update = { view ->
-                                val trigger = durationState.value
+                                val durationBase = durationState.longValue
                                 if (detachedHead) return@AndroidView // chromometer is never shown for inactive queues
                                 val durationView: Chronometer = view.findViewById(R.id.duration)
                                 val pl = playlistAdapter.playlist
 
-                                val current = (instance?.currentMediaItemIndex ?: 0)
-                                val elapsedCurrentMs = (instance?.currentPosition ?: 0)
+
                                 durationView.format = context.getString(
                                     R.string.duration_queue,
                                     "%s",
@@ -185,10 +184,7 @@ class PlaylistQueueSheet(
                                 } else {
                                     durationView.stop()
                                 }
-                                durationView.base = SystemClock.elapsedRealtime() +
-                                        pl.second.subList(current, pl.second.size)
-                                            .sumOf { it.mediaMetadata.durationMs ?: 0L
-                                            } - elapsedCurrentMs + 1000
+                                durationView.base = durationBase
                             }
                         )
                     }
@@ -319,8 +315,13 @@ class PlaylistQueueSheet(
         playlistAdapter.updateList()
     }
 
-    fun forceUpdate(mq: Int) {
-        playlistAdapter.updateList(true, mq)
+    /**
+     * Force a full update of playlist and timer
+     *
+     * @param mq Inactive queue index. Set to -1 to load the active queue
+     */
+    fun forceUpdate(mq: Int = -1) {
+        playlistAdapter.updateList(mq)
     }
 
     private inner class PlaylistCardAdapter : EditSongAdapter(activity) {
@@ -437,16 +438,25 @@ class PlaylistQueueSheet(
             return Pair(indexes, items)
         }
 
-        fun updateList(nuke: Boolean = false, index: Int = -1) {
-            updateTimer()
-            if (nuke) {
-                playlist = instance?.getQueueForUi(index) ?: dumpPlaylist()
-                notifyDataSetChanged()
-            }
+        /**
+         * Update playlist and timer
+         */
+        fun updateList(mqIndex: Int? = null) {
+            val mq = mqIndex?.let { instance?.getQueueForUi(mqIndex) }
+            val pl = if (mq != null) Pair(mq.first, mq.second.queue) else dumpPlaylist()
+            playlist = pl
+            notifyDataSetChanged()
+            updateTimer(mq?.second?.startIndex, mq?.second?.startPositionMs)
         }
 
-        fun updateTimer() {
-            durationState.value = !durationState.value
+        fun updateTimer(currentMediaItemIndex: Int? = null, currentPosition: Long? = null) {
+            val current = (currentMediaItemIndex ?: instance?.currentMediaItemIndex ?: 0)
+            val elapsedCurrentMs = (currentPosition ?: instance?.currentPosition ?: 0)
+            durationState.longValue = SystemClock.elapsedRealtime() +
+                    playlist.second.subList(current, playlist.second.size)
+                        .sumOf {
+                            it.mediaMetadata.durationMs ?: 0L
+                        } - elapsedCurrentMs + 1000
         }
     }
 }
