@@ -555,6 +555,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                     )
                 )
                 .setSystemUiPlaybackResumptionOptIn(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+                .setPeriodicPositionUpdateEnabled(false)
                 .build()
         addSession(mediaSession!!)
         controller = MediaBrowser.Builder(this, mediaSession!!.token).buildAsync().get()
@@ -1085,7 +1086,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                             gramophoneApplication.reader.songListFlow.first().filter { it.mediaMetadata.artist == artistName }
                         } else if (parentId.startsWith("playlist_")) {
                             val playlistIdStr = parentId.removePrefix("playlist_")
-                            val playlist = gramophoneApplication.reader.playlistListFlow.first().find { 
+                            val playlist = gramophoneApplication.reader.playlistListFlow.first().find {
                                 when (playlistIdStr) {
                                     "recently_added" -> it is uk.akane.libphonograph.dynamicitem.RecentlyAdded
                                     "favorite" -> it is uk.akane.libphonograph.dynamicitem.Favorite
@@ -1152,7 +1153,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                     if (artist != null) createFolderItem("artist_${artist.title}", artist.title ?: "", MediaMetadata.MEDIA_TYPE_FOLDER_MIXED, subtitle = resources.getQuantityString(R.plurals.songs, artist.songList.size, artist.songList.size), artworkUri = artist.albumList.firstOrNull()?.cover, isPlayable = true, isBrowsable = false) else null
                 } else if (mediaId.startsWith("playlist_")) {
                     val playlistIdStr = mediaId.removePrefix("playlist_")
-                    val playlist = gramophoneApplication.reader.playlistListFlow.first().find { 
+                    val playlist = gramophoneApplication.reader.playlistListFlow.first().find {
                         when (playlistIdStr) {
                             "recently_added" -> it is uk.akane.libphonograph.dynamicitem.RecentlyAdded
                             "favorite" -> it is uk.akane.libphonograph.dynamicitem.Favorite
@@ -1510,7 +1511,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                         gramophoneApplication.reader.artistListFlow.first().find { a -> a.title == artistName }?.songList?.shuffled() ?: emptyList()
                     } else if (it.mediaId.startsWith("playlist_")) {
                         val playlistIdStr = it.mediaId.removePrefix("playlist_")
-                        gramophoneApplication.reader.playlistListFlow.first().find { p -> 
+                        gramophoneApplication.reader.playlistListFlow.first().find { p ->
                             when (playlistIdStr) {
                                 "recently_added" -> p is uk.akane.libphonograph.dynamicitem.RecentlyAdded
                                 "favorite" -> p is uk.akane.libphonograph.dynamicitem.Favorite
