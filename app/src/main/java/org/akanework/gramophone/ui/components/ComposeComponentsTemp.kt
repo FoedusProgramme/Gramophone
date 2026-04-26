@@ -1,7 +1,9 @@
 package org.akanework.gramophone.ui.components
 
-import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -9,6 +11,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,7 +30,6 @@ import androidx.compose.material.icons.automirrored.rounded.List
 import androidx.compose.material.icons.rounded.DragHandle
 import androidx.compose.material.icons.rounded.ExpandLess
 import androidx.compose.material.icons.rounded.ExpandMore
-import androidx.compose.material.icons.rounded.MusicNote
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
@@ -52,11 +54,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.Player.REPEAT_MODE_ALL
 import androidx.media3.common.Player.REPEAT_MODE_OFF
 import androidx.media3.common.Player.REPEAT_MODE_ONE
-import androidx.media3.common.util.Log
 import androidx.media3.session.MediaBrowser
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
@@ -161,6 +163,9 @@ fun MqContent(
     val mqExpand = mqState.expanded
     val animatedMinHeight by animateDpAsState(
         targetValue = if (mqExpand) 300.dp else 0.dp,
+        animationSpec = spring(
+            stiffness = Spring.StiffnessMediumLow,
+        ),
         label = "queueListHeight"
     )
 
@@ -283,13 +288,14 @@ fun MqContent(
 
             // action bar
             item {
-                Row(
+                FlowRow(
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
+                    verticalArrangement = Arrangement.Center,
+                    itemVerticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp)
-                        .animateContentSize(),
+                        .offset(y = 10.dp) // account 20 dp static padding in pager
                 ) {
                     // left options
                     Row(
@@ -385,7 +391,7 @@ fun MqContent(
                                 contentDescription = null,
                             )
                         }
-                        if (mqState.isDetached()) {
+                        AnimatedVisibility(mqState.isDetached()) {
                             IconButton(
                                 onClick = {
                                     mqState.loadDetached()

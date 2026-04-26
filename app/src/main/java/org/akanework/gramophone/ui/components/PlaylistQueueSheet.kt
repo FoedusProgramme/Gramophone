@@ -235,8 +235,7 @@ class PlaylistQueueSheet(
                             state = pagerState,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(bottom = if (mqState.expanded) 0.dp else 20.dp)
-                                .animateContentSize(),
+                                .padding(bottom = 20.dp),
                             beyondViewportPageCount = 1,
                             userScrollEnabled = !mqState.expanded
                         ) { page ->

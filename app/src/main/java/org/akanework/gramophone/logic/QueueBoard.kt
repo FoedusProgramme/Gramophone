@@ -1,5 +1,6 @@
 package org.akanework.gramophone.logic
 
+import android.content.Context
 import android.os.Bundle
 import android.os.Parcelable
 import android.util.Log
@@ -45,8 +46,12 @@ class QueueBoard(
      *
      * @param mq
      */
-    fun commitQueue(mq: MultiQueueObject, shouldResume: Boolean = true) =
-        commitQueue(masterQueues.indexOf(mq), shouldResume)
+    fun commitQueue(
+        mq: MultiQueueObject,
+        setMediaItems: Boolean = true,
+        shouldResume: Boolean = true
+    ) =
+        commitQueue(masterQueues.indexOf(mq), setMediaItems, shouldResume)
 
     /**
      * Push this queue to the player, and save the player queue back to QueueBoard. The last queue
@@ -54,7 +59,12 @@ class QueueBoard(
      *
      * @param index
      */
-    fun commitQueue(index: Int, shouldResume: Boolean = true, saveLast: Boolean = true) {
+    fun commitQueue(
+        index: Int,
+        setMediaItems: Boolean = true,
+        shouldResume: Boolean = true,
+        saveLast: Boolean = true
+    ) {
         Log.v(TAG, "commitQueue() called")
         if (index < 0 || index >= masterQueues.size) {
             Log.w(TAG, "commitQueue() index $index out of bounds (size = ${masterQueues.size}). Aborting")
@@ -72,7 +82,9 @@ class QueueBoard(
         val new = masterQueues[index]
         masterQueues.remove(new)
         masterQueues.add(new)
-        setCurrQueue(new, true, shouldResume)
+        if (setMediaItems) {
+            setCurrQueue(new, true, shouldResume)
+        }
     }
 
     fun pinQueue(index: Int) {
@@ -194,7 +206,6 @@ class QueueBoard(
                 startIndex = mediaItemIndex,
                 startPositionMs = startPositionMs ?: C.TIME_UNSET,
                 repeatMode = player.endedWorkaroundPlayer!!.repeatMode,
-                shuffleModeEnabled = false,
                 shuffleOrder = null,
                 ended = false,
             )
@@ -280,7 +291,7 @@ class QueueBoard(
     /**
      * Get all copy of all queues
      */
-    fun getInactiveQueues() = masterQueues.dropLast(1)
+    fun getInactiveQueues() = masterQueues.dropLast(1).map { it.copy(queue = ArrayList()) }
 
     /**
      * Get a single queue (or several queues in the future)
@@ -392,9 +403,6 @@ class QueueBoard(
         } else {
             Log.d(TAG, "Seamless is not supported. Loading songs in directly")
 
-            if (plr.shuffleModeEnabled && mq.shuffleOrder == null)
-                Log.w(TAG, "Shuffle mode is enabled but no shuffle order is provided")
-
             if (plr.nextShuffleOrder != null)
                 throw IllegalStateException("shuffleFactory was found orphaned")
 
@@ -440,7 +448,6 @@ class QueueBoard(
         mq.startIndex = plr.currentMediaItemIndex
         mq.startPositionMs = plr.currentPosition
         mq.repeatMode = plr.repeatMode
-        mq.shuffleModeEnabled = plr.shuffleModeEnabled
         val persistent = if (mq.shuffleModeEnabled) {
             CircularShuffleOrder.Persistent(plr.exoPlayer.shuffleOrder as CircularShuffleOrder)
         } else {
@@ -450,6 +457,9 @@ class QueueBoard(
         mq.queue.clear()
         mq.queue.addAll(dumpPlaylist())
     }
+
+    val context
+        get() = player as Context
 
 }
 
@@ -489,14 +499,16 @@ data class MultiQueueObject(
     var startIndex: Int = C.INDEX_UNSET, // position of current song
     var startPositionMs: Long = C.TIME_UNSET,
     var repeatMode: Int = 0,
-    var shuffleModeEnabled: Boolean = false,
 
     var shuffleOrder: String? = null,
+    // TODO: why did i need this again?
     var ended: Boolean = false,
 ) {
     override fun toString() =
         "$title ($id) startIndex=$startIndex, startPositionMs=$startPositionMs, repeatMode=$repeatMode, shuffleModeEnabled=$shuffleModeEnabled, ended=$ended, mediaItems_size=${queue.size}"
 
+    val shuffleModeEnabled
+        get() = shuffleOrder != null
 
     /**
      * Retrieve the song at current position in the queue
@@ -572,7 +584,6 @@ data class MultiQueueObject(
                 startIndex = bundle.getInt("startIndex", C.INDEX_UNSET),
                 startPositionMs = bundle.getLong("startPositionMs", C.TIME_UNSET),
                 repeatMode = bundle.getInt("repeatMode", REPEAT_MODE_OFF),
-                shuffleModeEnabled = bundle.getBoolean("shuffleModeEnabled"),
                 ended = bundle.getBoolean("ended"),
                 shuffleOrder = bundle.getString("shuffleOrder"),
             )

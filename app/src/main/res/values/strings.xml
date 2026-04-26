@@ -509,4 +509,5 @@
     <string name="favorite_failed_text">Please click here to apply changes, by granting permission to the favourite playlist file</string>
     <string name="error_in_bg">Errors occuring in the background</string>
     <string name="settings_mq_enabled">Multiple queues</string>
+    <string name="song_queue">Queue</string>
 </resources>

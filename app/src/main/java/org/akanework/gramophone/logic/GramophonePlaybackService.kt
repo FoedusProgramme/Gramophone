@@ -123,6 +123,7 @@ import org.akanework.gramophone.logic.utils.ReplayGainAudioProcessor
 import org.akanework.gramophone.logic.utils.ReplayGainUtil
 import org.akanework.gramophone.logic.utils.SemanticLyrics
 import org.akanework.gramophone.logic.utils.exoplayer.EndedWorkaroundPlayer
+import org.akanework.gramophone.logic.utils.exoplayer.EndedWorkaroundPlayer.Companion.queueWithTitle
 import org.akanework.gramophone.logic.utils.exoplayer.GramophoneExtractorsFactory
 import org.akanework.gramophone.logic.utils.exoplayer.GramophoneMediaSourceFactory
 import org.akanework.gramophone.logic.utils.exoplayer.GramophoneRenderFactory
@@ -161,12 +162,11 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         const val SERVICE_GET_LYRICS = "get_lyrics"
         const val SERVICE_TIMER_CHANGED = "changed_timer"
 
-        const val SERVICE_QB_GET_INACTIVE = "qb_get_all"
+        const val SERVICE_QB_GET_INACTIVE_LIST = "qb_get_inactive_list"
         const val SERVICE_QB_LOAD_QUEUE = "qb_load"
-        const val SERVICE_QB_GET_QUEUE = "qb_get_curr_queue"
+        const val SERVICE_QB_GET_QUEUE_FOR_UI = "qb_get_queue_for_ui"
         const val SERVICE_QB_DEL = "qb_delete"
         const val SERVICE_QB_REORDER = "qb_reorder"
-        const val SERVICE_QB_ENQUEUE = "qb_enqueue"
         const val SERVICE_QB_PIN_QUEUE ="qb_pin_queue"
         const val SERVICE_QB_UNPIN_QUEUE ="qb_unpin_queue"
 
@@ -560,9 +560,10 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                     val list = runBlocking { mapMediaItemsForFavorites(items.mediaItems) }
                     try {
                         mediaSession?.player?.setMediaItems(
-                            list, items.startIndex, items.startPositionMs
+                            queueWithTitle(list, "lastPlayedManager"),
+                            items.startIndex,
+                            items.startPositionMs
                         )
-                        mq?.let { endedWorkaroundPlayer?.queueBoard?.commitQueue(it) }
                     } catch (e: IllegalSeekPositionException) {
                         try {
                             mediaSession?.player?.setMediaItems(list)
@@ -793,12 +794,11 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         availableSessionCommands.add(SessionCommand(SERVICE_QUERY_TIMER, Bundle.EMPTY))
         availableSessionCommands.add(SessionCommand(SERVICE_GET_LYRICS, Bundle.EMPTY))
         availableSessionCommands.add(SessionCommand(SERVICE_GET_AUDIO_FORMAT, Bundle.EMPTY))
-        availableSessionCommands.add(SessionCommand(SERVICE_QB_GET_INACTIVE, Bundle.EMPTY))
-        availableSessionCommands.add(SessionCommand(SERVICE_QB_GET_QUEUE, Bundle.EMPTY))
+        availableSessionCommands.add(SessionCommand(SERVICE_QB_GET_INACTIVE_LIST, Bundle.EMPTY))
+        availableSessionCommands.add(SessionCommand(SERVICE_QB_GET_QUEUE_FOR_UI, Bundle.EMPTY))
         availableSessionCommands.add(SessionCommand(SERVICE_QB_LOAD_QUEUE, Bundle.EMPTY))
         availableSessionCommands.add(SessionCommand(SERVICE_QB_DEL, Bundle.EMPTY))
         availableSessionCommands.add(SessionCommand(SERVICE_QB_REORDER, Bundle.EMPTY))
-        availableSessionCommands.add(SessionCommand(SERVICE_QB_ENQUEUE, Bundle.EMPTY))
         availableSessionCommands.add(SessionCommand(SERVICE_QB_PIN_QUEUE, Bundle.EMPTY))
         availableSessionCommands.add(SessionCommand(SERVICE_QB_UNPIN_QUEUE, Bundle.EMPTY))
         return builder.setAvailableSessionCommands(availableSessionCommands.build()).build()
@@ -983,7 +983,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                     }
                 }
 
-                SERVICE_QB_GET_INACTIVE -> {
+                SERVICE_QB_GET_INACTIVE_LIST -> {
                     SessionResult(SessionResult.RESULT_SUCCESS).also { res ->
                         val queueList: List<MultiQueueObject> = qb.getInactiveQueues()
                         val binder = BundleListRetriever(queueList.map { it.toBundle() })
@@ -991,7 +991,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                     }
                 }
 
-                SERVICE_QB_GET_QUEUE -> {
+                SERVICE_QB_GET_QUEUE_FOR_UI -> {
                     SessionResult(SessionResult.RESULT_SUCCESS).also { res ->
                         val index = customCommand.customExtras.getInt("index")
                         val queueList: List<MultiQueueObject> = qb.getQueue(index)
@@ -1010,33 +1010,6 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                         }
                     }
                 }
-
-                /*
-                SERVICE_QB_ENQUEUE -> {
-                    val title = customCommand.customExtras.getString("title") ?: "Queue"
-                    val mediaItemIndex = customCommand.customExtras.getInt("mediaItemIndex")
-                    val isOriginal = customCommand.customExtras.getBoolean("isOriginal")
-                    val binder = customCommand.customExtras.getBinder("mediaList")!!
-                    val mediaList = BundleListRetriever.getList(binder).map {
-                        MediaItem.fromBundle(it)
-                    }
-
-                    if (Flags.MQ_PREVIEW && prefs.getBooleanStrict("mq_preview", false)) {
-                        val mq = qb.addQueue(title, mediaList, mediaItemIndex, isOriginal)
-                        qb.commitQueue(mq)
-                        if (!mq.queue.isEmpty()) {
-                            endedWorkaroundPlayer!!.prepare()
-                            endedWorkaroundPlayer!!.play()
-                        }
-                    } else {
-                        endedWorkaroundPlayer!!.setMediaItems(mediaList, mediaItemIndex, C.TIME_UNSET)
-                        endedWorkaroundPlayer!!.prepare()
-                        endedWorkaroundPlayer!!.play()
-                    }
-
-                    SessionResult(SessionResult.RESULT_SUCCESS)
-                }
-                 */
 
                 SERVICE_QB_LOAD_QUEUE -> {
                     val index = customCommand.customExtras.getInt("index")

@@ -78,9 +78,8 @@ import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_GET_AUDIO_FORMAT
 import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_GET_LYRICS
 import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QB_DEL
-import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QB_ENQUEUE
-import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QB_GET_INACTIVE
-import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QB_GET_QUEUE
+import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QB_GET_INACTIVE_LIST
+import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QB_GET_QUEUE_FOR_UI
 import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QB_LOAD_QUEUE
 import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QB_PIN_QUEUE
 import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QB_REORDER
@@ -92,14 +91,12 @@ import org.akanework.gramophone.logic.utils.AudioFormatDetector
 import org.akanework.gramophone.logic.utils.AudioTrackInfo
 import org.akanework.gramophone.logic.utils.BtCodecInfo
 import org.akanework.gramophone.logic.utils.CalculationUtils
-import org.akanework.gramophone.logic.utils.CircularShuffleOrder
 import org.akanework.gramophone.logic.utils.ReplayGainUtil
 import org.akanework.gramophone.logic.utils.SemanticLyrics
 import org.akanework.gramophone.ui.MainActivity
 import org.jetbrains.annotations.Contract
 import java.io.File
 import java.io.FileInputStream
-import java.util.LinkedList
 import java.util.Locale
 import kotlin.math.max
 
@@ -351,7 +348,7 @@ fun MediaController.getAudioFormat(): AudioFormatDetector.AudioFormats =
 
 fun MediaController.getInactiveQueues(): List<MultiQueueObject> =
     sendCustomCommand(
-        SessionCommand(SERVICE_QB_GET_INACTIVE, Bundle.EMPTY),
+        SessionCommand(SERVICE_QB_GET_INACTIVE_LIST, Bundle.EMPTY),
         Bundle.EMPTY
     ).get().extras.run {
         val binder = getBinder("allQueues")!!
@@ -362,7 +359,7 @@ fun MediaController.getInactiveQueues(): List<MultiQueueObject> =
 
 fun MediaController.getQueue(index: Int = C.INDEX_UNSET): MultiQueueObject? =
     sendCustomCommand(
-        SessionCommand(SERVICE_QB_GET_QUEUE, Bundle.EMPTY).apply {
+        SessionCommand(SERVICE_QB_GET_QUEUE_FOR_UI, Bundle.EMPTY).apply {
             customExtras.putInt("index", index)
         }, Bundle.EMPTY
     ).get().extras.run {
@@ -405,7 +402,7 @@ fun MediaController.getQueueForUi(index: Int = -1): Pair<MutableList<Int>, Multi
         return null
     }
     return sendCustomCommand(
-        SessionCommand(SERVICE_QB_GET_QUEUE, Bundle.EMPTY).apply {
+        SessionCommand(SERVICE_QB_GET_QUEUE_FOR_UI, Bundle.EMPTY).apply {
             customExtras.putInt("index", index)
         }, Bundle.EMPTY
     ).get().extras.run {
@@ -471,26 +468,6 @@ fun MediaController.reorderQueue(from: Int, to: Int): Boolean =
             getBoolean("status")
         else throw IllegalArgumentException("expected status to be set")
     }
-
-/*
-// TODO: shuffle and repeat mode
-fun MediaController.playQueue(
-    title: String?,
-    mediaList: List<MediaItem>,
-    mediaItemIndex: Int,
-    isOriginal: Boolean
-) {
-    sendCustomCommand(
-        SessionCommand(SERVICE_QB_ENQUEUE, Bundle.EMPTY).apply {
-            customExtras.putString("title", title)
-            customExtras.putInt("mediaItemIndex", mediaItemIndex)
-            customExtras.putBoolean("isOriginal", isOriginal)
-            val binder = BundleListRetriever(mediaList.map { it.toBundleIncludeLocalConfiguration() })
-            customExtras.putBinder("mediaList", binder)
-        }, Bundle.EMPTY
-    )
-}
-*/
 
 fun Tracks.getFirstSelectedTrackFormatByType(type: @C.TrackType Int): Format? {
     for (i in groups) {

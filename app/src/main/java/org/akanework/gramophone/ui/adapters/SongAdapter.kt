@@ -38,6 +38,7 @@ import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.getFile
 import org.akanework.gramophone.logic.requireMediaStoreId
 import org.akanework.gramophone.logic.utils.Flags
+import org.akanework.gramophone.logic.utils.exoplayer.EndedWorkaroundPlayer.Companion.queueWithTitle
 import org.akanework.gramophone.ui.MainActivity
 import org.akanework.gramophone.ui.MediaControllerViewModel
 import org.akanework.gramophone.ui.components.NowPlayingDrawable
@@ -175,7 +176,7 @@ class SongAdapter(
         val mediaController = mainActivity.getPlayer()
         mediaController?.apply {
             val songList = getSongList()
-            setMediaItems(songList, position, C.TIME_UNSET)
+            setMediaItems(queueWithTitle(songList, "What is this???"), position, C.TIME_UNSET)
             prepare()
             play()
         }

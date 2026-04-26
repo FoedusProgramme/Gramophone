@@ -59,7 +59,7 @@ import uk.akane.libphonograph.manipulator.ItemManipulator
 import java.io.File
 
 /**
- * [PlaylistAdapter] is an adapter for displaying artists.
+ * [PlaylistAdapter] is an adapter for displaying playlists.
  */
 class PlaylistAdapter(
     fragment: AdapterFragment,
