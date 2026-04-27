@@ -81,8 +81,6 @@ import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSession.MediaItemsWithStartPosition
 import androidx.media3.session.MediaSessionService
 import androidx.media3.session.SessionCommand
-import androidx.media3.session.LibraryResult
-import androidx.media3.session.MediaLibraryService.LibraryParams
 import androidx.media3.session.SessionError
 import androidx.media3.session.SessionResult
 import androidx.preference.PreferenceManager
@@ -118,7 +116,7 @@ import org.akanework.gramophone.logic.utils.LrcUtils.loadAndParseLyricsFile
 import org.akanework.gramophone.logic.utils.ReplayGainAudioProcessor
 import org.akanework.gramophone.logic.utils.ReplayGainUtil
 import org.akanework.gramophone.logic.utils.SemanticLyrics
-import org.akanework.gramophone.logic.utils.GramophoneArtResolver
+import org.akanework.gramophone.logic.utils.ArtResolver
 import org.akanework.gramophone.logic.utils.exoplayer.EndedWorkaroundPlayer
 import org.akanework.gramophone.logic.utils.exoplayer.GramophoneExtractorsFactory
 import org.akanework.gramophone.logic.utils.exoplayer.GramophoneMediaSourceFactory
@@ -164,7 +162,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
 
     private fun convertMetadata(metadata: MediaMetadata): MediaMetadata {
         val artworkUri = metadata.artworkUri ?: return metadata
-        val providerUri = GramophoneArtResolver.toProviderUri(artworkUri) ?: return metadata
+        val providerUri = ArtResolver.toProviderUri(artworkUri) ?: return metadata
         return metadata.buildUpon().setArtworkUri(providerUri).build()
     }
 

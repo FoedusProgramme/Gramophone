@@ -49,6 +49,7 @@ import org.akanework.gramophone.logic.clone
 import org.akanework.gramophone.logic.enableEdgeToEdgePaddingListener
 import org.akanework.gramophone.logic.needsManualSnackBarInset
 import org.akanework.gramophone.logic.updateMargin
+import org.akanework.gramophone.logic.utils.ArtCacheManager
 import org.akanework.gramophone.logic.utils.SdScanner
 import org.akanework.gramophone.ui.MainActivity
 import org.akanework.gramophone.ui.adapters.ViewPager2Adapter
@@ -121,6 +122,7 @@ class ViewPagerFragment : BaseFragment(true) {
                 }
 
                 R.id.quick_refresh -> {
+                    ArtCacheManager.clearCache(requireContext())
                     val playerLayout = activity.playerBottomSheet
                     activity.updateLibrary {
                         showRefreshDoneSnackBar(
@@ -130,6 +132,7 @@ class ViewPagerFragment : BaseFragment(true) {
                 }
 
                 R.id.refresh -> {
+                    ArtCacheManager.clearCache(requireContext())
                     val context = requireContext()
                     val playerLayout = activity.playerBottomSheet
                     MaterialAlertDialogBuilder(context)

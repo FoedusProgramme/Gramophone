@@ -8,7 +8,6 @@ import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Rating
 import androidx.media3.common.util.Log
 import androidx.media3.session.LibraryResult
-import androidx.media3.session.MediaLibraryService
 import androidx.media3.session.MediaLibraryService.LibraryParams
 import androidx.media3.session.MediaLibraryService.MediaLibrarySession
 import androidx.media3.session.MediaSession
@@ -24,7 +23,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.akanework.gramophone.R
-import org.akanework.gramophone.logic.utils.GramophoneArtResolver
 import androidx.media3.session.MediaConstants
 import com.google.common.util.concurrent.Futures
 import uk.akane.libphonograph.items.albumId
@@ -41,7 +39,7 @@ class GramophoneLibrarySessionCallback(
     private val delegate: SessionDelegate
 ) : MediaLibrarySession.Callback {
 
-    private val TAG = "GramoLibraryCallback"
+    private val TAG = "GramophoneLibrarySessionCallback"
 
     interface SessionDelegate {
         fun onConnect(session: MediaSession, controller: MediaSession.ControllerInfo): MediaSession.ConnectionResult
