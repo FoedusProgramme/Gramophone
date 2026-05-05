@@ -89,7 +89,7 @@
     <string name="dialog_mime">MIME-tüüp</string>
     <string name="dialog_duration">Kestus</string>
     <string name="dialog_disc_number">Plaadi number</string>
-    <string name="settings_title_center">Joondatud keskele</string>
+    <string name="settings_title_center">Pealkiri on joondatud keskele</string>
     <string name="settings_player_ui">Meediamängija kasutajaliides</string>
     <string name="settings_player_ui_summary">Täisekraanivaate kasutajaliides ja laulusõnad</string>
     <string name="settings_appearance_summary">Rakenduse välimus ja kujunduse vaated</string>
