@@ -115,7 +115,7 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
         super.onCreate()
         // disk read and write on first launch, but unavoidable as threads would race setDefaultNightMode
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        if (BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG && !isColorOS()) {
             // Use StrictMode to find anti-pattern issues
             StrictMode.setThreadPolicy(
                 ThreadPolicy.Builder()
@@ -397,6 +397,27 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
             return true
         } catch (_: Throwable) {
             return false
+        }
+    }
+
+    private fun isColorOS(): Boolean {
+        val props = listOf(
+            "ro.build.version.opporom",
+            "ro.oplus.os.version"
+        )
+        return props.any {
+            !getSystemProperty(it).isNullOrBlank()
+        }
+    }
+
+    @SuppressLint("PrivateApi")
+    private fun getSystemProperty(key: String): String? {
+        return try {
+            val clz = Class.forName("android.os.SystemProperties")
+            val get = clz.getMethod("get", String::class.java)
+            get.invoke(null, key) as String
+        } catch (e: Exception) {
+            null
         }
     }
 }
