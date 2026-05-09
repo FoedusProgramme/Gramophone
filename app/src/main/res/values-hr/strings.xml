@@ -449,7 +449,7 @@
     <string name="settings_stop_on_dismiss_summary">Prekini reprodukciju kada se zadatak aplikacije odbaci iz nedavnih</string>
     <string name="compact_grid">Rešetka (kompaktno)</string>
     <string name="sort_by_album_year">Godina albuma</string>
-    <string name="sort_by_album_artist_year"><![CDATA[Izvođač albuma -> godina]]></string>
+    <string name="sort_by_album_artist_year"><![CDATA[Izvođač albuma -&gt; godina]]></string>
     <string name="forbidden_symbol_error">Nevaljani znak u imenu</string>
     <string name="translators">Prevoditelji</string>
     <string name="settings_replaygain">Ujednačavanje glasnoće</string>
@@ -476,7 +476,7 @@
     <string name="settings_replaygain_preamp_desc">Povećaj ili smanji glasnoću pjesama s oznakom „Ujednačavanje glasnoće”. Veće vrijednosti mogu smanjiti dinamiku zvuka zbog sprečavanja odsjecanja (clipping).</string>
     <string name="settings_replaygain_mode_desc">Opcija „Pametno” automatski čuva dinamiku albuma samo kada se pjesme albuma reproduciraju redom (jedna za drugom).</string>
     <string name="settings_replaygain_boost_desc">"„Pojačanje glasnoće” (Boost) će reproducirati „Ujednačavanje glasnoće” i drugu glazbu pri većoj glasnoći od one postavljene na tvom uređaju. (Ako je glasnoća uređaja postavljena blizu 100 %, „Pojačanje glasnoće” neće dodatno povećati glasnoću.) Uz „Pojačanje glasnoće” možeš uživati u glazbi koja ima sličnu glasnoću kao i druge aplikacije, na primjer igre. Imaj na umu da je ova funkcija eksperimentalna i može ometati rad eksternih ekvilajzer aplikacija. „Pojačanje glasnoće” ne radi s Bluetooth slušalicama. U slučaju problema povezanih s glasnoćom, isključi „Pojačanje glasnoće” tako da opciju postaviš na 0 dB. "</string>
-    <string name="sort_by_artist_year"><![CDATA[Izvođač -> godina]]></string>
+    <string name="sort_by_artist_year"><![CDATA[Izvođač -&gt; godina]]></string>
     <string name="clear_queue">Isprazni red čekanja</string>
     <string name="actions_query_shuffle_all_songs">promiješaj sve pjesme</string>
     <string name="actions_query_shuffle_everything">promiješaj sve</string>
