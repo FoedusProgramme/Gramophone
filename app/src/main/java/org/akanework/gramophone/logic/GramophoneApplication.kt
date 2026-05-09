@@ -68,6 +68,7 @@ import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.ui.BugHandlerActivity
 import org.akanework.gramophone.logic.utils.Flags
 import org.akanework.gramophone.ui.LyricWidgetProvider
+import org.lsposed.hiddenapibypass.HiddenApiBypass
 import org.lsposed.hiddenapibypass.LSPass
 import org.nift4.gramophone.hificore.UacManager
 import uk.akane.libphonograph.Constants
@@ -91,7 +92,9 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
     init {
         @SuppressLint("DefaultUncaughtExceptionDelegation")
         Thread.setDefaultUncaughtExceptionHandler(this)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            HiddenApiBypass.setHiddenApiExemptions("")
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             LSPass.setHiddenApiExemptions("")
         }
         if (BuildConfig.DEBUG) {
