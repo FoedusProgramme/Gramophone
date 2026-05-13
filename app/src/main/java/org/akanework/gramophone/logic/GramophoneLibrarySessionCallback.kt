@@ -85,7 +85,9 @@ class GramophoneLibrarySessionCallback(
     private fun getEnabledTabs(): List<ViewPager2Adapter.Companion.Tab> {
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
         val tabs = ViewPager2Adapter.mapSettingToTabList(prefs.getString("tabs", "")!!)
-        return tabs.takeWhile { it != null }.filterNotNull()
+        return tabs.takeWhile { it != null }
+            .filterNotNull()
+            .filter { it != ViewPager2Adapter.Companion.Tab.FileSystem }
     }
 
     private fun tabToMediaItem(tab: ViewPager2Adapter.Companion.Tab): MediaItem {
@@ -97,12 +99,12 @@ class GramophoneLibrarySessionCallback(
             ViewPager2Adapter.Companion.Tab.Songs -> createFolderItem("songs", context.getString(R.string.category_songs), MediaMetadata.MEDIA_TYPE_FOLDER_MIXED)
             ViewPager2Adapter.Companion.Tab.Albums -> createFolderItem("albums", context.getString(R.string.category_albums), MediaMetadata.MEDIA_TYPE_FOLDER_ALBUMS, extras = gridExtras)
             ViewPager2Adapter.Companion.Tab.Artists -> createFolderItem("artists", context.getString(R.string.category_artists), MediaMetadata.MEDIA_TYPE_FOLDER_ARTISTS, extras = gridExtras)
-            ViewPager2Adapter.Companion.Tab.Genres -> createFolderItem("genres", context.getString(R.string.category_genres), MediaMetadata.MEDIA_TYPE_FOLDER_GENRES, extras = gridExtras)
-            ViewPager2Adapter.Companion.Tab.Dates -> createFolderItem("dates", context.getString(R.string.category_dates), MediaMetadata.MEDIA_TYPE_FOLDER_MIXED, extras = gridExtras)
+            ViewPager2Adapter.Companion.Tab.Genres -> createFolderItem("genres", context.getString(R.string.category_genres), MediaMetadata.MEDIA_TYPE_FOLDER_GENRES)
+            ViewPager2Adapter.Companion.Tab.Dates -> createFolderItem("dates", context.getString(R.string.category_dates), MediaMetadata.MEDIA_TYPE_FOLDER_MIXED)
             ViewPager2Adapter.Companion.Tab.Folders -> createFolderItem("folders", context.getString(R.string.folders), MediaMetadata.MEDIA_TYPE_FOLDER_MIXED)
             ViewPager2Adapter.Companion.Tab.Playlist -> createFolderItem("playlists", context.getString(R.string.category_playlists), MediaMetadata.MEDIA_TYPE_FOLDER_PLAYLISTS)
-            ViewPager2Adapter.Companion.Tab.FileSystem -> createFolderItem("detailed_folders", context.getString(R.string.filesystem), MediaMetadata.MEDIA_TYPE_FOLDER_MIXED)
-        }
+            ViewPager2Adapter.Companion.Tab.FileSystem -> null
+        }!!
     }
 
     override fun onGetChildren(
@@ -154,8 +156,8 @@ class GramophoneLibrarySessionCallback(
                         }
                         createFolderItem(id, title, MediaMetadata.MEDIA_TYPE_FOLDER_MIXED, artworkUri = icon, isPlayable = true, isBrowsable = false)
                     }
-                    "genres" -> app.reader.genreListFlow.first().map { createFolderItem("genre_${it.id}", it.title ?: context.getString(R.string.unknown_genre), MediaMetadata.MEDIA_TYPE_FOLDER_MIXED, subtitle = context.resources.getQuantityString(R.plurals.songs, it.songList.size, it.songList.size), isPlayable = true, isBrowsable = false) }
-                    "dates" -> app.reader.dateListFlow.first().map { createFolderItem("date_${it.id}", it.title ?: context.getString(R.string.unknown_year), MediaMetadata.MEDIA_TYPE_FOLDER_MIXED, subtitle = context.resources.getQuantityString(R.plurals.songs, it.songList.size, it.songList.size), isPlayable = true, isBrowsable = false) }
+                    "genres" -> app.reader.genreListFlow.first().map { createFolderItem("genre_${it.id}", it.title ?: context.getString(R.string.unknown_genre), MediaMetadata.MEDIA_TYPE_FOLDER_MIXED, subtitle = context.resources.getQuantityString(R.plurals.songs, it.songList.size, it.songList.size), isPlayable = true, isBrowsable = false, artworkUri = null) }
+                    "dates" -> app.reader.dateListFlow.first().map { createFolderItem("date_${it.id}", it.title ?: context.getString(R.string.unknown_year), MediaMetadata.MEDIA_TYPE_FOLDER_MIXED, subtitle = context.resources.getQuantityString(R.plurals.songs, it.songList.size, it.songList.size), isPlayable = true, isBrowsable = false, artworkUri = null) }
                     "folders" -> app.reader.shallowFolderFlow.first().folderList.values.map { createFolderItem("folder_${it.folderName}", it.folderName, MediaMetadata.MEDIA_TYPE_FOLDER_MIXED, subtitle = context.resources.getQuantityString(R.plurals.items, it.folderList.size + it.songList.size, it.folderList.size + it.songList.size), isPlayable = true, isBrowsable = false) }
                     else -> {
                         if (parentId.startsWith("album_")) {
@@ -251,11 +253,11 @@ class GramophoneLibrarySessionCallback(
                 } else if (mediaId.startsWith("genre_")) {
                     val genreId = mediaId.removePrefix("genre_").toLongOrNull()
                     val genre = app.reader.genreListFlow.first().find { it.id == genreId }
-                    if (genre != null) createFolderItem("genre_${genre.id}", genre.title ?: context.getString(R.string.unknown_genre), MediaMetadata.MEDIA_TYPE_FOLDER_MIXED, subtitle = context.resources.getQuantityString(R.plurals.songs, genre.songList.size, genre.songList.size), isPlayable = true, isBrowsable = false) else null
+                    if (genre != null) createFolderItem("genre_${genre.id}", genre.title ?: context.getString(R.string.unknown_genre), MediaMetadata.MEDIA_TYPE_FOLDER_MIXED, subtitle = context.resources.getQuantityString(R.plurals.songs, genre.songList.size, genre.songList.size), isPlayable = true, isBrowsable = false, artworkUri = null) else null
                 } else if (mediaId.startsWith("date_")) {
                     val dateId = mediaId.removePrefix("date_").toLongOrNull()
                     val date = app.reader.dateListFlow.first().find { it.id == dateId }
-                    if (date != null) createFolderItem("date_${date.id}", date.title ?: context.getString(R.string.unknown_year), MediaMetadata.MEDIA_TYPE_FOLDER_MIXED, subtitle = context.resources.getQuantityString(R.plurals.songs, date.songList.size, date.songList.size), isPlayable = true, isBrowsable = false) else null
+                    if (date != null) createFolderItem("date_${date.id}", date.title ?: context.getString(R.string.unknown_year), MediaMetadata.MEDIA_TYPE_FOLDER_MIXED, subtitle = context.resources.getQuantityString(R.plurals.songs, date.songList.size, date.songList.size), isPlayable = true, isBrowsable = false, artworkUri = null) else null
                 } else if (mediaId.startsWith("folder_")) {
                     val folderName = mediaId.removePrefix("folder_")
                     val folder = app.reader.shallowFolderFlow.first().folderList[folderName]
