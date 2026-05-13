@@ -116,6 +116,7 @@ import org.akanework.gramophone.logic.utils.LrcUtils.loadAndParseLyricsFile
 import org.akanework.gramophone.logic.utils.ReplayGainAudioProcessor
 import org.akanework.gramophone.logic.utils.ReplayGainUtil
 import org.akanework.gramophone.logic.utils.SemanticLyrics
+import org.akanework.gramophone.logic.utils.ArtResolver
 import org.akanework.gramophone.logic.utils.exoplayer.EndedWorkaroundPlayer
 import org.akanework.gramophone.logic.utils.exoplayer.GramophoneExtractorsFactory
 import org.akanework.gramophone.logic.utils.exoplayer.GramophoneMediaSourceFactory
@@ -131,7 +132,7 @@ import kotlin.random.Random
  * It's using exoplayer2 as its player backend.
  */
 class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Listener,
-    MediaLibraryService.MediaLibrarySession.Callback, Player.Listener, AnalyticsListener,
+    GramophoneLibrarySessionCallback.SessionDelegate, Player.Listener, AnalyticsListener,
     SharedPreferences.OnSharedPreferenceChangeListener {
 
     companion object {
@@ -153,8 +154,21 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
     private val internalPlaybackThread =
         HandlerThread("ExoPlayer:Playback", Process.THREAD_PRIORITY_AUDIO)
     private var mediaSession: MediaLibrarySession? = null
+    private var internalPlayer: EndedWorkaroundPlayer? = null
     val endedWorkaroundPlayer
-        get() = mediaSession?.player as EndedWorkaroundPlayer?
+        get() = internalPlayer
+
+    private lateinit var libraryCallback: GramophoneLibrarySessionCallback
+
+    private fun convertMetadata(metadata: MediaMetadata): MediaMetadata {
+        val artworkUri = metadata.artworkUri ?: return metadata
+        val providerUri = ArtResolver.toProviderUri(artworkUri) ?: return metadata
+        return metadata.buildUpon().setArtworkUri(providerUri).build()
+    }
+
+    private fun convertItem(item: MediaItem): MediaItem {
+        return item.buildUpon().setMediaMetadata(convertMetadata(item.mediaMetadata)).build()
+    }
     private var controller: MediaBrowser? = null
     private val sendLyrics = Runnable { scheduleSendingLyrics(false) }
     var lyrics: SemanticLyrics? = null
@@ -394,10 +408,42 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         player.exoPlayer.setShuffleOrder(CircularShuffleOrder(player, 0, 0, Random.nextLong()))
         lastPlayedManager = LastPlayedManager(this, player)
         lastPlayedManager.allowSavingState = false
+        internalPlayer = player
+
+        val sessionPlayer = object : androidx.media3.common.ForwardingPlayer(player) {
+
+            override fun getCurrentMediaItem(): MediaItem? {
+                return super.getCurrentMediaItem()?.let { convertItem(it) }
+            }
+            override fun getMediaItemAt(index: Int): MediaItem {
+                return convertItem(super.getMediaItemAt(index))
+            }
+            override fun getMediaMetadata(): MediaMetadata {
+                return convertMetadata(super.getMediaMetadata())
+            }
+            override fun getCurrentTimeline(): androidx.media3.common.Timeline {
+                val original = super.getCurrentTimeline()
+                return object : androidx.media3.exoplayer.source.ForwardingTimeline(original) {
+                    override fun getWindow(windowIndex: Int, window: androidx.media3.common.Timeline.Window, defaultPositionProjectionUs: Long): androidx.media3.common.Timeline.Window {
+                        super.getWindow(windowIndex, window, defaultPositionProjectionUs)
+                        window.mediaItem = convertItem(window.mediaItem)
+                        return window
+                    }
+                }
+            }
+        }
+
+        libraryCallback = GramophoneLibrarySessionCallback(
+            this,
+            gramophoneApplication,
+            lifecycleScope,
+            ::convertItem,
+            this
+        )
 
         mediaSession =
             MediaLibrarySession
-                .Builder(this, player, this)
+                .Builder(this, sessionPlayer, libraryCallback)
                 // CacheBitmapLoader is required for MeiZuLyricsMediaNotificationProvider
                 .setBitmapLoader(CacheBitmapLoader(object : BitmapLoader {
                     // Coil-based bitmap loader to reuse Coil's caching and to make sure we use
@@ -501,6 +547,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                     )
                 )
                 .setSystemUiPlaybackResumptionOptIn(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+                .setPeriodicPositionUpdateEnabled(false)
                 .build()
         addSession(mediaSession!!)
         controller = MediaBrowser.Builder(this, mediaSession!!.token).buildAsync().get()
@@ -956,25 +1003,6 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         return settable
     }
 
-    /*override fun onGetLibraryRoot(
-        session: MediaLibrarySession,
-        browser: MediaSession.ControllerInfo,
-        params: LibraryParams?
-    ): ListenableFuture<LibraryResult<MediaItem>> {
-        val outParams = LibraryParams.Builder()
-            .setOffline(true)
-            .setSuggested(false)
-            .setRecent(false)
-            .build()
-        val item = MediaItem.Builder()
-            .setMediaId("root")
-            .setMediaMetadata(MediaMetadata.Builder()
-                .setIsBrowsable(true)
-                .setIsPlayable(false)
-                .build())
-            .build()
-        return Futures.immediateFuture(LibraryResult.ofItem(item, outParams))
-    }*/
 
     override fun onTracksChanged(tracks: Tracks) {
         if (!tracks.isEmpty && !tracks.isTypeSelected(C.TRACK_TYPE_AUDIO)) {
@@ -1199,35 +1227,6 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                 )
             }
         }
-    }
-
-    override fun onAddMediaItems(
-        mediaSession: MediaSession,
-        controller: MediaSession.ControllerInfo,
-        mediaItems: List<MediaItem>
-    ): ListenableFuture<List<MediaItem>> {
-        if (mediaItems.find { it.localConfiguration == null } == null) // fast path
-            return Futures.immediateFuture(mediaItems)
-        val completion = SettableFuture.create<List<MediaItem>>()
-        lifecycleScope.launch(Dispatchers.Default) {
-            try {
-                val result = mediaItems.flatMap {
-                    if (it.localConfiguration != null)
-                        listOf(it)
-                    else if (it.mediaId != MediaItem.DEFAULT_MEDIA_ID)
-                        gramophoneApplication.reader.songListFlow.first()
-                            .filter { m -> m.mediaId == it.mediaId }
-                    else if (it.requestMetadata.searchQuery != null)
-                        searchForMediaItem(it)
-                    else
-                        throw UnsupportedOperationException("can't do anything with $it")
-                }
-                completion.set(result)
-            } catch (e: UnsupportedOperationException) {
-                completion.setException(e)
-            }
-        }
-        return completion
     }
 
     private suspend fun searchForMediaItem(item: MediaItem): List<MediaItem> {

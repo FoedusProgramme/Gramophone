@@ -69,11 +69,9 @@
         <meta-data
             android:name="com.google.android.gms.car.application.theme"
             android:resource="@style/Theme.Gramophone"/>
-<!-- TODO uncomment to enable Android Auto when library browsing is implemented
         <meta-data
             android:name="com.google.android.gms.car.application"
             android:resource="@xml/automotive_app_desc"/>
--->
         <activity
             android:name=".logic.ui.BugHandlerActivity"
             android:exported="false"
@@ -161,6 +159,12 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
+        <provider
+            android:name=".logic.GramophoneAlbumArtProvider"
+            android:authorities="${applicationId}.albumart"
+            android:exported="true"
+            android:permission="com.google.android.finsky.permission.GEARHEAD_SERVICE" />
 
         <receiver android:name=".ui.LyricWidgetProvider"
             android:exported="false">

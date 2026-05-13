@@ -20,17 +20,14 @@ package org.akanework.gramophone.logic
 import android.annotation.SuppressLint
 import android.app.Application
 import android.app.NotificationManager
-import android.content.ContentUris
 import android.content.Intent
 import android.content.SharedPreferences
-import android.media.ThumbnailUtils
 import android.os.Build
 import android.os.Debug
 import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy
 import android.os.StrictMode.VmPolicy
-import android.provider.MediaStore
-import android.util.Size
+
 import android.webkit.MimeTypeMap
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.runtime.Composer
@@ -39,6 +36,7 @@ import androidx.fragment.app.strictmode.FragmentStrictMode
 import androidx.media3.common.util.Log
 import androidx.media3.session.DefaultMediaNotificationProvider
 import androidx.preference.PreferenceManager
+import androidx.core.net.toUri
 import coil3.ImageLoader
 import coil3.PlatformContext
 import coil3.SingletonImageLoader
@@ -51,6 +49,7 @@ import coil3.fetch.Fetcher
 import coil3.fetch.ImageFetchResult
 import coil3.fetch.SourceFetchResult
 import coil3.request.NullRequestDataException
+import coil3.size.pxOrElse
 import coil3.size.pxOrElse
 import coil3.toCoilUri
 import coil3.util.Logger
@@ -71,7 +70,7 @@ import org.akanework.gramophone.ui.LyricWidgetProvider
 import org.lsposed.hiddenapibypass.HiddenApiBypass
 import org.lsposed.hiddenapibypass.LSPass
 import org.nift4.gramophone.hificore.UacManager
-import uk.akane.libphonograph.Constants
+import org.akanework.gramophone.logic.utils.ArtCacheManager
 import uk.akane.libphonograph.reader.FlowReader
 import uk.akane.libphonograph.utils.MiscUtils
 import java.io.File
@@ -83,10 +82,6 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
 
     companion object {
         private const val TAG = "GramophoneApplication"
-
-        // not actually defined in API, but CTS tested
-        // https://cs.android.com/android/platform/superproject/main/+/main:packages/providers/MediaProvider/src/com/android/providers/media/LocalUriMatcher.java;drc=ddf0d00b2b84b205a2ab3581df8184e756462e8d;l=182
-        private const val MEDIA_ALBUM_ART = "albumart"
     }
 
     init {
@@ -266,79 +261,21 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
             .components {
                 add(Fetcher.Factory { data, options, _ ->
                     if (data !is Uri) return@Factory null
-                    if (data.scheme != "gramophoneSongCover") return@Factory null
+                    if (data.scheme != "gramophoneSongCover" && data.scheme != "gramophoneAlbumCover") return@Factory null
                     return@Factory Fetcher {
-                        val file = File(data.path!!)
-                        val uri = ContentUris.appendId(
-                            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI.buildUpon(),
-                            data.authority!!.toLong()
-                        ).appendPath(MEDIA_ALBUM_ART).build()
-                        val bmp = if (options.size.width.pxOrElse { 0 } > 300
-                            && options.size.height.pxOrElse { 0 } > 300) try {
-                            if (hasScopedStorageV1()) {
-                                ThumbnailUtils.createAudioThumbnail(file, options.size.let {
-                                    Size(
-                                        it.width.pxOrElse { throw IllegalArgumentException("missing required size") },
-                                        it.height.pxOrElse { throw IllegalArgumentException("missing required size") })
-                                }, null)
-                            } else null // TODO: fallback for <Q?
-                        } catch (e: IOException) {
-                            if (e.message != "No embedded album art found" &&
-                                e.message != "No thumbnails in Downloads directories" &&
-                                e.message != "No thumbnails in top-level directories" &&
-                                e.message != "No album art found"
-                            )
-                                throw e
-                            null
-                        } else null
-                        if (bmp != null) {
-                            ImageFetchResult(
-                                bmp.asImage(), true, DataSource.DISK
-                            )
-                        } else {
-                            if (uri == null) return@Fetcher null
-                            val stream = contentResolver.openAssetFileDescriptor(uri, "r")
-                            checkNotNull(stream) { "Unable to open '$uri'." }
-                            SourceFetchResult(
-                                source = ImageSource(
-                                    source = stream.createInputStream().source().buffer(),
-                                    fileSystem = options.fileSystem,
-                                    metadata = ContentMetadata(uri.toCoilUri(), stream),
-                                ),
-                                mimeType = contentResolver.getType(uri),
-                                dataSource = DataSource.DISK,
-                            )
-                        }
-                    }
-                })
-                add(Fetcher.Factory { data, options, _ ->
-                    if (data !is Uri) return@Factory null
-                    if (data.scheme != "gramophoneAlbumCover") return@Factory null
-                    return@Factory Fetcher {
-                        val cover = MiscUtils.findBestCover(File(data.path!!))
-                        if (cover == null) {
-                            val uri =
-                                ContentUris.withAppendedId(
-                                    Constants.baseAlbumCoverUri,
-                                    data.authority!!.toLong()
-                                )
-                            val contentResolver = options.context.contentResolver
-                            val afd = contentResolver.openAssetFileDescriptor(uri, "r")
-                            checkNotNull(afd) { "Unable to open '$uri'." }
-                            return@Fetcher SourceFetchResult(
-                                source = ImageSource(
-                                    source = afd.createInputStream().source().buffer(),
-                                    fileSystem = options.fileSystem,
-                                    metadata = ContentMetadata(data, afd),
-                                ),
-                                mimeType = contentResolver.getType(uri),
-                                dataSource = DataSource.DISK,
-                            )
-                        }
-                        return@Fetcher SourceFetchResult(
-                            ImageSource(cover.toOkioPath(), options.fileSystem, null, null, null),
-                            MimeTypeMap.getSingleton().getMimeTypeFromExtension(cover.extension),
-                            DataSource.DISK
+                        val requestWidth = options.size.width.pxOrElse { 0 }
+                        val requestHeight = options.size.height.pxOrElse { 0 }
+                        val size = if (requestWidth > 0 && requestWidth <= 300 && requestHeight > 0 && requestHeight <= 300) 300 else 1024
+                        
+                        val art = ArtCacheManager.getArt(options.context, data.toString().toUri(), size)
+                        checkNotNull(art) { "Unable to open '$data'." }
+                        SourceFetchResult(
+                            source = ImageSource(
+                                source = art.file.inputStream().source().buffer(),
+                                fileSystem = options.fileSystem,
+                            ),
+                            mimeType = art.mimeType,
+                            dataSource = DataSource.DISK,
                         )
                     }
                 })
