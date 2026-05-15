@@ -85,6 +85,7 @@ import org.akanework.gramophone.ui.components.PlayerBottomSheet
 import org.akanework.gramophone.ui.fragments.BaseFragment
 import org.akanework.gramophone.ui.fragments.SearchFragment
 import org.akanework.gramophone.ui.fragments.ViewPagerFragment
+import org.nift4.mediastorecompat.MediaStoreCompat
 import uk.akane.libphonograph.manipulator.ItemManipulator
 import java.io.File
 
@@ -114,16 +115,17 @@ class MainActivity : BaseActivity() {
     private var ready = false
     lateinit var playerBottomSheet: PlayerBottomSheet
         private set
-    private lateinit var intentDelete: ActivityResultLauncher<Intent>
     private lateinit var intentSenderDelete: ActivityResultLauncher<IntentSenderRequest>
     private lateinit var addToPlaylistIntentSender: ActivityResultLauncher<IntentSenderRequest>
     private var pendingRequest: Bundle? = null
     private var pendingDeleteRequest: Bundle? = null
 
-    fun updateLibrary(then: (() -> Unit)? = null) {
+    fun updateLibrary(smartScanFirst: Boolean = false, then: (() -> Unit)? = null) {
         // If library load takes more than 2s, exit splash to avoid ANR
         if (!ready) handler.postDelayed(reportFullyDrawnRunnable, 2000)
         CoroutineScope(Dispatchers.Default).launch {
+            if (smartScanFirst)
+                MediaStoreCompat.smartScan(this@MainActivity.gramophoneApplication)
             this@MainActivity.gramophoneApplication.reader.refresh()
             withContext(Dispatchers.Main) {
                 onLibraryLoaded()
@@ -147,15 +149,6 @@ class MainActivity : BaseActivity() {
         if (savedInstanceState?.containsKey("DeletePendingRequest") == true) {
             pendingDeleteRequest = savedInstanceState.getBundle("DeletePendingRequest")
         }
-        intentDelete =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-                val req = pendingDeleteRequest
-                    ?: throw IllegalStateException("pending delete request is null")
-                pendingDeleteRequest = null
-                CoroutineScope(Dispatchers.Default).launch {
-                    ItemManipulator.continueDeleteFromIntent(this@MainActivity, it.resultCode, it.data, req)
-                }
-            }
         intentSenderDelete =
             registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {
                 val req = pendingDeleteRequest
@@ -316,29 +309,16 @@ class MainActivity : BaseActivity() {
             putString("PlaylistPath", playlist.absolutePath)
         }
         CoroutineScope(Dispatchers.Default).launch {
-            if (ItemManipulator.needRequestWrite(this@MainActivity, uri)) {
+            val token = MediaStoreCompat.needRequestBytesWrite(this@MainActivity, uri)
+            if (token != null) {
                 pendingRequest = data
-                val pendingIntent = MediaStore.createWriteRequest(contentResolver, listOf(uri))
+                val pendingIntent = MediaStoreCompat.createWriteRequest(this@MainActivity,
+                    listOf(token))
                 addToPlaylistIntentSender.launch(
                     IntentSenderRequest.Builder(pendingIntent.intentSender).build()
                 )
             } else {
                 doAddToPlaylist(RESULT_OK, data)
-            }
-        }
-    }
-
-    fun runIntentForDelete(intent: Intent, bundle: Bundle) {
-        try {
-            intentDelete.launch(intent)
-            pendingDeleteRequest = bundle
-        } catch (e: ActivityNotFoundException) {
-            Log.e("MainActivity", "error launching intent", e)
-            CoroutineScope(Dispatchers.Default).launch {
-                ItemManipulator.continueDeleteFromIntent(
-                    this@MainActivity, RESULT_CANCELED,
-                    Intent(), bundle
-                )
             }
         }
     }

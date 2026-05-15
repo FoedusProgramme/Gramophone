@@ -23,7 +23,6 @@ import android.app.NotificationManager
 import android.content.ContentUris
 import android.content.Intent
 import android.content.SharedPreferences
-import android.media.ThumbnailUtils
 import android.os.Build
 import android.os.Debug
 import android.os.StrictMode
@@ -71,6 +70,8 @@ import org.akanework.gramophone.ui.LyricWidgetProvider
 import org.lsposed.hiddenapibypass.HiddenApiBypass
 import org.lsposed.hiddenapibypass.LSPass
 import org.nift4.gramophone.hificore.UacManager
+import org.nift4.mediastorecompat.MediaStoreCompat
+import org.nift4.mediastorecompat.ThumbnailUtilsCompat
 import uk.akane.libphonograph.Constants
 import uk.akane.libphonograph.reader.FlowReader
 import uk.akane.libphonograph.utils.MiscUtils
@@ -119,7 +120,7 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
         // disk read and write on first launch, but unavoidable as threads would race setDefaultNightMode
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
         if (BuildConfig.DEBUG && !isColorOS()) {
-            // Use StrictMode to find anti-pattern issues
+            // Use StrictMode to find antipattern issues
             StrictMode.setThreadPolicy(
                 ThreadPolicy.Builder()
                     .detectAll()
@@ -164,6 +165,39 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
                 .build()
         }
         android.util.Log.d(TAG, "GramophoneApplication.onCreate()")
+        org.nift4.mediastorecompat.Log.setLogger(object : org.nift4.mediastorecompat.Log.Logger {
+            override fun d(
+                tag: String,
+                message: String,
+                throwable: Throwable?
+            ) {
+                Log.d(tag, message, throwable)
+            }
+
+            override fun i(
+                tag: String,
+                message: String,
+                throwable: Throwable?
+            ) {
+                Log.i(tag, message, throwable)
+            }
+
+            override fun w(
+                tag: String,
+                message: String,
+                throwable: Throwable?
+            ) {
+                Log.w(tag, message, throwable)
+            }
+
+            override fun e(
+                tag: String,
+                message: String,
+                throwable: Throwable?
+            ) {
+                Log.e(tag, message, throwable)
+            }
+        })
         if (!android.util.Log.isLoggable(TAG, android.util.Log.INFO)) {
             Log.setLogger(object : Log.Logger {
                 override fun d(
@@ -197,7 +231,6 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
                 ) {
                     android.util.Log.e(tag, "[ERROR] $message", throwable)
                 }
-
             })
         }
         uacManager = UacManager(this)
@@ -238,6 +271,7 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
             }
 
             LyricWidgetProvider.update(this@GramophoneApplication)
+            MediaStoreCompat.smartScan(this@GramophoneApplication)
         }
     }
 
@@ -275,13 +309,11 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
                         ).appendPath(MEDIA_ALBUM_ART).build()
                         val bmp = if (options.size.width.pxOrElse { 0 } > 300
                             && options.size.height.pxOrElse { 0 } > 300) try {
-                            if (hasScopedStorageV1()) {
-                                ThumbnailUtils.createAudioThumbnail(file, options.size.let {
-                                    Size(
-                                        it.width.pxOrElse { throw IllegalArgumentException("missing required size") },
-                                        it.height.pxOrElse { throw IllegalArgumentException("missing required size") })
-                                }, null)
-                            } else null // TODO: fallback for <Q?
+                            ThumbnailUtilsCompat.createAudioThumbnail(file, options.size.let {
+                                Size(
+                                    it.width.pxOrElse { throw IllegalArgumentException("missing required size") },
+                                    it.height.pxOrElse { throw IllegalArgumentException("missing required size") })
+                            }, null)
                         } catch (e: IOException) {
                             if (e.message != "No embedded album art found" &&
                                 e.message != "No thumbnails in Downloads directories" &&

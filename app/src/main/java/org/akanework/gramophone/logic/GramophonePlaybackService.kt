@@ -484,11 +484,6 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                     }
 
                     override fun loadBitmapFromMetadata(metadata: MediaMetadata): ListenableFuture<Bitmap>? {
-                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                            // allow using exoplayer's copy extracted here on P- for now
-                            // refer to the TO DO in GramophoneApplication
-                            return super.loadBitmapFromMetadata(metadata)
-                        }
                         return metadata.artworkUri?.let { loadBitmap(it) }
                     }
                 }))

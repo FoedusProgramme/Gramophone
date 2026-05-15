@@ -1,15 +1,12 @@
 package uk.akane.libphonograph.manipulator
 
 import android.content.Context
-import android.media.MediaScannerConnection
 import android.net.Uri
-import androidx.media3.common.util.Log
 import okio.Path.Companion.toOkioPath
+import org.nift4.mediastorecompat.MediaStoreCompat
 import java.io.File
 
 object PlaylistSerializer {
-    private const val TAG = "PlaylistSerializer"
-
     @Throws(UnsupportedPlaylistFormatException::class)
     fun write(context: Context, outFile: File, songs: List<File>) {
         val format = when (outFile.extension.lowercase()) {
@@ -50,6 +47,12 @@ object PlaylistSerializer {
     }
 
     private fun write(context: Context, format: PlaylistFormat, outFile: File, songs: List<File>) {
+        val existed = outFile.exists()
+        val uri = if (existed) {
+            MediaStoreCompat.getMediaUriForFile(context, outFile.absolutePath)
+        } else {
+            MediaStoreCompat.create(context, outFile.absolutePath)!!
+        }
         when (format) {
             PlaylistFormat.M3u -> {
                 val parent = outFile.parentFile
@@ -57,17 +60,19 @@ object PlaylistSerializer {
                 val out =
                     "#EXTM3U\n" + songs.joinToString("\n") { it.relativeTo(parent).toString() }
                         .trim()
-                outFile.writeText(out)
+                MediaStoreCompat.openOutputStream(context, uri, "wt")!!.use {
+                    it.writer().use { writer -> writer.write(out) }
+                }
             }
 
             PlaylistFormat.Xspf -> TODO()
             PlaylistFormat.Wpl -> TODO()
             PlaylistFormat.Pls -> TODO()
         }
-        MediaScannerConnection.scanFile(context, arrayOf(outFile.toString()), null) { path, uri ->
-            if (uri == null) {
-                Log.e(TAG, "failed to scan playlist $path")
-            }
+        if (existed) {
+            MediaStoreCompat.scanFile(context, outFile.toString())
+        } else {
+            MediaStoreCompat.finishCreate(context, uri)
         }
     }
 

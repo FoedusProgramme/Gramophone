@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2024 nift4
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.akanework.gramophone.logic.utils
 
 import android.content.Context
@@ -6,35 +22,50 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.os.SystemClock
-import android.os.storage.StorageManager
 import android.provider.MediaStore
-import androidx.core.content.getSystemService
 import androidx.core.util.Consumer
-import androidx.media3.common.util.Log
+import org.nift4.mediastorecompat.Log
+import org.nift4.mediastorecompat.MediaStoreCompat
+import org.nift4.mediastorecompat.StorageManagerCompat
 import java.io.File
 import java.io.IOException
 
 /**
- * Rewrite of jerickson314's great SD Scanner for Lollipop as utility class
- * https://github.com/jerickson314/sdscanner/blob/master/src/com/gmail/jerickson314/sdscanner/ScanFragment.java
+ * Scan folders for media files recursively.
+ *
+ * Doesn't support playlist files on Android 9 or earlier, use [org.nift4.mediastorecompat.MediaStoreCompat.scanEverything] for
+ * those versions.
  */
-class SdScanner(private val context: Context, var progressFrequencyMs: Int = 250) {
+internal class SdScanner(private val context: Context, var progressFrequencyMs: Int = 250) {
     val progress = SimpleProgress()
     private val filesToProcess = hashSetOf<File>()
     private var lastUpdate = 0L
     private var roots: Set<File>? = null
     private var ignoreDb: Boolean? = null
 
-    fun scan(inRoots: Set<File>, inIgnoreDb: Boolean) {
+    fun scan(inRoots: Set<File>, inIgnoreDb: Boolean, ignoreMtime: Boolean) {
         roots = inRoots
         this.ignoreDb = inIgnoreDb
         lastUpdate = SystemClock.elapsedRealtime()
         for (root in roots!!) {
             progress.set(SimpleProgress.Step.DIR_SCAN, root.path, null)
-            recursiveAddFiles(root)
+            root.walk().forEach {
+                SystemClock.elapsedRealtime().apply {
+                    if (lastUpdate + progressFrequencyMs < this) {
+                        lastUpdate = this
+                        progress.set(
+                            SimpleProgress.Step.DIR_SCAN, root.path, null
+                        )
+                    }
+                }
+                if (!shouldScan(it, false)) {
+                    return@forEach
+                }
+                filesToProcess.add(it)
+            }
         }
         context.contentResolver.query(
-            MediaStore.Files.getContentUri("external"),
+            MediaStoreCompat.FILES_EXTERNAL_CONTENT_URI,
             arrayOf(
                 MediaStore.MediaColumns.DATA,
                 MediaStore.MediaColumns.DATE_MODIFIED
@@ -47,9 +78,9 @@ class SdScanner(private val context: Context, var progressFrequencyMs: Int = 250
             val modifiedColumn = cursor.getColumnIndex(MediaStore.MediaColumns.DATE_MODIFIED)
             val totalSize = cursor.count
             while (cursor.moveToNext()) {
-                val mediaFile = File(cursor.getString(dataColumn)).getCanonicalFile()
+                val mediaFile = File(cursor.getString(dataColumn))
                 SystemClock.elapsedRealtime().apply {
-                    if (lastUpdate + progressFrequencyMs/*ms*/ < this) {
+                    if (lastUpdate + progressFrequencyMs < this) {
                         lastUpdate = this
                         progress.set(
                             SimpleProgress.Step.DATABASE, mediaFile.path,
@@ -57,7 +88,7 @@ class SdScanner(private val context: Context, var progressFrequencyMs: Int = 250
                         )
                     }
                 }
-                if ((!mediaFile.exists() ||
+                if ((ignoreMtime || !filesToProcess.contains(mediaFile) ||
                             mediaFile.lastModified() / 1000L >
                             cursor.getLong(modifiedColumn))
                     && shouldScan(mediaFile, true)
@@ -81,7 +112,7 @@ class SdScanner(private val context: Context, var progressFrequencyMs: Int = 250
                     Log.w("SdScanner", "Android scanned $path but we never asked it to do so")
                 }
                 SystemClock.elapsedRealtime().apply {
-                    if (lastUpdate + progressFrequencyMs/*ms*/ < this) {
+                    if (lastUpdate + progressFrequencyMs < this) {
                         lastUpdate = this
                         progress.set(
                             SimpleProgress.Step.SCAN, path,
@@ -103,40 +134,6 @@ class SdScanner(private val context: Context, var progressFrequencyMs: Int = 250
         filesToProcess.clear()
         roots = null
         ignoreDb = null
-    }
-
-    @Throws(IOException::class)
-    private fun recursiveAddFiles(file: File) {
-        SystemClock.elapsedRealtime().apply {
-            if (lastUpdate + progressFrequencyMs/*ms*/ < this) {
-                lastUpdate = this
-                progress.set(
-                    SimpleProgress.Step.DIR_SCAN, file.path, null
-                )
-            }
-        }
-        if (!shouldScan(file, false)) {
-            // If we got here, there file was either outside the scan
-            // directory, or was an empty directory.
-            return
-        }
-        if (!filesToProcess.add(file)) {
-            // Avoid infinite recursion caused by symlinks.
-            // If mFilesToProcess already contains this file, add() will
-            // return false.
-            return
-        }
-        if (!file.canRead()) {
-            Log.w("SdScanner", "cannot read $file")
-        }
-        if (file.isDirectory) {
-            val files = file.listFiles()
-            if (files != null) {
-                for (nextFile in files) {
-                    recursiveAddFiles(nextFile.canonicalFile)
-                }
-            }
-        }
     }
 
     @Throws(IOException::class)
@@ -199,8 +196,8 @@ class SdScanner(private val context: Context, var progressFrequencyMs: Int = 250
 
     companion object {
         fun scan(
-            context: Context, root: File, ignoreDb: Boolean, progressFrequencyMs: Int = 250,
-            listener: Consumer<SimpleProgress>? = null
+            context: Context, root: File, ignoreDb: Boolean, ignoreMtime: Boolean = false,
+            progressFrequencyMs: Int = 250, listener: Consumer<SimpleProgress>? = null
         ) {
             val scanner = SdScanner(context, progressFrequencyMs)
             if (listener != null) {
@@ -212,12 +209,13 @@ class SdScanner(private val context: Context, var progressFrequencyMs: Int = 250
                     listener.accept(t)
                 }
             }
-            scanner.scan(setOf(root), ignoreDb)
+            scanner.scan(setOf(root), ignoreDb, ignoreMtime)
         }
 
         fun scanEverything(
             context: Context,
             progressFrequencyMs: Int = 250,
+            ignoreMtime: Boolean = true,
             listener: Consumer<SimpleProgress>? = null
         ) {
             val scanner = SdScanner(context, progressFrequencyMs)
@@ -231,13 +229,13 @@ class SdScanner(private val context: Context, var progressFrequencyMs: Int = 250
                 }
             }
             val roots = hashSetOf<File>()
-            for (volume in StorageManagerCompat(context).storageVolumes) {
+            for (volume in StorageManagerCompat.getStorageVolumes(context)) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q &&
                     volume.mediaStoreVolumeName == null) continue
                 if (!volume.state.startsWith(Environment.MEDIA_MOUNTED)) continue
                 roots.add(volume.directory!!)
             }
-            scanner.scan(roots, false)
+            scanner.scan(roots, false, ignoreMtime)
         }
     }
 }

@@ -50,11 +50,12 @@ import org.akanework.gramophone.logic.utils.Flags
 import org.akanework.gramophone.ui.MainActivity
 import org.akanework.gramophone.ui.fragments.AdapterFragment
 import org.akanework.gramophone.ui.fragments.GeneralSubFragment
+import org.nift4.mediastorecompat.MediaStoreCompat
+import org.nift4.mediastorecompat.StorageManagerCompat
 import uk.akane.libphonograph.dynamicitem.Favorite
 import uk.akane.libphonograph.dynamicitem.RecentlyAdded
 import uk.akane.libphonograph.items.Playlist
 import uk.akane.libphonograph.manipulator.ItemManipulator
-import uk.akane.libphonograph.manipulator.ItemManipulator.DeleteFailedPleaseTryDeleteRequestException
 import java.io.File
 
 /**
@@ -187,17 +188,17 @@ class PlaylistAdapter(
                             @Suppress("deprecation") MediaStore.Audio.Playlists.getContentUri("external"),
                             id
                         )
+                        val path = item.path!!.resolveSibling("$name.${item.path.extension}").absolutePath
                         val data = Bundle().apply {
                             putLong("Id", id)
-                            putString("NewName", name)
-                            putString("Path", item.path!!.absolutePath)
+                            putString("Path", path)
                         }
                         CoroutineScope(Dispatchers.Default).launch {
-                            if (ItemManipulator.needRequestWrite(context, uri)) {
-                                val pendingIntent = MediaStore.createWriteRequest(
-                                    context.contentResolver,
-                                    listOf(uri)
-                                )
+                            val token = MediaStoreCompat.needRequestEfficientMove(context, uri,
+                                path)
+                            if (token != null) {
+                                val pendingIntent = MediaStoreCompat.createWriteRequest(
+                                    context, listOf(token))
                                 (fragment as AdapterFragment).startRequest(
                                     pendingIntent.intentSender,
                                     data
@@ -219,17 +220,14 @@ class PlaylistAdapter(
 
     override fun onRequest(resultCode: Int, data: Bundle) {
         if (resultCode == Activity.RESULT_OK) {
+            val uri = ContentUris.withAppendedId(
+                @Suppress("deprecation") MediaStore.Audio.Playlists.getContentUri("external"),
+                data.getLong("Id")
+            )
             val path = data.getString("Path")!!
-            val newName = data.getString("NewName")!!
             CoroutineScope(Dispatchers.Default).launch {
                 try {
-                    ItemManipulator.renamePlaylist(context, File(path), newName)
-                } catch (e: DeleteFailedPleaseTryDeleteRequestException) {
-                    withContext(Dispatchers.Main) {
-                        /*mainActivity.intentSender.launch(
-                            IntentSenderRequest.Builder(e.pendingIntent).build()
-                        ) TODO(ASAP)*/
-                    }
+                    MediaStoreCompat.efficientMove(context, uri, path)
                 } catch (e: Exception) {
                     Log.e("PlaylistAdapter", Log.getThrowableString(e)!!)
                     withContext(Dispatchers.Main) {

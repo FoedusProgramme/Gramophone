@@ -20,6 +20,7 @@ package org.akanework.gramophone.ui.fragments
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.media.audiofx.AudioEffect
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.LayoutInflater
@@ -41,6 +42,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -54,6 +56,7 @@ import org.akanework.gramophone.ui.MainActivity
 import org.akanework.gramophone.ui.adapters.ViewPager2Adapter
 import org.akanework.gramophone.ui.components.PlayerBottomSheet
 import org.akanework.gramophone.ui.fragments.settings.MainSettingsActivity
+import org.nift4.mediastorecompat.MediaStoreCompat
 
 /**
  * ViewPagerFragment:
@@ -77,7 +80,7 @@ class ViewPagerFragment : BaseFragment(true) {
         val rootView = inflater.inflate(R.layout.fragment_viewpager, container, false)
         val tabLayout = rootView.findViewById<TabLayout>(R.id.tab_layout)
         val topAppBar = rootView.findViewById<MaterialToolbar>(R.id.topAppBar)
-        viewPager2 = rootView.findViewById<ViewPager2>(R.id.fragment_viewpager)
+        viewPager2 = rootView.findViewById(R.id.fragment_viewpager)
 
         appBarLayout = rootView.findViewById(R.id.appbarlayout)
         appBarLayout.enableEdgeToEdgePaddingListener()
@@ -122,7 +125,8 @@ class ViewPagerFragment : BaseFragment(true) {
 
                 R.id.quick_refresh -> {
                     val playerLayout = activity.playerBottomSheet
-                    activity.updateLibrary {
+                    activity.updateLibrary(smartScanFirst =
+                        Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                         showRefreshDoneSnackBar(
                             playerLayout,
                             runBlocking { activity.reader.songListFlow.first().size })
@@ -140,25 +144,39 @@ class ViewPagerFragment : BaseFragment(true) {
                         .show()
                     Toast.makeText(context, R.string.refreshing_wait, Toast.LENGTH_LONG).show()
                     CoroutineScope(Dispatchers.Default).launch {
-                        SdScanner.scanEverything(context, 5000) { progress ->
-                            if (progress.step != SdScanner.SimpleProgress.Step.DONE) {
-                                val str = if (progress.percentage == null)
-                                    context.getString(R.string.refreshing_wait)
-                                else context.getString(
-                                    R.string.still_refreshing,
-                                    progress.step.ordinal,
-                                    SdScanner.SimpleProgress.Step.DONE.ordinal - 1,
-                                    "${progress.percentage}%"
-                                )
-                                CoroutineScope(Dispatchers.Main).launch {
-                                    Toast.makeText(context, str, Toast.LENGTH_SHORT).show()
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                            SdScanner.scanEverything(context, 5000) { progress ->
+                                if (progress.step != SdScanner.SimpleProgress.Step.DONE) {
+                                    val str = if (progress.percentage == null)
+                                        context.getString(R.string.refreshing_wait)
+                                    else context.getString(
+                                        R.string.still_refreshing,
+                                        progress.step.ordinal,
+                                        SdScanner.SimpleProgress.Step.DONE.ordinal - 1,
+                                        "${progress.percentage}%"
+                                    )
+                                    CoroutineScope(Dispatchers.Main).launch {
+                                        Toast.makeText(context, str, Toast.LENGTH_SHORT).show()
+                                    }
+                                    return@scanEverything
                                 }
-                                return@scanEverything
+                                activity.updateLibrary {
+                                    showRefreshDoneSnackBar(
+                                        playerLayout,
+                                        runBlocking { activity.reader.songListFlow.first().size })
+                                }
                             }
-                            activity.updateLibrary {
-                                showRefreshDoneSnackBar(
-                                    playerLayout,
-                                    runBlocking { activity.reader.songListFlow.first().size })
+                        } else {
+                            val job = launch(Dispatchers.IO) {
+                                MediaStoreCompat.scanEverything(context)
+                            }
+                            while (!job.isCompleted) {
+                                delay(5000)
+                                CoroutineScope(Dispatchers.Main).launch {
+                                    Toast.makeText(context, context.getString(
+                                        R.string.refreshing_wait),
+                                        Toast.LENGTH_SHORT).show()
+                                }
                             }
                         }
                     }
