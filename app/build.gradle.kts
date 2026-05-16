@@ -290,8 +290,8 @@ dependencies {
     implementation("androidx.fragment:fragment-ktx:1.8.9")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.4")
     implementation("androidx.mediarouter:mediarouter:1.8.1")
-    implementation("io.github.nift4.mediastorecompat:minsdk21:1.0.0-alpha02")
-    val media3Version = "1.9.1"
+    implementation("io.github.nift4.mediastorecompat:minsdk21:1.0.0-alpha05")
+    val media3Version = "1.10.1"
     implementation("androidx.media3:media3-common-ktx:$media3Version")
     implementation("androidx.media3:media3-exoplayer:$media3Version")
     implementation("androidx.media3:media3-exoplayer-midi:$media3Version")

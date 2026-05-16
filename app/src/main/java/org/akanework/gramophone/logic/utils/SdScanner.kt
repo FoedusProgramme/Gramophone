@@ -107,7 +107,7 @@ internal class SdScanner(private val context: Context, var progressFrequencyMs: 
                 context,
                 pathsToProcess.toTypedArray(),
                 null
-            ) { path: String, _: Uri ->
+            ) { path: String, _: Uri? ->
                 if (!pathsToProcess.remove(path)) {
                     Log.w("SdScanner", "Android scanned $path but we never asked it to do so")
                 }

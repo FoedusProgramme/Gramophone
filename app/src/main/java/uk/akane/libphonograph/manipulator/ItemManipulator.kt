@@ -51,7 +51,6 @@ object ItemManipulator {
         return delete(context, setOf(uri))
     }
 
-    // requires requestLegacyExternalStorage for simplicity
     private suspend fun delete(context: MainActivity, uris: Set<Uri>): (() -> Unit)? {
         if (uris.find { MediaStoreCompat.needRequestDelete(context, it) != null } != null) {
             val pendingIntent = MediaStoreCompat.createDeleteRequest(context, uris.toList())
@@ -68,21 +67,21 @@ object ItemManipulator {
                 CoroutineScope(Dispatchers.IO).launch {
                     val urisWithStatus = uris.map {
                         try {
-                            it to (MediaStoreCompat.delete(context, it))
+                            MediaStoreCompat.delete(context, it)
+                            it to (null)
                         } catch (e: SecurityException) {
                             Log.e("ItemManipulator", "failed to delete $it", e)
                             it to e
                         }
                     }
-                    val notOk = urisWithStatus.filter { it.second != true }
+                    val notOk = urisWithStatus.filter { it.second != null }
                     val ok = notOk.isEmpty()
                     if (!ok) {
-                        val firstError = notOk.find { it.second is Throwable }
                         withContext(Dispatchers.Main) {
                             Toast.makeText(context,
                                 context.getString(R.string.delete_failed,
-                                    firstError?.toString() ?: context.getString(
-                                        androidx.media3.session.R.string.error_message_info_cancelled)),
+                                    notOk.first().toString()
+                                ),
                                 Toast.LENGTH_LONG).show()
                         }
                     }

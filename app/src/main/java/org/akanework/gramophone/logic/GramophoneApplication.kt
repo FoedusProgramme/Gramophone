@@ -150,7 +150,11 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
                         } else it
                     }
                     .penaltyLog()
-                    .penaltyDeath()
+                    .let {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            it.penaltyDeathOnFileUriExposure()
+                        } else it
+                    }
                     .build()
             )
             FragmentStrictMode.defaultPolicy = FragmentStrictMode.Policy.Builder()
