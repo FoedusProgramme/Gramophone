@@ -125,8 +125,7 @@ class ViewPagerFragment : BaseFragment(true) {
 
                 R.id.quick_refresh -> {
                     val playerLayout = activity.playerBottomSheet
-                    activity.updateLibrary(smartScanFirst =
-                        Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    activity.updateLibrary {
                         showRefreshDoneSnackBar(
                             playerLayout,
                             runBlocking { activity.reader.songListFlow.first().size })
@@ -160,7 +159,7 @@ class ViewPagerFragment : BaseFragment(true) {
                                     }
                                     return@scanEverything
                                 }
-                                activity.updateLibrary {
+                                activity.updateLibrary(false) {
                                     showRefreshDoneSnackBar(
                                         playerLayout,
                                         runBlocking { activity.reader.songListFlow.first().size })

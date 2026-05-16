@@ -18,7 +18,6 @@
 package org.akanework.gramophone.ui
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.app.NotificationManager
 import android.app.SearchManager
 import android.app.assist.AssistContent
@@ -31,6 +30,7 @@ import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -50,6 +50,7 @@ import androidx.core.content.FileProvider
 import androidx.core.content.IntentCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.net.toUri
+import androidx.core.os.BundleCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -120,7 +121,8 @@ class MainActivity : BaseActivity() {
     private var pendingRequest: Bundle? = null
     private var pendingDeleteRequest: Bundle? = null
 
-    fun updateLibrary(smartScanFirst: Boolean = false, then: (() -> Unit)? = null) {
+    fun updateLibrary(smartScanFirst: Boolean = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R,
+                      then: (() -> Unit)? = null) {
         // If library load takes more than 2s, exit splash to avoid ANR
         if (!ready) handler.postDelayed(reportFullyDrawnRunnable, 2000)
         CoroutineScope(Dispatchers.Default).launch {
@@ -288,7 +290,7 @@ class MainActivity : BaseActivity() {
                 }
                 val pl = playlists[item]
                 setPlaylist(
-                    pl.path!!, ContentUris.withAppendedId(
+                    ContentUris.withAppendedId(
                         @Suppress("deprecation") MediaStore.Audio.Playlists.getContentUri("external"),
                         pl.id!!
                     ), true, listOf(song)
@@ -298,15 +300,15 @@ class MainActivity : BaseActivity() {
             .show()
     }
 
-    fun setPlaylist(playlist: File, uri: Uri, addToEnd: Boolean, songs: List<File>) {
-        setPlaylist(playlist, uri, addToEnd, ArrayList(songs.map { it.absolutePath }))
+    fun setPlaylist(uri: Uri, addToEnd: Boolean, songs: List<File>) {
+        setPlaylist(uri, addToEnd, ArrayList(songs.map { it.absolutePath }))
     }
 
-    fun setPlaylist(playlist: File, uri: Uri, addToEnd: Boolean, songs: ArrayList<String>) {
+    fun setPlaylist(uri: Uri, addToEnd: Boolean, songs: ArrayList<String>) {
         val data = Bundle().apply {
             putBoolean("AddToEnd", addToEnd)
             putStringArrayList("Songs", songs)
-            putString("PlaylistPath", playlist.absolutePath)
+            putParcelable("Uri", uri)
         }
         CoroutineScope(Dispatchers.Default).launch {
             val token = MediaStoreCompat.needRequestBytesWrite(this@MainActivity, uri)
@@ -341,13 +343,13 @@ class MainActivity : BaseActivity() {
     private suspend fun doAddToPlaylist(resultCode: Int, data: Bundle) {
         if (resultCode == RESULT_OK) {
             val add = data.getBoolean("AddToEnd")
-            val path = File(data.getString("PlaylistPath")!!)
+            val uri = BundleCompat.getParcelable(data, "Uri", Uri::class.java)!!
             val songs = data.getStringArrayList("Songs")!!.map { File(it) }
             try {
                 if (add)
-                    ItemManipulator.addToPlaylist(this@MainActivity, path, songs)
+                    ItemManipulator.addToPlaylist(this@MainActivity, uri, songs)
                 else
-                    ItemManipulator.setPlaylistContent(this@MainActivity, path, songs)
+                    ItemManipulator.setPlaylistContent(this@MainActivity, uri, songs)
             } catch (e: Exception) {
                 Log.e("MainActivity", Log.getThrowableString(e)!!)
                 withContext(Dispatchers.Main) {

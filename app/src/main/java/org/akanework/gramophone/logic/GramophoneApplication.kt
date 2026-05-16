@@ -275,7 +275,6 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
             }
 
             LyricWidgetProvider.update(this@GramophoneApplication)
-            MediaStoreCompat.smartScan(this@GramophoneApplication)
         }
     }
 

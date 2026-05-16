@@ -10,14 +10,13 @@ open class Playlist protected constructor(
     val path: File?,
     val dateAdded: Long?,
     val dateModified: Long?,
-    val hasGaps: Boolean,
 ) : Item {
     private var _songList: List<MediaItem>? = null
 
     constructor(
         id: Long?, title: String?, path: File?, dateAdded: Long?, dateModified: Long?,
-        hasGaps: Boolean, songList: List<MediaItem>
-    ) : this(id, title, path, dateAdded, dateModified, hasGaps) {
+        songList: List<MediaItem>
+    ) : this(id, title, path, dateAdded, dateModified) {
         _songList = songList
     }
 
@@ -54,19 +53,30 @@ internal data class RawPlaylist(
     val path: File?,
     val dateAdded: Long?,
     val dateModified: Long?,
-    val idList: List<Long?>,
+    val idList: List<Long?>?,
     val pathList: List<File?>?,
 ) {
     // idMap may be null if and only if all playlists are empty
     fun toPlaylist(idMap: Map<Long, MediaItem>?, pathMap: Map<String, MediaItem>?): Playlist {
-        val tmp = arrayOfNulls<MediaItem?>(max(idList.size, pathList?.size ?: 0))
-        for (i in 0..<tmp.size) {
-            // if we have an id and it's not in the map, something's weird. but it's not a crash-worthy offense
-            tmp[i] = pathList?.getOrNull(i)?.let { pathMap!![it.absolutePath] }
-                ?: if (idList.getOrNull(i) != null) idMap!![idList[i]!!] else null
+        val result = if (pathList != null) {
+            val tmp = arrayOfNulls<MediaItem?>(pathList.size)
+            for (i in 0..<tmp.size) {
+                // if we have a path and it's not in the map, something's weird. but it's not a
+                // crash-worthy offense
+                tmp[i] = pathList.getOrNull(i)?.let { pathMap!![it.absolutePath] }
+            }
+            if (tmp.contains(null)) tmp.filterNotNull() else
+                (@Suppress("UNCHECKED_CAST") (tmp as Array<MediaItem>)).toList()
+        } else {
+            val tmp = arrayOfNulls<MediaItem?>(idList!!.size)
+            for (i in 0..<tmp.size) {
+                // if we have an id and it's not in the map, something's weird. but it's not a
+                // crash-worthy offense
+                tmp[i] = if (idList.getOrNull(i) != null) idMap!![idList[i]!!] else null
+            }
+            if (tmp.contains(null)) tmp.filterNotNull() else
+                (@Suppress("UNCHECKED_CAST") (tmp as Array<MediaItem>)).toList()
         }
-        val result = if (tmp.contains(null)) tmp.filterNotNull() else
-            (@Suppress("UNCHECKED_CAST") (tmp as Array<MediaItem>)).toList()
-        return Playlist(id, title, path, dateAdded, dateModified, result.size != tmp.size, result)
+        return Playlist(id, title, path, dateAdded, dateModified, result)
     }
 }

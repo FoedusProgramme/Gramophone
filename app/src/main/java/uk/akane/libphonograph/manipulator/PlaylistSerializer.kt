@@ -8,7 +8,7 @@ import java.io.File
 
 object PlaylistSerializer {
     @Throws(UnsupportedPlaylistFormatException::class)
-    fun write(context: Context, outFile: File, songs: List<File>) {
+    fun write(context: Context, outFile: File, out: Uri, songs: List<File>) {
         val format = when (outFile.extension.lowercase()) {
             "m3u", "m3u8" -> PlaylistFormat.M3u
             // "xspf" -> PlaylistFormat.Xspf
@@ -16,7 +16,7 @@ object PlaylistSerializer {
             // "pls" -> PlaylistFormat.Pls
             else -> throw UnsupportedPlaylistFormatException(outFile.extension)
         }
-        write(context, format, outFile, songs)
+        write(context, format, outFile, out, songs)
     }
 
     @Throws(UnsupportedPlaylistFormatException::class)
@@ -46,13 +46,7 @@ object PlaylistSerializer {
         }
     }
 
-    private fun write(context: Context, format: PlaylistFormat, outFile: File, songs: List<File>) {
-        val existed = outFile.exists()
-        val uri = if (existed) {
-            MediaStoreCompat.getMediaUriForFile(context, outFile.absolutePath)
-        } else {
-            MediaStoreCompat.create(context, outFile.absolutePath)!!
-        }
+    private fun write(context: Context, format: PlaylistFormat, outFile: File, uri: Uri, songs: List<File>) {
         when (format) {
             PlaylistFormat.M3u -> {
                 val parent = outFile.parentFile
@@ -68,11 +62,6 @@ object PlaylistSerializer {
             PlaylistFormat.Xspf -> TODO()
             PlaylistFormat.Wpl -> TODO()
             PlaylistFormat.Pls -> TODO()
-        }
-        if (existed) {
-            MediaStoreCompat.scanFile(context, outFile.toString())
-        } else {
-            MediaStoreCompat.finishCreate(context, uri)
         }
     }
 

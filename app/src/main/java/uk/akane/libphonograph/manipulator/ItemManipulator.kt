@@ -5,12 +5,10 @@ import android.content.ContentUris
 import android.content.Context
 import android.content.IntentSender
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.media3.common.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -22,7 +20,6 @@ import org.akanework.gramophone.ui.MainActivity
 import org.nift4.mediastorecompat.MediaStoreCompat
 import uk.akane.libphonograph.getIntOrNullIfThrow
 import uk.akane.libphonograph.getLongOrNullIfThrow
-import uk.akane.libphonograph.getStringOrNullIfThrow
 import java.io.File
 
 object ItemManipulator {
@@ -34,13 +31,14 @@ object ItemManipulator {
         )
         val uris = mutableSetOf(uri)
         // TODO maybe don't hardcode these extensions twice, here and in LrcUtils?
-        uris.addAll(setOf("ttml", "lrc", "srt").map {
+        uris.addAll(setOf("ttml", "lrc", "srt").asSequence().map {
             file.resolveSibling("${file.nameWithoutExtension}.$it")
         }.filter { it.exists() }.map {
             // It doesn't really make sense to have >1 subtitle file so we don't need to batch the queries.
             getIdForPath(context, it)
         }.filter { it != null }
-            .map { ContentUris.withAppendedId(MediaStore.Files.getContentUri("external"), it!!) })
+            .map { ContentUris.withAppendedId(MediaStore.Files.getContentUri("external"), it!!) }
+            .toList())
         return delete(context, uris)
     }
 
@@ -117,13 +115,15 @@ object ItemManipulator {
         }
     }
 
-    fun createPlaylist(context: Context, name: String): File {
+    fun createPlaylist(context: Context, name: String): Uri {
         val parent = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
         val out = File(parent, "$name.m3u")
         if (out.exists())
             throw IllegalArgumentException("tried to create playlist $out that already exists")
-        PlaylistSerializer.write(context.applicationContext, out, listOf())
-        return out
+        val uri = MediaStoreCompat.create(context, out.absolutePath)!!
+        PlaylistSerializer.write(context.applicationContext, out, uri, listOf())
+        MediaStoreCompat.finishCreate(context, uri)
+        return uri
     }
 
     private fun getIdForPath(context: Context, file: File): Long? {
@@ -150,50 +150,73 @@ object ItemManipulator {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
-    private fun checkIfFileAttributedToSelf(context: Context, uri: Uri): Boolean {
-        val cursor = context.contentResolver.query(
-            uri,
-            arrayOf(MediaStore.MediaColumns.OWNER_PACKAGE_NAME), null, null, null
-        )
-        if (cursor == null) return false
-        cursor.use {
-            if (!cursor.moveToFirst()) return false
-            val column = cursor.getColumnIndex(MediaStore.MediaColumns.OWNER_PACKAGE_NAME)
-            val pkg = cursor.getStringOrNullIfThrow(column)
-            return pkg == context.packageName
-        }
-    }
-
-    fun addToPlaylist(context: Context, out: File, songs: List<File>) {
-        if (!out.exists())
-            throw IllegalArgumentException("tried to change playlist $out that doesn't exist")
-        setPlaylistContent(context, out, PlaylistSerializer.read(out) + songs)
-    }
-
-    fun setPlaylistContent(context: Context, out: File, songs: List<File>) {
-        if (!out.exists())
-            throw IllegalArgumentException("tried to change playlist $out that doesn't exist")
-        val backup = out.readBytes()
-        try {
-            PlaylistSerializer.write(context.applicationContext, out, songs)
-        } catch (t: Throwable) {
-            try {
-                PlaylistSerializer.write(
-                    context.applicationContext, out.resolveSibling(
-                        "${out.nameWithoutExtension}_NEW_${System.currentTimeMillis()}.m3u"
-                    ), songs
+    fun readPlaylist(context: Context, uri: Uri): List<File> {
+        val out = File(context.contentResolver.query(uri,
+            arrayOf(MediaStore.MediaColumns.DATA),
+            null, null, null).use { cursor ->
+            if (cursor == null || !cursor.moveToFirst())
+                throw IllegalArgumentException("Failed to query $uri")
+            cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA))
+        })
+        if (!hasImprovedMediaStore() &&
+            MediaStoreCompat.shouldPreferAbstractPlaylistOverFile(context, uri)) {
+            return context.contentResolver.query(
+                @Suppress("DEPRECATION") MediaStore.Audio.Playlists.Members
+                    .getContentUri("external", ContentUris
+                        .parseId(uri)), arrayOf(
+                    @Suppress("DEPRECATION") MediaStore.Audio.Playlists.Members.DATA,
+                ), null, null, @Suppress("DEPRECATION")
+                MediaStore.Audio.Playlists.Members.PLAY_ORDER + " ASC"
+            ).use { cursor ->
+                if (cursor == null)
+                    throw IllegalArgumentException("Failed to query $uri members")
+                val column = cursor.getColumnIndexOrThrow(
+                    @Suppress("DEPRECATION") MediaStore.Audio.Playlists.Members.DATA
                 )
-            } catch (t: Throwable) {
-                Log.e(TAG, Log.getThrowableString(t)!!)
+                val out = mutableListOf<File>()
+                while (cursor.moveToNext()) {
+                    out.add(File(cursor.getString(column)))
+                }
+                out
             }
-            try {
-                out.resolveSibling("${out.nameWithoutExtension}_BAK_${System.currentTimeMillis()}.${out.extension}")
-                    .writeBytes(backup)
-            } catch (t: Throwable) {
-                Log.e(TAG, Log.getThrowableString(t)!!)
-            }
-            throw t
         }
+        return PlaylistSerializer.read(out)
+    }
+
+    fun addToPlaylist(context: Context, uri: Uri, songs: List<File>) {
+        setPlaylistContent(context, uri, readPlaylist(context, uri) + songs)
+    }
+
+    fun setPlaylistContent(context: Context, uri: Uri, songs: List<File>) {
+        var out: File? = null
+        var name: String? = null
+        context.contentResolver.query(uri,
+            if (hasImprovedMediaStore())
+                arrayOf(MediaStore.MediaColumns.DATA)
+            else arrayOf(MediaStore.MediaColumns.DATA,
+                @Suppress("deprecation") MediaStore.Audio.Playlists.NAME),
+            null, null, null).use { cursor ->
+            if (cursor == null || !cursor.moveToFirst())
+                throw IllegalArgumentException("Failed to query $uri")
+            out = File(cursor.getString(
+                cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA)))
+            if (!hasImprovedMediaStore())
+                name = cursor.getString(cursor.getColumnIndexOrThrow(
+                    @Suppress("deprecation") MediaStore.Audio.Playlists.NAME))
+        }
+        if (!hasImprovedMediaStore() && !out!!.exists()) {
+            // Move this playlist to a plausible real path on the same volume because we're about to
+            // convert it from abstract to real playlist.
+            MediaStoreCompat.efficientMove(context, uri, "Music/$name.m3u")
+            out = File(context.contentResolver.query(uri,
+                arrayOf(MediaStore.MediaColumns.DATA),
+                null, null, null).use { cursor ->
+                if (cursor == null || !cursor.moveToFirst())
+                    throw IllegalArgumentException("Failed to query $uri")
+                cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA))
+            })
+        }
+        PlaylistSerializer.write(context.applicationContext, out!!, uri, songs)
+        MediaStoreCompat.scanFile(context, uri, out)
     }
 }

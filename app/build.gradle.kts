@@ -28,7 +28,7 @@ android {
     }
 
     namespace = "org.akanework.gramophone"
-    compileSdk = 36
+    compileSdk = 37
 
     signingConfigs {
         create("release") {
@@ -290,7 +290,7 @@ dependencies {
     implementation("androidx.fragment:fragment-ktx:1.8.9")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.4")
     implementation("androidx.mediarouter:mediarouter:1.8.1")
-    implementation("io.github.nift4.mediastorecompat:minsdk21:1.0.0-alpha05")
+    implementation("io.github.nift4.mediastorecompat:minsdk21:1.0.0-alpha08")
     val media3Version = "1.10.1"
     implementation("androidx.media3:media3-common-ktx:$media3Version")
     implementation("androidx.media3:media3-exoplayer:$media3Version")

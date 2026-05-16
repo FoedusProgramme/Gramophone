@@ -188,7 +188,8 @@ class PlaylistAdapter(
                             @Suppress("deprecation") MediaStore.Audio.Playlists.getContentUri("external"),
                             id
                         )
-                        val path = item.path!!.resolveSibling("$name.${item.path.extension}").absolutePath
+                        val path = item.path!!.resolveSibling(if (item.path.extension != "")
+                            "$name.${item.path.extension}" else name).absolutePath
                         val data = Bundle().apply {
                             putLong("Id", id)
                             putString("Path", path)

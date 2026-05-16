@@ -18,6 +18,7 @@ import org.akanework.gramophone.logic.hasAudioPermission
 import org.akanework.gramophone.logic.hasImagePermission
 import org.akanework.gramophone.logic.hasImprovedMediaStore
 import org.akanework.gramophone.logic.hasScopedStorageWithMediaTypes
+import org.nift4.mediastorecompat.MediaStoreCompat
 import uk.akane.libphonograph.Constants
 import uk.akane.libphonograph.getColumnIndexOrNull
 import uk.akane.libphonograph.getIntOrNullIfThrow
@@ -580,48 +581,41 @@ internal object Reader {
                     it.getString(playlistPathColumn)?.ifEmpty { null }?.let { p -> File(p) }
                 val playlistDateAdded = it.getLongOrNullIfThrow(playlistDateAddedColumn)
                 val playlistDateModified = it.getLongOrNullIfThrow(playlistDateModifiedColumn)
-                val content = mutableListOf<Long?>()
+                val content = mutableListOf<Long>()
                 context.contentResolver.query(
                     @Suppress("DEPRECATION") MediaStore.Audio
-                        .Playlists.Members.getContentUri("external", playlistId), arrayOf(
-                        @Suppress("DEPRECATION") MediaStore.Audio.Playlists.Members.AUDIO_ID,
-                        @Suppress("DEPRECATION") MediaStore.Audio.Playlists.Members.PLAY_ORDER,
-                    ), null, null, @Suppress("DEPRECATION")
+                        .Playlists.Members.getContentUri("external", playlistId),
+                    arrayOf(@Suppress("DEPRECATION")
+                    MediaStore.Audio.Playlists.Members.AUDIO_ID), null,
+                    null, @Suppress("DEPRECATION")
                     MediaStore.Audio.Playlists.Members.PLAY_ORDER + " ASC"
                 )?.use { cursor ->
                     val column = cursor.getColumnIndexOrThrow(
                         @Suppress("DEPRECATION") MediaStore.Audio.Playlists.Members.AUDIO_ID
                     )
-                    val column2 = cursor.getColumnIndexOrThrow(
-                        @Suppress("DEPRECATION") MediaStore.Audio.Playlists.Members.PLAY_ORDER
-                    )
-                    var first: Long? = null
                     while (cursor.moveToNext()) {
-                        val last = first
-                        first = cursor.getLong(column2)
-                        while (last != null && first + 1 < last) {
-                            content.add(null)
-                            first++
-                        }
                         foundPlaylistContent = true
                         content.add(cursor.getLong(column))
                     }
                 }
-                val paths = try {
-                    playlistPath?.let { p -> PlaylistSerializer.read(p) }
-                } catch (_: PlaylistSerializer.UnsupportedPlaylistFormatException) {
-                    null
-                } catch (e: IOException) {
-                    Log.w("Reader", "failed to read playlist $playlistPath", e)
-                    null
-                }
-                if (paths != null && content.size > paths.size) {
-                    throw IllegalStateException("playlist $playlistName failed to parse: $content, $paths")
-                }
+                val paths = if (!MediaStoreCompat.shouldPreferAbstractPlaylistOverFile(context,
+                        @Suppress("DEPRECATION") ContentUris.withAppendedId(
+                            MediaStore.Audio.Playlists.getContentUri(
+                                "external"), playlistId)))
+                    try {
+                        playlistPath?.let { p -> PlaylistSerializer.read(p) }
+                    } catch (_: PlaylistSerializer.UnsupportedPlaylistFormatException) {
+                        null
+                    } catch (e: IOException) {
+                        Log.w("Reader", "failed to read playlist $playlistPath",
+                            e)
+                        null
+                    } else null
                 playlists.add(
                     RawPlaylist(
                         playlistId, playlistName, playlistPath,
-                        playlistDateAdded, playlistDateModified, content, paths
+                        playlistDateAdded, playlistDateModified,
+                        if (paths != null) null else content, paths
                     )
                 )
             }
