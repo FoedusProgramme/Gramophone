@@ -135,7 +135,7 @@ class FlowReader(
             .provideReplayCacheInvalidationManager(copyDownstream = Invalidation.Optional)
             .sharePauseableIn(scope, WhileSubscribed(20000), WhileSubscribed(2000), replay = 1)
     val idMapFlow: Flow<Map<Long, MediaItem>> = readerFlow.map { it.idMap!! }
-    private val pathMapFlow = readerFlow.map { it.pathMap!! }
+    val pathMapFlow = readerFlow.map { it.pathMap!! }
     val songListFlow: Flow<List<MediaItem>> = readerFlow.map { it.songList }
     private val recentlyAddedFlow = recentlyAddedFilterSecondFlow.distinctUntilChanged()
         .onEach { requireReplayCacheInvalidationManager().invalidate() }

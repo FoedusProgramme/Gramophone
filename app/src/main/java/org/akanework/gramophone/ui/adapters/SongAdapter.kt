@@ -290,7 +290,7 @@ class SongAdapter(
                 }
 
                 R.id.add_to_playlist -> {
-                    mainActivity.addToPlaylistDialog(item.getFile())
+                    mainActivity.addToPlaylistDialog(item)
                     true
                 }
 

@@ -88,6 +88,7 @@ import org.akanework.gramophone.ui.fragments.SearchFragment
 import org.akanework.gramophone.ui.fragments.ViewPagerFragment
 import org.nift4.mediastorecompat.MediaStoreCompat
 import uk.akane.libphonograph.manipulator.ItemManipulator
+import uk.akane.libphonograph.manipulator.PlaylistSerializer.Entry
 import java.io.File
 
 /**
@@ -229,7 +230,8 @@ class MainActivity : BaseActivity() {
     }
 
     @OptIn(FlowPreview::class)
-    fun addToPlaylistDialog(song: File?) {
+    fun addToPlaylistDialog(item: MediaItem) {
+        val song = Entry.ofMediaItem(item)
         if (song == null) {
             Toast.makeText(
                 this@MainActivity,
@@ -293,21 +295,16 @@ class MainActivity : BaseActivity() {
                     ContentUris.withAppendedId(
                         @Suppress("deprecation") MediaStore.Audio.Playlists.getContentUri("external"),
                         pl.id!!
-                    ), true, listOf(song)
+                    ), listOf(song)
                 )
             }
             .setNegativeButton(android.R.string.cancel) { _, _ -> }
             .show()
     }
 
-    fun setPlaylist(uri: Uri, addToEnd: Boolean, songs: List<File>) {
-        setPlaylist(uri, addToEnd, ArrayList(songs.map { it.absolutePath }))
-    }
-
-    fun setPlaylist(uri: Uri, addToEnd: Boolean, songs: ArrayList<String>) {
+    fun setPlaylist(uri: Uri, songs: List<Entry>) {
         val data = Bundle().apply {
-            putBoolean("AddToEnd", addToEnd)
-            putStringArrayList("Songs", songs)
+            putParcelableArrayList("Songs", ArrayList(songs))
             putParcelable("Uri", uri)
         }
         CoroutineScope(Dispatchers.Default).launch {
@@ -342,14 +339,11 @@ class MainActivity : BaseActivity() {
 
     private suspend fun doAddToPlaylist(resultCode: Int, data: Bundle) {
         if (resultCode == RESULT_OK) {
-            val add = data.getBoolean("AddToEnd")
             val uri = BundleCompat.getParcelable(data, "Uri", Uri::class.java)!!
-            val songs = data.getStringArrayList("Songs")!!.map { File(it) }
+            val songs = BundleCompat.getParcelableArrayList(data, "Songs",
+                Entry::class.java)!!
             try {
-                if (add)
-                    ItemManipulator.addToPlaylist(this@MainActivity, uri, songs)
-                else
-                    ItemManipulator.setPlaylistContent(this@MainActivity, uri, songs)
+                ItemManipulator.addToPlaylist(this@MainActivity, uri, songs)
             } catch (e: Exception) {
                 Log.e("MainActivity", Log.getThrowableString(e)!!)
                 withContext(Dispatchers.Main) {

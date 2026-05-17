@@ -1,6 +1,7 @@
 package uk.akane.libphonograph.items
 
 import androidx.media3.common.MediaItem
+import uk.akane.libphonograph.manipulator.PlaylistSerializer
 import java.io.File
 
 open class Playlist protected constructor(
@@ -52,21 +53,14 @@ internal data class RawPlaylist(
     val path: File?,
     val dateAdded: Long?,
     val dateModified: Long?,
-    val pathList: List<File?>?,
+    val entries: List<PlaylistSerializer.Entry?>?,
 ) {
     // pathMap may be null if and only if all playlists are empty
     fun toPlaylist(pathMap: Map<String, MediaItem>?): Playlist? {
         // Unsupported format and MediaStore can't read it either (ex: smpl), don't display at all
-        if (pathList == null) return null
-        // TODO: this could use some clean up
-        val tmp = arrayOfNulls<MediaItem?>(pathList.size)
-        for (i in 0..<tmp.size) {
-            // if we have a path and it's not in the map, something's weird. but it's not a
-            // crash-worthy offense
-            tmp[i] = pathList.getOrNull(i)?.let { pathMap!![it.absolutePath] }
-        }
-        val result = if (tmp.contains(null)) tmp.filterNotNull() else
-            (@Suppress("UNCHECKED_CAST") (tmp as Array<MediaItem>)).toList()
-        return Playlist(id, title, path, dateAdded, dateModified, result)
+        if (entries == null) return null
+        return Playlist(id, title, path, dateAdded, dateModified, entries.mapNotNull {
+            it?.resolveMediaItem(pathMap)
+        })
     }
 }
