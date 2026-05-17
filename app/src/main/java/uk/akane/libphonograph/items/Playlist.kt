@@ -2,7 +2,6 @@ package uk.akane.libphonograph.items
 
 import androidx.media3.common.MediaItem
 import java.io.File
-import kotlin.math.max
 
 open class Playlist protected constructor(
     override val id: Long?,
@@ -53,30 +52,21 @@ internal data class RawPlaylist(
     val path: File?,
     val dateAdded: Long?,
     val dateModified: Long?,
-    val idList: List<Long?>?,
     val pathList: List<File?>?,
 ) {
-    // idMap may be null if and only if all playlists are empty
-    fun toPlaylist(idMap: Map<Long, MediaItem>?, pathMap: Map<String, MediaItem>?): Playlist {
-        val result = if (pathList != null) {
-            val tmp = arrayOfNulls<MediaItem?>(pathList.size)
-            for (i in 0..<tmp.size) {
-                // if we have a path and it's not in the map, something's weird. but it's not a
-                // crash-worthy offense
-                tmp[i] = pathList.getOrNull(i)?.let { pathMap!![it.absolutePath] }
-            }
-            if (tmp.contains(null)) tmp.filterNotNull() else
-                (@Suppress("UNCHECKED_CAST") (tmp as Array<MediaItem>)).toList()
-        } else {
-            val tmp = arrayOfNulls<MediaItem?>(idList!!.size)
-            for (i in 0..<tmp.size) {
-                // if we have an id and it's not in the map, something's weird. but it's not a
-                // crash-worthy offense
-                tmp[i] = if (idList.getOrNull(i) != null) idMap!![idList[i]!!] else null
-            }
-            if (tmp.contains(null)) tmp.filterNotNull() else
-                (@Suppress("UNCHECKED_CAST") (tmp as Array<MediaItem>)).toList()
+    // pathMap may be null if and only if all playlists are empty
+    fun toPlaylist(pathMap: Map<String, MediaItem>?): Playlist? {
+        // Unsupported format and MediaStore can't read it either (ex: smpl), don't display at all
+        if (pathList == null) return null
+        // TODO: this could use some clean up
+        val tmp = arrayOfNulls<MediaItem?>(pathList.size)
+        for (i in 0..<tmp.size) {
+            // if we have a path and it's not in the map, something's weird. but it's not a
+            // crash-worthy offense
+            tmp[i] = pathList.getOrNull(i)?.let { pathMap!![it.absolutePath] }
         }
+        val result = if (tmp.contains(null)) tmp.filterNotNull() else
+            (@Suppress("UNCHECKED_CAST") (tmp as Array<MediaItem>)).toList()
         return Playlist(id, title, path, dateAdded, dateModified, result)
     }
 }

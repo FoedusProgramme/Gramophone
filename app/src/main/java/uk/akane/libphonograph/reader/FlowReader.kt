@@ -135,7 +135,7 @@ class FlowReader(
             .provideReplayCacheInvalidationManager(copyDownstream = Invalidation.Optional)
             .sharePauseableIn(scope, WhileSubscribed(20000), WhileSubscribed(2000), replay = 1)
     val idMapFlow: Flow<Map<Long, MediaItem>> = readerFlow.map { it.idMap!! }
-    private val idPathMapFlow = readerFlow.map { it.idMap!! to it.pathMap!! }
+    private val pathMapFlow = readerFlow.map { it.pathMap!! }
     val songListFlow: Flow<List<MediaItem>> = readerFlow.map { it.songList }
     private val recentlyAddedFlow = recentlyAddedFilterSecondFlow.distinctUntilChanged()
         .onEach { requireReplayCacheInvalidationManager().invalidate() }
@@ -156,8 +156,8 @@ class FlowReader(
         .provideReplayCacheInvalidationManager(copyDownstream = Invalidation.Optional)
         .sharePauseableIn(scope, WhileSubscribed(20000), WhileSubscribed(2000), replay = 1)
     private val mappedPlaylistsFlow =
-        idPathMapFlow.combine(rawPlaylistFlow) { idPathMap, rawPlaylists ->
-            rawPlaylists.map { it.toPlaylist(idPathMap.first, idPathMap.second) }
+        pathMapFlow.combine(rawPlaylistFlow) { pathMap, rawPlaylists ->
+            rawPlaylists.mapNotNull { it.toPlaylist(pathMap) }
         }
     val albumListFlow: Flow<List<Album>> = readerFlow.map { it.albumList!! }
     val albumArtistListFlow: Flow<List<Artist>> = readerFlow.map { it.albumArtistList!! }

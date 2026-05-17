@@ -22,7 +22,8 @@ object SimpleReader {
                 Reader.readFromMediaStore(
                     context, minSongLengthSeconds, blackListSet,
                     shouldUseEnhancedCoverReading, shouldIncludeExtraFormat,
-                    shouldLoadIdMap = foundPlaylistContent, coverStubUri = coverStubUri
+                    shouldLoadIdMap = false,
+                    shouldLoadPathMap = foundPlaylistContent, coverStubUri = coverStubUri
                 )
             }
         }
@@ -34,7 +35,7 @@ object SimpleReader {
             result.artistList!!,
             result.genreList!!,
             result.dateList!!,
-            playlists.map { it.toPlaylist(result.idMap, result.pathMap) }.let {
+            playlists.mapNotNull { it.toPlaylist(result.pathMap) }.let {
                 if (recentlyAddedFilterSecond != null)
                     it + RecentlyAdded(
                         (System.currentTimeMillis() / 1000L) - recentlyAddedFilterSecond,

@@ -18,7 +18,6 @@ import org.akanework.gramophone.logic.hasAudioPermission
 import org.akanework.gramophone.logic.hasImagePermission
 import org.akanework.gramophone.logic.hasImprovedMediaStore
 import org.akanework.gramophone.logic.hasScopedStorageWithMediaTypes
-import org.nift4.mediastorecompat.MediaStoreCompat
 import uk.akane.libphonograph.Constants
 import uk.akane.libphonograph.getColumnIndexOrNull
 import uk.akane.libphonograph.getIntOrNullIfThrow
@@ -39,7 +38,7 @@ import uk.akane.libphonograph.items.Genre
 import uk.akane.libphonograph.items.RawPlaylist
 import uk.akane.libphonograph.items.addDate
 import uk.akane.libphonograph.items.modifiedDate
-import uk.akane.libphonograph.manipulator.PlaylistSerializer
+import uk.akane.libphonograph.manipulator.ItemManipulator
 import uk.akane.libphonograph.putIfAbsentSupport
 import uk.akane.libphonograph.toUriCompat
 import uk.akane.libphonograph.utils.MiscUtils
@@ -48,7 +47,6 @@ import uk.akane.libphonograph.utils.MiscUtils.findBestCover
 import uk.akane.libphonograph.utils.MiscUtils.handleMediaFolder
 import uk.akane.libphonograph.utils.MiscUtils.handleShallowMediaItem
 import java.io.File
-import java.io.IOException
 import java.time.Instant
 import java.time.ZoneId
 import kotlin.math.min
@@ -125,6 +123,7 @@ internal object Reader {
         shouldLoadFolders: Boolean = true,
         shouldLoadFilesystem: Boolean = true,
         shouldLoadIdMap: Boolean = true,
+        shouldLoadPathMap: Boolean = true,
         coverStubUri: String? = null
     ): ReaderResult {
         if (!shouldLoadFilesystem && shouldUseEnhancedCoverReading != false) {
@@ -169,7 +168,7 @@ internal object Reader {
         val genreMap = if (shouldLoadGenres) hashMapOf<String?, Genre>() else null
         val dateMap = if (shouldLoadDates) hashMapOf<Int?, Date>() else null
         val idMap = if (shouldLoadIdMap) hashMapOf<Long, MediaItem>() else null
-        val pathMap = if (shouldLoadIdMap) hashMapOf<String, MediaItem>() else null
+        val pathMap = if (shouldLoadPathMap) hashMapOf<String, MediaItem>() else null
         val hasVolume = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             MediaStore.getExternalVolumeNames(context).contains(MediaStore.VOLUME_EXTERNAL_PRIMARY)
         } else true
@@ -180,11 +179,6 @@ internal object Reader {
                 val queryArgs = Bundle()
                 queryArgs.putString(ContentResolver.QUERY_ARG_SQL_SELECTION, selection)
                 queryArgs.putString(ContentResolver.QUERY_ARG_SQL_SORT_ORDER, sortOrder)
-                /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    queryArgs.putInt(MediaStore.QUERY_ARG_MATCH_PENDING, MediaStore.MATCH_INCLUDE)
-                } TODO separately find pending files (but only pending by fuse) and if they
-                   were last modified over Y seconds ago (assumes every write updates mtime), scan
-                   them. in the end we dont do much harm with scanning too early so whatever.*/
                 // TODO: maybe we can use QUERY_ARG_INCLUDE_RECENTLY_UNMOUNTED_VOLUMES?
                 context.contentResolver.query(
                     MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
@@ -581,41 +575,20 @@ internal object Reader {
                     it.getString(playlistPathColumn)?.ifEmpty { null }?.let { p -> File(p) }
                 val playlistDateAdded = it.getLongOrNullIfThrow(playlistDateAddedColumn)
                 val playlistDateModified = it.getLongOrNullIfThrow(playlistDateModifiedColumn)
-                val content = mutableListOf<Long>()
-                context.contentResolver.query(
-                    @Suppress("DEPRECATION") MediaStore.Audio
-                        .Playlists.Members.getContentUri("external", playlistId),
-                    arrayOf(@Suppress("DEPRECATION")
-                    MediaStore.Audio.Playlists.Members.AUDIO_ID), null,
-                    null, @Suppress("DEPRECATION")
-                    MediaStore.Audio.Playlists.Members.PLAY_ORDER + " ASC"
-                )?.use { cursor ->
-                    val column = cursor.getColumnIndexOrThrow(
-                        @Suppress("DEPRECATION") MediaStore.Audio.Playlists.Members.AUDIO_ID
-                    )
-                    while (cursor.moveToNext()) {
-                        foundPlaylistContent = true
-                        content.add(cursor.getLong(column))
-                    }
+                val paths = try {
+                    ItemManipulator.readPlaylist(context, ContentUris.withAppendedId(
+                        @Suppress("DEPRECATION") MediaStore.Audio.Playlists
+                            .getContentUri("external"), playlistId))
+                } catch (e: Exception) {
+                    Log.w("Reader", "failed to read playlist $playlistPath",
+                        e)
+                    null
                 }
-                val paths = if (!MediaStoreCompat.shouldPreferAbstractPlaylistOverFile(context,
-                        @Suppress("DEPRECATION") ContentUris.withAppendedId(
-                            MediaStore.Audio.Playlists.getContentUri(
-                                "external"), playlistId)))
-                    try {
-                        playlistPath?.let { p -> PlaylistSerializer.read(p) }
-                    } catch (_: PlaylistSerializer.UnsupportedPlaylistFormatException) {
-                        null
-                    } catch (e: IOException) {
-                        Log.w("Reader", "failed to read playlist $playlistPath",
-                            e)
-                        null
-                    } else null
+                if (!paths.isNullOrEmpty()) foundPlaylistContent = true
                 playlists.add(
                     RawPlaylist(
                         playlistId, playlistName, playlistPath,
-                        playlistDateAdded, playlistDateModified,
-                        if (paths != null) null else content, paths
+                        playlistDateAdded, playlistDateModified, paths
                     )
                 )
             }
