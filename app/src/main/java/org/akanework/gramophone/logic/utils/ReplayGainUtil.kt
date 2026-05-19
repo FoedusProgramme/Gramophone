@@ -369,7 +369,7 @@ sealed class ReplayGainUtil {
             } catch (_: IllegalArgumentException) {
                 return null
             }
-            if (soundcheck.size < 9)
+            if (soundcheck.size < 10)
                 return null
             val gainL = log10(soundcheck[0] / 1000.0f) * -10
             val gainR = if (soundcheck[1] == 0) gainL else log10(soundcheck[1] / 1000.0f) * -10
