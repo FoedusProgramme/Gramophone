@@ -18,6 +18,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.replaceAllSupport
 import org.akanework.gramophone.logic.ui.MyRecyclerView
+import org.akanework.gramophone.logic.utils.PlayerListHelp.dumpPlaylist
 import org.akanework.gramophone.logic.utils.convertDurationToTimeStamp
 import org.akanework.gramophone.ui.MainActivity
 import java.util.LinkedList
@@ -113,7 +114,7 @@ class PlaylistQueueSheet(
     }
 
     private inner class PlaylistCardAdapter : EditSongAdapter(activity) {
-        var playlist: Pair<MutableList<Int>, MutableList<MediaItem>> = dumpPlaylist()
+        var playlist: Pair<MutableList<Int>, MutableList<MediaItem>> = dumpPlaylist(activity.getPlayer()!!)
 
         init {
             updateList()
@@ -217,22 +218,6 @@ class PlaylistQueueSheet(
         override fun getItem(pos: Int) = playlist.second[playlist.first[pos]]
         override fun startDrag(holder: ViewHolder) {
             touchHelper.startDrag(holder)
-        }
-
-        private fun dumpPlaylist(): Pair<MutableList<Int>, MutableList<MediaItem>> {
-            val items = LinkedList<MediaItem>()
-            val instance = activity.getPlayer()!!
-            for (i in 0 until instance.mediaItemCount) {
-                items.add(instance.getMediaItemAt(i))
-            }
-            val indexes = LinkedList<Int>()
-            val s = instance.shuffleModeEnabled
-            var i = instance.currentTimeline.getFirstWindowIndex(s)
-            while (i != C.INDEX_UNSET) {
-                indexes.add(i)
-                i = instance.currentTimeline.getNextWindowIndex(i, Player.REPEAT_MODE_OFF, s)
-            }
-            return Pair(indexes, items)
         }
 
         private fun updateList() {
