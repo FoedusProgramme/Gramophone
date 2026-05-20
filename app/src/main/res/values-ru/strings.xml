@@ -484,7 +484,7 @@
     <string name="settings_replaygain_no_rg_amp_desc">Снижать громкость для громких треков без тегов ReplayGain</string>
     <string name="settings_replaygain_preamp_desc">Увеличение или уменьшение громкости треков с тегами ReplayGain. Слишком высокие значения могут привести к потере динамики из-за защиты от клиппинга.</string>
     <string name="settings_replaygain_mode_desc">Режим «Умный» автоматически сохраняет динамику альбома только при последовательном прослушивании треков из него.</string>
-    <string name="sort_by_artist_year"><![CDATA[Исполнитель -> год]]></string>
+    <string name="sort_by_artist_year"><![CDATA[Исполнитель -&gt; год]]></string>
     <string name="clear_queue">Очистить очередь</string>
     <string name="actions_query_shuffle_all_songs">Перемешать все песни</string>
     <string name="actions_query_shuffle_everything">Перемешать всё</string>
