@@ -51,6 +51,8 @@ import uk.akane.libphonograph.utils.MiscUtils.handleShallowMediaItem
 import java.io.File
 import java.time.Instant
 import java.time.ZoneId
+import kotlin.collections.withIndex
+import kotlin.math.abs
 import kotlin.math.min
 
 internal object Reader {
@@ -616,7 +618,7 @@ internal object Reader {
         // read A, B, C from the m3u because we have no way of knowing which song is missing in the
         // abstract playlist (in fact not even MediaProvider knows, which is why abstract playlists
         // rightly got deprecated).
-        val out = mutableListOf<Long?>()
+        val out = mutableListOf<Long>()
         val orders = mutableListOf<Long>()
         // Ensure to trigger the "simpleQuery" path without join which allows us to see ghost ID by
         // not requesting DATA column.
@@ -626,8 +628,7 @@ internal object Reader {
                     .parseId(uri)), arrayOf(
                 @Suppress("DEPRECATION") MediaStore.Audio.Playlists.Members.AUDIO_ID,
                 @Suppress("DEPRECATION") MediaStore.Audio.Playlists.Members.PLAY_ORDER
-            ), null, null, @Suppress("DEPRECATION")
-            MediaStore.Audio.Playlists.Members.PLAY_ORDER + " ASC"
+            ), null, null, null
         ).use { cursor ->
             if (cursor == null) {
                 return paths
@@ -638,50 +639,64 @@ internal object Reader {
             val column2 = cursor.getColumnIndexOrThrow(
                 @Suppress("DEPRECATION") MediaStore.Audio.Playlists.Members.PLAY_ORDER
             )
-            var first: Long? = null
             while (cursor.moveToNext()) {
-                val last = first
-                first = cursor.getLong(column2)
-                orders.add(first)
-                while (last != null && first + 1 < last) {
-                    out.add(null)
-                    first++
-                }
+                orders.add(cursor.getLong(column2))
                 out.add(cursor.getLong(column))
             }
         }
-        val abstract = out.map { it?.let { getPathForId(context, it)
-            ?.let { path -> PlaylistSerializer.Entry.ofAbstract(File(path)) } } }
+        val outResolved = out.map { getPathForId(context, it)
+            ?.let { f -> File(f) } to it }
+        val abstract = outResolved.mapNotNull { it.first
+            ?.let { path -> PlaylistSerializer.Entry.ofAbstract(path) } }
+        if (abstract.isEmpty()) {
+            Log.i(TAG, "Used paths because abstract is empty")
+            return paths
+        }
         if (orders.isNotEmpty() && orders != (0..orders.max()).toList()) {
-            // PLAY_ORDER has a gap, duplicates or other inconsistencies which MediaScanner doesn't
-            // generate, which means this playlist was edited in the database after MediaScanner
-            // scanned it last time. So we must use abstract playlist.
+            // PLAY_ORDER has a gap, duplicates, the wrong order or other inconsistencies which
+            // MediaScanner doesn't generate, which means this playlist was edited in the database
+            // after MediaScanner scanned it last time. So we must use abstract playlist.
             Log.i(TAG, "Used abstract playlist due to bad play order: $orders")
-            return abstract.filterNotNull()
+            return abstract
         }
-        abstract.forEachIndexed { i, file ->
-            if (paths.size <= i) {
-                if (file != null) {
-                    // The abstract playlist has more entries, we must use it
-                    Log.i(TAG, "Used abstract playlist due to file ${file.file} at $i")
-                    return abstract.filterNotNull()
-                }
-                return@forEachIndexed
-            }
-            if (file != null && paths[i].file != file.file) {
-                // The abstract playlist has a different entry, we must use it
-                Log.i(TAG, "Used abstract playlist due to a=${file.file} !=" +
-                        " b=${paths[i].file} at $i")
-                return abstract.filterNotNull()
-            }
+        // If a file was moved after scan time and the MediaStore entry was updated to the new path,
+        // the abstract playlist can have the new path and the M3U the old ones. So to ensure we do
+        // not reject this case we ignore all paths present in abstract and not in M3U (if it is in
+        // M3U then that's definite proof it's not the new name of a file).
+        // TODO: this is correct, but does this fact make this method somehow useful at all now that
+        //  we don't really have a lot left to validate for single-item playlists?
+        val abstractForHeuristics = outResolved.map { candidate ->
+            if (candidate.first != null && paths.find { it.file == candidate.first } == null)
+                null to candidate.second else candidate
         }
-        if (paths.size > abstract.size) {
-            Log.i(TAG, "Used abstract playlist due to suffix deleted: " +
-                    "${paths[abstract.size].file}")
-            return abstract.filterNotNull()
+        if (!greedyWalk(abstractForHeuristics.mapNotNull { it.first },
+                paths.map { it.file })) {
+            Log.i(TAG, "Used abstract playlist because greedy walk said impossible...")
+            return abstract
+        }
+        // TODO: id<->slot verification...
+        if (true) {
+            return abstract
         }
         Log.i(TAG, "Used parsed playlist, no issues found")
         return paths
+    }
+
+    private fun greedyWalk(
+        db: List<File>,
+        m3u: List<File>
+    ): Boolean {
+        var m3uIndex = 0
+        for (song in db) {
+            while (m3uIndex < m3u.size && m3u[m3uIndex] != song) {
+                m3uIndex++
+            }
+            if (m3uIndex >= m3u.size) {
+                return false
+            }
+            m3uIndex++
+        }
+        return true
     }
 
     fun fetchPlaylists(context: Context): Pair<List<RawPlaylist>, Boolean> {

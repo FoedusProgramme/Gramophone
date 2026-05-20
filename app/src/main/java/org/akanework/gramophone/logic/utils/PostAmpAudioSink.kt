@@ -225,7 +225,7 @@ class PostAmpAudioSink(
             } else {
                 if (needToLogWhyNoEffect)
                     Log.i(TAG, "didn't init volume or dpe, e=$isVolumeAvailable " +
-                            "E=$isDpeAvailable o=$isDpeOffloadable O=$offloadEnabled")
+                            "E=$isDpeAvailable o=${isDpeAvailable && isDpeOffloadable} O=$offloadEnabled")
                 needToLogWhyNoEffect = false
             }
         }
