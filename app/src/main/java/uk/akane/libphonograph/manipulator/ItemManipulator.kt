@@ -155,7 +155,7 @@ object ItemManipulator {
     }
 
     fun addToPlaylist(context: Context, uri: Uri, songs: List<PlaylistSerializer.Entry>) {
-        val readback = Reader.readPlaylist(context, uri).map {
+        val readback = Reader.readPlaylist(context, uri, null).map {
             val pathMap = runBlocking { context.gramophoneApplication.reader.pathMapFlow.first() }
             it.resolveMediaItem(pathMap)?.let { song -> it.copyFromMediaItem(song) } ?: it
         }

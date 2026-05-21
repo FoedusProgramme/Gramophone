@@ -7,6 +7,8 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.system.ErrnoException
+import android.system.Os
 import androidx.core.database.getStringOrNull
 import androidx.media3.common.HeartRating
 import androidx.media3.common.MediaItem
@@ -20,6 +22,8 @@ import org.akanework.gramophone.logic.hasImprovedMediaStore
 import org.akanework.gramophone.logic.hasScopedStorageV1
 import org.akanework.gramophone.logic.hasScopedStorageWithMediaTypes
 import org.nift4.mediastorecompat.MediaStoreCompat
+import org.nift4.mediastorecompat.StorageManagerCompat
+import org.nift4.mediastorecompat.StorageVolumeCompat
 import uk.akane.libphonograph.Constants
 import uk.akane.libphonograph.getColumnIndexOrNull
 import uk.akane.libphonograph.getIntOrNullIfThrow
@@ -51,8 +55,7 @@ import uk.akane.libphonograph.utils.MiscUtils.handleShallowMediaItem
 import java.io.File
 import java.time.Instant
 import java.time.ZoneId
-import kotlin.collections.withIndex
-import kotlin.math.abs
+import java.util.concurrent.atomic.AtomicInteger
 import kotlin.math.min
 
 internal object Reader {
@@ -454,7 +457,7 @@ internal object Reader {
                         if (tmpPath != null && (tmpPath.absolutePath == "/storage/emulated"
                                     || tmpPath.absolutePath == "/storage")
                         )
-                            tmpPath = null // lets not allow to blacklist more than entire volumes
+                            tmpPath = null // let's not allow to blacklist more than entire volumes
                     }
                 }
             }
@@ -525,7 +528,7 @@ internal object Reader {
                     if (tmpPath != null && (tmpPath.absolutePath == "/storage/emulated"
                                 || tmpPath.absolutePath == "/storage")
                     )
-                        tmpPath = null // lets not allow to blacklist more than entire volumes
+                        tmpPath = null // let's not allow to blacklist more than entire volumes
                 }
             }
         }
@@ -557,14 +560,20 @@ internal object Reader {
         }
     }
 
-    fun readPlaylist(context: Context, uri: Uri): List<PlaylistSerializer.Entry> {
-        val file = File(context.contentResolver.query(uri,
-            arrayOf(MediaStore.MediaColumns.DATA),
+    fun readPlaylist(context: Context, uri: Uri, volumes: List<StorageVolumeCompat>?):
+            List<PlaylistSerializer.Entry> {
+        val file: File
+        val playlistModifiedTime: Long
+        context.contentResolver.query(uri,
+            arrayOf(MediaStore.MediaColumns.DATA, MediaStore.MediaColumns.DATE_MODIFIED),
             null, null, null).use { cursor ->
             if (cursor == null || !cursor.moveToFirst())
                 throw IllegalArgumentException("Failed to query $uri")
-            cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA))
-        })
+            file = File(cursor.getString(cursor.getColumnIndexOrThrow(
+                MediaStore.MediaColumns.DATA)))
+            playlistModifiedTime = cursor.getLong(cursor.getColumnIndexOrThrow(
+                MediaStore.MediaColumns.DATE_MODIFIED))
+        }
         // Note: because abstract playlists got removed in R, the file must exist on R+ or it's a
         // fatal error.
         val paths = if (hasImprovedMediaStore() || file.exists()) try {
@@ -648,10 +657,6 @@ internal object Reader {
             ?.let { f -> File(f) } to it }
         val abstract = outResolved.mapNotNull { it.first
             ?.let { path -> PlaylistSerializer.Entry.ofAbstract(path) } }
-        if (abstract.isEmpty()) {
-            Log.i(TAG, "Used paths because abstract is empty")
-            return paths
-        }
         if (orders.isNotEmpty() && orders != (0..orders.max()).toList()) {
             // PLAY_ORDER has a gap, duplicates, the wrong order or other inconsistencies which
             // MediaScanner doesn't generate, which means this playlist was edited in the database
@@ -663,40 +668,177 @@ internal object Reader {
         // the abstract playlist can have the new path and the M3U the old ones. So to ensure we do
         // not reject this case we ignore all paths present in abstract and not in M3U (if it is in
         // M3U then that's definite proof it's not the new name of a file).
-        // TODO: this is correct, but does this fact make this method somehow useful at all now that
-        //  we don't really have a lot left to validate for single-item playlists?
         val abstractForHeuristics = outResolved.map { candidate ->
             if (candidate.first != null && paths.find { it.file == candidate.first } == null)
                 null to candidate.second else candidate
         }
-        if (!greedyWalk(abstractForHeuristics.mapNotNull { it.first },
-                paths.map { it.file })) {
+        val volumes = volumes ?: StorageManagerCompat.getStorageVolumes(context)
+        val playlistVolume = StorageManagerCompat.getVolumeForPath(volumes, file)
+        val canSkipCache = hashMapOf<File, Boolean>()
+        val sawVolumeCache = hashMapOf<StorageVolumeCompat, Boolean>()
+        if (!greedyWalk(abstractForHeuristics
+            .filter { it.first != null }, paths.map { it.file }, null,
+                sawVolumeCache, canSkipCache, playlistModifiedTime, playlistVolume, volumes)) {
             Log.i(TAG, "Used abstract playlist because greedy walk said impossible...")
             return abstract
         }
-        // TODO: id<->slot verification...
-        if (true) {
-            return abstract
+        if (abstractForHeuristics.find { it.first == null } != null) {
+            val iterations = AtomicInteger()
+            val start = System.currentTimeMillis()
+            if (!bruteForceGreedyWalk(abstractForHeuristics, paths.map { it.file },
+                    iterations, sawVolumeCache, canSkipCache, playlistModifiedTime, playlistVolume,
+                    volumes)) {
+                Log.i(TAG, "Used abstract playlist because BFGW said impossible... " +
+                        "(took ${System.currentTimeMillis() - start}ms over $iterations runs)")
+                return abstract
+            }
+            val end = System.currentTimeMillis()
+            if (end - start > 500) {
+                Log.w(TAG, "BFGW took ${end - start}ms over $iterations runs")
+            }
         }
         Log.i(TAG, "Used parsed playlist, no issues found")
         return paths
     }
 
-    private fun greedyWalk(
-        db: List<File>,
-        m3u: List<File>
+    // open to better solutions with the same functionality
+    private fun bruteForceGreedyWalk(
+        db: List<Pair<File?, Long>>,
+        m3u: List<File>,
+        iterations: AtomicInteger,
+        sawVolumeCache: HashMap<StorageVolumeCompat, Boolean>,
+        canSkipCache: HashMap<File, Boolean>,
+        playlistModifiedTime: Long,
+        playlistVolume: StorageVolumeCompat,
+        volumes: List<StorageVolumeCompat>
     ): Boolean {
+        var choices: MutableList<Boolean> = ArrayList()
+        iterations.incrementAndGet()
+        while (!greedyWalk(db, m3u, choices, sawVolumeCache, canSkipCache, playlistModifiedTime,
+                playlistVolume, volumes)) {
+            val toChange = choices.lastIndexOf(false)
+            if (toChange == -1) {
+                return false
+            }
+            iterations.incrementAndGet()
+            choices = choices.subList(0, toChange).toMutableList()
+            choices.add(true)
+        }
+        return true
+    }
+
+    private fun greedyWalk(
+        db: List<Pair<File?, Long>>,
+        m3u: List<File>,
+        choices: MutableList<Boolean>?,
+        sawVolumeCache: HashMap<StorageVolumeCompat, Boolean>,
+        canSkipCache: HashMap<File, Boolean>,
+        playlistModifiedTime: Long,
+        playlistVolume: StorageVolumeCompat,
+        volumes: List<StorageVolumeCompat>
+    ): Boolean {
+        var choiceIndex = 0
         var m3uIndex = 0
-        for (song in db) {
-            while (m3uIndex < m3u.size && m3u[m3uIndex] != song) {
-                m3uIndex++
+        val bound = hashMapOf<Long, File>()
+        db.forEachIndexed { index, song ->
+            val songFile = song.first ?: bound[song.second]
+            if (songFile == null) {
+                while (db.size - index > m3u.size - m3uIndex &&
+                    choice(choices!!, choiceIndex++)) {
+                    m3uIndex++
+                }
+                if (bound.containsValue(m3u[m3uIndex])) {
+                    return false
+                }
+                bound[song.second] = m3u[m3uIndex]
+            } else {
+                while (m3uIndex < m3u.size && m3u[m3uIndex] != songFile) {
+                    m3uIndex++
+                }
             }
             if (m3uIndex >= m3u.size) {
                 return false
             }
             m3uIndex++
         }
+        m3u.toSet().forEach { entry ->
+            val count = db.count { entry == it.first ||
+                    entry == bound[it.second] }
+            if (count != 0 && count != m3u.count { it == entry }) {
+                return false
+            } else if (count == 0) {
+                if (!canSkipCache.getOrPut(entry) {
+                    val volume = volumes.find { tested ->
+                        StorageManagerCompat.isVolumeForPath(tested, entry) == true
+                    }
+                    // Because (ex/V)FAT does not support ctime, only do this for emulated storage.
+                    // Also don't bother for hidden files as they will be omitted silently.
+                    if (volume != null && volume.isEmulated && !entry.path.contains("/.")) {
+                        // Note: in Linux, ctime also includes rename, and we know playlists are
+                        // only scanned together with whole volumes if we are here (P or lower). So
+                        // we know that if the ctime of a song is lower than the mtime of the
+                        // playlist, the song must have existed under this name at scan time in the
+                        // database.
+                        val sawVolume =
+                            volume == playlistVolume || sawVolumeCache.getOrPut(volume) {
+                                // If some other song from this playlist is present, the volume
+                                // must've been inserted at scan time. If not, it might be the case
+                                // that playlist was scanned while volume was ejected, in which case
+                                // we should not check the ctime of the song.
+                                db.find {
+                                    it.first?.let { path ->
+                                        volumes.find { tested ->
+                                            StorageManagerCompat.isVolumeForPath(
+                                                tested,
+                                                path
+                                            ) == true
+                                        }
+                                    } == volume
+                                } != null
+                            }
+                        !sawVolume || run {
+                            try {
+                                val stat = Os.stat(entry.path)
+                                stat.st_ctime >= playlistModifiedTime
+                                        /* 0-byte files may be skipped, if we're here the file was
+                                         * 0 bytes at scan time as we know it did not change */
+                                        || stat.st_size == 0L ||
+                                        run {
+                                            var canSkip = false
+                                            var currentFolder = entry.parentFile
+                                            // This mtime check sadly takes a lot of the usefulness
+                                            // out, but it _is_ required if we really want 100% no
+                                            // false positives for detection.
+                                            while (currentFolder != null && !canSkip &&
+                                                volume.canonicalDirectory != currentFolder) {
+                                                canSkip = currentFolder.resolve(".nomedia")
+                                                    .exists() || Os.stat(currentFolder.path)
+                                                        .st_mtime >= playlistModifiedTime
+                                                currentFolder = currentFolder.parentFile
+                                            }
+                                            canSkip
+                                        }
+                            } catch (e: ErrnoException) {
+                                Log.w(TAG, "failed to stat file $entry: ${e.message}")
+                                true
+                            }
+                        }
+                    } else true
+                }) {
+                    return false
+                }
+            }
+        }
         return true
+    }
+
+    private fun choice(choices: MutableList<Boolean>, choiceIndex: Int): Boolean {
+        if (choices.size < choiceIndex) {
+            choices.addAll(MutableList(choices.size - choiceIndex + 1) { false })
+        } else if (choices.size == choiceIndex) {
+            choices.add(false)
+        }
+        return choices[choiceIndex]
     }
 
     fun fetchPlaylists(context: Context): Pair<List<RawPlaylist>, Boolean> {
@@ -727,6 +869,8 @@ internal object Reader {
             val playlistDateModifiedColumn = it.getColumnIndexOrThrow(
                 @Suppress("DEPRECATION") MediaStore.Audio.Playlists.DATE_MODIFIED
             )
+            val volumes = if (!hasScopedStorageV1())
+                StorageManagerCompat.getStorageVolumes(context) else null
             while (it.moveToNext()) {
                 val playlistId = it.getLong(playlistIdColumn)
                 val playlistName = it.getString(playlistNameColumn)?.ifEmpty { null }
@@ -737,7 +881,7 @@ internal object Reader {
                 val paths = try {
                     readPlaylist(context, ContentUris.withAppendedId(
                         @Suppress("DEPRECATION") MediaStore.Audio.Playlists
-                            .getContentUri("external"), playlistId))
+                            .getContentUri("external"), playlistId), volumes)
                 } catch (e: Exception) {
                     Log.w(TAG, "failed to read playlist $playlistPath", e)
                     null
