@@ -49,12 +49,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.Player.REPEAT_MODE_ALL
 import androidx.media3.common.Player.REPEAT_MODE_OFF
@@ -161,7 +162,7 @@ fun MqContent(
     val shuffleModeEnabled by mqState.shuffleModeEnabled.collectAsState()
 
     val mqExpand = mqState.expanded
-    val animatedMinHeight by animateDpAsState(
+    val animatedMaxHeight by animateDpAsState(
         targetValue = if (mqExpand) 300.dp else 0.dp,
         animationSpec = spring(
             stiffness = Spring.StiffnessMediumLow,
@@ -241,11 +242,13 @@ fun MqContent(
         }
 
         val lazyQueuesListState = rememberLazyListState()
+        val scrollConnection = rememberNestedScrollInteropConnection()
         LazyColumn(
             state = lazyQueuesListState,
             modifier = Modifier
+                .nestedScroll(scrollConnection)
                 .fillMaxWidth()
-                .heightIn(0.dp, animatedMinHeight),
+                .heightIn(0.dp, animatedMaxHeight),
         ) {
             if (mqState.getQueueListSize() == 0) {
                 item {
@@ -285,124 +288,121 @@ fun MqContent(
                     )
                 }
             }
+        }
 
-            // action bar
-            item {
-                FlowRow(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalArrangement = Arrangement.Center,
-                    itemVerticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                        .offset(y = 10.dp) // account 20 dp static padding in pager
+        // action bar
+        FlowRow(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalArrangement = Arrangement.Center,
+            itemVerticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+        ) {
+            // left options
+            Row(
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+            ) {
+                IconButton(
+                    onClick = {
+                        mqState.toggleRepeatMode()
+                    },
+                    enabled = !mqState.isDetached(),
                 ) {
-                    // left options
-                    Row(
-                        horizontalArrangement = Arrangement.End,
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                    ) {
-                        IconButton(
-                            onClick = {
-                                mqState.toggleRepeatMode()
-                            },
-                            enabled = !mqState.isDetached(),
-                        ) {
-                            Icon(
-                                painter = painterResource(
-                                    when (repeatMode) {
-                                        REPEAT_MODE_OFF, REPEAT_MODE_ALL -> R.drawable.ic_repeat
-                                        else -> R.drawable.ic_repeat_one
-                                    }
-                                ),
-                                contentDescription = null,
-                                tint = LocalContentColor.current.copy(if (repeatMode == REPEAT_MODE_OFF) 0.5f else 1f)
-                            )
-                        }
-                        IconButton(
-                            onClick = {
-                                mqState.toggleShuffleMode()
-                            },
-                            enabled = !mqState.isDetached(),
-                        ) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_shuffle),
-                                contentDescription = null,
-                                tint = LocalContentColor.current.copy(if (shuffleModeEnabled) 1f else 0.5f)
-                            )
-                        }
-                    }
-
-                    // center options
-                    Row(
-                        horizontalArrangement = Arrangement.End,
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .padding(horizontal = 16.dp)
-                    ) {
-                        IconButton(
-                            onClick = {
-                                mqState.seekPrev()
-                            },
-                            enabled = !mqState.isDetached(),
-                        ) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_skip_previous),
-                                contentDescription = null,
-                            )
-                        }
-                        IconButton(
-                            onClick = {
-                                mqState.togglePlayPause()
-                            },
-                            enabled = !mqState.isDetached(),
-                        ) {
-                            Icon(
-                                painter = painterResource(if (isPlaying) R.drawable.ic_pause_filled else R.drawable.ic_play_arrow),
-                                contentDescription = null,
-                            )
-                        }
-                        IconButton(
-                            onClick = {
-                                mqState.seekNext()
-                            },
-                            enabled = !mqState.isDetached(),
-                        ) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_skip_next),
-                                contentDescription = null,
-                            )
-                        }
-                    }
-
-                    // right options
-                    Row(
-                        horizontalArrangement = Arrangement.End,
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                    ) {
-                        IconButton(
-                            onClick = {
-                            },
-                        ) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_more_vert_alt),
-                                contentDescription = null,
-                            )
-                        }
-                        AnimatedVisibility(mqState.isDetached()) {
-                            IconButton(
-                                onClick = {
-                                    mqState.loadDetached()
-                                },
-                            ) {
-                                Icon(
-                                    painter = painterResource(R.drawable.ic_play_arrow),
-                                    contentDescription = null,
-                                )
+                    Icon(
+                        painter = painterResource(
+                            when (repeatMode) {
+                                REPEAT_MODE_OFF, REPEAT_MODE_ALL -> R.drawable.ic_repeat
+                                else -> R.drawable.ic_repeat_one
                             }
-                        }
+                        ),
+                        contentDescription = null,
+                        tint = LocalContentColor.current.copy(if (repeatMode == REPEAT_MODE_OFF) 0.5f else 1f)
+                    )
+                }
+                IconButton(
+                    onClick = {
+                        mqState.toggleShuffleMode()
+                    },
+                    enabled = !mqState.isDetached(),
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_shuffle),
+                        contentDescription = null,
+                        tint = LocalContentColor.current.copy(if (shuffleModeEnabled) 1f else 0.5f)
+                    )
+                }
+            }
+
+            // center options
+            Row(
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+            ) {
+                IconButton(
+                    onClick = {
+                        mqState.seekPrev()
+                    },
+                    enabled = !mqState.isDetached(),
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_skip_previous),
+                        contentDescription = null,
+                    )
+                }
+                IconButton(
+                    onClick = {
+                        mqState.togglePlayPause()
+                    },
+                    enabled = !mqState.isDetached(),
+                ) {
+                    Icon(
+                        painter = painterResource(if (isPlaying) R.drawable.ic_pause_filled else R.drawable.ic_play_arrow),
+                        contentDescription = null,
+                    )
+                }
+                IconButton(
+                    onClick = {
+                        mqState.seekNext()
+                    },
+                    enabled = !mqState.isDetached(),
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_skip_next),
+                        contentDescription = null,
+                    )
+                }
+            }
+
+            // right options
+            Row(
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+            ) {
+                IconButton(
+                    onClick = {
+                    },
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_more_vert_alt),
+                        contentDescription = null,
+                    )
+                }
+                AnimatedVisibility(mqState.isDetached()) {
+                    IconButton(
+                        onClick = {
+                            mqState.loadDetached()
+                        },
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_play_arrow),
+                            contentDescription = null,
+                        )
                     }
                 }
             }

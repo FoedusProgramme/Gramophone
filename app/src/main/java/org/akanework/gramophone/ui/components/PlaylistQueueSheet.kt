@@ -13,13 +13,18 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -82,14 +87,16 @@ class PlaylistQueueSheet(
 
         setContentView(R.layout.playlist_bottom_sheet)
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
-        val recyclerView = findViewById<MyRecyclerView>(R.id.recyclerview)!!
+        val recyclerView = MyRecyclerView(context)
         ViewCompat.setOnApplyWindowInsetsListener(recyclerView) { v, ic ->
             val i = ic.getInsets(
                 WindowInsetsCompat.Type.systemBars()
+                        or WindowInsetsCompat.Type.navigationBars()
                         or WindowInsetsCompat.Type.displayCutout()
             )
             val i2 = ic.getInsetsIgnoringVisibility(
                 WindowInsetsCompat.Type.systemBars()
+                        or WindowInsetsCompat.Type.navigationBars()
                         or WindowInsetsCompat.Type.displayCutout()
             )
             v.setPadding(i.left, 0, i.right, i.bottom)
@@ -119,7 +126,6 @@ class PlaylistQueueSheet(
             (context.resources.getDimensionPixelOffset(R.dimen.list_height) * 0.5f).toInt()
         )
         recyclerView.fastScroll(null, null)
-        recyclerView.isNestedScrollingEnabled = false // required for queueHead list scrolling
         activity.controllerViewModel.addRecreationalPlayerListener(lifecycle, this) {
             onMediaItemTransition(
                 instance?.currentMediaItem,
@@ -199,7 +205,7 @@ class PlaylistQueueSheet(
                     pureDark = false, // TODO: I don't want to do this rn. Does not respect light/dark mode
                 ) {
                     val mqState =
-                        rememberMqState(coroutineScope, instance!!, this@PlaylistQueueSheet, )
+                        rememberMqState(coroutineScope, instance!!, this@PlaylistQueueSheet)
                     val pagerState = rememberPagerState(pageCount = { 2 })
 
                     LaunchedEffect(mqState) {
@@ -230,62 +236,79 @@ class PlaylistQueueSheet(
                         }
                     }
 
-                    Box {
-                        HorizontalPager(
-                            state = pagerState,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = 20.dp),
-                            beyondViewportPageCount = 1,
-                            userScrollEnabled = !mqState.expanded
-                        ) { page ->
-                            when (page) {
-                                0 -> {
-                                    MqContent(
-                                        mqState = mqState,
-                                        mqEnabled = mqEnabled
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                    ) {
+                        Box {
+                            HorizontalPager(
+                                state = pagerState,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(bottom = 20.dp),
+                                beyondViewportPageCount = 1,
+                                userScrollEnabled = !mqState.expanded
+                            ) { page ->
+                                when (page) {
+                                    0 -> {
+                                        MqContent(
+                                            mqState = mqState,
+                                            mqEnabled = mqEnabled
+                                        )
+                                    }
+
+                                    1 -> {
+                                        HeadActions()
+                                    }
+                                }
+                            }
+
+                            Row(
+                                horizontalArrangement = Arrangement.Center,
+                                modifier = Modifier
+                                    .wrapContentHeight()
+                                    .fillMaxWidth()
+                                    .padding(bottom = 8.dp)
+                                    .align(Alignment.BottomCenter)
+                                    .alpha(if (!mqState.expanded) 1f else 0.3f)
+                                    .animateContentSize()
+                            ) {
+                                repeat(pagerState.pageCount) { iteration ->
+                                    val color = if (pagerState.currentPage == iteration) {
+                                        MaterialTheme.colorScheme.onSurface
+                                    } else {
+                                        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
+                                    }
+                                    Box(
+                                        modifier = Modifier
+                                            .padding(horizontal = 4.dp)
+                                            .clip(CircleShape)
+                                            .background(color)
+                                            .size(8.dp)
+                                            .clickable(
+                                                enabled = !mqState.expanded,
+                                                onClick = {
+                                                    coroutineScope.launch {
+                                                        haptic.performHapticFeedback(
+                                                            HapticFeedbackType.ContextClick
+                                                        )
+                                                        pagerState.animateScrollToPage(iteration)
+                                                    }
+                                                }
+                                            )
                                     )
                                 }
-
-                                1 -> {
-                                    HeadActions()
-                                }
                             }
                         }
 
-                        Row(
-                            horizontalArrangement = Arrangement.Center,
-                            modifier = Modifier
-                                .wrapContentHeight()
-                                .fillMaxWidth()
-                                .padding(bottom = 8.dp)
-                                .align(Alignment.BottomCenter)
-                                .alpha(if (!mqState.expanded) 1f else 0f)
-                                .animateContentSize()
-                        ) {
-                            repeat(pagerState.pageCount) { iteration ->
-                                val color = if (pagerState.currentPage == iteration) {
-                                    MaterialTheme.colorScheme.onSurface
-                                } else {
-                                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
-                                }
-                                Box(
-                                    modifier = Modifier
-                                        .padding(horizontal = 4.dp)
-                                        .clip(CircleShape)
-                                        .background(color)
-                                        .size(8.dp)
-                                        .clickable(
-                                            onClick = {
-                                                coroutineScope.launch {
-                                                    haptic.performHapticFeedback(HapticFeedbackType.ContextClick)
-                                                    pagerState.animateScrollToPage(iteration)
-                                                }
-                                            }
-                                        )
-                                )
-                            }
-                        }
+                        HorizontalDivider(thickness = 2.dp)
+
+                        AndroidView(
+                            modifier = Modifier.fillMaxSize(),
+                            factory = {
+                                recyclerView
+                            },
+                        )
                     }
                 }
             }
