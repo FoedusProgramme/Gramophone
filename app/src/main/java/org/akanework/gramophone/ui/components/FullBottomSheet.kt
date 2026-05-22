@@ -94,6 +94,7 @@ import org.akanework.gramophone.logic.utils.AudioFormatDetector.SpatialFormat
 import org.akanework.gramophone.logic.utils.CalculationUtils
 import org.akanework.gramophone.logic.utils.ColorUtils
 import org.akanework.gramophone.logic.utils.Flags
+import org.akanework.gramophone.logic.utils.exoplayer.oem.SystemMediaControlResolver
 import org.akanework.gramophone.ui.MainActivity
 import org.akanework.gramophone.ui.fragments.ArtistSubFragment
 import org.akanework.gramophone.ui.fragments.DetailDialogFragment
@@ -200,6 +201,7 @@ class FullBottomSheet
     private val bottomSheetShuffleButton: MaterialButton
     private val bottomSheetLoopButton: MaterialButton
     private val bottomSheetPlaylistButton: MaterialButton
+    private val bottomSheetMediaControl: MaterialButton
     private val bottomSheetTimerButton: MaterialButton
     private val bottomSheetPlaybackSpeedButton: MaterialButton
     private val bottomSheetFavoriteButton: MaterialButton
@@ -238,6 +240,7 @@ class FullBottomSheet
         if (!Flags.FAVORITE_SONGS)
             bottomSheetFavoriteButton.visibility = GONE
         bottomSheetPlaylistButton = findViewById(R.id.playlist)
+        bottomSheetMediaControl = findViewById(R.id.media_control)
         bottomSheetLyricButton = findViewById(R.id.lyrics)
         bottomSheetFullLyricView = findViewById(R.id.lyric_frame)
         bottomSheetFullQualityDetails = findViewById(R.id.quality_details)
@@ -415,6 +418,16 @@ class FullBottomSheet
         }
 
         bottomSheetFavoriteButton.addOnCheckedChangeListener(this)
+
+        if (SystemMediaControlResolver.isMediaOutputPanelSupported(context)){
+            bottomSheetMediaControl.setOnClickListener {
+                SystemMediaControlResolver.intentSystemMediaDialog(context)
+            }
+        } else {
+            bottomSheetMediaControl.visibility = GONE
+        }
+
+
 
         bottomSheetPlaylistButton.setOnClickListener {
             ViewCompat.performHapticFeedback(it, HapticFeedbackConstantsCompat.CONTEXT_CLICK)
