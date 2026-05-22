@@ -103,7 +103,8 @@
     <string name="settings_default_progress_bar">Default progress bar</string>
     <string name="settings_default_progress_bar_summary">Enable material styled progress bar</string>
     <string name="opensource_info">Open-sourced under GPL-3.0\nCopyright %s</string>
-    <string name="playlist_favourite">Favourite</string>
+    <!-- The name of the playlist used for showing every song where the heart was clicked -->
+    <string name="playlist_favourite">Favourites</string>
     <string name="settings_contributors_click">%s (click for more!)</string>
     <string name="now_playing">Now playing</string>
     <string name="settings_content_based_color_summary">Enable album based color generation</string>
@@ -439,6 +440,7 @@
     <string name="create_failed_playlist">Failed to create playlist: %s</string>
     <string name="rename_playlist">Rename playlist</string>
     <string name="edit_playlist_failed">Editing playlist failed: %s</string>
+    <string name="edit_favorites_failed">Editing favorites failed: %s</string>
     <string name="add_to_playlist">Add to playlist</string>
     <string name="playlist_editing_pref_desc">Allows to add songs to playlists (moving / removing not yet implemented)</string>
     <string name="no_app_found">No app found that can do this</string>
@@ -502,4 +504,8 @@
     <string name="actions_query_shuffle_specific">shuffle $item_name</string>
     <string name="please_allow_to_delete">Press allow to delete files</string>
     <string name="choose_sd">Choose %s</string>
+    <string name="favorite">Favorite</string>
+    <string name="favorite_failed_title">Failed to change favourite state of song</string>
+    <string name="favorite_failed_text">Please click here to apply changes, by granting permission to the favourite playlist file</string>
+    <string name="error_in_bg">Errors occuring in the background</string>
 </resources>
