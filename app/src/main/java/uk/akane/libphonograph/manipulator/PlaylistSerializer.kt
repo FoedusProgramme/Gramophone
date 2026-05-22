@@ -209,6 +209,16 @@ object PlaylistSerializer {
             title = song.mediaMetadata.title?.toString(),
             durationSeconds = song.mediaMetadata.durationMs?.div(1000L),
         )
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
+            return file == (other as Entry).file
+        }
+
+        override fun hashCode(): Int {
+            return file.hashCode()
+        }
     }
     class UnsupportedPlaylistFormatException(extension: String) : Exception(extension)
 }

@@ -19,6 +19,7 @@ import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.enableEdgeToEdgePaddingListener
 import org.akanework.gramophone.logic.ui.MyRecyclerView
 import org.akanework.gramophone.ui.components.EditSongAdapter
+import uk.akane.libphonograph.dynamicitem.Favorite
 import uk.akane.libphonograph.items.Playlist
 
 class PlaylistEditFragment : BaseFragment(false) {
@@ -49,7 +50,8 @@ class PlaylistEditFragment : BaseFragment(false) {
             val item = mainActivity.reader.playlistListFlow.map {
                 it.find { it.id == id && it.javaClass.name == clazz }
             }.first()
-            collapsingToolbarLayout.title = item?.title
+            collapsingToolbarLayout.title = if (item is Favorite)
+                context?.getString(R.string.playlist_favourite) else item?.title
                 ?: context?.getString(R.string.unknown_playlist)
             theItem.emit(item)
         }

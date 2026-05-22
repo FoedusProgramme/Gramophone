@@ -49,6 +49,28 @@
         app:layout_constraintVertical_bias="0.0"
         app:tooltipText="@string/playback_speed" />
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/timer"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:background="@drawable/rp_buttons"
+        android:contentDescription="@string/timer"
+        android:saveEnabled="false"
+        android:checkable="true"
+        app:toggleCheckedStateOnClick="false"
+        app:icon="@drawable/sl_check_timer"
+        app:iconGravity="textStart"
+        app:iconPadding="0dp"
+        app:iconSize="24dp"
+        app:iconTint="?attr/colorOnSurface"
+        app:layout_constraintBottom_toTopOf="@id/album_cover_frame"
+        app:layout_constraintEnd_toStartOf="@id/playback_speed"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@id/slide_down"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:tooltipText="@string/timer" />
+
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/album_cover_frame"
         android:layout_width="0dp"
@@ -407,27 +429,6 @@
             app:iconSize="24sp"
             app:iconTint="@color/sl_fav_button"
             app:tooltipText="@string/playlist_favourite" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/timer"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:background="@drawable/rp_buttons"
-            android:checkable="true"
-            android:contentDescription="@string/timer"
-            android:insetLeft="0dp"
-            android:insetTop="0dp"
-            android:insetRight="0dp"
-            android:insetBottom="0dp"
-            android:saveEnabled="false"
-            app:icon="@drawable/sl_check_timer"
-            app:iconGravity="textStart"
-            app:iconPadding="0dp"
-            app:iconSize="24sp"
-            app:iconTint="?attr/colorOnSurface"
-            app:toggleCheckedStateOnClick="false"
-            app:tooltipText="@string/timer" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/playlist"

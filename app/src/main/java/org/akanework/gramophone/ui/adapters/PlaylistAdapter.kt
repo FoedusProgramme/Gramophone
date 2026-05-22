@@ -92,7 +92,7 @@ class PlaylistAdapter(
     }
 
     override fun coverOf(item: Playlist): Uri? {
-        return if (item.id != null) super.coverOf(item) else
+        return if (item.title != null) super.coverOf(item) else
             Uri.Builder()
                 .scheme(ContentResolver.SCHEME_ANDROID_RESOURCE)
                 .authority(context.packageName)
@@ -115,10 +115,12 @@ class PlaylistAdapter(
 
     override fun onMenu(item: Playlist, popupMenu: PopupMenu) {
         popupMenu.inflate(R.menu.more_menu)
-        val canEdit = Flags.PLAYLIST_EDITING!! && item.id != null
+        val canRename = Flags.PLAYLIST_EDITING!! && item.title != null
+        val canDelete = Flags.PLAYLIST_EDITING!! && item.id != null
         popupMenu.menu.iterator().forEach {
             it.isVisible = it.itemId == R.id.play_next || it.itemId == R.id.add_to_queue
-                    || (canEdit && (it.itemId == R.id.rename || it.itemId == R.id.delete))
+                    || (canRename && it.itemId == R.id.rename)
+                    || (canDelete && it.itemId == R.id.delete)
         }
         popupMenu.setOnMenuItemClickListener { it1 ->
             when (it1.itemId) {
@@ -156,7 +158,9 @@ class PlaylistAdapter(
                                     .setMessage(
                                         context.getString(
                                             R.string.delete_really,
-                                            item.title
+                                            if (item is Favorite)
+                                                context.getString(R.string.playlist_favourite)
+                                            else item.title
                                         )
                                     )
                                     .setPositiveButton(R.string.yes) { _, _ ->
@@ -185,7 +189,7 @@ class PlaylistAdapter(
                     ) { name ->
                         val id = item.id!!
                         val uri = ContentUris.withAppendedId(
-                            @Suppress("deprecation") MediaStore.Audio.Playlists.getContentUri("external"),
+                            @Suppress("deprecation") MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI,
                             id
                         )
                         val path = item.path!!.resolveSibling(if (item.path.extension != "")
@@ -222,7 +226,7 @@ class PlaylistAdapter(
     override fun onRequest(resultCode: Int, data: Bundle) {
         if (resultCode == Activity.RESULT_OK) {
             val uri = ContentUris.withAppendedId(
-                @Suppress("deprecation") MediaStore.Audio.Playlists.getContentUri("external"),
+                @Suppress("deprecation") MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI,
                 data.getLong("Id")
             )
             val path = data.getString("Path")!!

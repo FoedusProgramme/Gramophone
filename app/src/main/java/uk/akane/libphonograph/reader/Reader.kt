@@ -94,7 +94,6 @@ internal object Reader {
                 add(MediaStore.Audio.Media.WRITER)
                 add(MediaStore.Audio.Media.DISC_NUMBER)
                 add(MediaStore.Audio.Media.AUTHOR)
-                add(MediaStore.Audio.Media.IS_FAVORITE)
             }
         }.toTypedArray()
 
@@ -240,8 +239,6 @@ internal object Reader {
                 it.getColumnIndexOrThrow(MediaStore.Audio.Media.WRITER) else null
             val authorColumn = if (hasImprovedMediaStore())
                 it.getColumnIndexOrThrow(MediaStore.Audio.Media.AUTHOR) else null
-            val favoriteColumn = if (hasImprovedMediaStore())
-                it.getColumnIndexOrThrow(MediaStore.Audio.Media.IS_FAVORITE) else null
             val durationColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)
             val addDateColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media.DATE_ADDED)
             val modifiedDateColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media.DATE_MODIFIED)
@@ -293,11 +290,6 @@ internal object Reader {
                 val writer = writerColumn?.let { col -> it.getStringOrNullIfThrow(col) }
                 val author = authorColumn?.let { col -> it.getStringOrNullIfThrow(col) }
                 val genre = genreColumn?.let { col -> it.getStringOrNullIfThrow(col) }
-                val favorite = favoriteColumn?.let { col -> it.getIntOrNullIfThrow(col) }.let {
-                    when (it) {
-                        1 -> true; 0 -> false; else -> null
-                    }
-                }
                 val addDate = it.getLongOrNullIfThrow(addDateColumn)
                 val modifiedDate = it.getLongOrNullIfThrow(modifiedDateColumn)
                 val dateTakenParsed = if (hasImprovedMediaStore()) {
@@ -375,7 +367,7 @@ internal object Reader {
                             .setRecordingMonth(dateTakenMonth)
                             .setRecordingYear(dateTakenYear)
                             .setReleaseYear(year)
-                            .setUserRating(if (favorite != null) HeartRating(favorite) else HeartRating())
+                            .setUserRating(HeartRating(false))
                             .setExtras(Bundle().apply {
                                 if (artistId != null) {
                                     putLong(EXTRA_ARTIST_ID, artistId)
@@ -560,7 +552,7 @@ internal object Reader {
         }
     }
 
-    fun readPlaylist(context: Context, uri: Uri, volumes: List<StorageVolumeCompat>?):
+    fun readPlaylist(context: Context, uri: Uri, volumes: List<StorageVolumeCompat>? = null):
             List<PlaylistSerializer.Entry> {
         val file: File
         val playlistModifiedTime: Long

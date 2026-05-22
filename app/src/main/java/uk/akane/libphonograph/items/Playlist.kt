@@ -1,6 +1,8 @@
 package uk.akane.libphonograph.items
 
 import androidx.media3.common.MediaItem
+import uk.akane.libphonograph.dynamicitem.Favorite
+import uk.akane.libphonograph.manipulator.ItemManipulator
 import uk.akane.libphonograph.manipulator.PlaylistSerializer
 import java.io.File
 
@@ -59,6 +61,10 @@ internal data class RawPlaylist(
     fun toPlaylist(pathMap: Map<String, MediaItem>?): Playlist? {
         // Unsupported format and MediaStore can't read it either (ex: smpl), don't display at all
         if (entries == null) return null
+        if (title == ItemManipulator.FAVORITES)
+            return Favorite(id, path, dateAdded, dateModified, entries.mapNotNull {
+                it?.resolveMediaItem(pathMap)
+            })
         return Playlist(id, title, path, dateAdded, dateModified, entries.mapNotNull {
             it?.resolveMediaItem(pathMap)
         })

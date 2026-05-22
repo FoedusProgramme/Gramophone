@@ -23,11 +23,13 @@ import org.akanework.gramophone.ui.MainActivity
 import org.nift4.mediastorecompat.MediaStoreCompat
 import uk.akane.libphonograph.getIntOrNullIfThrow
 import uk.akane.libphonograph.getLongOrNullIfThrow
+import uk.akane.libphonograph.manipulator.PlaylistSerializer.Entry
 import uk.akane.libphonograph.reader.Reader
 import java.io.File
 
 object ItemManipulator {
     private const val TAG = "ItemManipulator"
+    const val FAVORITES = "gramophone_favourite"
 
     suspend fun deleteSong(context: MainActivity, file: File, id: Long): (() -> Unit)? {
         val uri = ContentUris.withAppendedId(
@@ -41,14 +43,14 @@ object ItemManipulator {
             // It doesn't really make sense to have >1 subtitle file so we don't need to batch the queries.
             getIdForPath(context, it)
         }.filter { it != null }
-            .map { ContentUris.withAppendedId(MediaStore.Files.getContentUri("external"), it!!) }
+            .map { ContentUris.withAppendedId(MediaStoreCompat.FILES_EXTERNAL_CONTENT_URI, it!!) }
             .toList())
         return delete(context, uris)
     }
 
     suspend fun deletePlaylist(context: MainActivity, id: Long): (() -> Unit)? {
         val uri = ContentUris.withAppendedId(
-            @Suppress("deprecation") MediaStore.Audio.Playlists.getContentUri("external"), id
+            @Suppress("deprecation") MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, id
         )
         return delete(context, setOf(uri))
     }
@@ -120,13 +122,11 @@ object ItemManipulator {
     }
 
     fun createPlaylist(context: Context, name: String): Uri {
-        val parent = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
-        val out = File(parent, "$name.m3u")
+        val out = getDefaultPlaylistFile(name)
         if (out.exists())
             throw IllegalArgumentException("tried to create playlist $out that already exists")
         val uri = MediaStoreCompat.create(context, out.absolutePath)!!
         PlaylistSerializer.write(context.applicationContext, out, uri, listOf())
-        MediaStoreCompat.finishCreate(context, uri)
         return uri
     }
 
@@ -154,15 +154,20 @@ object ItemManipulator {
         }
     }
 
-    fun addToPlaylist(context: Context, uri: Uri, songs: List<PlaylistSerializer.Entry>) {
-        val readback = Reader.readPlaylist(context, uri, null).map {
-            val pathMap = runBlocking { context.gramophoneApplication.reader.pathMapFlow.first() }
-            it.resolveMediaItem(pathMap)?.let { song -> it.copyFromMediaItem(song) } ?: it
-        }
-        setPlaylistContent(context, uri, readback + songs)
+    fun getDefaultPlaylistFile(name: String): File {
+        val parent = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
+        return File(parent, "$name.m3u")
     }
 
-    fun setPlaylistContent(context: Context, uri: Uri, songs: List<PlaylistSerializer.Entry>) {
+    suspend fun readbackPlaylist(context: Context, uri: Uri): List<Entry> {
+        val pathMap = context.gramophoneApplication.reader.pathMapFlow.first()
+        return Reader.readPlaylist(context, uri).map {
+            it.resolveMediaItem(pathMap)?.let { song -> it.copyFromMediaItem(song) } ?: it
+        }
+    }
+
+    fun setPlaylistContent(context: Context, uri: Uri, songs: List<PlaylistSerializer.Entry>,
+                           needToFinishCreate: Boolean) {
         var out: File? = null
         var name: String? = null
         context.contentResolver.query(uri,
@@ -192,6 +197,10 @@ object ItemManipulator {
                 .resolveSibling("${out.nameWithoutExtension}.m3u").path)
             PlaylistSerializer.write(context.applicationContext, out, uri, songs)
         }
-        MediaStoreCompat.scanFile(context, uri, out)
+        if (needToFinishCreate) {
+            MediaStoreCompat.finishCreate(context, uri, out)
+        } else {
+            MediaStoreCompat.scanFile(context, uri, out)
+        }
     }
 }

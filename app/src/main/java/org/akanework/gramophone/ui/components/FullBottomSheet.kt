@@ -82,7 +82,6 @@ import org.akanework.gramophone.logic.getIntStrict
 import org.akanework.gramophone.logic.getLyrics
 import org.akanework.gramophone.logic.getTimer
 import org.akanework.gramophone.logic.playOrPause
-import org.akanework.gramophone.logic.requireMediaStoreId
 import org.akanework.gramophone.logic.setTextAnimation
 import org.akanework.gramophone.logic.setTimer
 import org.akanework.gramophone.logic.startAnimation
@@ -100,7 +99,7 @@ import org.akanework.gramophone.ui.fragments.DetailDialogFragment
 import org.akanework.gramophone.ui.fragments.GeneralSubFragment
 import uk.akane.libphonograph.items.albumId
 import uk.akane.libphonograph.items.artistId
-import uk.akane.libphonograph.manipulator.ItemManipulator
+import uk.akane.libphonograph.manipulator.PlaylistSerializer.Entry
 import kotlin.math.min
 
 @SuppressLint("NotifyDataSetChanged")
@@ -235,8 +234,6 @@ class FullBottomSheet
         bottomSheetTimerButton = findViewById(R.id.timer)
         bottomSheetPlaybackSpeedButton = findViewById(R.id.playback_speed)
         bottomSheetFavoriteButton = findViewById(R.id.favor)
-        if (!Flags.FAVORITE_SONGS)
-            bottomSheetFavoriteButton.visibility = GONE
         bottomSheetPlaylistButton = findViewById(R.id.playlist)
         bottomSheetLyricButton = findViewById(R.id.lyrics)
         bottomSheetFullLyricView = findViewById(R.id.lyric_frame)
@@ -1202,16 +1199,9 @@ class FullBottomSheet
 
     override fun onCheckedChanged(button: MaterialButton?, isChecked: Boolean) {
         instance?.currentMediaItem?.let { song ->
-            val uri = ContentUris.withAppendedId(
-                MediaStore.Audio.Media.getContentUri("external"), song.requireMediaStoreId()
-            )
-            CoroutineScope(Dispatchers.Default).launch {
-                val sender = ItemManipulator.setFavorite(activity, setOf(uri), isChecked)
-                /*if (sender != null)
-                    activity.intentSender.launch(
-                        IntentSenderRequest.Builder(sender).build()
-                    ) TODO(ASAP)*/
-            }
+            val entry = Entry.ofMediaItem(song)
+            if (entry != null)
+                activity.markIsFavoriteStatus(listOf(entry), isChecked)
         }
     }
 

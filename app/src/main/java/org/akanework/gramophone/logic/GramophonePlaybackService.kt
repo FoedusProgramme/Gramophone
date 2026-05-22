@@ -22,6 +22,7 @@ import android.app.PendingIntent
 import android.bluetooth.BluetoothCodecStatus
 import android.bluetooth.BluetoothProfile
 import android.content.BroadcastReceiver
+import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -37,6 +38,7 @@ import android.os.HandlerThread
 import android.os.Looper
 import android.os.Process
 import android.os.SystemClock
+import android.provider.MediaStore
 import androidx.concurrent.futures.CallbackToFutureAdapter
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
@@ -48,6 +50,7 @@ import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
 import androidx.media3.common.DeviceInfo
 import androidx.media3.common.Format
+import androidx.media3.common.HeartRating
 import androidx.media3.common.IllegalSeekPositionException
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
@@ -98,7 +101,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.ui.MeiZuLyricsMediaNotificationProvider
@@ -122,7 +127,12 @@ import org.akanework.gramophone.logic.utils.exoplayer.GramophoneMediaSourceFacto
 import org.akanework.gramophone.logic.utils.exoplayer.GramophoneRenderFactory
 import org.akanework.gramophone.ui.LyricWidgetProvider
 import org.akanework.gramophone.ui.MainActivity
+import org.nift4.mediastorecompat.MediaStoreCompat
+import uk.akane.libphonograph.dynamicitem.Favorite
 import uk.akane.libphonograph.items.albumId
+import uk.akane.libphonograph.manipulator.ItemManipulator
+import uk.akane.libphonograph.manipulator.PlaylistSerializer.Entry
+import kotlin.collections.plus
 import kotlin.random.Random
 
 
@@ -138,9 +148,11 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         private const val TAG = "GramoPlaybackService"
         const val NOTIFY_CHANNEL_ID = "serviceFgsError"
         const val NOTIFY_ID = 1
+        private const val FAVE_ID = 2
         private const val PENDING_INTENT_SESSION_ID = 0
         const val PENDING_INTENT_NOTIFY_ID = 1
         const val PENDING_INTENT_WIDGET_ID = 2
+        const val PENDING_INTENT_FAVE_ID = 3
         const val SERVICE_SET_TIMER = "set_timer"
         const val SERVICE_QUERY_TIMER = "query_timer"
         const val SERVICE_GET_AUDIO_FORMAT = "get_audio_format"
@@ -267,25 +279,18 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         )
         setForegroundServiceTimeoutMs(120000)
         setShowNotificationForEmptyPlayer(SHOW_NOTIFICATION_FOR_EMPTY_PLAYER_AFTER_STOP_OR_ERROR)
-        if (mayThrowForegroundServiceStartNotAllowed()
-            || mayThrowForegroundServiceStartNotAllowedMiui()
-        ) {
-            nm.createNotificationChannel(
-                NotificationChannelCompat.Builder(
-                    NOTIFY_CHANNEL_ID, NotificationManagerCompat.IMPORTANCE_HIGH
-                ).apply {
-                    setName(getString(R.string.fgs_failed_channel))
-                    setVibrationEnabled(true)
-                    setVibrationPattern(longArrayOf(0L, 200L))
-                    setLightsEnabled(false)
-                    setShowBadge(false)
-                    setSound(null, null)
-                }.build()
-            )
-        } else if (nm.getNotificationChannel(NOTIFY_CHANNEL_ID) != null) {
-            // for people who upgraded from S/S_V2 to newer version
-            nm.deleteNotificationChannel(NOTIFY_CHANNEL_ID)
-        }
+        nm.createNotificationChannel(
+            NotificationChannelCompat.Builder(
+                NOTIFY_CHANNEL_ID, NotificationManagerCompat.IMPORTANCE_HIGH
+            ).apply {
+                setName(getString(R.string.error_in_bg))
+                setVibrationEnabled(true)
+                setVibrationPattern(longArrayOf(0L, 200L))
+                setLightsEnabled(false)
+                setShowBadge(false)
+                setSound(null, null)
+            }.build()
+        )
 
         customCommands =
             listOf(
@@ -405,6 +410,9 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
 
                     private val limit by lazy { MediaSession.getBitmapDimensionLimit(this@GramophonePlaybackService) }
 
+                    // the suppression is correct, we want identity of the byte array as it will
+                    // stay the same over one song's lifetime
+                    @Suppress("KotlinArrayHashCode")
                     override fun decodeBitmap(data: ByteArray): ListenableFuture<Bitmap> {
                         return CallbackToFutureAdapter.getFuture { completer ->
                             imageLoader.enqueue(
@@ -534,13 +542,14 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                     if (endedWorkaroundPlayer?.nextShuffleOrder != null)
                         throw IllegalStateException("shuffleFactory was found orphaned")
                     endedWorkaroundPlayer?.nextShuffleOrder = factory.toFactory()
+                    val list = runBlocking { mapMediaItemsForFavorites(items.mediaItems) }
                     try {
                         mediaSession?.player?.setMediaItems(
-                            items.mediaItems, items.startIndex, items.startPositionMs
+                            list, items.startIndex, items.startPositionMs
                         )
                     } catch (e: IllegalSeekPositionException) {
                         try {
-                            mediaSession?.player?.setMediaItems(items.mediaItems)
+                            mediaSession?.player?.setMediaItems(list)
                             Log.w(TAG, "failed to restore index", e)
                         } catch (_: IllegalSeekPositionException) {
                             Log.e(TAG, "failed to restore", e)
@@ -560,18 +569,28 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                 lastPlayedManager.allowSavingState = true
             }
         }
-        if (Flags.FAVORITE_SONGS) {
-            scope.launch {
-                gramophoneApplication.reader.songListFlow.collect { list ->
+        scope.launch {
+            gramophoneApplication.reader.playlistListFlow.map { it.find { p -> p is Favorite } }
+                .collect { list ->
+                    val ids = list?.songList?.map { it.mediaId } ?: emptyList()
                     withContext(Dispatchers.Main + NonCancellable) {
-                        val cmi = controller?.currentMediaItem?.mediaId ?: return@withContext
-                        list.find { it.mediaId == cmi }?.let {
-                            // TODO need to update non current item too
-                            controller!!.replaceMediaItem(controller!!.currentMediaItemIndex, it)
+                        controller?.let { controller ->
+                            for (i in 0..<controller.mediaItemCount) {
+                                val item = controller.getMediaItemAt(i)
+                                val isHeart = (item.mediaMetadata.userRating as? HeartRating)
+                                    ?.isHeart == true
+                                val shouldBeHeart = ids.contains(item.mediaId)
+                                if (isHeart != shouldBeHeart ||
+                                    item.mediaMetadata.userRating !is HeartRating) {
+                                    controller.replaceMediaItem(i, item
+                                        .buildUpon().setMediaMetadata(item.mediaMetadata.buildUpon()
+                                            .setUserRating(HeartRating(shouldBeHeart))
+                                            .build()).build())
+                                }
+                            }
                         }
                     }
                 }
-            }
         }
         Log.i(TAG, "-onCreate()")
     }
@@ -598,8 +617,89 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         mediaId: String,
         rating: Rating
     ): ListenableFuture<SessionResult> {
-        // TODO: implement this...
-        return Futures.immediateFuture(SessionResult(SessionError.ERROR_NOT_SUPPORTED))
+        if (rating !is HeartRating) {
+            return Futures.immediateFuture(SessionResult(
+                SessionResult.RESULT_ERROR_BAD_VALUE))
+        }
+        val completion = SettableFuture.create<SessionResult>()
+        lifecycleScope.launch(Dispatchers.Default) {
+            val item = gramophoneApplication.reader.songListFlow.map {
+                it.find { s -> s.mediaId == mediaId } }.first()
+            if (item == null) {
+                completion.set(SessionResult(SessionResult.RESULT_ERROR_BAD_VALUE))
+                return@launch
+            }
+            val song = Entry.ofMediaItem(item)
+            if (song == null) {
+                completion.set(SessionResult(SessionResult.RESULT_ERROR_BAD_VALUE))
+                return@launch
+            }
+            val uriIn = gramophoneApplication.reader.playlistListFlow.map { it.find { p ->
+                p is Favorite } }.first()?.id?.let {
+                ContentUris.withAppendedId(@Suppress("deprecation")
+                MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, it)
+            }
+            val token = if (uriIn != null) {
+                MediaStoreCompat.needRequestBytesWrite(this@GramophonePlaybackService,
+                    uriIn)
+            } else {
+                MediaStoreCompat.needRequestCreate(this@GramophonePlaybackService,
+                    ItemManipulator.getDefaultPlaylistFile(
+                        ItemManipulator.FAVORITES).path)
+            }
+            var error: Exception? = null
+            if (token == null) {
+                try {
+                    val uri = uriIn ?: ItemManipulator.createPlaylist(
+                        this@GramophonePlaybackService, ItemManipulator.FAVORITES)
+                    val readback = if (uriIn != null) ItemManipulator.readbackPlaylist(
+                        this@GramophonePlaybackService, uri) else emptyList()
+                    val newSongs = if (rating.isHeart) {
+                        readback + song
+                    } else {
+                        readback.filter { song != it }
+                    }
+                    ItemManipulator.setPlaylistContent(this@GramophonePlaybackService, uri,
+                        newSongs, uriIn == null)
+                } catch (e: Exception) {
+                    Log.e(TAG, "failed to set $rating on $mediaId", e)
+                    error = e
+                }
+            }
+            if (token == null && error == null) {
+                completion.set(SessionResult(SessionResult.RESULT_SUCCESS))
+            } else {
+                if (!supportsNotificationPermission() || hasNotificationPermission()) {
+                    @SuppressLint("MissingPermission") // false positive
+                    nm.notify(FAVE_ID, NotificationCompat.Builder(
+                        this@GramophonePlaybackService, NOTIFY_CHANNEL_ID).apply {
+                        setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                        setAutoCancel(true)
+                        setCategory(NotificationCompat.CATEGORY_ERROR)
+                        setSmallIcon(R.drawable.ic_error)
+                        setContentTitle(this@GramophonePlaybackService.getString(R.string.favorite_failed_title))
+                        setContentText(this@GramophonePlaybackService.getString(R.string.favorite_failed_text))
+                        setContentIntent(
+                            PendingIntent.getActivity(
+                                this@GramophonePlaybackService,
+                                PENDING_INTENT_FAVE_ID,
+                                Intent(this@GramophonePlaybackService, MainActivity::class.java)
+                                    .putExtra(MainActivity.FAVORITE_ENTRY, song)
+                                    .putExtra(MainActivity.FAVORITE_STATE, rating.isHeart),
+                                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
+                            )
+                        )
+                        setVibrate(longArrayOf(0L, 200L))
+                        setLights(0, 0, 0)
+                        setBadgeIconType(NotificationCompat.BADGE_ICON_NONE)
+                        setSound(null)
+                    }.build())
+                }
+                completion.set(SessionResult(SessionError.ERROR_IO))
+                return@launch
+            }
+        }
+        return completion
     }
 
     override fun onSetRating(
@@ -892,8 +992,10 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                     if (endedWorkaroundPlayer?.nextShuffleOrder != null)
                         throw IllegalStateException("shuffleFactory was found orphaned")
                     if (isForPlayback && items.mediaItems.isNotEmpty()) {
+                        val list = runBlocking { mapMediaItemsForFavorites(items.mediaItems) }
                         endedWorkaroundPlayer?.nextShuffleOrder = factory.toFactory()
-                        settable.set(items)
+                        settable.set(MediaItemsWithStartPosition(list, items.startIndex,
+                            items.startPositionMs))
                         if (endedWorkaroundPlayer?.nextShuffleOrder != null)
                             throw IllegalStateException("shuffleFactory was not consumed during resumption")
                     } else if (items.mediaItems.isNotEmpty()) {
@@ -1201,8 +1303,6 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         controller: MediaSession.ControllerInfo,
         mediaItems: List<MediaItem>
     ): ListenableFuture<List<MediaItem>> {
-        if (mediaItems.find { it.localConfiguration == null } == null) // fast path
-            return Futures.immediateFuture(mediaItems)
         val completion = SettableFuture.create<List<MediaItem>>()
         lifecycleScope.launch(Dispatchers.Default) {
             try {
@@ -1217,12 +1317,27 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                     else
                         throw UnsupportedOperationException("can't do anything with $it")
                 }
-                completion.set(result)
+                completion.set(mapMediaItemsForFavorites(result))
             } catch (e: UnsupportedOperationException) {
                 completion.setException(e)
             }
         }
         return completion
+    }
+
+    private suspend fun mapMediaItemsForFavorites(mediaItems: List<MediaItem>): List<MediaItem> {
+        val favorites = gramophoneApplication.reader.playlistListFlow.map { it.find { p ->
+            p is Favorite } }.first()?.songList?.map { it.mediaId } ?: emptyList()
+        return mediaItems.map { item ->
+            val isHeart = (item.mediaMetadata.userRating as? HeartRating)
+                ?.isHeart == true
+            val shouldBeHeart = favorites.contains(item.mediaId)
+            if (isHeart != shouldBeHeart ||
+                item.mediaMetadata.userRating !is HeartRating) {
+                item.buildUpon().setMediaMetadata(item.mediaMetadata.buildUpon().setUserRating(
+                    HeartRating(shouldBeHeart)).build()).build()
+            } else item
+        }
     }
 
     private suspend fun searchForMediaItem(item: MediaItem): List<MediaItem> {
