@@ -93,7 +93,7 @@
     <string name="settings_default_progress_bar_summary">Fortschrittsbalken im MD3-Stil aktivieren</string>
     <string name="dialog_mime">MIME-Typ</string>
     <string name="now_playing">Aktuelle Wiedergabe</string>
-    <string name="playlist_favourite">Favorit</string>
+    <string name="playlist_favourite">Favoriten</string>
     <string name="no_lyric_found">Kein Liedtext gefunden</string>
     <string name="settings_player_ui_summary">Vollbild-Benutzeroberfläche, Liedtexte</string>
     <string name="settings_player_ui">Abspieloberfläche</string>
