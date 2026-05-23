@@ -89,7 +89,7 @@
     <string name="settings_content_based_color_summary">Включает генерацию цветов на основе обложки альбома</string>
     <string name="opensource_info">С открытым исходным кодом под лицензией GPL-3.0
 \nАвторские права %s</string>
-    <string name="playlist_favourite">Избранное</string>
+    <string name="playlist_favourite">Избранные</string>
     <string name="now_playing">Сейчас играет</string>
     <string name="settings_default_progress_bar_summary">Включает полосу прогресса в стиле Material</string>
     <string name="settings_package_type">Тип пакета</string>
@@ -496,4 +496,9 @@
     <string name="actions_query_shuffle_specific">Перемешать $item_name</string>
     <string name="please_allow_to_delete">Нажмите «Разрешить», чтобы удалить файлы</string>
     <string name="choose_sd">Выберите %s</string>
+    <string name="edit_favorites_failed">Ошибка при редактировании избранного: %s</string>
+    <string name="favorite">Избранное</string>
+    <string name="favorite_failed_title">Не удалось изменить статус «Избранного» для трека</string>
+    <string name="favorite_failed_text">Нажмите здесь, чтобы применить изменения, предоставив доступ к файлу плейлиста «Избранное»</string>
+    <string name="error_in_bg">Ошибки в фоновом режиме</string>
 </resources>
