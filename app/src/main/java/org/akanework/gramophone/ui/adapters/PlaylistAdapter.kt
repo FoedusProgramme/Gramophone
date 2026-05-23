@@ -275,7 +275,9 @@ class PlaylistAdapter(
                 playlistNameDialog(context, R.string.create_playlist, "") { name ->
                     ioScope.launch {
                         try {
-                            ItemManipulator.createPlaylist(context, name)
+                            val uri = ItemManipulator.createPlaylist(context, name)
+                            ItemManipulator.setPlaylistContent(context, uri, emptyList(),
+                                true)
                         } catch (e: Exception) {
                             Log.e("PlaylistAdapter", Log.getThrowableString(e)!!)
                             withContext(Dispatchers.Main) {
