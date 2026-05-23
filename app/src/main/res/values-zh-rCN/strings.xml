@@ -141,7 +141,7 @@
     <string name="settings_lyrics_multiline_summary">将歌词中时间点之间的所有行都视作同一条歌词</string>
     <string name="timer">睡眠定时器</string>
     <string name="current_playlist">当前播放列表</string>
-    <string name="fgs_failed_text">单击此处以打开应用并继续播放</string>
+    <string name="fgs_failed_text">点击此处以打开应用并继续播放</string>
     <string name="fgs_failed_title">无法恢复音乐播放</string>
     <string name="fgs_failed_channel">播放无法恢复</string>
     <string name="album_covers_enhance_desc">展示高品质歌曲封面，并允许专辑和歌曲封面有所不同（需要照片访问权限）</string>
@@ -478,4 +478,9 @@
     <string name="actions_query_shuffle_specific">随机播放 $item_name</string>
     <string name="please_allow_to_delete">按允许删除文件</string>
     <string name="choose_sd">选择 %s</string>
+    <string name="edit_favorites_failed">编辑收藏失败：%s</string>
+    <string name="favorite">收藏</string>
+    <string name="favorite_failed_title">无法更改歌曲的收藏状态</string>
+    <string name="favorite_failed_text">请点击此处应用更改，授予对收藏播放列表文件的权限</string>
+    <string name="error_in_bg">后台发生错误</string>
 </resources>

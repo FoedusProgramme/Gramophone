@@ -41,7 +41,7 @@
     <string name="home_menu_equalizer">Equalitzador</string>
     <string name="compact_list">Llista (compacta)</string>
     <string name="check_for_updates">Consulteu les actualitzacions al nostre canal!</string>
-    <string name="playlist_favourite">Preferida</string>
+    <string name="playlist_favourite">Preferides</string>
     <string name="now_playing">Ara s\'està reproduint</string>
     <string name="home_menu_search">Cerca</string>
     <string name="home_menu_refresh">Actualitza</string>
@@ -488,4 +488,9 @@
     <string name="actions_query_shuffle_specific">barreja $item_name</string>
     <string name="please_allow_to_delete">Premeu «Permet» per a suprimir fitxers</string>
     <string name="choose_sd">Tria %s</string>
+    <string name="edit_favorites_failed">Ha fallat l\'edició de les preferides: %s</string>
+    <string name="favorite">Preferida</string>
+    <string name="favorite_failed_title">Ha fallat en canviar l\'estat de preferida de la cançó</string>
+    <string name="favorite_failed_text">Feu clic aquí per aplicar els canvis, concedint permís al fitxer de llista de reproducció de preferides</string>
+    <string name="error_in_bg">S\'han produït errors en el segon pla</string>
 </resources>
