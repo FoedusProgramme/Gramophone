@@ -635,6 +635,16 @@ fun WindowInsetsCompat.clone(): WindowInsetsCompat =
         it.unconsumeIfNeeded()
     })
 
+fun Context.supportsWideScreen() : Boolean {
+    val config = resources.configuration
+    return config.screenWidthDp >= 780
+}
+
+fun Context.isTablet() : Boolean {
+    val config = resources.configuration
+    return config.smallestScreenWidthDp >= 780
+}
+
 val Context.gramophoneApplication
     get() = this.applicationContext as GramophoneApplication
 

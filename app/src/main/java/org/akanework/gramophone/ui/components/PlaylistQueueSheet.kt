@@ -6,36 +6,18 @@ import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
-import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.graphics.Insets
@@ -59,15 +41,17 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.akanework.gramophone.R
+import org.akanework.gramophone.logic.dpToPx
 import org.akanework.gramophone.logic.getBooleanStrict
 import org.akanework.gramophone.logic.getQueueForUi
+import org.akanework.gramophone.logic.isTablet
 import org.akanework.gramophone.logic.replaceAllSupport
 import org.akanework.gramophone.logic.ui.MyRecyclerView
 import org.akanework.gramophone.logic.utils.Flags
 import org.akanework.gramophone.logic.utils.convertDurationToTimeStamp
 import org.akanework.gramophone.ui.GramophoneTheme
 import org.akanework.gramophone.ui.MainActivity
-import org.akanework.gramophone.ui.fragments.compose.MqContent
+import org.akanework.gramophone.ui.fragments.compose.QueueRoot
 import org.akanework.gramophone.ui.fragments.compose.rememberMqState
 import java.util.LinkedList
 
@@ -92,6 +76,10 @@ class PlaylistQueueSheet(
 
         setContentView(R.layout.playlist_bottom_sheet)
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        if (mqEnabled) {
+            behavior.maxWidth = 900.dpToPx(context)
+        }
+
         val recyclerView = MyRecyclerView(context)
         ViewCompat.setOnApplyWindowInsetsListener(recyclerView) { v, ic ->
             val i = ic.getInsets(
@@ -164,7 +152,6 @@ class PlaylistQueueSheet(
 
             setContent {
                 val coroutineScope = rememberCoroutineScope()
-                val haptic = LocalHapticFeedback.current
 
                 // TODO: very inelegant.
                 val pureDarkFlow by lazy {
@@ -220,86 +207,15 @@ class PlaylistQueueSheet(
                         }
                     }
 
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                    ) {
-                        Box {
-                            HorizontalPager(
-                                state = pagerState,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(bottom = 20.dp),
-                                beyondViewportPageCount = 1,
-                                userScrollEnabled = !mqState.expanded
-                            ) { page ->
-                                when (page) {
-                                    0 -> {
-                                        MqContent(
-                                            mqState = mqState,
-                                            mqEnabled = mqEnabled,
-                                            onDismiss = { dismiss() }
-                                        )
-                                    }
-
-                                    1 -> {
-                                        AndroidView(
-                                            modifier = Modifier.fillMaxWidth(),
-                                            factory = {
-                                                queueActionsView
-                                            },
-                                        )
-                                    }
-                                }
-                            }
-
-                            Row(
-                                horizontalArrangement = Arrangement.Center,
-                                modifier = Modifier
-                                    .wrapContentHeight()
-                                    .fillMaxWidth()
-                                    .padding(bottom = 8.dp)
-                                    .align(Alignment.BottomCenter)
-                                    .alpha(if (!mqState.expanded) 1f else 0.3f)
-                                    .animateContentSize()
-                            ) {
-                                repeat(pagerState.pageCount) { iteration ->
-                                    val color = if (pagerState.currentPage == iteration) {
-                                        MaterialTheme.colorScheme.onSurface
-                                    } else {
-                                        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
-                                    }
-                                    Box(
-                                        modifier = Modifier
-                                            .padding(horizontal = 4.dp)
-                                            .clip(CircleShape)
-                                            .background(color)
-                                            .size(8.dp)
-                                            .clickable(
-                                                enabled = !mqState.expanded,
-                                                onClick = {
-                                                    coroutineScope.launch {
-                                                        haptic.performHapticFeedback(
-                                                            HapticFeedbackType.ContextClick
-                                                        )
-                                                        pagerState.animateScrollToPage(iteration)
-                                                    }
-                                                }
-                                            )
-                                    )
-                                }
-                            }
-                        }
-
-                        HorizontalDivider(thickness = 2.dp)
-
-                        AndroidView(
-                            modifier = Modifier.fillMaxSize(),
-                            factory = {
-                                recyclerView
-                            },
-                        )
-                    }
+                    QueueRoot(
+                        mqState = mqState,
+                        pagerState = pagerState,
+                        coroutineScope = coroutineScope,
+                        queueActionsView = queueActionsView,
+                        recyclerView = recyclerView,
+                        mqEnabled = mqEnabled,
+                        onDismiss = { dismiss() },
+                    )
                 }
             }
         }

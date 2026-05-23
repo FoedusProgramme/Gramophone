@@ -1,6 +1,8 @@
 package org.akanework.gramophone.ui.fragments.compose
 
+import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
@@ -10,25 +12,34 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.List
 import androidx.compose.material.icons.rounded.DragHandle
 import androidx.compose.material.icons.rounded.ExpandLess
 import androidx.compose.material.icons.rounded.ExpandMore
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
@@ -43,18 +54,25 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.media3.common.Player
 import androidx.media3.common.Player.REPEAT_MODE_ALL
 import androidx.media3.common.Player.REPEAT_MODE_OFF
@@ -71,6 +89,8 @@ import org.akanework.gramophone.logic.getInactiveQueues
 import org.akanework.gramophone.logic.getQueue
 import org.akanework.gramophone.logic.loadQueue
 import org.akanework.gramophone.logic.playOrPause
+import org.akanework.gramophone.logic.supportsWideScreen
+import org.akanework.gramophone.logic.ui.MyRecyclerView
 import org.akanework.gramophone.ui.components.PlaylistQueueSheet
 
 @Composable
@@ -153,266 +173,456 @@ fun MqContent(
     mqState: MqState,
     modifier: Modifier = Modifier,
     mqEnabled: Boolean,
+    landscape: Boolean,
     onDismiss: (() -> Unit)? = null,
 ) {
-    val haptic = LocalHapticFeedback.current
-
-    val isPlaying by mqState.isPlaying.collectAsState()
-    val repeatMode by mqState.repeatMode.collectAsState()
-    val shuffleModeEnabled by mqState.shuffleModeEnabled.collectAsState()
-
-    val mqExpand = mqState.expanded
     val animatedMaxHeight by animateDpAsState(
-        targetValue = if (mqExpand) 300.dp else 0.dp,
+        targetValue = if (mqState.expanded) 300.dp else 0.dp,
         animationSpec = spring(
             stiffness = Spring.StiffnessMediumLow,
         ),
         label = "queueListHeight"
     )
 
-    // clean up later
-    val MediumCornerRadius = 12.dp
-    val landscape = false
-    // clean up later
-
     Column(
         modifier = modifier
             .fillMaxWidth(),
     ) {
-
-        // queue info
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(6.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .padding(16.dp, 4.dp)
-                .clickable(onClick = {
-                    onDismiss?.invoke()
-                })
-        ) {
-            // queue title and show multiqueue button
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .border(
-                        1.dp,
-                        MaterialTheme.colorScheme.secondary,
-                        RoundedCornerShape(MediumCornerRadius)
-                    )
-                    .padding(2.dp)
-                    .weight(1f)
-                    .clickable(enabled = mqEnabled && !landscape) {
-                        mqState.toggleExpand()
-                        haptic.performHapticFeedback(HapticFeedbackType.ContextClick)
-                    }
-            ) {
-                Text(
-                    text = mqState.getQueueTitle() ?: "",
-                    style = MaterialTheme.typography.titleMedium,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(horizontal = 8.dp)
-                )
-                IconButton(
-                    enabled = mqEnabled && !landscape,
-                    onClick = {
-                        mqState.toggleExpand()
-                        haptic.performHapticFeedback(HapticFeedbackType.ContextClick)
-                    },
-                    modifier = Modifier.padding(vertical = 6.dp)
-                ) {
-                    Icon(
-                        imageVector = if (mqExpand) Icons.Rounded.ExpandLess else Icons.Rounded.ExpandMore,
-                        contentDescription = null,
-                    )
-                }
-            }
-
-            Column(
-                verticalArrangement = Arrangement.spacedBy(4.dp),
-                horizontalAlignment = Alignment.End,
-                modifier = Modifier.padding(horizontal = 8.dp)
-            ) {
-                Text(
-                    text = mqState.getQueuePositionStr(),
-                    style = MaterialTheme.typography.bodyMedium
-                )
-                Text(
-                    text = makeTimeString(mqState.getQueueLength()),
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
-        }
+        QueueInfo(
+            mqState = mqState,
+            mqEnabled = mqEnabled,
+            landscape = landscape,
+            onDismiss = onDismiss,
+        )
 
         val lazyQueuesListState = rememberLazyListState()
         val scrollConnection = rememberNestedScrollInteropConnection()
-        LazyColumn(
-            state = lazyQueuesListState,
+        MqList(
+            mqState = mqState,
+            lazyQueuesListState = lazyQueuesListState,
             modifier = Modifier
+                .heightIn(Dp.Unspecified, if (!landscape) animatedMaxHeight else Dp.Unspecified)
                 .nestedScroll(scrollConnection)
-                .fillMaxWidth()
-                .heightIn(0.dp, animatedMaxHeight),
-        ) {
-            if (mqState.getQueueListSize() == 0) {
-                item {
-                    EmptyPlaceholder(
-                        icon = Icons.AutoMirrored.Rounded.List,
-                        text = stringResource(R.string.oh_no),
-                        modifier = Modifier.animateItem()
-                    )
-                }
-            }
-            itemsIndexed(
-                items = mqState.inactiveQueues,
-                key = { _, item -> item.id },
-            ) { index, mq ->
-                MqListItem(
-                    mqState = mqState,
-                    index = index,
-                    mq = mq,
-                    isActiveQueue = false,
-                    isInactiveActiveQueue = mq == mqState.detachedQueue,
-                    onClick = {
-                        mqState.detach(mq)
-                    },
+        )
+
+        ActionBar(
+            mqState = mqState,
+        )
+    }
+}
+
+@Composable
+fun QueueInfo(
+    mqState: MqState,
+    mqEnabled: Boolean,
+    landscape: Boolean,
+    modifier: Modifier = Modifier,
+    onDismiss: (() -> Unit)? = null,
+) {
+    val haptic = LocalHapticFeedback.current
+
+    // clean up later
+    val MediumCornerRadius = 12.dp
+    // clean up later
+
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(6.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+            .padding(16.dp, 4.dp)
+            .clickable(onClick = {
+                onDismiss?.invoke()
+            })
+    ) {
+        // queue title and show multiqueue button
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .border(
+                    1.dp,
+                    MaterialTheme.colorScheme.secondary,
+                    RoundedCornerShape(MediumCornerRadius)
                 )
-            }
-            mqState.activeQueue?.let {
-                item {
-                    MqListItem(
-                        mqState = mqState,
-                        index = mqState.getQueueListSize() - 1,
-                        mq = it,
-                        isActiveQueue = true,
-                        isInactiveActiveQueue = false,
-                        onClick = {
-                            mqState.resetHead()
-                        },
-                    )
+                .padding(2.dp)
+                .weight(1f)
+                .clickable(enabled = mqEnabled && !landscape) {
+                    mqState.toggleExpand()
+                    haptic.performHapticFeedback(HapticFeedbackType.ContextClick)
                 }
+        ) {
+            Text(
+                text = mqState.getQueueTitle() ?: "",
+                style = MaterialTheme.typography.titleMedium,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = 8.dp)
+            )
+            IconButton(
+                enabled = mqEnabled && !landscape,
+                onClick = {
+                    mqState.toggleExpand()
+                    haptic.performHapticFeedback(HapticFeedbackType.ContextClick)
+                },
+                modifier = Modifier.padding(vertical = 6.dp)
+            ) {
+                Icon(
+                    imageVector = if (mqState.expanded) Icons.Rounded.ExpandLess else Icons.Rounded.ExpandMore,
+                    contentDescription = null,
+                )
             }
         }
 
-        // action bar
-        FlowRow(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalArrangement = Arrangement.Center,
-            itemVerticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
+        Column(
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+            horizontalAlignment = Alignment.End,
+            modifier = Modifier.padding(horizontal = 8.dp)
         ) {
-            // left options
-            Row(
-                horizontalArrangement = Arrangement.End,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-            ) {
-                IconButton(
-                    onClick = {
-                        mqState.toggleRepeatMode()
-                    },
-                    enabled = !mqState.isDetached(),
-                ) {
-                    Icon(
-                        painter = painterResource(
-                            when (repeatMode) {
-                                REPEAT_MODE_OFF, REPEAT_MODE_ALL -> R.drawable.ic_repeat
-                                else -> R.drawable.ic_repeat_one
-                            }
-                        ),
-                        contentDescription = null,
-                        tint = LocalContentColor.current.copy(if (repeatMode == REPEAT_MODE_OFF) 0.5f else 1f)
-                    )
-                }
-                IconButton(
-                    onClick = {
-                        mqState.toggleShuffleMode()
-                    },
-                    enabled = !mqState.isDetached(),
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_shuffle),
-                        contentDescription = null,
-                        tint = LocalContentColor.current.copy(if (shuffleModeEnabled) 1f else 0.5f)
-                    )
-                }
-            }
+            Text(
+                text = mqState.getQueuePositionStr(),
+                style = MaterialTheme.typography.bodyMedium
+            )
+            Text(
+                text = makeTimeString(mqState.getQueueLength()),
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
+    }
+}
 
-            // center options
-            Row(
-                horizontalArrangement = Arrangement.End,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-            ) {
-                IconButton(
-                    onClick = {
-                        mqState.seekPrev()
-                    },
-                    enabled = !mqState.isDetached(),
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_skip_previous),
-                        contentDescription = null,
-                    )
-                }
-                IconButton(
-                    onClick = {
-                        mqState.togglePlayPause()
-                    },
-                    enabled = !mqState.isDetached(),
-                ) {
-                    Icon(
-                        painter = painterResource(if (isPlaying) R.drawable.ic_pause_filled else R.drawable.ic_play_arrow),
-                        contentDescription = null,
-                    )
-                }
-                IconButton(
-                    onClick = {
-                        mqState.seekNext()
-                    },
-                    enabled = !mqState.isDetached(),
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_skip_next),
-                        contentDescription = null,
-                    )
-                }
+@Composable
+fun MqList(
+    mqState: MqState,
+    lazyQueuesListState: LazyListState,
+    modifier: Modifier = Modifier
+) {
+    LazyColumn(
+        state = lazyQueuesListState,
+        modifier = modifier
+            .fillMaxWidth()
+    ) {
+        if (mqState.getQueueListSize() == 0) {
+            item {
+                EmptyPlaceholder(
+                    icon = Icons.AutoMirrored.Rounded.List,
+                    text = stringResource(R.string.oh_no),
+                    modifier = Modifier.animateItem()
+                )
             }
-
-            // right options
-            Row(
-                horizontalArrangement = Arrangement.End,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-            ) {
-                IconButton(
+        }
+        itemsIndexed(
+            items = mqState.inactiveQueues,
+            key = { _, item -> item.id },
+        ) { index, mq ->
+            MqListItem(
+                mqState = mqState,
+                index = index,
+                mq = mq,
+                isActiveQueue = false,
+                isInactiveActiveQueue = mq == mqState.detachedQueue,
+                onClick = {
+                    mqState.detach(mq)
+                },
+            )
+        }
+        mqState.activeQueue?.let {
+            item {
+                MqListItem(
+                    mqState = mqState,
+                    index = mqState.getQueueListSize() - 1,
+                    mq = it,
+                    isActiveQueue = true,
+                    isInactiveActiveQueue = false,
                     onClick = {
+                        mqState.resetHead()
                     },
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_more_vert_alt),
-                        contentDescription = null,
-                    )
-                }
-                AnimatedVisibility(mqState.isDetached()) {
-                    IconButton(
-                        onClick = {
-                            mqState.loadDetached()
-                        },
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_play_arrow),
-                            contentDescription = null,
-                        )
-                    }
-                }
+                )
             }
         }
     }
 }
+
+@Composable
+fun ActionBar(
+    mqState: MqState,
+    modifier: Modifier = Modifier
+) {
+    val isPlaying by mqState.isPlaying.collectAsState()
+    val repeatMode by mqState.repeatMode.collectAsState()
+    val shuffleModeEnabled by mqState.shuffleModeEnabled.collectAsState()
+
+    FlowRow(
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalArrangement = Arrangement.Center,
+        itemVerticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+    ) {
+        // left options
+        Row(
+            horizontalArrangement = Arrangement.End,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+        ) {
+            IconButton(
+                onClick = {
+                    mqState.toggleRepeatMode()
+                },
+                enabled = !mqState.isDetached(),
+            ) {
+                Icon(
+                    painter = painterResource(
+                        when (repeatMode) {
+                            REPEAT_MODE_OFF, REPEAT_MODE_ALL -> R.drawable.ic_repeat
+                            else -> R.drawable.ic_repeat_one
+                        }
+                    ),
+                    contentDescription = null,
+                    tint = LocalContentColor.current.copy(if (repeatMode == REPEAT_MODE_OFF) 0.5f else 1f)
+                )
+            }
+            IconButton(
+                onClick = {
+                    mqState.toggleShuffleMode()
+                },
+                enabled = !mqState.isDetached(),
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_shuffle),
+                    contentDescription = null,
+                    tint = LocalContentColor.current.copy(if (shuffleModeEnabled) 1f else 0.5f)
+                )
+            }
+        }
+
+        // center options
+        Row(
+            horizontalArrangement = Arrangement.End,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+        ) {
+            IconButton(
+                onClick = {
+                    mqState.seekPrev()
+                },
+                enabled = !mqState.isDetached(),
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_skip_previous),
+                    contentDescription = null,
+                )
+            }
+            IconButton(
+                onClick = {
+                    mqState.togglePlayPause()
+                },
+                enabled = !mqState.isDetached(),
+            ) {
+                Icon(
+                    painter = painterResource(if (isPlaying) R.drawable.ic_pause_filled else R.drawable.ic_play_arrow),
+                    contentDescription = null,
+                )
+            }
+            IconButton(
+                onClick = {
+                    mqState.seekNext()
+                },
+                enabled = !mqState.isDetached(),
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_skip_next),
+                    contentDescription = null,
+                )
+            }
+        }
+
+        // right options
+        Row(
+            horizontalArrangement = Arrangement.End,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+        ) {
+            IconButton(
+                onClick = {
+                },
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_more_vert_alt),
+                    contentDescription = null,
+                )
+            }
+            AnimatedVisibility(mqState.isDetached()) {
+                IconButton(
+                    onClick = {
+                        mqState.loadDetached()
+                    },
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_play_arrow),
+                        contentDescription = null,
+                    )
+                }
+            }
+        }
+    }
+
+}
+
+@Composable
+fun QueueRoot(
+    mqState: MqState,
+    pagerState: PagerState,
+    coroutineScope: CoroutineScope,
+    queueActionsView: ConstraintLayout,
+    recyclerView: MyRecyclerView,
+    mqEnabled: Boolean,
+    modifier: Modifier = Modifier,
+    onDismiss: (() -> Unit)? = null,
+) {
+    val context = LocalContext.current
+    val haptic = LocalHapticFeedback.current
+
+    val landscapeMode = context.supportsWideScreen()
+//        LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
+
+    @Composable
+    fun BoxScope.pager(
+        modifier: Modifier = Modifier,
+    ) {
+        HorizontalPager(
+            state = pagerState,
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(bottom = 20.dp),
+            beyondViewportPageCount = 1,
+            userScrollEnabled = !mqState.expanded
+        ) { page ->
+            when (page) {
+                0 -> {
+                    if (landscapeMode) {
+                        QueueInfo(
+                            mqState = mqState,
+                            mqEnabled = mqEnabled,
+                            landscape = landscapeMode,
+                            onDismiss = onDismiss,
+                        )
+                    } else {
+                        MqContent(
+                            mqState = mqState,
+                            mqEnabled = mqEnabled,
+                            landscape = false,
+                            onDismiss = onDismiss,
+                        )
+                    }
+                }
+
+                1 -> {
+                    AndroidView(
+                        modifier = Modifier.fillMaxWidth(),
+                        factory = {
+                            queueActionsView
+                        },
+                    )
+                }
+            }
+        }
+
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .wrapContentHeight()
+                .fillMaxWidth()
+                .padding(bottom = 8.dp)
+                .align(Alignment.BottomCenter)
+                .alpha(if (!mqState.expanded) 1f else 0.3f)
+                .animateContentSize()
+        ) {
+            repeat(pagerState.pageCount) { iteration ->
+                val color = if (pagerState.currentPage == iteration) {
+                    MaterialTheme.colorScheme.onSurface
+                } else {
+                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
+                }
+                Box(
+                    modifier = Modifier
+                        .padding(horizontal = 4.dp)
+                        .clip(CircleShape)
+                        .background(color)
+                        .size(8.dp)
+                        .clickable(
+                            enabled = !mqState.expanded,
+                            onClick = {
+                                coroutineScope.launch {
+                                    haptic.performHapticFeedback(HapticFeedbackType.ContextClick)
+                                    pagerState.animateScrollToPage(iteration)
+                                }
+                            }
+                        )
+                )
+            }
+        }
+    }
+
+    if (landscapeMode) {
+        Row(
+            modifier = modifier
+                .fillMaxSize()
+        ) {
+            Column(
+                modifier = Modifier
+                    .weight(0.5f)
+            ) {
+                Box {
+                    pager()
+                }
+
+                ActionBar(
+                    mqState = mqState,
+                )
+
+                val lazyQueuesListState = rememberLazyListState()
+                val scrollConnection = rememberNestedScrollInteropConnection()
+                MqList(
+                    mqState = mqState,
+                    lazyQueuesListState = lazyQueuesListState,
+                    modifier = Modifier
+                        .heightIn(Dp.Unspecified, Dp.Unspecified)
+                        .nestedScroll(scrollConnection)
+                )
+            }
+
+            AndroidView(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(0.5f),
+                factory = {
+                    recyclerView
+                },
+            )
+        }
+    } else {
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+        ) {
+            Box {
+                pager()
+            }
+
+            HorizontalDivider(thickness = 2.dp)
+
+            AndroidView(
+                modifier = Modifier.fillMaxSize(),
+                factory = {
+                    recyclerView
+                },
+            )
+        }
+    }
+}
+
 
 // clean up later
 fun makeTimeString(duration: Long?): String {
