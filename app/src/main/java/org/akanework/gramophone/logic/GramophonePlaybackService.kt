@@ -1378,17 +1378,21 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
             if (!computeRgMode(false))
                 throw IllegalStateException("unreachable, mode failed with force=false")
         }
-        pendingDownstreamFormat.toSet().forEach {
-            if (timeline.getIndexOfPeriod(it.first) == C.INDEX_UNSET) {
-                // This period is going away.
-                pendingDownstreamFormat.remove(it)
+        try {
+            pendingDownstreamFormat.toSet().forEach {
+                if (timeline.getIndexOfPeriod(it.first) == C.INDEX_UNSET) {
+                    // This period is going away.
+                    pendingDownstreamFormat.remove(it)
+                }
             }
-        }
-        pendingAfTrackFormats.toMap().forEach { (key, _) ->
-            if (timeline.getIndexOfPeriod(key) == C.INDEX_UNSET) {
-                // This period is going away.
-                pendingAfTrackFormats.remove(key)
+            pendingAfTrackFormats.toMap().forEach { (key, _) ->
+                if (timeline.getIndexOfPeriod(key) == C.INDEX_UNSET) {
+                    // This period is going away.
+                    pendingAfTrackFormats.remove(key)
+                }
             }
+        } catch (_: UnsupportedOperationException) {
+            // TODO ???? what (to repro, like a song and let it trigger replaceMediaItem)
         }
     }
 
