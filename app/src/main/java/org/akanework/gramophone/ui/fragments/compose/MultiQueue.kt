@@ -1,4 +1,4 @@
-package org.akanework.gramophone.ui.components
+package org.akanework.gramophone.ui.fragments.compose
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Spring
@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -72,6 +71,7 @@ import org.akanework.gramophone.logic.getInactiveQueues
 import org.akanework.gramophone.logic.getQueue
 import org.akanework.gramophone.logic.loadQueue
 import org.akanework.gramophone.logic.playOrPause
+import org.akanework.gramophone.ui.components.PlaylistQueueSheet
 
 @Composable
 fun MqListItem(
@@ -148,12 +148,12 @@ fun MqListItem(
     }
 }
 
-
 @Composable
 fun MqContent(
     mqState: MqState,
     modifier: Modifier = Modifier,
-    mqEnabled: Boolean = false,
+    mqEnabled: Boolean,
+    onDismiss: (() -> Unit)? = null,
 ) {
     val haptic = LocalHapticFeedback.current
 
@@ -184,7 +184,11 @@ fun MqContent(
         Row(
             horizontalArrangement = Arrangement.spacedBy(6.dp),
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(16.dp, 4.dp)
+            modifier = Modifier
+                .padding(16.dp, 4.dp)
+                .clickable(onClick = {
+                    onDismiss?.invoke()
+                })
         ) {
             // queue title and show multiqueue button
             Row(
