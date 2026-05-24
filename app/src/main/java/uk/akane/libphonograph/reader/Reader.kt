@@ -837,24 +837,27 @@ internal object Reader {
         var foundPlaylistContent = false
         val playlists = mutableListOf<RawPlaylist>()
         context.contentResolver.query(
+            if (hasImprovedMediaStore()) MediaStoreCompat.FILES_EXTERNAL_CONTENT_URI else
             @Suppress("DEPRECATION")
-            MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, arrayOf(
-                @Suppress("DEPRECATION") MediaStore.Audio.Playlists._ID,
+            MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, if (hasImprovedMediaStore())
+                arrayOf(MediaStore.MediaColumns._ID, MediaStore.MediaColumns.DATA,
+                MediaStore.MediaColumns.DATE_ADDED, MediaStore.MediaColumns.DATE_MODIFIED) else
+                    arrayOf(MediaStore.MediaColumns._ID, MediaStore.MediaColumns.DATA,
+                        MediaStore.MediaColumns.DATE_ADDED, MediaStore.MediaColumns.DATE_MODIFIED,
                 @Suppress("DEPRECATION") MediaStore.Audio.Playlists.NAME,
-                @Suppress("DEPRECATION") MediaStore.Audio.Playlists.DATA,
-                @Suppress("DEPRECATION") MediaStore.Audio.Playlists.DATE_ADDED,
-                @Suppress("DEPRECATION") MediaStore.Audio.Playlists.DATE_MODIFIED
-            ), null, null, null
-        )?.use {
+            ), if (hasImprovedMediaStore()) MediaStore.Files.FileColumns.MEDIA_TYPE +
+                    " = ${MediaStoreCompat.MEDIA_TYPE_PLAYLIST}" else null, null,
+            null)?.
+        use {
             val playlistIdColumn = it.getColumnIndexOrThrow(
                 @Suppress("DEPRECATION") MediaStore.Audio.Playlists._ID
             )
             val playlistPathColumn = it.getColumnIndexOrThrow(
                 @Suppress("DEPRECATION") MediaStore.Audio.Playlists.DATA
             )
-            val playlistNameColumn = it.getColumnIndexOrThrow(
+            val playlistNameColumn = if (!hasImprovedMediaStore()) it.getColumnIndexOrThrow(
                 @Suppress("DEPRECATION") MediaStore.Audio.Playlists.NAME
-            )
+            ) else null
             val playlistDateAddedColumn = it.getColumnIndexOrThrow(
                 @Suppress("DEPRECATION") MediaStore.Audio.Playlists.DATE_ADDED
             )
@@ -865,15 +868,19 @@ internal object Reader {
                 StorageManagerCompat.getStorageVolumes(context) else null
             while (it.moveToNext()) {
                 val playlistId = it.getLong(playlistIdColumn)
-                val playlistName = it.getString(playlistNameColumn)?.ifEmpty { null }
                 val playlistPath =
                     it.getString(playlistPathColumn)?.ifEmpty { null }?.let { p -> File(p) }
+                val playlistName = playlistNameColumn?.let { p0 -> it.getString(p0) }
+                    ?.ifEmpty { null } ?: playlistPath?.nameWithoutExtension
                 val playlistDateAdded = it.getLongOrNullIfThrow(playlistDateAddedColumn)
                 val playlistDateModified = it.getLongOrNullIfThrow(playlistDateModifiedColumn)
                 val paths = try {
-                    readPlaylist(context, ContentUris.withAppendedId(
-                        @Suppress("DEPRECATION") MediaStore.Audio.Playlists
-                            .getContentUri("external"), playlistId), volumes)
+                    readPlaylist(
+                        context, ContentUris.withAppendedId(
+                            @Suppress("DEPRECATION") MediaStore.Audio.Playlists
+                                .getContentUri("external"), playlistId
+                        ), volumes
+                    )
                 } catch (e: Exception) {
                     Log.w(TAG, "failed to read playlist $playlistPath", e)
                     null
