@@ -31,20 +31,28 @@ object ItemManipulator {
     private const val TAG = "ItemManipulator"
     const val FAVORITES = "gramophone_favourite"
 
-    suspend fun deleteSong(context: MainActivity, file: File, id: Long): (() -> Unit)? {
-        val uri = ContentUris.withAppendedId(
-            MediaStore.Audio.Media.getContentUri("external"), id
-        )
-        val uris = mutableSetOf(uri)
-        // TODO maybe don't hardcode these extensions twice, here and in LrcUtils?
-        uris.addAll(setOf("ttml", "lrc", "srt").asSequence().map {
-            file.resolveSibling("${file.nameWithoutExtension}.$it")
-        }.filter { it.exists() }.map {
-            // It doesn't really make sense to have >1 subtitle file so we don't need to batch the queries.
-            getIdForPath(context, it)
-        }.filter { it != null }
-            .map { ContentUris.withAppendedId(MediaStoreCompat.FILES_EXTERNAL_CONTENT_URI, it!!) }
-            .toList())
+    suspend fun deleteSongs(context: MainActivity, list: List<Pair<File, Long>>): (() -> Unit)? {
+        val uris = list.flatMap {
+            val id = it.second
+            val file = it.first
+            val uri = ContentUris.withAppendedId(
+                MediaStore.Audio.Media.getContentUri("external"), id
+            )
+            // TODO maybe don't hardcode these extensions twice, here and in LrcUtils?
+            setOf("ttml", "lrc", "srt").asSequence().map {
+                file.resolveSibling("${file.nameWithoutExtension}.$it")
+            }.filter { it.exists() }.map {
+                // It doesn't really make sense to have >1 subtitle file so we don't need to batch the queries.
+                getIdForPath(context, it)
+            }.filter { it != null }
+                .map {
+                    ContentUris.withAppendedId(
+                        MediaStoreCompat.FILES_EXTERNAL_CONTENT_URI,
+                        it!!
+                    )
+                }
+                .toList() + uri
+        }
         return delete(context, uris)
     }
 

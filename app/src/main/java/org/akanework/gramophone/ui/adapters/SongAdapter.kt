@@ -232,10 +232,9 @@ class SongAdapter(
 
                 R.id.delete -> {
                     CoroutineScope(Dispatchers.Default).launch {
-                        val res = ItemManipulator.deleteSong(
+                        val res = ItemManipulator.deleteSongs(
                             mainActivity,
-                            item.getFile()!!,
-                            item.requireMediaStoreId()
+                            listOf(item.getFile()!! to item.requireMediaStoreId())
                         )
                         if (res != null) {
                             withContext(Dispatchers.Main) {
