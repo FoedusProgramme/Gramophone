@@ -177,9 +177,26 @@ class SongAdapter(
         val mediaController = mainActivity.getPlayer()
         mediaController?.apply {
             val songList = getSongList()
-            setMediaItems(songList, position, C.TIME_UNSET)
+            // If the currently playing song is also the clicked song, then we continue playing the
+            // song and open full player, but we still replace the list. This is intended to copy
+            // UX of Chinese players that open full player when clicking song, and we don't want
+            // this UX to break if list is different for some reason.
+            val currentItem = currentMediaItem
+            if (currentItem?.mediaId == songList[position].mediaId) {
+                replaceMediaItems(0, currentMediaItemIndex,
+                    songList.subList(0, position))
+                replaceMediaItem(position, songList[position])
+                replaceMediaItems(position + 1, Int.MAX_VALUE,
+                    if (songList.size > position + 1) songList.subList(position + 1,
+                        songList.size) else emptyList())
+            } else {
+                setMediaItems(songList, position, C.TIME_UNSET)
+            }
             prepare()
             play()
+            if (currentItem?.mediaId == songList[position].mediaId) {
+                mainActivity.playerBottomSheet.open()
+            }
         }
     }
 

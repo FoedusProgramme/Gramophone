@@ -76,7 +76,6 @@ class PlayerBottomSheet private constructor(
 
     private val activity
         get() = context as MainActivity
-    private val prefs = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
     private val lifecycleOwner: LifecycleOwner
         get() = activity
     private val handler = Handler(Looper.getMainLooper())
@@ -112,17 +111,19 @@ class PlayerBottomSheet private constructor(
         previewPlayer = findViewById(R.id.preview_player)
         fullPlayer = findViewById(R.id.full_player)
 
-        setOnClickListener {
-            if (standardBottomSheetBehavior!!.state == BottomSheetBehavior.STATE_COLLAPSED) {
-                standardBottomSheetBehavior!!.state = BottomSheetBehavior.STATE_EXPANDED
-            }
-        }
+        setOnClickListener { open() }
 
         activity.controllerViewModel.addRecreationalPlayerListener(activity.lifecycle, this) {
             onMediaItemTransition(
                 instance?.currentMediaItem,
                 Player.MEDIA_ITEM_TRANSITION_REASON_PLAYLIST_CHANGED
             )
+        }
+    }
+
+    fun open() {
+        if (standardBottomSheetBehavior!!.state == BottomSheetBehavior.STATE_COLLAPSED) {
+            standardBottomSheetBehavior!!.state = BottomSheetBehavior.STATE_EXPANDED
         }
     }
 
