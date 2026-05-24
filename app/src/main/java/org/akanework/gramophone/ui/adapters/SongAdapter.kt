@@ -183,12 +183,18 @@ class SongAdapter(
             // this UX to break if list is different for some reason.
             val currentItem = currentMediaItem
             if (currentItem?.mediaId == songList[position].mediaId) {
+                val index = currentMediaItemIndex
+                val isLast = mediaItemCount - index == 1
                 replaceMediaItems(0, currentMediaItemIndex,
                     songList.subList(0, position))
                 replaceMediaItem(position, songList[position])
-                replaceMediaItems(position + 1, Int.MAX_VALUE,
-                    if (songList.size > position + 1) songList.subList(position + 1,
+                if (isLast)
+                    addMediaItems(if (songList.size > position + 1) songList.subList(position + 1,
                         songList.size) else emptyList())
+                else
+                    replaceMediaItems(position + 1, Int.MAX_VALUE,
+                        if (songList.size > position + 1) songList.subList(position + 1,
+                            songList.size) else emptyList())
             } else {
                 setMediaItems(songList, position, C.TIME_UNSET)
             }
