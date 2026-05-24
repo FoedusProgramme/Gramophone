@@ -121,6 +121,7 @@ internal object Reader {
         context: Context,
         minSongLengthSeconds: Long = 0,
         blackListSet: Set<String> = setOf(),
+        whiteListSet: Set<String> = setOf(),
         shouldUseEnhancedCoverReading: Boolean? = false, // null means load if permission is granted
         shouldIncludeExtraFormat: Boolean = true,
         shouldLoadAlbums: Boolean = true, // implies album artists too
@@ -162,6 +163,7 @@ internal object Reader {
         val coverCache = if (shouldLoadAlbums && useEnhancedCoverReading)
             hashMapOf<Long, Pair<File, FileNode>>() else null
         val folders = if (shouldLoadFolders) hashSetOf<String>() else null
+        val foldersForWhitelist = if (shouldLoadFolders) hashSetOf<String>() else null
         val root = if (shouldLoadFilesystem) MiscUtils.FileNodeImpl("storage") else null
         val shallowRoot = if (shouldLoadFolders) MiscUtils.FileNodeImpl("shallow") else null
         val songs = mutableListOf<MediaItem>()
@@ -251,7 +253,18 @@ internal object Reader {
                 val parent = pathFile?.parentFile?.takeIf { it.absolutePath != "/" }
                 val fldPath = parent?.absolutePath
                 var isBlacklisted = false
-                if (blackListSet.isNotEmpty()) {
+                if (whiteListSet.isNotEmpty()) {
+                    isBlacklisted = true
+                    var f = pathFile
+                    while (f != null) {
+                        if (whiteListSet.contains(f.absolutePath)) {
+                            isBlacklisted = false
+                            break
+                        }
+                        f = f.parentFile
+                    }
+                }
+                if (!isBlacklisted && blackListSet.isNotEmpty()) {
                     var f = pathFile
                     while (f != null) {
                         if (blackListSet.contains(f.absolutePath)) {
@@ -259,6 +272,17 @@ internal object Reader {
                             break
                         }
                         f = f.parentFile
+                    }
+                }
+                if (shouldLoadFolders) {
+                    var tmpPath = parent
+                    while (tmpPath != null) {
+                        foldersForWhitelist!!.add(tmpPath.absolutePath)
+                        tmpPath = tmpPath.parentFile
+                        if (tmpPath != null && (tmpPath.absolutePath == "/storage/emulated"
+                                    || tmpPath.absolutePath == "/storage")
+                        )
+                            tmpPath = null // let's not allow to whitelist more than entire volumes
                     }
                 }
                 val skip = (duration != null && duration != 0L &&
@@ -512,16 +536,44 @@ internal object Reader {
         val dateList = dateMap?.values?.toList()
 
         if (folders != null) {
-            for (blacklistedFolder in blackListSet) {
-                var tmpPath: File? = File(blacklistedFolder)
+            val whiteListSetNoDuplicates = whiteListSet.filter {
+                var tmpPath: File? = File(it).parentFile
                 while (tmpPath != null) {
-                    folders.add(tmpPath.absolutePath)
+                    if (whiteListSet.contains(tmpPath.absolutePath))
+                        return@filter false
+                    folders.remove(tmpPath.absolutePath)
                     tmpPath = tmpPath.parentFile
                     if (tmpPath != null && (tmpPath.absolutePath == "/storage/emulated"
                                 || tmpPath.absolutePath == "/storage")
                     )
                         tmpPath = null // let's not allow to blacklist more than entire volumes
                 }
+                return@filter true
+            }
+            for (whitelistedFolder in whiteListSetNoDuplicates) {
+                var tmpPath: File? = File(whitelistedFolder)
+                while (tmpPath != null) {
+                    folders.remove(tmpPath.absolutePath)
+                    tmpPath = tmpPath.parentFile
+                    if (tmpPath != null && (tmpPath.absolutePath == "/storage/emulated"
+                                || tmpPath.absolutePath == "/storage")
+                    )
+                        tmpPath = null // let's not allow to blacklist more than entire volumes
+                }
+            }
+            for (blacklistedFolder in blackListSet) {
+                if (!(blacklistedFolder == "/storage/emulated" || blacklistedFolder == "/storage"))
+                    folders.add(blacklistedFolder) // let's not allow to blacklist more than entire volumes
+            }
+        }
+        if (foldersForWhitelist != null) {
+            for (blacklistedFolder in blackListSet) {
+                foldersForWhitelist.removeAll { it.startsWith("$blacklistedFolder/",
+                    ignoreCase = true) || it.equals(blacklistedFolder, ignoreCase = true) }
+            }
+            for (whitelistedFolder in whiteListSet) {
+                foldersForWhitelist.removeAll { it.startsWith("$whitelistedFolder/",
+                    ignoreCase = true) }
             }
         }
 
@@ -536,7 +588,8 @@ internal object Reader {
             pathMap,
             root,
             shallowRoot,
-            folders
+            folders,
+            foldersForWhitelist
         )
     }
 

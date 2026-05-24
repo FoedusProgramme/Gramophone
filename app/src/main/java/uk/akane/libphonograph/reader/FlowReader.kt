@@ -60,6 +60,7 @@ class FlowReader(
     context: Context,
     minSongLengthSecondsFlow: SharedFlow<Long>,
     blackListSetFlow: SharedFlow<Set<String>>,
+    whiteListSetFlow: SharedFlow<Set<String>>,
     shouldUseEnhancedCoverReadingFlow: SharedFlow<Boolean?>, // null means load if permission is granted
     recentlyAddedFilterSecondFlow: SharedFlow<Long?>, // null means don't generate recently added
     shouldIncludeExtraFormatFlow: SharedFlow<Boolean>,
@@ -189,28 +190,32 @@ class FlowReader(
                             .flatMapLatest { minSongLengthSeconds ->
                                 blackListSetFlow.distinctUntilChanged()
                                     .flatMapLatest { blackListSet ->
-                                        mediaVersionFlow
-                                            .onEach { requireReplayCacheInvalidationManager().invalidate() }
-                                            .conflateAndBlockWhenPaused()
-                                            .flatMapLatest {
-                                                // manual refresh may for whatever reason run in background
-                                                // but all others shouldn't trigger background runs
-                                                manualRefreshTrigger.mapLatest { _ ->
-                                                    repeatUntilDoneWhenUnpaused {
-                                                        // TODO repeatUntilDoneWhenUnpaused makes no sense with non-cancelable
-                                                        //  function, make it cancelable
-                                                        if (context.hasAudioPermission())
-                                                            Reader.readFromMediaStore(
-                                                                context,
-                                                                minSongLengthSeconds,
-                                                                blackListSet,
-                                                                shouldUseEnhancedCoverReading,
-                                                                shouldIncludeExtraFormat,
-                                                                coverStubUri = coverStubUri
-                                                            )
-                                                        else ReaderResult.emptyReaderResult()
+                                        whiteListSetFlow.distinctUntilChanged()
+                                            .flatMapLatest { whiteListSet ->
+                                                mediaVersionFlow
+                                                    .onEach { requireReplayCacheInvalidationManager().invalidate() }
+                                                    .conflateAndBlockWhenPaused()
+                                                    .flatMapLatest {
+                                                        // manual refresh may for whatever reason run in background
+                                                        // but all others shouldn't trigger background runs
+                                                        manualRefreshTrigger.mapLatest { _ ->
+                                                            repeatUntilDoneWhenUnpaused {
+                                                                // TODO repeatUntilDoneWhenUnpaused makes no sense with non-cancelable
+                                                                //  function, make it cancelable
+                                                                if (context.hasAudioPermission())
+                                                                    Reader.readFromMediaStore(
+                                                                        context,
+                                                                        minSongLengthSeconds,
+                                                                        blackListSet,
+                                                                        whiteListSet,
+                                                                        shouldUseEnhancedCoverReading,
+                                                                        shouldIncludeExtraFormat,
+                                                                        coverStubUri = coverStubUri
+                                                                    )
+                                                                else ReaderResult.emptyReaderResult()
+                                                            }
+                                                        }
                                                     }
-                                                }
                                             }
                                     }
                             }
@@ -255,6 +260,7 @@ class FlowReader(
     val folderStructureFlow: Flow<FileNode> = readerFlow.map { it.folderStructure!! }
     val shallowFolderFlow: Flow<FileNode> = readerFlow.map { it.shallowFolder!! }
     val foldersFlow: Flow<Set<String>> = readerFlow.map { it.folders!! }
+    val foldersForWhitelistFlow: Flow<Set<String>> = readerFlow.map { it.foldersForWhitelist!! }
 
     /**
      * If the library hasn't been loaded yet, forces a load of the library. Otherwise forces a

@@ -107,6 +107,7 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
 
     val minSongLengthSecondsFlow = MutableSharedFlow<Long>(replay = 1)
     val blackListSetFlow = MutableSharedFlow<Set<String>>(replay = 1)
+    val whiteListSetFlow = MutableSharedFlow<Set<String>>(replay = 1)
     val shouldUseEnhancedCoverReadingFlow = if (hasScopedStorageWithMediaTypes()) null else
         MutableSharedFlow<Boolean?>(replay = 1)
     val recentlyAddedFilterSecondFlow = MutableStateFlow(1_209_600L)
@@ -244,6 +245,7 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
             if (BuildConfig.DISABLE_MEDIA_STORE_FILTER) MutableStateFlow(0) else
                 minSongLengthSecondsFlow,
             blackListSetFlow,
+            whiteListSetFlow,
             if (hasScopedStorageWithMediaTypes()) MutableStateFlow(null) else
                 shouldUseEnhancedCoverReadingFlow!!,
             recentlyAddedFilterSecondFlow,
@@ -290,6 +292,9 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
             }
             if (key == null || key == "folderFilter") {
                 blackListSetFlow.emit(prefs.getStringSet("folderFilter", setOf()) ?: setOf())
+            }
+            if (key == null || key == "folderAllow") {
+                whiteListSetFlow.emit(prefs.getStringSet("folderAllow", setOf()) ?: setOf())
             }
             if ((key == null || key == "album_covers") && !hasScopedStorageWithMediaTypes()) {
                 shouldUseEnhancedCoverReadingFlow!!.emit(prefs.getBoolean("album_covers", true))

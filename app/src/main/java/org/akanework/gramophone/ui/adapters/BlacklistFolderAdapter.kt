@@ -1,10 +1,12 @@
 package org.akanework.gramophone.ui.adapters
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.SharedPreferences
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -19,18 +21,23 @@ import org.akanework.gramophone.logic.gramophoneApplication
 import org.akanework.gramophone.logic.ui.MyRecyclerView
 import org.akanework.gramophone.logic.utils.flows.repeatPausingWithLifecycle
 import org.akanework.gramophone.ui.fragments.settings.BlacklistSettingsActivity
+import java.io.File
 
 @SuppressLint("NotifyDataSetChanged")
 class BlacklistFolderAdapter(
-    private val activity: BlacklistSettingsActivity,
-    private val prefs: SharedPreferences
+    private val activity: AppCompatActivity,
+    private val prefs: SharedPreferences,
+    private val isWhitelist: Boolean
 ) : MyRecyclerView.Adapter<BlacklistFolderAdapter.ViewHolder>() {
     private var folderArray: List<String>? = null
     private var folderFilter: Set<String>? = null
 
     init {
         repeatPausingWithLifecycle(activity, Dispatchers.Default) {
-            activity.gramophoneApplication.reader.foldersFlow.combine(activity.gramophoneApplication.blackListSetFlow) { newFolderArray, newFolderFilter ->
+            (if (isWhitelist) activity.gramophoneApplication.reader.foldersForWhitelistFlow else
+                activity.gramophoneApplication.reader.foldersFlow).combine(if (isWhitelist)
+                activity.gramophoneApplication.whiteListSetFlow else activity.gramophoneApplication
+                    .blackListSetFlow) { newFolderArray, newFolderFilter ->
                 val sortedFolderArray = newFolderArray.sorted()
                 val oldFolderArray = folderArray?.toList()
                 val oldFolderFilter = folderFilter?.toSet()
@@ -96,7 +103,7 @@ class BlacklistFolderAdapter(
             if (position != RecyclerView.NO_POSITION) {
                 prefs.edit {
                     putStringSet(
-                        "folderFilter",
+                        if (isWhitelist) "folderAllow" else "folderFilter",
                         folderFilter!!.let {
                             if (holder.checkBox.isChecked)
                                 it + folderArray!![position]
