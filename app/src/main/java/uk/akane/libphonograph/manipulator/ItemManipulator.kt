@@ -63,7 +63,7 @@ object ItemManipulator {
         return delete(context, setOf(uri))
     }
 
-    private suspend fun delete(context: MainActivity, uris: Set<Uri>): (() -> Unit)? {
+    private suspend fun delete(context: MainActivity, uris: Collection<Uri>): (() -> Unit)? {
         if (uris.find { MediaStoreCompat.needRequestDelete(context, it) != null } != null) {
             val pendingIntent = MediaStoreCompat.createDeleteRequest(context, uris.toList())
             val req = Bundle().apply {
