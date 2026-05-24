@@ -56,7 +56,8 @@ object AudioTrackHiddenApi {
                 Build.PRODUCT.startsWith("BG6-")) && // Tecno SPARK Go 2024
                 !(Build.VERSION.SDK_INT == 34 && Build.BRAND == "samsung" &&
                         Build.DEVICE == "dm1q") // Samsung Galaxy S23
-                && !(try { Class.forName("android.ext.dcl.DynCodeLoading"); true }
+                && !(try { ((Class.forName("android.ext.dcl.DynCodeLoading")
+                    .getMethod("getAppBindFlags").invoke(null) as Int) and 1) != 0 }
         catch (_: Exception) { false }) // GrapheneOS (may warn user with notification)
     }
 
