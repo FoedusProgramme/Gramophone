@@ -46,7 +46,7 @@
     <string name="compact_list">Loend (kompaktne)</string>
     <string name="check_for_updates">Viimast teavet leiad meie kanalist!</string>
     <string name="settings_default_progress_bar">Vaikimisi edenemisriba</string>
-    <string name="playlist_favourite">Lemmik</string>
+    <string name="playlist_favourite">Lemmikud</string>
     <string name="settings_content_based_color_summary">Kasuta albumipõhist värvimustrit</string>
     <string name="settings_content_based_color">Sisust lähtuvad värvid</string>
     <string name="home_menu_search">Otsi</string>
@@ -484,4 +484,9 @@
     <string name="actions_query_shuffle_specific">sega $item_name</string>
     <string name="please_allow_to_delete">Failide kustutamiseks klõpsa „Luba“</string>
     <string name="choose_sd">Vali %s</string>
+    <string name="edit_favorites_failed">Lemmiku muutmine ei õnnestunud: %s</string>
+    <string name="favorite">Lemmik</string>
+    <string name="favorite_failed_title">Loo oleku muutmine lemmikuna ei õnnestunud</string>
+    <string name="favorite_failed_text">Muudatuste jõustamiseks palun klõpsa siin ja luba õigused lemmikute esitusloendi failile</string>
+    <string name="error_in_bg">Taustal juhtunud vead</string>
 </resources>
