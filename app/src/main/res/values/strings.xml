@@ -507,5 +507,7 @@
     <string name="favorite">Favorite</string>
     <string name="favorite_failed_title">Failed to change favourite state of song</string>
     <string name="favorite_failed_text">Please click here to apply changes, by granting permission to the favourite playlist file</string>
-    <string name="error_in_bg">Errors occuring in the background</string>
+    <string name="error_in_bg">Errors occurring in the background</string>
+    <string name="settings_whitelist">Whitelist</string>
+    <string name="whitelist_and_blacklist">If no folders are selected in the Whitelist, all folders will be allowed.\n\nWhitelist and Blacklist are applied together, with Blacklist taking priority. For example, you can allow a folder in the Whitelist while excluding one of its subfolders in the Blacklist.</string>
 </resources>
