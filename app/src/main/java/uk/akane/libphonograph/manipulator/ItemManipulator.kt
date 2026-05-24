@@ -112,23 +112,6 @@ object ItemManipulator {
         }
     }
 
-    fun setFavorite(context: Context, uris: Set<Uri>, favorite: Boolean): IntentSender? {
-        if (!hasImprovedMediaStore()) {
-            // TODO(ASAP) Q- support
-            return null
-        }
-        if (MediaStoreCompat.needRequestFavorite(context, uris)) {
-            // This never actually visibly asks the user for permission...
-            val pendingIntent = MediaStoreCompat.createFavoriteRequest(
-                context, uris.toList(), favorite
-            )
-            return pendingIntent.intentSender
-        } else {
-            MediaStoreCompat.markIsFavoriteStatus(context, uris, favorite)
-            return null
-        }
-    }
-
     fun createPlaylist(context: Context, name: String): Uri {
         val out = getDefaultPlaylistFile(name)
         if (out.exists())

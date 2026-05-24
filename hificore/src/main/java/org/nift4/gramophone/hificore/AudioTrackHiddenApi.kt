@@ -50,11 +50,14 @@ object AudioTrackHiddenApi {
      * ban can be lifted again because it's not our fault. If there are no further crashes, it may
      * indicate an incompatibility of `libhificore.so` with the device's firmware.
      */
+    @SuppressLint("PrivateApi")
     fun canLoadLib(): Boolean {
         return !(Build.VERSION.SDK_INT == 33 && Build.BRAND == "TECNO" &&
                 Build.PRODUCT.startsWith("BG6-")) && // Tecno SPARK Go 2024
                 !(Build.VERSION.SDK_INT == 34 && Build.BRAND == "samsung" &&
                         Build.DEVICE == "dm1q") // Samsung Galaxy S23
+                && !(try { Class.forName("android.ext.dcl.DynCodeLoading"); true }
+        catch (_: Exception) { false }) // GrapheneOS (may warn user with notification)
     }
 
     @SuppressLint("PrivateApi", "DiscouragedPrivateApi")
