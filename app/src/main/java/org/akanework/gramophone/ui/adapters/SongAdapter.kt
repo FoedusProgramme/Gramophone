@@ -185,8 +185,11 @@ class SongAdapter(
             if (currentItem?.mediaId == songList[position].mediaId) {
                 val index = currentMediaItemIndex
                 val isLast = mediaItemCount - index == 1
-                replaceMediaItems(0, currentMediaItemIndex,
-                    songList.subList(0, position))
+                if (index == 0)
+                    addMediaItems(0, songList.subList(0, position))
+                else
+                    replaceMediaItems(0, index,
+                        songList.subList(0, position))
                 replaceMediaItem(position, songList[position])
                 if (isLast)
                     addMediaItems(if (songList.size > position + 1) songList.subList(position + 1,
