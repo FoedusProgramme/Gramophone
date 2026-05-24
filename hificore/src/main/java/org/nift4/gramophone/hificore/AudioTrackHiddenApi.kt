@@ -20,6 +20,7 @@ package org.nift4.gramophone.hificore
 import android.annotation.SuppressLint
 import android.media.AudioTrack
 import android.os.Build
+import android.os.Environment
 import androidx.media3.common.util.Log
 
 object AudioTrackHiddenApi {
@@ -56,9 +57,8 @@ object AudioTrackHiddenApi {
                 Build.PRODUCT.startsWith("BG6-")) && // Tecno SPARK Go 2024
                 !(Build.VERSION.SDK_INT == 34 && Build.BRAND == "samsung" &&
                         Build.DEVICE == "dm1q") // Samsung Galaxy S23
-                && !(try { ((Class.forName("android.ext.dcl.DynCodeLoading")
-                    .getMethod("getAppBindFlags").invoke(null) as Int) and 1) != 0 }
-        catch (_: Exception) { false }) // GrapheneOS (may warn user with notification)
+                && !(try { Environment::class.java.getMethod("isMemoryDclRestricted")
+            .invoke(null) as Boolean } catch (_: Exception) { false }) // GrapheneOS
     }
 
     @SuppressLint("PrivateApi", "DiscouragedPrivateApi")
