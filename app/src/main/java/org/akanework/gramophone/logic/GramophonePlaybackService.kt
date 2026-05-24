@@ -541,6 +541,8 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                 if (items != null) {
                     if (endedWorkaroundPlayer?.nextShuffleOrder != null)
                         throw IllegalStateException("shuffleFactory was found orphaned")
+                    if (lastPlayedManager.allowSavingState)
+                        return@restore // media items were already applied to player
                     endedWorkaroundPlayer?.nextShuffleOrder = factory.toFactory()
                     val list = runBlocking { mapMediaItemsForFavorites(items.mediaItems) }
                     try {
@@ -566,7 +568,6 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                         handler.post { mediaSession?.player?.prepare() }
                     }
                 }
-                lastPlayedManager.allowSavingState = true
             }
         }
         scope.launch {
@@ -1374,6 +1375,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
 
     override fun onTimelineChanged(timeline: Timeline, reason: @Player.TimelineChangeReason Int) {
         if (reason == Player.TIMELINE_CHANGE_REASON_PLAYLIST_CHANGED) {
+            lastPlayedManager.allowSavingState = true
             refreshMediaButtonCustomLayout()
             if (!computeRgMode(false))
                 throw IllegalStateException("unreachable, mode failed with force=false")
