@@ -494,4 +494,9 @@
     <string name="actions_query_shuffle_specific">mieszaj $item_name</string>
     <string name="please_allow_to_delete">Zezwól na usuwanie plików</string>
     <string name="choose_sd">Wybierz %s</string>
+    <string name="edit_favorites_failed">Edytowanie ulubionych nie powiodło się: %s</string>
+    <string name="favorite">Ulubiony</string>
+    <string name="favorite_failed_title">Nie udało się zmienić statusu utworu jako ulubionego</string>
+    <string name="favorite_failed_text">Kliknij tutaj, aby zastosować zmiany, udzielając uprawnień do pliku ulubionej playlisty</string>
+    <string name="error_in_bg">Błędy występujące w tle</string>
 </resources>
