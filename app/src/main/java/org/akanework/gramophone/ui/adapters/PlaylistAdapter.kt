@@ -91,6 +91,16 @@ class PlaylistAdapter(
         }
     }
 
+    override fun getPinnedOrder(item: Playlist): Int {
+        return when (item) {
+            is RecentlyAdded -> 1
+            // is RecentlyPlayed -> 2
+            // is MostPlayed -> 3
+            is Favorite -> 4
+            else -> 999
+        }
+    }
+
     override fun coverOf(item: Playlist): Uri? {
         return if (item.title != null) super.coverOf(item) else
             Uri.Builder()

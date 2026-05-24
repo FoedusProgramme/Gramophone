@@ -39,6 +39,7 @@ import coil3.load
 import coil3.request.crossfade
 import coil3.request.error
 import com.google.android.material.button.MaterialButton
+import com.google.common.collect.Comparators
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -143,6 +144,8 @@ abstract class BaseAdapter<T : Any>(
                         sortWith { o1, o2 ->
                             if (isPinned(o1) && !isPinned(o2)) -1
                             else if (!isPinned(o1) && isPinned(o2)) 1
+                            else if (isPinned(o1) && isPinned(o2))
+                                compareBy<T> { getPinnedOrder(it) }.compare(o1, o2)
                             else cmp.compare(o1, o2)
                         }
                     }
@@ -450,6 +453,9 @@ abstract class BaseAdapter<T : Any>(
     }
 
     protected abstract fun virtualTitleOf(item: T): String
+    protected open fun getPinnedOrder(item: T): Int {
+        return 0
+    }
     private fun subTitleOf(item: T): String {
         return if (sorter.sortingHelper.canGetArtist())
             sorter.sortingHelper.getArtist(item) ?: context.getString(R.string.unknown_artist)
