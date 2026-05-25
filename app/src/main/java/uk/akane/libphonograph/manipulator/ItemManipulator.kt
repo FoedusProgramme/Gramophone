@@ -3,6 +3,7 @@ package uk.akane.libphonograph.manipulator
 import android.app.Activity
 import android.content.ContentUris
 import android.content.Context
+import android.content.Intent
 import android.content.IntentSender
 import android.net.Uri
 import android.os.Bundle
@@ -102,12 +103,13 @@ object ItemManipulator {
         }
     }
 
-    suspend fun continueDeleteFromPendingIntent(context: Context, resultCode: Int, req: Bundle) {
+    suspend fun continueDeleteFromPendingIntent(context: Context, resultCode: Int, data: Intent?, req: Bundle) {
         // this is the callback of createDeleteRequest(), and the delete was already done if
         // resultCode is RESULT_OK. if it's not, then we just show a toast or something.
-        if (resultCode == Activity.RESULT_OK) return
+        if (resultCode == Activity.RESULT_OK || resultCode == Activity.RESULT_CANCELED) return
         withContext(Dispatchers.Main) {
             Toast.makeText(context, context.getString(R.string.delete_failed,
+                data?.getStringExtra("ErrorMsg") ?:
                 req.getString("UiError")), Toast.LENGTH_LONG).show()
         }
     }

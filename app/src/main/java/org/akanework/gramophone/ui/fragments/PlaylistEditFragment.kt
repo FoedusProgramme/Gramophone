@@ -1,9 +1,13 @@
 package org.akanework.gramophone.ui.fragments
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.MediaItem
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -24,16 +28,19 @@ import uk.akane.libphonograph.items.Playlist
 
 class PlaylistEditFragment : BaseFragment(false) {
     private lateinit var touchHelper: ItemTouchHelper
+    private lateinit var intentSender: ActivityResultLauncher<IntentSenderRequest>
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
+        intentSender =
+            registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {
+                onRequest(it.resultCode)
+            }
         val theItem = MutableSharedFlow<Playlist?>(replay = 1)
 
-        // TODO(ASAP): show warning and offer to convert (non-destructively) playlist if it's
-        //  MediaStore DB only or unsupported format
         val rootView = inflater.inflate(R.layout.fragment_general_sub, container, false)
         val topAppBar = rootView.findViewById<MaterialToolbar>(R.id.topAppBar)
         val collapsingToolbarLayout =
@@ -75,6 +82,18 @@ class PlaylistEditFragment : BaseFragment(false) {
         return rootView
     }
 
+    override fun onResume() {
+        super.onResume()
+        // TODO write request?
+    }
+
+    private fun onRequest(resultCode: Int) {
+        if (resultCode != Activity.RESULT_OK) {
+            requireActivity().supportFragmentManager.popBackStack()
+            return
+        }
+    }
+
     // TODO(ASAP): finish it
     private inner class PlaylistEditAdapter : EditSongAdapter(requireContext()) {
         override fun getItemCount(): Int {
@@ -86,7 +105,7 @@ class PlaylistEditFragment : BaseFragment(false) {
         }
 
         override fun onClick(pos: Int) {
-            TODO("Not yet implemented")
+            // do nothing
         }
 
         override fun getItem(pos: Int): MediaItem {

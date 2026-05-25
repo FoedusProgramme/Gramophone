@@ -167,7 +167,7 @@ class MainActivity : BaseActivity() {
                     ?: throw IllegalStateException("pending delete request is null")
                 pendingDeleteRequest = null
                 CoroutineScope(Dispatchers.Default).launch {
-                    ItemManipulator.continueDeleteFromPendingIntent(this@MainActivity, it.resultCode, req)
+                    ItemManipulator.continueDeleteFromPendingIntent(this@MainActivity, it.resultCode, it.data, req)
                 }
             }
         addToPlaylistIntentSender =
@@ -353,8 +353,8 @@ class MainActivity : BaseActivity() {
             Log.e("MainActivity", "error launching intent", e)
             CoroutineScope(Dispatchers.Default).launch {
                 ItemManipulator.continueDeleteFromPendingIntent(
-                    this@MainActivity, RESULT_CANCELED,
-                    bundle
+                    this@MainActivity, RESULT_FIRST_USER,
+                    null, bundle
                 )
             }
         }
