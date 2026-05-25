@@ -157,6 +157,12 @@ class SongAdapter(
         }
     }
 
+    fun getPlayingSong(): Int? {
+        return if (currentMediaItem != null) {
+            idToPosMap?.get(currentMediaItem)?.firstOrNull()
+        } else null
+    }
+
     override fun onListUpdated() {
         // TODO run this method on a different thread / in advance
         idToPosMap = hashMapOf()
