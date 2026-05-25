@@ -499,4 +499,6 @@
     <string name="favorite_failed_title">Nie udało się zmienić statusu utworu jako ulubionego</string>
     <string name="favorite_failed_text">Kliknij tutaj, aby zastosować zmiany, udzielając uprawnień do pliku ulubionej playlisty</string>
     <string name="error_in_bg">Błędy występujące w tle</string>
+    <string name="settings_whitelist">Biała lista</string>
+    <string name="whitelist_and_blacklist">Jeśli na białej liście nie wybrano żadnych folderów, dostęp będą miały wszystkie foldery.\n\nBiała lista i czarna lista są stosowane łącznie, przy czym czarna lista ma pierwszeństwo. Na przykład można zezwolić na dostęp do folderu umieszczonego na białej liście, jednocześnie wykluczając jeden z jego podfolderów na czarnej liście.</string>
 </resources>
