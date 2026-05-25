@@ -489,4 +489,6 @@
     <string name="favorite_failed_title">Loo oleku muutmine lemmikuna ei õnnestunud</string>
     <string name="favorite_failed_text">Muudatuste jõustamiseks palun klõpsa siin ja luba õigused lemmikute esitusloendi failile</string>
     <string name="error_in_bg">Taustal juhtunud vead</string>
+    <string name="settings_whitelist">Lubatud kaustade loend</string>
+    <string name="whitelist_and_blacklist">Kui sa pole lubatud kaustade loendisse mitte midagi lisanud, siis on kõik kaustad lubatud.\n\nLubatud ja keelatud kaustade loendit töödeldakse koos ja neist keelatud kaustade loend on prioriteetne. Näitaks võid lubada konkreetse kausta, kuid välistada mõne tema alakausta.</string>
 </resources>
