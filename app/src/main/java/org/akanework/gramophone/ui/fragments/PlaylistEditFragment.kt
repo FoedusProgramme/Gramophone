@@ -1,10 +1,13 @@
 package org.akanework.gramophone.ui.fragments
 
 import android.app.Activity
+import android.content.ContentUris
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -23,12 +26,14 @@ import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.enableEdgeToEdgePaddingListener
 import org.akanework.gramophone.logic.ui.MyRecyclerView
 import org.akanework.gramophone.ui.components.EditSongAdapter
+import org.nift4.mediastorecompat.MediaStoreCompat
 import uk.akane.libphonograph.dynamicitem.Favorite
 import uk.akane.libphonograph.items.Playlist
 
 class PlaylistEditFragment : BaseFragment(false) {
     private lateinit var touchHelper: ItemTouchHelper
     private lateinit var intentSender: ActivityResultLauncher<IntentSenderRequest>
+    private var id = 0L
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,9 +55,13 @@ class PlaylistEditFragment : BaseFragment(false) {
         topAppBar.setNavigationIcon(R.drawable.outline_close_24)
         appBarLayout.enableEdgeToEdgePaddingListener()
 
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            maybeGoBack()
+        }
+
         val bundle = requireArguments()
         val clazz = bundle.getString("Class")
-        val id = bundle.getString("Id")?.toLong()
+        id = bundle.getString("Id")!!.toLong()
         lifecycleScope.launch(Dispatchers.Default) {
             val item = mainActivity.reader.playlistListFlow.map {
                 it.find { it.id == id && it.javaClass.name == clazz }
@@ -75,16 +84,26 @@ class PlaylistEditFragment : BaseFragment(false) {
         recyclerView.fastScroll(null, null)
 
         topAppBar.setNavigationOnClickListener {
-            // TODO(ASAP): ask "are you sure" and delete pending edit
-            requireActivity().supportFragmentManager.popBackStack()
+            maybeGoBack()
         }
 
         return rootView
     }
 
+    private fun maybeGoBack() {
+        // TODO(ASAP): ask "are you sure" and delete pending edit
+        requireActivity().supportFragmentManager.popBackStack()
+    }
+
     override fun onResume() {
         super.onResume()
-        // TODO write request?
+        val token = MediaStoreCompat.needRequestBytesWrite(requireContext(),
+            ContentUris.withAppendedId(@Suppress("deprecation")
+            MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, id))
+        if (token != null) {
+            intentSender.launch(IntentSenderRequest.Builder(MediaStoreCompat
+                .createWriteRequest(requireContext(), listOf(token))).build())
+        }
     }
 
     private fun onRequest(resultCode: Int) {
