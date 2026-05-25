@@ -492,5 +492,7 @@
     <string name="favorite">Preferida</string>
     <string name="favorite_failed_title">Ha fallat en canviar l\'estat de preferida de la cançó</string>
     <string name="favorite_failed_text">Feu clic aquí per aplicar els canvis, concedint permís al fitxer de llista de reproducció de preferides</string>
-    <string name="error_in_bg">S\'han produït errors en el segon pla</string>
+    <string name="error_in_bg">S\'han produït errors en segon pla</string>
+    <string name="settings_whitelist">Llista blanca</string>
+    <string name="whitelist_and_blacklist">Si no hi ha cap carpeta seleccionada a la llista blanca, es permetran totes les carpetes.\n\nLa llista blanca i la llista negra s\'apliquen conjuntament, i la llista negra té prioritat. Per exemple, podeu permetre una carpeta a la llista blanca mentre s\'exclou una de les seves subcarpetes a la llista negra.</string>
 </resources>

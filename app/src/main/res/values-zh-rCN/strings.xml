@@ -483,4 +483,6 @@
     <string name="favorite_failed_title">无法更改歌曲的收藏状态</string>
     <string name="favorite_failed_text">请点击此处应用更改，授予对收藏播放列表文件的权限</string>
     <string name="error_in_bg">后台发生错误</string>
+    <string name="settings_whitelist">白名单</string>
+    <string name="whitelist_and_blacklist">如果白名单中未选择任何文件夹，则所有文件夹均被允许。\n\n白名单和黑名单同时生效，且黑名单具有优先级。例如，您可以在白名单中允许某个文件夹，同时在黑名单中排除其某个子文件夹。</string>
 </resources>
