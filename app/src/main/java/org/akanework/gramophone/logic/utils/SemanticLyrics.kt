@@ -1602,7 +1602,7 @@ fun parseTtml(audioMimeType: String?, lyricText: String): SemanticLyrics? {
         val isOther = peopleToType[it.agent] == "other"
         // first person goes left, second right, third left, fourth right, and so on.
         // and the same goes for "other" except that we start on the right here.
-        val isVoice2 = pToSide[j] ?:
+        val isVoice2 = if (pToSide != null) !isGroup && pToSide[j]!! else
             (it.agent != null && (people[peopleToType[it.agent]] ?: throw NullPointerException(
                 "expected to find ${it.agent} (${peopleToType[it.agent]}) in $people"
             )).indexOf(it.agent) % 2 == (if (isOther) 0 else 1))
