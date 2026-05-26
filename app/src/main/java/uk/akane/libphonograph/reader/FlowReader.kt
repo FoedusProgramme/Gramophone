@@ -3,8 +3,6 @@ package uk.akane.libphonograph.reader
 import android.content.ContentResolver
 import android.content.ContentUris
 import android.content.Context
-import android.database.ContentObservable
-import android.database.ContentObserver
 import android.net.Uri
 import android.os.Build
 import android.os.ext.SdkExtensions
@@ -33,7 +31,6 @@ import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import org.akanework.gramophone.logic.emitOrDie
 import org.akanework.gramophone.logic.hasAudioPermission
-import org.akanework.gramophone.logic.utils.Flags
 import org.akanework.gramophone.logic.utils.flows.Invalidation
 import org.akanework.gramophone.logic.utils.flows.PauseManagingSharedFlow.Companion.sharePauseableIn
 import org.akanework.gramophone.logic.utils.flows.conflateAndBlockWhenPaused
@@ -43,7 +40,6 @@ import org.akanework.gramophone.logic.utils.flows.requireReplayCacheInvalidation
 import org.nift4.mediastorecompat.MediaStoreCompat
 import uk.akane.libphonograph.ContentObserverCompat
 import uk.akane.libphonograph.contentObserverVersioningFlow
-import uk.akane.libphonograph.dynamicitem.Favorite
 import uk.akane.libphonograph.dynamicitem.RecentlyAdded
 import uk.akane.libphonograph.items.Album
 import uk.akane.libphonograph.items.Artist
@@ -167,6 +163,31 @@ class FlowReader(
         context, scope, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, true
     ).shareIn(scope, Eagerly, replay = 1)
 
+    private suspend fun maybeDoRead(
+        context: Context,
+        minSongLengthSeconds: Long,
+        blackListSet: Set<String>,
+        whiteListSet: Set<String>,
+        shouldUseEnhancedCoverReading: Boolean?,
+        shouldIncludeExtraFormat: Boolean,
+        coverStubUri: String?
+    ) =
+        // TODO repeatUntilDoneWhenUnpaused makes no sense with non-cancelable
+        //  function, make it cancelable
+        if (context.hasAudioPermission() && (Build.VERSION.SDK_INT < Build.VERSION_CODES.R ||
+                    MediaStore.getExternalVolumeNames(context)
+                        .contains(MediaStore.VOLUME_EXTERNAL_PRIMARY)))
+            Reader.readFromMediaStore(
+                context,
+                minSongLengthSeconds,
+                blackListSet,
+                whiteListSet,
+                shouldUseEnhancedCoverReading,
+                shouldIncludeExtraFormat,
+                coverStubUri = coverStubUri
+            )
+        else ReaderResult.emptyReaderResult()
+
     // These expensive Reader calls are only done if we have someone (UI) observing the result AND
     // something changed. The PauseableFlows mechanism allows us to skip any unnecessary work.
     private val rawPlaylistFlow = rawPlaylistVersionFlow
@@ -174,7 +195,9 @@ class FlowReader(
         .conflateAndBlockWhenPaused()
         .flatMapLatest {
             manualRefreshTrigger.mapLatest { _ ->
-                if (context.hasAudioPermission())
+                if (context.hasAudioPermission() && (Build.VERSION.SDK_INT < Build.VERSION_CODES.R
+                            || MediaStore.getExternalVolumeNames(context)
+                                .contains(MediaStore.VOLUME_EXTERNAL_PRIMARY)))
                     Reader.fetchPlaylists(context).first
                 else emptyList()
             }
@@ -196,23 +219,20 @@ class FlowReader(
                                                     .onEach { requireReplayCacheInvalidationManager().invalidate() }
                                                     .conflateAndBlockWhenPaused()
                                                     .flatMapLatest {
-                                                        // manual refresh may for whatever reason run in background
-                                                        // but all others shouldn't trigger background runs
+                                                        // manual refresh may for whatever reason
+                                                        // run in background, but all others
+                                                        // shouldn't trigger background runs
                                                         manualRefreshTrigger.mapLatest { _ ->
                                                             repeatUntilDoneWhenUnpaused {
-                                                                // TODO repeatUntilDoneWhenUnpaused makes no sense with non-cancelable
-                                                                //  function, make it cancelable
-                                                                if (context.hasAudioPermission())
-                                                                    Reader.readFromMediaStore(
-                                                                        context,
-                                                                        minSongLengthSeconds,
-                                                                        blackListSet,
-                                                                        whiteListSet,
-                                                                        shouldUseEnhancedCoverReading,
-                                                                        shouldIncludeExtraFormat,
-                                                                        coverStubUri = coverStubUri
-                                                                    )
-                                                                else ReaderResult.emptyReaderResult()
+                                                                maybeDoRead(
+                                                                    context,
+                                                                    minSongLengthSeconds,
+                                                                    blackListSet,
+                                                                    whiteListSet,
+                                                                    shouldUseEnhancedCoverReading,
+                                                                    shouldIncludeExtraFormat,
+                                                                    coverStubUri
+                                                                )
                                                             }
                                                         }
                                                     }
