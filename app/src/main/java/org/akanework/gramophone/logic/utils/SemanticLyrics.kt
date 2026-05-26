@@ -1532,35 +1532,35 @@ fun parseTtml(audioMimeType: String?, lyricText: String): SemanticLyrics? {
         out
     }
     // start left if person is first, and right if sample is first.
-    val agentToSide = hashMapOf<String?, Boolean /* true = right */>()
+    val pToSide = hashMapOf<Int, Boolean /* true = right */>()
     if (Flags.TTML_AGENT_SMART_SIDES) {
         var agent: String? = null
         var side = state.paragraphs.firstOrNull()?.let { peopleToType[it.agent] == "other" } == true
-        state.paragraphs.forEach {
+        state.paragraphs.forEachIndexed { i, it ->
             if (agent != it.agent && peopleToType[it.agent] != "group") {
                 agent = it.agent
-                agentToSide.putIfAbsentSupport(it.agent, !side)
-                side = agentToSide[it.agent]!!
+                pToSide[i] = !side
+                side = !side
             }
         }
-        val countLeft = state.paragraphs.count { agentToSide[it.agent] == false }
-        val countRight = state.paragraphs.count { agentToSide[it.agent] == true }
+        val countLeft = state.paragraphs.indices.count { pToSide[it] == false }
+        val countRight = state.paragraphs.indices.count { pToSide[it] == true }
         if (countRight * 100 >= (countLeft + countRight) * 85) {
-            agentToSide.keys.toList().forEach {
-                agentToSide[it] = !agentToSide[it]!!
+            pToSide.keys.toList().forEach {
+                pToSide[it] = !pToSide[it]!!
             }
         }
     }
     val hasAtLeastTwoPeople = people["person"]?.let { it.size > 1 } == true
     if (paragraphs.find { it.time != null } == null) {
-        return UnsyncedLyrics(paragraphs.map {
+        return UnsyncedLyrics(paragraphs.mapIndexed { j, it ->
             val text = it.texts.joinToString("") { it.text }
             val isBg = it.role == "x-bg"
             val isGroup = peopleToType[it.agent] == "group"
             val isOther = peopleToType[it.agent] == "other"
             // first person goes left, second right, third left, fourth right, and so on.
             // and the same goes for "other" except that we start on the right here.
-            val isVoice2 = agentToSide[it.agent] ?:
+            val isVoice2 = pToSide[j] ?:
                 (it.agent != null && (people[peopleToType[it.agent]] ?: throw NullPointerException(
                     "expected to find ${it.agent} (${peopleToType[it.agent]}) in $people"
                 )).indexOf(it.agent) % 2 == (if (isOther) 0 else 1))
@@ -1599,7 +1599,7 @@ fun parseTtml(audioMimeType: String?, lyricText: String): SemanticLyrics? {
         val isOther = peopleToType[it.agent] == "other"
         // first person goes left, second right, third left, fourth right, and so on.
         // and the same goes for "other" except that we start on the right here.
-        val isVoice2 = agentToSide[it.agent] ?:
+        val isVoice2 = pToSide[j] ?:
             (it.agent != null && (people[peopleToType[it.agent]] ?: throw NullPointerException(
                 "expected to find ${it.agent} (${peopleToType[it.agent]}) in $people"
             )).indexOf(it.agent) % 2 == (if (isOther) 0 else 1))
