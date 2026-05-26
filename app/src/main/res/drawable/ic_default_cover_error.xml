@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@android:id/background">
+        <shape
+            android:shape="rectangle"
+            android:tint="?attr/colorSurfaceVariant">
+            <corners android:radius="0dp" />
+        </shape>
+    </item>
+    <item
+        android:bottom="12dp"
+        android:drawable="@drawable/ic_error"
+        android:left="12dp"
+        android:right="12dp"
+        android:top="12dp" />
+</layer-list>

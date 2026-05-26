@@ -487,7 +487,7 @@ class PlaylistEditFragment : BaseFragment(false) {
         }
     }
 
-    private inner class PlaylistEditAdapter : EditSongAdapter(requireContext()) {
+    private inner class PlaylistEditAdapter : EditSongAdapter(requireContext(), false) {
         override fun getItemCount(): Int {
             return entries.value.second.size
         }
@@ -520,6 +520,12 @@ class PlaylistEditFragment : BaseFragment(false) {
                 }
             }
             notifyItemRemoved(pos)
+        }
+
+        override fun getCoverFallback(pos: Int): Int {
+            if (getItem(pos).mediaId.startsWith("Missing:"))
+                return R.drawable.ic_default_cover_error
+            return R.drawable.ic_default_cover
         }
     }
 }

@@ -29,7 +29,8 @@ import org.akanework.gramophone.logic.utils.convertDurationToTimeStamp
 
 // Like SongAdapter, but without layouts, sorting, or flows; instead supporting drag, swipe & remove
 abstract class EditSongAdapter(
-    private val context: Context
+    private val context: Context,
+    private val showDuration: Boolean
 ) : MyRecyclerView.Adapter<EditSongAdapter.ViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -44,15 +45,15 @@ abstract class EditSongAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
         holder.songName.text = item.mediaMetadata.title
-        holder.songArtist.text = context.getString(
+        holder.songArtist.text = if (showDuration) context.getString(
             R.string.artist_time,
             item.mediaMetadata.durationMs?.convertDurationToTimeStamp(),
             item.mediaMetadata.artist ?: context.getString(R.string.unknown_artist)
-        )
+        ) else item.mediaMetadata.artist ?: context.getString(R.string.unknown_artist)
         holder.songCover.load(item.mediaMetadata.artworkUri) {
-            placeholderScaleToFit(R.drawable.ic_default_cover)
+            placeholderScaleToFit(getCoverFallback(position))
             crossfade(true)
-            error(R.drawable.ic_default_cover)
+            error(getCoverFallback(position))
         }
         holder.closeButton.setOnClickListener { v ->
             ViewCompat.performHapticFeedback(v, HapticFeedbackConstantsCompat.CONTEXT_CLICK)
@@ -88,6 +89,9 @@ abstract class EditSongAdapter(
     abstract fun startDrag(holder: ViewHolder)
     abstract fun onClick(pos: Int)
     abstract fun getItem(pos: Int): MediaItem
+    protected open fun getCoverFallback(pos: Int): Int {
+        return R.drawable.ic_default_cover
+    }
     abstract fun onRowMoved(from: Int, to: Int) // must call notifyItemMoved() if actually moving
     abstract fun removeItem(pos: Int) // must call notifyItemRemoved() if actually removing
 

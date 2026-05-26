@@ -112,7 +112,7 @@ class PlaylistQueueSheet(
         playlistAdapter.currentIsPlaying = isPlaying
     }
 
-    private inner class PlaylistCardAdapter : EditSongAdapter(activity) {
+    private inner class PlaylistCardAdapter : EditSongAdapter(activity, true) {
         var playlist: Pair<MutableList<Int>, MutableList<MediaItem>> = dumpPlaylist()
 
         init {
