@@ -500,4 +500,18 @@
     <string name="favorite_failed_title">Не удалось изменить статус «Избранного» для трека</string>
     <string name="favorite_failed_text">Нажмите здесь, чтобы применить изменения, предоставив доступ к файлу плейлиста «Избранное»</string>
     <string name="error_in_bg">Ошибки в фоновом режиме</string>
+    <string name="settings_whitelist">Белый список</string>
+    <string name="whitelist_and_blacklist">Если в белом списке не выбраны папки, доступ будет открыт ко всем папкам.\n\nБелый и чёрный списки работают вместе, но приоритет остаётся за чёрным списком. Например, вы можете добавить папку в белый список, а одну из её вложенных папок — в чёрный, тем самым исключив её.</string>
+    <string name="discard_changes_title">Не сохранять изменения?</string>
+    <string name="save">Сохранить</string>
+    <string name="discard">Отменить</string>
+    <string name="discard_changes_msg">Вы точно хотите отменить изменения в плейлисте \"%s\"?</string>
+    <string name="apply">Применить</string>
+    <string name="restore_edits">Восстановить изменения?</string>
+    <string name="restore_edits_msg">В плейлисте \"%s\" остались несохранённые изменения. Хотите восстановить эти изменения или удалить их и открыть первоначальную версию плейлиста?</string>
+    <string name="restore">Восстановить</string>
+    <string name="mount_storage">Для использования этой функции вставьте SD-карту</string>
+    <string name="failed_to_restore">Не удалось восстановить изменения: %s</string>
+    <string name="playlist_empty">Плейлист пуст</string>
+    <string name="playlist_empty_msg">Чтобы добавить песни, нажмите на значок с тремя точками рядом с нужным треком и выберите \"Добавить в плейлист\".</string>
 </resources>
