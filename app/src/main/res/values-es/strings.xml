@@ -379,7 +379,6 @@
     <string name="settings_pure_dark_summary">Un tema en el que todas las superficies de la aplicación son completamente negras</string>
     <string name="compact_grid">Cuadrícula (compacta)</string>
     <string name="sort_by_album_year">Año del álbum</string>
-    <string name="playlist_editing_pref_desc">Permite agregar canciones a listas de reproducción (mover/eliminar aún no está implementado)</string>
     <string name="no_app_found">No se encontró ninguna aplicación que pueda hacer esto</string>
     <string name="contributors_nift4">Mantenedor / Desarrollador líder</string>
     <string name="contributors_123duo3">Diseñador principal</string>
