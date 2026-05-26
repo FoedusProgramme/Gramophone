@@ -1532,15 +1532,17 @@ fun parseTtml(audioMimeType: String?, lyricText: String): SemanticLyrics? {
         out
     }
     // start left if person is first, and right if sample is first.
-    val pToSide = hashMapOf<Int, Boolean /* true = right */>()
-    if (Flags.TTML_AGENT_SMART_SIDES) {
-        var agent: String? = null
-        var side = state.paragraphs.firstOrNull()?.let { peopleToType[it.agent] == "other" } != true
+    val pToSide = if (Flags.TTML_AGENT_SMART_SIDES) {
+        val pToSide = hashMapOf<Int, Boolean /* true = right */>()
+        var agent = state.paragraphs.firstOrNull()?.agent
+        var side = state.paragraphs.firstOrNull()?.let { peopleToType[it.agent] == "other" } == true
         state.paragraphs.forEachIndexed { i, it ->
-            if (agent != it.agent && peopleToType[it.agent] != "group") {
-                agent = it.agent
-                pToSide[i] = !side
-                side = !side
+            if (peopleToType[it.agent] != "group") {
+                if (agent != it.agent) {
+                    agent = it.agent
+                    side = !side
+                }
+                pToSide[i] = side
             }
         }
         val countLeft = pToSide.count { !it.value }
@@ -1550,7 +1552,8 @@ fun parseTtml(audioMimeType: String?, lyricText: String): SemanticLyrics? {
                 pToSide[it] = !pToSide[it]!!
             }
         }
-    }
+        pToSide
+    } else null
     val hasAtLeastTwoPeople = people["person"]?.let { it.size > 1 } == true
     if (paragraphs.find { it.time != null } == null) {
         return UnsyncedLyrics(paragraphs.mapIndexed { j, it ->
@@ -1560,7 +1563,7 @@ fun parseTtml(audioMimeType: String?, lyricText: String): SemanticLyrics? {
             val isOther = peopleToType[it.agent] == "other"
             // first person goes left, second right, third left, fourth right, and so on.
             // and the same goes for "other" except that we start on the right here.
-            val isVoice2 = pToSide[j] ?:
+            val isVoice2 = if (pToSide != null) !isGroup && pToSide[j]!! else
                 (it.agent != null && (people[peopleToType[it.agent]] ?: throw NullPointerException(
                     "expected to find ${it.agent} (${peopleToType[it.agent]}) in $people"
                 )).indexOf(it.agent) % 2 == (if (isOther) 0 else 1))
