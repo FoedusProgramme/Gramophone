@@ -280,7 +280,6 @@
     <string name="contributors_yuyuko1024">波浪进度条</string>
     <string name="contributors_ghhccghk">状态栏歌词及其他改进</string>
     <string name="no_app_found">找不到可以进行此操作的应用程序</string>
-    <string name="playlist_editing_pref_desc">允许将歌曲添加到播放列表（移动/删除尚未实现）</string>
     <string name="spk_encoding_mp3">MP3</string>
     <string name="spk_encoding_aac_lc">AAC-LC</string>
     <string name="spk_encoding_aac_he_v1">HE-AAC v1</string>

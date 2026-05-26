@@ -399,7 +399,6 @@
     <string name="rename_playlist">Wiedergabeliste umbenennen</string>
     <string name="edit_playlist_failed">Bearbeiten der Wiedergabeliste fehlgeschlagen: %s</string>
     <string name="add_to_playlist">Zur Wiedergabeliste hinzufügen</string>
-    <string name="playlist_editing_pref_desc">Ermöglicht, Lieder zu Wiedergabelisten hinzuzufügen (bewegen/entfernen ist noch nicht implementiert)</string>
     <string name="no_app_found">Keine passende App gefunden</string>
     <string name="contributors_nift4">Maintainer / Hauptentwickler</string>
     <string name="contributors_123duo3">Hauptdesigner</string>

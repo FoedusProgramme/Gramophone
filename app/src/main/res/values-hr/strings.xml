@@ -421,7 +421,6 @@
     <string name="rename_playlist">Preimenuj playlistu</string>
     <string name="edit_playlist_failed">Uređivanje playliste nije uspjelo: %s</string>
     <string name="add_to_playlist">Dodaj u playlistu</string>
-    <string name="playlist_editing_pref_desc">Omogućuje dodavanje pjesama na playliste (premještanje / uklanjanje još nije implementirano)</string>
     <string name="no_app_found">Nije pronađena nijedna aplikacija koja to može uraditi</string>
     <string name="contributors_nift4">Održavatelj / Glavni programer</string>
     <string name="contributors_123duo3">Glavni dizajner</string>

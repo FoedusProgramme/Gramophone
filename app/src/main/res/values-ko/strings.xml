@@ -404,7 +404,6 @@
     <string name="settings_pure_dark_summary">앱의 순서가 풀 한 블랙 (모든 블랙에 흑색 호출이 발생할 수 있음) 테마</string>
     <string name="settings_translation_auto_word_summary">변환기에 대한 선형 그라데이션 적용 교환기가 번역을 답변하는 경우 단어를 동기화하는 메타 데이터가 없습니다</string>
     <string name="settings_replaygain_mode_desc">\"Smart\"는 앨범을 동시에 앨범에서 연주하는 채우기만으로 앨범 다이나믹스를 자동으로 보존합니다.</string>
-    <string name="playlist_editing_pref_desc">재생 목록에 노래를 추가 할 수 있습니다 (이동, 제거 또는 제거되지 않음)</string>
     <string name="timer_expiry_eos">수면 타이머는 %s에서 노래 할 때 음악을 일시 중지합니다</string>
     <string name="timer_expiry_end_of_this_song">수면 타이머는이 노래의 끝에 음악을 깨뜨릴 것입니다</string>
     <string name="settings_replaygain_no_rg_amp_desc">시끄러운 노래 용 볼륨 줄이는 것은 태그를 표현하지 않습니다</string>

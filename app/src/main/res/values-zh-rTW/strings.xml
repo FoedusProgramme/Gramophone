@@ -209,7 +209,6 @@
     <string name="settings_audio_quality_info">音訊品質資訊</string>
     <string name="settings_audio_quality_info_summary">在播放器螢幕上顯示音訊品質／格式資訊</string>
     <string name="settings_mp3_index_seeking">MP3 索引搜尋</string>
-    <string name="playlist_editing_pref_desc">可將歌曲新增至播放清單（移動／移除功能尚未實作）</string>
     <string name="app_name">Gramophone</string>
     <string name="settings_contributors_click">%s (點擊查看更多！)</string>
     <string name="delete_failed_playlist">刪除播放清單錯誤</string>

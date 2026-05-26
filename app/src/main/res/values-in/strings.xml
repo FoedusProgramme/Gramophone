@@ -416,7 +416,6 @@
     <string name="rename_playlist">Ganti nama daftar putar</string>
     <string name="edit_playlist_failed">Pengeditan daftar putar gagal: %s</string>
     <string name="add_to_playlist">Tambahkan ke daftar putar</string>
-    <string name="playlist_editing_pref_desc">Memungkinkan penambahan lagu ke daftar putar (pemindahan / penghapusan belum diimplementasikan)</string>
     <string name="no_app_found">Tidak ada aplikasi yang dapat melakukan ini</string>
     <string name="contributors_nift4">Pemelihara / Pengembang Utama</string>
     <string name="contributors_123duo3">Desainer Utama</string>
