@@ -490,4 +490,16 @@
     <string name="error_in_bg">Taustal juhtunud vead</string>
     <string name="settings_whitelist">Lubatud kaustade loend</string>
     <string name="whitelist_and_blacklist">Kui sa pole lubatud kaustade loendisse mitte midagi lisanud, siis on kõik kaustad lubatud.\n\nLubatud ja keelatud kaustade loendit töödeldakse koos ja neist keelatud kaustade loend on prioriteetne. Näitaks võid lubada konkreetse kausta, kuid välistada mõne tema alakausta.</string>
+    <string name="discard_changes_title">Kas loobud muudatustest?</string>
+    <string name="save">Salvesta</string>
+    <string name="discard">Loobu</string>
+    <string name="discard_changes_msg">Kas kindlasti tahad loobuda muudatustest esitusloendis „%s“?</string>
+    <string name="apply">Rakenda</string>
+    <string name="restore_edits">Kas taastad muudatused?</string>
+    <string name="restore_edits_msg">Esitusloendis „%s“ on salvestamata muudatusi. Kas sa sooviksid need taastada või neist loobuda ja alustada esitusloendi värske versiooniga?</string>
+    <string name="restore">Taasta</string>
+    <string name="mount_storage">Selle funktsionaalsuse kasutamiseks palun sisesta SD-kaart</string>
+    <string name="failed_to_restore">Muudatuste taastamine ei õnnestunud: %s</string>
+    <string name="playlist_empty">Esitusloend on tühi</string>
+    <string name="playlist_empty_msg">Klõpsates loo juures leiduvast kolme punktiga menüüst valikut „Lisa esitusloendisse“ saadki alustada lugude lisamisega esitusloendisse.</string>
 </resources>
