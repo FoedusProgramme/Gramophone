@@ -1534,9 +1534,9 @@ fun parseTtml(audioMimeType: String?, lyricText: String): SemanticLyrics? {
     // start left if person is first, and right if sample is first.
     val pToSide = if (Flags.TTML_AGENT_SMART_SIDES) {
         val pToSide = hashMapOf<Int, Boolean /* true = right */>()
-        var agent = state.paragraphs.firstOrNull()?.agent
-        var side = state.paragraphs.firstOrNull()?.let { peopleToType[it.agent] == "other" } == true
-        state.paragraphs.forEachIndexed { i, it ->
+        var agent = paragraphs.firstOrNull()?.agent
+        var side = paragraphs.firstOrNull()?.let { peopleToType[it.agent] == "other" } == true
+        paragraphs.forEachIndexed { i, it ->
             if (peopleToType[it.agent] != "group") {
                 if (agent != it.agent) {
                     agent = it.agent
