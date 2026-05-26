@@ -510,4 +510,15 @@
     <string name="error_in_bg">Errors occurring in the background</string>
     <string name="settings_whitelist">Whitelist</string>
     <string name="whitelist_and_blacklist">If no folders are selected in the Whitelist, all folders will be allowed.\n\nWhitelist and Blacklist are applied together, with Blacklist taking priority. For example, you can allow a folder in the Whitelist while excluding one of its subfolders in the Blacklist.</string>
+    <string name="discard_changes_title">Discard changes?</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="discard">Discard</string>
+    <string name="discard_changes_msg">Do you really want to discard your changes to playlist \"%s\"?</string>
+    <string name="apply">Apply</string>
+    <string name="restore_edits">Restore changes?</string>
+    <string name="restore_edits_msg">There are unsaved changes for the playlist \"%s\". Do you wish to restore these changes, or discard them and start over with a fresh version of the playlist?</string>
+    <string name="restore">Restore</string>
+    <string name="mount_storage">Please insert SD card to use this feature</string>
+    <string name="failed_to_restore">Failed to restore changes: %s</string>
 </resources>
