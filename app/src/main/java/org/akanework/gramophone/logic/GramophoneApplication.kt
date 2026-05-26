@@ -239,7 +239,6 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
             })
         }
         uacManager = UacManager(this)
-        Flags.PLAYLIST_EDITING = prefs.getBooleanStrict("playlist_editing", false)
         reader = FlowReader(
             this,
             if (BuildConfig.DISABLE_MEDIA_STORE_FILTER) MutableStateFlow(0) else

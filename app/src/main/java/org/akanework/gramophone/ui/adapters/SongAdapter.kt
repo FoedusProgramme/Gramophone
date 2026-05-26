@@ -20,7 +20,6 @@ package org.akanework.gramophone.ui.adapters
 import android.net.Uri
 import android.view.View
 import android.widget.Toast
-import androidx.activity.result.IntentSenderRequest
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.app.ShareCompat
 import androidx.core.content.FileProvider
@@ -29,7 +28,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
-import androidx.media3.common.util.Log
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -39,7 +37,6 @@ import kotlinx.coroutines.withContext
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.getFile
 import org.akanework.gramophone.logic.requireMediaStoreId
-import org.akanework.gramophone.logic.utils.Flags
 import org.akanework.gramophone.ui.MainActivity
 import org.akanework.gramophone.ui.MediaControllerViewModel
 import org.akanework.gramophone.ui.components.NowPlayingDrawable
@@ -217,8 +214,6 @@ class SongAdapter(
 
     override fun onMenu(item: MediaItem, popupMenu: PopupMenu) {
         popupMenu.inflate(R.menu.more_menu)
-        if (!Flags.PLAYLIST_EDITING!!)
-            popupMenu.menu.findItem(R.id.add_to_playlist).isVisible = false
 
         popupMenu.setOnMenuItemClickListener { it1 ->
             when (it1.itemId) {

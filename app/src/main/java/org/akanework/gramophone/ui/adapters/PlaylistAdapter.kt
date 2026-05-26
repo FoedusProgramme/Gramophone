@@ -45,7 +45,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.akanework.gramophone.R
-import org.akanework.gramophone.logic.utils.Flags
 import org.akanework.gramophone.ui.MainActivity
 import org.akanework.gramophone.ui.fragments.AdapterFragment
 import org.akanework.gramophone.ui.fragments.GeneralSubFragment
@@ -122,8 +121,8 @@ class PlaylistAdapter(
 
     override fun onMenu(item: Playlist, popupMenu: PopupMenu) {
         popupMenu.inflate(R.menu.more_menu)
-        val canRename = Flags.PLAYLIST_EDITING!! && item.title != null
-        val canDelete = Flags.PLAYLIST_EDITING!! && item.id != null
+        val canRename = item.title != null
+        val canDelete = item.id != null
         popupMenu.menu.iterator().forEach {
             it.isVisible = it.itemId == R.id.play_next || it.itemId == R.id.add_to_queue
                     || (canRename && it.itemId == R.id.rename)
@@ -276,7 +275,6 @@ class PlaylistAdapter(
             payloads: List<Any?>
         ) {
             super.onBindViewHolder(holder, position, payloads)
-            if (!Flags.PLAYLIST_EDITING!!) return
             holder.createPlaylist.visibility = View.VISIBLE
             holder.createPlaylist.setOnClickListener { _ ->
                 playlistNameDialog(context, R.string.create_playlist, "") { name ->

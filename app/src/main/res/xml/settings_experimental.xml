@@ -54,15 +54,6 @@
             android:widgetLayout="@layout/preference_switch_widget"
             app:iconSpaceReserved="false" />
 
-        <SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="playlist_editing"
-            android:layout="@layout/preference_switch"
-            android:summary="@string/playlist_editing_pref_desc"
-            android:title="@string/add_to_playlist"
-            android:widgetLayout="@layout/preference_switch_widget"
-            app:iconSpaceReserved="false" />
-
         <ListPreference
             android:defaultValue="0"
             android:entries="@array/offload_switch"

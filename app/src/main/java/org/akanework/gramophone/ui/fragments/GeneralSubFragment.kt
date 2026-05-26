@@ -36,7 +36,6 @@ import kotlinx.coroutines.withContext
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.enableEdgeToEdgePaddingListener
 import org.akanework.gramophone.logic.ui.MyRecyclerView
-import org.akanework.gramophone.logic.utils.Flags
 import org.akanework.gramophone.logic.utils.flows.PauseManagingSharedFlow.Companion.sharePauseableIn
 import org.akanework.gramophone.logic.utils.flows.provideReplayCacheInvalidationManager
 import org.akanework.gramophone.ui.adapters.SongAdapter
@@ -136,7 +135,7 @@ class GeneralSubFragment : BaseFragment(true) {
                 }
                 itemList = item.map { it?.songList }
                 rawOrderExposed = Sorter.Type.NaturalOrder
-                if (clazz == Playlist::class.java.name && Flags.PLAYLIST_EDITING!!) {
+                if (clazz == Playlist::class.java.name) {
                     topAppBar.inflateMenu(R.menu.playlist_subfragment_menu)
                     topAppBar.setOnMenuItemClickListener {
                         when (it.itemId) {
