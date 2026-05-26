@@ -227,7 +227,7 @@ class PlaylistEditFragment : BaseFragment(false) {
         }.map {
             it.resolveMediaItem(pathMap)?.let { mi -> it.copyFromMediaItem(mi) } ?: it
         }
-        if (readback.isEmpty()) {
+        if (!restore && readback.isEmpty()) {
             withContext(Dispatchers.Main) {
                 MaterialAlertDialogBuilder(requireContext())
                     .setTitle(R.string.playlist_empty)
