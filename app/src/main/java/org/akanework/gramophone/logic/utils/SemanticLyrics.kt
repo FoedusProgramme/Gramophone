@@ -1543,6 +1543,13 @@ fun parseTtml(audioMimeType: String?, lyricText: String): SemanticLyrics? {
                 side = agentToSide[it.agent]!!
             }
         }
+        val countLeft = state.paragraphs.count { agentToSide[it.agent] == false }
+        val countRight = state.paragraphs.count { agentToSide[it.agent] == true }
+        if (countRight * 100 >= (countLeft + countRight) * 85) {
+            agentToSide.keys.toList().forEach {
+                agentToSide[it] = !agentToSide[it]!!
+            }
+        }
     }
     val hasAtLeastTwoPeople = people["person"]?.let { it.size > 1 } == true
     if (paragraphs.find { it.time != null } == null) {
