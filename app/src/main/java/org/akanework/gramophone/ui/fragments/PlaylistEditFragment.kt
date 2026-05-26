@@ -235,7 +235,7 @@ class PlaylistEditFragment : BaseFragment(false) {
                     .setPositiveButton(android.R.string.ok) { _, _ ->
                         requireActivity().supportFragmentManager.popBackStack()
                     }
-                    .setOnDismissListener {
+                    .setOnCancelListener {
                         requireActivity().supportFragmentManager.popBackStack()
                     }
                     .show()
