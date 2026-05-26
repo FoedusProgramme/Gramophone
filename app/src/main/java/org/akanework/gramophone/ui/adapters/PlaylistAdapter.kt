@@ -28,7 +28,6 @@ import android.provider.MediaStore
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.result.IntentSenderRequest
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.app.DialogCompat
@@ -51,12 +50,10 @@ import org.akanework.gramophone.ui.MainActivity
 import org.akanework.gramophone.ui.fragments.AdapterFragment
 import org.akanework.gramophone.ui.fragments.GeneralSubFragment
 import org.nift4.mediastorecompat.MediaStoreCompat
-import org.nift4.mediastorecompat.StorageManagerCompat
 import uk.akane.libphonograph.dynamicitem.Favorite
 import uk.akane.libphonograph.dynamicitem.RecentlyAdded
 import uk.akane.libphonograph.items.Playlist
 import uk.akane.libphonograph.manipulator.ItemManipulator
-import java.io.File
 
 /**
  * [PlaylistAdapter] is an adapter for displaying artists.
@@ -173,10 +170,10 @@ class PlaylistAdapter(
                                             else item.title
                                         )
                                     )
-                                    .setPositiveButton(R.string.yes) { _, _ ->
+                                    .setPositiveButton(R.string.delete) { _, _ ->
                                         res.invoke()
                                     }
-                                    .setNegativeButton(R.string.no) { _, _ -> }
+                                    .setNegativeButton(R.string.cancel) { _, _ -> }
                                     .show()
                             }
                         }

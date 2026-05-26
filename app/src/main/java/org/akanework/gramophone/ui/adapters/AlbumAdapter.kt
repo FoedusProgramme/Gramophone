@@ -110,10 +110,10 @@ class AlbumAdapter(
                                             item.title
                                         )
                                     )
-                                    .setPositiveButton(R.string.yes) { _, _ ->
+                                    .setPositiveButton(R.string.delete) { _, _ ->
                                         res.invoke()
                                     }
-                                    .setNegativeButton(R.string.no) { _, _ -> }
+                                    .setNegativeButton(R.string.cancel) { _, _ -> }
                                     .show()
                             }
                         }

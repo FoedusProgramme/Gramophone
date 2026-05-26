@@ -1,5 +1,6 @@
 package uk.akane.libphonograph.manipulator
 
+import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
 import android.os.Parcelable
@@ -115,7 +116,9 @@ object PlaylistSerializer {
     private fun write(context: Context, format: PlaylistFormat, outFile: File, uri: Uri, songs: List<Entry>) {
         val parent = outFile.parentFile
             ?: throw NullPointerException("parentFile of playlist is null")
-        val os = MediaStoreCompat.openOutputStream(context, uri, "wt")!!
+        val os = if (uri.scheme == ContentResolver.SCHEME_FILE)
+            context.contentResolver.openOutputStream(uri, "wt")!!
+        else MediaStoreCompat.openOutputStream(context, uri, "wt")!!
         when (format) {
             PlaylistFormat.M3u -> {
                 val out = "#EXTM3U\n" + songs.joinToString("\n") {
