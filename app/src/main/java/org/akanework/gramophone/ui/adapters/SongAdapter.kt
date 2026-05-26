@@ -276,7 +276,7 @@ class SongAdapter(
                                     .setPositiveButton(R.string.delete) { _, _ ->
                                         res.invoke()
                                     }
-                                    .setNegativeButton(R.string.cancel) { _, _ -> }
+                                    .setNegativeButton(android.R.string.cancel) { _, _ -> }
                                     .show()
                             }
                         }

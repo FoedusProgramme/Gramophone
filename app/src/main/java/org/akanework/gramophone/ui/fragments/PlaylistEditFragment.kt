@@ -1,5 +1,6 @@
 package org.akanework.gramophone.ui.fragments
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ContentUris
 import android.content.Context
@@ -16,6 +17,7 @@ import androidx.activity.addCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.view.doOnLayout
 import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
@@ -57,6 +59,8 @@ class PlaylistEditFragment : BaseFragment(false) {
     }
     private lateinit var theItem: MutableSharedFlow<Playlist?>
     private lateinit var tmpName: String
+    private lateinit var loadingCircle: View
+    private lateinit var recyclerView: MyRecyclerView
     private lateinit var touchHelper: ItemTouchHelper
     private lateinit var topAppBar: MaterialToolbar
     private lateinit var intentSender: ActivityResultLauncher<IntentSenderRequest>
@@ -77,11 +81,12 @@ class PlaylistEditFragment : BaseFragment(false) {
             }
         theItem = MutableSharedFlow(replay = 1)
 
-        val rootView = inflater.inflate(R.layout.fragment_general_sub, container, false)
+        val rootView = inflater.inflate(R.layout.fragment_edit_playlist, container, false)
         topAppBar = rootView.findViewById(R.id.topAppBar)
         val collapsingToolbarLayout =
             rootView.findViewById<CollapsingToolbarLayout>(R.id.collapsingtoolbar)
-        val recyclerView = rootView.findViewById<MyRecyclerView>(R.id.recyclerview)
+        recyclerView = rootView.findViewById(R.id.recyclerview)
+        loadingCircle = rootView.findViewById(R.id.loadingCircle)
         val appBarLayout = rootView.findViewById<AppBarLayout>(R.id.appbarlayout)
         topAppBar.setNavigationIcon(R.drawable.outline_close_24)
         topAppBar.inflateMenu(R.menu.playlist_apply_menu)
@@ -169,9 +174,10 @@ class PlaylistEditFragment : BaseFragment(false) {
                                     load(application, false)
                                 }
                             }
-                            .setNeutralButton(R.string.cancel) { _, _ ->
+                            .setNeutralButton(android.R.string.cancel) { _, _ ->
                                 requireActivity().supportFragmentManager.popBackStack()
                             }
+                            .setCancelable(false)
                             .show()
                     }
                 }
@@ -221,6 +227,21 @@ class PlaylistEditFragment : BaseFragment(false) {
         }.map {
             it.resolveMediaItem(pathMap)?.let { mi -> it.copyFromMediaItem(mi) } ?: it
         }
+        if (readback.isEmpty()) {
+            withContext(Dispatchers.Main) {
+                MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(R.string.playlist_empty)
+                    .setMessage(R.string.playlist_empty_msg)
+                    .setPositiveButton(android.R.string.ok) { _, _ ->
+                        requireActivity().supportFragmentManager.popBackStack()
+                    }
+                    .setOnDismissListener {
+                        requireActivity().supportFragmentManager.popBackStack()
+                    }
+                    .show()
+            }
+            return
+        }
         val rendered = hashMapOf<PlaylistSerializer.Entry, MediaItem>()
         readback.forEach {
             rendered[it] = it.resolveMediaItem(pathMap) ?: MediaItem.Builder()
@@ -249,6 +270,12 @@ class PlaylistEditFragment : BaseFragment(false) {
             }
             requireActivity().onBackPressedDispatcher.addCallback(
                 this@PlaylistEditFragment) { maybeGoBack() }
+            @SuppressLint("NotifyDataSetChanged") adapter.notifyDataSetChanged()
+            recyclerView.doOnLayout {
+                recyclerView.postOnAnimation {
+                    loadingCircle.visibility = View.GONE
+                }
+            }
         }
         launch {
             mainActivity.reader.pathMapFlow.drop(1).collectLatest { pathMap ->
@@ -352,7 +379,7 @@ class PlaylistEditFragment : BaseFragment(false) {
                 }
                 requireActivity().supportFragmentManager.popBackStack()
             }
-            .setNeutralButton(R.string.cancel) { _, _ -> }
+            .setNeutralButton(android.R.string.cancel) { _, _ -> }
             .show()
     }
 
@@ -394,6 +421,8 @@ class PlaylistEditFragment : BaseFragment(false) {
     private fun hasChanges(context: Context): Boolean? {
         val filesDir = context.externalCacheDir ?: return null
         val playlistsDir = filesDir.resolve(FOLDER_NAME)
+        if (!playlistsDir.exists() && !playlistsDir.mkdirs())
+            return null
         val playlist = playlistsDir.resolve(tmpName)
         return playlist.exists()
     }

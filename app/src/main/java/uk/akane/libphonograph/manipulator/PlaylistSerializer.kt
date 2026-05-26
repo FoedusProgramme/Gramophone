@@ -117,7 +117,7 @@ object PlaylistSerializer {
         val parent = outFile.parentFile
             ?: throw NullPointerException("parentFile of playlist is null")
         val os = if (uri.scheme == ContentResolver.SCHEME_FILE)
-            context.contentResolver.openOutputStream(uri, "wt")!!
+            outFile.outputStream()
         else MediaStoreCompat.openOutputStream(context, uri, "wt")!!
         when (format) {
             PlaylistFormat.M3u -> {
