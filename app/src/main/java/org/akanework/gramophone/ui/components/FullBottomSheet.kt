@@ -1142,8 +1142,8 @@ class FullBottomSheet
             bottomSheetFavoriteButton.removeOnCheckedChangeListener(this)
             bottomSheetFavoriteButton.isChecked =
                 (mediaMetadata.userRating as? HeartRating)?.isHeart == true
-            bottomSheetFavoriteButton.addOnCheckedChangeListener(this)
         }
+        bottomSheetFavoriteButton.addOnCheckedChangeListener(this) // see onCheckedChanged
     }
 
     private fun updateDuration() {
@@ -1203,6 +1203,7 @@ class FullBottomSheet
             if (entry != null)
                 activity.markIsFavoriteStatus(listOf(entry), isChecked)
         }
+        bottomSheetFavoriteButton.removeOnCheckedChangeListener(this) // see onMediaMetadataChanged
     }
 
     override fun onPositionDiscontinuity(
