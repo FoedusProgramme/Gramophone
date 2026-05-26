@@ -1535,7 +1535,7 @@ fun parseTtml(audioMimeType: String?, lyricText: String): SemanticLyrics? {
     val pToSide = hashMapOf<Int, Boolean /* true = right */>()
     if (Flags.TTML_AGENT_SMART_SIDES) {
         var agent: String? = null
-        var side = state.paragraphs.firstOrNull()?.let { peopleToType[it.agent] == "other" } == true
+        var side = state.paragraphs.firstOrNull()?.let { peopleToType[it.agent] == "other" } != true
         state.paragraphs.forEachIndexed { i, it ->
             if (agent != it.agent && peopleToType[it.agent] != "group") {
                 agent = it.agent
@@ -1543,8 +1543,8 @@ fun parseTtml(audioMimeType: String?, lyricText: String): SemanticLyrics? {
                 side = !side
             }
         }
-        val countLeft = state.paragraphs.indices.count { pToSide[it] == false }
-        val countRight = state.paragraphs.indices.count { pToSide[it] == true }
+        val countLeft = pToSide.count { !it.value }
+        val countRight = pToSide.count { it.value }
         if (countRight * 100 >= (countLeft + countRight) * 85) {
             pToSide.keys.toList().forEach {
                 pToSide[it] = !pToSide[it]!!
