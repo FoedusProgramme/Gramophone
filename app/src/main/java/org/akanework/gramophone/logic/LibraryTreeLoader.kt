@@ -3,29 +3,21 @@ package org.akanework.gramophone.logic
 import android.content.Context
 import android.os.Bundle
 import androidx.core.net.toUri
-import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
-import androidx.media3.common.Rating
 import androidx.media3.common.util.Log
 import androidx.media3.session.LibraryResult
 import androidx.media3.session.MediaLibraryService.LibraryParams
-import androidx.media3.session.MediaLibraryService.MediaLibrarySession
-import androidx.media3.session.MediaSession
-import androidx.media3.session.MediaSession.MediaItemsWithStartPosition
-import androidx.media3.session.SessionCommand
-import androidx.media3.session.SessionError
-import androidx.media3.session.SessionResult
 import androidx.media3.session.MediaConstants
 import androidx.preference.PreferenceManager
 import com.google.common.collect.ImmutableList
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.common.util.concurrent.SettableFuture
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.comparators.SupportComparator
 import org.akanework.gramophone.ui.adapters.AlbumAdapter
@@ -40,35 +32,21 @@ import uk.akane.libphonograph.items.*
 
 /**
  * Handles the media library browsing logic for [GramophonePlaybackService].
- * Extracted from the service to improve maintainability and separate UI/tree-building logic.
+ * Responsible for building the library tree and searching for items.
  */
-class GramophoneLibrarySessionCallback(
+class LibraryTreeLoader(
     private val context: Context,
     private val app: GramophoneApplication,
-    private val lifecycleScope: LifecycleCoroutineScope,
+    private val scope: CoroutineScope,
     private val convertItem: (MediaItem) -> MediaItem,
-    private val delegate: SessionDelegate,
-) : MediaLibrarySession.Callback {
+) {
 
-    private val tag = "GramophoneLibSession"
+    private val tag = "LibraryTreeLoader"
 
-    interface SessionDelegate {
-        fun onConnect(session: MediaSession, controller: MediaSession.ControllerInfo): MediaSession.ConnectionResult
-        fun onPostConnect(session: MediaSession, controller: MediaSession.ControllerInfo)
-        fun onDisconnected(session: MediaSession, controller: MediaSession.ControllerInfo)
-        fun onSetRating(session: MediaSession, controller: MediaSession.ControllerInfo, mediaId: String, rating: Rating): ListenableFuture<SessionResult>
-        fun onSetRating(session: MediaSession, controller: MediaSession.ControllerInfo, rating: Rating): ListenableFuture<SessionResult>
-        fun onCustomCommand(session: MediaSession, controller: MediaSession.ControllerInfo, customCommand: SessionCommand, args: Bundle): ListenableFuture<SessionResult>
-        fun onPlaybackResumption(mediaSession: MediaSession, controller: MediaSession.ControllerInfo, isForPlayback: Boolean): ListenableFuture<MediaItemsWithStartPosition>
-    }
-
-    override fun onConnect(session: MediaSession, controller: MediaSession.ControllerInfo) = delegate.onConnect(session, controller)
-    override fun onPostConnect(session: MediaSession, controller: MediaSession.ControllerInfo) = delegate.onPostConnect(session, controller)
-    override fun onDisconnected(session: MediaSession, controller: MediaSession.ControllerInfo) = delegate.onDisconnected(session, controller)
-    override fun onSetRating(session: MediaSession, controller: MediaSession.ControllerInfo, mediaId: String, rating: Rating) = delegate.onSetRating(session, controller, mediaId, rating)
-    override fun onSetRating(session: MediaSession, controller: MediaSession.ControllerInfo, rating: Rating) = delegate.onSetRating(session, controller, rating)
-    override fun onCustomCommand(session: MediaSession, controller: MediaSession.ControllerInfo, customCommand: SessionCommand, args: Bundle) = delegate.onCustomCommand(session, controller, customCommand, args)
-    override fun onPlaybackResumption(mediaSession: MediaSession, controller: MediaSession.ControllerInfo, isForPlayback: Boolean) = delegate.onPlaybackResumption(mediaSession, controller, isForPlayback)
+    data class ExpandedMediaItems(
+        val mediaItems: List<MediaItem>,
+        val startIndex: Int? = null
+    )
 
     // --- Helpers ---
 
@@ -202,28 +180,22 @@ class GramophoneLibrarySessionCallback(
         }
     }
 
-    // --- MediaLibrarySession.Callback Implementation ---
+    // --- Library Tree Methods ---
 
-    override fun onGetLibraryRoot(
-        session: MediaLibrarySession,
-        browser: MediaSession.ControllerInfo,
-        params: LibraryParams?
-    ): ListenableFuture<LibraryResult<MediaItem>> {
+    fun getLibraryRoot(): ListenableFuture<LibraryResult<MediaItem>> {
         val outParams = LibraryParams.Builder().setOffline(true).setSuggested(false).setRecent(false).build()
         val item = getCategoryItem("root")!!
         return Futures.immediateFuture(LibraryResult.ofItem(item, outParams))
     }
 
-    override fun onGetChildren(
-        session: MediaLibrarySession,
-        browser: MediaSession.ControllerInfo,
+    fun getChildren(
         parentId: String,
         page: Int,
         pageSize: Int,
         params: LibraryParams?
     ): ListenableFuture<LibraryResult<ImmutableList<MediaItem>>> {
         val completion = SettableFuture.create<LibraryResult<ImmutableList<MediaItem>>>()
-        lifecycleScope.launch(Dispatchers.Default) {
+        scope.launch(Dispatchers.Default) {
             try {
                 val list: List<MediaItem> = when (parentId) {
                     "root" -> {
@@ -249,8 +221,8 @@ class GramophoneLibrarySessionCallback(
                 val pagedList = list.asSequence().drop(page * finalPageSize).take(finalPageSize).map { convertItem(it) }.toList()
                 completion.set(LibraryResult.ofItemList(ImmutableList.copyOf(pagedList), params))
             } catch (e: Exception) {
-                Log.w(tag, "onGetChildren failed for $parentId", e)
-                completion.set(LibraryResult.ofError(SessionError.ERROR_UNKNOWN))
+                Log.w(tag, "getChildren failed for $parentId", e)
+                completion.set(LibraryResult.ofError(androidx.media3.session.SessionError.ERROR_UNKNOWN))
             }
         }
         return completion
@@ -267,13 +239,9 @@ class GramophoneLibrarySessionCallback(
         ViewPager2Adapter.Companion.Tab.FileSystem -> "detailed_folders"
     }
 
-    override fun onGetItem(
-        session: MediaLibrarySession,
-        browser: MediaSession.ControllerInfo,
-        mediaId: String
-    ): ListenableFuture<LibraryResult<MediaItem>> {
+    fun getItem(mediaId: String): ListenableFuture<LibraryResult<MediaItem>> {
         val completion = SettableFuture.create<LibraryResult<MediaItem>>()
-        lifecycleScope.launch(Dispatchers.Default) {
+        scope.launch(Dispatchers.Default) {
             try {
                 val item = getCategoryItem(mediaId) ?: when {
                     mediaId.startsWith("album_") -> {
@@ -310,10 +278,10 @@ class GramophoneLibrarySessionCallback(
                 }
 
                 if (item != null) completion.set(LibraryResult.ofItem(convertItem(item), null))
-                else completion.set(LibraryResult.ofError(SessionError.ERROR_BAD_VALUE))
+                else completion.set(LibraryResult.ofError(androidx.media3.session.SessionError.ERROR_BAD_VALUE))
             } catch (e: Exception) {
-                Log.w(tag, "onGetItem failed for $mediaId", e)
-                completion.set(LibraryResult.ofError(SessionError.ERROR_UNKNOWN))
+                Log.w(tag, "getItem failed for $mediaId", e)
+                completion.set(LibraryResult.ofError(androidx.media3.session.SessionError.ERROR_UNKNOWN))
             }
         }
         return completion
@@ -332,37 +300,19 @@ class GramophoneLibrarySessionCallback(
         return MediaItem.Builder().setMediaId(id).setMediaMetadata(metadataBuilder.build()).build()
     }
 
-    override fun onSearch(
-        session: MediaLibrarySession, browser: MediaSession.ControllerInfo,
-        query: String, params: LibraryParams?
-    ): ListenableFuture<LibraryResult<Void>> {
-        val completion = SettableFuture.create<LibraryResult<Void>>()
-        lifecycleScope.launch(Dispatchers.Default) {
-            try {
-                session.notifySearchResultChanged(browser, query, 0, params)
-                completion.set(LibraryResult.ofVoid())
-            } catch (e: Exception) {
-                Log.w(tag, "onSearch failed for $query", e)
-                completion.set(LibraryResult.ofError(SessionError.ERROR_UNKNOWN))
-            }
-        }
-        return completion
-    }
-
-    override fun onGetSearchResult(
-        session: MediaLibrarySession, browser: MediaSession.ControllerInfo,
+    fun getSearchResult(
         query: String, page: Int, pageSize: Int, params: LibraryParams?
     ): ListenableFuture<LibraryResult<ImmutableList<MediaItem>>> {
         val completion = SettableFuture.create<LibraryResult<ImmutableList<MediaItem>>>()
-        lifecycleScope.launch(Dispatchers.Default) {
+        scope.launch(Dispatchers.Default) {
             try {
                 val list = searchForMediaItemSync(query)
                 val finalPageSize = pageSize.coerceAtMost(200)
                 val pagedList = list.asSequence().drop(page * finalPageSize).take(finalPageSize).map { convertItem(it) }.toList()
                 completion.set(LibraryResult.ofItemList(ImmutableList.copyOf(pagedList), params))
             } catch (e: Exception) {
-                Log.w(tag, "onGetSearchResult failed for $query", e)
-                completion.set(LibraryResult.ofError(SessionError.ERROR_UNKNOWN))
+                Log.w(tag, "getSearchResult failed for $query", e)
+                completion.set(LibraryResult.ofError(androidx.media3.session.SessionError.ERROR_UNKNOWN))
             }
         }
         return completion
@@ -379,13 +329,11 @@ class GramophoneLibrarySessionCallback(
         }
     }
 
-    override fun onAddMediaItems(
-        mediaSession: MediaSession, controller: MediaSession.ControllerInfo, mediaItems: List<MediaItem>
-    ): ListenableFuture<List<MediaItem>> {
-        if (mediaItems.all { it.localConfiguration != null })
-            return Futures.immediateFuture(mediaItems.map { convertItem(it) })
-        val completion = SettableFuture.create<List<MediaItem>>()
-        lifecycleScope.launch(Dispatchers.Default) {
+    fun addMediaItems(
+        mediaItems: List<MediaItem>
+    ): ListenableFuture<ExpandedMediaItems> {
+        val completion = SettableFuture.create<ExpandedMediaItems>()
+        scope.launch(Dispatchers.Default) {
             try {
                 var startingIndex: Int? = null
                 val resultList = mutableListOf<MediaItem>()
@@ -415,14 +363,7 @@ class GramophoneLibrarySessionCallback(
                 }
 
                 val convertedResult = resultList.map { convertItem(it) }
-                completion.set(convertedResult)
-
-                val startIdx = startingIndex
-                if (startIdx != null && convertedResult.isNotEmpty()) {
-                    withContext(Dispatchers.Main) {
-                        mediaSession.player.setMediaItems(convertedResult, startIdx, androidx.media3.common.C.TIME_UNSET)
-                    }
-                }
+                completion.set(ExpandedMediaItems(convertedResult, startingIndex))
             } catch (e: Exception) { completion.setException(e) }
         }
         return completion

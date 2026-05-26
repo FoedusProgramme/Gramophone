@@ -72,11 +72,9 @@ import androidx.media3.exoplayer.source.MediaLoadData
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
 import androidx.media3.exoplayer.util.EventLogger
 import androidx.media3.extractor.mp3.Mp3Extractor
-import androidx.media3.session.CacheBitmapLoader
-import androidx.media3.session.CommandButton
-import androidx.media3.session.MediaBrowser
-import androidx.media3.session.MediaConstants
+import androidx.media3.session.LibraryResult
 import androidx.media3.session.MediaLibraryService
+import androidx.media3.session.MediaLibraryService.MediaLibrarySession
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSession.MediaItemsWithStartPosition
 import androidx.media3.session.MediaSessionService
@@ -84,6 +82,10 @@ import androidx.media3.session.SessionCommand
 import androidx.media3.session.SessionError
 import androidx.media3.session.SessionResult
 import androidx.preference.PreferenceManager
+import androidx.media3.session.CacheBitmapLoader
+import androidx.media3.session.CommandButton
+import androidx.media3.session.MediaBrowser
+import androidx.media3.session.MediaConstants
 import coil3.BitmapImage
 import coil3.imageLoader
 import coil3.request.ImageRequest
@@ -97,7 +99,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.akanework.gramophone.R
@@ -132,7 +133,7 @@ import kotlin.random.Random
  * It's using exoplayer2 as its player backend.
  */
 class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Listener,
-    GramophoneLibrarySessionCallback.SessionDelegate, Player.Listener, AnalyticsListener,
+    MediaLibrarySession.Callback, Player.Listener, AnalyticsListener,
     SharedPreferences.OnSharedPreferenceChangeListener {
 
     companion object {
@@ -158,7 +159,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
     val endedWorkaroundPlayer
         get() = internalPlayer
 
-    private lateinit var libraryCallback: GramophoneLibrarySessionCallback
+    private lateinit var libraryTreeLoader: LibraryTreeLoader
 
     private fun convertMetadata(metadata: MediaMetadata): MediaMetadata {
         val artworkUri = metadata.artworkUri ?: return metadata
@@ -391,7 +392,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                                 .apply {
                                     val config =
                                         prefs.getStringStrict("offload", "0")?.toIntOrNull()
-                                    if (config != null && config > 0 && Flags.OFFLOAD) {
+                                    if (config != null && config > 0) {
                                         rgAp.setOffloadEnabled(true)
                                         setAudioOffloadMode(TrackSelectionParameters.AudioOffloadPreferences.AUDIO_OFFLOAD_MODE_ENABLED)
                                         setIsGaplessSupportRequired(config == 2)
@@ -421,10 +422,10 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
             override fun getMediaMetadata(): MediaMetadata {
                 return convertMetadata(super.getMediaMetadata())
             }
-            override fun getCurrentTimeline(): androidx.media3.common.Timeline {
+            override fun getCurrentTimeline(): Timeline {
                 val original = super.getCurrentTimeline()
                 return object : androidx.media3.exoplayer.source.ForwardingTimeline(original) {
-                    override fun getWindow(windowIndex: Int, window: androidx.media3.common.Timeline.Window, defaultPositionProjectionUs: Long): androidx.media3.common.Timeline.Window {
+                    override fun getWindow(windowIndex: Int, window: Window, defaultPositionProjectionUs: Long): Window {
                         super.getWindow(windowIndex, window, defaultPositionProjectionUs)
                         window.mediaItem = convertItem(window.mediaItem)
                         return window
@@ -433,17 +434,16 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
             }
         }
 
-        libraryCallback = GramophoneLibrarySessionCallback(
+        libraryTreeLoader = LibraryTreeLoader(
             this,
             gramophoneApplication,
             lifecycleScope,
-            ::convertItem,
-            this
+            ::convertItem
         )
 
         mediaSession =
             MediaLibrarySession
-                .Builder(this, sessionPlayer, libraryCallback)
+                .Builder(this, sessionPlayer, this)
                 // CacheBitmapLoader is required for MeiZuLyricsMediaNotificationProvider
                 .setBitmapLoader(CacheBitmapLoader(object : BitmapLoader {
                     // Coil-based bitmap loader to reuse Coil's caching and to make sure we use
@@ -1209,6 +1209,14 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
 
     override fun onEvents(player: Player, events: Player.Events) {
         super<Player.Listener>.onEvents(player, events)
+        if (events.containsAny(
+                Player.EVENT_REPEAT_MODE_CHANGED,
+                Player.EVENT_SHUFFLE_MODE_ENABLED_CHANGED,
+                Player.EVENT_TIMELINE_CHANGED
+            )
+        ) {
+            refreshMediaButtonCustomLayout()
+        }
         // if timeline changed, shuffle order is handled elsewhere instead (cloneAndInsert called by
         // ExoPlayer for common case and nextShuffleOrder for resumption case)
         if (events.contains(Player.EVENT_SHUFFLE_MODE_ENABLED_CHANGED)
@@ -1226,24 +1234,6 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                     )
                 )
             }
-        }
-    }
-
-    private suspend fun searchForMediaItem(item: MediaItem): List<MediaItem> {
-        val text = item.requestMetadata.searchQuery?.trim() ?: ""
-        val list = gramophoneApplication.reader.songListFlow.first()
-        // TODO support focus and sub queries (see MainActivity)
-        return if (text == "") list else list.filter {
-            // TODO sort results by match quality? (using raw=natural order)
-            // TODO this is copied directly from SearchFragment, which should probably call into
-            //  here for its search needs instead in the future
-            val isMatchingTitle =
-                it.mediaMetadata.title?.contains(text, true) == true
-            val isMatchingAlbum =
-                it.mediaMetadata.albumTitle?.contains(text, true) == true
-            val isMatchingArtist =
-                it.mediaMetadata.artist?.contains(text, true) == true
-            isMatchingTitle || isMatchingAlbum || isMatchingArtist
         }
     }
 
@@ -1451,5 +1441,85 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                 throw IllegalStateException("onForegroundServiceStartNotAllowedException shouldn't be called on T+")
             }
         }
+    }
+
+    // --- MediaLibrarySession.Callback Implementation ---
+
+    override fun onGetLibraryRoot(
+        session: MediaLibrarySession,
+        browser: MediaSession.ControllerInfo,
+        params: LibraryParams?
+    ): ListenableFuture<LibraryResult<MediaItem>> {
+        return libraryTreeLoader.getLibraryRoot()
+    }
+
+    override fun onGetChildren(
+        session: MediaLibrarySession,
+        browser: MediaSession.ControllerInfo,
+        parentId: String,
+        page: Int,
+        pageSize: Int,
+        params: LibraryParams?
+    ): ListenableFuture<LibraryResult<ImmutableList<MediaItem>>> {
+        return libraryTreeLoader.getChildren(parentId, page, pageSize, params)
+    }
+
+    override fun onGetItem(
+        session: MediaLibrarySession,
+        browser: MediaSession.ControllerInfo,
+        mediaId: String
+    ): ListenableFuture<LibraryResult<MediaItem>> {
+        return libraryTreeLoader.getItem(mediaId)
+    }
+
+    override fun onSearch(
+        session: MediaLibrarySession,
+        browser: MediaSession.ControllerInfo,
+        query: String,
+        params: LibraryParams?
+    ): ListenableFuture<LibraryResult<Void>> {
+        session.notifySearchResultChanged(browser, query, 0, params)
+        return Futures.immediateFuture(LibraryResult.ofVoid())
+    }
+
+    override fun onGetSearchResult(
+        session: MediaLibrarySession,
+        browser: MediaSession.ControllerInfo,
+        query: String,
+        page: Int,
+        pageSize: Int,
+        params: LibraryParams?
+    ): ListenableFuture<LibraryResult<ImmutableList<MediaItem>>> {
+        return libraryTreeLoader.getSearchResult(query, page, pageSize, params)
+    }
+
+    override fun onAddMediaItems(
+        mediaSession: MediaSession,
+        controller: MediaSession.ControllerInfo,
+        mediaItems: MutableList<MediaItem>
+    ): ListenableFuture<MutableList<MediaItem>> {
+        val future = libraryTreeLoader.addMediaItems(mediaItems)
+        val completion = CallbackToFutureAdapter.getFuture<MutableList<MediaItem>> { completer ->
+            future.addListener({
+                try {
+                    val expanded = future.get()
+                    completer.set(expanded.mediaItems.toMutableList())
+                    val startIdx = expanded.startIndex
+                    if (startIdx != null && expanded.mediaItems.isNotEmpty()) {
+                        handler.post {
+                            mediaSession.player.setMediaItems(
+                                expanded.mediaItems,
+                                startIdx,
+                                C.TIME_UNSET
+                            )
+                        }
+                    }
+                } catch (e: Exception) {
+                    completer.setException(e)
+                }
+            }, ContextCompat.getMainExecutor(this))
+            "addMediaItems callback"
+        }
+        return completion
     }
 }
