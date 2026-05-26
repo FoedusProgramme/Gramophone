@@ -90,7 +90,7 @@
     <string name="settings_default_progress_bar">Zadana traka napretka</string>
     <string name="settings_default_progress_bar_summary">Uključi traku napretka u „material“ stilu</string>
     <string name="opensource_info">Aplikacija otvorenog koda, licenca GPL-3.0\nAutorska prava %s</string>
-    <string name="playlist_favourite">Favorit</string>
+    <string name="playlist_favourite">Favoriti</string>
     <string name="settings_contributors_click">%s (klikni za više!)</string>
     <string name="now_playing">Sada se izvodi</string>
     <string name="settings_content_based_color_summary">Uključi generiranje boja na temelju albuma</string>
@@ -488,4 +488,10 @@
     <string name="actions_query_shuffle_specific">primiješaj $item_name</string>
     <string name="please_allow_to_delete">Pritisni „Dozvoli” za brisanje datoteka</string>
     <string name="choose_sd">Odaberi %s</string>
+    <string name="edit_favorites_failed">Uređivanje favorita neuspjelo: %s</string>
+    <string name="favorite">Favorit</string>
+    <string name="favorite_failed_title">Nije bilo moguće promijenit stanje pjesme</string>
+    <string name="favorite_failed_text">Pritisni ovdje za primjenu promjena, davajući dozvole favoritnoj datoteci playliste</string>
+    <string name="error_in_bg">Događaju se greške u pozadini</string>
+    <string name="settings_whitelist">Bijela lista</string>
 </resources>
