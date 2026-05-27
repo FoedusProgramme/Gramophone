@@ -9,6 +9,7 @@ import android.widget.Button
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.LaunchedEffect
@@ -18,6 +19,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.graphics.Insets
@@ -44,7 +46,6 @@ import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.dpToPx
 import org.akanework.gramophone.logic.getBooleanStrict
 import org.akanework.gramophone.logic.getQueueForUi
-import org.akanework.gramophone.logic.isTablet
 import org.akanework.gramophone.logic.replaceAllSupport
 import org.akanework.gramophone.logic.ui.MyRecyclerView
 import org.akanework.gramophone.logic.utils.Flags
@@ -80,7 +81,17 @@ class PlaylistQueueSheet(
             behavior.maxWidth = 900.dpToPx(context)
         }
 
-        val recyclerView = MyRecyclerView(context)
+        val recyclerView = if (mqEnabled) {
+            MyRecyclerView(context)
+        } else {
+            findViewById<MyRecyclerView>(R.id.recyclerview)!!
+        }
+
+        if (mqEnabled) {
+            findViewById<View>(R.id.divider)?.visibility = View.GONE
+            findViewById<View>(R.id.recyclerview)?.visibility = View.GONE
+        }
+
         ViewCompat.setOnApplyWindowInsetsListener(recyclerView) { v, ic ->
             val i = ic.getInsets(
                 WindowInsetsCompat.Type.systemBars()
@@ -128,21 +139,13 @@ class PlaylistQueueSheet(
                 setContent {
                     Column(
                         modifier = Modifier
-                            .fillMaxSize()
+                            .fillMaxWidth()
+                            .padding(bottom = 4.dp)
                     ) {
                         AndroidView(
                             modifier = Modifier.fillMaxWidth(),
                             factory = {
                                 queueActionsView
-                            },
-                        )
-
-                        HorizontalDivider()
-
-                        AndroidView(
-                            modifier = Modifier.fillMaxSize(),
-                            factory = {
-                                recyclerView
                             },
                         )
                     }
