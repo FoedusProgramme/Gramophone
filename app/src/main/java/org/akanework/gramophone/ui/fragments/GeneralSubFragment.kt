@@ -54,6 +54,8 @@ import uk.akane.libphonograph.items.Playlist
  * @author AkaneTan, nift4
  */
 class GeneralSubFragment : BaseFragment(true) {
+    lateinit var qTitle: Flow<String>
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -81,6 +83,7 @@ class GeneralSubFragment : BaseFragment(true) {
             R.id.album -> {
                 val item = mainActivity.reader.albumListFlow.map { it.find { it.id == id } }
                 title = item.map { it?.title ?: requireContext().getString(R.string.unknown_album) }
+                qTitle = title
                 itemList = item.map { it?.songList }
                 rawOrderExposed = Sorter.Type.ByAlbumTitleAscending
             }
@@ -95,6 +98,7 @@ class GeneralSubFragment : BaseFragment(true) {
                 // Genres
                 val item = mainActivity.reader.genreListFlow.map { it.find { it.id == id } }
                 title = item.map { it?.title ?: requireContext().getString(R.string.unknown_genre) }
+                qTitle = title
                 itemList = item.map { it?.songList }
             }
 
@@ -102,6 +106,7 @@ class GeneralSubFragment : BaseFragment(true) {
                 // Dates
                 val item = mainActivity.reader.dateListFlow.map { it.find { it.id == id } }
                 title = item.map { it?.title ?: requireContext().getString(R.string.unknown_year) }
+                qTitle = title
                 itemList = item.map { it?.songList }
             }
 
@@ -134,6 +139,7 @@ class GeneralSubFragment : BaseFragment(true) {
                                 + if (it != null) " (${it.id} - ${it.path})" else "")
                     }
                 }
+                qTitle = title
                 itemList = item.map { it?.songList }
                 rawOrderExposed = Sorter.Type.NaturalOrder
                 if (clazz == Playlist::class.java.name && Flags.PLAYLIST_EDITING!!) {
@@ -169,6 +175,7 @@ class GeneralSubFragment : BaseFragment(true) {
         val songAdapter =
             SongAdapter(
                 this,
+                qTitle,
                 itemList,
                 rawOrderExposed = rawOrderExposed,
                 isSubFragment = itemType

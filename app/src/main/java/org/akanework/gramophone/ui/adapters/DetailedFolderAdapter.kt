@@ -96,6 +96,7 @@ class DetailedFolderAdapter(
             Sorter.Type.ByFilePathAscending
     )
     private var fileNodePath = MutableStateFlow<List<String>?>(null)
+    val qTitle = fileNodePath.map { it?.lastOrNull() ?: "MISSING TITLE (DetailedFolderAdapter)" }
     private val liveData = if (isDetailed) mainActivity.reader.folderStructureFlow
     else mainActivity.reader.shallowFolderFlow
     private val dataFlow = liveData.combineTransform(fileNodePath) { root, path ->
@@ -152,7 +153,7 @@ class DetailedFolderAdapter(
     private val decorAdapter =
         BaseDecorAdapter<DetailedFolderAdapter>(this, R.plurals.folders_plural)
     private val songAdapter: SongAdapter =
-        SongAdapter(fragment, dataFlow.map { it.songList }, folder = true).apply {
+        SongAdapter(fragment, qTitle, dataFlow.map { it.songList }, folder = true).apply {
             onFullyDrawnListener = { reportFullyDrawn() }
             decorAdapter.jumpUpPos = { 0 }
         }

@@ -11,8 +11,10 @@ import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.appbar.MaterialToolbar
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.akanework.gramophone.R
@@ -24,6 +26,7 @@ import uk.akane.libphonograph.items.Playlist
 
 class PlaylistEditFragment : BaseFragment(false) {
     private lateinit var touchHelper: ItemTouchHelper
+    private lateinit var qTitle: Flow<String>
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,6 +34,7 @@ class PlaylistEditFragment : BaseFragment(false) {
         savedInstanceState: Bundle?,
     ): View? {
         val theItem = MutableSharedFlow<Playlist?>(replay = 1)
+        qTitle = theItem.map { it?.title ?: "MISSING TITLE (PlaylistEditFragment)" }
 
         // TODO(ASAP): show warning and offer to convert (non-destructively) playlist if it's
         //  MediaStore DB only or unsupported format

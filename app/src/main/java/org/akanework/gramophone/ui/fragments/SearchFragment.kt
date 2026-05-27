@@ -28,6 +28,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.appbar.AppBarLayout
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
@@ -49,6 +50,7 @@ import org.akanework.gramophone.ui.adapters.Sorter
 class SearchFragment : BaseFragment(true) {
     // TODO this class leaks InsetSourceControl
     private lateinit var editText: EditText
+    private lateinit var qTitle: Flow<String>
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -62,9 +64,10 @@ class SearchFragment : BaseFragment(true) {
         editText = rootView.findViewById(R.id.edit_text)
         val recyclerView = rootView.findViewById<MyRecyclerView>(R.id.recyclerview)
         val searchTextFlow = MutableStateFlow(arguments?.getString("query", "") ?: "")
+        qTitle = searchTextFlow.map { requireContext().getString(R.string.search_query, it) }
         val songAdapter =
             SongAdapter(
-                this, mainActivity.reader.songListFlow.combine(searchTextFlow.map {
+                this, qTitle, mainActivity.reader.songListFlow.combine(searchTextFlow.map {
                     it.trim()
                 }) { list, text ->
                     list.filter {

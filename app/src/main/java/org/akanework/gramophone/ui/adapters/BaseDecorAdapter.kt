@@ -32,6 +32,8 @@ import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.ui.ItemHeightHelper
 import org.akanework.gramophone.logic.ui.MyRecyclerView
@@ -169,7 +171,7 @@ open class BaseDecorAdapter<T : AdapterFragment.BaseInterface<*>>(
                     setMediaItems(
                         queueWithTitle(
                             songList,
-                            context.getString(R.string.category_songs)
+                            runBlocking { adapter.queueTitle.first() }
                         )
                     )
                     if (songList.isNotEmpty()) {
@@ -187,7 +189,7 @@ open class BaseDecorAdapter<T : AdapterFragment.BaseInterface<*>>(
                         setMediaItems(
                             queueWithTitle(
                                 albums.flatMap { it.songList },
-                                context.getString(R.string.category_albums)
+                                runBlocking { adapter.queueTitle.first() }
                             )
                         )
                         prepare()
@@ -206,7 +208,7 @@ open class BaseDecorAdapter<T : AdapterFragment.BaseInterface<*>>(
                     setMediaItems(
                         queueWithTitle(
                             songList,
-                            context.getString(R.string.category_songs)
+                            runBlocking { adapter.queueTitle.first() }
                         )
                     )
                     if (songList.isNotEmpty()) {
@@ -224,7 +226,7 @@ open class BaseDecorAdapter<T : AdapterFragment.BaseInterface<*>>(
                         setMediaItems(
                             queueWithTitle(
                                 albums.shuffled().flatMap { it.songList },
-                                context.getString(R.string.category_songs)
+                                runBlocking { adapter.queueTitle.first() }
                             )
                         )
                         prepare()

@@ -32,7 +32,9 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.getFile
@@ -43,6 +45,7 @@ import org.akanework.gramophone.ui.MainActivity
 import org.akanework.gramophone.ui.MediaControllerViewModel
 import org.akanework.gramophone.ui.components.NowPlayingDrawable
 import org.akanework.gramophone.ui.fragments.ArtistSubFragment
+import org.akanework.gramophone.ui.fragments.BaseFragment
 import org.akanework.gramophone.ui.fragments.DetailDialogFragment
 import org.akanework.gramophone.ui.fragments.GeneralSubFragment
 import uk.akane.libphonograph.items.addDate
@@ -59,6 +62,7 @@ import java.util.GregorianCalendar
  */
 class SongAdapter(
     fragment: Fragment,
+    val queueTitle: Flow<String>,
     songList: Flow<List<MediaItem>?> = (fragment.requireActivity() as MainActivity).reader.songListFlow,
     helper: Sorter.NaturalOrderHelper<MediaItem>? = null,
     isSubFragment: Int? = null,
@@ -174,9 +178,10 @@ class SongAdapter(
 
     override fun onClick(item: MediaItem, position: Int) {
         val mediaController = mainActivity.getPlayer()
+        val title = runBlocking { queueTitle.first() } // TODO: will nick kill me for this
         mediaController?.apply {
             val songList = getSongList()
-            setMediaItems(queueWithTitle(songList, "What is this???"), position, C.TIME_UNSET)
+            setMediaItems(queueWithTitle(songList, title), position, C.TIME_UNSET)
             prepare()
             play()
         }
