@@ -81,6 +81,7 @@ class PlaylistAdapter(
     pluralStr = R.plurals.items,
     defaultLayoutType = LayoutType.LIST,
     isSubFragment = isSubFragment,
+    hasMenu = fragment != null,
     fallbackContext = fallbackContext
 ), AdapterFragment.RequestAdapter {
 
