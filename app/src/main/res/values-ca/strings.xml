@@ -177,7 +177,7 @@
     <string name="remove">Elimina</string>
     <string name="skip_next">Salta al següent</string>
     <string name="settings_lyrics_ui">Activa la interfície d\'usuari nova de lletres</string>
-    <string name="settings_lyrics_ui_summary">IU experimental per a mostrar la lletra paraula a paraula amb característiques avançades</string>
+    <string name="settings_lyrics_ui_summary">IU experimental per a mostrar la lletra paraula a paraula amb funcions avançades</string>
     <string name="settings_status_bar_lyrics_title">Lletres a la barra d\'estat</string>
     <string name="settings_status_bar_lyrics_summary">Activa el mètode MeiZu per a mostrar les lletres a la barra d\'estat (disponible només en alguns dispositius)</string>
     <string name="lyric_widget_description">Giny que mostra la lletra de l\'element multimèdia actualment en reproducció</string>
@@ -494,4 +494,16 @@
     <string name="error_in_bg">S\'han produït errors en segon pla</string>
     <string name="settings_whitelist">Llista blanca</string>
     <string name="whitelist_and_blacklist">Si no hi ha cap carpeta seleccionada a la llista blanca, es permetran totes les carpetes.\n\nLa llista blanca i la llista negra s\'apliquen conjuntament, i la llista negra té prioritat. Per exemple, podeu permetre una carpeta a la llista blanca mentre s\'exclou una de les seves subcarpetes a la llista negra.</string>
+    <string name="discard_changes_title">Descarto els canvis?</string>
+    <string name="save">Desa</string>
+    <string name="discard">Descarta</string>
+    <string name="discard_changes_msg">Voleu descartar els canvis a la llista de reproducció \"%s\"?</string>
+    <string name="apply">Aplica</string>
+    <string name="restore_edits">Restauro els canvis?</string>
+    <string name="restore_edits_msg">Hi ha canvis sense desar a la llista de reproducció «%s». Voleu restaurar aquests canvis o descartar-los i començar de nou amb una versió nova de la llista de reproducció?</string>
+    <string name="restore">Restaura</string>
+    <string name="mount_storage">Inseriu una targeta SD per a fer servir aquesta funció</string>
+    <string name="failed_to_restore">Ha fallat en restaurar els canvis: %s</string>
+    <string name="playlist_empty">La llista de reproducció és buida</string>
+    <string name="playlist_empty_msg">Afegiu cançons fent clic a «Afegeix a la llista de reproducció» al menú de tres punts d\'una cançó.</string>
 </resources>
