@@ -115,7 +115,7 @@ class GeneralSubFragment : BaseFragment(true) {
                 // Playlists
                 val clazz = arguments?.getString("Class") ?: "null"
                 val item = mainActivity.reader.playlistListFlow.map {
-                    it.find { it.id == id && it.javaClass.name == clazz }
+                    it.find { if (id != null) it.id == id else it.javaClass.name == clazz }
                 }
                     .provideReplayCacheInvalidationManager()
                     .sharePauseableIn(
@@ -142,7 +142,6 @@ class GeneralSubFragment : BaseFragment(true) {
                             R.id.edit -> {
                                 mainActivity.startFragment(PlaylistEditFragment()) {
                                     putString("Id", id?.toString())
-                                    putString("Class", arguments?.getString("Class"))
                                 }
                                 true
                             }

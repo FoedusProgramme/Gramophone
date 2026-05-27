@@ -108,13 +108,12 @@ class PlaylistEditFragment : BaseFragment(false) {
 
         val application = requireContext().applicationContext
         val bundle = requireArguments()
-        val clazz = bundle.getString("Class")
         val id = bundle.getString("Id")!!.toLong()
         uri = ContentUris.withAppendedId(@Suppress("deprecation")
             MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, id)
         lifecycleScope.launch(Dispatchers.Default) {
             val item = mainActivity.reader.playlistListFlow.map {
-                it.find { p -> p.id == id && p.javaClass.name == clazz }
+                it.find { p -> p.id == id }
             }.first()
             if (item == null || item.path == null) {
                 withContext(Dispatchers.Main) {

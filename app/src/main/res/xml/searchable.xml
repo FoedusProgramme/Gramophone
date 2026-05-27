@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<searchable xmlns:android="http://schemas.android.com/apk/res/android"
+    android:label="@string/app_name"
+    android:hint="@string/search_hint"
+    android:searchSuggestAuthority="${applicationId}.search"
+    android:searchSuggestSelection=" ?"
+    android:searchSuggestIntentAction="org.akanework.gramophone.action.PLAY_MEDIA_FROM_SUGGESTION"
+    android:includeInGlobalSearch="true"
+    android:searchSettingsDescription="@string/search_desc"
+    android:queryAfterZeroResults="true" />

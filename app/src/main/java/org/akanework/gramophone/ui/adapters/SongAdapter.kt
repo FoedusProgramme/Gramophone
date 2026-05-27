@@ -20,6 +20,7 @@ package org.akanework.gramophone.ui.adapters
 import android.net.Uri
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.app.ShareCompat
 import androidx.core.content.FileProvider
@@ -36,9 +37,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.getFile
+import org.akanework.gramophone.logic.gramophoneApplication
 import org.akanework.gramophone.logic.requireMediaStoreId
-import org.akanework.gramophone.ui.MainActivity
 import org.akanework.gramophone.ui.MediaControllerViewModel
+import org.akanework.gramophone.ui.SongPickerActivity
 import org.akanework.gramophone.ui.components.NowPlayingDrawable
 import org.akanework.gramophone.ui.fragments.ArtistSubFragment
 import org.akanework.gramophone.ui.fragments.DetailDialogFragment
@@ -56,13 +58,15 @@ import java.util.GregorianCalendar
  * [SongAdapter] is an adapter for displaying songs.
  */
 class SongAdapter(
-    fragment: Fragment,
-    songList: Flow<List<MediaItem>?> = (fragment.requireActivity() as MainActivity).reader.songListFlow,
+    fragment: Fragment?,
+    songList: Flow<List<MediaItem>?> = (fragment?.requireContext() ?: fallbackContext!!)
+        .gramophoneApplication.reader.songListFlow,
     helper: Sorter.NaturalOrderHelper<MediaItem>? = null,
     isSubFragment: Int? = null,
     allowDiffUtils: Boolean = false,
     rawOrderExposed: Sorter.Type? = if (isSubFragment == null) Sorter.Type.ByTitleAscending else null,
-    val folder: Boolean = false
+    val folder: Boolean = false,
+    fallbackContext: AppCompatActivity? = null
 ) : BaseAdapter<MediaItem>
     (
     fragment,
@@ -77,7 +81,9 @@ class SongAdapter(
     defaultLayoutType = LayoutType.COMPACT_LIST,
     isSubFragment = isSubFragment,
     rawOrderExposed = rawOrderExposed,
-    allowDiffUtils = allowDiffUtils
+    allowDiffUtils = allowDiffUtils,
+    hasMenu = isSubFragment != R.id.songs,
+    fallbackContext = fallbackContext
 ) {
 
     init {
@@ -88,7 +94,6 @@ class SongAdapter(
 
     fun getActivity() = mainActivity
 
-    private val mediaControllerViewModel: MediaControllerViewModel by fragment.activityViewModels()
     private var idToPosMap: HashMap<String, List<Int?>>? = null
     private var currentMediaItem: String? = null
         set(value) {
@@ -126,31 +131,34 @@ class SongAdapter(
         }
 
     init {
-        mediaControllerViewModel.addRecreationalPlayerListener(
-            fragment.viewLifecycleOwner.lifecycle,
-            object : Player.Listener {
-                override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
-                    currentMediaItem = mediaItem?.mediaId
-                }
+        if (fragment != null) {
+            val mediaControllerViewModel: MediaControllerViewModel by fragment.activityViewModels()
+            mediaControllerViewModel.addRecreationalPlayerListener(
+                fragment.viewLifecycleOwner.lifecycle,
+                object : Player.Listener {
+                    override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+                        currentMediaItem = mediaItem?.mediaId
+                    }
 
-                override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
-                    currentIsPlaying =
-                        playWhenReady &&
-                                mediaControllerViewModel.get()!!.playbackState != Player.STATE_ENDED
-                                && mediaControllerViewModel.get()!!.playbackState != Player.STATE_IDLE
-                }
+                    override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
+                        currentIsPlaying =
+                            playWhenReady &&
+                                    mediaControllerViewModel.get()!!.playbackState != Player.STATE_ENDED
+                                    && mediaControllerViewModel.get()!!.playbackState != Player.STATE_IDLE
+                    }
 
-                override fun onPlaybackStateChanged(playbackState: Int) {
-                    currentIsPlaying =
-                        mediaControllerViewModel.get()!!.playWhenReady
-                                && playbackState != Player.STATE_ENDED &&
-                                mediaControllerViewModel.get()!!.playbackState != Player.STATE_IDLE
+                    override fun onPlaybackStateChanged(playbackState: Int) {
+                        currentIsPlaying =
+                            mediaControllerViewModel.get()!!.playWhenReady
+                                    && playbackState != Player.STATE_ENDED &&
+                                    mediaControllerViewModel.get()!!.playbackState != Player.STATE_IDLE
+                    }
                 }
+            ) {
+                currentMediaItem = it.currentMediaItem?.mediaId
+                currentIsPlaying =
+                    it.playWhenReady && it.playbackState != Player.STATE_ENDED && it.playbackState != Player.STATE_IDLE
             }
-        ) {
-            currentMediaItem = it.currentMediaItem?.mediaId
-            currentIsPlaying =
-                it.playWhenReady && it.playbackState != Player.STATE_ENDED && it.playbackState != Player.STATE_IDLE
         }
     }
 
@@ -177,6 +185,10 @@ class SongAdapter(
     }
 
     override fun onClick(item: MediaItem, position: Int) {
+        if (isSubFragment == R.id.songs) {
+            (context as SongPickerActivity).onSelected(item)
+            return
+        }
         val mediaController = mainActivity.getPlayer()
         mediaController?.apply {
             val songList = getSongList()

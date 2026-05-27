@@ -37,6 +37,7 @@ import android.os.Looper
 import android.provider.MediaStore
 import android.provider.Settings
 import android.view.Choreographer
+import android.view.SearchEvent
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
@@ -85,6 +86,7 @@ import org.akanework.gramophone.logic.ui.BaseActivity
 import org.akanework.gramophone.ui.adapters.PlaylistAdapter
 import org.akanework.gramophone.ui.components.PlayerBottomSheet
 import org.akanework.gramophone.ui.fragments.BaseFragment
+import org.akanework.gramophone.ui.fragments.GeneralSubFragment
 import org.akanework.gramophone.ui.fragments.SearchFragment
 import org.akanework.gramophone.ui.fragments.ViewPagerFragment
 import org.nift4.mediastorecompat.MediaStoreCompat
@@ -468,8 +470,17 @@ class MainActivity : BaseActivity() {
 
     private fun doPlayFromIntent(intent: Intent) {
         Log.i("MainActivity", "doPlayFromIntent($intent)")
+        val autoPlayId = intent.extras?.getString(PLAYBACK_AUTO_PLAY_ID) ?: (if
+                (intent.action == "org.akanework.gramophone.action.PLAY_MEDIA_FROM_SUGGESTION")
+                intent.data?.let {
+                    try {
+                        ContentUris.parseId(it)
+                        "MediaStore:${it.lastPathSegment}"
+                    } catch (_: NumberFormatException) {
+                        null
+                    } } else null)
         var willAutoPlayLater = false
-        intent.extras?.getString(PLAYBACK_AUTO_PLAY_ID)?.let { id ->
+        autoPlayId?.let { id ->
             willAutoPlayLater = true
             val pos =
                 intent.extras?.getLong(PLAYBACK_AUTO_PLAY_POSITION, C.TIME_UNSET) ?: C.TIME_UNSET
@@ -507,12 +518,19 @@ class MainActivity : BaseActivity() {
                 val state = intent.getBooleanExtra(FAVORITE_STATE, false)
                 markIsFavoriteStatus(listOf(it), state)
             }
+        if (intent.action == Intent.ACTION_VIEW) {
+            val id = intent.getStringExtra("playlist")?.toLongOrNull()
+            if (id != null) {
+                startFragment(GeneralSubFragment()) {
+                    putString("Id", id.toString())
+                    putInt("Item", R.id.playlist)
+                }
+            }
+        }
         if (intent.action == Intent.ACTION_SEARCH ||
             intent.action == "com.google.android.gms.actions.SEARCH_ACTION") {
             startFragment(SearchFragment()) {
-                Bundle().apply {
-                    putString("query", intent.getStringExtra(SearchManager.QUERY))
-                }
+                putString("query", intent.getStringExtra(SearchManager.QUERY))
             }
         }
         if (intent.action == MediaStore.INTENT_ACTION_MEDIA_SEARCH
@@ -611,11 +629,9 @@ class MainActivity : BaseActivity() {
                 }
             } else {
                 startFragment(SearchFragment()) {
-                    Bundle().apply {
-                        putString("query", intent.getStringExtra(SearchManager.QUERY))
-                        // TODO: support sub queries or at least focus to use a different type of
-                        //  search fragment.
-                    }
+                    putString("query", mainQuery)
+                    // TODO: support sub queries or at least focus to use a different type of
+                    //  search fragment.
                 }
             }
         }
@@ -649,6 +665,15 @@ class MainActivity : BaseActivity() {
                 dispose()
             }
         }
+    }
+
+    override fun onSearchRequested(): Boolean {
+        startFragment(SearchFragment())
+        return true
+    }
+
+    override fun onSearchRequested(searchEvent: SearchEvent?): Boolean {
+        return onSearchRequested()
     }
 
     // https://twitter.com/Piwai/status/1529510076196630528

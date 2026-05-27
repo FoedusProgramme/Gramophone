@@ -117,9 +117,95 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:mimeType="vnd.android.cursor.dir/playlist" />
+            </intent-filter>
+
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
             <meta-data android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />
         </activity>
+
+        <activity
+            android:name=".ui.SongPickerActivity"
+            android:label="@string/picker_activity"
+            android:exported="true"
+            android:taskAffinity="">
+            <intent-filter android:priority="-1">
+                <action android:name="android.intent.action.GET_CONTENT" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.OPENABLE" />
+                <data android:mimeType="audio/*"/>
+                <data android:mimeType="application/ogg"/>
+                <data android:mimeType="application/x-ogg"/>
+                <data android:mimeType="application/x-flac"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.PICK" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.OPENABLE" />
+                <data android:mimeType="vnd.android.cursor.dir/audio"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.PlaylistPickerActivity"
+            android:label="@string/playlist_picker_activity"
+            android:exported="true"
+            android:enabled="@bool/has_xspf"
+            android:taskAffinity="">
+            <intent-filter>
+                <action android:name="android.intent.action.GET_CONTENT" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.OPENABLE" />
+
+                <data android:mimeType="application/vnd.apple.mpegurl"/>
+                <data android:mimeType="application/vnd.ms-wpl"/>
+                <data android:mimeType="application/x-mpegurl"/>
+                <data android:mimeType="application/xspf+xml"/>
+                <data android:mimeType="audio/mpegurl"/>
+                <data android:mimeType="audio/x-mpegurl"/>
+                <data android:mimeType="audio/x-scpls"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.PICK" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.OPENABLE" />
+                <data android:mimeType="vnd.android.cursor.dir/playlist"/>
+            </intent-filter>
+        </activity>
+
+        <activity-alias
+            android:targetActivity=".ui.PlaylistPickerActivity"
+            android:name=".ui.PlaylistPickerActivityLegacy"
+            android:label="@string/playlist_picker_activity"
+            android:enabled="@bool/missing_xspf"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.GET_CONTENT" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.OPENABLE" />
+
+                <data android:mimeType="application/vnd.apple.mpegurl"/>
+                <data android:mimeType="application/vnd.ms-wpl"/>
+                <data android:mimeType="application/x-mpegurl"/>
+                <data android:mimeType="audio/mpegurl"/>
+                <data android:mimeType="audio/x-mpegurl"/>
+                <data android:mimeType="audio/x-scpls"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.PICK" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.OPENABLE" />
+                <data android:mimeType="vnd.android.cursor.dir/playlist"/>
+            </intent-filter>
+        </activity-alias>
 
         <activity
             android:name=".ui.AudioPreviewActivity"
@@ -137,6 +223,11 @@
                 <data android:scheme="content" />
                 <data android:scheme="file" />
                 <data android:mimeType="audio/*" />
+                <data android:mimeType="application/ogg"/>
+                <data android:mimeType="application/x-ogg"/>
+                <data android:mimeType="application/itunes"/>
+                <data android:mimeType="application/x-flac"/>
+                <data android:mimeType="vnd.android.cursor.dir/audio" />
             </intent-filter>
         </activity>
 
@@ -149,8 +240,11 @@
             </intent-filter>
         </receiver>
 
-        <!-- <receiver android:name="androidx.mediarouter.media.MediaTransferReceiver"
-            android:exported="false" /> -->
+        <provider
+            android:name=".logic.SearchSuggestionsProvider"
+            android:authorities="${applicationId}.search"
+            android:exported="true"
+            android:readPermission="android.permission.GLOBAL_SEARCH" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

@@ -29,6 +29,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.app.DialogCompat
 import androidx.core.view.ViewCompat
@@ -42,10 +43,12 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.akanework.gramophone.R
-import org.akanework.gramophone.ui.MainActivity
+import org.akanework.gramophone.logic.gramophoneApplication
+import org.akanework.gramophone.ui.PlaylistPickerActivity
 import org.akanework.gramophone.ui.fragments.AdapterFragment
 import org.akanework.gramophone.ui.fragments.GeneralSubFragment
 import org.nift4.mediastorecompat.MediaStoreCompat
@@ -58,16 +61,27 @@ import uk.akane.libphonograph.manipulator.ItemManipulator
  * [PlaylistAdapter] is an adapter for displaying artists.
  */
 class PlaylistAdapter(
-    fragment: AdapterFragment,
+    private val fragment: AdapterFragment?,
+    isSubFragment: Int? = null,
+    fallbackContext: AppCompatActivity? = null,
 ) : BaseAdapter<Playlist>
     (
     fragment,
-    liveData = (fragment.requireActivity() as MainActivity).reader.playlistListFlow,
+    liveData = (fragment?.requireActivity() ?: fallbackContext)!!
+        .gramophoneApplication.reader.playlistListFlow.let {
+            if (isSubFragment == R.id.songs)
+                it.map { playlistsList ->
+                    playlistsList.filter { p -> p.id != null && p.path != null }
+                }
+            else it
+        },
     sortHelper = StorePlaylistHelper,
     naturalOrderHelper = null,
     initialSortType = Sorter.Type.ByTitleAscending,
     pluralStr = R.plurals.items,
-    defaultLayoutType = LayoutType.LIST
+    defaultLayoutType = LayoutType.LIST,
+    isSubFragment = isSubFragment,
+    fallbackContext = fallbackContext
 ), AdapterFragment.RequestAdapter {
 
     init {
@@ -112,6 +126,9 @@ class PlaylistAdapter(
     }
 
     override fun onClick(item: Playlist, position: Int) {
+        if (fragment == null) {
+            return (context as PlaylistPickerActivity).onSelected(item)
+        }
         mainActivity.startFragment(GeneralSubFragment()) {
             putString("Class", item.javaClass.name) // TODO kinda stupid
             putString("Id", item.id?.toString())
@@ -210,7 +227,7 @@ class PlaylistAdapter(
                             if (token != null) {
                                 val pendingIntent = MediaStoreCompat.createWriteRequest(
                                     context, listOf(token))
-                                (fragment as AdapterFragment).startRequest(
+                                fragment!!.startRequest(
                                     pendingIntent.intentSender,
                                     data
                                 )
@@ -262,6 +279,9 @@ class PlaylistAdapter(
     }
 
     override fun createDecorAdapter(): BaseDecorAdapter<out BaseAdapter<Playlist>> {
+        if (fragment == null) {
+            return super.createDecorAdapter()
+        }
         return PlaylistDecorAdapter(this)
     }
 

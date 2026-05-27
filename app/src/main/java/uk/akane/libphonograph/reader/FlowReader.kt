@@ -65,7 +65,7 @@ class FlowReader(
     // IMPORTANT: Do not use distinctUntilChanged() or StateFlow here because equals() on thousands
     // of MediaItems is very, very expensive!
     private var awaitingRefresh = false
-    var hadFirstRefresh = true
+    var hadFirstRefresh = false
         private set
     private val scope = CoroutineScope(Dispatchers.IO + CoroutineName("FlowReader"))
     private val finishRefreshTrigger = MutableSharedFlow<Unit>(replay = 0)
@@ -244,7 +244,6 @@ class FlowReader(
             .onEach {
                 finishRefreshTrigger.emit(Unit)
                 awaitingRefresh = true
-                hadFirstRefresh = true
             }
             .provideReplayCacheInvalidationManager(copyDownstream = Invalidation.Optional)
             .sharePauseableIn(scope, WhileSubscribed(20000), WhileSubscribed(2000), replay = 1)
@@ -287,6 +286,7 @@ class FlowReader(
      * manual refresh of the library. Suspends until new data is available.
      */
     suspend fun refresh() {
+        hadFirstRefresh = true
         coroutineScope {
             if (!awaitingRefresh) {
                 // The playlist flow uses pull principle, and causes readerFlow to refresh, so
