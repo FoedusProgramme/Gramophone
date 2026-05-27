@@ -179,7 +179,7 @@
     <string name="no">否</string>
     <string name="sort_by_file_path">文件路径</string>
     <string name="sort_by_album_artist">专辑音乐人 -&gt; 标题</string>
-    <string name="delete_really">是否确定要删除“%s”？此操作无法撤销。</string>
+    <string name="delete_really">确定要删除“%s”吗？此操作无法撤销。</string>
     <string name="settings_contributors_click">%s（点击查看更多！）</string>
     <string name="spk_channel_out_9point1point6">9.1.6 声道</string>
     <string name="spk_channel_out_front_left">前置左声道</string>
@@ -324,7 +324,7 @@
     <string name="mix_port_flag_compress_offload">压缩分流</string>
     <string name="mix_port_flag_deep_buffer">深度缓冲区</string>
     <string name="refreshing_wait">正在刷新，请稍等…</string>
-    <string name="create_playlist">新建播放列表…</string>
+    <string name="create_playlist">创建播放列表…</string>
     <string name="log_attachment">日志将会自动作为附件发送</string>
     <string name="log_will_auto_send">日志将自动发送，请说明问题</string>
     <string name="do_not_enter_email_enter_msg">输入消息，而不是电子邮件地址</string>
@@ -484,4 +484,16 @@
     <string name="error_in_bg">后台发生错误</string>
     <string name="settings_whitelist">白名单</string>
     <string name="whitelist_and_blacklist">如果白名单中未选择任何文件夹，则所有文件夹均被允许。\n\n白名单和黑名单同时生效，且黑名单具有优先级。例如，您可以在白名单中允许某个文件夹，同时在黑名单中排除其某个子文件夹。</string>
+    <string name="discard_changes_title">舍弃更改？</string>
+    <string name="save">保存</string>
+    <string name="discard">舍弃</string>
+    <string name="discard_changes_msg">确定要舍弃对播放列表“%s”所做的更改吗？</string>
+    <string name="apply">应用</string>
+    <string name="restore_edits">恢复更改？</string>
+    <string name="restore_edits_msg">播放列表“%s”存在未保存的更改。您要恢复这些更改，还是舍弃更改并使用播放列表的全新版本重新开始？</string>
+    <string name="restore">恢复</string>
+    <string name="mount_storage">请插入 SD 卡以使用此功能</string>
+    <string name="failed_to_restore">无法恢复更改：%s</string>
+    <string name="playlist_empty">播放列表为空</string>
+    <string name="playlist_empty_msg">点击歌曲三点菜单中的“添加到播放列表”添加一些歌曲。</string>
 </resources>

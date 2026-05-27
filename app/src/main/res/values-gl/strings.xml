@@ -78,7 +78,7 @@
     <string name="settings_default_progress_bar">Barra de progreso predeterminada</string>
     <string name="settings_default_progress_bar_summary">Activar a barra de progreso co estilo de Material</string>
     <string name="opensource_info">Código Aberto baixo a GPL-3.0\nDereitos %s</string>
-    <string name="playlist_favourite">Favorita</string>
+    <string name="playlist_favourite">Favoritas</string>
     <string name="settings_contributors_click">%s (ler máis)</string>
     <string name="home_menu_settings">Axustes</string>
     <string name="dialog_year">Ano</string>
@@ -482,4 +482,23 @@
     <string name="actions_query_shuffle_specific">barallar $item_name</string>
     <string name="please_allow_to_delete">Preme permitir para eliminar ficheiros</string>
     <string name="choose_sd">Seleccionar %s</string>
+    <string name="favorite">Favorecer</string>
+    <string name="favorite_failed_title">Fallou o cambio do estado de canción favorita</string>
+    <string name="favorite_failed_text">Preme aquí para aplicar os cambios, concedendo o permiso ao ficheiro da lista de cancións favoritas</string>
+    <string name="error_in_bg">Houbo erros nos procesos en segundo plano</string>
+    <string name="settings_whitelist">Lista de permitidos</string>
+    <string name="whitelist_and_blacklist">Se non hai cartafoles seleccionados para a lista de permitidos, entón permítense todos.\n\nAs listas de permitidos e non permitidos aplícanse ao mesmo tempo, tendo prioridade a de non permitidos. Exemplo: podes permitir un cartafol na lista de permitidos e excluír un dos seus subcartafoles na de non permitidos.</string>
+    <string name="discard_changes_title">Desbotar cambios?</string>
+    <string name="save">Gardar</string>
+    <string name="discard">Desbotar</string>
+    <string name="discard_changes_msg">Queres desbotar os cambios realizados á lista «%s»?</string>
+    <string name="apply">Aplicar</string>
+    <string name="restore_edits">Restablecer cambios?</string>
+    <string name="restore_edits_msg">Hai cambios sen gardar para a lista «%s». Queres restablecer estes cambios, ou desbotalos e volver a comezar unha nova versión da lista de reprodución?</string>
+    <string name="restore">Restablecer</string>
+    <string name="mount_storage">Inserta unha tarxeta SD para usar esta característica</string>
+    <string name="failed_to_restore">Fallou o restablecemento: %s</string>
+    <string name="playlist_empty">Lista de reprodución baleira</string>
+    <string name="playlist_empty_msg">Engade algunhas cancións premento en «Engadir á lista de reprodución» no menú de tres puntos da canción.</string>
+    <string name="edit_favorites_failed">Fallou a edición das favoritas: %s</string>
 </resources>
