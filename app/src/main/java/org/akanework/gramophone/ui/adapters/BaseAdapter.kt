@@ -88,7 +88,7 @@ abstract class BaseAdapter<T : Any>(
     private val rawOrderExposed: Sorter.Type? = null,
     private val allowDiffUtils: Boolean = false,
     private val canSort: Boolean = true,
-    private val hasMenu: Boolean = false,
+    private val hasMenu: Boolean = true,
     private val fallbackContext: AppCompatActivity? = null,
 ) : AdapterFragment.BaseInterface<BaseAdapter.ViewHolder>(), PopupTextProvider, ItemHeightHelper {
 
