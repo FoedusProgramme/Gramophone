@@ -500,4 +500,21 @@
     <string name="error_in_bg">Błędy występujące w tle</string>
     <string name="settings_whitelist">Biała lista</string>
     <string name="whitelist_and_blacklist">Jeśli na białej liście nie wybrano żadnych folderów, dostęp będą miały wszystkie foldery.\n\nBiała lista i czarna lista są stosowane łącznie, przy czym czarna lista ma pierwszeństwo. Na przykład można zezwolić na dostęp do folderu umieszczonego na białej liście, jednocześnie wykluczając jeden z jego podfolderów na czarnej liście.</string>
+    <string name="delete_really_artist">Czy na pewno chcesz usunąć wszystkie utwory wykonawcy „%s”? Tego działania nie można cofnąć.</string>
+    <string name="discard_changes_title">Anulować zmiany?</string>
+    <string name="save">Zapisz</string>
+    <string name="discard">Anuluj</string>
+    <string name="discard_changes_msg">Czy na pewno chcesz anulować zmiany wprowadzone w playliście „%s”?</string>
+    <string name="apply">Zastosuj</string>
+    <string name="restore_edits">Przywrócić zmiany?</string>
+    <string name="restore_edits_msg">W playliście „%s” znajdują się niezapisane zmiany. Czy chcesz przywrócić te zmiany, czy też je odrzucić i zacząć od nowa z czystą wersją playlisty?</string>
+    <string name="restore">Przywróć</string>
+    <string name="mount_storage">Aby skorzystać z tej funkcji, należy włożyć kartę SD</string>
+    <string name="failed_to_restore">Nie udało się przywrócić zmian: %s</string>
+    <string name="playlist_empty">Playlista jest pusta</string>
+    <string name="playlist_empty_msg">Dodaj utwory, klikając opcję „Dodaj do listy odtwarzania” w menu z trzema kropkami obok utworu.</string>
+    <string name="search_desc">Wykonawcy, albumy, utwory</string>
+    <string name="search_hint">Wyszukaj piosenkę i wykonawcę</string>
+    <string name="picker_activity">Wybierz utwór muzyczny</string>
+    <string name="playlist_picker_activity">Wybierz playlistę</string>
 </resources>
