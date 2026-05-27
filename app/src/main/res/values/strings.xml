@@ -216,6 +216,7 @@
     <string name="lyric_widget_description">Widget that shows lyrics of currently playing media</string>
     <string name="delete">Delete</string>
     <string name="delete_really">Do you really want to delete \"%s\"? This action cannot be undone.</string>
+    <string name="delete_really_artist">Do you really want to delete all songs by \"%s\"? This action cannot be undone.</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="sort_by_file_path">File path</string>
@@ -521,4 +522,8 @@
     <string name="failed_to_restore">Failed to restore changes: %s</string>
     <string name="playlist_empty">Playlist is empty</string>
     <string name="playlist_empty_msg">Add some songs by clicking on \"Add to playlist\" in the three-dot menu of a song.</string>
+    <string name="search_desc">Artists, albums and tracks</string>
+    <string name="search_hint">Search songs and artists</string>
+    <string name="picker_activity">Choose music track</string>
+    <string name="playlist_picker_activity">Choose playlist</string>
 </resources>
