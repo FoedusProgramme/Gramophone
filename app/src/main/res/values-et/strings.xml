@@ -502,4 +502,9 @@
     <string name="failed_to_restore">Muudatuste taastamine ei õnnestunud: %s</string>
     <string name="playlist_empty">Esitusloend on tühi</string>
     <string name="playlist_empty_msg">Klõpsates loo juures leiduvast kolme punktiga menüüst valikut „Lisa esitusloendisse“ saadki alustada lugude lisamisega esitusloendisse.</string>
+    <string name="delete_really_artist">Kas sa kindlasti soovid „%s“ esitaja kõik lood kustutada? Seda tegevust ei saa tagasi pöörata.</string>
+    <string name="search_desc">Esitajad, albumid ja lood</string>
+    <string name="search_hint">Otsi lugusid ja esitajaid</string>
+    <string name="picker_activity">Vali lugu</string>
+    <string name="playlist_picker_activity">Vali esitusloend</string>
 </resources>
