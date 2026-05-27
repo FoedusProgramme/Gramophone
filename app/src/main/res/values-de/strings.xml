@@ -453,4 +453,14 @@
     <string name="clear_queue">Warteschlange leeren</string>
     <string name="choose_sd">%s auswählen</string>
     <string name="contributors_saladnoober">Qualitätssicherung</string>
+    <string name="discard">Verwerfen</string>
+    <string name="apply">Anwenden</string>
+    <string name="restore_edits">Änderungen wiederherstellen?</string>
+    <string name="discard_changes_title">Änderungen verwerfen?</string>
+    <string name="save">Speichern</string>
+    <string name="restore">Wiederherstellen</string>
+    <string name="playlist_empty">Wiedergabeliste ist leer</string>
+    <string name="picker_activity">Musiktitel auswählen</string>
+    <string name="playlist_picker_activity">Wiedergabeliste auswählen</string>
+    <string name="settings_replaygain_drc">DRC aktivieren</string>
 </resources>
