@@ -506,4 +506,9 @@
     <string name="failed_to_restore">Ha fallat en restaurar els canvis: %s</string>
     <string name="playlist_empty">La llista de reproducció és buida</string>
     <string name="playlist_empty_msg">Afegiu cançons fent clic a «Afegeix a la llista de reproducció» al menú de tres punts d\'una cançó.</string>
+    <string name="delete_really_artist">Segur que voleu suprimir totes les cançons de «%s»? Aquesta acció no es pot desfer.</string>
+    <string name="search_desc">Artistes, àlbums i pistes</string>
+    <string name="picker_activity">Tria una pista de música</string>
+    <string name="search_hint">Cerca cançons i artistes</string>
+    <string name="playlist_picker_activity">Tria una llista de reproducció</string>
 </resources>
