@@ -17,8 +17,8 @@ import org.akanework.gramophone.logic.utils.flows.IncrementalMap
 import org.akanework.gramophone.logic.utils.flows.PauseManager
 import org.akanework.gramophone.logic.utils.flows.conflateAndBlockWhenPaused
 import org.akanework.gramophone.logic.utils.flows.filterIncremental
-import org.akanework.gramophone.logic.utils.flows.flatMapIncremental
-import org.akanework.gramophone.logic.utils.flows.flattenIncremental
+import org.akanework.gramophone.logic.utils.flows.flatMapConcatIncremental
+import org.akanework.gramophone.logic.utils.flows.flattenLastestIncremental
 import org.akanework.gramophone.logic.utils.flows.forKey
 import org.akanework.gramophone.logic.utils.flows.groupByIncremental
 import org.akanework.gramophone.logic.utils.flows.mapIncremental
@@ -97,7 +97,7 @@ class PauseableFlowsTest {
                 .filterIncremental { it < 100 }
                 .assertContractNotViolated("after filter")
                 .onEach { countFiltered++ }
-                .flatMapIncremental { if (it % 2 == 0) listOf(it, it) else emptyList() }
+                .flatMapConcatIncremental { if (it % 2 == 0) listOf(it, it) else emptyList() }
                 .assertContractNotViolated("after flatMap")
             val out = ArrayList<IncrementalList<Int>>()
             source.toCollection(out)
@@ -144,7 +144,7 @@ class PauseableFlowsTest {
                 .assertContractNotViolated("after groupBy")
                 .mapIncremental { a, b -> flowOf(b) }
                 .assertContractNotViolated("after mapIncremental")
-                .flattenIncremental()
+                .flattenLastestIncremental()
                 .assertContractNotViolated("after flattenIncremental")
                 .forKey(1)
                 .map { it!! }

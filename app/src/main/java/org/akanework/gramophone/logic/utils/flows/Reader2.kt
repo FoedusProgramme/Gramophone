@@ -3,6 +3,8 @@ package org.akanework.gramophone.logic.utils.flows
 import android.content.ContentUris
 import android.net.Uri
 import androidx.media3.common.MediaItem
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -10,17 +12,21 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import org.akanework.gramophone.logic.getFile
 import org.akanework.gramophone.logic.utils.flows.PauseManagingSharedFlow.Companion.sharePauseableIn
 import uk.akane.libphonograph.Constants
+import uk.akane.libphonograph.items.RawPlaylist
 import uk.akane.libphonograph.items.albumId
 import uk.akane.libphonograph.items.artistId
 import uk.akane.libphonograph.toUriCompat
 import uk.akane.libphonograph.utils.MiscUtils
 import uk.akane.libphonograph.utils.MiscUtils.findBestCover
 import java.io.File
+import kotlin.comparisons.compareBy
 
 data class Album2(
     val id: Long?,
@@ -40,20 +46,34 @@ data class Artist2(
     val albumCount: Int,
 )
 
-// TODO sharePauseableIn should propagate replay cache invalidation to downstream as well
-private data class ReaderResult2(
-    val songList: IncrementalList<MediaItem>,
-    val canonicalArtistIdMap: Map<String, Long>,
+data class Playlist2(
+    val id: Long?,
+    val name: String?,
+    val path: File?,
+    val dateAdded: Long?,
+    val dateModified: Long?,
+    val cover: Uri?,
+    val songCount: Int,
 )
+
+// TODO sharePauseableIn should propagate replay cache invalidation to downstream as well
+// doesn't it already do that...? this TODO is so old i wonder if its correct
 
 private var useEnhancedCoverReading = true
 private var coverStubUri: String? = "gramophoneAlbumCover"//TODO
 private val scope = CoroutineScope(Dispatchers.Default)
-private val readerFlow: SharedFlow<ReaderResult2> = TODO()
-    .provideReplayCacheInvalidationManager<ReaderResult2>(copyDownstream = Invalidation.Optional)
+val songFlow: Flow<IncrementalList<MediaItem>> = TODO()
+    .provideReplayCacheInvalidationManager<IncrementalList<MediaItem>>(
+        copyDownstream = Invalidation.Optional)
     .sharePauseableIn(scope, WhileSubscribed(), replay = 1)
-val songFlow: Flow<IncrementalList<MediaItem>> = readerFlow.map { it.songList }
 
+private val canonicalArtistIdMapRawFlow: Flow<IncrementalMap<String, Long?>> = songFlow
+    .groupByIncremental { it.mediaMetadata.artist?.toString() }
+    .filterKeyNotNullIncremental()
+    .mapIncremental { _, list -> list.after.mapNotNull { it.mediaMetadata.artistId }
+        .groupingBy { it }.eachCount().maxByOrNull { it.value }?.key }
+    .provideReplayCacheInvalidationManager(copyDownstream = Invalidation.Required)
+    .sharePauseableIn(scope, WhileSubscribed(), replay = 1)
 private val allowedFoldersForCoversFlow: SharedFlow<Set<String>> = songFlow
     .groupByIncremental { it.getFile()?.parent }
     .filterIncremental { folder, songs ->
@@ -71,7 +91,7 @@ private val rawAlbumsFlow: Flow<IncrementalMap<Long?, IncrementalList<MediaItem>
     .provideReplayCacheInvalidationManager(copyDownstream = Invalidation.Required)
     .sharePauseableIn(scope, WhileSubscribed(), replay = 1)
 val albumsFlow: SharedFlow<IncrementalList<Album2>> = rawAlbumsFlow
-    .mapIncremental { albumId, songs ->
+    .flatMapLatestIncremental { albumId, songs ->
         val songList = songs.after
         val title = songList.first().mediaMetadata.albumTitle?.toString()
         val year = songList.mapNotNull { it.mediaMetadata.releaseYear }.maxOrNull()
@@ -99,13 +119,12 @@ val albumsFlow: SharedFlow<IncrementalList<Album2>> = rawAlbumsFlow
         )
         val artistIdFlow =
             if (artist?.second != null) flowOf(artist.second) else if (artist != null)
-                readerFlow.map { it.canonicalArtistIdMap[artist.first] }
-                    .distinctUntilChanged() else flowOf(null)
+                canonicalArtistIdMapRawFlow.forKey(artist.first).distinctUntilChanged()
+            else flowOf(null)
         albumArtFlow.combine(artistIdFlow) { cover, artistId ->
             Album2(albumId, title, artist?.first, artistId, year, cover, songCount)
         }
     }
-    .flattenIncremental()
     .toIncrementalList(::compareValues)
     .provideReplayCacheInvalidationManager(copyDownstream = Invalidation.Optional)
     .sharePauseableIn(scope, WhileSubscribed(), replay = 1)
@@ -129,13 +148,12 @@ private val artistsWithoutSongsFlow = albumsForArtistFlow
     .filterLatestIncremental { artistId, albums ->
         rawArtistFlow.forKey(artistId).map { it == null }
     }
-    .mapIncremental { artistId, albums ->
+    .flatMapLatestIncremental { artistId, albums ->
         val firstAlbum = albums.after.first() // TODO is this unsorted? non-deterministic?!
         flowOf(Artist2(artistId, firstAlbum.albumArtist, firstAlbum.cover, 0, albums.after.size))
     }
-    .flattenIncremental()
 val artistFlow: SharedFlow<IncrementalList<Artist2>> = rawArtistFlow
-    .mapIncremental { artistId, songs ->
+    .flatMapLatestIncremental { artistId, songs ->
         val songList = songs.after
         val title = songList.first().mediaMetadata.artist?.toString()
         val cover = songList.first().mediaMetadata.artworkUri
@@ -148,7 +166,6 @@ val artistFlow: SharedFlow<IncrementalList<Artist2>> = rawArtistFlow
                 Artist2(artistId, title, cover, songCount, albumCount)
             }
     }
-    .flattenIncremental()
     .mergeWithIncremental(artistsWithoutSongsFlow)
     .toIncrementalList(::compareValues)
     .provideReplayCacheInvalidationManager()
@@ -156,6 +173,45 @@ val artistFlow: SharedFlow<IncrementalList<Artist2>> = rawArtistFlow
 
 fun getSongsForArtist(artist: Artist2): Flow<IncrementalList<MediaItem>> =
     rawArtistFlow.forKey(artist.id).defeatNullable()
+
+private val rawPlaylistFlow: Flow<IncrementalList<RawPlaylist>> = TODO()
+    .provideReplayCacheInvalidationManager<IncrementalList<RawPlaylist>>(
+        copyDownstream = Invalidation.Required)
+    .sharePauseableIn(scope, WhileSubscribed(), replay = 1)
+private val pathMapFlow: Flow<IncrementalMap<String, MediaItem>> = songFlow
+    .groupByIncremental { it.getFile()?.path }
+    .filterKeyNotNullIncremental()
+    .mapIncremental { _, song ->
+        // song.after.size == 1 here because each song has a different path
+        song.after.first()
+    }
+    .provideReplayCacheInvalidationManager(copyDownstream = Invalidation.Required)
+    .sharePauseableIn(scope, WhileSubscribed(), replay = 1)
+private val playlistSongsFlow: Flow<IncrementalMap<Long, IncrementalList<MediaItem>>> =
+    rawPlaylistFlow
+        .groupByIncremental { it.id }
+        // The point of key set in between is not recreating flow when the playlist content changes
+        .keySetAsSortedIncrementalList(compareBy { it })
+        .groupByIncremental { it } // IMap<Long, Long>
+        .flatMapLatestIncremental { id, _ -> // IMap<Long, Flow<IList<Entry>>>
+            flow {
+                rawPlaylistFlow // IList<RawPlaylist>
+                    .filterIncremental { it.id == id && it.entries != null }
+                    .map { it.after.firstOrNull()?.entries } // List<Entry>?
+                    .collect {
+                        // TODO provide actually incremental list of entries here
+                        emit(IncrementalList.Begin(it?.toPersistentList()
+                            ?: persistentListOf()))
+                    }
+            } // IList<Entry>
+                .mapIncremental { it.resolveMediaItem2(pathMapFlow) } // IList<Flow<MediaItem?>>
+                .flattenLastestIncremental() // IList<MediaItem?>
+                .filterNotNullIncremental() // IList<MediaItem>
+        } // IMap<Long, IList<MediaItem>>
+        .provideReplayCacheInvalidationManager(copyDownstream = Invalidation.Required)
+        .sharePauseableIn(scope, WhileSubscribed(), replay = 1)
+
+//val playlistFlow: Flow<IncrementalList<Playlist2>> TODO
 
 // TODO make proper album artists (songs sorted by album artist) tab again
 

@@ -8,10 +8,13 @@ import android.util.SparseArray
 import android.util.Xml
 import androidx.core.util.keyIterator
 import androidx.media3.common.MediaItem
+import kotlinx.coroutines.flow.Flow
 import kotlinx.parcelize.Parcelize
 import okio.Path.Companion.toOkioPath
 import org.akanework.gramophone.BuildConfig
 import org.akanework.gramophone.logic.getFile
+import org.akanework.gramophone.logic.utils.flows.IncrementalMap
+import org.akanework.gramophone.logic.utils.flows.forKey
 import org.nift4.mediastorecompat.MediaStoreCompat
 import org.xmlpull.v1.XmlPullParser
 import java.io.File
@@ -208,6 +211,8 @@ object PlaylistSerializer {
         }
         fun resolveMediaItem(pathMap: Map<String, MediaItem>?) =
             pathMap!![file.absolutePath]
+        fun resolveMediaItem2(pathMapFlow: Flow<IncrementalMap<String, MediaItem>>) =
+            pathMapFlow.forKey(file.absolutePath)
         fun copyFromMediaItem(song: MediaItem) = copy(
             title = song.mediaMetadata.title?.toString(),
             durationSeconds = song.mediaMetadata.durationMs?.div(1000L),
