@@ -36,36 +36,33 @@ import java.util.concurrent.atomic.AtomicReference
 import kotlin.math.abs
 import kotlin.math.min
 
-sealed class IncrementalList<T>(val after: List<T>) {
-    class Begin<T>(after: List<T>) : IncrementalList<T>(after) {
-        override fun toString() = "Begin()"
-    }
+sealed class IncrementalList<T> {
+    abstract val after: List<T>
+    data class Begin<T>(override val after: List<T>) : IncrementalList<T>()
 
-    class Insert<T>(val pos: Int, val count: Int, after: List<T>) : IncrementalList<T>(after) {
-        override fun toString() = "Insert(pos=$pos, count=$count)"
-    }
+    data class Insert<T>(val pos: Int, val count: Int, override val after: List<T>) :
+        IncrementalList<T>()
 
-    class Remove<T>(val pos: Int, val count: Int, after: List<T>) : IncrementalList<T>(after) {
-        override fun toString() = "Remove(pos=$pos, count=$count)"
-    }
+    data class Remove<T>(val pos: Int, val count: Int, override val after: List<T>) :IncrementalList<T>()
 
-    class Move<T>(val pos: Int, val count: Int, val outPos: Int, after: List<T>) :
-        IncrementalList<T>(after) {
-        override fun toString() = "Move(pos=$pos, count=$count, outPos=$outPos)"
-    }
+    data class Move<T>(val pos: Int, val count: Int, val outPos: Int, override val after: List<T>) :
+        IncrementalList<T>()
 
-    class Update<T>(val pos: Int, val count: Int, after: List<T>) : IncrementalList<T>(after) {
-        override fun toString() = "Update(pos=$pos, count=$count)"
-    }
+    data class Update<T>(val pos: Int, val count: Int, override val after: List<T>) :
+        IncrementalList<T>()
 }
 
-sealed class IncrementalMap<T, R>(val after: Map<T, R>) {
-    class Begin<T, R>(after: Map<T, R>) : IncrementalMap<T, R>(after)
-    class Insert<T, R>(val key: T, after: Map<T, R>) : IncrementalMap<T, R>(after)
-    class Remove<T, R>(val key: T, after: Map<T, R>) : IncrementalMap<T, R>(after)
-    class Move<T, R>(val key: T, val outKey: T, after: Map<T, R>) : IncrementalMap<T, R>(after)
-    class Update<T, R>(val key: T, after: Map<T, R>) : IncrementalMap<T, R>(after)
+sealed class IncrementalMap<T, R> {
+    abstract val after: Map<T, R>
+    data class Begin<T, R>(override val after: Map<T, R>) : IncrementalMap<T, R>()
+    data class Insert<T, R>(val key: T, override val after: Map<T, R>) : IncrementalMap<T, R>()
+    data class Remove<T, R>(val key: T, override val after: Map<T, R>) : IncrementalMap<T, R>()
+    data class Move<T, R>(val key: T, val outKey: T, override val after: Map<T, R>) : IncrementalMap<T, R>()
+    data class Update<T, R>(val key: T, override val after: Map<T, R>) : IncrementalMap<T, R>()
 }
+
+fun <T> Flow<IncrementalList<T>?>.defeatNullable() =
+    map { it ?: IncrementalList.Begin(listOf()) }
 
 inline fun <T, R> Flow<IncrementalList<T>>.flatMapIncremental(
     crossinline predicate: (T) -> List<R>
@@ -159,6 +156,7 @@ inline fun <T, R> Flow<IncrementalList<T>>.flatMapIncremental(
                     var offsetCount = abs(added - removed)
                     newFlat = new.flatMap { it }
                     // in insert/remove cases we technically spoiler updates to the list but it doesn't matter
+                    // TODO: maybe we shouldnt after all ...?
                     if (removed > added) {
                         emit(IncrementalList.Remove(offsetStart, offsetCount, newFlat))
                     } else if (removed < added) {
@@ -248,7 +246,7 @@ inline fun <T, K> Iterable<T>.groupByIndexed(keySelector: (Int, T) -> K): Map<K,
     val destination = LinkedHashMap<K, ArrayList<T>>()
     forEachIndexed { index, element ->
         val key = keySelector(index, element)
-        val list = destination.getOrPut(key) { ArrayList<T>() }
+        val list = destination.getOrPut(key) { ArrayList() }
         list.add(element)
     }
     return destination
@@ -281,13 +279,11 @@ inline fun <T, R> Flow<IncrementalList<T>>.groupByIncremental(
                     val group = groupCache[key]
                     if (group != null) {
                         var totalStart = 0
-                        for (j in it.pos - 1 downTo 0) {
+                        for (j in 0..<i) {
                             if (keyCache[j] == key) {// TODO optimize equals?
-                                totalStart = group.after.indexOf(it.after[j])
-                                break
+                                totalStart++
                             }
                         }
-                        totalStart++
                         val new =
                             group.after.toMutableList().apply { add(totalStart, item) }.toList()
                         groupCache[key] = IncrementalList.Insert(totalStart, 1, new)
@@ -314,13 +310,11 @@ inline fun <T, R> Flow<IncrementalList<T>>.groupByIncremental(
                     val group = groupCache.getValue(key)
                     val oldInnerPos = group.after.indexOf(item)
                     var totalStart = 0
-                    for (j in outPos - 1 downTo 0) {
+                    for (j in 0..<outPos) {
                         if (keyCache[j] == key) {// TODO optimize equals?
-                            totalStart = group.after.indexOf(it.after[j])
-                            break
+                            totalStart++
                         }
                     }
-                    totalStart++
                     val new =
                         group.after.toMutableList().apply { add(totalStart, removeAt(oldInnerPos)) }
                             .toList()
@@ -335,13 +329,11 @@ inline fun <T, R> Flow<IncrementalList<T>>.groupByIncremental(
                     val group = groupCache.getValue(key)
                     if (group.after.size > 1) {
                         var totalStart = 0
-                        for (j in it.pos - 1 downTo 0) {
+                        for (j in 0..<it.pos) {
                             if (keyCache[j] == key) {// TODO optimize equals?
-                                totalStart = group.after.indexOf(it.after[j])
-                                break
+                                totalStart++
                             }
                         }
-                        totalStart++
                         val new =
                             group.after.toMutableList().apply { removeAt(totalStart) }.toList()
                         groupCache[key] = IncrementalList.Remove(totalStart, 1, new)
@@ -804,6 +796,7 @@ inline fun <T, R> Flow<IncrementalMap<T, Flow<R>>>.flattenIncremental(): Flow<In
                         } else state = HashMap()
                         val deferred = PendingCommand.Begin()
                         pending = deferred
+                        pendingKeys.addAll(it.after.keys)
                         state.putAll(it.after.mapValues {
                             createFlattenJob(
                                 it.key,
@@ -817,6 +810,7 @@ inline fun <T, R> Flow<IncrementalMap<T, Flow<R>>>.flattenIncremental(): Flow<In
                     it is IncrementalMap.Insert -> {
                         val deferred = PendingCommand.Insert()
                         pending = deferred
+                        pendingKeys.add(it.key)
                         state[it.key] = createFlattenJob(it.key, it.after.getValue(it.key), update)
                         deferred.await()
                     }
@@ -846,6 +840,7 @@ inline fun <T, R> Flow<IncrementalMap<T, Flow<R>>>.flattenIncremental(): Flow<In
                         }
                         val deferred = PendingCommand.Update()
                         pending = deferred
+                        pendingKeys.add(it.key)
                         state[it.key] = createFlattenJob(it.key, it.after.getValue(it.key), update)
                         deferred.await()
                     }
@@ -977,7 +972,7 @@ private val readerFlow: SharedFlow<ReaderResult2> = TODO()
 val songFlow: Flow<IncrementalList<MediaItem>> = readerFlow.map { it.songList }
 
 private val allowedFoldersForCoversFlow: SharedFlow<Set<String>> = songFlow
-    .groupByIncremental { it.getFile()?.absolutePath }
+    .groupByIncremental { it.getFile()?.parent }
     .filterIncremental { folder, songs ->
         if (folder != null) {
             val firstAlbum = songs.after.first().mediaMetadata.albumId
@@ -1032,16 +1027,16 @@ val albumsFlow: SharedFlow<IncrementalList<Album2>> = rawAlbumsFlow
     .provideReplayCacheInvalidationManager(copyDownstream = Invalidation.Optional)
     .sharePauseableIn(scope, WhileSubscribed(), replay = 1)
 
-fun getSongsInAlbum(album: Album2): Flow<IncrementalList<MediaItem>?> = rawAlbumsFlow
-    .forKey(album.id)
+fun getSongsInAlbum(album: Album2): Flow<IncrementalList<MediaItem>> = rawAlbumsFlow
+    .forKey(album.id).defeatNullable()
 
 private val albumsForArtistFlow: Flow<IncrementalMap<Long?, IncrementalList<Album2>>> = albumsFlow
     .groupByIncremental { it.albumArtistId }
     .provideReplayCacheInvalidationManager(copyDownstream = Invalidation.Optional)
     .sharePauseableIn(scope, WhileSubscribed(), replay = 1)
 
-fun getAlbumsForArtist(artist: Artist2): Flow<IncrementalList<Album2>?> =
-    albumsForArtistFlow.forKey(artist.id)
+fun getAlbumsForArtist(artist: Artist2): Flow<IncrementalList<Album2>> =
+    albumsForArtistFlow.forKey(artist.id).defeatNullable()
 
 private val rawArtistFlow: Flow<IncrementalMap<Long?, IncrementalList<MediaItem>>> = songFlow
     .groupByIncremental { it.mediaMetadata.artistId }
@@ -1076,8 +1071,8 @@ val artistFlow: SharedFlow<IncrementalList<Artist2>> = rawArtistFlow
     .provideReplayCacheInvalidationManager()
     .sharePauseableIn(scope, WhileSubscribed(), replay = 1)
 
-fun getSongsForArtist(artist: Artist2): Flow<IncrementalList<MediaItem>?> =
-    rawArtistFlow.forKey(artist.id)
+fun getSongsForArtist(artist: Artist2): Flow<IncrementalList<MediaItem>> =
+    rawArtistFlow.forKey(artist.id).defeatNullable()
 
 // TODO make proper album artists (songs sorted by album artist) tab again
 

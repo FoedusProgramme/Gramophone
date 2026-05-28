@@ -300,7 +300,7 @@ class PauseableFlowsTest {
                 it is IncrementalMap.Update -> {
                     var new = HashMap(cache!!.after)
                     assertTrue(
-                        "at \"$tag\", processing op $it: expected key to exist",
+                        "at \"$tag\", processing op $it: expected key to exist in $new",
                         new.contains(it.key)
                     )
                     new[it.key] = it.after[it.key]
