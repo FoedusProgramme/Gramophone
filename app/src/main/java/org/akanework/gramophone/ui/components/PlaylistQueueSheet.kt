@@ -7,11 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -52,6 +50,7 @@ import org.akanework.gramophone.logic.utils.Flags
 import org.akanework.gramophone.logic.utils.convertDurationToTimeStamp
 import org.akanework.gramophone.ui.GramophoneTheme
 import org.akanework.gramophone.ui.MainActivity
+import org.akanework.gramophone.ui.fragments.compose.BottomSheetActions
 import org.akanework.gramophone.ui.fragments.compose.QueueRoot
 import org.akanework.gramophone.ui.fragments.compose.rememberMqState
 import java.util.LinkedList
@@ -66,7 +65,6 @@ class PlaylistQueueSheet(
         get() = activity.getPlayer()
     private val playlistAdapter: PlaylistCardAdapter
     private val touchHelper: ItemTouchHelper
-    private val queueActionsView: ConstraintLayout
     private val durationView: Chronometer
     private val queueHead: ComposeView
     private val mqEnabled: Boolean
@@ -131,28 +129,12 @@ class PlaylistQueueSheet(
         )
         recyclerView.fastScroll(null, null)
 
+        durationView = Chronometer(context)
+        durationView.isCountDown = true
+
         queueHead = findViewById(R.id.queue_head)!!
         queueHead.apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-            // TODO: remove once mq ui (mostly queue title atp) is stable enough to show to users
-            if (!mqEnabled) {
-                setContent {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 4.dp)
-                    ) {
-                        AndroidView(
-                            modifier = Modifier.fillMaxWidth(),
-                            factory = {
-                                queueActionsView
-                            },
-                        )
-                    }
-                }
-                return@apply
-            }
-
             setContent {
                 val coroutineScope = rememberCoroutineScope()
 
@@ -214,28 +196,18 @@ class PlaylistQueueSheet(
                         mqState = mqState,
                         pagerState = pagerState,
                         coroutineScope = coroutineScope,
-                        queueActionsView = queueActionsView,
+                        durationView = durationView,
                         recyclerView = recyclerView,
                         mqEnabled = mqEnabled,
                         onDismiss = { dismiss() },
+                        onRecyclerScrollTo = {
+                            recyclerView.smoothScrollToPosition(playlistAdapter.playlist.first.indexOfFirst { i ->
+                                i == (instance?.currentMediaItemIndex ?: 0)
+                            })
+                        }
                     )
                 }
             }
-        }
-
-        queueActionsView = LayoutInflater.from(context)
-            .inflate(R.layout.playlist_bottom_sheet_actions, null) as ConstraintLayout
-        durationView = queueActionsView.findViewById(R.id.duration)!!
-        durationView.isCountDown = true
-
-        queueActionsView.findViewById<Button>(R.id.clearQueue)!!.setOnClickListener {
-            dismiss()
-            instance?.clearMediaItems()
-        }
-        queueActionsView.findViewById<Button>(R.id.scrollToPlaying)!!.setOnClickListener {
-            recyclerView.smoothScrollToPosition(playlistAdapter.playlist.first.indexOfFirst { i ->
-                i == (instance?.currentMediaItemIndex ?: 0)
-            })
         }
 
         activity.controllerViewModel.addRecreationalPlayerListener(lifecycle, this) {

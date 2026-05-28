@@ -1,6 +1,5 @@
 package org.akanework.gramophone.ui.fragments.compose
 
-import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
@@ -18,7 +17,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -39,6 +37,8 @@ import androidx.compose.material.icons.automirrored.rounded.List
 import androidx.compose.material.icons.rounded.DragHandle
 import androidx.compose.material.icons.rounded.ExpandLess
 import androidx.compose.material.icons.rounded.ExpandMore
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -61,10 +61,8 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -72,7 +70,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.media3.common.Player
 import androidx.media3.common.Player.REPEAT_MODE_ALL
 import androidx.media3.common.Player.REPEAT_MODE_OFF
@@ -91,6 +88,7 @@ import org.akanework.gramophone.logic.loadQueue
 import org.akanework.gramophone.logic.playOrPause
 import org.akanework.gramophone.logic.supportsWideScreen
 import org.akanework.gramophone.logic.ui.MyRecyclerView
+import org.akanework.gramophone.ui.components.Chronometer
 import org.akanework.gramophone.ui.components.PlaylistQueueSheet
 
 @Composable
@@ -107,7 +105,7 @@ fun MqListItem(
     onLongClick: () -> Unit = {},
 ) {
     Row( // wrapper
-        modifier = Modifier
+        modifier = modifier
             .padding(horizontal = 16.dp)
             .clip(RoundedCornerShape(8.dp))
             .background(
@@ -447,6 +445,7 @@ fun ActionBar(
             IconButton(
                 onClick = {
                 },
+                enabled = false,
             ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_more_vert_alt),
@@ -471,15 +470,72 @@ fun ActionBar(
 }
 
 @Composable
+fun BottomSheetActions(
+    mqState: MqState,
+    durationView: Chronometer,
+    modifier: Modifier = Modifier,
+    onDismiss: (() -> Unit)? = null,
+    onRecyclerScrollTo: (() -> Unit)? = null,
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+            .fillMaxWidth(),
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.SpaceAround
+        ) {
+            Button(
+                colors = ButtonDefaults.textButtonColors(),
+                onClick = {
+                    onDismiss?.invoke()
+                    mqState.removeQueue()
+                }
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.baseline_delete_sweep_24),
+                    contentDescription = null,
+                )
+                Text(
+                    stringResource(R.string.clear_queue)
+                )
+            }
+
+            Button(
+                colors = ButtonDefaults.textButtonColors(),
+                onClick = {
+                    onRecyclerScrollTo?.invoke()
+                }
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_unfold_double),
+                    contentDescription = null,
+                )
+                Text(
+                    stringResource(R.string.scroll_to_playing)
+                )
+            }
+        }
+
+        AndroidView(
+            factory = {
+                durationView
+            },
+        )
+    }
+}
+
+@Composable
 fun QueueRoot(
     mqState: MqState,
     pagerState: PagerState,
     coroutineScope: CoroutineScope,
-    queueActionsView: ConstraintLayout,
+    durationView: Chronometer,
     recyclerView: MyRecyclerView,
     mqEnabled: Boolean,
     modifier: Modifier = Modifier,
     onDismiss: (() -> Unit)? = null,
+    onRecyclerScrollTo: (() -> Unit)? = null,
 ) {
     val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
@@ -519,11 +575,11 @@ fun QueueRoot(
                 }
 
                 1 -> {
-                    AndroidView(
-                        modifier = Modifier.fillMaxWidth(),
-                        factory = {
-                            queueActionsView
-                        },
+                    BottomSheetActions(
+                        mqState = mqState,
+                        durationView = durationView,
+                        onDismiss = onDismiss,
+                        onRecyclerScrollTo = onRecyclerScrollTo,
                     )
                 }
             }
@@ -568,7 +624,7 @@ fun QueueRoot(
     if (landscapeMode) {
         Row(
             modifier = modifier
-                .fillMaxSize()
+                .fillMaxWidth()
         ) {
             Column(
                 modifier = Modifier
@@ -593,6 +649,7 @@ fun QueueRoot(
                 )
             }
 
+            if (!mqEnabled) return@Row
             AndroidView(
                 modifier = Modifier
                     .fillMaxSize()
@@ -605,7 +662,7 @@ fun QueueRoot(
     } else {
         Column(
             modifier = modifier
-                .fillMaxSize()
+                .fillMaxWidth()
         ) {
             Box {
                 pager()
@@ -613,6 +670,7 @@ fun QueueRoot(
 
             HorizontalDivider(thickness = 2.dp)
 
+            if (!mqEnabled) return@Column
             AndroidView(
                 modifier = Modifier.fillMaxSize(),
                 factory = {
@@ -793,7 +851,7 @@ class MqState(
         resetHead()
     }
 
-    fun removeQueue(index: Int) {
+    fun removeQueue(index: Int = getQueueListSize() - 1) {
         instance.deleteQueue(index)
         coroutineScope.launch {
             init()
