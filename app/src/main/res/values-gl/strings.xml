@@ -501,4 +501,9 @@
     <string name="playlist_empty">Lista de reprodución baleira</string>
     <string name="playlist_empty_msg">Engade algunhas cancións premento en «Engadir á lista de reprodución» no menú de tres puntos da canción.</string>
     <string name="edit_favorites_failed">Fallou a edición das favoritas: %s</string>
+    <string name="delete_really_artist">Queres eliminar todas as cancións de «%s»? Esta acción non é reversible.</string>
+    <string name="search_desc">Artistas, álbums e cancións</string>
+    <string name="search_hint">Buscar cancións e artistas</string>
+    <string name="picker_activity">Escolle a pista de música</string>
+    <string name="playlist_picker_activity">Escolle a lista de reprodución</string>
 </resources>
