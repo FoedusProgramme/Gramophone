@@ -174,9 +174,9 @@ val artistFlow: SharedFlow<IncrementalList<Artist2>> = rawArtistFlow
 fun getSongsForArtist(artist: Artist2): Flow<IncrementalList<MediaItem>> =
     rawArtistFlow.forKey(artist.id).defeatNullable()
 
-private val rawPlaylistFlow: Flow<IncrementalList<RawPlaylist>> = TODO()
-    .provideReplayCacheInvalidationManager<IncrementalList<RawPlaylist>>(
-        copyDownstream = Invalidation.Required)
+private val rawPlaylistFlow: Flow<IncrementalMap<Long, IncrementalList<RawPlaylist>>> = TODO()
+    .groupByIncremental<RawPlaylist, Long> { it.id }
+    .provideReplayCacheInvalidationManager(copyDownstream = Invalidation.Required)
     .sharePauseableIn(scope, WhileSubscribed(), replay = 1)
 private val pathMapFlow: Flow<IncrementalMap<String, MediaItem>> = songFlow
     .groupByIncremental { it.getFile()?.path }
@@ -189,14 +189,15 @@ private val pathMapFlow: Flow<IncrementalMap<String, MediaItem>> = songFlow
     .sharePauseableIn(scope, WhileSubscribed(), replay = 1)
 private val playlistSongsFlow: Flow<IncrementalMap<Long, IncrementalList<MediaItem>>> =
     rawPlaylistFlow
-        .groupByIncremental { it.id }
         // The point of key set in between is not recreating flow when the playlist content changes
         .keySetAsSortedIncrementalList(compareBy { it })
         .groupByIncremental { it } // IMap<Long, Long>
         .flatMapLatestIncremental { id, _ -> // IMap<Long, Flow<IList<Entry>>>
             flow {
-                rawPlaylistFlow // IList<RawPlaylist>
-                    .filterIncremental { it.id == id && it.entries != null }
+                rawPlaylistFlow
+                    .forKey(id)
+                    .defeatNullable()
+                    .filterIncremental { it.entries != null }
                     .map { it.after.firstOrNull()?.entries } // List<Entry>?
                     .collect {
                         // TODO provide actually incremental list of entries here
@@ -211,7 +212,24 @@ private val playlistSongsFlow: Flow<IncrementalMap<Long, IncrementalList<MediaIt
         .provideReplayCacheInvalidationManager(copyDownstream = Invalidation.Required)
         .sharePauseableIn(scope, WhileSubscribed(), replay = 1)
 
-//val playlistFlow: Flow<IncrementalList<Playlist2>> TODO
+val playlistFlow: Flow<IncrementalList<Playlist2>> = playlistSongsFlow
+    .keySetAsSortedIncrementalList(compareBy { it })
+    .flatMapLatestIncremental { rawPlaylistFlow.forKey(it).defeatNullable()
+        .map { e -> e.after.firstOrNull() } }
+    .filterNotNullIncremental()
+    .flatMapLatestIncremental { playlist ->
+        playlistSongsFlow
+            .forKey(playlist.id)
+            .map { (it?.after?.size ?: 0) to (if (it?.after?.isNotEmpty() == true) it.after.first()
+                    .mediaMetadata.artworkUri else null) }
+            .distinctUntilChanged()
+            .map { songData ->
+                Playlist2(playlist.id, playlist.title, playlist.path, playlist.dateAdded,
+                    playlist.dateModified, songData.second, songData.first)
+            }
+    }
+    .provideReplayCacheInvalidationManager()
+    .sharePauseableIn(scope, WhileSubscribed(), replay = 1)
 
 // TODO make proper album artists (songs sorted by album artist) tab again
 
@@ -224,5 +242,3 @@ private val playlistSongsFlow: Flow<IncrementalMap<Long, IncrementalList<MediaIt
 // TODO filesystem tree
 
 // TODO id map
-
-// TODO playlists
