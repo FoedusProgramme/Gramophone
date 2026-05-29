@@ -1528,6 +1528,7 @@ fun parseTtml(audioMimeType: String?, lyricText: String): SemanticLyrics? {
                             .toMutableList()
                     if (t.firstOrNull()?.text?.startsWith('(') == true
                         && t.lastOrNull()?.text?.endsWith(')') == true
+                        && (t.firstOrNull()?.role ?: it.role) == "x-bg"
                     ) {
                         t[0] = t.first().copy(text = t.first().text.substring(1))
                         t[t.size - 1] = t.last()
