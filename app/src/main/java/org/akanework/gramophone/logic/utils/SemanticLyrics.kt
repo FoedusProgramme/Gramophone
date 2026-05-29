@@ -19,7 +19,6 @@ import org.akanework.gramophone.logic.utils.SemanticLyrics.UnsyncedLyrics
 import org.akanework.gramophone.logic.utils.SemanticLyrics.Word
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserException
-import uk.akane.libphonograph.putIfAbsentSupport
 import java.io.StringReader
 import java.nio.charset.Charset
 import java.util.concurrent.atomic.AtomicReference
@@ -1326,7 +1325,7 @@ fun parseTtml(audioMimeType: String?, lyricText: String): SemanticLyrics? {
     }
     val peopleToType = hashMapOf<String, String>()
     val people = hashMapOf<String, MutableList<String>>()
-    val itunesTranslations = hashMapOf<String, HashMap<String, String>>()
+    val itunesTranslations = hashMapOf<String, HashMap<String, out List<Pair<String?, String>>>>()
     val timer = TtmlTimeTracker(parser, hasItunesNamespace)
     parser.nextTag()
     if (parser.eventType == XmlPullParser.END_TAG && parser.namespace == tt && parser.name == "tt") {
@@ -1421,15 +1420,48 @@ fun parseTtml(audioMimeType: String?, lyricText: String): SemanticLyrics? {
                                                 "http://www.w3.org/XML/1998/namespace",
                                                 "lang"
                                             )
-                                            val out = hashMapOf<String, String>()
+                                            val out = hashMapOf<String, ArrayList<Pair<String?, String>>>()
                                             while (parser.nextTag() != XmlPullParser.END_TAG) {
                                                 if (parser.name == "text") {
                                                     val `for` =
                                                         parser.getAttributeValue(null, "for")
                                                             ?: throw XmlPullParserException("missing attribute for at $parser")
-                                                    parser.nextAndThrowIfNotText()
-                                                    out[`for`] = parser.text
-                                                    parser.nextAndThrowIfNotEnd()
+                                                    val roleStack = mutableListOf<String>()
+                                                    while (true) {
+                                                        when (parser.next()) {
+                                                            XmlPullParser.TEXT -> {
+                                                                out.getOrPut(`for`) {
+                                                                    ArrayList() }.add(roleStack
+                                                                    .lastOrNull() to parser.text)
+                                                            }
+
+                                                            XmlPullParser.START_TAG if
+                                                            parser.name == "span" -> {
+                                                                val role = parser.getAttributeValue(
+                                                                    ttm, "role")
+                                                                roleStack.add(role)
+                                                            }
+
+                                                            XmlPullParser.END_TAG if
+                                                            parser.name == "span" &&
+                                                                    roleStack.isNotEmpty() -> {
+                                                                roleStack.removeAt(
+                                                                    roleStack.lastIndex)
+                                                            }
+
+                                                            XmlPullParser.END_TAG if
+                                                            parser.name == "text" &&
+                                                                    roleStack.isEmpty() -> {
+                                                                break
+                                                            }
+
+                                                            else ->
+                                                                throw XmlPullParserException(
+                                                                    "Wrong event type " +
+                                                                            "${parser.eventType} " +
+                                                                            "in $parser")
+                                                        }
+                                                    }
                                                 } else {
                                                     throw XmlPullParserException(
                                                         "expected <text>, got " +
@@ -1466,23 +1498,6 @@ fun parseTtml(audioMimeType: String?, lyricText: String): SemanticLyrics? {
     parser.require(XmlPullParser.START_TAG, tt, "body")
     val state = TtmlParserState(parser, timer)
     state.parse()
-    itunesTranslations.forEach { lang ->
-        lang.value.forEach { line ->
-            val lastIdx = state.paragraphs.indexOfLast { it.key == line.key }
-            if (lastIdx != -1) {
-                state.paragraphs.add(
-                    lastIdx + 1, state.paragraphs
-                        .find { it.key == line.key }!!.copy(
-                            texts = listOf(
-                                TtmlParserState.Text(
-                                    line.value, time = null, role = null
-                                )
-                            ), translated = true
-                        )
-                )
-            }
-        }
-    }
     val paragraphs = state.paragraphs.flatMap {
         /* x-bg can be anywhere in a line, let's split it out into
          * separate lines for now, that looks better */
@@ -1530,6 +1545,24 @@ fun parseTtml(audioMimeType: String?, lyricText: String): SemanticLyrics? {
             if (idx != -1) idx += cur
         } while (cur != -1)
         out
+    }.toMutableList()
+    itunesTranslations.forEach { lang ->
+        lang.value.forEach { line ->
+            val indices = paragraphs.flatMapIndexed { i, it -> if (it.key == line.key)
+                listOf(i) else emptyList() }
+            if (indices.size >= line.value.size) {
+                var offset = 0
+                line.value.forEachIndexed { occurrenceIndex, roleAndText ->
+                    val untranslated = paragraphs[indices[occurrenceIndex] + offset]
+                    if (untranslated.role != roleAndText.first)
+                        throw XmlPullParserException("translation role is different: " +
+                                "$untranslated vs $roleAndText (idx $occurrenceIndex)")
+                    paragraphs.add(indices[occurrenceIndex] + ++offset,
+                        untranslated.copy(texts = listOf(TtmlParserState.Text(
+                            roleAndText.second, time = null, role = null)), translated = true))
+                }
+            }
+        }
     }
     // start left if person is first, and right if sample is first.
     val pToSide = if (Flags.TTML_AGENT_SMART_SIDES) {
