@@ -399,7 +399,7 @@ fun ActionBar(
             horizontalArrangement = Arrangement.End,
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = 8.dp)
         ) {
             IconButton(
                 onClick = {
@@ -553,10 +553,11 @@ fun QueueRoot(
                 .fillMaxWidth()
                 .padding(bottom = 20.dp),
             beyondViewportPageCount = 1,
-            userScrollEnabled = !mqState.expanded
+            userScrollEnabled = mqEnabled && !mqState.expanded
         ) { page ->
             when (page) {
                 0 -> {
+                    if (!mqEnabled) return@HorizontalPager
                     if (landscapeMode) {
                         QueueInfo(
                             mqState = mqState,
@@ -585,6 +586,7 @@ fun QueueRoot(
             }
         }
 
+        if (!mqEnabled) return
         Row(
             horizontalArrangement = Arrangement.Center,
             modifier = Modifier
@@ -784,8 +786,8 @@ class MqState(
 
     fun getQueueLength(): Long {
         return if (!isDetached()) {
-            activeQueue?.queue?.sumOf { it.mediaMetadata.durationMs ?: 0L } ?: 0L
-        } else detachedQueue?.queue?.sumOf { it.mediaMetadata.durationMs ?: 0L } ?: 0L
+            activeQueue?.getDuration() ?: 0L
+        } else detachedQueue?.getDuration() ?: 0L
     }
 
     fun getQueuePositionStr(): String {

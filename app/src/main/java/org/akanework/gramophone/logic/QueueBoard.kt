@@ -8,6 +8,7 @@ import androidx.compose.ui.util.fastFirstOrNull
 import androidx.compose.ui.util.fastSumBy
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
 import androidx.media3.common.Player.REPEAT_MODE_OFF
 import org.akanework.gramophone.logic.utils.CircularShuffleOrder
 import kotlin.random.Random
@@ -67,7 +68,10 @@ class QueueBoard(
     ) {
         Log.v(TAG, "commitQueue() called")
         if (index < 0 || index >= masterQueues.size) {
-            Log.w(TAG, "commitQueue() index $index out of bounds (size = ${masterQueues.size}). Aborting")
+            Log.w(
+                TAG,
+                "commitQueue() index $index out of bounds (size = ${masterQueues.size}). Aborting"
+            )
             return
         }
 
@@ -291,17 +295,36 @@ class QueueBoard(
     /**
      * Get all copy of all queues
      */
-    fun getInactiveQueues() = masterQueues.dropLast(1).map { it.copy(queue = ArrayList()) }
+    fun getInactiveQueues() = masterQueues.dropLast(1).map {
+        it.copy(
+            queue = ArrayList(),
+            fakeQueueSize = it.getSize(),
+            fakeQueueLength = it.getDuration(),
+        )
+    }
 
     /**
      * Get a single queue (or several queues in the future)
      */
     fun getQueue(index: Int): List<MultiQueueObject> {
-        return if (index == C.INDEX_UNSET) {
+        var duration = 0L
+        for (i in 0 until player.endedWorkaroundPlayer!!.mediaItemCount) {
+            duration += player.endedWorkaroundPlayer!!.getMediaItemAt(i).mediaMetadata.durationMs
+                ?: 0L
+        }
+
+        return if (index == C.INDEX_UNSET || index == masterQueues.lastIndex) {
             masterQueues.lastOrNull()
         } else {
             masterQueues.getOrNull(index)
-        }?.let { listOf(it) } ?: emptyList()
+        }?.let {
+            listOf(
+                it.copy(
+                    fakeQueueSize = it.getSize(),
+                    fakeQueueLength = it.getDuration()
+                )
+            )
+        } ?: emptyList()
     }
 
 
@@ -380,7 +403,10 @@ class QueueBoard(
             Log.d(TAG, "Trying seamless queue switch. Is first song?: ${startIndex == 0}")
             val playerIndex = plr.currentMediaItemIndex
 
-            plr.replaceMediaItem(playerIndex, mediaItems[playerIndex]) // update current's metadata
+            plr.replaceMediaItem(
+                playerIndex,
+                mediaItems[playerIndex]
+            ) // update current's metadata
             if (startIndex == 0) {
                 // remove all songs before the currently playing one and then replace all the items after
                 if (playerIndex > 0) {
@@ -456,6 +482,7 @@ class QueueBoard(
         mq.shuffleOrder = persistent?.toString()
         mq.queue.clear()
         mq.queue.addAll(dumpPlaylist())
+        mq.clearFakeStats()
     }
 
     val context
@@ -503,6 +530,9 @@ data class MultiQueueObject(
     var shuffleOrder: String? = null,
     // TODO: why did i need this again?
     var ended: Boolean = false,
+
+    private var fakeQueueSize: Int? = null,
+    private var fakeQueueLength: Long? = null
 ) {
     override fun toString() =
         "$title ($id) startIndex=$startIndex, startPositionMs=$startPositionMs, repeatMode=$repeatMode, shuffleModeEnabled=$shuffleModeEnabled, ended=$ended, mediaItems_size=${queue.size}"
@@ -532,19 +562,23 @@ data class MultiQueueObject(
     /**
      * Retrieve the total duration of all songs
      *
-     * @return Duration in seconds
+     * @return Duration in milliseconds
      */
-    fun getDuration(): Int {
-        return queue.fastSumBy {
-            ((it.mediaMetadata.durationMs ?: 0L) / 1000).toInt() // seconds
+    fun getDuration(): Long {
+        return fakeQueueLength ?: queue.sumOf {
+            it.mediaMetadata.durationMs ?: 0L
         }
     }
 
     /**
      * Get the length of the queue
      */
-    fun getSize() = queue.size
+    fun getSize() = fakeQueueSize ?: queue.size
 
+    fun clearFakeStats() {
+        fakeQueueSize = null
+        fakeQueueLength = null
+    }
 
     fun toBundle(): Bundle =
         Bundle().apply {
@@ -564,6 +598,13 @@ data class MultiQueueObject(
             putBoolean("shuffleModeEnabled", shuffleModeEnabled)
             putBoolean("ended", ended)
             putString("shuffleOrder", shuffleOrder)
+
+            fakeQueueSize?.let {
+                putInt("fakeQueueSize", it)
+            }
+            fakeQueueLength?.let {
+                putLong("fakeQueueLength", it)
+            }
         }
 
     companion object {
@@ -586,6 +627,11 @@ data class MultiQueueObject(
                 repeatMode = bundle.getInt("repeatMode", REPEAT_MODE_OFF),
                 ended = bundle.getBoolean("ended"),
                 shuffleOrder = bundle.getString("shuffleOrder"),
+
+                fakeQueueSize = bundle.getInt("fakeQueueSize", C.INDEX_UNSET)
+                    .let { if (it == C.INDEX_UNSET) null else it },
+                fakeQueueLength = bundle.getLong("fakeQueueLength", C.TIME_UNSET)
+                    .let { if (it == C.TIME_UNSET) null else it }
             )
         }
     }
