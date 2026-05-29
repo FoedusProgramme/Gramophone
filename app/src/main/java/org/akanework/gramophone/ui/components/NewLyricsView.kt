@@ -245,15 +245,14 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
         }
         var animating = false
         val globalPaddingTop = spForRender!!.first[2]
-        var heightSoFar = globalPaddingTop
-        var heightSoFarUnscaled = globalPaddingTop
-        var heightSoFarWithoutTranslated = heightSoFarUnscaled
+        var heightSoFar = globalPaddingTop.toDouble()
+        var heightSoFarWithoutTranslated = heightSoFar
         var determineTimeUntilNext = false
         var timeUntilNext = 0uL // TODO: remove if useless
         var firstScrollTarget: Int? = null
         var lastScrollTarget: Int? = null
         canvas.save()
-        canvas.translate(globalPaddingHorizontal, heightSoFarUnscaled.toFloat())
+        canvas.translate(globalPaddingHorizontal, globalPaddingTop.toFloat())
         val width = width - globalPaddingHorizontal * 2
         spForRender!!.second.forEach {
             var spanEnd = -1
@@ -322,27 +321,24 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
                     determineTimeUntilNext = false
                     timeUntilNext = max(0uL, (it.line?.start ?: 0uL) - posForRender)
                 }
-                heightSoFarWithoutTranslated = heightSoFarUnscaled
+                heightSoFarWithoutTranslated = heightSoFar
             }
             if (scrollTarget && firstScrollTarget == null) {
-                firstScrollTarget = heightSoFarWithoutTranslated
+                firstScrollTarget = heightSoFarWithoutTranslated.toInt()
                 determineTimeUntilNext = true
             }
             if (posForRender >= fadeInStart && it.line?.isTranslated != true
                 && it.speaker?.isBackground != true
             ) {
-                lastScrollTarget = heightSoFarUnscaled
+                lastScrollTarget = heightSoFar.toInt()
                 if (firstScrollTarget == null)
                     determineTimeUntilNext = true
             }
-            canvas.translate(
-                0f,
-                it.paddingTop.toFloat() / hlScaleFactor
-            )
-            heightSoFar += (it.paddingTop.toFloat() / hlScaleFactor).toInt()
-            heightSoFarUnscaled += it.paddingTop
+            canvas.translate(0f, it.paddingTop.toFloat() -
+                    (it.layout.height.toFloat() / hlScaleFactor - it.layout.height.toFloat()) / 2)
+            heightSoFar += it.paddingTop.toFloat()
             val culled = heightSoFar > scrollY + height || scrollY - paddingTop > heightSoFar +
-                    ((it.layout.height.toFloat() + it.paddingBottom) / hlScaleFactor).toInt()
+                    it.layout.height.toFloat() + it.paddingBottom
             if (!culled) {
                 if (highlight) {
                     canvas.save()
@@ -497,12 +493,10 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
                 if (highlight || !alignmentNormal)
                     canvas.restore()
             }
-            canvas.translate(
-                0f,
-                (it.layout.height.toFloat() + it.paddingBottom) / hlScaleFactor
-            )
-            heightSoFarUnscaled += it.layout.height + it.paddingBottom
-            heightSoFar += ((it.layout.height.toFloat() + it.paddingBottom) / hlScaleFactor).toInt()
+            canvas.translate(0f, (it.layout.height.toFloat()) / hlScaleFactor -
+                    (it.layout.height.toFloat() / hlScaleFactor - it.layout.height.toFloat()) / 2
+                    + it.paddingBottom.toFloat())
+            heightSoFar += it.layout.height + it.paddingBottom
         }
         //heightSoFar += globalPaddingBottom
         canvas.restore()
