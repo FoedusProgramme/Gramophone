@@ -9,6 +9,8 @@ import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.graphics.drawable.BitmapDrawable
 import android.os.Build
+import android.os.Bundle
+import android.os.Parcelable
 import android.provider.MediaStore
 import android.text.format.DateFormat
 import android.util.AttributeSet
@@ -28,10 +30,12 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.edit
 import androidx.core.graphics.Insets
 import androidx.core.graphics.TypefaceCompat
+import androidx.core.os.BundleCompat
 import androidx.core.view.HapticFeedbackConstantsCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
 import androidx.core.widget.NestedScrollView
 import androidx.core.widget.TextViewCompat
 import androidx.media3.common.C
@@ -490,6 +494,23 @@ class FullBottomSheet
             if (oldRight - oldLeft != right - left || oldBottom - oldTop != bottom - top) {
                 loadCoverForImageView()
             }
+        }
+    }
+
+    override fun onSaveInstanceState(): Parcelable {
+        return Bundle().apply {
+            putParcelable("Super", super.onSaveInstanceState())
+            putBoolean("Lyrics", bottomSheetFullLyricView.isVisible)
+        }
+    }
+
+    override fun onRestoreInstanceState(state: Parcelable?) {
+        state as Bundle?
+        if (state != null) {
+            bottomSheetFullLyricView.isVisible = state.getBoolean("Lyrics")
+            super.onRestoreInstanceState(BundleCompat.getParcelable(state, "Super", BaseSavedState::class.java))
+        } else {
+            super.onRestoreInstanceState(null)
         }
     }
 
