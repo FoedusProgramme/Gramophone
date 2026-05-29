@@ -100,9 +100,9 @@ private sealed class SyntacticLrc {
 
     companion object {
         // also eats space if present
-        val timeMarksRegex = "\\[(\\d+):(\\d{2})([.:]\\d+)?]".toRegex()
-        val timeMarksAfterWsRegex = "([ \t]+)\\[(\\d+):(\\d{2})([.:]\\d+)?]".toRegex()
-        val timeWordMarksRegex = "<(\\d+):(\\d{2})([.:]\\d+)?>".toRegex()
+        val timeMarksRegex = "\\[(\\d+):(\\d+)([.:]\\d+)?]".toRegex()
+        val timeMarksAfterWsRegex = "([ \t]+)\\[(\\d+):(\\d+)([.:]\\d+)?]".toRegex()
+        val timeWordMarksRegex = "<(\\d+):(\\d+)([.:]\\d+)?>".toRegex()
         val metadataRegex = "\\[([a-zA-Z#]+):([^]]*)]".toRegex()
 
         private fun parseTime(match: MatchResult): ULong {
