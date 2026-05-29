@@ -674,7 +674,7 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
             intArrayOf(
                 width,
                 (if (heights.isNotEmpty())
-                    (heights.max() * (1 - (1 / smallSizeFactor)) + heights.sum()).toInt()
+                    (heights.max() * (1 / smallSizeFactor - 1) + heights.sum()).toInt()
                 else 0) + globalPaddingTop + globalPaddingBottom,
                 globalPaddingTop,
                 if (lyrics is SemanticLyrics.SyncedLyrics) 1 else 0
@@ -692,45 +692,10 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
         if (lyrics is SemanticLyrics.SyncedLyrics) {
             var heightSoFar = spForRender!!.first[2]
             spForRender!!.second.forEach {
-                val firstTs = it.line!!.start.toFloat()
-                val lastTs = it.line.end.toFloat()
-                val pos = posForRender.toFloat()
-                val timeOffsetForUse = min(
-                    scaleInAnimTime, min(
-                        lerp(
-                            firstTs,
-                            lastTs, 0.5f
-                        ) - firstTs, firstTs
-                    )
-                )
-                val highlight = pos >= firstTs - timeOffsetForUse &&
-                        pos <= lastTs + timeOffsetForUse
-                val scaleInProgress = lerpInv(
-                    firstTs - timeOffsetForUse, firstTs + timeOffsetForUse, pos
-                )
-                val scaleOutProgress = lerpInv(
-                    lastTs - timeOffsetForUse, lastTs + timeOffsetForUse, pos
-                )
-                val hlScaleFactor =
-                    // lerp() argument order is swapped because we divide by this factor
-                    if (scaleOutProgress in 0f..1f)
-                        lerp(
-                            smallSizeFactor, 1f,
-                            scaleColorInterpolator.getInterpolation(scaleOutProgress)
-                        )
-                    else if (scaleInProgress in 0f..1f)
-                        lerp(
-                            1f, smallSizeFactor,
-                            scaleColorInterpolator.getInterpolation(scaleInProgress)
-                        )
-                    else if (highlight)
-                        smallSizeFactor
-                    else 1f
-                val myHeight =
-                    (it.paddingTop + it.layout.height + it.paddingBottom) / hlScaleFactor
-                if (y >= heightSoFar && y <= heightSoFar + myHeight && it.line.isClickable)
+                val myHeight = it.paddingTop + it.layout.height + it.paddingBottom
+                if (y >= heightSoFar && y <= heightSoFar + myHeight && it.line!!.isClickable)
                     foundItem = it.line
-                heightSoFar += myHeight.toInt()
+                heightSoFar += myHeight
             }
         }
         if (foundItem != null) {
