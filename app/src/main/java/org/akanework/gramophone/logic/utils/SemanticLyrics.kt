@@ -1554,7 +1554,7 @@ fun parseTtml(audioMimeType: String?, lyricText: String): SemanticLyrics? {
         lang.value.forEach { line ->
             val indices = paragraphs.flatMapIndexed { i, it -> if (it.key == line.key)
                 listOf(i) else emptyList() }
-            if (indices.size >= line.value.size) {
+            if (indices.size == line.value.size) {
                 var offset = 0
                 line.value.forEachIndexed { occurrenceIndex, roleAndText ->
                     val untranslated = paragraphs[indices[occurrenceIndex] + offset]
@@ -1569,6 +1569,15 @@ fun parseTtml(audioMimeType: String?, lyricText: String): SemanticLyrics? {
                                     it.substring(1, it.length - 1) else it
                             }, time = null, role = null)), translated = true))
                 }
+            } else if (indices.size > 1 && line.value.size == 1 &&
+                line.value.first().first == null) { // if the translation has no roles
+                val idx = indices.findLast { paragraphs[it].role == null } ?: indices.last()
+                paragraphs.add(idx + 1, paragraphs[idx].copy(texts = listOf(
+                    TtmlParserState.Text(line.value.first().second, time = null, role = null)),
+                    translated = true))
+            } else {
+                throw XmlPullParserException("translation count is different: " +
+                        "$indices vs ${line.value}")
             }
         }
     }
