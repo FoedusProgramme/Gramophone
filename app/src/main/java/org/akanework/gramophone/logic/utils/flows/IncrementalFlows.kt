@@ -804,6 +804,7 @@ internal sealed class PendingCommand {
 }
 
 @Suppress("NOTHING_TO_INLINE")
+@JvmName("flattenLastestIncrementalList")
 inline fun <T> Flow<IncrementalList<Flow<T>>>.flattenLastestIncremental(): Flow<IncrementalList<T>> =
     channelFlow {
         coroutineScope {
