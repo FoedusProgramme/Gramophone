@@ -89,6 +89,7 @@ enum class SpeakerEntity(
 private sealed class SyntacticLrc {
     // all timestamps are in milliseconds ignoring offset
     data class SyncPoint(val timestamp: ULong) : SyntacticLrc()
+    data class LineEndSyncPoint(val timestamp: ULong) : SyntacticLrc()
     data class SpeakerTag(val speaker: SpeakerEntity) : SyntacticLrc()
     data class WordSyncPoint(val timestamp: ULong) : SyntacticLrc()
     data class Metadata(val name: String, val value: String) : SyntacticLrc()
@@ -100,14 +101,15 @@ private sealed class SyntacticLrc {
 
     companion object {
         // also eats space if present
-        val timeMarksRegex = "\\[(\\d+):(\\d+)([.:]\\d+)?]".toRegex()
-        val timeMarksAfterWsRegex = "([ \t]+)\\[(\\d+):(\\d+)([.:]\\d+)?]".toRegex()
-        val timeWordMarksRegex = "<(\\d+):(\\d+)([.:]\\d+)?>".toRegex()
+        val timeMarksRegex = "\\[(\\d+)[.:](\\d+)([.:]\\d+)?(?:-\\[(\\d+)[.:](\\d+)([.:]\\d+)?)?]".toRegex()
+        val timeMarksAfterWsRegex = "([ \t]+)\\[\\d+[.:]\\d+(?:[.:]\\d+)?(?:-\\d+[.:]\\d+(?:[.:]\\d+)?)?]".toRegex()
+        val timeWordMarksRegex = "<(\\d+)[.:](\\d+)([.:]\\d+)?>".toRegex()
         val metadataRegex = "\\[([a-zA-Z#]+):([^]]*)]".toRegex()
 
-        private fun parseTime(match: MatchResult): ULong {
-            val minute = match.groupValues[1].toULong()
-            val milliseconds = ((match.groupValues[2] + match.groupValues[3]
+        private fun parseTime(match: MatchResult, second: Boolean): ULong {
+            val offset = if (second) 3 else 0
+            val minute = match.groupValues[offset+1].toULong()
+            val milliseconds = ((match.groupValues[offset+2] + match.groupValues[offset+3]
                 .replace(':', '.')).toDouble() * 1000L).toULong()
             return minute * 60u * 1000u + milliseconds
         }
@@ -153,9 +155,13 @@ private sealed class SyntacticLrc {
                     // you'll probably have to delete the following three lines.
                     val lastOrNull = out.lastOrNull()
                     if (!(lastOrNull is NewLine? || lastOrNull is SyncPoint
+                                || lastOrNull is LineEndSyncPoint
                                 || (lastOrNull is SpeakerTag && lastOrNull.speaker.isBackground)))
                         out.add(NewLine.SyntheticNewLine())
-                    out.add(SyncPoint(parseTime(tmMatch)))
+                    out.add(SyncPoint(parseTime(tmMatch, false)))
+                    if (tmMatch.groupValues[4].isNotEmpty()) { // [00:01.02-00:03.03] duration ext
+                        out.add(LineEndSyncPoint(parseTime(tmMatch, true)))
+                    }
                     pos += tmMatch.value.length
                     continue
                 }
@@ -167,7 +173,7 @@ private sealed class SyntacticLrc {
                     continue
                 }
                 // Speaker points can only appear directly after a sync point
-                if (out.lastOrNull() is SyncPoint) {
+                if (out.lastOrNull() is SyncPoint || out.lastOrNull() is LineEndSyncPoint) {
                     if (pos + 2 < text.length && text.regionMatches(pos, "v1:", 0, 3)) {
                         out.add(SpeakerTag(SpeakerEntity.Voice1))
                         pos += 3
@@ -241,7 +247,7 @@ private sealed class SyntacticLrc {
                 // but only word marks in a lrc file.
                 val wmMatch = timeWordMarksRegex.matchAt(text, pos)
                 if (wmMatch != null) {
-                    out.add(WordSyncPoint(parseTime(wmMatch)))
+                    out.add(WordSyncPoint(parseTime(wmMatch, false)))
                     pos += wmMatch.value.length
                     continue
                 }
@@ -271,7 +277,7 @@ private sealed class SyntacticLrc {
                 }
                 pos = firstUnsafeCharPos
             }
-            if (out.lastOrNull() is SyncPoint)
+            if (out.lastOrNull() is SyncPoint || out.lastOrNull() is LineEndSyncPoint)
                 out.add(InvalidText(""))
             if (out.isNotEmpty() && out.last() !is NewLine)
                 out.add(NewLine.SyntheticNewLine())
@@ -281,6 +287,7 @@ private sealed class SyntacticLrc {
                 if (it.find {
                         it is SyncPoint && it.timestamp > 0u
                                 || it is WordSyncPoint && it.timestamp > 0u
+                                || it is LineEndSyncPoint && it.timestamp > 0u
                     } == null)
                 // Recover only text information to make the most out of this damaged file.
                     it.flatMap {
@@ -526,6 +533,7 @@ fun parseLrc(lyricText: String, trimEnabled: Boolean, multiLineEnabled: Boolean)
     var offset = 0L
     var lastSyncPoint: ULong? = null
     var lastWordSyncPoint: ULong? = null
+    var pendingLineEndSyncPoint: ULong? = null
     var speaker: SpeakerEntity? = null
     var hadVoice2 = false
     var hadLyricSinceWordSync = true
@@ -533,10 +541,16 @@ fun parseLrc(lyricText: String, trimEnabled: Boolean, multiLineEnabled: Boolean)
     val currentLine = mutableListOf<Pair<ULong, String?>>()
     var syncPointStreak = 0
     val compressed = mutableListOf<ULong>()
+    val compressedEnds = mutableListOf<ULong>()
     for (element in lyricSyntax) {
+        if (syncPointStreak > 1 && element !is SyntacticLrc.LineEndSyncPoint &&
+            compressedEnds.isNotEmpty() && compressed.size == compressedEnds.size + 1) {
+            compressedEnds.add(compressed.last() + compressed[compressed.size - 2] -
+                    compressedEnds.last())
+        }
         if (element is SyntacticLrc.SyncPoint)
             syncPointStreak++
-        else
+        else if (element !is SyntacticLrc.LineEndSyncPoint)
             syncPointStreak = 0
         when (element) {
             is SyntacticLrc.Metadata if element.name == "offset" -> {
@@ -552,6 +566,20 @@ fun parseLrc(lyricText: String, trimEnabled: Boolean, multiLineEnabled: Boolean)
                     if (compressed.isNotEmpty())
                         throw IllegalStateException("while parsing lrc, $compressed not empty but syncPointStreak is 1; lrc file: $lyricText")
                     lastSyncPoint = ts
+                }
+            }
+
+            is SyntacticLrc.LineEndSyncPoint -> {
+                val ts = (element.timestamp.toLong() + offset).coerceAtLeast(0).toULong()
+                if (syncPointStreak > 1) {
+                    compressedEnds.add(ts)
+                    if (compressedEnds.size != syncPointStreak - 1) {
+                        throw IllegalStateException("while parsing lrc, compressedEnds too small: $compressedEnds, ${syncPointStreak - 1}, $lyricText")
+                    }
+                } else {
+                    if (compressedEnds.isNotEmpty())
+                        throw IllegalStateException("while parsing lrc, $compressedEnds not empty but syncPointStreak is 1; lrc file: $lyricText")
+                    pendingLineEndSyncPoint = ts
                 }
             }
 
@@ -615,6 +643,11 @@ fun parseLrc(lyricText: String, trimEnabled: Boolean, multiLineEnabled: Boolean)
                             // If we have a dedicated sync point just for the last word,
                             // use it. Similar to dummy words but for the last word only
                             lastWordSyncPoint - 1uL // minus 1ms for consistency
+                        } else if (pendingLineEndSyncPoint != null &&
+                            pendingLineEndSyncPoint > current.first
+                        ) {
+                            // If we know when the line ends, use that for last word
+                            pendingLineEndSyncPoint - 1uL // minus 1ms for consistency
                         } else null /* filled later */
                         if (endInclusive == null || endInclusive > current.first)
                         // isRtl is filled in later in splitBidirectionalWords
@@ -656,16 +689,16 @@ fun parseLrc(lyricText: String, trimEnabled: Boolean, multiLineEnabled: Boolean)
                     // not file order) line.
                     val lastWordSyncForEnd = lastWordSyncPoint?.let { it - 1uL }
                     val lastWordBegin = words?.lastOrNull()?.begin
-                    val end = if (lastWordSyncForEnd != null && lastWordBegin != null &&
-                        lastWordBegin < lastWordSyncForEnd
-                    ) lastWordSyncForEnd else null
+                    val end = pendingLineEndSyncPoint?.also { pendingLineEndSyncPoint = null }
+                        ?: if (lastWordSyncForEnd != null && lastWordBegin != null &&
+                            lastWordBegin < lastWordSyncForEnd) lastWordSyncForEnd else null
                     out.add(
                         LyricLine(
                             text, start, end ?: 0uL /* filled later */,
                             end == null, words, speaker, false /* filled later */
                         )
                     )
-                    compressed.forEach {
+                    compressed.forEachIndexed { i, it ->
                         val diff = it - start
                         out.add(
                             out.last().copy(
@@ -674,7 +707,8 @@ fun parseLrc(lyricText: String, trimEnabled: Boolean, multiLineEnabled: Boolean)
                             words = words?.map {
                                 it.copy(
                                     begin = it.begin + diff,
-                                    endInclusive = it.endInclusive?.plus(diff)
+                                    endInclusive = if (compressedEnds.isNotEmpty())
+                                        compressedEnds[i] else it.endInclusive?.plus(diff)
                                 )
                             }?.toMutableList()
                         )
@@ -682,6 +716,7 @@ fun parseLrc(lyricText: String, trimEnabled: Boolean, multiLineEnabled: Boolean)
                     }
                 }
                 compressed.clear()
+                compressedEnds.clear()
                 currentLine.clear()
                 lastSyncPoint = null
                 lastWordSyncPoint = null
