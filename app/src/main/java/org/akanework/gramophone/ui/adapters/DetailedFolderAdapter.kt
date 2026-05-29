@@ -17,6 +17,7 @@
 
 package org.akanework.gramophone.ui.adapters
 
+import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
@@ -59,7 +60,8 @@ import java.util.concurrent.atomic.AtomicInteger
 
 class DetailedFolderAdapter(
     private val fragment: Fragment,
-    val isDetailed: Boolean
+    val isDetailed: Boolean,
+    savedInstanceState: Bundle?
 ) : AdapterFragment.BaseInterface<RecyclerView.ViewHolder>() {
     private val mainActivity = fragment.requireActivity() as MainActivity
     override val context
@@ -95,7 +97,8 @@ class DetailedFolderAdapter(
         else
             Sorter.Type.ByFilePathAscending
     )
-    private var fileNodePath = MutableStateFlow<List<String>?>(null)
+    private var fileNodePath = MutableStateFlow<List<String>?>(savedInstanceState
+        ?.getStringArrayList("Path"))
     private val liveData = if (isDetailed) mainActivity.reader.folderStructureFlow
     else mainActivity.reader.shallowFolderFlow
     private val dataFlow = liveData.combineTransform(fileNodePath) { root, path ->
@@ -222,6 +225,13 @@ class DetailedFolderAdapter(
         super.onDetachedFromRecyclerView(recyclerView)
         scope!!.cancel()
         scope = null
+    }
+
+    fun onSaveInstanceState(outState: Bundle) {
+        val path = fileNodePath.replayCache.firstOrNull()
+        if (path != null) {
+            outState.putStringArrayList("Path", ArrayList(path))
+        }
     }
 
     fun enter(path: String?) {
