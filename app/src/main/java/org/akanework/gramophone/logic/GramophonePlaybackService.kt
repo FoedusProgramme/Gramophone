@@ -770,7 +770,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
             }
         }
         if (controller.connectionHints.getBoolean("PrepareWhenReady", false) &&
-            this.controller?.currentTimeline?.isEmpty == false
+            this.mediaSession?.player?.currentTimeline?.isEmpty == false
         ) {
             handler.post { this.controller?.prepare() }
         }
