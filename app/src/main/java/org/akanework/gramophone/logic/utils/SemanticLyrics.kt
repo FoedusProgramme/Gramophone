@@ -1563,7 +1563,11 @@ fun parseTtml(audioMimeType: String?, lyricText: String): SemanticLyrics? {
                                 "$untranslated vs $roleAndText (idx $occurrenceIndex)")
                     paragraphs.add(indices[occurrenceIndex] + ++offset,
                         untranslated.copy(texts = listOf(TtmlParserState.Text(
-                            roleAndText.second, time = null, role = null)), translated = true))
+                            roleAndText.second.let {
+                                if (roleAndText.first == "x-bg" && it.startsWith('(')
+                                    && it.endsWith(')'))
+                                    it.substring(1, it.length - 1) else it
+                            }, time = null, role = null)), translated = true))
                 }
             }
         }
