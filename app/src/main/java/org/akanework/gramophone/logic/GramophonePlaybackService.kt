@@ -1234,17 +1234,19 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
     }
 
     override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
-        bitrate = null
-        bitrateFetcher.launch {
-            bitrate = mediaItem?.getBitrate() // TODO subtract cover size
-            this@GramophonePlaybackService.mediaSession?.broadcastCustomCommand(
-                SessionCommand(SERVICE_GET_AUDIO_FORMAT, Bundle.EMPTY),
-                Bundle.EMPTY
-            )
+        if (reason != Player.MEDIA_ITEM_TRANSITION_REASON_REPEAT) {
+            bitrate = null
+            bitrateFetcher.launch {
+                bitrate = mediaItem?.getBitrate() // TODO subtract cover size
+                this@GramophonePlaybackService.mediaSession?.broadcastCustomCommand(
+                    SessionCommand(SERVICE_GET_AUDIO_FORMAT, Bundle.EMPTY),
+                    Bundle.EMPTY
+                )
+            }
+            // TODO: re-enable this when https://github.com/androidx/media/issues/3248 is fixed
+            //lyrics = null
+            //scheduleSendingLyrics(true)
         }
-        // TODO: re-enable this when https://github.com/androidx/media/issues/3248 is fixed
-        //lyrics = null
-        //scheduleSendingLyrics(true)
 
         // reshuffle queue when shuffle AND repeat all are enabled
         val player = endedWorkaroundPlayer
