@@ -1252,7 +1252,7 @@ private class TtmlParserState(
                     throw IllegalStateException("found TEXT \"${parser.text}\" but text isn't allowed here (forgot <p>?)")
                 return
             }
-            if (level == plevel)
+            if (level < plevel)
                 time = null
             texts!!.add(Text(parser.text, time, role))
             return
@@ -1284,6 +1284,9 @@ private class TtmlParserState(
             else -> throw IllegalStateException("unknown tag ${parser.name}, wanted body/span/div/p")
         }
         while (parser.next() != XmlPullParser.END_TAG) {
+            if (parser.eventType == XmlPullParser.START_TAG) {
+                plevel = level + 1
+            }
             parse(time, level, plevel, agent, songPart, key, role)
         }
         timer.endBlock()

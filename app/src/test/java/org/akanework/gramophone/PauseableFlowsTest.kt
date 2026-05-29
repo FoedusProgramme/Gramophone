@@ -1,5 +1,6 @@
 package org.akanework.gramophone
 
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -80,14 +81,14 @@ class PauseableFlowsTest {
             var countMapped = 0
             var countFiltered = 0
             val source = flow {
-                emit(IncrementalList.Begin(listOf(1, 2, 3)))
-                emit(IncrementalList.Insert(1, 2, listOf(1, 15, 10, 2, 3)))
-                emit(IncrementalList.Insert(1, 1, listOf(1, 999, 15, 10, 2, 3)))
-                emit(IncrementalList.Move(1, 1, 2, listOf(1, 15, 999, 10, 2, 3)))
-                emit(IncrementalList.Move(1, 1, 5, listOf(1, 999, 10, 2, 3, 15)))
-                emit(IncrementalList.Move(2, 3, 0, listOf(10, 2, 3, 1, 999, 15)))
-                emit(IncrementalList.Remove(1, 1, listOf(10, 3, 1, 999, 15)))
-                emit(IncrementalList.Update(1, 1, listOf(10, 5, 1, 999, 15)))
+                emit(IncrementalList.Begin(persistentListOf(1, 2, 3)))
+                emit(IncrementalList.Insert(1, 2, persistentListOf(1, 15, 10, 2, 3)))
+                emit(IncrementalList.Insert(1, 1, persistentListOf(1, 999, 15, 10, 2, 3)))
+                emit(IncrementalList.Move(1, 1, 2, persistentListOf(1, 15, 999, 10, 2, 3)))
+                emit(IncrementalList.Move(1, 1, 5, persistentListOf(1, 999, 10, 2, 3, 15)))
+                emit(IncrementalList.Move(2, 3, 0, persistentListOf(10, 2, 3, 1, 999, 15)))
+                emit(IncrementalList.Remove(1, 1, persistentListOf(10, 3, 1, 999, 15)))
+                emit(IncrementalList.Update(1, 1, persistentListOf(10, 5, 1, 999, 15)))
             }
                 .assertContractNotViolated("init")
                 .onEach { countEmitted++ }
@@ -97,7 +98,7 @@ class PauseableFlowsTest {
                 .filterIncremental { it < 100 }
                 .assertContractNotViolated("after filter")
                 .onEach { countFiltered++ }
-                .flatMapConcatIncremental { if (it % 2 == 0) listOf(it, it) else emptyList() }
+                .flatMapConcatIncremental { if (it % 2 == 0) persistentListOf(it, it) else emptyList() }
                 .assertContractNotViolated("after flatMap")
             val out = ArrayList<IncrementalList<Int>>()
             source.toCollection(out)
@@ -110,9 +111,9 @@ class PauseableFlowsTest {
             assertTrue(out[2] is IncrementalList.Move)
             assertTrue(out[3] is IncrementalList.Move)
             assertTrue(out[4] is IncrementalList.Update)
-            assertEquals(listOf(2, 2, 16, 16, 4, 4), out[1].after)
-            assertEquals(listOf(4, 4, 2, 2, 16, 16), out[3].after)
-            assertEquals(listOf(6, 6, 2, 2, 16, 16), out[4].after)
+            assertEquals(persistentListOf(2, 2, 16, 16, 4, 4), out[1].after)
+            assertEquals(persistentListOf(4, 4, 2, 2, 16, 16), out[3].after)
+            assertEquals(persistentListOf(6, 6, 2, 2, 16, 16), out[4].after)
         }
     }
 
@@ -123,14 +124,14 @@ class PauseableFlowsTest {
             var countMapped = 0
             var countFiltered = 0
             val source = flow {
-                emit(IncrementalList.Begin(listOf(1, 2, 3)))
-                emit(IncrementalList.Insert(1, 2, listOf(1, 15, 10, 2, 3)))
-                emit(IncrementalList.Insert(1, 1, listOf(1, 999, 15, 10, 2, 3)))
-                emit(IncrementalList.Move(1, 1, 2, listOf(1, 15, 999, 10, 2, 3)))
-                emit(IncrementalList.Move(1, 1, 5, listOf(1, 999, 10, 2, 3, 15)))
-                emit(IncrementalList.Move(2, 3, 0, listOf(10, 2, 3, 1, 999, 15)))
-                emit(IncrementalList.Remove(1, 1, listOf(10, 3, 1, 999, 15)))
-                emit(IncrementalList.Update(1, 1, listOf(10, 5, 1, 999, 15)))
+                emit(IncrementalList.Begin(persistentListOf(1, 2, 3)))
+                emit(IncrementalList.Insert(1, 2, persistentListOf(1, 15, 10, 2, 3)))
+                emit(IncrementalList.Insert(1, 1, persistentListOf(1, 999, 15, 10, 2, 3)))
+                emit(IncrementalList.Move(1, 1, 2, persistentListOf(1, 15, 999, 10, 2, 3)))
+                emit(IncrementalList.Move(1, 1, 5, persistentListOf(1, 999, 10, 2, 3, 15)))
+                emit(IncrementalList.Move(2, 3, 0, persistentListOf(10, 2, 3, 1, 999, 15)))
+                emit(IncrementalList.Remove(1, 1, persistentListOf(10, 3, 1, 999, 15)))
+                emit(IncrementalList.Update(1, 1, persistentListOf(10, 5, 1, 999, 15)))
             }
                 .assertContractNotViolated("init")
                 .onEach { countEmitted++ }
@@ -161,14 +162,14 @@ class PauseableFlowsTest {
             var countMapped = 0
             var countFiltered = 0
             val source = flow {
-                emit(IncrementalList.Begin(listOf(1, 2, 3)))
-                emit(IncrementalList.Insert(1, 2, listOf(1, 15, 10, 2, 3)))
-                emit(IncrementalList.Insert(1, 1, listOf(1, 999, 15, 10, 2, 3)))
-                emit(IncrementalList.Move(1, 1, 2, listOf(1, 15, 999, 10, 2, 3)))
-                emit(IncrementalList.Move(1, 1, 5, listOf(1, 999, 10, 2, 3, 15)))
-                emit(IncrementalList.Move(2, 3, 0, listOf(10, 2, 3, 1, 999, 15)))
-                emit(IncrementalList.Remove(1, 1, listOf(10, 3, 1, 999, 15)))
-                emit(IncrementalList.Update(1, 1, listOf(10, 5, 1, 999, 15)))
+                emit(IncrementalList.Begin(persistentListOf(1, 2, 3)))
+                emit(IncrementalList.Insert(1, 2, persistentListOf(1, 15, 10, 2, 3)))
+                emit(IncrementalList.Insert(1, 1, persistentListOf(1, 999, 15, 10, 2, 3)))
+                emit(IncrementalList.Move(1, 1, 2, persistentListOf(1, 15, 999, 10, 2, 3)))
+                emit(IncrementalList.Move(1, 1, 5, persistentListOf(1, 999, 10, 2, 3, 15)))
+                emit(IncrementalList.Move(2, 3, 0, persistentListOf(10, 2, 3, 1, 999, 15)))
+                emit(IncrementalList.Remove(1, 1, persistentListOf(10, 3, 1, 999, 15)))
+                emit(IncrementalList.Update(1, 1, persistentListOf(10, 5, 1, 999, 15)))
             }
                 .assertContractNotViolated("init")
                 .onEach { countEmitted++ }

@@ -93,7 +93,7 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
     init {
         @SuppressLint("DefaultUncaughtExceptionDelegation")
         Thread.setDefaultUncaughtExceptionHandler(this)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && Build.MODEL != "robolectric") {
             HiddenApiBypass.setHiddenApiExemptions("")
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             LSPass.setHiddenApiExemptions("")

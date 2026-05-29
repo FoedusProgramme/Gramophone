@@ -448,8 +448,14 @@ class LrcUtilsTest {
 
     @Test
     fun testParserTtmlTemplate() {
-        val ttml = parseSynced(LrcTestData.TTML_DEATH_BED)
-        assertEquals(LrcTestData.TTML_DEATH_BED_PARSED, ttml)
+        val ttml = parseSynced(LrcTestData2.TTML_DEATH_BED)
+        assertEquals(LrcTestData2.TTML_DEATH_BED_PARSED, ttml)
+    }
+
+    @Test
+    fun testParserTtmlTemplate2() {
+        val ttml = parseSynced(LrcTestData2.TTML_SATISIFED)
+        assertEquals(LrcTestData2.TTML_SATISFIED_PARSED, ttml)
     }
 
     @Test
