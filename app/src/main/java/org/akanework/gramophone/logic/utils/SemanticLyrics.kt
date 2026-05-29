@@ -1621,8 +1621,8 @@ fun parseTtml(audioMimeType: String?, lyricText: String): SemanticLyrics? {
         }
         val next = paragraphs.getOrNull(j + 1)?.time?.first
         LyricLine(
-            text.toString(), it.time.first, it.time.last,
-            next != null && (it.time.last == next || it.time.last == next - 1uL),
+            text.toString(), it.time.first, it.time.last, theWords == null
+                    && next != null && (it.time.last == next || it.time.last == next - 1uL),
             theWords, speaker, it.translated
         )
     }).also { splitBidirectionalWords(it) }
