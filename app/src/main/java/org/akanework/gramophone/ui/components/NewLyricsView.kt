@@ -666,9 +666,12 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
         val heights = spLines.map { it.layout.height + it.paddingTop + it.paddingBottom }
         val globalPaddingTop = if (lyrics is SemanticLyrics.SyncedLyrics) measuredHeight / 6 else
             context.resources.getDimensionPixelSize(R.dimen.lyric_top_padding)
-        val globalPaddingBottom = if (lyrics is SemanticLyrics.SyncedLyrics)
-            (measuredHeight * (1f - 1f / 6f)).toInt() - (heights.lastOrNull()
-                ?: 0) - globalPaddingTop
+        val lastIdx = spLines.indexOfLast { it.speaker?.isBackground != true &&
+                it.line?.isTranslated != true }.takeIf { it != -1 }
+        val globalPaddingBottom = if (lyrics is SemanticLyrics.SyncedLyrics) max(0,
+            (measuredHeight * (1f - 1f / 6f)).toInt() + (lastIdx?.let { spLines[it] }
+                ?.paddingTop ?: 0) - (lastIdx?.let { heights.subList(it, heights.size).sum() } ?:
+                0) - globalPaddingTop)
         else if (lyrics != null) context.resources.getDimensionPixelSize(R.dimen.lyric_bottom_padding) else 0
         return Pair(
             intArrayOf(
