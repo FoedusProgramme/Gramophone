@@ -117,6 +117,7 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
             translationTextPaint.color = defaultTextColor
             translationBackgroundTextPaint.color = defaultTextColor
             changed = true
+            changedTl = true
         }
         if (highlightTextColor != newHighlightColor) {
             highlightTextColor = newHighlightColor
@@ -137,6 +138,52 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
             repeat(2) { gradientTlSpanPool.add(makeGradientTlSpan()) }
         }
         if (changed || changedTl) {
+            spForRender?.second?.forEach {
+                it.text.getSpans<MyGradientSpan>()
+                    .forEach { s -> it.text.removeSpan(s) }
+            }
+            invalidate()
+        }
+    }
+
+    fun updateTextColor(newColor: Int) {
+        if (defaultTextColor != newColor) {
+            defaultTextColor = newColor
+            defaultTextPaint.color = defaultTextColor
+            translationTextPaint.color = defaultTextColor
+            translationBackgroundTextPaint.color = defaultTextColor
+            gradientSpanPool.clear()
+            repeat(3) { gradientSpanPool.add(makeGradientSpan()) }
+            gradientTlSpanPool.clear()
+            repeat(2) { gradientTlSpanPool.add(makeGradientTlSpan()) }
+            spForRender?.second?.forEach {
+                it.text.getSpans<MyGradientSpan>()
+                    .forEach { s -> it.text.removeSpan(s) }
+            }
+            invalidate()
+        }
+    }
+
+    fun updateHighlightColor(newHighlightColor: Int) {
+        if (highlightTextColor != newHighlightColor) {
+            highlightTextColor = newHighlightColor
+            wordActiveSpan.color = highlightTextColor
+            gradientSpanPool.clear()
+            repeat(3) { gradientSpanPool.add(makeGradientSpan()) }
+            spForRender?.second?.forEach {
+                it.text.getSpans<MyGradientSpan>()
+                    .forEach { s -> it.text.removeSpan(s) }
+            }
+            invalidate()
+        }
+    }
+
+    fun updateHighlightTlColor(newHighlightTlColor: Int) {
+        if (highlightTlTextColor != newHighlightTlColor) {
+            highlightTlTextColor = newHighlightTlColor
+            wordActiveTlSpan.color = highlightTlTextColor
+            gradientTlSpanPool.clear()
+            repeat(2) { gradientTlSpanPool.add(makeGradientTlSpan()) }
             spForRender?.second?.forEach {
                 it.text.getSpans<MyGradientSpan>()
                     .forEach { s -> it.text.removeSpan(s) }

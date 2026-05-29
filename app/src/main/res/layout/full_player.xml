@@ -236,6 +236,7 @@
                 android:gravity="center"
                 android:textColor="?attr/colorOnSurfaceVariant"
                 android:textSize="12sp"
+                app:drawableTint="?attr/colorOnSurfaceVariant"
                 app:layout_constrainedWidth="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/duration"

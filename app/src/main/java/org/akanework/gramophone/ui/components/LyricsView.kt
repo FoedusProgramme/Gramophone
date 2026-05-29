@@ -21,9 +21,12 @@ class LyricsView(context: Context, attrs: AttributeSet?) : FrameLayout(context, 
     private var newView: NewLyricsView? = null
     private val adapter
         get() = recyclerView?.adapter as LegacyLyricsAdapter?
-    private var defaultTextColor = 0
-    private var highlightTextColor = 0
-    private var highlightTlTextColor = 0
+    var defaultTextColor = 0
+        private set
+    var highlightTextColor = 0
+        private set
+    var highlightTlTextColor = 0
+        private set
     private var lyrics: SemanticLyrics? = null
 
     init {
@@ -132,5 +135,22 @@ class LyricsView(context: Context, attrs: AttributeSet?) : FrameLayout(context, 
         newView?.updateTextColor(
             defaultTextColor, highlightTextColor, highlightTlTextColor
         )
+    }
+
+    fun updateTextColor(newColor: Int) {
+        defaultTextColor = newColor
+        adapter?.updateTextColor(defaultTextColor, highlightTextColor)
+        newView?.updateTextColor(defaultTextColor)
+    }
+
+    fun updateHighlightColor(newHighlightColor: Int) {
+        highlightTextColor = newHighlightColor
+        adapter?.updateTextColor(defaultTextColor, highlightTextColor)
+        newView?.updateHighlightColor(highlightTextColor)
+    }
+
+    fun updateHighlightTlColor(newHighlightTlColor: Int) {
+        highlightTlTextColor = newHighlightTlColor
+        newView?.updateHighlightTlColor(highlightTlTextColor)
     }
 }
