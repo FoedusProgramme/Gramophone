@@ -509,7 +509,8 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
             if (spForRender!!.first[3] == 1)
                 currentScrollTarget = null
         } else if (!isCallbackQueued && !isScrolling) {
-            val scrollTarget = max(0, (firstScrollTarget ?: lastScrollTarget ?: 0) - height / 6)
+            val scrollTarget = max(0, (firstScrollTarget ?: lastScrollTarget ?: 0) -
+                    (height - paddingTop - paddingBottom) / 6)
             if (scrollTarget != currentScrollTarget) {
                 smoothScrollTo(
                     0, scrollTarget,
@@ -669,16 +670,13 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
         val lastIdx = spLines.indexOfLast { it.speaker?.isBackground != true &&
                 it.line?.isTranslated != true }.takeIf { it != -1 }
         val globalPaddingBottom = if (lyrics is SemanticLyrics.SyncedLyrics) max(0,
-            (measuredHeight * (1f - 1f / 6f)).toInt() + (lastIdx?.let { spLines[it] }
-                ?.paddingTop ?: 0) - (lastIdx?.let { heights.subList(it, heights.size).sum() } ?:
-                0) - globalPaddingTop)
+            ((measuredHeight - paddingBottom - paddingTop) * (5f / 6f)).toInt() -
+                    (lastIdx?.let { heights.subList(it, heights.size).sum() } ?: 0))
         else if (lyrics != null) context.resources.getDimensionPixelSize(R.dimen.lyric_bottom_padding) else 0
         return Pair(
             intArrayOf(
                 width,
-                (if (heights.isNotEmpty())
-                    (heights.max() * (1 / smallSizeFactor - 1) + heights.sum()).toInt()
-                else 0) + globalPaddingTop + globalPaddingBottom,
+                heights.sum() + globalPaddingTop + globalPaddingBottom,
                 globalPaddingTop,
                 if (lyrics is SemanticLyrics.SyncedLyrics) 1 else 0
             ), spLines
