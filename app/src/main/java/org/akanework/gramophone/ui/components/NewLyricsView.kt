@@ -453,15 +453,15 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
                                 spanStartGradient = word.charRange.first
                                 // be greedy and eat as much as the line as can be eaten (text that is
                                 // same line + is in same text direction). improves font rendering for
-                                // japanese if font rendering renders whole text in one pass
+                                // Japanese if font rendering processes whole text in one pass
                                 val wordStartLine = it.layout.getLineForOffset(word.charRange.first)
                                 val firstCharOnStartLine = it.layout.getLineStart(wordStartLine)
                                 realGradientStart = it.theWords.lastOrNull {
-                                    it.charRange.first >= firstCharOnStartLine && it.charRange.last <
+                                    it.charRange.last >= firstCharOnStartLine && it.charRange.last <
                                             word.charRange.first && it.isRtl != word.isRtl
                                 }?.charRange?.last?.plus(1) ?: firstCharOnStartLine
                                 realGradientEnd = it.theWords.firstOrNull {
-                                    it.charRange.first > word.charRange.last && it.charRange.last <
+                                    it.charRange.first > word.charRange.last && it.charRange.first <
                                             lastCharOnEndLineExcl && it.isRtl != word.isRtl
                                 }?.charRange?.first ?: lastCharOnEndLineExcl
                             }
@@ -482,6 +482,9 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
                     animating = true
             }
             val spanEndWithoutGradient = if (realGradientStart == -1) spanEnd else realGradientStart
+            if (realGradientStart != -1)
+                Log.i("hi","drawing color to ${it.text.substring(0, spanEndWithoutGradient)} " +
+                        " and gradient to ${it.text.substring(realGradientStart, realGradientEnd)}")
             val inColorAnim = ((scaleInProgress in 0f..1f && gradientProgress ==
                     Float.NEGATIVE_INFINITY) || scaleOutProgress in 0f..1f) &&
                     timeOffsetForUse > 0f
