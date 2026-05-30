@@ -70,6 +70,8 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
     private var currentScrollTarget: Int? = null
     private var currentSmoothScroll: Pair<Pair<Float, Float>, Pair<Float, Float>>? = null
     private var delayedScrollAnimation: Pair<Long, Pair<Int, Int>>? = null
+    private var stateOverrides = hashMapOf<Int, Float>()
+    private var stateTime = 0uL
     private var isCallbackQueued = false
     private val invalidateCallback = Runnable { isCallbackQueued = false; invalidate() }
     private var defaultTextColor = 0
@@ -110,6 +112,7 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
         fun seekTo(position: ULong)
         fun setPlayWhenReady(play: Boolean)
         fun speed(): Float
+        fun destroy()
     }
 
     fun updateTextColor(
@@ -203,6 +206,7 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
         spForMeasure = null
         requestLayout()
         lyrics = parsedLyrics
+        stateOverrides.clear()
     }
 
     fun updateLyricPositionFromPlaybackPos() {
@@ -288,16 +292,48 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
             val fadeOutEnd = if (it.line?.endIsImplicit == false)
                 lastTs + (timeOffsetForUse * 2).toULong()
             else lastTs + timeOffsetForUse.toULong()
-            val highlight = posForRender in fadeInStart..fadeOutEnd
+            val highlightReal = posForRender in fadeInStart..fadeOutEnd
+            val override = stateOverrides[i]
+            val overridePos = override?.let {
+                if (it >= 0f)
+                    it.toULong() + posForRender - stateTime
+                else (-it).toULong() // negative signals freeze
+            } ?: posForRender
+            val highlight = overridePos in fadeInStart..fadeOutEnd
+            if (override != null) {
+                val animPosReal = if (!highlightReal) 0f else if (posForRender >= fadeInEnd)
+                    min(
+                        1f, 1f - lerpInv(
+                            fadeOutStart.toFloat(),
+                            fadeOutEnd.toFloat(), posForRender.toFloat()
+                        )
+                    )
+                else lerpInv(
+                    fadeInStart.toFloat(),
+                    fadeInEnd.toFloat(), posForRender.toFloat()
+                )
+                val animPos = if (!highlight) 0f else if (overridePos >= fadeInEnd) min(
+                    1f,
+                    1f - lerpInv(
+                        fadeOutStart.toFloat(), fadeOutEnd.toFloat(),
+                        overridePos.toFloat()
+                    )
+                ) else lerpInv(
+                    fadeInStart.toFloat(),
+                    fadeInEnd.toFloat(), overridePos.toFloat()
+                )
+                if (if (overridePos >= fadeInEnd) animPos <= animPosReal else animPos >= animPosReal)
+                    stateOverrides.remove(i)
+            }
             val scrollTarget = posForRender in fadeInStart..(lastTs - timeOffsetForUse.toULong())
             val scaleInProgress = if (it.line == null) 1f else lerpInv(
                 fadeInStart.toFloat(), fadeInEnd.toFloat(),
-                posForRender.toFloat()
+                overridePos.toFloat()
             )
             val scaleOutProgress = if (it.line == null) 1f else lerpInv(
                 fadeOutStart.toFloat(),
                 fadeOutEnd.toFloat(),
-                posForRender.toFloat()
+                overridePos.toFloat()
             )
             val hlScaleFactor = if (it.line == null) 1f else {
                 // lerp() argument order is swapped because we divide by this factor
@@ -742,12 +778,67 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
                 heightSoFar += myHeight
             }
         }
+        handler.removeCallbacks(invalidateCallback)
+        isCallbackQueued = false
         if (foundItem != null) {
-            instance.setPlayWhenReady(true)
             instance.seekTo(foundItem.start)
+            instance.setPlayWhenReady(true)
             performClick()
         }
         return true
+    }
+
+    fun handleSeek(from: ULong, to: ULong) {
+        // Don't clear stateOverrides, let it stack, it's ok
+        stateTime = to
+        spForRender?.second?.forEachIndexed { i, it ->
+            val firstTs = it.line?.start ?: ULong.MIN_VALUE
+            val lastTs = min(it.line?.end ?: Int.MAX_VALUE.toULong(), Int.MAX_VALUE.toULong())
+            val timeOffsetForUse = min(
+                scaleInAnimTime, min(
+                    lerp(
+                        firstTs.toFloat(), lastTs.toFloat(),
+                        0.5f
+                    ) - firstTs.toFloat(),
+                    max(firstTs.toFloat(), scaleInAnimTime)
+                )
+            )
+            val fadeInStart = max(firstTs.toLong() - timeOffsetForUse.toLong(), 0L).toULong()
+            val fadeInEnd = firstTs + timeOffsetForUse.toULong()
+            // If end is implicit, it's the start point of next line, so animate smoothly.
+            val fadeOutStart = if (it.line?.endIsImplicit == false) lastTs
+            else lastTs - timeOffsetForUse.toULong()
+            val fadeOutEnd = if (it.line?.endIsImplicit == false)
+                lastTs + (timeOffsetForUse * 2).toULong()
+            else lastTs + timeOffsetForUse.toULong()
+            val highlight = from in fadeInStart..fadeOutEnd
+            val animPosNow = if (!highlight) 0f else if (from >= fadeInEnd)
+                min(1f, 1f - lerpInv(fadeOutStart.toFloat(),
+                    fadeOutEnd.toFloat(), from.toFloat()))
+            else lerpInv(fadeInStart.toFloat(),
+                fadeInEnd.toFloat(), from.toFloat())
+            val highlightAfterSeek = to in fadeInStart..fadeOutEnd
+            val animPosAfterSeek = if (!highlightAfterSeek) 0f else if (to >=
+                fadeInEnd) min(1f, 1f - lerpInv(fadeOutStart.toFloat(),
+                fadeOutEnd.toFloat(), to.toFloat()))
+            else lerpInv(fadeInStart.toFloat(),
+                fadeInEnd.toFloat(), to.toFloat())
+            if (animPosNow != animPosAfterSeek)
+                stateOverrides[i] =
+                    // Now we have to decide what behavior towards infinity we wish to have...
+                    when {
+                        // If we are fading out or fully faded out at target, skip to fade out
+                        // at current animation point
+                        to !in fadeInStart..<fadeOutStart ->
+                            lerp(fadeOutStart.toFloat(), fadeOutEnd.toFloat(),
+                                1f - animPosNow)
+                        // If we're fading in at target and are already fully faded in here,
+                        // stay fully faded in and wait for target to finish fading in too.
+                        from >= fadeInEnd -> -from.toFloat() // negative signals freeze
+                        else -> lerp(fadeInStart.toFloat(), fadeInEnd.toFloat(),
+                            animPosNow)
+                    }
+        }
     }
 
     override fun computeScroll() {
