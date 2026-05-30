@@ -589,12 +589,16 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
             lastScrollTarget?.first ?: 0) - (height - paddingTop - paddingBottom) / 6)
             val scrollTargetIndex = firstScrollTarget?.second ?: lastScrollTarget?.second
             if (scrollTarget != currentScrollTarget) {
-                currentSmoothScroll = (AnimationUtils.currentAnimationTimeMillis().toFloat() to
-                        lyricAnimTime) to (scrollY.toFloat() to scrollTarget.toFloat())
-                currentScrollTarget = scrollTarget
-                delayedScrollAnimation = if (scrollTargetIndex != null) AnimationUtils
-                    .currentAnimationTimeMillis() to (scrollTargetIndex to scrollY)
-                else null
+                if (lyricAnimTime == 0f) {
+                    scrollTo(0, scrollTarget)
+                } else {
+                    currentSmoothScroll = (AnimationUtils.currentAnimationTimeMillis().toFloat() to
+                            lyricAnimTime) to (scrollY.toFloat() to scrollTarget.toFloat())
+                    currentScrollTarget = scrollTarget
+                    delayedScrollAnimation = if (scrollTargetIndex != null) AnimationUtils
+                        .currentAnimationTimeMillis() to (scrollTargetIndex to scrollY)
+                    else null
+                }
             }
         }
     }
