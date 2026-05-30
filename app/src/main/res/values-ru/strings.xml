@@ -514,4 +514,9 @@
     <string name="failed_to_restore">Не удалось восстановить изменения: %s</string>
     <string name="playlist_empty">Плейлист пуст</string>
     <string name="playlist_empty_msg">Чтобы добавить песни, нажмите на значок с тремя точками рядом с нужным треком и выберите \"Добавить в плейлист\".</string>
+    <string name="delete_really_artist">Вы действительно хотите удалить все песни \"%s\"? Это действие нельзя отменить.</string>
+    <string name="search_desc">Исполнители, альбомы и треки</string>
+    <string name="search_hint">Поиск песен и исполнителей</string>
+    <string name="picker_activity">Выберите трек</string>
+    <string name="playlist_picker_activity">Выберите плейлист</string>
 </resources>

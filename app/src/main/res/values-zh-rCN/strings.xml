@@ -496,4 +496,9 @@
     <string name="failed_to_restore">无法恢复更改：%s</string>
     <string name="playlist_empty">播放列表为空</string>
     <string name="playlist_empty_msg">点击歌曲三点菜单中的“添加到播放列表”添加一些歌曲。</string>
+    <string name="delete_really_artist">确定要删除“%s”的所有歌曲吗？此操作无法撤销。</string>
+    <string name="search_desc">音乐人、专辑和曲目</string>
+    <string name="search_hint">搜索歌曲和音乐人</string>
+    <string name="picker_activity">选择音乐曲目</string>
+    <string name="playlist_picker_activity">选择播放列表</string>
 </resources>
