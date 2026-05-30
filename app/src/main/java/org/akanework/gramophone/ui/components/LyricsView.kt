@@ -60,7 +60,7 @@ class LyricsView(context: Context, attrs: AttributeSet?) : FrameLayout(context, 
                 return (context as MainActivity).getPlayer()?.playbackParameters?.speed ?: 1f
             }
         }
-        if (prefs.getBooleanStrict("lyric_ui", false)) {
+        if (prefs.getBooleanStrict("lyric_ui", true)) {
             inflate(context, R.layout.lyric_view_v2, this)
             newView = findViewById(R.id.lyric_view)!!
             newView!!.setPadding(oldPaddingLeft, oldPaddingTop, oldPaddingRight, oldPaddingBottom)
