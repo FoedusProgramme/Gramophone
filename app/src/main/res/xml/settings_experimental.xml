@@ -47,7 +47,7 @@
 
         <SwitchPreferenceCompat
             android:defaultValue="true"
-            android:key="lyric_ui"
+            android:key="lyric_ui_v2"
             android:layout="@layout/preference_switch"
             android:summary="@string/settings_lyrics_ui_summary"
             android:title="@string/settings_lyrics_ui"
