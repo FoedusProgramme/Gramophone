@@ -45,7 +45,7 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
     private var lyricAnimTime by Delegates.notNull<Float>()
 
     private val scaleInAnimTime
-        get() = max(1f, lyricAnimTime / 2f)
+        get() = lyricAnimTime / 2f
     private val isElegantTextHeight =
         false // TODO this was causing issues, but target 36 can't turn this off anymore... needs rework
     private val scaleColorInterpolator = PathInterpolator(0.4f, 0.2f, 0f, 1f)
@@ -322,7 +322,8 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
                     fadeInStart.toFloat(),
                     fadeInEnd.toFloat(), overridePos.toFloat()
                 )
-                if (if (overridePos >= fadeInEnd) animPos <= animPosReal else animPos >= animPosReal)
+                if (timeOffsetForUse == 0f || if (overridePos >= fadeInEnd) animPos <= animPosReal
+                    else animPos >= animPosReal)
                     stateOverrides.remove(i)
             }
             val scrollTarget = posForRender in fadeInStart..(lastTs - timeOffsetForUse.toULong())
@@ -337,13 +338,13 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
             )
             val hlScaleFactor = if (it.line == null) 1f else {
                 // lerp() argument order is swapped because we divide by this factor
-                if (scaleOutProgress in 0f..1f)
+                if (scaleOutProgress in 0f..1f && timeOffsetForUse > 0f)
                     lerp(
                         smallSizeFactor,
                         1f,
                         scaleColorInterpolator.getInterpolation(scaleOutProgress)
                     )
-                else if (scaleInProgress in 0f..1f)
+                else if (scaleInProgress in 0f..1f && timeOffsetForUse > 0f)
                     lerp(
                         1f,
                         smallSizeFactor,
@@ -356,8 +357,9 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
             val isRtl = it.layout.getParagraphDirection(0) == Layout.DIR_RIGHT_TO_LEFT
             val alignmentNormal = if (isRtl) it.layout.alignment == Layout.Alignment.ALIGN_OPPOSITE
             else it.layout.alignment == Layout.Alignment.ALIGN_NORMAL
-            if ((scaleInProgress >= -.1f && scaleInProgress <= 1f) ||
-                (scaleOutProgress >= -.1f && scaleOutProgress <= 1f)
+            if (((scaleInProgress >= -.1f && scaleInProgress <= 1f) ||
+                (scaleOutProgress >= -.1f && scaleOutProgress <= 1f)) &&
+                timeOffsetForUse > 0f
             )
                 animating = true
             if (it.line?.isTranslated != true && it.speaker?.isBackground != true) {
@@ -480,8 +482,9 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
                     animating = true
             }
             val spanEndWithoutGradient = if (realGradientStart == -1) spanEnd else realGradientStart
-            val inColorAnim = (scaleInProgress in 0f..1f && gradientProgress ==
-                    Float.NEGATIVE_INFINITY) || scaleOutProgress in 0f..1f
+            val inColorAnim = ((scaleInProgress in 0f..1f && gradientProgress ==
+                    Float.NEGATIVE_INFINITY) || scaleOutProgress in 0f..1f) &&
+                    timeOffsetForUse > 0f
             var colorSpan = it.text.getSpans<MyForegroundColorSpan>().firstOrNull()
             val cachedEnd = colorSpan?.let { j -> it.text.getSpanEnd(j) } ?: -1
             val wordActiveSpanForLine = if (it.line?.isTranslated == true)
