@@ -482,9 +482,6 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
                     animating = true
             }
             val spanEndWithoutGradient = if (realGradientStart == -1) spanEnd else realGradientStart
-            if (realGradientStart != -1)
-                Log.i("hi","drawing color to ${it.text.substring(0, spanEndWithoutGradient)} " +
-                        " and gradient to ${it.text.substring(realGradientStart, realGradientEnd)}")
             val inColorAnim = ((scaleInProgress in 0f..1f && gradientProgress ==
                     Float.NEGATIVE_INFINITY) || scaleOutProgress in 0f..1f) &&
                     timeOffsetForUse > 0f
