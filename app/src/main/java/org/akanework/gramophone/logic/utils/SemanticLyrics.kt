@@ -281,7 +281,7 @@ private sealed class SyntacticLrc {
                 out.add(InvalidText(""))
             if (out.isNotEmpty() && out.last() !is NewLine)
                 out.add(NewLine.SyntheticNewLine())
-            return out.let {
+            out.let {
                 // If there isn't a single sync point with timestamp over zero, that is probably not
                 // a valid .lrc file.
                 if (it.find {
@@ -290,16 +290,17 @@ private sealed class SyntacticLrc {
                                 || it is LineEndSyncPoint && it.timestamp > 0u
                     } == null)
                 // Recover only text information to make the most out of this damaged file.
-                    it.flatMap {
+                    return it.flatMap {
                         when (it) {
                             is InvalidText -> listOf(it)
+                            is NewLine -> listOf(it)
                             is SpeakerTag -> listOf(it)
                             is LyricText -> listOf(InvalidText(it.text))
                             else -> listOf()
                         }
                     }
-                else it
-            }.let {
+            }
+            return out.let {
                 if (multiLineEnabled) {
                     val a = AtomicReference<String?>(null)
                     it.flatMap {
@@ -506,27 +507,45 @@ fun parseLrc(lyricText: String, trimEnabled: Boolean, multiLineEnabled: Boolean)
     val lyricSyntax = SyntacticLrc.parseLrc(lyricText, multiLineEnabled)
         ?: return null
     if (lyricSyntax.find { it is SyntacticLrc.SyncPoint || it is SyntacticLrc.WordSyncPoint } == null) {
-        var lastSpeakerTag: SpeakerEntity? = null
-        val out = mutableListOf<Pair<String, SpeakerEntity?>>()
+        val out = mutableListOf<Pair<String?, SpeakerEntity?>>()
+        var shouldStartNewLine = false
         for (element in lyricSyntax) {
             when (element) {
                 is SyntacticLrc.SpeakerTag -> {
-                    lastSpeakerTag = element.speaker
+                    if (out.lastOrNull()?.let { it.first == null } == true && !shouldStartNewLine)
+                        out[out.size - 1] = null to element.speaker
+                    else
+                        out += null to element.speaker
+                    shouldStartNewLine = false
+                }
+
+                is SyntacticLrc.NewLine.SyntheticNewLine -> {
+                    shouldStartNewLine = true
+                }
+
+                is SyntacticLrc.NewLine -> {
+                    out += null to null
+                    shouldStartNewLine = false
                 }
 
                 is SyntacticLrc.InvalidText -> {
-                    out += element.text to lastSpeakerTag
-                    lastSpeakerTag = null
+                    if (out.isEmpty() || shouldStartNewLine)
+                        out += null to null
+                    shouldStartNewLine = false
+                    out[out.size - 1] = (out.last().first ?: "") + element.text to out.last().second
                 }
 
                 else -> throw IllegalStateException("unexpected type ${element.javaClass.name}")
             }
         }
-        while (out.firstOrNull()?.first?.isBlank() == true)
-            out.removeAt(0)
-        //while (out.lastOrNull()?.first?.isBlank() == true)
-        //    out.removeAt(out.lastIndex) TODO this breaks unit tests, but blank lines are useless
-        return UnsyncedLyrics(out)
+        val out2 = out.map { if (it.first == null) "" to it.second else
+            @Suppress("UNCHECKED_CAST") (it as Pair<String, SpeakerEntity?>) }
+            .toMutableList()
+        while (out2.firstOrNull()?.first?.isBlank() == true)
+            out2.removeAt(0)
+        //while (out2.lastOrNull()?.first?.isBlank() == true)
+        //    out2.removeAt(out.lastIndex) TODO this breaks unit tests, but blank lines are useless
+        return UnsyncedLyrics(out2)
     }
     // Synced lyrics processing state machine starts here
     val out = mutableListOf<LyricLine>()
