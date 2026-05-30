@@ -383,10 +383,13 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
             heightSoFar += it.paddingTop.toFloat()
             val culledDown = heightSoFar > scrollY + height
             var delayedScrollOffset = 0
+            // TODO: is this +1 find check valid for tl+bg? the idea is that tl lines stick to
+            //  their main line and are animated exactly the same.
             if (delayedScrollAnimation != null && delayedScrollAnimation!!.second.first < i &&
-                !delayedScrollDoneForFrame) {
-                val ii = spForRender!!.second.subList(delayedScrollAnimation!!.second.first, i)
-                    .sumOf { if (it.line?.isTranslated == true) 0 else 1 }
+                !delayedScrollDoneForFrame && spForRender!!.second.subList(delayedScrollAnimation!!
+                    .second.first + 1, i + 1).find { it.line?.isTranslated != true } != null) {
+                val ii = spForRender!!.second.subList(delayedScrollAnimation!!.second.first + 1,
+                    i + 1).sumOf { if (it.line?.isTranslated == true) 0 else 1 }
                 val duration = (lyricAnimTime * 0.278).toLong()
                 val durationReturn = (lyricAnimTime * 0.722).toLong()
                 val durationStep = (lyricAnimTime * 0.1).toLong()
