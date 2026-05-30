@@ -17,6 +17,8 @@
 
 package org.akanework.gramophone.ui.adapters
 
+import android.annotation.SuppressLint
+import android.content.SharedPreferences
 import android.net.Uri
 import android.view.View
 import android.widget.Toast
@@ -29,6 +31,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
+import androidx.preference.PreferenceManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -36,9 +39,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.akanework.gramophone.R
+import org.akanework.gramophone.logic.getBooleanStrict
 import org.akanework.gramophone.logic.getFile
 import org.akanework.gramophone.logic.gramophoneApplication
 import org.akanework.gramophone.logic.requireMediaStoreId
+import org.akanework.gramophone.logic.ui.MyRecyclerView
 import org.akanework.gramophone.ui.MediaControllerViewModel
 import org.akanework.gramophone.ui.SongPickerActivity
 import org.akanework.gramophone.ui.components.NowPlayingDrawable
@@ -74,8 +79,8 @@ class SongAdapter(
     sortHelper = MediaItemHelper,
     naturalOrderHelper = helper,
     initialSortType =
-        (if (helper != null) Sorter.Type.NaturalOrder else (rawOrderExposed
-            ?: if (folder) Sorter.Type.ByFilePathAscending else Sorter.Type.ByTitleAscending)),
+        (if (helper != null) Sorter.Type.NaturalOrder else (if (folder) Sorter.Type
+            .ByFilePathAscending else rawOrderExposed ?: Sorter.Type.ByTitleAscending)),
     canSort = true,
     pluralStr = R.plurals.songs,
     defaultLayoutType = LayoutType.COMPACT_LIST,
@@ -84,7 +89,7 @@ class SongAdapter(
     allowDiffUtils = allowDiffUtils,
     hasMenu = isSubFragment != R.id.songs,
     fallbackContext = fallbackContext
-) {
+), SharedPreferences.OnSharedPreferenceChangeListener {
 
     init {
         lateInit()
@@ -94,6 +99,7 @@ class SongAdapter(
 
     fun getActivity() = mainActivity
 
+    private var showFileNames = false
     private var idToPosMap: HashMap<String, List<Int?>>? = null
     private var currentMediaItem: String? = null
         set(value) {
@@ -162,6 +168,28 @@ class SongAdapter(
         }
     }
 
+    override fun onAttachedToRecyclerView(recyclerView: MyRecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        if (folder) {
+            prefs.registerOnSharedPreferenceChangeListener(this)
+            showFileNames = prefs.getBooleanStrict("show_file_names", true)
+        }
+    }
+
+    override fun onDetachedFromRecyclerView(recyclerView: MyRecyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView)
+        if (folder)
+            prefs.unregisterOnSharedPreferenceChangeListener(this)
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    override fun onSharedPreferenceChanged(prefs: SharedPreferences?, key: String?) {
+        if ((key == null || key == "show_file_names") && folder) {
+            showFileNames = this.prefs.getBooleanStrict("show_file_names", true)
+            notifyDataSetChanged()
+        }
+    }
+
     fun getPlayingSong(): Int? {
         return if (currentMediaItem != null) {
             idToPosMap?.get(currentMediaItem)?.firstOrNull()
@@ -181,7 +209,7 @@ class SongAdapter(
     }
 
     override fun titleOf(item: MediaItem): String? {
-        return if (folder) item.getFile()?.name else super.titleOf(item)
+        return if (showFileNames) item.getFile()?.name else super.titleOf(item)
     }
 
     override fun onClick(item: MediaItem, position: Int) {

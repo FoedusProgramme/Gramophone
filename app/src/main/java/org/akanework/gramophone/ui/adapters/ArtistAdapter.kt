@@ -43,8 +43,8 @@ import uk.akane.libphonograph.manipulator.ItemManipulator
  */
 class ArtistAdapter(
     fragment: Fragment,
-    private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(fragment.requireContext().applicationContext),
-    var isAlbumArtist: Boolean = prefs.getBooleanStrict("isDisplayingAlbumArtist", false)
+    private val prefs2: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(fragment.requireContext().applicationContext),
+    var isAlbumArtist: Boolean = prefs2.getBooleanStrict("isDisplayingAlbumArtist", false)
 ) : BaseAdapter<Artist>
     (
     fragment,

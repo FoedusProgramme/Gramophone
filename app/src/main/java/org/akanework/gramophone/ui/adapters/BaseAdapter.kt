@@ -120,7 +120,7 @@ abstract class BaseAdapter<T : Any>(
     protected var recyclerView: MyRecyclerView? = null
         private set
 
-    private val prefs = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
+    protected val prefs = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
 
     override var layoutType: LayoutType? = null
         @SuppressLint("NotifyDataSetChanged")
