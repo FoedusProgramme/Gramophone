@@ -517,4 +517,7 @@
     <string name="search_hint">Wyszukaj piosenkę i wykonawcę</string>
     <string name="picker_activity">Wybierz utwór muzyczny</string>
     <string name="playlist_picker_activity">Wybierz playlistę</string>
+    <string name="settings_preference_category_folders_filesystem"><![CDATA[Zakładki folder i system plików]]></string>
+    <string name="show_file_names">Pokazuj nazwy plików</string>
+    <string name="show_file_names_summary">Wyświetlaj nazwy plików zamiast tytułów utworów w zakładkach „folder” i „system plików”</string>
 </resources>
