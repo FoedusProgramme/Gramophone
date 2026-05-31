@@ -246,8 +246,6 @@
     <string name="settings_lyrics_bold_summary">ให้ตัวอักษรเนื้อเพลงเป็นตัวหนา</string>
     <string name="settings_lyrics_center">จัดเรียงอยู่ตรงกลาง</string>
     <string name="settings_lyrics_center_summary">ให้จัดเรียงเนื้อเพลงอยู่ตรงกลาง</string>
-    <string name="settings_lyrics_multiline">เนื้อเพลงแบบหลายบรรทัด</string>
-    <string name="settings_lyrics_multiline_summary">ให้นับเนื้อเพลงระหว่างวรรคเป็นท่อนเดียวกัน</string>
     <string name="settings_play_on_launch">เล่นเมื่อเปิดแอป</string>
     <string name="settings_play_on_launch_summary">ให้เริ่มเล่นเพลงทันทีเมื่อเปิดแอป</string>
     <string name="settings_blacklist">บัญชีดำ</string>

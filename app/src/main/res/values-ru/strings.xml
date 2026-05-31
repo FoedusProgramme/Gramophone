@@ -152,8 +152,6 @@
     <string name="crash_clipboard">Журнал сбоев скопирован в буфер обмена</string>
     <string name="grant_images"><![CDATA[Пожалуйста, предоставьте разрешение \"Фото и видео\"]]></string>
     <string name="settings_trim_lyrics">Удаляет пробелы вокруг текста песни</string>
-    <string name="settings_lyrics_multiline">Чтение многострочных текстов песен</string>
-    <string name="settings_lyrics_multiline_summary">Считывает все строки между точками синхронизации единым текстом песни</string>
     <string name="current_playlist">Текущий плейлист</string>
     <string name="timer">Таймер сна</string>
     <string name="sort_by_release_date">Дата выхода</string>

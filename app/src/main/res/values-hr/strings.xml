@@ -135,8 +135,6 @@
     <string name="settings_lyrics_bold_summary">Koristi deblji font za tekstove pjesama</string>
     <string name="settings_lyrics_center">Centrirano poravnanje</string>
     <string name="settings_lyrics_center_summary">Koristi centrirano poravnanje za tekstove pjesama</string>
-    <string name="settings_lyrics_multiline">Čitaj tekstove pjesama u više redaka</string>
-    <string name="settings_lyrics_multiline_summary">Tretiraj sve retke između sinkronizacijskih točaka kao jedan tekst pjesme</string>
     <string name="settings_play_on_launch">Reproduciraj nakon pokretanja aplikacje</string>
     <string name="settings_play_on_launch_summary">Reproduciraj glazbu nakon pokretanja aplikacje</string>
     <string name="settings_blacklist">Popis nepoželjnih</string>

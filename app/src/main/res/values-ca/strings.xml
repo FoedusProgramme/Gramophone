@@ -115,8 +115,6 @@
     <string name="settings_lyrics_bold_summary">Usa un estil de lletra més gruixut per a les lletres</string>
     <string name="settings_lyrics_center">Alineació central</string>
     <string name="settings_lyrics_center_summary">Usa l\'alineació central per a les lletres</string>
-    <string name="settings_lyrics_multiline">Llegeix lletres multilínia</string>
-    <string name="settings_lyrics_multiline_summary">Tracta totes les línies entre els punts de sincronització com un text de lletra</string>
     <string name="settings_play_on_launch">Reprodueix en llançar</string>
     <string name="settings_blacklist">Llista negra</string>
     <string name="settings_category_basic_info">Informació bàsica</string>
@@ -511,4 +509,7 @@
     <string name="picker_activity">Tria una pista de música</string>
     <string name="search_hint">Cerca cançons i artistes</string>
     <string name="playlist_picker_activity">Tria una llista de reproducció</string>
+    <string name="show_file_names">Mostra els noms del fitxers</string>
+    <string name="show_file_names_summary">Mostra els noms dels fitxers en lloc dels noms de les cançons a les pestanyes de carpetes i del sistema de fitxers</string>
+    <string name="settings_preference_category_folders_filesystem"><![CDATA[Pestanyes de carpetes i del sistema de fitxers]]></string>
 </resources>

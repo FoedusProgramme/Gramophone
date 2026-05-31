@@ -153,8 +153,6 @@
     <string name="settings_lyrics_center_summary">Kasuta laulusõnade kuvamisel keskele joondamist</string>
     <string name="settings_lyrics_configuration">Laulusõnade seadistused</string>
     <string name="settings_play_on_launch">Käivitamisel esita muusikat</string>
-    <string name="settings_lyrics_multiline">Mitmerealiste laulusõnade tuvastus</string>
-    <string name="settings_lyrics_multiline_summary">Tõlgenda kõiki ridu sünkroniseerimispunktide vahel ühe laulutekstina</string>
     <string name="settings_preference_category_home">Avavaade</string>
     <string name="tab_order">Seadista vahekaartide järjekorda</string>
     <string name="tab_order_summary">Rakendus näitab käivitamisel esimest vahekaarti. Eraldaja taga olevad vahekaardid saavad olema peidetud.</string>
@@ -507,4 +505,7 @@
     <string name="search_hint">Otsi lugusid ja esitajaid</string>
     <string name="picker_activity">Vali lugu</string>
     <string name="playlist_picker_activity">Vali esitusloend</string>
+    <string name="settings_preference_category_folders_filesystem"><![CDATA[Kaustade ja failisüsteemi vahekaardid]]></string>
+    <string name="show_file_names">Näita failinimesid</string>
+    <string name="show_file_names_summary">Näita kaustade ja failisüsteemi vahekaartidel lugude nimede asemel failinimesid</string>
 </resources>

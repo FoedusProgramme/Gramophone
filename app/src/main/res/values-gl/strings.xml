@@ -129,8 +129,6 @@
     <string name="settings_lyrics_bold_summary">Usar un tipo de letra máis groso</string>
     <string name="settings_lyrics_center">Aliñar ao centro</string>
     <string name="settings_lyrics_center_summary">Usar aliñamento no centro para letras</string>
-    <string name="settings_lyrics_multiline">Ler letras en varias liñas</string>
-    <string name="settings_lyrics_multiline_summary">Tratar todas as liñas entre puntos de sincronización como un texto único</string>
     <string name="settings_play_on_launch">Reproducir ao inicio</string>
     <string name="settings_play_on_launch_summary">Reproducir a música ao iniciar</string>
     <string name="settings_blacklist">Omisións</string>

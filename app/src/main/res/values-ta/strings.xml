@@ -129,8 +129,6 @@
     <string name="settings_lyrics_bold_summary">பாடல் வரிகளுக்கு கனமான எழுத்துரு எடையைப் பயன்படுத்துங்கள்</string>
     <string name="settings_lyrics_center">மைய சீரமைப்பு</string>
     <string name="settings_lyrics_center_summary">பாடல் வரிகளுக்கு மைய சீரமைப்பு பயன்படுத்தவும்</string>
-    <string name="settings_lyrics_multiline">மல்டிலைன் வரிகளை படியுங்கள்</string>
-    <string name="settings_lyrics_multiline_summary">ஒத்திசைவு புள்ளிகளுக்கு இடையிலான அனைத்து வரிகளையும் ஒரு பாடல் உரையாக கருதுங்கள்</string>
     <string name="settings_play_on_launch">துவக்கத்தில் விளையாடுங்கள்</string>
     <string name="settings_blacklist_folder_summary">சில கோப்புறைகளிலிருந்து பாடல்களை வடிகட்டவும்</string>
     <string name="settings_blacklist_folder">தடுப்புப்பட்டியல் கோப்புறைகள்</string>
