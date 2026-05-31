@@ -408,8 +408,6 @@
     <string name="settings_replaygain_no_rg_amp">Atenuación (no RG)</string>
     <string name="settings_replaygain_drc">Habilita DRC</string>
     <string name="settings_replaygain_drc_desc">Usar compresión de rango dinámico (DRC) para evitar saturación (recomendado). Si se desactiva, se bajará el volumen general, perdiendo la uniformidad de la normalización.</string>
-    <string name="settings_mp3_index_seeking_summary">Lee todo el archivo MP3 en la memoria según sea necesario para la búsqueda (seeking), en lugar de depender de un encabezado Xing que podría faltar para la búsqueda en archivos VBR. Si esta opción está desactivada, se utilizará la búsqueda CBR si falta el encabezado Xing. Un archivo MP3 VBR bien formado tiene un encabezado Xing, por lo que esta opción no debería ser necesaria en casi ningún caso. (Requiere reiniciar la aplicación para aplicarse)</string>
-    <string name="settings_mp3_index_seeking">Indexación para búsqueda en MP3</string>
     <string name="log_will_auto_send">Los registros se enviarán de forma automática; por favor, describa el problema a continuación</string>
     <string name="forbidden_symbol_error">El nombre contiene caracteres no válidos</string>
     <string name="track_gain">Igual sonoridad en todas las pistas</string>

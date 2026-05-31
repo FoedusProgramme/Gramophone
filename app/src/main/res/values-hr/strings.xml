@@ -402,7 +402,6 @@
     <string name="settings_translation_auto_word">Automatski animiraj prijevode</string>
     <string name="settings_translation_auto_word_summary">Primijeni linearni gradijent na retke prijevoda u sinkroniziranoj reprodukciji tekstova ako prijevodi nemaju metapodatke za sinkronizaciju riječi</string>
     <string name="cannot_find_file">Ova se datoteka ne može pronaći</string>
-    <string name="settings_mp3_index_seeking">Premještanje putem MP3 indeksa</string>
     <string name="enter_msg_for_dev_here">Ovdje upiši poruku za programera</string>
     <string name="do_not_enter_email_enter_msg">Upiši poruku, ne e-mail adresu</string>
     <string name="log_will_auto_send">Dnevnici će se automatski slati, umjesto toga objasni problem</string>
@@ -465,7 +464,6 @@
     <string name="settings_replaygain_preamp">Predpojačalo</string>
     <string name="settings_audio_offload">Prebacivanje audio signala (štedi bateriju)</string>
     <string name="mix_port_flag_deep_buffer">Duboka/Velika predmemorija</string>
-    <string name="settings_mp3_index_seeking_summary">Učitaj cijelu MP3 datoteku u memoriju prema potrebi za premještanje (seeking), umjesto da se oslanjaš na potencijalno nedostajuće Xing zaglavlje za VBR premještanje. Ako je ova opcija isključena, za premještanje će se koristiti CBR metoda ako Xing zaglavlje nedostaje. Dobro formatirana VBR MP3 datoteka obično ima Xing zaglavlje, stoga ova opcija u većini slučajeva ne bi trebala biti potrebna. (Za primjenu promjene ponovo pokreni aplikaciju)</string>
     <string name="d_db">%d dB</string>
     <string name="contributors_saladnoober">Osiguranje kvalitete</string>
     <string name="settings_replaygain_no_rg_amp_desc">Smanji glasnoću za glasne pjesme koje nemaju oznake „Ujednačavanje glasnoće”</string>
