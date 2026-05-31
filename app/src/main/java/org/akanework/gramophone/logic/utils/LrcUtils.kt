@@ -44,7 +44,14 @@ object LrcUtils {
             else null
         })) {
             return try {
-                i() ?: continue
+                val ret = i() ?: continue
+                if (ret is SyncedLyrics && Flags.HIDE_SAME_TRANSLATIONS)
+                    ret.copy(text = ret.text.filterIndexed { i, it ->
+                        !it.isTranslated || it.text != ret.text.subList(0, i)
+                            .last { !it.isTranslated }.text
+                    })
+                else
+                    ret
             } catch (e: Exception) {
                 if (parserOptions.errorText == null)
                     throw e
