@@ -1083,9 +1083,8 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         val mediaItem = controller?.currentMediaItem
         lyricsFetcher.launch {
             val trim = prefs.getBoolean("trim_lyrics", true)
-            val multiLine = prefs.getBoolean("lyric_multiline", false)
             val options = LrcParserOptions(
-                trim = trim, multiLine = multiLine,
+                trim = trim, multiLine = true,
                 errorText = getString(R.string.failed_to_parse_lyric)
             )
             // TODO: allow multiple lyric files/tags combining them for translations...maybe?
