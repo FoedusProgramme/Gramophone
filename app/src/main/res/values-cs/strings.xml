@@ -364,7 +364,6 @@
     <string name="settings_translation_auto_word">Automatické animace překladů</string>
     <string name="settings_translation_auto_word_summary">Použít lineární přechod na překladové řádky v synchronizovaném přehrávání textů písní, pokud překlady nemají metadata synchronizace slov</string>
     <string name="cannot_find_file">Tento soubor nelze najít</string>
-    <string name="settings_mp3_index_seeking_summary">Načtěte celý soubor MP3 do paměti, jak je požadováno pro vyhledávání, namísto spoléhání se na potenciálně chybějící hlavičku Xing pro vyhledávání VBR. Pokud je tato funkce vypnuta, bude v případě chybějící hlavičky Xing použito vyhledávání CBR. Správně vytvořený soubor MP3 VBR má hlavičku Xing, proto by tato možnost neměla být téměř ve všech případech potřebná. (K použití je nutné restartovat aplikaci.)</string>
     <string name="enter_msg_for_dev_here">Zde zadejte zprávu pro vývojáře</string>
     <string name="do_not_enter_email_enter_msg">Zadejte zprávu, ne e-mailovou adresu</string>
     <string name="settings_contributors_click">%s (Klikněte pro více!)</string>

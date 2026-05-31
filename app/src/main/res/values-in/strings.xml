@@ -396,8 +396,6 @@
     <string name="settings_translation_auto_word">Animasi terjemahan otomatis</string>
     <string name="settings_translation_auto_word_summary">Terapkan gradasi linier pada baris terjemahan dalam pemutaran lirik tersinkronisasi kata jika terjemahan tidak memiliki metadata sinkronisasi kata</string>
     <string name="cannot_find_file">Tidak dapat menemukan berkas ini</string>
-    <string name="settings_mp3_index_seeking_summary">Baca seluruh berkas MP3 ke dalam memori sebagaimana diperlukan untuk pencarian, alih-alih mengandalkan header Xing yang mungkin tidak ada untuk pencarian VBR. Jika ini dinonaktifkan, pencarian CBR akan digunakan jika header Xing tidak ada. Berkas MP3 VBR yang terformat dengan baik memiliki header Xing, sehingga opsi ini seharusnya tidak diperlukan di hampir semua kasus. (Memerlukan mulai ulang aplikasi untuk diterapkan)</string>
-    <string name="settings_mp3_index_seeking">Pencarian indeks MP3</string>
     <string name="enter_msg_for_dev_here">Masukkan pesan untuk pengembang di sini</string>
     <string name="do_not_enter_email_enter_msg">Masukkan pesan, bukan alamat email</string>
     <string name="log_will_auto_send">Log akan dikirim secara otomatis, jelaskan masalahnya</string>
