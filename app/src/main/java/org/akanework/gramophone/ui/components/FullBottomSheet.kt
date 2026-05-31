@@ -793,7 +793,7 @@ class FullBottomSheet
         currentJob = job
         val mediaItem = instance?.currentMediaItem
         job.launch {
-            if (viewModel.lastBitmapUri == mediaItem?.mediaMetadata?.artworkUri) {
+            if (viewModel.lastBitmapUri?.equals(mediaItem?.mediaMetadata?.artworkUri) == true) {
                 wrappedContext = makeWrappedContext(context,
                     viewModel.lastDynamicColorsOptions!!)
                 applyColorScheme(false)
