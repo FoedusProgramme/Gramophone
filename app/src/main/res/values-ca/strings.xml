@@ -511,4 +511,7 @@
     <string name="picker_activity">Tria una pista de música</string>
     <string name="search_hint">Cerca cançons i artistes</string>
     <string name="playlist_picker_activity">Tria una llista de reproducció</string>
+    <string name="show_file_names">Mostra els noms del fitxers</string>
+    <string name="show_file_names_summary">Mostra els noms dels fitxers en lloc dels noms de les cançons a les pestanyes de carpetes i del sistema de fitxers</string>
+    <string name="settings_preference_category_folders_filesystem"><![CDATA[Pestanyes de carpetes i del sistema de fitxers]]></string>
 </resources>
