@@ -136,8 +136,6 @@
     <string name="fgs_failed_title">無法恢復音樂播放</string>
     <string name="fgs_failed_text">按一下此處以開啟應用程式並繼續播放</string>
     <string name="settings_play_on_launch">啟動時播放</string>
-    <string name="settings_lyrics_multiline">閱讀多行歌詞</string>
-    <string name="settings_lyrics_multiline_summary">將同步點之間的所有行視為一個歌詞文本</string>
     <string name="settings_play_on_launch_summary">啟動時播放音樂</string>
     <string name="fgs_failed_channel">恢復播放失敗</string>
     <string name="settings_crash_application">應用程式崩潰</string>

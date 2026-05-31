@@ -48,7 +48,6 @@
     <string name="settings_play_on_launch">Esegui all\'avvio</string>
     <string name="settings_appearance_summary">Aspetto applicazione, modalità tema</string>
     <string name="settings_preference_category_application">Applicazione</string>
-    <string name="settings_lyrics_multiline">Leggi testi multilinea</string>
     <string name="settings_play_on_launch_summary">Esegui musica all\'avvio</string>
     <plurals name="items">
         <item quantity="one">%d Elemento</item>
@@ -92,7 +91,6 @@
     <string name="deny_images"><![CDATA[Per favore nega l\'autorizzazione \"Foto e video\"]]></string>
     <string name="settings_player_ui_summary">UI player intero, testi</string>
     <string name="settings_library_summary">Gestisci libreria media</string>
-    <string name="settings_lyrics_multiline_summary">Tratta tutte le righe tra i punti di sincronizzazione come un unico testo</string>
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
     <string name="dialog_edit_metadata">Modifica</string>
     <string name="album_cover">Copertina album</string>

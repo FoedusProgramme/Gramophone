@@ -81,7 +81,6 @@
     <string name="settings_lyrics_configuration">تنظیمات متن ترانه</string>
     <string name="settings_lyrics_configuration_summary">تنظیمات ظاهر متن ترانه</string>
     <string name="settings_lyrics_center">چینش مرکزی</string>
-    <string name="settings_lyrics_multiline_summary">برخورد کردن یکسان با همه ی خط های بین نقاط همگام شده</string>
     <string name="settings_play_on_launch_summary">پخش آهنگ در زمان اجرای برنامه</string>
     <string name="settings_blacklist_folder_summary">فیلتر کردن آهنگ ها از پوشه های مشخص</string>
     <string name="dialog_edit_metadata">ویرایش</string>
@@ -114,7 +113,6 @@
     <string name="settings_lyrics_bold">بولد کردن متن ترانه</string>
     <string name="settings_lyrics_bold_summary">استفاده کردن از فونت درشت تر برای متن ترانه</string>
     <string name="settings_lyrics_center_summary">استفاده از چینش مرکزی برای متن ترانه ها</string>
-    <string name="settings_lyrics_multiline">خواندن متن ترانه های چند خطی</string>
     <string name="settings_play_on_launch">پخش در زمان اجرای برنامه</string>
     <string name="settings_blacklist">لیست سیاه</string>
     <string name="settings_category_misc">متفرقه</string>

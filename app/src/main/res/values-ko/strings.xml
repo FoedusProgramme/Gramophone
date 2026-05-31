@@ -67,7 +67,6 @@
     <string name="settings_color_accuracy_summary">정확한 색상 생성</string>
     <string name="settings_color_accuracy">색상 정확도</string>
     <string name="settings_lyrics_center">가운데 정렬</string>
-    <string name="settings_lyrics_multiline">가사 여러 줄 읽기</string>
     <string name="settings_blacklist">블랙리스트</string>
     <string name="settings_blacklist_folder_summary">지정한 폴더의 음악 제외</string>
     <string name="settings_blacklist_folder">블랙리스트 폴더</string>
@@ -79,7 +78,6 @@
     <string name="dialog_edit_metadata">편집</string>
     <string name="dialog_lyrics">가사</string>
     <string name="delete_failed">삭제 노래 실패: %s</string>
-    <string name="settings_lyrics_multiline_summary">각 동기화 지점 사이에 있는 모든 줄을 하나의 가사 텍스트로 처리</string>
     <string name="settings_play_on_launch">앱을 실행할 때 재생</string>
     <string name="settings_play_on_launch_summary">앱을 실행하면 자동으로 음악 재생</string>
     <string name="album_covers_enhance">개선된 방식으로 앨범 커버 불러오기</string>

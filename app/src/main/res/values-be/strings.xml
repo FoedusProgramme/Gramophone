@@ -150,8 +150,6 @@
     <string name="crash_clipboard">Журнал збояў скапіяваны ў буфер абмену</string>
     <string name="settings_category_full_player">Прайгравальнік</string>
     <string name="settings_trim_lyrics">Выдаліць прабелы вакол тэксту песні</string>
-    <string name="settings_lyrics_multiline">Чытанне шматрадковых тэкстаў песень</string>
-    <string name="settings_lyrics_multiline_summary">Усе радкі паміж кропкамі сінхранізацыі разглядаюцца як адзіны тэкст</string>
     <string name="current_playlist">Бягучы плэйліст</string>
     <string name="timer">Таймер сну</string>
     <string name="sort_by_release_date">Дата выхаду</string>

@@ -117,14 +117,12 @@
     <string name="settings_title_bold">Nosaukums treknrakstā</string>
     <string name="settings_title_bold_summary">Rādīt nosaukumu treknrakstā pilnajā pleijerī</string>
     <string name="settings_experimental_settings">Eksperimentāls</string>
-    <string name="settings_lyrics_multiline_summary">Uzskatīt visas rindiņas starp sinhronizācijas punktiem par vienotu tekstu</string>
     <string name="sort_by_add_date">Pievienot datumu</string>
     <string name="settings_lyrics_center_summary">Centrēt vārdus</string>
     <string name="settings_blacklist">Melnais saraksts</string>
     <string name="settings_category_full_player">Pilnais pleijeris</string>
     <string name="settings_category_filters">Filtri</string>
     <string name="settings_blacklist_folder_summary">Filtrēt dziesmas no specifiskām mapēm</string>
-    <string name="settings_lyrics_multiline">Lasīt vairāku rindiņu vārdus</string>
     <string name="album_cover">Albuma vāka dizains</string>
     <string name="settings_preference_category_application">Aplikācija</string>
     <string name="settings_lyrics_bold_summary">Izmantot lielāku fontu priekš vārdiem</string>

@@ -142,8 +142,6 @@
     <string name="timer">Despertador</string>
     <string name="current_playlist">Lista de reprodução atual</string>
     <string name="fgs_failed_title">Falha ao retomar a reprodução da música</string>
-    <string name="settings_lyrics_multiline">Leia letras multilinhas</string>
-    <string name="settings_lyrics_multiline_summary">Trate todas as linhas entre os pontos de sincronização como um texto de letra</string>
     <string name="settings_crash_application">Travar a aplicação</string>
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
     <string name="delete_failed">Falha ao apagar a música: %s</string>

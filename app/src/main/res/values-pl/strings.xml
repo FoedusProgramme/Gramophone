@@ -149,8 +149,6 @@
     <string name="fgs_failed_channel">Nie udało się wznowić odtwarzania</string>
     <string name="timer">Wyłącznik czasowy</string>
     <string name="album_cover">Okładka</string>
-    <string name="settings_lyrics_multiline_summary">Traktuj wszystkie wiersze pomiędzy punktami synchronizacji jako jeden tekst</string>
-    <string name="settings_lyrics_multiline">Odczytywanie wielowierszowych tekstów</string>
     <string name="dialog_lyrics">Teksty</string>
     <string name="dialog_edit_metadata">Edytuj</string>
     <string name="settings_category_filters">Filtry</string>

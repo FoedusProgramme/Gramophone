@@ -146,12 +146,10 @@
     <string name="crash_clipboard">Journal de plantage copié</string>
     <string name="settings_category_full_player">Lecteur complet</string>
     <string name="settings_trim_lyrics">Enlever les espaces autour des paroles</string>
-    <string name="settings_lyrics_multiline">Lire les paroles multi-lignes</string>
     <string name="sort_by_release_date">Date de publication</string>
     <string name="timer_expiry">Le minuteur de sommeil arrêtera la musique à %s</string>
     <string name="album_covers_enhance">Chargement amélioré des couvertures d\'albums</string>
     <string name="share">Partager</string>
-    <string name="settings_lyrics_multiline_summary">Traiter toutes les lignes entre les points de synchronisation comme une seule parole</string>
     <string name="album_covers_enhance_desc">Permet d\'utiliser des couvertures de chanson de haute qualité et d\'avoir des couvertures d\'albums et de chansons différentes (nécessite la permission d\'accès aux photos)</string>
     <string name="fgs_failed_title">Échec de la reprise de la lecture</string>
     <string name="timer">Minuteur de sommeil</string>

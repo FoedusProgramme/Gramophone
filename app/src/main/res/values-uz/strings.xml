@@ -135,8 +135,6 @@
     <string name="settings_lyrics_bold">Qalin qo\'shiqlar</string>
     <string name="settings_lyrics_bold_summary">Qo\'shiq matni uchun og\'irroq shriftdan foydalaning</string>
     <string name="settings_lyrics_center_summary">Qo\'shiq matni uchun markazni tekislashdan foydalaning</string>
-    <string name="settings_lyrics_multiline">Qo\'shiq matni uchun markazni tekislashdan ko\'ra</string>
-    <string name="settings_lyrics_multiline_summary">Sinxronlash nuqtalari orasidagi barcha satrlarni bitta lirik matn sifatida ko\'rib chiqing</string>
     <string name="settings_play_on_launch">Ishga tushganda o\'ynang</string>
     <string name="settings_play_on_launch_summary">Ishga tushganda musiqa tinglang</string>
     <string name="settings_blacklist_folder_summary">Muayyan papkalardan qo\'shiqlarni filtrlang</string>

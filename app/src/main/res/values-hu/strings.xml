@@ -297,7 +297,6 @@
     <string name="expand_less">Bezár</string>
     <string name="settings_lyrics_ui">Új dalszöveg felület bekapcsolása</string>
     <string name="delete">Törlés</string>
-    <string name="settings_lyrics_multiline">Többsoros dalszövegek beolvasása</string>
     <string name="device_type_builtin_speaker">Beépített hangszóró</string>
     <string name="device_type_usb_device">USB eszköz</string>
     <string name="device_type_usb_accessory">USB kellék</string>
@@ -319,7 +318,6 @@
     <string name="play">Lejátszás</string>
     <string name="more">Több</string>
     <string name="sort_by_album_artist">Album előadó</string>
-    <string name="settings_lyrics_multiline_summary">A szinkronizációs pontok közötti szöveg egy dalszövegnek tekintendő</string>
     <string name="seekbar">Kereső sáv</string>
     <string name="divider">Elválasztó</string>
     <string name="spk_encoding_alac">ALAC</string>

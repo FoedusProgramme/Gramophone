@@ -154,8 +154,6 @@
     <string name="settings_lyrics_bold_summary">Koristite deblji font za tekstove</string>
     <string name="settings_blacklist">Crna lista</string>
     <string name="settings_preference_category_application">Aplikacija</string>
-    <string name="settings_lyrics_multiline">Čitajte višelinijske tekstove</string>
-    <string name="settings_lyrics_multiline_summary">Tretirajte sve linije između tačaka sinhronizacije kao jedan dio teksta</string>
     <string name="settings_category_basic_info">Osnovne informacije</string>
     <string name="album_covers_enhance_desc">Podržite visokokvalitetne omote pesama i dozvolite da se album i omot pesme razlikuju (zahteva pristup fotografijama)</string>
     <string name="grant_audio"><![CDATA[Molimo odobrite \"Music and audio\" permission]]></string>

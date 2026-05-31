@@ -141,8 +141,6 @@
     <string name="settings_crash_application">Travar o aplicativo</string>
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
     <string name="crash_clipboard">Log de erros copiado para a área de transferência</string>
-    <string name="settings_lyrics_multiline">Visualizar letras com várias linhas</string>
-    <string name="settings_lyrics_multiline_summary">Trate todas as linhas entre os pontos de sincronização como um texto de letra</string>
     <string name="delete_failed">Falha ao excluir a música: %s</string>
     <string name="dialog_edit_metadata">Editar</string>
     <string name="deny_images"><![CDATA[Negue a permissão \"imagens e vídeos\"]]></string>

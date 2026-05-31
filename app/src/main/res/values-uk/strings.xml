@@ -148,8 +148,6 @@
     <string name="settings_trim_lyrics">Видаліть пробіли навколо тексту пісні</string>
     <string name="settings_category_misc">Різне</string>
     <string name="sort_by_modified_date">Дата зміни</string>
-    <string name="settings_lyrics_multiline">Читання багаторядкового тексту пісень</string>
-    <string name="settings_lyrics_multiline_summary">Усі рядки між точками синхронізації розглядаються як один текст</string>
     <string name="settings_lyrics_center_summary">Використовувати вирівнювання центром для текстів пісень</string>
     <string name="settings_title_bold_summary">Використовуйте жирний заголовок для гравця програвача</string>
     <string name="current_playlist">Поточний список відтворення</string>
