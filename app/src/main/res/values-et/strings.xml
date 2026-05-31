@@ -507,4 +507,7 @@
     <string name="search_hint">Otsi lugusid ja esitajaid</string>
     <string name="picker_activity">Vali lugu</string>
     <string name="playlist_picker_activity">Vali esitusloend</string>
+    <string name="settings_preference_category_folders_filesystem"><![CDATA[Kaustade ja failisüsteemi vahekaardid]]></string>
+    <string name="show_file_names">Näita failinimesid</string>
+    <string name="show_file_names_summary">Näita kaustade ja failisüsteemi vahekaartidel lugude nimede asemel failinimesid</string>
 </resources>
