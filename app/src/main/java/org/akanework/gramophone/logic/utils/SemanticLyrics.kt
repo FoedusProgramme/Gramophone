@@ -508,9 +508,14 @@ fun parseLrc(lyricText: String, trimEnabled: Boolean, multiLineEnabled: Boolean)
         ?: return null
     if (lyricSyntax.find { it is SyntacticLrc.SyncPoint || it is SyntacticLrc.WordSyncPoint } == null) {
         val out = mutableListOf<Pair<String?, SpeakerEntity?>>()
+        var emptyIsEnd = false
         var shouldStartNewLine = false
         for (element in lyricSyntax) {
             when (element) {
+                is SyntacticLrc.Metadata if element.name == "emptyIsEnd" -> {
+                    emptyIsEnd = element.value == "1"
+                }
+
                 is SyntacticLrc.SpeakerTag -> {
                     if (out.lastOrNull()?.let { it.first == null } == true && !shouldStartNewLine)
                         out[out.size - 1] = null to element.speaker
@@ -524,7 +529,10 @@ fun parseLrc(lyricText: String, trimEnabled: Boolean, multiLineEnabled: Boolean)
                 }
 
                 is SyntacticLrc.NewLine -> {
-                    out += null to null
+                    if (!emptyIsEnd || out.lastOrNull()?.let { it.first == null } != true)
+                        out += null to null
+                    else
+                        out[out.size - 1] = null to null
                     shouldStartNewLine = false
                 }
 
@@ -557,6 +565,7 @@ fun parseLrc(lyricText: String, trimEnabled: Boolean, multiLineEnabled: Boolean)
     var hadVoice2 = false
     var hadLyricSinceWordSync = true
     var hadWordSyncSinceNewLine = false
+    var emptyIsEnd = false
     val currentLine = mutableListOf<Pair<ULong, String?>>()
     var syncPointStreak = 0
     val compressed = mutableListOf<ULong>()
@@ -575,6 +584,10 @@ fun parseLrc(lyricText: String, trimEnabled: Boolean, multiLineEnabled: Boolean)
             is SyntacticLrc.Metadata if element.name == "offset" -> {
                 // positive offset means lyric played earlier in lrc, hence multiply with -1
                 offset = element.value.toLong() * -1
+            }
+
+            is SyntacticLrc.Metadata if element.name == "emptyIsEnd" -> {
+                emptyIsEnd = element.value == "1"
             }
 
             is SyntacticLrc.SyncPoint -> {
@@ -680,8 +693,9 @@ fun parseLrc(lyricText: String, trimEnabled: Boolean, multiLineEnabled: Boolean)
                     }
                     wout
                 } else null
-                if (currentLine.isNotEmpty() || lastWordSyncPoint != null || lastSyncPoint != null) {
-                    var text = currentLine.joinToString("") { it.second ?: "" }
+                var text = currentLine.joinToString("") { it.second ?: "" }
+                if (text.isNotBlank() || !emptyIsEnd &&
+                    (lastWordSyncPoint != null || lastSyncPoint != null)) {
                     if (trimEnabled) {
                         val orig = text
                         text = orig.trimStart()
@@ -732,6 +746,14 @@ fun parseLrc(lyricText: String, trimEnabled: Boolean, multiLineEnabled: Boolean)
                             }?.toMutableList()
                         )
                         )
+                    }
+                } else if (lastWordSyncPoint != null || lastSyncPoint != null) {
+                    out.lastOrNull()?.let {
+                        out[out.size - 1] = it.copy(end = lastWordSyncPoint ?: lastSyncPoint!!,
+                            endIsImplicit = false)
+                        if (it.words?.lastOrNull()?.let { w -> w.endInclusive == null } == true) {
+                            it.words.last().endInclusive = lastWordSyncPoint ?: lastSyncPoint!!
+                        }
                     }
                 }
                 compressed.clear()
