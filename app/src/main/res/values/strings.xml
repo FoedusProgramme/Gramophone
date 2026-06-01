@@ -525,4 +525,5 @@
     <string name="settings_preference_category_folders_filesystem"><![CDATA[Folder & filesystem tabs]]></string>
     <string name="show_file_names">Show file names</string>
     <string name="show_file_names_summary">Show file names in the place of song names in the folder and filesystem tabs</string>
+    <string name="another_with_name">Name is already in use</string>
 </resources>

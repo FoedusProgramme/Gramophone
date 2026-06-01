@@ -270,7 +270,9 @@ class MainActivity : BaseActivity() {
             } + getString(R.string.create_playlist)).toTypedArray())
             { _, item ->
                 if (playlists.size == item) {
-                    PlaylistAdapter.playlistNameDialog(this, R.string.create_playlist, "") { name ->
+                    PlaylistAdapter.playlistNameDialog(this,
+                        R.string.create_playlist, "",
+                        { ItemManipulator.getDefaultPlaylistFile(it) }) { name ->
                         addToPlaylist(null, name, listOf(song))
                     }
                     return@setItems
@@ -287,18 +289,18 @@ class MainActivity : BaseActivity() {
             .show()
     }
 
-    fun addToPlaylist(uri: Uri?, name: String?, songs: List<Entry>) {
+    fun addToPlaylist(uri: Uri?, name: File?, songs: List<Entry>) {
         val data = Bundle().apply {
             putParcelableArrayList("Songs", ArrayList(songs))
             putParcelable("Uri", uri)
-            putString("Name", name)
+            putString("Name", name!!.path)
         }
         CoroutineScope(Dispatchers.Default).launch {
             val token = if (uri != null) {
                 MediaStoreCompat.needRequestBytesWrite(this@MainActivity, uri)
             } else {
                 MediaStoreCompat.needRequestCreate(this@MainActivity,
-                    ItemManipulator.getDefaultPlaylistFile(name!!).path)
+                    name!!.path)
             }
             if (token != null) {
                 pendingPlaylistRequest = data
@@ -375,7 +377,7 @@ class MainActivity : BaseActivity() {
             val favorite = data.getBoolean("Favorite")
             try {
                 val uri = uriIn ?: ItemManipulator.createPlaylist(this,
-                    ItemManipulator.FAVORITES)
+                    ItemManipulator.getDefaultPlaylistFile(ItemManipulator.FAVORITES))
                 val readback = if (uriIn != null) ItemManipulator.readbackPlaylist(this,
                     uri) else emptyList()
                 val newSongs = if (favorite) {
@@ -420,7 +422,8 @@ class MainActivity : BaseActivity() {
             try {
                 val readback = if (uriIn != null) ItemManipulator.readbackPlaylist(this,
                     uriIn) else emptyList()
-                val uri = uriIn ?: ItemManipulator.createPlaylist(this, name!!)
+                val uri = uriIn ?: ItemManipulator.createPlaylist(this,
+                    File(name!!))
                 ItemManipulator.setPlaylistContent(this, uri, readback + songs,
                     uriIn == null)
             } catch (e: Exception) {

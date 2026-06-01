@@ -138,8 +138,7 @@ object ItemManipulator {
         }
     }
 
-    fun createPlaylist(context: Context, name: String): Uri {
-        val out = getDefaultPlaylistFile(name)
+    fun createPlaylist(context: Context, out: File): Uri {
         if (out.exists())
             throw IllegalArgumentException("tried to create playlist $out that already exists")
         val uri = MediaStoreCompat.create(context, out.absolutePath)!!

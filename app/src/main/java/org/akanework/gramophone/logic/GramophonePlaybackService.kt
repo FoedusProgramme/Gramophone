@@ -651,7 +651,8 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
             if (token == null) {
                 try {
                     val uri = uriIn ?: ItemManipulator.createPlaylist(
-                        this@GramophonePlaybackService, ItemManipulator.FAVORITES)
+                        this@GramophonePlaybackService, ItemManipulator
+                            .getDefaultPlaylistFile(ItemManipulator.FAVORITES))
                     val readback = if (uriIn != null) ItemManipulator.readbackPlaylist(
                         this@GramophonePlaybackService, uri) else emptyList()
                     val newSongs = if (rating.isHeart) {

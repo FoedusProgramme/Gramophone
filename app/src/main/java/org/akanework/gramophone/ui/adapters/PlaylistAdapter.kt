@@ -43,8 +43,11 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.gramophoneApplication
@@ -54,8 +57,10 @@ import org.akanework.gramophone.ui.fragments.GeneralSubFragment
 import org.nift4.mediastorecompat.MediaStoreCompat
 import uk.akane.libphonograph.dynamicitem.Favorite
 import uk.akane.libphonograph.dynamicitem.RecentlyAdded
+import uk.akane.libphonograph.items.Item
 import uk.akane.libphonograph.items.Playlist
 import uk.akane.libphonograph.manipulator.ItemManipulator
+import java.io.File
 
 /**
  * [PlaylistAdapter] is an adapter for displaying artists.
@@ -209,15 +214,16 @@ class PlaylistAdapter(
                     playlistNameDialog(
                         context,
                         R.string.rename_playlist,
-                        item.title ?: ""
-                    ) { name ->
+                        item.title ?: "",
+                        { name -> item.path!!.resolveSibling(
+                            if (item.path.extension != "") "$name.${item.path.extension}"
+                            else name) }
+                    ) { path ->
                         val id = item.id!!
                         val uri = ContentUris.withAppendedId(
                             @Suppress("deprecation") MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI,
                             id
                         )
-                        val path = item.path!!.resolveSibling(if (item.path.extension != "")
-                            "$name.${item.path.extension}" else name)
                         val data = Bundle().apply {
                             putLong("Id", id)
                             putString("Path", path.absolutePath)
@@ -298,10 +304,11 @@ class PlaylistAdapter(
             super.onBindViewHolder(holder, position, payloads)
             holder.createPlaylist.visibility = View.VISIBLE
             holder.createPlaylist.setOnClickListener { _ ->
-                playlistNameDialog(context, R.string.create_playlist, "") { name ->
+                playlistNameDialog(context, R.string.create_playlist, "",
+                    { ItemManipulator.getDefaultPlaylistFile(it) }) { path ->
                     ioScope.launch {
                         try {
-                            val uri = ItemManipulator.createPlaylist(context, name)
+                            val uri = ItemManipulator.createPlaylist(context, path)
                             ItemManipulator.setPlaylistContent(context, uri, emptyList(),
                                 true)
                         } catch (e: Exception) {
@@ -335,7 +342,8 @@ class PlaylistAdapter(
             context: Context,
             title: Int,
             initialValue: String,
-            then: (String) -> Unit
+            nameToFile: (String) -> File,
+            then: (File) -> Unit
         ) {
             val d = MaterialAlertDialogBuilder(context)
                 .setTitle(title)
@@ -346,7 +354,7 @@ class PlaylistAdapter(
                         R.id.editText
                     ) as TextInputEditText
                     val name = et.editableText.toString()
-                    then(name)
+                    then(nameToFile(name))
                 }
                 .setNegativeButton(android.R.string.cancel) { _, _ -> }
                 .show()
@@ -362,16 +370,36 @@ class PlaylistAdapter(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 d.window!!.decorView.measuredHeight
             )
+            var job: Job? = null
             et.addTextChangedListener(afterTextChanged = {
                 val tmp = et.editableText.toString()
                 val hasForbidden =
                     tmp.any { it in "/\\:*?\"<>|" || it.code <= 0x1F || it.code == 0x7F }
+                job?.cancel()
                 if (hasForbidden) {
                     inL.error = context.getString(R.string.forbidden_symbol_error)
                 } else {
                     inL.error = null
                 }
-                b.isEnabled = !tmp.isBlank() && !hasForbidden
+                b.isEnabled = false
+                if (!hasForbidden) {
+                    lateinit var myJob: Job
+                    myJob = CoroutineScope(Dispatchers.Default).launch {
+                        val exists = nameToFile(tmp).exists()
+                        withContext(Dispatchers.Main) {
+                            if (job == myJob) {
+                                job = null
+                                if (exists) {
+                                    inL.error = context.getString(R.string.another_with_name)
+                                } else {
+                                    inL.error = null
+                                }
+                                b.isEnabled = !exists
+                            }
+                        }
+                    }
+                    job = myJob
+                }
             })
             et.requestFocus()
             et.post {
