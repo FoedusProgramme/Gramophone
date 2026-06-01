@@ -36,6 +36,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
+import androidx.core.view.postOnAnimationDelayed
 import androidx.core.widget.NestedScrollView
 import androidx.core.widget.TextViewCompat
 import androidx.lifecycle.ViewModel
@@ -105,6 +106,7 @@ import org.akanework.gramophone.ui.fragments.GeneralSubFragment
 import uk.akane.libphonograph.items.albumId
 import uk.akane.libphonograph.items.artistId
 import uk.akane.libphonograph.manipulator.PlaylistSerializer.Entry
+import kotlin.math.max
 import kotlin.math.min
 
 @SuppressLint("NotifyDataSetChanged")
@@ -1138,6 +1140,7 @@ class FullBottomSheet
                     bottomSheetFullSlider.trackInactiveTintList =
                         ColorStateList.valueOf(progressColor)
                 }
+                duration = BACKGROUND_COLOR_TRANSITION_SEC
             }
 
             colorOnSurfaceTransition.apply {
@@ -1166,6 +1169,7 @@ class FullBottomSheet
                     val progressColor = animation.animatedValue as Int
                     bottomSheetFullLyricView.updateTextColor(progressColor)
                 }
+                duration = BACKGROUND_COLOR_TRANSITION_SEC
             }
 
             lyricHighlightTlColorTransition.apply {
@@ -1173,6 +1177,7 @@ class FullBottomSheet
                     val progressColor = animation.animatedValue as Int
                     bottomSheetFullLyricView.updateHighlightTlColor(progressColor)
                 }
+                duration = BACKGROUND_COLOR_TRANSITION_SEC
             }
 
             loopTransition.apply {
@@ -1180,6 +1185,7 @@ class FullBottomSheet
                     val progressColor = animation.animatedValue as Int
                     bottomSheetLoopButton.iconTint = ColorStateList.valueOf(progressColor)
                 }
+                duration = BACKGROUND_COLOR_TRANSITION_SEC
             }
 
             shuffleTransition.apply {
@@ -1187,6 +1193,7 @@ class FullBottomSheet
                     val progressColor = animation.animatedValue as Int
                     bottomSheetShuffleButton.iconTint = ColorStateList.valueOf(progressColor)
                 }
+                duration = BACKGROUND_COLOR_TRANSITION_SEC
             }
 
             favoriteTransition.apply {
@@ -1194,6 +1201,7 @@ class FullBottomSheet
                     val progressColor = animation.animatedValue as Int
                     bottomSheetFavoriteButton.iconTint = ColorStateList.valueOf(progressColor)
                 }
+                duration = BACKGROUND_COLOR_TRANSITION_SEC
             }
 
             withContext(Dispatchers.Main) {
@@ -1210,11 +1218,12 @@ class FullBottomSheet
                 favoriteTransition.start()
             }
 
-            delay(FOREGROUND_COLOR_TRANSITION_SEC)
+            delay(max(BACKGROUND_COLOR_TRANSITION_SEC,
+                FOREGROUND_COLOR_TRANSITION_SEC))
         }
 
         currentJob = null
-        withContext(Dispatchers.Main) {
+        postOnAnimation {
             setBackgroundColor(backgroundProcessedColor)
             bottomSheetFullLyricView.setBackgroundColor(backgroundProcessedColor)
             bottomSheetFullTitle.setTextColor(
