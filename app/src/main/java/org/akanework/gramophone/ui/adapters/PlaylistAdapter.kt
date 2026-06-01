@@ -217,14 +217,14 @@ class PlaylistAdapter(
                             id
                         )
                         val path = item.path!!.resolveSibling(if (item.path.extension != "")
-                            "$name.${item.path.extension}" else name).absolutePath
+                            "$name.${item.path.extension}" else name)
                         val data = Bundle().apply {
                             putLong("Id", id)
-                            putString("Path", path)
+                            putString("Path", path.absolutePath)
                         }
                         CoroutineScope(Dispatchers.Default).launch {
                             val token = MediaStoreCompat.needRequestEfficientMove(context, uri,
-                                path)
+                                path.parent ?: "")
                             if (token != null) {
                                 val pendingIntent = MediaStoreCompat.createWriteRequest(
                                     context, listOf(token))
