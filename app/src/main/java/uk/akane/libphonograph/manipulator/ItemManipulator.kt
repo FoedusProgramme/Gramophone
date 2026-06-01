@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
-import android.content.IntentSender
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -14,14 +13,16 @@ import androidx.media3.common.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.akanework.gramophone.R
+import org.akanework.gramophone.logic.getFile
 import org.akanework.gramophone.logic.gramophoneApplication
 import org.akanework.gramophone.logic.hasImprovedMediaStore
 import org.akanework.gramophone.ui.MainActivity
 import org.nift4.mediastorecompat.MediaStoreCompat
+import uk.akane.libphonograph.dynamicitem.Favorite
 import uk.akane.libphonograph.getIntOrNullIfThrow
 import uk.akane.libphonograph.getLongOrNullIfThrow
 import uk.akane.libphonograph.manipulator.PlaylistSerializer.Entry
@@ -33,6 +34,26 @@ object ItemManipulator {
     const val FAVORITES = "gramophone_favourite"
 
     suspend fun deleteSongs(context: MainActivity, list: List<Pair<File, Long>>): (() -> Unit)? {
+        val faves = context.gramophoneApplication.reader.playlistListFlow.map { it.find { p ->
+            p is Favorite } }.first()
+        val songsToUnfave = list.filter { faves?.songList?.find { song -> song.getFile() ==
+                it.first } != null }.map { it.first }
+        if (faves?.id != null && songsToUnfave.isNotEmpty()) {
+            val uri = ContentUris.withAppendedId(
+                    @Suppress("deprecation")
+                    MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, faves.id!!
+                )
+            val token = MediaStoreCompat.needRequestBytesWrite(context, uri)
+            if (token == null) {
+                try {
+                    val readback = readbackPlaylist(context, uri)
+                    val newSongs = readback.filter { !songsToUnfave.contains(it.file) }
+                    setPlaylistContent(context, uri, newSongs, false)
+                } catch (e: Exception) {
+                    Log.e(TAG, "failed to set unfavorite $songsToUnfave", e)
+                }
+            }
+        }
         val uris = list.flatMap {
             val id = it.second
             val file = it.first
