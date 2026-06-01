@@ -515,4 +515,8 @@
     <string name="search_hint">Поиск песен и исполнителей</string>
     <string name="picker_activity">Выберите трек</string>
     <string name="playlist_picker_activity">Выберите плейлист</string>
+    <string name="settings_preference_category_folders_filesystem"><![CDATA[Вкладки папок и файловой системы]]></string>
+    <string name="show_file_names">Показывать имена файлов</string>
+    <string name="show_file_names_summary">Показывать имена файлов вместо названий песен во вкладках папок и файловой системы</string>
+    <string name="another_with_name">Это имя уже используется</string>
 </resources>
