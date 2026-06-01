@@ -601,9 +601,11 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
                     currentSmoothScroll = (AnimationUtils.currentAnimationTimeMillis().toFloat() to
                             lyricAnimTime) to (scrollY.toFloat() to scrollTarget.toFloat())
                     currentScrollTarget = scrollTarget
-                    delayedScrollAnimation = if (scrollTargetIndex != null) AnimationUtils
-                        .currentAnimationTimeMillis() to (scrollTargetIndex to scrollY)
-                    else null
+                    if (scrollY < scrollTarget) {
+                        delayedScrollAnimation = if (scrollTargetIndex != null) AnimationUtils
+                            .currentAnimationTimeMillis() to (scrollTargetIndex to scrollY)
+                        else null
+                    }
                 }
             }
         }
@@ -833,7 +835,7 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
                 fadeOutEnd.toFloat(), to.toFloat()))
             else lerpInv(fadeInStart.toFloat(),
                 fadeInEnd.toFloat(), to.toFloat())
-            if (animPosNow != animPosAfterSeek)
+            if (animPosNow != animPosAfterSeek && it.theWords != null)
                 stateOverrides[i] =
                     // Now we have to decide what behavior towards infinity we wish to have...
                     when {
