@@ -10,6 +10,7 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.widget.Toast
 import androidx.media3.common.util.Log
+import androidx.media3.common.util.Util
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -22,6 +23,7 @@ import org.akanework.gramophone.logic.gramophoneApplication
 import org.akanework.gramophone.logic.hasImprovedMediaStore
 import org.akanework.gramophone.ui.MainActivity
 import org.nift4.mediastorecompat.MediaStoreCompat
+import org.nift4.mediastorecompat.StorageManagerCompat
 import uk.akane.libphonograph.dynamicitem.Favorite
 import uk.akane.libphonograph.getIntOrNullIfThrow
 import uk.akane.libphonograph.getLongOrNullIfThrow
@@ -32,6 +34,7 @@ import java.io.File
 object ItemManipulator {
     private const val TAG = "ItemManipulator"
     const val FAVORITES = "gramophone_favourite"
+    const val DEFAULT_FORMAT = "m3u"
 
     suspend fun deleteSongs(context: MainActivity, list: List<Pair<File, Long>>): (() -> Unit)? {
         val faves = context.gramophoneApplication.reader.playlistListFlow.map { it.find { p ->
@@ -170,7 +173,7 @@ object ItemManipulator {
 
     fun getDefaultPlaylistFile(name: String): File {
         val parent = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
-        return File(parent, "$name.m3u")
+        return File(parent, "$name.$DEFAULT_FORMAT")
     }
 
     suspend fun readbackPlaylist(context: Context, uri: Uri): List<Entry> {
@@ -201,14 +204,29 @@ object ItemManipulator {
         if (!hasImprovedMediaStore() && !out!!.exists()) {
             // Move this playlist to a plausible real path on the same volume because we're about to
             // convert it from abstract to real playlist.
-            out = MediaStoreCompat.efficientMove(context, uri, "Music/$name.m3u")
+            out = StorageManagerCompat.getVolumeForPath(StorageManagerCompat
+                .getStorageVolumes(context), out)
+                .requireCanonicalDirectory()
+                .resolve(Environment.DIRECTORY_MUSIC)
+                .resolve(Util.escapeFileName("$name.$DEFAULT_FORMAT"))
+            var i = 1
+            while (out!!.exists()) {
+                out = out.resolveSibling("${out.nameWithoutExtension} (${i++})" +
+                        ".${out.extension}")
+            }
+            out = MediaStoreCompat.efficientMove(context, uri, out.absolutePath)
         }
         try {
             PlaylistSerializer.write(context.applicationContext, out!!, uri, songs)
         } catch (_: PlaylistSerializer.UnsupportedPlaylistFormatException) {
             // convert to .m3u to fulfill the user's request
-            out = MediaStoreCompat.efficientMove(context, uri, out!!
-                .resolveSibling("${out.nameWithoutExtension}.m3u").path)
+            out = out!!.resolveSibling("${out.nameWithoutExtension}.$DEFAULT_FORMAT")
+            var i = 1
+            while (out!!.exists()) {
+                out = out.resolveSibling("${out.nameWithoutExtension} (${i++})" +
+                        ".${out.extension}")
+            }
+            out = MediaStoreCompat.efficientMove(context, uri, out.path)
             PlaylistSerializer.write(context.applicationContext, out, uri, songs)
         }
         if (needToFinishCreate) {
