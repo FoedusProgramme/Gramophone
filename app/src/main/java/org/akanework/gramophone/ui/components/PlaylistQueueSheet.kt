@@ -211,6 +211,11 @@ class PlaylistQueueSheet(
             instance?.removeMediaItem(idx)
             playlist.second.removeAt(idx)
             notifyItemRemoved(pos)
+            currentMediaItemIndex?.let {
+                if (pos == it) {
+                    notifyItemChanged(it, true)
+                }
+            }
             updateList() // TODO: this could be more efficient
         }
 
