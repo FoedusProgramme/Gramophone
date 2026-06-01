@@ -506,4 +506,5 @@
     <string name="settings_preference_category_folders_filesystem"><![CDATA[Kaustade ja failisüsteemi vahekaardid]]></string>
     <string name="show_file_names">Näita failinimesid</string>
     <string name="show_file_names_summary">Näita kaustade ja failisüsteemi vahekaartidel lugude nimede asemel failinimesid</string>
+    <string name="another_with_name">Selline nimi on juba kasutusel</string>
 </resources>
