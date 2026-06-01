@@ -835,7 +835,7 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
                 fadeOutEnd.toFloat(), to.toFloat()))
             else lerpInv(fadeInStart.toFloat(),
                 fadeInEnd.toFloat(), to.toFloat())
-            if (animPosNow != animPosAfterSeek && it.theWords != null)
+            if (animPosNow != animPosAfterSeek && it.theWords == null)
                 stateOverrides[i] =
                     // Now we have to decide what behavior towards infinity we wish to have...
                     when {
