@@ -101,7 +101,7 @@ private sealed class SyntacticLrc {
 
     companion object {
         // also eats space if present
-        val timeMarksRegex = "\\[(\\d+)[.:](\\d+)([.:]\\d+)?(?:-\\[(\\d+)[.:](\\d+)([.:]\\d+)?)?]".toRegex()
+        val timeMarksRegex = "\\[(\\d+)[.:](\\d+)([.:]\\d+)?(?:-(\\d+)[.:](\\d+)([.:]\\d+)?)?]".toRegex()
         val timeMarksAfterWsRegex = "([ \t]+)\\[\\d+[.:]\\d+(?:[.:]\\d+)?(?:-\\d+[.:]\\d+(?:[.:]\\d+)?)?]".toRegex()
         val timeWordMarksRegex = "<(\\d+)[.:](\\d+)([.:]\\d+)?>".toRegex()
         val metadataRegex = "\\[([a-zA-Z#]+):([^]]*)]".toRegex()
