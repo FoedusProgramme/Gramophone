@@ -78,7 +78,6 @@
     <string name="settings_lyrics_bold">বোল্ড লিরিক</string>
     <string name="filesystem">ফাইল সিস্টেম</string>
     <string name="settings_player_options_summary">আউটপুট গুণমান, প্লেব্যাক আচরণ</string>
-    <string name="settings_album_round_corner_summary">পুরো প্লেয়ারে বৃত্তাকার কর্নার সক্ষম করুন</string>
     <string name="settings_lyrics_center">কেন্দ্র প্রান্তিককরণ</string>
     <string name="opensource_info">GPL-3.0-এর অধীনে ওপেন-সোর্স।\nস্বত্ব %s</string>
     <string name="playlist_favourite">প্রিয়</string>

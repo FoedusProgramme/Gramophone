@@ -99,7 +99,6 @@
     <string name="settings_player_options_summary">音频输出质量、播放器行为</string>
     <string name="settings_customization">自定义</string>
     <string name="settings_customization_summary">管理自定义选项</string>
-    <string name="settings_album_round_corner_summary">在播放器中启用圆角</string>
     <string name="settings_album_round_corner">专辑圆角</string>
     <string name="settings_audio">音频</string>
     <string name="settings_title_bold">粗体标题</string>

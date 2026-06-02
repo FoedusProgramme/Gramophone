@@ -69,7 +69,6 @@
     <string name="settings_category_links">Linkit</string>
     <string name="settings_library">Kirjasto</string>
     <string name="settings_player_options">Ääni</string>
-    <string name="settings_album_round_corner_summary">Ota käyttöön pyöristetyt kulmat suurennetussa soittimessa</string>
     <string name="settings_album_round_corner">Albumin pyöristetyt kulmat</string>
     <string name="settings_audio">Ääni</string>
     <string name="settings_title_bold">Lihavoitu otsikko</string>

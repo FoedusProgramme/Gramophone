@@ -127,7 +127,6 @@
     <string name="settings_contributors">Contributores</string>
     <string name="settings_mediastore_filter">Duration minime de canto (secundas)</string>
     <string name="settings_title_bold">Titulo grasse</string>
-    <string name="settings_album_round_corner_summary">Activar angulos ronde in le reproductor plen</string>
     <string name="settings_content_based_color_summary">Activar generation de colores basate in le albumes</string>
     <string name="settings_title_center">Titulo centrate</string>
     <string name="settings_title_center_summary">Usar titulo centrate pro le reproductor plen</string>

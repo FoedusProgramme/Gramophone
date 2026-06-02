@@ -117,7 +117,6 @@
     <string name="settings_player_options_summary">Kvaliteta izlaza, ponašanje reprodukcije</string>
     <string name="settings_customization">Prilagođavanje</string>
     <string name="settings_customization_summary">Upravljaj opcijama prilagođavanja</string>
-    <string name="settings_album_round_corner_summary">Uključi zaobljene kutove kada player zauzima cijeli ekran</string>
     <string name="settings_album_round_corner">Albumi sa zaobljenim kutovima</string>
     <string name="settings_audio">Audio</string>
     <string name="settings_title_bold">Podebljani naslov</string>

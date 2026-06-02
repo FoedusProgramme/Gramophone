@@ -165,7 +165,6 @@
     <string name="settings_player_options_summary">کیفیت خروجی، رفتار پخش</string>
     <string name="settings_customization">شخصی سازی</string>
     <string name="settings_customization_summary">مدیریت گزینه های شخصی سازی</string>
-    <string name="settings_album_round_corner_summary">فعال کردن گوشه های گرد در صفحه پخش کننده ی اصلی</string>
     <string name="settings_album_round_corner">گوشه های گرد برای البوم</string>
     <string name="settings_audio">صدا</string>
     <string name="settings_title_bold">درشت نویسی عنوان</string>
