@@ -21,7 +21,8 @@
     <dimen name="lyric_top_padding">36dp</dimen>
     <dimen name="lyric_bottom_padding">640dp</dimen>
     <dimen name="lyric_gradient_size">20dp</dimen>
-    <dimen name="lyric_text_size">34.25sp</dimen>
+    <!-- when changing this update the default in settings_lyric -->
+    <dimen name="lyric_text_size">34sp</dimen>
     <dimen name="lyric_tl_text_size">20sp</dimen>
     <dimen name="lyric_tl_bg_text_size">14sp</dimen>
     <dimen name="tab_list_item_height">50dp</dimen>

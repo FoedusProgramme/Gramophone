@@ -12,6 +12,7 @@ import android.text.Spanned
 import android.text.StaticLayout
 import android.text.TextPaint
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.animation.AnimationUtils
@@ -24,6 +25,7 @@ import androidx.preference.PreferenceManager
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.dpToPx
 import org.akanework.gramophone.logic.getBooleanStrict
+import org.akanework.gramophone.logic.getIntStrict
 import org.akanework.gramophone.logic.ui.spans.MyForegroundColorSpan
 import org.akanework.gramophone.logic.ui.spans.MyGradientSpan
 import org.akanework.gramophone.logic.ui.spans.StaticLayoutBuilderCompat
@@ -59,7 +61,10 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
     private val translationTextSize = context.resources.getDimension(R.dimen.lyric_tl_text_size)
     private val translationBackgroundTextSize =
         context.resources.getDimension(R.dimen.lyric_tl_bg_text_size)
-    private val globalPaddingHorizontal = 28.5f.dpToPx(context)
+    private var globalPaddingHorizontal = 28.5f.dpToPx(context)
+    private var paddingVerticalTl = 2f
+    private var paddingVerticalDefault = 18f
+    private var depth = 15f.dpToPx(context)
     private var colorSpanPool = mutableListOf<MyForegroundColorSpan>()
     private var spForRender: Pair<IntArray, List<SbItem>>? = null
     private var spForMeasure: Pair<IntArray, List<SbItem>>? = null
@@ -80,17 +85,14 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
     private val defaultTextPaint = TextPaint().apply {
         color = Color.RED
         isElegantTextHeight = this@NewLyricsView.isElegantTextHeight
-        textSize = defaultTextSize
     }
     private val translationTextPaint = TextPaint().apply {
         color = Color.GREEN
         isElegantTextHeight = this@NewLyricsView.isElegantTextHeight
-        textSize = translationTextSize
     }
     private val translationBackgroundTextPaint = TextPaint().apply {
         color = Color.BLUE
         isElegantTextHeight = this@NewLyricsView.isElegantTextHeight
-        textSize = translationBackgroundTextSize
     }
     private var wordActiveSpan = MyForegroundColorSpan(Color.CYAN)
     private var wordActiveTlSpan = MyForegroundColorSpan(Color.CYAN)
@@ -104,6 +106,7 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
 
     init {
         applyTypefaces()
+        applySize()
         loadLyricAnimTime()
     }
 
@@ -221,6 +224,8 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
         }
         if (key == "lyric_bold")
             applyTypefaces()
+        if (key == "lyric_text_size")
+            applySize()
         spForRender = null
         spForMeasure = null
         requestLayout()
@@ -228,6 +233,20 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
 
     private fun loadLyricAnimTime() {
         lyricAnimTime = if (prefs.getBooleanStrict("lyric_no_animation", false)) 0f else 650f
+    }
+
+    private fun applySize() {
+        val newTextSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
+            prefs.getIntStrict("lyric_text_size", 34).toFloat(),
+            context.resources.displayMetrics)
+        globalPaddingHorizontal = 28.5f.dpToPx(context) * newTextSize / defaultTextSize
+        depth = 15f.dpToPx(context) * newTextSize / defaultTextSize
+        paddingVerticalTl = 2f * newTextSize / defaultTextSize
+        paddingVerticalDefault = 18f * newTextSize / defaultTextSize
+        defaultTextPaint.textSize = newTextSize
+        translationTextPaint.textSize = newTextSize * translationTextSize / defaultTextSize
+        translationBackgroundTextPaint.textSize =
+            newTextSize * translationBackgroundTextSize / defaultTextSize
     }
 
     private fun applyTypefaces() {
@@ -398,7 +417,6 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
                 if (end > cat) { // animation is still ongoing
                     if (!culledDown) {
                         val middle = start + duration
-                        val depth = 15.dpToPx(context).toFloat()
                         delayedScrollOffset += if (middle <= cat) {
                             val progress = lerpInv(middle, end, cat)
                             val p = delayedOutInterpolator.getInterpolation(progress)
@@ -665,10 +683,10 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
             val bg = speaker?.isBackground == true
             // TODO: width limiting to 85% if there is >1 singer
             //val widthLimit = speaker?.isWidthLimited == true
-            val paddingTop = if (tl) 2 else 18
+            val paddingTop = if (tl) paddingVerticalTl else paddingVerticalDefault
             val paddingBottom = if (i + 1 < (syncedLines?.size ?: -1) &&
                 syncedLines?.get(i + 1)?.isTranslated == true
-            ) 2 else 18
+            ) paddingVerticalTl else paddingVerticalDefault
             val layout = StaticLayoutBuilderCompat.obtain(
                 sb, when {
                     tl && bg -> translationBackgroundTextPaint
@@ -737,7 +755,8 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
                 return@map ia
             }
             SbItem(
-                layout, sb, paddingTop.dpToPx(context), paddingBottom.dpToPx(context),
+                layout, sb, paddingTop.dpToPx(context).toInt(),
+                paddingBottom.dpToPx(context).toInt(),
                 words, lineOffsets, lineOffsets?.let { _ ->
                     (0..<layout.lineCount).map { line ->
                         findBidirectionalBarriers(

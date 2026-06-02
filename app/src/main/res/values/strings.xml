@@ -131,7 +131,6 @@
     <string name="settings_player_options_summary">Output quality, playback behavior</string>
     <string name="settings_customization">Customization</string>
     <string name="settings_customization_summary">Manage customization options</string>
-    <string name="settings_album_round_corner_summary">Enable round corner in full player</string>
     <string name="settings_album_round_corner">Album round corner</string>
     <string name="settings_audio">Audio</string>
     <string name="settings_title_bold">Bold title</string>
@@ -526,4 +525,5 @@
     <string name="show_file_names">Show file names</string>
     <string name="show_file_names_summary">Show file names in the place of song names in the folder and filesystem tabs</string>
     <string name="another_with_name">Name is already in use</string>
+    <string name="settings_font_size">Font size</string>
 </resources>

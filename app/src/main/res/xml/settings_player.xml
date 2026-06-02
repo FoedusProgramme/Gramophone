@@ -28,7 +28,6 @@
             android:key="album_round_corner"
             android:layout="@layout/preference_seekbar"
             android:max="28"
-            android:summary="@string/settings_album_round_corner_summary"
             android:title="@string/settings_album_round_corner"
             app:showSeekBarValue="true" />
 

@@ -36,6 +36,16 @@
         android:widgetLayout="@layout/preference_switch_widget"
         app:iconSpaceReserved="false" />
 
+    <SeekBarPreference
+        android:defaultValue="34"
+        android:icon="@drawable/ic_font_size"
+        android:key="lyric_text_size"
+        android:layout="@layout/preference_seekbar"
+        app:min="26"
+        android:max="40"
+        android:title="@string/settings_font_size"
+        app:showSeekBarValue="true" />
+
     <SwitchPreferenceCompat
         android:defaultValue="false"
         android:key="status_bar_lyrics"
