@@ -506,4 +506,5 @@
     <string name="show_file_names">Näita failinimesid</string>
     <string name="show_file_names_summary">Näita kaustade ja failisüsteemi vahekaartidel lugude nimede asemel failinimesid</string>
     <string name="another_with_name">Selline nimi on juba kasutusel</string>
+    <string name="settings_font_size">Kirjatüübi suurus</string>
 </resources>
