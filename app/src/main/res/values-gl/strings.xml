@@ -111,7 +111,6 @@
     <string name="settings_player_options_summary">Calidade da saída, reprodución</string>
     <string name="settings_customization">Personalización</string>
     <string name="settings_customization_summary">Xestionar opcións de personalización</string>
-    <string name="settings_album_round_corner_summary">Activar cantos redondeados co reprodutor completo</string>
     <string name="settings_album_round_corner">Canto redondeado do álbum</string>
     <string name="settings_audio">Audio</string>
     <string name="settings_title_bold">Título resaltado</string>
@@ -502,4 +501,8 @@
     <string name="search_hint">Buscar cancións e artistas</string>
     <string name="picker_activity">Escolle a pista de música</string>
     <string name="playlist_picker_activity">Escolle a lista de reprodución</string>
+    <string name="settings_preference_category_folders_filesystem"><![CDATA[Pestanas de ficheiros e cartafoles]]></string>
+    <string name="show_file_names">Mostrar nome dos ficheiros</string>
+    <string name="show_file_names_summary">Motrar nomes dos ficheiros no lugar dos nomes das cancións nas pestanas do cartafol e sistema de ficheiros</string>
+    <string name="another_with_name">O nome xa se está a utilizar</string>
 </resources>

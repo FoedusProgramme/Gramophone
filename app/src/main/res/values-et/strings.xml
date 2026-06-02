@@ -95,7 +95,6 @@
     <string name="settings_appearance_summary">Rakenduse välimus ja kujunduse vaated</string>
     <string name="settings_about_gramophone">Teave selle rakenduse kohta</string>
     <string name="settings_category_links">Lingid</string>
-    <string name="settings_album_round_corner_summary">Täisekraanivaates kuva kaanepilti kumerate nurkadega</string>
     <string name="settings_album_round_corner">Albumi kaanepildi ümarad nurgad</string>
     <string name="settings_audio">Heli seadistused</string>
     <string name="settings_color_accuracy_summary">Loo värvid väga täpselt</string>
@@ -506,4 +505,5 @@
     <string name="settings_preference_category_folders_filesystem"><![CDATA[Kaustade ja failisüsteemi vahekaardid]]></string>
     <string name="show_file_names">Näita failinimesid</string>
     <string name="show_file_names_summary">Näita kaustade ja failisüsteemi vahekaartidel lugude nimede asemel failinimesid</string>
+    <string name="another_with_name">Selline nimi on juba kasutusel</string>
 </resources>

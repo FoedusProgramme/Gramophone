@@ -103,7 +103,6 @@
     <string name="settings_library_summary">Mediathek verwalten</string>
     <string name="settings_player_options_summary">Ausgabequalität, Wiedergabeverhalten</string>
     <string name="unknown_title">Unbekannter Titel</string>
-    <string name="settings_album_round_corner_summary">Runde Ecken im Vollbildmodus aktivieren</string>
     <string name="settings_lyrics_center">Zentriert</string>
     <string name="settings_play_on_launch_summary">Beim Start Musik wiedergeben</string>
     <string name="settings_play_on_launch">Beim Start wiedergeben</string>

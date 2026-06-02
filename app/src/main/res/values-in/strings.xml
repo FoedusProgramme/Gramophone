@@ -118,7 +118,6 @@
     <string name="settings_title_bold">Judul tebal</string>
     <string name="settings_about_app">Tentang</string>
     <string name="settings_experimental_settings_summary">Fitur pengujian, lain-lain</string>
-    <string name="settings_album_round_corner_summary">Aktifkan sudut melengkung di pemutar penuh</string>
     <string name="settings_default_progress_bar_summary">Aktifkan bilah progres bergaya material</string>
     <string name="go_to_artist">Buka artis</string>
     <string name="dialog_track_number">Nomor trek</string>

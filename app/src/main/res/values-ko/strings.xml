@@ -52,7 +52,6 @@
     <string name="settings_player_options">오디오</string>
     <string name="settings_player_options_summary">출력 품질, 재생 동작</string>
     <string name="settings_customization_summary">사용자 정의 옵션 관리</string>
-    <string name="settings_album_round_corner_summary">플레이어 화면에서 앨범 커버 모서리를 둥글게 표시</string>
     <string name="settings_audio">오디오</string>
     <string name="settings_album_round_corner">둥근 앨범 커버</string>
     <string name="settings_title_bold">제목 굵게</string>
