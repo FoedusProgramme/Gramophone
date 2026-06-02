@@ -500,4 +500,5 @@
     <string name="show_file_names">显示文件名称</string>
     <string name="show_file_names_summary">在文件夹和文件系统标签页中，用文件名称代替歌曲名称</string>
     <string name="another_with_name">名称已被使用</string>
+    <string name="settings_font_size">字体大小</string>
 </resources>
