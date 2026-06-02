@@ -293,7 +293,7 @@ class MainActivity : BaseActivity() {
         val data = Bundle().apply {
             putParcelableArrayList("Songs", ArrayList(songs))
             putParcelable("Uri", uri)
-            putString("Name", name!!.path)
+            putString("Name", name?.path)
         }
         CoroutineScope(Dispatchers.Default).launch {
             val token = if (uri != null) {
