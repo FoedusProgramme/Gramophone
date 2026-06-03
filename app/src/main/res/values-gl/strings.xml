@@ -505,4 +505,5 @@
     <string name="show_file_names">Mostrar nome dos ficheiros</string>
     <string name="show_file_names_summary">Motrar nomes dos ficheiros no lugar dos nomes das cancións nas pestanas do cartafol e sistema de ficheiros</string>
     <string name="another_with_name">O nome xa se está a utilizar</string>
+    <string name="settings_font_size">Tamaño da letra</string>
 </resources>

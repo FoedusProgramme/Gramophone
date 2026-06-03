@@ -510,4 +510,5 @@
     <string name="show_file_names_summary">Mostra els noms dels fitxers en lloc dels noms de les cançons a les pestanyes de carpetes i del sistema de fitxers</string>
     <string name="settings_preference_category_folders_filesystem"><![CDATA[Pestanyes de carpetes i del sistema de fitxers]]></string>
     <string name="another_with_name">El nom ja està en ús</string>
+    <string name="settings_font_size">Mida de la lletra</string>
 </resources>
