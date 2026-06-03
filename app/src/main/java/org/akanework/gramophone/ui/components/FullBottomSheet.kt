@@ -405,6 +405,7 @@ class FullBottomSheet
                     .show()
                 val lv = dialog.findViewById<ListView>(R.id.listView)!!
                 val checkbox = dialog.findViewById<CheckBox>(R.id.checkBox)!!
+                checkbox.isChecked = prefs.getBooleanStrict("lastTimerEos", false)
                 val minutes = listOf(0, 1, 3, 5, 10, 15, 20, 30, 45, 60, 90)
                 val items = minutes.map {
                     if (it > 0)
@@ -436,6 +437,7 @@ class FullBottomSheet
                             .show()
                         et = dialog2.findViewById(R.id.editText)!!
                         cb = dialog2.findViewById(R.id.checkBox)!!
+                        cb.isChecked = checkbox.isChecked
                     } else {
                         val duration = minutes[position] * 60 * 1000
                         val eos = duration == 0 || checkbox.isChecked

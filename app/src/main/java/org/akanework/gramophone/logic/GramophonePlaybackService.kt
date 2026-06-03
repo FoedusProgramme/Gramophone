@@ -45,6 +45,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.IntentCompat
+import androidx.core.content.edit
 import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
@@ -910,6 +911,11 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                                 SessionCommand(SERVICE_TIMER_CHANGED, Bundle.EMPTY),
                                 Bundle.EMPTY
                             )
+                        }
+                    }
+                    if (duration > 0 || pauseOnEnd) {
+                        prefs.edit {
+                            putBoolean("lastTimerEos", pauseOnEnd)
                         }
                     }
                     SessionResult(SessionResult.RESULT_SUCCESS)
