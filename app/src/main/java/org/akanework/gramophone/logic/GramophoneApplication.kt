@@ -23,6 +23,7 @@ import android.app.NotificationManager
 import android.content.ContentUris
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Bitmap
 import android.os.Build
 import android.os.Debug
 import android.os.StrictMode
@@ -50,7 +51,9 @@ import coil3.fetch.Fetcher
 import coil3.fetch.ImageFetchResult
 import coil3.fetch.SourceFetchResult
 import coil3.request.NullRequestDataException
+import coil3.request.allowHardware
 import coil3.size.pxOrElse
+import coil3.toBitmap
 import coil3.toCoilUri
 import coil3.util.Logger
 import kotlinx.coroutines.CoroutineScope
@@ -331,6 +334,10 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
                             null
                         } else null
                         if (bmp != null) {
+                            // This would crash while drawing if we don't catch it here
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
+                                bmp.config == Bitmap.Config.HARDWARE && !options.allowHardware)
+                                throw IllegalStateException("Got hardware bitmap unexpectedly")
                             ImageFetchResult(
                                 bmp.asImage(), true, DataSource.DISK
                             )
@@ -408,7 +415,8 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
                             // Let's keep the log readable and ignore normal events' stack traces.
                             if (throwable != null && throwable !is NullRequestDataException
                                 && (throwable !is IOException
-                                        || throwable.message != "No album art found")
+                                        || throwable.message != "No album art found"
+                                        && throwable.message != "No thumbnails in top-level directories")
                             ) {
                                 println(Log.getThrowableString(throwable)!!)
                             }

@@ -217,6 +217,7 @@ class FullBottomSheet
     val bottomSheetFullLyricView: LyricsView
     private val progressDrawable: SquigglyProgress
     private var lastDisposable: Disposable? = null
+    private var pqs: PlaylistQueueSheet? = null
 
     init {
         inflate(context, R.layout.full_player, this)
@@ -403,7 +404,7 @@ class FullBottomSheet
         bottomSheetPlaylistButton.setOnClickListener {
             ViewCompat.performHapticFeedback(it, HapticFeedbackConstantsCompat.CONTEXT_CLICK)
             if (instance != null)
-                PlaylistQueueSheet(wrappedContext ?: context, activity).show()
+                pqs = PlaylistQueueSheet(wrappedContext ?: context, activity).also { it.show() }
         }
         bottomSheetFullControllerButton.setOnClickListener {
             ViewCompat.performHapticFeedback(it, HapticFeedbackConstantsCompat.CONTEXT_CLICK)
@@ -752,6 +753,7 @@ class FullBottomSheet
     }
 
     fun onStop() {
+        pqs?.dismiss()
         runnableRunning = false
     }
 

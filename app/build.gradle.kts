@@ -303,7 +303,9 @@ dependencies {
     implementation("com.mikepenz:aboutlibraries-compose-m3:$aboutLibsVersion")
     implementation("com.google.android.material:material:1.13.0")
     implementation("me.zhanghai.android.fastscroll:library:1.3.0")
-    implementation("io.coil-kt.coil3:coil-compose:3.3.0")
+    val coilVersion = "3.4.0"
+    implementation("io.coil-kt.coil3:coil-compose:$coilVersion")
+    lintChecks("io.coil-kt.coil3:coil-lint:$coilVersion")
     implementation("org.lsposed.hiddenapibypass:hiddenapibypass:6.1")
     //noinspection GradleDependency newer versions need java.nio which is api 26+
     //implementation("com.github.albfernandez:juniversalchardet:2.0.3") TODO
