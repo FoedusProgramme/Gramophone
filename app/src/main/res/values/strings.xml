@@ -526,4 +526,14 @@
     <string name="show_file_names_summary">Show file names in the place of song names in the folder and filesystem tabs</string>
     <string name="another_with_name">Name is already in use</string>
     <string name="settings_font_size">Font size</string>
+    <string name="set">Set</string>
+    <string name="timer_eos">Wait for song to end</string>
+    <string name="timer_end_of_this_song">End of this song</string>
+    <string name="other">Custom</string>
+    <string name="unset">Unset</string>
+    <string name="timer_hint">Minutes to pause music in…</string>
+    <plurals name="minutes">
+        <item quantity="one">%d minute</item>
+        <item quantity="other">%d minutes</item>
+    </plurals>
 </resources>

@@ -17,12 +17,19 @@ import android.text.format.DateFormat
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.KeyEvent
+import android.view.View
 import android.view.ViewPropertyAnimator
 import android.view.WindowInsets
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.CheckBox
+import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.ListView
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.TooltipCompat
@@ -363,21 +370,79 @@ class FullBottomSheet
         }
 
         bottomSheetTimerButton.setOnClickListener {
-            // TODO(ASAP): expose wait until song end in ui
             ViewCompat.performHapticFeedback(it, HapticFeedbackConstantsCompat.CONTEXT_CLICK)
-            val picker =
-                MaterialTimePicker
-                    .Builder()
-                    .setHour((instance?.getTimer()?.first ?: 0) / 3600 / 1000)
-                    .setMinute(((instance?.getTimer()?.first ?: 0) % (3600 * 1000)) / (60 * 1000))
-                    .setTimeFormat(TimeFormat.CLOCK_24H)
-                    .setInputMode(MaterialTimePicker.INPUT_MODE_KEYBOARD)
-                    .build()
-            picker.addOnPositiveButtonClickListener {
-                val destinationTime: Int = picker.hour * 1000 * 3600 + picker.minute * 1000 * 60
-                instance?.setTimer(destinationTime, false)
+            val t = instance?.getTimer()
+            val currentText = if (t?.first != null) context.getString(R.string.timer_expiry,
+                DateFormat.getTimeFormat(context).format(System.currentTimeMillis() + t.first!!)
+            ) else if (t?.second == true) context.getString(R.string.timer_expiry_end_of_this_song)
+            else null
+            if (currentText != null) {
+                val dialog = MaterialAlertDialogBuilder(wrappedContext ?: context)
+                    .setTitle(R.string.timer)
+                    .setView(R.layout.dialog_sleep_timer_active)
+                    .setNeutralButton(R.string.unset)  { _, _ ->
+                        instance?.setTimer(0, false)
+                    }
+                    .setPositiveButton(android.R.string.ok) { _, _ -> }
+                    .show()
+                dialog.findViewById<TextView>(R.id.textView)!!.text = currentText
+                dialog.findViewById<CheckBox>(R.id.checkBox)!!.let {
+                    if (t!!.first == null) {
+                        it.visibility = GONE
+                    } else {
+                        it.isChecked = t.second
+                        it.setOnCheckedChangeListener { _, value ->
+                            val newTime = instance?.getTimer()
+                            instance?.setTimer(newTime?.first ?: 0, value)
+                        }
+                    }
+                }
+            } else {
+                val dialog = MaterialAlertDialogBuilder(wrappedContext ?: context)
+                    .setTitle(R.string.timer)
+                    .setView(R.layout.dialog_sleep_timer)
+                    .setNegativeButton(android.R.string.cancel) { _, _ -> }
+                    .show()
+                val lv = dialog.findViewById<ListView>(R.id.listView)!!
+                val checkbox = dialog.findViewById<CheckBox>(R.id.checkBox)!!
+                val minutes = listOf(0, 1, 3, 5, 10, 15, 20, 30, 45, 60, 90)
+                val items = minutes.map {
+                    if (it > 0)
+                        context.resources.getQuantityString(
+                            R.plurals.minutes, it,
+                            it
+                        )
+                    else
+                        context.resources.getString(R.string.timer_end_of_this_song)
+                } + context.resources.getString(R.string.other)
+                lv.adapter = ArrayAdapter(
+                    context, android.R.layout.simple_list_item_1,
+                    items
+                )
+                lv.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+                    dialog.dismiss()
+                    if (position == minutes.size) {
+                        lateinit var et: EditText
+                        lateinit var cb: CheckBox
+                        // TODO find out why wrapped context does not work
+                        val dialog2 = MaterialAlertDialogBuilder(context)
+                            .setTitle(R.string.timer)
+                            .setView(R.layout.dialog_sleep_timer_custom)
+                            .setPositiveButton(android.R.string.ok) { _, _ ->
+                                instance?.setTimer(((et.editableText?.toString()?.toFloat()
+                                    ?: 0f) * 60f * 1000f).toInt(), cb.isChecked)
+                            }
+                            .setNegativeButton(android.R.string.cancel) { _, _ -> }
+                            .show()
+                        et = dialog2.findViewById(R.id.editText)!!
+                        cb = dialog2.findViewById(R.id.checkBox)!!
+                    } else {
+                        val duration = minutes[position] * 60 * 1000
+                        val eos = duration == 0 || checkbox.isChecked
+                        instance?.setTimer(duration, eos)
+                    }
+                }
             }
-            picker.show(activity.supportFragmentManager, "timer")
         }
 
         bottomSheetLoopButton.setOnClickListener {

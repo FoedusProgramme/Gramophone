@@ -901,8 +901,16 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                         timerPauseOnEnd = pauseOnEnd
                         timerDuration = SystemClock.elapsedRealtime() + duration
                     } else {
-                        timerDuration = null
+                        val currentPauseOnEnd = this.endedWorkaroundPlayer!!.exoPlayer.pauseAtEndOfMediaItems
                         this.endedWorkaroundPlayer!!.exoPlayer.pauseAtEndOfMediaItems = pauseOnEnd
+                        if (timerDuration != null) {
+                            timerDuration = null
+                        } else if (pauseOnEnd != currentPauseOnEnd) {
+                            mediaSession!!.broadcastCustomCommand(
+                                SessionCommand(SERVICE_TIMER_CHANGED, Bundle.EMPTY),
+                                Bundle.EMPTY
+                            )
+                        }
                     }
                     SessionResult(SessionResult.RESULT_SUCCESS)
                 }
