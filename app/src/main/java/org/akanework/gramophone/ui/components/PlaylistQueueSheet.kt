@@ -144,7 +144,7 @@ class PlaylistQueueSheet(
                     val mqState =
                         rememberMqState(coroutineScope, instance!!, this@PlaylistQueueSheet)
                     val pagerState = rememberPagerState(
-                        initialPage = if (mqEnabled) 0 else 1,
+                        initialPage = if (Flags.MQ_PREVIEW) 0 else 1,
                         pageCount = { 2 }
                     )
 

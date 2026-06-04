@@ -86,6 +86,7 @@ import org.akanework.gramophone.logic.getQueue
 import org.akanework.gramophone.logic.loadQueue
 import org.akanework.gramophone.logic.playOrPause
 import org.akanework.gramophone.logic.supportsWideScreen
+import org.akanework.gramophone.logic.utils.Flags
 import org.akanework.gramophone.ui.components.Chronometer
 import org.akanework.gramophone.ui.components.PlaylistQueueSheet
 
@@ -549,12 +550,12 @@ fun QueueRoot(
                 .fillMaxWidth()
                 .padding(bottom = 20.dp),
             beyondViewportPageCount = 1,
-            userScrollEnabled = mqEnabled && !mqState.expanded
+            userScrollEnabled = Flags.MQ_PREVIEW && !mqState.expanded
         ) { page ->
             when (page) {
                 0 -> {
-                    if (!mqEnabled) return@HorizontalPager
-                    if (landscapeMode) {
+                    if (!Flags.MQ_PREVIEW) return@HorizontalPager
+                    if (Flags.MQ_PREVIEW && landscapeMode) {
                         QueueInfo(
                             mqState = mqState,
                             mqEnabled = mqEnabled,
@@ -582,7 +583,7 @@ fun QueueRoot(
             }
         }
 
-        if (!mqEnabled) return
+        if (!Flags.MQ_PREVIEW) return
         Row(
             horizontalArrangement = Arrangement.Center,
             modifier = Modifier
