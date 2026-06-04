@@ -1,8 +1,8 @@
-- Bitrate im Detail-Dialog anzeigen
+- Bitrate wird nun im Detail-Dialog angezeigt
 - Experimentell: neuer Liedtext-Parser für Wortsynchronisierung LRC & TTML, SRT (Benutzeroberfläche kommt bald)
-- Audioformat-Info in der aktuellen Wiedergabe
-- Automatisches Aktualisieren der Mediathek
-- "In Gramophonen öffnen" zum Abspielen von Dateien
+- Audioformat-Info in der Wiedergabe-Oberfläche
+- Automatisches Aktualisieren der Mediendateien
+- "In Gramophone öffnen" zum Abspielen von Dateien
 - Liedtext-Widget
 - Verbesserte Sortierung
 - Eine Menge Fehlerbehebungen
