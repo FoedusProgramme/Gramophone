@@ -517,4 +517,7 @@
         <item quantity="one">%d minut</item>
         <item quantity="other">%d minutit</item>
     </plurals>
+    <string name="search_query">Otsing: %s</string>
+    <string name="settings_mq_enabled">Mitu esitusjärjekorda</string>
+    <string name="song_queue">Esitusjärjekord</string>
 </resources>
