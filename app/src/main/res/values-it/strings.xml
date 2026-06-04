@@ -50,7 +50,7 @@
     <string name="settings_play_on_launch_summary">Esegui musica all\'avvio</string>
     <plurals name="items">
         <item quantity="one">%d Elemento</item>
-        <item quantity="many">%d Elementi</item>
+        <item quantity="many">%d di Elementi</item>
         <item quantity="other">%d Elementi</item>
     </plurals>
     <string name="settings_blacklist_folder_summary">Filtra brani da alcune cartelle</string>
