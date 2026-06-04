@@ -529,4 +529,7 @@
         <item quantity="many">%d minut</item>
         <item quantity="other">%d minut</item>
     </plurals>
+    <string name="search_query">Szukaj: %s</string>
+    <string name="settings_mq_enabled">Wiele kolejek</string>
+    <string name="song_queue">Kolejka</string>
 </resources>
