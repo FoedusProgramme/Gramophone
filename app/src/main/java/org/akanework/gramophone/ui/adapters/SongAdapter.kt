@@ -254,7 +254,7 @@ class SongAdapter(
             }
             prepare()
             play()
-            if (currentMediaItem?.mediaId == songList[position].mediaId) {
+            if (currentItem?.mediaId == songList[position].mediaId) {
                 mainActivity.playerBottomSheet.open()
             }
         }
