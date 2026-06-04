@@ -25,7 +25,7 @@ import org.akanework.gramophone.ui.fragments.BasePreferenceFragment
 import org.akanework.gramophone.ui.fragments.BaseSettingsActivity
 
 class AudioSettingsActivity : BaseSettingsActivity(
-    R.string.settings_audio,
+    R.string.settings_player_options,
     { AudioSettingsFragment() })
 
 class AudioSettingsFragment : BasePreferenceFragment() {
