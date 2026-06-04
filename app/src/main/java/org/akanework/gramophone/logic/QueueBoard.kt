@@ -307,24 +307,30 @@ class QueueBoard(
      * Get a single queue (or several queues in the future)
      */
     fun getQueue(index: Int): List<MultiQueueObject> {
+        val plr = player.endedWorkaroundPlayer!!
         var duration = 0L
-        for (i in 0 until player.endedWorkaroundPlayer!!.mediaItemCount) {
-            duration += player.endedWorkaroundPlayer!!.getMediaItemAt(i).mediaMetadata.durationMs
+        for (i in 0 until plr.mediaItemCount) {
+            duration += plr.getMediaItemAt(i).mediaMetadata.durationMs
                 ?: 0L
         }
 
         return if (index == C.INDEX_UNSET || index == masterQueues.lastIndex) {
-            masterQueues.lastOrNull()
-        } else {
-            masterQueues.getOrNull(index)
-        }?.let {
-            listOf(
-                it.copy(
-                    fakeQueueSize = it.getSize(),
-                    fakeQueueLength = it.getDuration()
+            listOfNotNull(
+                masterQueues.lastOrNull()?.copy(
+                    fakeQueueSize = plr.mediaItemCount,
+                    fakeQueueLength = duration
                 )
             )
-        } ?: emptyList()
+        } else {
+            listOfNotNull(
+                masterQueues.getOrNull(index)?.let {
+                    it.copy(
+                        fakeQueueSize = it.getSize(),
+                        fakeQueueLength = it.getDuration()
+                    )
+                }
+            )
+        }
     }
 
 
@@ -474,7 +480,7 @@ class QueueBoard(
         mq.startIndex = plr.currentMediaItemIndex
         mq.startPositionMs = plr.currentPosition
         mq.repeatMode = plr.repeatMode
-        val persistent = if (mq.shuffleModeEnabled) {
+        val persistent = if (plr.shuffleModeEnabled) {
             CircularShuffleOrder.Persistent(plr.exoPlayer.shuffleOrder as CircularShuffleOrder)
         } else {
             null

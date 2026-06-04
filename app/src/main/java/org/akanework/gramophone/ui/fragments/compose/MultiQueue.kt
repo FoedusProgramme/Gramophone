@@ -537,7 +537,7 @@ fun QueueRoot(
     val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
 
-    val landscapeMode = context.supportsWideScreen()
+    val landscapeMode = false && context.supportsWideScreen()
 //        LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
 
     @Composable

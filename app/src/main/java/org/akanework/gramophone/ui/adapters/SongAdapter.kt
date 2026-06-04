@@ -228,7 +228,30 @@ class SongAdapter(
         val title = runBlocking { queueTitle.first() } // TODO: will nick kill me for this
         mediaController?.apply {
             val songList = getSongList()
-            setMediaItems(queueWithTitle(songList, title), position, C.TIME_UNSET)
+            // If the currently playing song is also the clicked song, then we continue playing the
+            // song and open full player, but we still replace the list. This is intended to copy
+            // UX of Chinese players that open full player when clicking song, and we don't want
+            // this UX to break if list is different for some reason.
+            val currentItem = currentMediaItem
+            if (currentItem?.mediaId == songList[position].mediaId) {
+                val index = currentMediaItemIndex
+                val isLast = mediaItemCount - index == 1
+                if (index == 0)
+                    addMediaItems(0, songList.subList(0, position))
+                else
+                    replaceMediaItems(0, index,
+                        songList.subList(0, position))
+                replaceMediaItem(position, songList[position])
+                if (isLast)
+                    addMediaItems(if (songList.size > position + 1) songList.subList(position + 1,
+                        songList.size) else emptyList())
+                else
+                    replaceMediaItems(position + 1, Int.MAX_VALUE,
+                        if (songList.size > position + 1) songList.subList(position + 1,
+                            songList.size) else emptyList())
+            } else {
+                setMediaItems(queueWithTitle(songList, title), position, C.TIME_UNSET)
+            }
             prepare()
             play()
             if (currentMediaItem?.mediaId == songList[position].mediaId) {
