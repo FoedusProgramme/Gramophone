@@ -511,4 +511,15 @@
     <string name="settings_preference_category_folders_filesystem"><![CDATA[Pestanyes de carpetes i del sistema de fitxers]]></string>
     <string name="another_with_name">El nom ja està en ús</string>
     <string name="settings_font_size">Mida de la lletra</string>
+    <string name="timer_eos">Espera que acabi la cançó</string>
+    <string name="timer_end_of_this_song">Final d\'aquesta cançó</string>
+    <string name="other">Personalitzat</string>
+    <string name="unset">Desassigna</string>
+    <string name="timer_hint">Minuts fins a aturar la música…</string>
+    <plurals name="minutes">
+        <item quantity="one">%d minut</item>
+        <item quantity="many">%d de minuts</item>
+        <item quantity="other">%d minuts</item>
+    </plurals>
+    <string name="set">Assigna</string>
 </resources>
