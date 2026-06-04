@@ -49,7 +49,7 @@ import org.akanework.gramophone.ui.adapters.SongAdapter
  * @see BaseFragment
  * @see GeneralSubFragment
  */
-class ArtistSubFragment : BaseFragment(true), PopupTextProvider {
+class  ArtistSubFragment : BaseFragment(true), PopupTextProvider {
     private lateinit var albumAdapter: AlbumAdapter
     private lateinit var songAdapter: SongAdapter
     private var recyclerView: MyRecyclerView? = null
@@ -81,6 +81,7 @@ class ArtistSubFragment : BaseFragment(true), PopupTextProvider {
         songAdapter = SongAdapter(
             this,
             qTitle,
+            item.map { it?.songList },
             isSubFragment = itemType
         )
         songAdapter.decorAdapter.jumpUpPos = { 0 }
