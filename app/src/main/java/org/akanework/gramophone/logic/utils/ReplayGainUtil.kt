@@ -9,7 +9,7 @@ import androidx.media3.extractor.metadata.id3.CommentFrame
 import androidx.media3.extractor.metadata.id3.InternalFrame
 import androidx.media3.extractor.metadata.id3.TextInformationFrame
 import androidx.media3.extractor.metadata.vorbis.VorbisComment
-import androidx.media3.extractor.mp3.Mp3InfoReplayGain
+import androidx.media3.extractor.metadata.ReplayGainInfo
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.math.MathContext
@@ -75,14 +75,14 @@ sealed class ReplayGainUtil {
     ) : ReplayGainUtil()
 
     data class Mp3Info(
-        val peak: Float, val field1Name: Byte, val field1Originator: Byte,
-        val field1Value: Float, val field2Name: Byte, val field2Originator: Byte,
+        val peak: Float, val field1Name: Int, val field1Originator: Int,
+        val field1Value: Float, val field2Name: Int, val field2Originator: Int,
         val field2Value: Float
     ) : ReplayGainUtil() {
-        constructor(i: Mp3InfoReplayGain) : this(
-            i.peak, i.field1Name,
-            i.field1Originator, i.field1Value, i.field2Name,
-            i.field2Originator, i.field2Value
+        constructor(i: androidx.media3.extractor.metadata.ReplayGainInfo) : this(
+            i.peak, i.field1?.name ?: 0,
+            i.field1?.originator ?: 0, i.field1?.gain ?: 0f, i.field2?.name ?: 0,
+            i.field2?.originator ?: 0, i.field2?.gain ?: 0f
         )
     }
 
@@ -557,7 +557,7 @@ sealed class ReplayGainUtil {
                     }
                 })
             } // Classic ReplayGain proposed ID3 tag
-            inputFormat.metadata!!.getEntriesOfType(Mp3InfoReplayGain::class.java)
+            inputFormat.metadata!!.getEntriesOfType(androidx.media3.extractor.metadata.ReplayGainInfo::class.java)
                 .let { metadata.addAll(it.map { info -> Mp3Info(info) }) } // LAME
             inputFormat.metadata!!.getMatchingEntries(InternalFrame::class.java)
             { it.domain == "com.apple.iTunes" && it.description == "iTunNORM" }
@@ -587,19 +587,19 @@ sealed class ReplayGainUtil {
                 when (it) {
                     is Mp3Info -> {
                         val out = mutableListOf<RgInfo>()
-                        if ((it.field1Name == 1.toByte() || it.field1Name == 2.toByte()
-                                    || it.field2Name == 1.toByte() || it.field2Name == 2.toByte())
+                        if ((it.field1Name == 1 || it.field1Name == 2
+                                    || it.field2Name == 1 || it.field2Name == 2)
                             && it.peak != 0f
                         )
                             out += RgInfo.TrackPeak(it.peak)
-                        if (it.field1Name == 1.toByte()) {
+                        if (it.field1Name == 1) {
                             out += RgInfo.TrackGain(it.field1Value)
-                        } else if (it.field1Name == 2.toByte()) {
+                        } else if (it.field1Name == 2) {
                             out.add(RgInfo.AlbumGain(it.field1Value))
                         }
-                        if (it.field2Name == 1.toByte()) {
+                        if (it.field2Name == 1) {
                             out += RgInfo.TrackGain(it.field2Value)
-                        } else if (it.field2Name == 2.toByte()) {
+                        } else if (it.field2Name == 2) {
                             out.add(RgInfo.AlbumGain(it.field2Value))
                         }
                         out
