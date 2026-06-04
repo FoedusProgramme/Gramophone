@@ -515,4 +515,18 @@
     <string name="settings_preference_category_folders_filesystem"><![CDATA[Zakładki folder i system plików]]></string>
     <string name="show_file_names">Pokazuj nazwy plików</string>
     <string name="show_file_names_summary">Wyświetlaj nazwy plików zamiast tytułów utworów w zakładkach „folder” i „system plików”</string>
+    <string name="another_with_name">Nazwa jest już w użyciu</string>
+    <string name="settings_font_size">Rozmiar czcionki</string>
+    <string name="set">Ustaw</string>
+    <string name="timer_eos">Czekaj na zakończenie piosenki</string>
+    <string name="timer_end_of_this_song">Koniec tej piosenki</string>
+    <string name="other">Własne</string>
+    <string name="unset">Nieustawione</string>
+    <string name="timer_hint">Ilość minut po których muzyka zostanie wstrzymana…</string>
+    <plurals name="minutes">
+        <item quantity="one">%d minuta</item>
+        <item quantity="few">%d minuty</item>
+        <item quantity="many">%d minut</item>
+        <item quantity="other">%d minut</item>
+    </plurals>
 </resources>

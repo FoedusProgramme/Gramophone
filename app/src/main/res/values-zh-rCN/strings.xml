@@ -501,4 +501,13 @@
     <string name="show_file_names_summary">在文件夹和文件系统标签页中，用文件名称代替歌曲名称</string>
     <string name="another_with_name">名称已被使用</string>
     <string name="settings_font_size">字体大小</string>
+    <string name="set">设置</string>
+    <string name="timer_eos">等待歌曲结束</string>
+    <string name="timer_end_of_this_song">这首歌曲结束</string>
+    <string name="other">自定义</string>
+    <string name="unset">取消设置</string>
+    <string name="timer_hint">暂停音乐前的分钟数…</string>
+    <plurals name="minutes">
+        <item quantity="other">%d 分钟</item>
+    </plurals>
 </resources>

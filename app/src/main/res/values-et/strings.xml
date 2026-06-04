@@ -507,4 +507,14 @@
     <string name="show_file_names_summary">Näita kaustade ja failisüsteemi vahekaartidel lugude nimede asemel failinimesid</string>
     <string name="another_with_name">Selline nimi on juba kasutusel</string>
     <string name="settings_font_size">Kirjatüübi suurus</string>
+    <string name="set">Seadista</string>
+    <string name="timer_eos">Oota loo lõppemist</string>
+    <string name="timer_end_of_this_song">Selle loo lõpuni</string>
+    <string name="other">Sinu seadistatud</string>
+    <string name="unset">Eemalda seadistus</string>
+    <string name="timer_hint">Aeg minutites muusika peatumiseni…</string>
+    <plurals name="minutes">
+        <item quantity="one">%d minut</item>
+        <item quantity="other">%d minutit</item>
+    </plurals>
 </resources>
