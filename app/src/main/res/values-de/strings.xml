@@ -456,4 +456,32 @@
     <string name="picker_activity">Musiktitel auswählen</string>
     <string name="playlist_picker_activity">Wiedergabeliste auswählen</string>
     <string name="settings_replaygain_drc">DRC aktivieren</string>
+    <plurals name="minutes">
+        <item quantity="one">%d Minute</item>
+        <item quantity="other">%d Minuten</item>
+    </plurals>
+    <string name="timer_hint">Minuten, in denen die Musik pausiert wird…</string>
+    <string name="other">Andere</string>
+    <string name="unset">Deaktivieren</string>
+    <string name="timer_end_of_this_song">Ende dieses Liedes</string>
+    <string name="timer_eos">Warten, bis das Lied zu Ende ist</string>
+    <string name="set">Aktivieren</string>
+    <string name="settings_font_size">Schriftgröße</string>
+    <string name="another_with_name">Name bereits in Verwendung</string>
+    <string name="show_file_names_summary">Dateinamen statt Song-Namen in den Order- und Dateisystem-Tabs anzeigen</string>
+    <string name="show_file_names">Dateinamen anzeigen</string>
+    <string name="settings_preference_category_folders_filesystem"><![CDATA[Order- &amp; Dateisystem-Tabs]]></string>
+    <string name="search_hint">Titel und Interpreten suchen</string>
+    <string name="search_desc">Interpreten, Alben und Titel</string>
+    <string name="playlist_empty_msg">Füge einige Lieder hinzu, indem Du \"Zur Wiedergabeliste hinzufügen\" im Kontextmenü eines Lieds wählst.</string>
+    <string name="failed_to_restore">Konnte Änderungen nicht wiederherstellen: %s</string>
+    <string name="mount_storage">Bitte setze eine SD-Karte ein, um diese Funktion zu nutzen</string>
+    <string name="restore_edits_msg">Es gibt ungespeicherte Änderungen für die Wiedergabeliste \"%s\". Willst Du diese Änderungen wiederherstellen, oder verwerfen und mit einer frischen Version der Wiedergabeliste starten?</string>
+    <string name="discard_changes_msg">Willst du wirklich deine Änderungen an der Wiedergabeliste \"%s\" verwerfen?</string>
+    <string name="whitelist_and_blacklist">Falls keine Ordner in der weißen Liste ausgewählt werden, sind alle Ordner erlaubt.\n\nDie schwarze und die weiße Liste werden gemeinsam angewendet, und die schwarze Liste hat Priorität. Zum Beispiel kannst Du einen Ordner in der weißen Liste erlauben und einen Unterordner in der schwarzen Liste ausschließen.</string>
+    <string name="settings_whitelist">Weiße Liste</string>
+    <string name="error_in_bg">Fehler, die im Hintergrund auftreten</string>
+    <string name="favorite_failed_text">Bitte klicke hier, um Änderungen anzuwenden, indem Zugriff auf die Favoriten-Playlistdatei gewährt wird</string>
+    <string name="favorite_failed_title">Konnte Favoriten-Status von Titel nicht ändern</string>
+    <string name="favorite">Favoritisieren</string>
 </resources>
