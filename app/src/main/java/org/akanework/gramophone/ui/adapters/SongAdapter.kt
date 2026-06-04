@@ -17,9 +17,12 @@
 
 package org.akanework.gramophone.ui.adapters
 
+import android.annotation.SuppressLint
+import android.content.SharedPreferences
 import android.net.Uri
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.app.ShareCompat
 import androidx.core.content.FileProvider
@@ -28,6 +31,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
+import androidx.preference.PreferenceManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -37,12 +41,16 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.akanework.gramophone.R
+import org.akanework.gramophone.logic.getBooleanStrict
 import org.akanework.gramophone.logic.getFile
+import org.akanework.gramophone.logic.gramophoneApplication
 import org.akanework.gramophone.logic.requireMediaStoreId
 import org.akanework.gramophone.logic.utils.Flags
 import org.akanework.gramophone.logic.utils.exoplayer.EndedWorkaroundPlayer.Companion.queueWithTitle
 import org.akanework.gramophone.ui.MainActivity
+import org.akanework.gramophone.logic.ui.MyRecyclerView
 import org.akanework.gramophone.ui.MediaControllerViewModel
+import org.akanework.gramophone.ui.SongPickerActivity
 import org.akanework.gramophone.ui.components.NowPlayingDrawable
 import org.akanework.gramophone.ui.fragments.ArtistSubFragment
 import org.akanework.gramophone.ui.fragments.BaseFragment
@@ -61,14 +69,16 @@ import java.util.GregorianCalendar
  * [SongAdapter] is an adapter for displaying songs.
  */
 class SongAdapter(
-    fragment: Fragment,
+    fragment: Fragment?,
     val queueTitle: Flow<String>,
-    songList: Flow<List<MediaItem>?> = (fragment.requireActivity() as MainActivity).reader.songListFlow,
+    songList: Flow<List<MediaItem>?> = (fragment?.requireContext() ?: fallbackContext!!)
+        .gramophoneApplication.reader.songListFlow,
     helper: Sorter.NaturalOrderHelper<MediaItem>? = null,
     isSubFragment: Int? = null,
     allowDiffUtils: Boolean = false,
     rawOrderExposed: Sorter.Type? = if (isSubFragment == null) Sorter.Type.ByTitleAscending else null,
-    val folder: Boolean = false
+    val folder: Boolean = false,
+    fallbackContext: AppCompatActivity? = null
 ) : BaseAdapter<MediaItem>
     (
     fragment,
@@ -76,15 +86,17 @@ class SongAdapter(
     sortHelper = MediaItemHelper,
     naturalOrderHelper = helper,
     initialSortType =
-        (if (helper != null) Sorter.Type.NaturalOrder else (rawOrderExposed
-            ?: if (folder) Sorter.Type.ByFilePathAscending else Sorter.Type.ByTitleAscending)),
+        (if (helper != null) Sorter.Type.NaturalOrder else (if (folder) Sorter.Type
+            .ByFilePathAscending else rawOrderExposed ?: Sorter.Type.ByTitleAscending)),
     canSort = true,
     pluralStr = R.plurals.songs,
     defaultLayoutType = LayoutType.COMPACT_LIST,
     isSubFragment = isSubFragment,
     rawOrderExposed = rawOrderExposed,
-    allowDiffUtils = allowDiffUtils
-) {
+    allowDiffUtils = allowDiffUtils,
+    hasMenu = isSubFragment != R.id.songs,
+    fallbackContext = fallbackContext
+), SharedPreferences.OnSharedPreferenceChangeListener {
 
     init {
         lateInit()
@@ -94,7 +106,7 @@ class SongAdapter(
 
     fun getActivity() = mainActivity
 
-    private val mediaControllerViewModel: MediaControllerViewModel by fragment.activityViewModels()
+    private var showFileNames = false
     private var idToPosMap: HashMap<String, List<Int?>>? = null
     private var currentMediaItem: String? = null
         set(value) {
@@ -132,32 +144,63 @@ class SongAdapter(
         }
 
     init {
-        mediaControllerViewModel.addRecreationalPlayerListener(
-            fragment.viewLifecycleOwner.lifecycle,
-            object : Player.Listener {
-                override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
-                    currentMediaItem = mediaItem?.mediaId
-                }
+        if (fragment != null) {
+            val mediaControllerViewModel: MediaControllerViewModel by fragment.activityViewModels()
+            mediaControllerViewModel.addRecreationalPlayerListener(
+                fragment.viewLifecycleOwner.lifecycle,
+                object : Player.Listener {
+                    override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+                        currentMediaItem = mediaItem?.mediaId
+                    }
 
-                override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
-                    currentIsPlaying =
-                        playWhenReady &&
-                                mediaControllerViewModel.get()!!.playbackState != Player.STATE_ENDED
-                                && mediaControllerViewModel.get()!!.playbackState != Player.STATE_IDLE
-                }
+                    override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
+                        currentIsPlaying =
+                            playWhenReady &&
+                                    mediaControllerViewModel.get()!!.playbackState != Player.STATE_ENDED
+                                    && mediaControllerViewModel.get()!!.playbackState != Player.STATE_IDLE
+                    }
 
-                override fun onPlaybackStateChanged(playbackState: Int) {
-                    currentIsPlaying =
-                        mediaControllerViewModel.get()!!.playWhenReady
-                                && playbackState != Player.STATE_ENDED &&
-                                mediaControllerViewModel.get()!!.playbackState != Player.STATE_IDLE
+                    override fun onPlaybackStateChanged(playbackState: Int) {
+                        currentIsPlaying =
+                            mediaControllerViewModel.get()!!.playWhenReady
+                                    && playbackState != Player.STATE_ENDED &&
+                                    mediaControllerViewModel.get()!!.playbackState != Player.STATE_IDLE
+                    }
                 }
+            ) {
+                currentMediaItem = it.currentMediaItem?.mediaId
+                currentIsPlaying =
+                    it.playWhenReady && it.playbackState != Player.STATE_ENDED && it.playbackState != Player.STATE_IDLE
             }
-        ) {
-            currentMediaItem = it.currentMediaItem?.mediaId
-            currentIsPlaying =
-                it.playWhenReady && it.playbackState != Player.STATE_ENDED && it.playbackState != Player.STATE_IDLE
         }
+    }
+
+    override fun onAttachedToRecyclerView(recyclerView: MyRecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        if (folder) {
+            prefs.registerOnSharedPreferenceChangeListener(this)
+            showFileNames = prefs.getBooleanStrict("show_file_names", true)
+        }
+    }
+
+    override fun onDetachedFromRecyclerView(recyclerView: MyRecyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView)
+        if (folder)
+            prefs.unregisterOnSharedPreferenceChangeListener(this)
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    override fun onSharedPreferenceChanged(prefs: SharedPreferences?, key: String?) {
+        if ((key == null || key == "show_file_names") && folder) {
+            showFileNames = this.prefs.getBooleanStrict("show_file_names", true)
+            notifyDataSetChanged()
+        }
+    }
+
+    fun getPlayingSong(): Int? {
+        return if (currentMediaItem != null) {
+            idToPosMap?.get(currentMediaItem)?.firstOrNull()
+        } else null
     }
 
     override fun onListUpdated() {
@@ -173,10 +216,14 @@ class SongAdapter(
     }
 
     override fun titleOf(item: MediaItem): String? {
-        return if (folder) item.getFile()?.name else super.titleOf(item)
+        return if (showFileNames) item.getFile()?.name else super.titleOf(item)
     }
 
     override fun onClick(item: MediaItem, position: Int) {
+        if (isSubFragment == R.id.songs) {
+            (context as SongPickerActivity).onSelected(item)
+            return
+        }
         val mediaController = mainActivity.getPlayer()
         val title = runBlocking { queueTitle.first() } // TODO: will nick kill me for this
         mediaController?.apply {
@@ -184,13 +231,14 @@ class SongAdapter(
             setMediaItems(queueWithTitle(songList, title), position, C.TIME_UNSET)
             prepare()
             play()
+            if (currentMediaItem?.mediaId == songList[position].mediaId) {
+                mainActivity.playerBottomSheet.open()
+            }
         }
     }
 
     override fun onMenu(item: MediaItem, popupMenu: PopupMenu) {
         popupMenu.inflate(R.menu.more_menu)
-        if (!Flags.PLAYLIST_EDITING!!)
-            popupMenu.menu.findItem(R.id.add_to_playlist).isVisible = false
 
         popupMenu.setOnMenuItemClickListener { it1 ->
             when (it1.itemId) {
@@ -236,10 +284,9 @@ class SongAdapter(
 
                 R.id.delete -> {
                     CoroutineScope(Dispatchers.Default).launch {
-                        val res = ItemManipulator.deleteSong(
+                        val res = ItemManipulator.deleteSongs(
                             mainActivity,
-                            item.getFile()!!,
-                            item.requireMediaStoreId()
+                            listOf(item.getFile()!! to item.requireMediaStoreId())
                         )
                         if (res != null) {
                             withContext(Dispatchers.Main) {
@@ -251,10 +298,10 @@ class SongAdapter(
                                             item.mediaMetadata.title
                                         )
                                     )
-                                    .setPositiveButton(R.string.yes) { _, _ ->
+                                    .setPositiveButton(R.string.delete) { _, _ ->
                                         res.invoke()
                                     }
-                                    .setNegativeButton(R.string.no) { _, _ -> }
+                                    .setNegativeButton(android.R.string.cancel) { _, _ -> }
                                     .show()
                             }
                         }

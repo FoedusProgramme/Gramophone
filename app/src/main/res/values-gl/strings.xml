@@ -78,7 +78,7 @@
     <string name="settings_default_progress_bar">Barra de progreso predeterminada</string>
     <string name="settings_default_progress_bar_summary">Activar a barra de progreso co estilo de Material</string>
     <string name="opensource_info">Código Aberto baixo a GPL-3.0\nDereitos %s</string>
-    <string name="playlist_favourite">Favorita</string>
+    <string name="playlist_favourite">Favoritas</string>
     <string name="settings_contributors_click">%s (ler máis)</string>
     <string name="home_menu_settings">Axustes</string>
     <string name="dialog_year">Ano</string>
@@ -111,7 +111,6 @@
     <string name="settings_player_options_summary">Calidade da saída, reprodución</string>
     <string name="settings_customization">Personalización</string>
     <string name="settings_customization_summary">Xestionar opcións de personalización</string>
-    <string name="settings_album_round_corner_summary">Activar cantos redondeados co reprodutor completo</string>
     <string name="settings_album_round_corner">Canto redondeado do álbum</string>
     <string name="settings_audio">Audio</string>
     <string name="settings_title_bold">Título resaltado</string>
@@ -129,8 +128,6 @@
     <string name="settings_lyrics_bold_summary">Usar un tipo de letra máis groso</string>
     <string name="settings_lyrics_center">Aliñar ao centro</string>
     <string name="settings_lyrics_center_summary">Usar aliñamento no centro para letras</string>
-    <string name="settings_lyrics_multiline">Ler letras en varias liñas</string>
-    <string name="settings_lyrics_multiline_summary">Tratar todas as liñas entre puntos de sincronización como un texto único</string>
     <string name="settings_play_on_launch">Reproducir ao inicio</string>
     <string name="settings_play_on_launch_summary">Reproducir a música ao iniciar</string>
     <string name="settings_blacklist">Omisións</string>
@@ -389,8 +386,6 @@
     <string name="settings_translation_auto_word">Tradución automática</string>
     <string name="settings_translation_auto_word_summary">Aplicar un gradiente lineal ás liñas traducidas na reprodución con letra sincronizada se a tradución non ten metadatos sincronizados por palabras</string>
     <string name="cannot_find_file">Non se atopa o ficheiro</string>
-    <string name="settings_mp3_index_seeking_summary">Ler o ficheiro MP3 ao completo na memoria como requerimento para buscar, no lugar de confiar na posible falta da cabeceira Xing na busca VBR. Se está desactivado, usarase a busca CBR se a cabeceira Xing non está presente. Un ficheiro VBR MP3 co formato correcto ten unha cabeceira Xing, polo que esta opción non debería ser necesaria na maioría dos casos. (Require reiniciar a app)</string>
-    <string name="settings_mp3_index_seeking">Busca no índice MP3</string>
     <string name="enter_msg_for_dev_here">Escribe aquí a mensaxe para o desenvolvedor</string>
     <string name="do_not_enter_email_enter_msg">Escribe a mensaxe, non un enderezo de correo</string>
     <string name="log_attachment">O rexistros vanse enviar automaticamente como un anexo</string>
@@ -408,7 +403,6 @@
     <string name="create_failed_playlist">Fallou a creación da lista: %s</string>
     <string name="refreshing_wait">Actualizando, agarda…</string>
     <string name="refresh_did_you_know">Gramophone mira se hai actualizacións nas listas cada vez que se inicia, e mentras está a funcionar, tamén detectará se hai novas cancións. Este botón «Actualizar» non volve a cargar o multimedia en Gramophone, se non que lle pide ao sistema volver a escanear todos os ficheiros das almacenaxes permanentes (por iso lle leva un pouco de tempo). Isto significa que, a non ser que o sistema ou outras apps non estean a funcionar correctamente, non precisarás usar nunca esta característica.\n\nFaltan algunhas cancións? Comproba o filtro de lonxitude mínima e os cartafoles ignorados en Axustes &gt; Comportamento, e confirma que teñen os valores agardados. Para outras posibles razóns mira as nósas PMF.</string>
-    <string name="playlist_editing_pref_desc">Permite engadir cancións ás listas (aínda non se pode mover / retirar)</string>
     <string name="no_app_found">Non atopamos unha app para iso</string>
     <string name="contributors_nift4">Mantemento / Desenvolvedora principal</string>
     <string name="contributors_123duo3">Deseñadora principal</string>
@@ -483,4 +477,33 @@
     <string name="actions_query_shuffle_specific">barallar $item_name</string>
     <string name="please_allow_to_delete">Preme permitir para eliminar ficheiros</string>
     <string name="choose_sd">Seleccionar %s</string>
+    <string name="favorite">Favorecer</string>
+    <string name="favorite_failed_title">Fallou o cambio do estado de canción favorita</string>
+    <string name="favorite_failed_text">Preme aquí para aplicar os cambios, concedendo o permiso ao ficheiro da lista de cancións favoritas</string>
+    <string name="error_in_bg">Houbo erros nos procesos en segundo plano</string>
+    <string name="settings_whitelist">Lista de permitidos</string>
+    <string name="whitelist_and_blacklist">Se non hai cartafoles seleccionados para a lista de permitidos, entón permítense todos.\n\nAs listas de permitidos e non permitidos aplícanse ao mesmo tempo, tendo prioridade a de non permitidos. Exemplo: podes permitir un cartafol na lista de permitidos e excluír un dos seus subcartafoles na de non permitidos.</string>
+    <string name="discard_changes_title">Desbotar cambios?</string>
+    <string name="save">Gardar</string>
+    <string name="discard">Desbotar</string>
+    <string name="discard_changes_msg">Queres desbotar os cambios realizados á lista «%s»?</string>
+    <string name="apply">Aplicar</string>
+    <string name="restore_edits">Restablecer cambios?</string>
+    <string name="restore_edits_msg">Hai cambios sen gardar para a lista «%s». Queres restablecer estes cambios, ou desbotalos e volver a comezar unha nova versión da lista de reprodución?</string>
+    <string name="restore">Restablecer</string>
+    <string name="mount_storage">Inserta unha tarxeta SD para usar esta característica</string>
+    <string name="failed_to_restore">Fallou o restablecemento: %s</string>
+    <string name="playlist_empty">Lista de reprodución baleira</string>
+    <string name="playlist_empty_msg">Engade algunhas cancións premento en «Engadir á lista de reprodución» no menú de tres puntos da canción.</string>
+    <string name="edit_favorites_failed">Fallou a edición das favoritas: %s</string>
+    <string name="delete_really_artist">Queres eliminar todas as cancións de «%s»? Esta acción non é reversible.</string>
+    <string name="search_desc">Artistas, álbums e cancións</string>
+    <string name="search_hint">Buscar cancións e artistas</string>
+    <string name="picker_activity">Escolle a pista de música</string>
+    <string name="playlist_picker_activity">Escolle a lista de reprodución</string>
+    <string name="settings_preference_category_folders_filesystem"><![CDATA[Pestanas de ficheiros e cartafoles]]></string>
+    <string name="show_file_names">Mostrar nome dos ficheiros</string>
+    <string name="show_file_names_summary">Motrar nomes dos ficheiros no lugar dos nomes das cancións nas pestanas do cartafol e sistema de ficheiros</string>
+    <string name="another_with_name">O nome xa se está a utilizar</string>
+    <string name="settings_font_size">Tamaño da letra</string>
 </resources>

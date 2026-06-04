@@ -238,7 +238,7 @@ class PlaylistQueueSheet(
         playlistAdapter.updateList(mq)
     }
 
-    inner class PlaylistCardAdapter : EditSongAdapter(activity) {
+    inner class PlaylistCardAdapter : EditSongAdapter(activity, true) {
         var playlist: Pair<MutableList<Int>, MutableList<MediaItem>> = dumpPlaylist()
         var currentMediaItemIndex: Int? = null
             set(value) {
@@ -328,6 +328,11 @@ class PlaylistQueueSheet(
             instance?.removeMediaItem(idx)
             playlist.second.removeAt(idx)
             notifyItemRemoved(pos)
+            currentMediaItemIndex?.let {
+                if (pos == it) {
+                    notifyItemChanged(it, true)
+                }
+            }
             updateList() // TODO: this could be more efficient
         }
 
@@ -366,8 +371,7 @@ class PlaylistQueueSheet(
         fun updateTimer(currentMediaItemIndex: Int? = null, currentPosition: Long? = null) {
             if (currentMediaItemIndex == -1) return
             val current = currentMediaItemIndex ?: instance?.currentMediaItemIndex?.let {
-                playlist.first.indexOf(it)
-            } ?: 0
+                playlist.first.indexOf(it).takeIf { it != -1 } } ?: 0
             if (current < 0) return
             val elapsedCurrentMs = currentPosition ?: instance?.currentPosition ?: 0
             durationView.format = context.getString(

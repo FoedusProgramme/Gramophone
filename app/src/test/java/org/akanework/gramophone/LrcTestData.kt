@@ -8809,6 +8809,358 @@ object LrcTestData {
             endIsImplicit = false
         ),
     )
+}
+
+// have to use a new object to avoid "Method too large" compliation error for initializers
+object LrcTestData2 {
+    val TTML_SATISIFED = """<?xml version='1.0' encoding='utf-8'?>
+<tt xmlns="http://www.w3.org/ns/ttml" xmlns:itunes="http://music.apple.com/lyric-ttml-internal" xmlns:ttm="http://www.w3.org/ns/ttml#metadata" itunes:timing="Word" xml:lang="en">
+  <head>
+    <metadata>
+      <ttm:agent type="person" xml:id="v1"/>
+      <ttm:agent type="person" xml:id="v2"/>
+      <ttm:agent type="person" xml:id="v3"/>
+      <ttm:agent type="group" xml:id="v1000"/>
+      <ttm:agent type="person" xml:id="v4"/>
+      <ttm:agent type="person" xml:id="v5"/>
+      <iTunesMetadata xmlns="http://music.apple.com/lyric-ttml-internal">
+        <translations/>
+        <songwriters>
+          <songwriter>Lin-Manuel Miranda</songwriter>
+        </songwriters>
+      </iTunesMetadata>
+    </metadata>
+  </head>
+  <body dur="5:29.228">
+    <div begin="1.205" end="13.920" itunes:songPart="Intro" ttm:agent="v2">
+      <p begin="1.205" end="5.429" itunes:key="L1" ttm:agent="v2"><span begin="1.205" end="1.925">Alright,</span> <span begin="1.925" end="3.002">alright,</span> <span begin="3.002" end="3.349">that's</span> <span begin="3.349" end="3.560">what</span> <span begin="3.560" end="3.869">I'm</span> <span begin="3.869" end="4.565">talkin'</span> <span begin="4.565" end="5.429">about!</span></p>
+      <p begin="5.974" end="11.207" itunes:key="L2" ttm:agent="v2"><span begin="5.974" end="6.502">Now</span> <span begin="6.803" end="7.648">everyone,</span> <span begin="8.139" end="8.374">give</span> <span begin="8.374" end="8.611">it</span> <span begin="8.611" end="8.960">up</span> <span begin="9.574" end="9.723">for</span> <span begin="9.723" end="9.947">the</span> <span begin="9.947" end="10.289">Maid</span> <span begin="10.289" end="10.441">of</span> <span begin="10.441" end="11.207">Honor</span></p>
+      <p begin="11.680" end="13.920" itunes:key="L3" ttm:agent="v2"><span begin="11.680" end="12.558">Angelica</span> <span begin="12.558" end="13.920">Schuyler!</span></p>
+    </div>
+    <div begin="14.732" end="31.044" itunes:songPart="Chorus">
+      <p begin="14.732" end="16.222" itunes:key="L4" ttm:agent="v1"><span begin="14.732" end="14.959">A</span> <span begin="14.959" end="15.207">toast</span> <span begin="15.207" end="15.361">to</span> <span begin="15.361" end="15.479">the</span> <span begin="15.479" end="16.222">groom</span></p>
+      <p begin="16.232" end="18.874" itunes:key="L5" ttm:agent="v3"><span begin="16.232" end="16.349">To</span> <span begin="16.349" end="16.485">the</span> <span begin="16.485" end="16.936">groom,</span> <span begin="17.104" end="17.243">to</span> <span begin="17.243" end="17.384">the</span> <span begin="17.384" end="17.910">groom,</span> <span begin="18.088" end="18.268">to</span> <span begin="18.268" end="18.368">the</span> <span begin="18.368" end="18.874">groom</span></p>
+      <p begin="19.127" end="20.224" itunes:key="L6" ttm:agent="v1"><span begin="19.127" end="19.266">To</span> <span begin="19.266" end="19.378">the</span> <span begin="19.378" end="20.224">bride</span></p>
+      <p begin="20.034" end="24.217" itunes:key="L7" ttm:agent="v3"><span begin="20.034" end="20.199">To</span> <span begin="20.199" end="20.316">the</span> <span begin="20.316" end="20.925">bride,</span> <span begin="21.010" end="21.130">to</span> <span begin="21.130" end="21.255">the</span> <span begin="21.255" end="22.835">bride</span> <span ttm:role="x-bg"><span begin="21.945" end="22.106">(To</span> <span begin="22.106" end="22.206">the</span> <span begin="22.206" end="24.217">bride)</span></span></p>
+      <p begin="22.545" end="25.257" itunes:key="L8" ttm:agent="v1"><span begin="22.545" end="22.881">From</span> <span begin="22.881" end="23.081">your</span> <span begin="23.081" end="23.697">sist</span><span begin="23.697" end="25.257">er</span></p>
+      <p begin="23.903" end="27.927" itunes:key="L9" ttm:agent="v3"><span begin="23.903" end="24.868">Angelica,</span> <span begin="24.868" end="25.818">Angelica,</span> <span begin="25.818" end="27.927">Angelica</span></p>
+      <p begin="26.631" end="29.478" itunes:key="L10" ttm:agent="v1"><span begin="26.631" end="26.780">Who</span> <span begin="26.780" end="26.946">is</span> <span begin="26.946" end="27.484">always</span> <span begin="27.484" end="27.674">by</span> <span begin="27.674" end="27.924">your</span> <span begin="27.924" end="29.478">side</span></p>
+      <p begin="28.427" end="31.044" itunes:key="L11" ttm:agent="v3"><span begin="28.427" end="28.758">By</span> <span begin="28.758" end="28.915">your</span> <span begin="28.915" end="31.017">side</span> <span ttm:role="x-bg"><span begin="29.545" end="29.721">(By</span> <span begin="29.721" end="29.902">your</span> <span begin="29.902" end="31.044">side)</span></span></p>
+    </div>
+    <div begin="30.392" end="49.186" itunes:songPart="Chorus">
+      <p begin="30.392" end="32.926" itunes:key="L12" ttm:agent="v1"><span begin="30.392" end="30.581">To</span> <span begin="30.581" end="30.792">your</span> <span begin="30.792" end="32.926">union</span></p>
+      <p begin="32.103" end="34.351" itunes:key="L13" ttm:agent="v3"><span begin="32.103" end="32.234">To</span> <span begin="32.234" end="32.340">the</span> <span begin="32.340" end="33.060">union,</span> <span begin="33.060" end="33.191">to</span> <span begin="33.191" end="33.306">the</span> <span begin="33.306" end="34.351">revolution</span></p>
+      <p begin="34.613" end="36.813" itunes:key="L14" ttm:agent="v1"><span begin="34.613" end="34.713">And</span> <span begin="34.713" end="34.849">the</span> <span begin="34.849" end="35.062">hope</span> <span begin="35.062" end="35.299">that</span> <span begin="35.299" end="35.502">you</span> <span begin="35.502" end="36.813">provide</span></p>
+      <p begin="36.254" end="38.456" itunes:key="L15" ttm:agent="v3"><span begin="36.254" end="36.457">You</span> <span begin="36.457" end="37.195">provide,</span> <span begin="37.195" end="37.425">you</span> <span begin="37.425" end="38.456">provide</span></p>
+      <p begin="37.951" end="41.442" itunes:key="L16" ttm:agent="v1"><span begin="37.951" end="38.156">And</span> <span begin="38.156" end="38.394">may</span> <span begin="38.394" end="38.586">you</span> <span begin="38.586" end="39.388">alw</span><span begin="39.388" end="41.442">ays</span></p>
+      <p begin="40.405" end="42.757" itunes:key="L17" ttm:agent="v3">
+        <span begin="40.405" end="41.274">Alw</span>
+        <span begin="41.274" end="42.757">ays</span>
+      </p>
+      <p begin="41.960" end="44.596" itunes:key="L18" ttm:agent="v1"><span begin="41.960" end="42.194">Be</span> <span begin="42.194" end="42.573">sat</span><span begin="42.573" end="42.784">isf</span><span begin="42.784" end="44.596">ied</span></p>
+      <p begin="44.223" end="46.464" itunes:key="L19" ttm:agent="v3">
+        <span begin="44.223" end="44.570">Rew</span>
+        <span begin="44.570" end="46.464">ind</span>
+      </p>
+      <p begin="00:46.050" end="00:49.186" ttm:agent="v1" itunes:key="L20"><span begin="00:46.050" end="00:47.098">Rewind,</span> <span begin="00:48.082" end="00:49.186">rewind</span></p><p begin="00:50.302" end="00:52.837" ttm:agent="v1" itunes:key="L21"><span begin="00:50.302" end="00:50.804">Help</span><span begin="00:50.804" end="00:52.837">less</span><span ttm:role="x-bg" begin="00:51.474" end="00:53.974"><span begin="00:51.474" end="00:52.268">(Sky's,</span> <span begin="00:53.399" end="00:53.974">Sky's)</span></span></p><p begin="00:54.241" end="00:56.016" ttm:agent="v1" itunes:key="L22"><span begin="00:54.241" end="00:54.733">Help</span><span begin="00:54.733" end="00:56.016">less</span><span ttm:role="x-bg" begin="00:55.506" end="00:58.197"><span begin="00:55.506" end="00:56.304">(Drownin',</span> <span begin="00:57.474" end="00:58.197">drownin')</span></span></p><p begin="00:57.854" end="00:58.671" ttm:agent="v1" itunes:key="L23"><span begin="00:57.854" end="00:58.671">Rewind</span></p>
+    </div>
+    <div begin="1:07.918" end="1:38.952" itunes:songPart="Verse">
+      <p begin="1:07.918" end="1:09.514" itunes:key="L21" ttm:agent="v1"><span begin="1:07.918" end="1:08.097">I</span> <span begin="1:08.097" end="1:08.393">remember</span> <span begin="1:08.393" end="1:08.678">that</span> <span begin="1:08.678" end="1:08.918">night,</span> <span begin="1:08.918" end="1:09.073">I</span> <span begin="1:09.073" end="1:09.291">just</span> <span begin="1:09.291" end="1:09.514">might</span></p>
+      <p begin="1:09.514" end="1:11.652" itunes:key="L22" ttm:agent="v1"><span begin="1:09.514" end="1:09.874">Regret</span> <span begin="1:09.874" end="1:10.127">that</span> <span begin="1:10.127" end="1:10.373">night</span> <span begin="1:10.373" end="1:10.498">for</span> <span begin="1:10.498" end="1:10.639">the</span> <span begin="1:10.639" end="1:10.793">rest</span> <span begin="1:10.793" end="1:10.893">of</span> <span begin="1:10.893" end="1:11.103">my</span> <span begin="1:11.103" end="1:11.652">days</span></p>
+      <p begin="1:11.796" end="1:13.103" itunes:key="L23" ttm:agent="v1"><span begin="1:11.796" end="1:11.999">I</span> <span begin="1:11.999" end="1:12.276">remember</span> <span begin="1:12.276" end="1:12.460">those</span> <span begin="1:12.460" end="1:12.844">soldier</span> <span begin="1:12.844" end="1:13.103">boys</span></p>
+      <p begin="1:13.103" end="1:15.524" itunes:key="L24" ttm:agent="v1"><span begin="1:13.103" end="1:13.439">Tripping</span> <span begin="1:13.439" end="1:13.639">over</span> <span begin="1:13.639" end="1:14.183">themselves</span> <span begin="1:14.183" end="1:14.431">to</span> <span begin="1:14.431" end="1:14.671">win</span> <span begin="1:14.671" end="1:14.887">our</span> <span begin="1:14.887" end="1:15.524">praise</span></p>
+      <p begin="1:15.642" end="1:17.565" itunes:key="L25" ttm:agent="v1"><span begin="1:15.642" end="1:15.882">I</span> <span begin="1:15.882" end="1:16.149">remember</span> <span begin="1:16.149" end="1:16.367">that</span> <span begin="1:16.367" end="1:16.837">dreamlike</span> <span begin="1:16.837" end="1:17.565">candlelight</span></p>
+      <p begin="1:17.575" end="1:19.443" itunes:key="L26" ttm:agent="v1"><span begin="1:17.575" end="1:17.794">Like</span> <span begin="1:17.794" end="1:17.935">a</span> <span begin="1:17.935" end="1:18.130">dream</span> <span begin="1:18.130" end="1:18.247">that</span> <span begin="1:18.247" end="1:18.386">you</span> <span begin="1:18.386" end="1:18.626">can't</span> <span begin="1:18.626" end="1:18.823">quite</span> <span begin="1:18.823" end="1:19.443">place</span></p>
+      <p begin="1:19.582" end="1:21.063" itunes:key="L27" ttm:agent="v1"><span begin="1:19.582" end="1:19.753">But</span> <span begin="1:19.753" end="1:21.063">Alexander</span></p>
+      <p begin="1:21.073" end="1:24.233" itunes:key="L28" ttm:agent="v1"><span begin="1:21.073" end="1:21.281">I'll</span> <span begin="1:21.281" end="1:21.468">never</span> <span begin="1:21.468" end="1:21.846">forget</span> <span begin="1:21.846" end="1:21.980">the</span> <span begin="1:21.980" end="1:22.220">first</span> <span begin="1:22.220" end="1:22.457">time</span> <span begin="1:22.457" end="1:22.702">I</span> <span begin="1:22.702" end="1:22.926">saw</span> <span begin="1:22.926" end="1:23.118">your</span> <span begin="1:23.118" end="1:24.233">face</span></p>
+      <p begin="1:24.605" end="1:26.697" itunes:key="L29" ttm:agent="v1"><span begin="1:24.605" end="1:24.861">I</span> <span begin="1:24.861" end="1:25.058">have</span> <span begin="1:25.058" end="1:25.557">never</span> <span begin="1:25.557" end="1:25.810">been</span> <span begin="1:25.810" end="1:26.010">the</span> <span begin="1:26.010" end="1:26.697">same</span></p>
+      <p begin="1:26.809" end="1:30.515" itunes:key="L30" ttm:agent="v1"><span begin="1:26.809" end="1:27.932">Intelligent</span> <span begin="1:27.932" end="1:28.494">eyes</span> <span begin="1:28.494" end="1:28.676">in</span> <span begin="1:28.676" end="1:28.876">a</span> <span begin="1:28.876" end="1:29.350">hunger-</span><span begin="1:29.350" end="1:29.876">pang</span> <span begin="1:29.876" end="1:30.515">frame</span></p>
+      <p begin="1:30.679" end="1:34.304" itunes:key="L31" ttm:agent="v1"><span begin="1:30.679" end="1:30.948">And</span> <span begin="1:30.948" end="1:31.124">when</span> <span begin="1:31.124" end="1:31.338">you</span> <span begin="1:31.338" end="1:31.788">said,</span> <span begin="1:31.788" end="1:32.335">"Hi",</span> <span begin="1:32.335" end="1:32.538">I</span> <span begin="1:32.538" end="1:33.084">forgot</span> <span begin="1:33.084" end="1:33.290">my</span> <span begin="1:33.290" end="1:33.767">dang</span> <span begin="1:33.767" end="1:34.304">name</span></p>
+      <p begin="1:34.304" end="1:37.270" itunes:key="L32" ttm:agent="v1"><span begin="1:34.304" end="1:34.581">Set</span> <span begin="1:34.581" end="1:34.763">my</span> <span begin="1:34.763" end="1:34.957">heart</span> <span begin="1:34.957" end="1:35.693">aflame,</span> <span begin="1:35.693" end="1:36.221">every</span> <span begin="1:36.221" end="1:36.435">part</span> <span begin="1:36.435" end="1:37.270">aflame</span></p>
+      <p begin="1:37.270" end="1:38.952" itunes:key="L33" ttm:agent="v1000"><span begin="1:37.270" end="1:37.462">This</span> <span begin="1:37.462" end="1:37.699">is</span> <span begin="1:37.699" end="1:37.905">not</span> <span begin="1:37.905" end="1:38.091">a</span> <span begin="1:38.091" end="1:38.952">game</span></p>
+    </div>
+    <div begin="1:38.558" end="2:09.501" itunes:songPart="Verse" ttm:agent="v4">
+      <p begin="1:38.558" end="1:42.717" itunes:key="L34" ttm:agent="v4"><span begin="1:38.558" end="1:39.019">You</span> <span begin="1:39.019" end="1:39.563">strike</span> <span begin="1:39.563" end="1:39.964">me</span> <span begin="1:40.371" end="1:40.491">as</span> <span begin="1:40.491" end="1:40.609">a</span> <span begin="1:40.609" end="1:40.873">woman</span> <span begin="1:40.873" end="1:41.027">who</span> <span begin="1:41.027" end="1:41.195">has</span> <span begin="1:41.195" end="1:41.369">never</span> <span begin="1:41.369" end="1:41.593">been</span> <span begin="1:41.593" end="1:42.717">satisfied</span></p>
+      <p begin="1:42.827" end="1:46.681" itunes:key="L35" ttm:agent="v1"><span begin="1:42.827" end="1:43.083">I'm</span> <span begin="1:43.083" end="1:43.315">sure</span> <span begin="1:43.315" end="1:43.544">I</span> <span begin="1:43.544" end="1:43.782">don't</span> <span begin="1:43.782" end="1:44.070">know</span> <span begin="1:44.070" end="1:44.304">what</span> <span begin="1:44.304" end="1:44.587">you</span> <span begin="1:44.587" end="1:45.086">mean,</span> <span begin="1:45.086" end="1:45.312">you</span> <span begin="1:45.312" end="1:45.784">forget</span> <span begin="1:45.784" end="1:45.998">your</span><span begin="1:45.998" end="1:46.681">self</span></p>
+      <p begin="1:46.491" end="1:50.483" itunes:key="L36" ttm:agent="v4"><span begin="1:46.491" end="1:46.968">You're</span> <span begin="1:46.968" end="1:47.629">like</span> <span begin="1:47.704" end="1:48.107">me,</span> <span begin="1:48.659" end="1:48.920">I'm</span> <span begin="1:48.920" end="1:49.440">never</span> <span begin="1:49.440" end="1:50.483">satisfied</span></p>
+      <p begin="1:50.767" end="1:52.154" itunes:key="L37" ttm:agent="v1"><span begin="1:50.767" end="1:50.964">Is</span> <span begin="1:50.964" end="1:51.415">that</span> <span begin="1:51.415" end="1:52.154">right?</span></p>
+      <p begin="1:52.653" end="1:55.009" itunes:key="L38" ttm:agent="v4"><span begin="1:52.653" end="1:52.794">I</span> <span begin="1:52.794" end="1:52.930">have</span> <span begin="1:52.930" end="1:53.173">never</span> <span begin="1:53.173" end="1:53.376">been</span> <span begin="1:53.376" end="1:53.659">sat</span><span begin="1:53.659" end="1:53.808">isf</span><span begin="1:53.808" end="1:55.009">ied</span></p>
+      <p begin="1:56.070" end="1:58.396" itunes:key="L39" ttm:agent="v1"><span begin="1:56.070" end="1:56.350">My</span> <span begin="1:56.350" end="1:56.585">name</span> <span begin="1:56.585" end="1:56.707">is</span> <span begin="1:56.707" end="1:57.278">Angelica</span> <span begin="1:57.278" end="1:58.396">Schuyler</span></p>
+      <p begin="1:58.306" end="2:00.207" itunes:key="L40" ttm:agent="v4"><span begin="1:58.306" end="1:59.223">Alexander</span> <span begin="1:59.223" end="2:00.207">Hamilton</span></p>
+      <p begin="2:00.758" end="2:02.525" itunes:key="L41" ttm:agent="v1"><span begin="2:00.758" end="2:01.099">Where's</span> <span begin="2:01.099" end="2:01.294">your</span> <span begin="2:01.294" end="2:01.710">family</span> <span begin="2:01.710" end="2:02.525">from?</span></p>
+      <p begin="2:02.765" end="2:06.055" itunes:key="L42" ttm:agent="v4"><span begin="2:02.765" end="2:03.754">Unimportant,</span> <span begin="2:03.754" end="2:04.008">there's</span> <span begin="2:04.008" end="2:04.248">a</span> <span begin="2:04.248" end="2:04.709">million</span> <span begin="2:04.709" end="2:04.970">things</span> <span begin="2:04.970" end="2:05.202">I</span> <span begin="2:05.202" end="2:05.650">haven't</span> <span begin="2:05.650" end="2:06.055">done</span></p>
+      <p begin="2:06.113" end="2:09.501" itunes:key="L43" ttm:agent="v4"><span begin="2:06.113" end="2:06.428">But</span> <span begin="2:06.428" end="2:06.764">just</span> <span begin="2:06.764" end="2:07.153">you</span> <span begin="2:07.153" end="2:07.736">wait,</span> <span begin="2:07.969" end="2:08.356">just</span> <span begin="2:08.356" end="2:08.881">you</span> <span begin="2:08.881" end="2:09.501">wait</span></p>
+    </div>
+    <div begin="2:09.374" end="2:41.281" itunes:songPart="Verse">
+      <p begin="2:09.374" end="2:10.173" itunes:key="L44" ttm:agent="v1"><span begin="2:09.374" end="2:09.643">So,</span> <span begin="2:09.643" end="2:09.862">so,</span> <span begin="2:09.862" end="2:10.173">so</span></p>
+      <p begin="2:10.199" end="2:11.950" itunes:key="L45" ttm:agent="v1"><span begin="2:10.199" end="2:10.362">So</span> <span begin="2:10.362" end="2:10.479">this</span> <span begin="2:10.479" end="2:10.588">is</span> <span begin="2:10.588" end="2:10.719">what</span> <span begin="2:10.719" end="2:10.855">it</span> <span begin="2:10.855" end="2:11.111">feels</span> <span begin="2:11.111" end="2:11.351">like</span> <span begin="2:11.351" end="2:11.484">to</span> <span begin="2:11.484" end="2:11.706">match</span> <span begin="2:11.706" end="2:11.950">wits</span></p>
+      <p begin="2:11.950" end="2:12.852" itunes:key="L46" ttm:agent="v1"><span begin="2:11.950" end="2:12.067">With</span> <span begin="2:12.067" end="2:12.345">someone</span> <span begin="2:12.345" end="2:12.450">at</span> <span begin="2:12.450" end="2:12.550">your</span> <span begin="2:12.550" end="2:12.852">level</span></p>
+      <p begin="2:12.821" end="2:13.738" itunes:key="L47" ttm:agent="v1"><span begin="2:12.821" end="2:12.965">What</span> <span begin="2:12.965" end="2:13.072">the</span> <span begin="2:13.072" end="2:13.210">hell</span> <span begin="2:13.210" end="2:13.338">is</span> <span begin="2:13.338" end="2:13.450">the</span> <span begin="2:13.450" end="2:13.738">catch?</span></p>
+      <p begin="2:13.738" end="2:15.595" itunes:key="L48" ttm:agent="v1"><span begin="2:13.738" end="2:13.938">It's</span> <span begin="2:13.938" end="2:14.066">the</span> <span begin="2:14.066" end="2:14.378">feeling</span> <span begin="2:14.378" end="2:14.498">of</span> <span begin="2:14.498" end="2:14.829">freedom,</span> <span begin="2:14.829" end="2:14.962">of</span> <span begin="2:14.962" end="2:15.207">seein'</span> <span begin="2:15.207" end="2:15.317">the</span> <span begin="2:15.317" end="2:15.595">light</span></p>
+      <p begin="2:15.605" end="2:17.125" itunes:key="L49" ttm:agent="v1"><span begin="2:15.605" end="2:15.706">It's</span> <span begin="2:15.706" end="2:15.949">Ben</span> <span begin="2:15.949" end="2:16.197">Franklin</span> <span begin="2:16.197" end="2:16.325">with</span> <span begin="2:16.325" end="2:16.464">a</span> <span begin="2:16.464" end="2:16.597">key</span> <span begin="2:16.597" end="2:16.713">and</span> <span begin="2:16.713" end="2:16.813">a</span> <span begin="2:16.813" end="2:17.125">kite!</span></p>
+      <p begin="2:17.295" end="2:17.907" itunes:key="L50" ttm:agent="v1"><span begin="2:17.295" end="2:17.439">You</span> <span begin="2:17.439" end="2:17.575">see</span> <span begin="2:17.575" end="2:17.682">it,</span> <span begin="2:17.682" end="2:17.907">right?</span></p>
+      <p begin="2:18.028" end="2:20.157" itunes:key="L51" ttm:agent="v1"><span begin="2:18.028" end="2:18.143">The</span> <span begin="2:18.143" end="2:18.609">conversation</span> <span begin="2:18.609" end="2:18.836">lasted</span> <span begin="2:18.836" end="2:19.103">two</span> <span begin="2:19.103" end="2:19.385">minutes,</span> <span begin="2:19.385" end="2:19.639">maybe</span> <span begin="2:19.639" end="2:19.844">three</span> <span begin="2:19.844" end="2:20.157">minutes</span></p>
+      <p begin="2:20.167" end="2:21.696" itunes:key="L52" ttm:agent="v1"><span begin="2:20.167" end="2:20.508">Everything</span> <span begin="2:20.508" end="2:20.639">we</span> <span begin="2:20.639" end="2:20.751">said</span> <span begin="2:20.751" end="2:20.880">in</span> <span begin="2:20.880" end="2:21.219">total</span> <span begin="2:21.219" end="2:21.696">agreement</span></p>
+      <p begin="2:21.696" end="2:23.506" itunes:key="L53" ttm:agent="v1"><span begin="2:21.696" end="2:21.947">It's</span> <span begin="2:21.947" end="2:22.064">a</span> <span begin="2:22.064" end="2:22.259">dream</span> <span begin="2:22.259" end="2:22.397">and</span> <span begin="2:22.397" end="2:22.605">it's</span> <span begin="2:22.605" end="2:22.741">a</span> <span begin="2:22.741" end="2:22.861">bit</span> <span begin="2:22.861" end="2:22.992">of</span> <span begin="2:22.992" end="2:23.104">a</span> <span begin="2:23.104" end="2:23.506">dance</span></p>
+      <p begin="2:23.582" end="2:25.396" itunes:key="L54" ttm:agent="v1"><span begin="2:23.582" end="2:23.721">A</span> <span begin="2:23.721" end="2:23.859">bit</span> <span begin="2:23.859" end="2:23.995">of</span> <span begin="2:23.995" end="2:24.115">a</span> <span begin="2:24.115" end="2:24.417">posture,</span> <span begin="2:24.417" end="2:24.537">it's</span> <span begin="2:24.537" end="2:24.675">a</span> <span begin="2:24.675" end="2:24.793">bit</span> <span begin="2:24.793" end="2:24.917">of</span> <span begin="2:24.917" end="2:25.017">a</span> <span begin="2:25.017" end="2:25.396">stance</span></p>
+      <p begin="2:25.396" end="2:27.408" itunes:key="L55" ttm:agent="v1"><span begin="2:25.396" end="2:25.532">He's</span> <span begin="2:25.532" end="2:25.673">a</span> <span begin="2:25.673" end="2:25.807">bit</span> <span begin="2:25.807" end="2:25.939">of</span> <span begin="2:25.939" end="2:26.039">a</span> <span begin="2:26.039" end="2:26.307">flirt,</span> <span begin="2:26.329" end="2:26.429">but</span> <span begin="2:26.429" end="2:26.612">I'ma</span> <span begin="2:26.612" end="2:26.776">give</span> <span begin="2:26.776" end="2:26.910">it</span> <span begin="2:26.910" end="2:27.010">a</span> <span begin="2:27.010" end="2:27.408">chance</span></p>
+      <p begin="2:27.418" end="2:29.402" itunes:key="L56" ttm:agent="v1"><span begin="2:27.418" end="2:27.565">I</span> <span begin="2:27.565" end="2:27.738">asked</span> <span begin="2:27.738" end="2:27.985">about</span> <span begin="2:27.985" end="2:28.085">his</span> <span begin="2:28.085" end="2:28.482">family,</span> <span begin="2:28.482" end="2:28.641">did</span> <span begin="2:28.641" end="2:28.741">you</span> <span begin="2:28.741" end="2:28.850">see</span> <span begin="2:28.850" end="2:28.962">his</span> <span begin="2:28.962" end="2:29.402">answer?</span></p>
+      <p begin="2:29.449" end="2:31.194" itunes:key="L57" ttm:agent="v1"><span begin="2:29.449" end="2:29.596">His</span> <span begin="2:29.596" end="2:29.796">hands</span> <span begin="2:29.796" end="2:30.006">started</span> <span begin="2:30.006" end="2:30.348">fidgeting,</span> <span begin="2:30.348" end="2:30.502">he</span> <span begin="2:30.502" end="2:30.745">looked</span> <span begin="2:30.745" end="2:31.194">askance</span></p>
+      <p begin="2:31.277" end="2:33.307" itunes:key="L58" ttm:agent="v1"><span begin="2:31.277" end="2:31.440">He's</span> <span begin="2:31.440" end="2:31.797">penniless,</span> <span begin="2:31.797" end="2:31.930">he's</span> <span begin="2:31.930" end="2:32.197">flying</span> <span begin="2:32.197" end="2:32.320">by</span> <span begin="2:32.320" end="2:32.461">the</span> <span begin="2:32.461" end="2:32.600">seat</span> <span begin="2:32.600" end="2:32.732">of</span> <span begin="2:32.732" end="2:32.832">his</span> <span begin="2:32.832" end="2:33.307">pants</span></p>
+      <p begin="2:33.417" end="2:35.236" itunes:key="L59" ttm:agent="v1"><span begin="2:33.417" end="2:34.313">Handsome,</span> <span begin="2:34.313" end="2:34.641">boy,</span> <span begin="2:34.641" end="2:34.766">does</span> <span begin="2:34.766" end="2:34.902">he</span> <span begin="2:34.902" end="2:35.095">know</span> <span begin="2:35.095" end="2:35.236">it</span></p>
+      <p begin="2:35.300" end="2:37.220" itunes:key="L60" ttm:agent="v1"><span begin="2:35.300" end="2:35.687">Peach</span> <span begin="2:35.687" end="2:36.063">fuzz,</span> <span begin="2:36.063" end="2:36.204">and</span> <span begin="2:36.204" end="2:36.363">he</span> <span begin="2:36.363" end="2:36.463">can't</span> <span begin="2:36.463" end="2:36.783">even</span> <span begin="2:36.783" end="2:37.046">grow</span> <span begin="2:37.046" end="2:37.220">it</span></p>
+      <p begin="2:37.427" end="2:39.034" itunes:key="L61" ttm:agent="v1"><span begin="2:37.427" end="2:37.547">I</span> <span begin="2:37.547" end="2:37.827">wanna</span> <span begin="2:37.827" end="2:37.947">take</span> <span begin="2:37.947" end="2:38.064">him</span> <span begin="2:38.064" end="2:38.195">far</span> <span begin="2:38.195" end="2:38.438">away</span> <span begin="2:38.438" end="2:38.574">from</span> <span begin="2:38.574" end="2:38.816">this</span> <span begin="2:38.816" end="2:39.034">place</span></p>
+      <p begin="2:39.034" end="2:41.281" itunes:key="L62" ttm:agent="v1"><span begin="2:39.034" end="2:39.174">Then</span> <span begin="2:39.174" end="2:39.274">I</span> <span begin="2:39.274" end="2:39.402">turn</span> <span begin="2:39.402" end="2:39.543">and</span> <span begin="2:39.543" end="2:39.649">see</span> <span begin="2:39.649" end="2:39.749">my</span> <span begin="2:39.749" end="2:40.170">sister's</span> <span begin="2:40.170" end="2:40.431">face</span> <span begin="2:40.431" end="2:40.711">and</span> <span begin="2:40.711" end="2:40.917">she</span> <span begin="2:40.917" end="2:41.281">is</span></p>
+    </div>
+    <div begin="2:41.091" end="2:56.634" itunes:songPart="Verse">
+      <p begin="2:41.091" end="2:43.118" itunes:key="L63" ttm:agent="v5">
+        <span begin="2:41.091" end="2:41.587">Helpl</span>
+        <span begin="2:41.587" end="2:43.118">ess</span>
+      </p>
+      <p begin="2:42.422" end="2:45.189" itunes:key="L64" ttm:agent="v1"><span begin="2:42.422" end="2:42.595">And</span> <span begin="2:42.595" end="2:42.827">I</span> <span begin="2:42.827" end="2:44.179">know</span> <span begin="2:44.179" end="2:44.513">she</span> <span begin="2:44.513" end="2:45.189">is</span></p>
+      <p begin="2:45.045" end="2:46.949" itunes:key="L65" ttm:agent="v5">
+        <span begin="2:45.045" end="2:45.541">Helpl</span>
+        <span begin="2:45.541" end="2:46.949">ess</span>
+      </p>
+      <p begin="2:46.299" end="2:49.194" itunes:key="L66" ttm:agent="v1"><span begin="2:46.299" end="2:46.480">And</span> <span begin="2:46.480" end="2:46.712">her</span> <span begin="2:46.712" end="2:48.118">eyes</span> <span begin="2:48.118" end="2:48.440">are</span> <span begin="2:48.440" end="2:49.194">just</span></p>
+      <p begin="2:48.856" end="2:50.768" itunes:key="L67" ttm:agent="v5">
+        <span begin="2:48.856" end="2:49.432">Helpl</span>
+        <span begin="2:49.432" end="2:50.768">ess</span>
+      </p>
+      <p begin="2:50.408" end="2:52.398" itunes:key="L68" ttm:agent="v1"><span begin="2:50.408" end="2:50.637">And</span> <span begin="2:50.637" end="2:51.075">I</span> <span begin="2:51.075" end="2:52.398">realize</span></p>
+      <p begin="2:52.408" end="2:56.634" itunes:key="L69" ttm:agent="v1000"><span begin="2:52.408" end="2:52.795">Three</span> <span begin="2:52.795" end="2:53.768">fundamental</span> <span begin="2:53.768" end="2:53.989">truths</span> <span begin="2:53.989" end="2:54.227">at</span> <span begin="2:54.227" end="2:54.456">the</span> <span begin="2:54.456" end="2:55.152">exact</span> <span begin="2:55.152" end="2:55.597">same</span> <span begin="2:55.597" end="2:56.634">time</span></p>
+    </div>
+    <div begin="2:56.962" end="3:01.716" itunes:songPart="Verse" ttm:agent="v4">
+      <p begin="2:56.962" end="2:58.185" itunes:key="L70" ttm:agent="v4"><span begin="2:56.962" end="2:57.170">Where</span> <span begin="2:57.170" end="2:57.357">are</span> <span begin="2:57.357" end="2:57.482">you</span> <span begin="2:57.482" end="2:57.810">taking</span> <span begin="2:57.810" end="2:58.185">me?</span></p>
+      <p begin="2:58.420" end="3:00.052" itunes:key="L71" ttm:agent="v1"><span begin="2:58.420" end="2:58.572">I'm</span> <span begin="2:58.572" end="2:58.943">about</span> <span begin="2:58.943" end="2:59.084">to</span> <span begin="2:59.084" end="2:59.375">change</span> <span begin="2:59.375" end="2:59.604">your</span> <span begin="2:59.604" end="3:00.052">life</span></p>
+      <p begin="2:59.901" end="3:01.716" itunes:key="L72" ttm:agent="v4"><span begin="2:59.901" end="3:00.178">Then</span> <span begin="3:00.178" end="3:00.373">by</span> <span begin="3:00.373" end="3:00.520">all</span> <span begin="3:00.520" end="3:00.872">means,</span> <span begin="3:00.872" end="3:01.138">lead</span> <span begin="3:01.138" end="3:01.274">the</span> <span begin="3:01.274" end="3:01.716">way</span></p>
+    </div>
+    <div begin="3:02.313" end="3:18.139" itunes:songPart="Verse">
+      <p begin="3:02.313" end="3:02.937" itunes:key="L73" ttm:agent="v3"><span begin="3:02.313" end="3:02.550">Number</span> <span begin="3:02.550" end="3:02.937">one</span></p>
+      <p begin="3:02.868" end="3:06.360" itunes:key="L74" ttm:agent="v1"><span begin="3:02.868" end="3:03.017">I'm</span> <span begin="3:03.017" end="3:03.143">a</span> <span begin="3:03.143" end="3:03.399">girl</span> <span begin="3:03.399" end="3:03.524">in</span> <span begin="3:03.524" end="3:03.641">a</span> <span begin="3:03.641" end="3:03.881">world</span> <span begin="3:03.881" end="3:04.145">in</span> <span begin="3:04.145" end="3:04.380">which</span> <span begin="3:04.380" end="3:04.588">my</span> <span begin="3:04.588" end="3:05.065">only</span> <span begin="3:05.065" end="3:05.276">job</span> <span begin="3:05.276" end="3:05.415">is</span> <span begin="3:05.415" end="3:05.553">to</span> <span begin="3:05.553" end="3:05.980">marry</span> <span begin="3:05.980" end="3:06.360">rich</span></p>
+      <p begin="3:06.470" end="3:07.651" itunes:key="L75" ttm:agent="v1"><span begin="3:06.470" end="3:06.697">My</span> <span begin="3:06.697" end="3:06.942">father</span> <span begin="3:06.942" end="3:07.201">has</span> <span begin="3:07.201" end="3:07.451">no</span> <span begin="3:07.451" end="3:07.651">sons</span></p>
+      <p begin="3:07.651" end="3:09.929" itunes:key="L76" ttm:agent="v1"><span begin="3:07.651" end="3:07.784">So</span> <span begin="3:07.784" end="3:08.027">I'm</span> <span begin="3:08.027" end="3:08.158">the</span> <span begin="3:08.158" end="3:08.398">one</span> <span begin="3:08.398" end="3:08.555">who</span> <span begin="3:08.555" end="3:08.779">has</span> <span begin="3:08.779" end="3:08.904">to</span> <span begin="3:08.904" end="3:09.238">social</span> <span begin="3:09.238" end="3:09.540">climb</span> <span begin="3:09.540" end="3:09.640">for</span> <span begin="3:09.640" end="3:09.929">one</span></p>
+      <p begin="3:09.922" end="3:11.556" itunes:key="L77" ttm:agent="v1"><span begin="3:09.922" end="3:10.063">'Cause</span> <span begin="3:10.063" end="3:10.202">I'm</span> <span begin="3:10.202" end="3:10.319">the</span> <span begin="3:10.319" end="3:10.863">oldest</span> <span begin="3:10.863" end="3:10.981">and</span> <span begin="3:10.981" end="3:11.119">the</span> <span begin="3:11.119" end="3:11.556">wittiest</span></p>
+      <p begin="3:11.577" end="3:14.270" itunes:key="L78" ttm:agent="v1"><span begin="3:11.577" end="3:11.697">And</span> <span begin="3:11.697" end="3:11.812">the</span> <span begin="3:11.812" end="3:12.276">gossip</span> <span begin="3:12.276" end="3:12.502">in</span> <span begin="3:12.502" end="3:12.753">New</span> <span begin="3:12.753" end="3:13.012">York</span> <span begin="3:13.012" end="3:13.289">City</span> <span begin="3:13.289" end="3:13.534">is</span> <span begin="3:13.534" end="3:14.270">insidious</span></p>
+      <p begin="3:14.449" end="3:15.830" itunes:key="L79" ttm:agent="v1"><span begin="3:14.449" end="3:14.556">And</span> <span begin="3:14.556" end="3:15.054">Alexander</span> <span begin="3:15.054" end="3:15.182">is</span> <span begin="3:15.182" end="3:15.830">penniless</span></p>
+      <p begin="3:15.870" end="3:18.139" itunes:key="L80" ttm:agent="v1"><span begin="3:15.870" end="3:16.342">Ha,</span> <span begin="3:16.342" end="3:16.470">that</span> <span begin="3:16.470" end="3:16.633">doesn't</span> <span begin="3:16.633" end="3:16.769">mean</span> <span begin="3:16.769" end="3:16.883">I</span> <span begin="3:16.883" end="3:17.037">want</span> <span begin="3:17.037" end="3:17.137">him</span> <span begin="3:17.137" end="3:17.523">any</span> <span begin="3:17.523" end="3:18.139">less</span></p>
+    </div>
+    <div begin="3:18.596" end="3:22.975" itunes:songPart="Verse">
+      <p begin="3:18.596" end="3:21.036" itunes:key="L81" ttm:agent="v5"><span begin="3:18.596" end="3:19.028">Elizabeth</span> <span begin="3:19.028" end="3:19.633">Schuyler,</span> <span begin="3:20.014" end="3:20.145">it's</span> <span begin="3:20.145" end="3:20.308">a</span> <span begin="3:20.308" end="3:20.508">pleasure</span> <span begin="3:20.508" end="3:20.661">to</span> <span begin="3:20.661" end="3:20.761">meet</span> <span begin="3:20.761" end="3:21.036">you</span></p>
+      <p begin="3:21.140" end="3:21.807" itunes:key="L82" ttm:agent="v4">
+        <span begin="3:21.140" end="3:21.807">Schuyler?</span>
+      </p>
+      <p begin="3:22.122" end="3:22.975" itunes:key="L83" ttm:agent="v1"><span begin="3:22.122" end="3:22.383">My</span> <span begin="3:22.383" end="3:22.975">sister</span></p>
+    </div>
+    <div begin="3:23.813" end="3:39.660" itunes:songPart="Verse">
+      <p begin="3:23.813" end="3:24.336" itunes:key="L84" ttm:agent="v3"><span begin="3:23.813" end="3:24.072">Number</span> <span begin="3:24.072" end="3:24.336">two</span></p>
+      <p begin="3:24.373" end="3:26.455" itunes:key="L85" ttm:agent="v1"><span begin="3:24.373" end="3:24.525">He's</span> <span begin="3:24.525" end="3:24.888">after</span> <span begin="3:24.888" end="3:25.160">me</span> <span begin="3:25.160" end="3:25.280">'cause</span> <span begin="3:25.280" end="3:25.418">I'm</span> <span begin="3:25.418" end="3:25.533">a</span> <span begin="3:25.533" end="3:25.856">Schuyler</span> <span begin="3:25.856" end="3:26.455">sister</span></p>
+      <p begin="3:26.455" end="3:28.037" itunes:key="L86" ttm:agent="v1"><span begin="3:26.455" end="3:26.612">That</span> <span begin="3:26.612" end="3:26.874">elevates</span> <span begin="3:26.874" end="3:27.007">his</span> <span begin="3:27.007" end="3:27.399">status,</span> <span begin="3:27.399" end="3:28.037">I'd</span></p>
+      <p begin="3:28.037" end="3:30.597" itunes:key="L87" ttm:agent="v1"><span begin="3:28.037" end="3:28.272">Have</span> <span begin="3:28.272" end="3:28.528">to</span> <span begin="3:28.528" end="3:28.728">be</span> <span begin="3:28.728" end="3:29.184">naïve</span> <span begin="3:29.184" end="3:29.360">to</span> <span begin="3:29.360" end="3:29.666">set</span> <span begin="3:29.666" end="3:29.893">that</span> <span begin="3:29.893" end="3:30.597">aside</span></p>
+      <p begin="3:30.605" end="3:31.869" itunes:key="L88" ttm:agent="v1"><span begin="3:30.605" end="3:30.840">Maybe</span> <span begin="3:30.840" end="3:31.061">that</span> <span begin="3:31.061" end="3:31.264">is</span> <span begin="3:31.264" end="3:31.869">why</span></p>
+      <p begin="3:32.065" end="3:35.730" itunes:key="L89" ttm:agent="v1"><span begin="3:32.065" end="3:32.265">I</span> <span begin="3:32.265" end="3:33.046">introduce</span> <span begin="3:33.046" end="3:33.308">him</span> <span begin="3:33.308" end="3:33.540">to</span> <span begin="3:33.540" end="3:34.252">Eli</span><span begin="3:34.252" end="3:34.452">za,</span> <span begin="3:34.452" end="3:34.705">now</span> <span begin="3:34.705" end="3:34.940">that's</span> <span begin="3:34.940" end="3:35.196">his</span> <span begin="3:35.196" end="3:35.730">bride</span></p>
+      <p begin="3:35.842" end="3:37.778" itunes:key="L90" ttm:agent="v1"><span begin="3:35.842" end="3:36.138">Nice</span> <span begin="3:36.138" end="3:36.333">going,</span> <span begin="3:36.333" end="3:37.119">Angelica,</span> <span begin="3:37.119" end="3:37.373">he</span> <span begin="3:37.373" end="3:37.503">was</span> <span begin="3:37.503" end="3:37.778">right</span></p>
+      <p begin="3:37.904" end="3:39.660" itunes:key="L91" ttm:agent="v1"><span begin="3:37.904" end="3:38.040">You</span> <span begin="3:38.040" end="3:38.173">will</span> <span begin="3:38.173" end="3:38.408">never</span> <span begin="3:38.408" end="3:38.547">be</span> <span begin="3:38.547" end="3:39.660">satisfied</span></p>
+    </div>
+    <div begin="3:39.836" end="3:46.167" itunes:songPart="Verse">
+      <p begin="3:39.836" end="3:41.351" itunes:key="L92" ttm:agent="v5"><span begin="3:39.836" end="3:40.097">Thank</span> <span begin="3:40.097" end="3:40.340">you</span> <span begin="3:40.340" end="3:40.513">for</span> <span begin="3:40.513" end="3:40.692">all</span> <span begin="3:40.692" end="3:40.839">your</span> <span begin="3:40.839" end="3:41.351">service</span></p>
+      <p begin="3:41.400" end="3:44.433" itunes:key="L93" ttm:agent="v4"><span begin="3:41.400" end="3:41.557">If</span> <span begin="3:41.557" end="3:41.709">it</span> <span begin="3:41.709" end="3:41.965">takes</span> <span begin="3:41.965" end="3:42.296">fighting</span> <span begin="3:42.296" end="3:42.415">a</span> <span begin="3:42.415" end="3:42.688">war</span> <span begin="3:42.688" end="3:42.829">for</span> <span begin="3:42.829" end="3:42.995">us</span> <span begin="3:42.995" end="3:43.139">to</span> <span begin="3:43.139" end="3:43.364">meet,</span> <span begin="3:43.402" end="3:43.589">it</span> <span begin="3:43.589" end="3:43.735">will</span> <span begin="3:43.735" end="3:43.911">have</span> <span begin="3:43.911" end="3:44.079">been</span> <span begin="3:44.079" end="3:44.247">worth</span> <span begin="3:44.247" end="3:44.433">it</span></p>
+      <p begin="3:45.050" end="3:46.167" itunes:key="L94" ttm:agent="v1"><span begin="3:45.050" end="3:45.263">I'll</span> <span begin="3:45.263" end="3:45.463">leave</span> <span begin="3:45.463" end="3:45.689">you</span> <span begin="3:45.689" end="3:45.789">to</span> <span begin="3:45.789" end="3:46.167">it</span></p>
+    </div>
+    <div begin="3:47.333" end="4:02.639" itunes:songPart="Verse">
+      <p begin="3:47.333" end="3:47.888" itunes:key="L95" ttm:agent="v3"><span begin="3:47.333" end="3:47.570">Number</span> <span begin="3:47.570" end="3:47.888">three</span></p>
+      <p begin="3:47.798" end="3:51.002" itunes:key="L96" ttm:agent="v1"><span begin="3:47.798" end="3:48.043">I</span> <span begin="3:48.043" end="3:48.278">know</span> <span begin="3:48.278" end="3:48.478">my</span> <span begin="3:48.478" end="3:48.998">sister</span> <span begin="3:48.998" end="3:49.219">like</span> <span begin="3:49.219" end="3:49.526">I</span> <span begin="3:49.526" end="3:49.737">know</span> <span begin="3:49.737" end="3:49.923">my</span> <span begin="3:49.923" end="3:50.387">own</span> <span begin="3:50.387" end="3:51.002">mind</span></p>
+      <p begin="3:51.002" end="3:54.923" itunes:key="L97" ttm:agent="v1"><span begin="3:51.002" end="3:51.253">You</span> <span begin="3:51.253" end="3:51.431">will</span> <span begin="3:51.431" end="3:51.845">never</span> <span begin="3:51.845" end="3:52.317">find</span> <span begin="3:52.317" end="3:53.002">anyone</span> <span begin="3:53.002" end="3:53.263">as</span> <span begin="3:53.263" end="3:53.714">trusting</span> <span begin="3:53.714" end="3:53.917">or</span> <span begin="3:53.917" end="3:54.189">as</span> <span begin="3:54.189" end="3:54.923">kind</span></p>
+      <p begin="3:55.119" end="3:58.713" itunes:key="L98" ttm:agent="v1"><span begin="3:55.119" end="3:55.282">If</span> <span begin="3:55.282" end="3:55.399">I</span> <span begin="3:55.399" end="3:55.588">tell</span> <span begin="3:55.588" end="3:55.823">her</span> <span begin="3:55.823" end="3:56.042">that</span> <span begin="3:56.042" end="3:56.235">I</span> <span begin="3:56.235" end="3:56.500">love</span> <span begin="3:56.500" end="3:56.762">him,</span> <span begin="3:56.762" end="3:57.007">she'd</span> <span begin="3:57.007" end="3:57.231">be</span> <span begin="3:57.231" end="3:57.932">silently</span> <span begin="3:57.932" end="3:58.713">resigned</span></p>
+      <p begin="3:58.713" end="4:00.128" itunes:key="L99" ttm:agent="v1"><span begin="3:58.713" end="3:58.990">He'd</span> <span begin="3:58.990" end="3:59.281">be</span> <span begin="3:59.281" end="4:00.128">mine</span></p>
+      <p begin="4:00.360" end="4:01.572" itunes:key="L100" ttm:agent="v1"><span begin="4:00.360" end="4:00.507">She</span> <span begin="4:00.507" end="4:00.624">would</span> <span begin="4:00.624" end="4:00.856">say,</span> <span begin="4:00.856" end="4:01.056">"I'm</span> <span begin="4:01.056" end="4:01.572">fine"</span></p>
+      <p begin="4:01.572" end="4:02.639" itunes:key="L101" ttm:agent="v1000"><span begin="4:01.572" end="4:01.868">She'd</span> <span begin="4:01.868" end="4:02.065">be</span> <span begin="4:02.065" end="4:02.639">lying</span></p>
+    </div>
+    <div begin="4:03.311" end="4:25.401" itunes:songPart="Bridge">
+      <p begin="4:03.311" end="4:07.348" itunes:key="L102" ttm:agent="v1"><span begin="4:03.311" end="4:03.618">But</span> <span begin="4:03.618" end="4:03.823">when</span> <span begin="4:03.823" end="4:03.975">I</span> <span begin="4:03.975" end="4:04.775">fantasize</span> <span begin="4:04.775" end="4:05.042">at</span> <span begin="4:05.042" end="4:05.359">night,</span> <span begin="4:05.359" end="4:05.599">it's</span> <span begin="4:05.599" end="4:06.647">Alexander's</span> <span begin="4:06.647" end="4:07.348">eyes</span></p>
+      <p begin="4:07.506" end="4:09.494" itunes:key="L103" ttm:agent="v1"><span begin="4:07.506" end="4:07.837">As</span> <span begin="4:07.837" end="4:08.053">I</span> <span begin="4:08.053" end="4:09.494">romanticize</span></p>
+      <p begin="4:09.494" end="4:14.883" itunes:key="L104" ttm:agent="v1"><span begin="4:09.494" end="4:09.694">What</span> <span begin="4:09.694" end="4:09.971">might</span> <span begin="4:09.971" end="4:10.153">have</span> <span begin="4:10.153" end="4:10.510">been</span> <span begin="4:10.510" end="4:10.827">if</span> <span begin="4:10.827" end="4:10.961">I</span> <span begin="4:10.961" end="4:11.233">hadn't</span> <span begin="4:11.233" end="4:12.937">sized</span> <span begin="4:12.937" end="4:13.166">him</span> <span begin="4:13.166" end="4:13.427">up</span> <span begin="4:13.427" end="4:13.726">so</span> <span begin="4:13.726" end="4:14.883">quickly</span></p>
+      <p begin="4:15.728" end="4:19.587" itunes:key="L105" ttm:agent="v1"><span begin="4:15.728" end="4:16.032">At</span> <span begin="4:16.032" end="4:16.347">least</span> <span begin="4:16.347" end="4:16.757">my</span> <span begin="4:16.757" end="4:17.043">dear</span> <span begin="4:17.043" end="4:17.438">El</span><span begin="4:17.438" end="4:18.204">i</span><span begin="4:18.204" end="4:18.587">za's</span> <span begin="4:18.587" end="4:18.934">his</span> <span begin="4:18.934" end="4:19.587">wife</span></p>
+      <p begin="4:21.134" end="4:25.401" itunes:key="L106" ttm:agent="v1"><span begin="4:21.134" end="4:21.414">At</span> <span begin="4:21.414" end="4:21.729">least</span> <span begin="4:21.729" end="4:22.091">I</span> <span begin="4:22.091" end="4:22.409">keep</span> <span begin="4:22.409" end="4:22.761">his</span> <span begin="4:22.761" end="4:23.713">eyes</span> <span begin="4:23.713" end="4:24.011">in</span> <span begin="4:24.011" end="4:24.574">my</span> <span begin="4:24.574" end="4:25.401">life</span></p>
+    </div>
+    <div begin="4:29.699" end="4:45.503" itunes:songPart="Chorus">
+      <p begin="4:29.699" end="4:30.687" itunes:key="L107" ttm:agent="v1"><span begin="4:29.699" end="4:29.838">To</span> <span begin="4:29.838" end="4:29.995">the</span> <span begin="4:29.995" end="4:30.687">groom</span></p>
+      <p begin="4:30.687" end="4:33.359" itunes:key="L108" ttm:agent="v3"><span begin="4:30.687" end="4:30.839">To</span> <span begin="4:30.839" end="4:30.978">the</span> <span begin="4:30.978" end="4:31.620">groom,</span> <span begin="4:31.620" end="4:31.775">to</span> <span begin="4:31.775" end="4:31.922">the</span> <span begin="4:31.922" end="4:32.610">groom,</span> <span begin="4:32.610" end="4:32.754">to</span> <span begin="4:32.754" end="4:32.898">the</span> <span begin="4:32.898" end="4:33.359">groom</span></p>
+      <p begin="4:33.472" end="4:34.459" itunes:key="L109" ttm:agent="v1"><span begin="4:33.472" end="4:33.624">To</span> <span begin="4:33.624" end="4:33.760">the</span> <span begin="4:33.760" end="4:34.459">bride</span></p>
+      <p begin="4:34.514" end="4:38.401" itunes:key="L110" ttm:agent="v3"><span begin="4:34.514" end="4:34.658">To</span> <span begin="4:34.658" end="4:34.799">the</span> <span begin="4:34.799" end="4:35.530">bride,</span> <span begin="4:35.530" end="4:35.666">to</span> <span begin="4:35.666" end="4:35.786">the</span> <span begin="4:35.786" end="4:37.221">bride</span> <span ttm:role="x-bg"><span begin="4:36.450" end="4:36.677">(To</span> <span begin="4:36.677" end="4:36.778">the</span> <span begin="4:36.778" end="4:38.401">bride)</span></span></p>
+      <p begin="4:37.080" end="4:39.774" itunes:key="L111" ttm:agent="v1"><span begin="4:37.080" end="4:37.384">From</span> <span begin="4:37.384" end="4:37.597">your</span> <span begin="4:37.597" end="4:38.112">sist</span><span begin="4:38.112" end="4:39.774">er</span></p>
+      <p begin="4:38.404" end="4:41.165" itunes:key="L112" ttm:agent="v3"><span begin="4:38.404" end="4:39.348">Angelica,</span> <span begin="4:39.348" end="4:40.348">Angelica,</span> <span begin="4:40.348" end="4:41.165">Angelica</span></p>
+      <p begin="4:41.075" end="4:44.569" itunes:key="L113" ttm:agent="v1"><span begin="4:41.075" end="4:41.339">Who</span> <span begin="4:41.339" end="4:41.531">is</span> <span begin="4:41.531" end="4:42.243">always</span> <span begin="4:42.243" end="4:42.675">by</span> <span begin="4:42.675" end="4:42.920">your</span> <span begin="4:42.920" end="4:44.569">side</span></p>
+      <p begin="4:43.044" end="4:45.503" itunes:key="L114" ttm:agent="v3"><span begin="4:43.044" end="4:43.297">By</span> <span begin="4:43.297" end="4:43.452">your</span> <span begin="4:43.452" end="4:45.492">side</span> <span ttm:role="x-bg"><span begin="4:43.988" end="4:44.263">(By</span> <span begin="4:44.263" end="4:44.417">your</span> <span begin="4:44.417" end="4:45.503">side)</span></span></p>
+    </div>
+    <div begin="4:44.875" end="5:00.744" itunes:songPart="Chorus">
+      <p begin="4:44.875" end="4:48.677" itunes:key="L115" ttm:agent="v1"><span begin="4:44.875" end="4:45.124">To</span> <span begin="4:45.124" end="4:45.319">your</span> <span begin="4:45.319" end="4:45.934">u</span><span begin="4:45.934" end="4:46.324">ni</span><span begin="4:46.324" end="4:48.677">on</span></p>
+      <p begin="4:46.648" end="4:49.110" itunes:key="L116" ttm:agent="v3"><span begin="4:46.648" end="4:46.824">To</span> <span begin="4:46.824" end="4:46.936">the</span> <span begin="4:46.936" end="4:47.571">union,</span> <span begin="4:47.571" end="4:47.704">to</span> <span begin="4:47.704" end="4:47.819">the</span> <span begin="4:47.819" end="4:49.110">revolution</span></p>
+      <p begin="4:49.120" end="4:52.293" itunes:key="L117" ttm:agent="v1"><span begin="4:49.120" end="4:49.256">And</span> <span begin="4:49.256" end="4:49.371">the</span> <span begin="4:49.371" end="4:49.603">hope</span> <span begin="4:49.603" end="4:49.837">that</span> <span begin="4:49.837" end="4:50.013">you</span> <span begin="4:50.013" end="4:52.293">provide</span></p>
+      <p begin="4:50.778" end="4:54.032" itunes:key="L118" ttm:agent="v3"><span begin="4:50.778" end="4:51.021">You</span> <span begin="4:51.021" end="4:51.711">provide,</span> <span begin="4:51.711" end="4:51.914">you</span> <span begin="4:51.914" end="4:54.032">provide</span></p>
+      <p begin="4:52.690" end="4:56.411" itunes:key="L119" ttm:agent="v1"><span begin="4:52.690" end="4:52.970">May</span> <span begin="4:52.970" end="4:53.146">you</span> <span begin="4:53.146" end="4:53.919">alw</span><span begin="4:53.919" end="4:56.411">ays</span></p>
+      <p begin="4:54.795" end="4:56.958" itunes:key="L120" ttm:agent="v3">
+        <span begin="4:54.795" end="4:55.818">Alw</span>
+        <span begin="4:55.818" end="4:56.958">ays</span>
+      </p>
+      <p begin="4:56.487" end="5:00.052" itunes:key="L121" ttm:agent="v1"><span begin="4:56.487" end="4:56.674">Be</span> <span begin="4:56.674" end="4:57.090">sat</span><span begin="4:57.090" end="4:57.276">isf</span><span begin="4:57.276" end="5:00.052">ied</span></p>
+      <p begin="4:57.518" end="5:00.744" itunes:key="L122" ttm:agent="v3"><span begin="4:57.518" end="4:57.707">Be</span> <span begin="4:57.707" end="4:58.427">satisfied,</span> <span begin="4:58.427" end="4:58.662">be</span> <span begin="4:58.662" end="4:59.425">satisfied,</span> <span begin="4:59.425" end="4:59.654">be</span> <span begin="4:59.654" end="5:00.744">satisfied</span></p>
+    </div>
+    <div begin="5:00.254" end="5:21.523" itunes:songPart="Outro">
+      <p begin="5:00.254" end="5:08.027" itunes:key="L123" ttm:agent="v1"><span begin="5:00.254" end="5:00.475">And</span> <span begin="5:00.475" end="5:00.675">I</span> <span begin="5:00.675" end="5:03.558">know</span> <span begin="5:04.027" end="5:04.254">she'll</span> <span begin="5:04.254" end="5:04.475">be</span> <span begin="5:04.475" end="5:05.261">ha</span><span begin="5:05.261" end="5:05.483">ppy</span> <span begin="5:05.483" end="5:06.230">as</span> <span begin="5:06.230" end="5:06.510">his</span> <span begin="5:06.510" end="5:08.027">bride</span></p>
+      <p begin="5:01.402" end="5:04.322" itunes:key="L124" ttm:agent="v3"><span begin="5:01.402" end="5:01.599">Be</span> <span begin="5:01.599" end="5:02.301">satisfied,</span> <span begin="5:02.301" end="5:02.543">be</span> <span begin="5:02.543" end="5:03.311">satisfied,</span> <span begin="5:03.311" end="5:03.567">be</span> <span begin="5:03.567" end="5:04.322">satisfied</span></p>
+      <p begin="5:04.322" end="5:07.216" itunes:key="L125" ttm:agent="v3"><span begin="5:04.322" end="5:04.538">Be</span> <span begin="5:04.538" end="5:05.298">satisfied,</span> <span begin="5:05.298" end="5:05.495">be</span> <span begin="5:05.495" end="5:06.215">satisfied,</span> <span begin="5:06.215" end="5:06.455">be</span> <span begin="5:06.455" end="5:07.216">satisfied</span></p>
+      <p begin="5:07.216" end="5:10.110" itunes:key="L126" ttm:agent="v3"><span begin="5:07.216" end="5:07.437">Be</span> <span begin="5:07.437" end="5:08.141">satisfied,</span> <span begin="5:08.141" end="5:08.379">be</span> <span begin="5:08.379" end="5:09.131">satisfied,</span> <span begin="5:09.131" end="5:09.352">be</span> <span begin="5:09.352" end="5:10.110">satisfied</span></p>
+      <p begin="5:08.037" end="5:12.152" itunes:key="L127" ttm:agent="v1"><span begin="5:08.037" end="5:08.232">And</span> <span begin="5:08.232" end="5:08.405">I</span> <span begin="5:08.405" end="5:12.152">know</span></p>
+      <p begin="5:10.111" end="5:13.159" itunes:key="L128" ttm:agent="v3"><span begin="5:10.111" end="5:10.303">Be</span> <span begin="5:10.303" end="5:11.074">satisfied,</span> <span begin="5:11.074" end="5:11.279">be</span> <span begin="5:11.279" end="5:11.658">sat</span><span begin="5:11.658" end="5:11.855">isf</span><span begin="5:11.855" end="5:13.159">ied</span></p>
+      <p begin="5:13.012" end="5:15.055" itunes:key="L129" ttm:agent="v1"><span begin="5:13.012" end="5:13.135">He</span> <span begin="5:13.135" end="5:13.271">will</span> <span begin="5:13.271" end="5:13.508">never</span> <span begin="5:13.508" end="5:13.713">be</span> <span begin="5:13.713" end="5:15.055">satisfied</span></p>
+      <p begin="5:15.177" end="5:21.523" itunes:key="L130" ttm:agent="v1"><span begin="5:15.177" end="5:15.326">I</span> <span begin="5:15.326" end="5:15.481">will</span> <span begin="5:15.481" end="5:15.788">never</span> <span begin="5:15.788" end="5:16.164">be</span> <span begin="5:16.164" end="5:16.631">sat</span><span begin="5:16.631" end="5:16.957">isf</span><span begin="5:16.957" end="5:21.390">ie</span><span begin="5:21.390" end="5:21.523">d</span></p>
+    </div>
+  </body>
+</tt>
+"""
+
+    val TTML_SATISFIED_PARSED = listOf(
+        LyricLine(start = 1205uL, text = """Alright, alright, that's what I'm talkin' about!""", words = mutableListOf(SemanticLyrics.Word(timeRange = 1205uL..1925uL, charRange = 0..7, isRtl = false), SemanticLyrics.Word(timeRange = 1925uL..3002uL, charRange = 9..16, isRtl = false), SemanticLyrics.Word(timeRange = 3002uL..3349uL, charRange = 18..23, isRtl = false), SemanticLyrics.Word(timeRange = 3349uL..3560uL, charRange = 25..28, isRtl = false), SemanticLyrics.Word(timeRange = 3560uL..3869uL, charRange = 30..32, isRtl = false), SemanticLyrics.Word(timeRange = 3869uL..4565uL, charRange = 34..40, isRtl = false), SemanticLyrics.Word(timeRange = 4565uL..5429uL, charRange = 42..47, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 5429uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 5974uL, text = """Now everyone, give it up for the Maid of Honor""", words = mutableListOf(SemanticLyrics.Word(timeRange = 5974uL..6502uL, charRange = 0..2, isRtl = false), SemanticLyrics.Word(timeRange = 6803uL..7648uL, charRange = 4..12, isRtl = false), SemanticLyrics.Word(timeRange = 8138uL..8374uL, charRange = 14..17, isRtl = false), SemanticLyrics.Word(timeRange = 8374uL..8611uL, charRange = 19..20, isRtl = false), SemanticLyrics.Word(timeRange = 8611uL..8960uL, charRange = 22..23, isRtl = false), SemanticLyrics.Word(timeRange = 9574uL..9723uL, charRange = 25..27, isRtl = false), SemanticLyrics.Word(timeRange = 9723uL..9947uL, charRange = 29..31, isRtl = false), SemanticLyrics.Word(timeRange = 9947uL..10289uL, charRange = 33..36, isRtl = false), SemanticLyrics.Word(timeRange = 10289uL..10441uL, charRange = 38..39, isRtl = false), SemanticLyrics.Word(timeRange = 10441uL..11207uL, charRange = 41..45, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 11207uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 11680uL, text = """Angelica Schuyler!""", words = mutableListOf(SemanticLyrics.Word(timeRange = 11680uL..12558uL, charRange = 0..7, isRtl = false), SemanticLyrics.Word(timeRange = 12558uL..13920uL, charRange = 9..17, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 13920uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 14732uL, text = """A toast to the groom""", words = mutableListOf(SemanticLyrics.Word(timeRange = 14732uL..14959uL, charRange = 0..0, isRtl = false), SemanticLyrics.Word(timeRange = 14959uL..15207uL, charRange = 2..6, isRtl = false), SemanticLyrics.Word(timeRange = 15207uL..15361uL, charRange = 8..9, isRtl = false), SemanticLyrics.Word(timeRange = 15361uL..15479uL, charRange = 11..13, isRtl = false), SemanticLyrics.Word(timeRange = 15479uL..16222uL, charRange = 15..19, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 16222uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 16232uL, text = """To the groom, to the groom, to the groom""", words = mutableListOf(SemanticLyrics.Word(timeRange = 16232uL..16349uL, charRange = 0..1, isRtl = false), SemanticLyrics.Word(timeRange = 16349uL..16485uL, charRange = 3..5, isRtl = false), SemanticLyrics.Word(timeRange = 16485uL..16936uL, charRange = 7..12, isRtl = false), SemanticLyrics.Word(timeRange = 17104uL..17243uL, charRange = 14..15, isRtl = false), SemanticLyrics.Word(timeRange = 17243uL..17384uL, charRange = 17..19, isRtl = false), SemanticLyrics.Word(timeRange = 17384uL..17910uL, charRange = 21..26, isRtl = false), SemanticLyrics.Word(timeRange = 18088uL..18268uL, charRange = 28..29, isRtl = false), SemanticLyrics.Word(timeRange = 18268uL..18368uL, charRange = 31..33, isRtl = false), SemanticLyrics.Word(timeRange = 18368uL..18874uL, charRange = 35..39, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 18874uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 19127uL, text = """To the bride""", words = mutableListOf(SemanticLyrics.Word(timeRange = 19127uL..19266uL, charRange = 0..1, isRtl = false), SemanticLyrics.Word(timeRange = 19266uL..19378uL, charRange = 3..5, isRtl = false), SemanticLyrics.Word(timeRange = 19378uL..20224uL, charRange = 7..11, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 20224uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 20034uL, text = """To the bride, to the bride""", words = mutableListOf(SemanticLyrics.Word(timeRange = 20034uL..20199uL, charRange = 0..1, isRtl = false), SemanticLyrics.Word(timeRange = 20199uL..20316uL, charRange = 3..5, isRtl = false), SemanticLyrics.Word(timeRange = 20316uL..20925uL, charRange = 7..12, isRtl = false), SemanticLyrics.Word(timeRange = 21010uL..21130uL, charRange = 14..15, isRtl = false), SemanticLyrics.Word(timeRange = 21130uL..21255uL, charRange = 17..19, isRtl = false), SemanticLyrics.Word(timeRange = 21255uL..22835uL, charRange = 21..25, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 22835uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 21945uL, text = """To the bride""", words = mutableListOf(SemanticLyrics.Word(timeRange = 21945uL..22106uL, charRange = 0..1, isRtl = false), SemanticLyrics.Word(timeRange = 22106uL..22206uL, charRange = 3..5, isRtl = false), SemanticLyrics.Word(timeRange = 22206uL..24217uL, charRange = 7..11, isRtl = false)), speaker = SpeakerEntity.Voice1Background, end = 24217uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 22545uL, text = """From your sister""", words = mutableListOf(SemanticLyrics.Word(timeRange = 22545uL..22881uL, charRange = 0..3, isRtl = false), SemanticLyrics.Word(timeRange = 22881uL..23081uL, charRange = 5..8, isRtl = false), SemanticLyrics.Word(timeRange = 23081uL..23697uL, charRange = 10..13, isRtl = false), SemanticLyrics.Word(timeRange = 23697uL..25257uL, charRange = 14..15, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 25257uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 23903uL, text = """Angelica, Angelica, Angelica""", words = mutableListOf(SemanticLyrics.Word(timeRange = 23903uL..24868uL, charRange = 0..8, isRtl = false), SemanticLyrics.Word(timeRange = 24868uL..25818uL, charRange = 10..18, isRtl = false), SemanticLyrics.Word(timeRange = 25818uL..27927uL, charRange = 20..27, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 27927uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 26631uL, text = """Who is always by your side""", words = mutableListOf(SemanticLyrics.Word(timeRange = 26631uL..26780uL, charRange = 0..2, isRtl = false), SemanticLyrics.Word(timeRange = 26780uL..26946uL, charRange = 4..5, isRtl = false), SemanticLyrics.Word(timeRange = 26946uL..27484uL, charRange = 7..12, isRtl = false), SemanticLyrics.Word(timeRange = 27484uL..27674uL, charRange = 14..15, isRtl = false), SemanticLyrics.Word(timeRange = 27674uL..27924uL, charRange = 17..20, isRtl = false), SemanticLyrics.Word(timeRange = 27924uL..29478uL, charRange = 22..25, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 29478uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 28427uL, text = """By your side""", words = mutableListOf(SemanticLyrics.Word(timeRange = 28427uL..28758uL, charRange = 0..1, isRtl = false), SemanticLyrics.Word(timeRange = 28758uL..28915uL, charRange = 3..6, isRtl = false), SemanticLyrics.Word(timeRange = 28915uL..31017uL, charRange = 8..11, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 31017uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 29545uL, text = """By your side""", words = mutableListOf(SemanticLyrics.Word(timeRange = 29545uL..29721uL, charRange = 0..1, isRtl = false), SemanticLyrics.Word(timeRange = 29721uL..29902uL, charRange = 3..6, isRtl = false), SemanticLyrics.Word(timeRange = 29902uL..31044uL, charRange = 8..11, isRtl = false)), speaker = SpeakerEntity.Voice1Background, end = 31044uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 30392uL, text = """To your union""", words = mutableListOf(SemanticLyrics.Word(timeRange = 30392uL..30581uL, charRange = 0..1, isRtl = false), SemanticLyrics.Word(timeRange = 30581uL..30792uL, charRange = 3..6, isRtl = false), SemanticLyrics.Word(timeRange = 30792uL..32926uL, charRange = 8..12, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 32926uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 32103uL, text = """To the union, to the revolution""", words = mutableListOf(SemanticLyrics.Word(timeRange = 32103uL..32234uL, charRange = 0..1, isRtl = false), SemanticLyrics.Word(timeRange = 32234uL..32340uL, charRange = 3..5, isRtl = false), SemanticLyrics.Word(timeRange = 32340uL..33060uL, charRange = 7..12, isRtl = false), SemanticLyrics.Word(timeRange = 33060uL..33191uL, charRange = 14..15, isRtl = false), SemanticLyrics.Word(timeRange = 33191uL..33306uL, charRange = 17..19, isRtl = false), SemanticLyrics.Word(timeRange = 33306uL..34351uL, charRange = 21..30, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 34351uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 34613uL, text = """And the hope that you provide""", words = mutableListOf(SemanticLyrics.Word(timeRange = 34613uL..34713uL, charRange = 0..2, isRtl = false), SemanticLyrics.Word(timeRange = 34713uL..34849uL, charRange = 4..6, isRtl = false), SemanticLyrics.Word(timeRange = 34849uL..35062uL, charRange = 8..11, isRtl = false), SemanticLyrics.Word(timeRange = 35062uL..35299uL, charRange = 13..16, isRtl = false), SemanticLyrics.Word(timeRange = 35299uL..35502uL, charRange = 18..20, isRtl = false), SemanticLyrics.Word(timeRange = 35502uL..36813uL, charRange = 22..28, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 36813uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 36254uL, text = """You provide, you provide""", words = mutableListOf(SemanticLyrics.Word(timeRange = 36254uL..36457uL, charRange = 0..2, isRtl = false), SemanticLyrics.Word(timeRange = 36457uL..37195uL, charRange = 4..11, isRtl = false), SemanticLyrics.Word(timeRange = 37195uL..37425uL, charRange = 13..15, isRtl = false), SemanticLyrics.Word(timeRange = 37425uL..38456uL, charRange = 17..23, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 38456uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 37951uL, text = """And may you always""", words = mutableListOf(SemanticLyrics.Word(timeRange = 37951uL..38156uL, charRange = 0..2, isRtl = false), SemanticLyrics.Word(timeRange = 38156uL..38394uL, charRange = 4..6, isRtl = false), SemanticLyrics.Word(timeRange = 38394uL..38586uL, charRange = 8..10, isRtl = false), SemanticLyrics.Word(timeRange = 38586uL..39388uL, charRange = 12..14, isRtl = false), SemanticLyrics.Word(timeRange = 39388uL..41442uL, charRange = 15..17, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 41442uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 40405uL, text = """Always""", words = mutableListOf(SemanticLyrics.Word(timeRange = 40405uL..41274uL, charRange = 0..2, isRtl = false), SemanticLyrics.Word(timeRange = 41274uL..42757uL, charRange = 3..5, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 42757uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 41960uL, text = """Be satisfied""", words = mutableListOf(SemanticLyrics.Word(timeRange = 41960uL..42194uL, charRange = 0..1, isRtl = false), SemanticLyrics.Word(timeRange = 42194uL..42573uL, charRange = 3..5, isRtl = false), SemanticLyrics.Word(timeRange = 42573uL..42784uL, charRange = 6..8, isRtl = false), SemanticLyrics.Word(timeRange = 42784uL..44596uL, charRange = 9..11, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 44596uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 44223uL, text = """Rewind""", words = mutableListOf(SemanticLyrics.Word(timeRange = 44223uL..44570uL, charRange = 0..2, isRtl = false), SemanticLyrics.Word(timeRange = 44570uL..46464uL, charRange = 3..5, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 46464uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 46050uL, text = """Rewind, rewind""", words = mutableListOf(SemanticLyrics.Word(timeRange = 46050uL..47098uL, charRange = 0..6, isRtl = false), SemanticLyrics.Word(timeRange = 48082uL..49186uL, charRange = 8..13, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 49186uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 50302uL, text = """Helpless""", words = mutableListOf(SemanticLyrics.Word(timeRange = 50302uL..50804uL, charRange = 0..3, isRtl = false), SemanticLyrics.Word(timeRange = 50804uL..52837uL, charRange = 4..7, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 52837uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 51474uL, text = """Sky's, Sky's""", words = mutableListOf(SemanticLyrics.Word(timeRange = 51474uL..52268uL, charRange = 0..5, isRtl = false), SemanticLyrics.Word(timeRange = 53399uL..53974uL, charRange = 7..11, isRtl = false)), speaker = SpeakerEntity.Voice2Background, end = 53974uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 54241uL, text = """Helpless""", words = mutableListOf(SemanticLyrics.Word(timeRange = 54241uL..54733uL, charRange = 0..3, isRtl = false), SemanticLyrics.Word(timeRange = 54733uL..56016uL, charRange = 4..7, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 56016uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 55506uL, text = """Drownin', drownin'""", words = mutableListOf(SemanticLyrics.Word(timeRange = 55506uL..56304uL, charRange = 0..8, isRtl = false), SemanticLyrics.Word(timeRange = 57474uL..58197uL, charRange = 10..17, isRtl = false)), speaker = SpeakerEntity.Voice2Background, end = 58197uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 57854uL, text = """Rewind""", words = mutableListOf(SemanticLyrics.Word(timeRange = 57854uL..58671uL, charRange = 0..5, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 58671uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 67918uL, text = """I remember that night, I just might""", words = mutableListOf(SemanticLyrics.Word(timeRange = 67918uL..68097uL, charRange = 0..0, isRtl = false), SemanticLyrics.Word(timeRange = 68097uL..68393uL, charRange = 2..9, isRtl = false), SemanticLyrics.Word(timeRange = 68393uL..68678uL, charRange = 11..14, isRtl = false), SemanticLyrics.Word(timeRange = 68678uL..68918uL, charRange = 16..21, isRtl = false), SemanticLyrics.Word(timeRange = 68918uL..69073uL, charRange = 23..23, isRtl = false), SemanticLyrics.Word(timeRange = 69073uL..69291uL, charRange = 25..28, isRtl = false), SemanticLyrics.Word(timeRange = 69291uL..69514uL, charRange = 30..34, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 69514uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 69514uL, text = """Regret that night for the rest of my days""", words = mutableListOf(SemanticLyrics.Word(timeRange = 69514uL..69874uL, charRange = 0..5, isRtl = false), SemanticLyrics.Word(timeRange = 69874uL..70127uL, charRange = 7..10, isRtl = false), SemanticLyrics.Word(timeRange = 70127uL..70373uL, charRange = 12..16, isRtl = false), SemanticLyrics.Word(timeRange = 70373uL..70498uL, charRange = 18..20, isRtl = false), SemanticLyrics.Word(timeRange = 70498uL..70639uL, charRange = 22..24, isRtl = false), SemanticLyrics.Word(timeRange = 70639uL..70793uL, charRange = 26..29, isRtl = false), SemanticLyrics.Word(timeRange = 70793uL..70893uL, charRange = 31..32, isRtl = false), SemanticLyrics.Word(timeRange = 70893uL..71103uL, charRange = 34..35, isRtl = false), SemanticLyrics.Word(timeRange = 71103uL..71652uL, charRange = 37..40, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 71652uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 71796uL, text = """I remember those soldier boys""", words = mutableListOf(SemanticLyrics.Word(timeRange = 71796uL..71999uL, charRange = 0..0, isRtl = false), SemanticLyrics.Word(timeRange = 71999uL..72276uL, charRange = 2..9, isRtl = false), SemanticLyrics.Word(timeRange = 72276uL..72460uL, charRange = 11..15, isRtl = false), SemanticLyrics.Word(timeRange = 72460uL..72844uL, charRange = 17..23, isRtl = false), SemanticLyrics.Word(timeRange = 72844uL..73103uL, charRange = 25..28, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 73103uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 73103uL, text = """Tripping over themselves to win our praise""", words = mutableListOf(SemanticLyrics.Word(timeRange = 73103uL..73439uL, charRange = 0..7, isRtl = false), SemanticLyrics.Word(timeRange = 73439uL..73639uL, charRange = 9..12, isRtl = false), SemanticLyrics.Word(timeRange = 73639uL..74183uL, charRange = 14..23, isRtl = false), SemanticLyrics.Word(timeRange = 74183uL..74431uL, charRange = 25..26, isRtl = false), SemanticLyrics.Word(timeRange = 74431uL..74671uL, charRange = 28..30, isRtl = false), SemanticLyrics.Word(timeRange = 74671uL..74887uL, charRange = 32..34, isRtl = false), SemanticLyrics.Word(timeRange = 74887uL..75524uL, charRange = 36..41, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 75524uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 75642uL, text = """I remember that dreamlike candlelight""", words = mutableListOf(SemanticLyrics.Word(timeRange = 75642uL..75882uL, charRange = 0..0, isRtl = false), SemanticLyrics.Word(timeRange = 75882uL..76149uL, charRange = 2..9, isRtl = false), SemanticLyrics.Word(timeRange = 76149uL..76367uL, charRange = 11..14, isRtl = false), SemanticLyrics.Word(timeRange = 76367uL..76837uL, charRange = 16..24, isRtl = false), SemanticLyrics.Word(timeRange = 76837uL..77565uL, charRange = 26..36, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 77565uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 77575uL, text = """Like a dream that you can't quite place""", words = mutableListOf(SemanticLyrics.Word(timeRange = 77575uL..77794uL, charRange = 0..3, isRtl = false), SemanticLyrics.Word(timeRange = 77794uL..77935uL, charRange = 5..5, isRtl = false), SemanticLyrics.Word(timeRange = 77935uL..78130uL, charRange = 7..11, isRtl = false), SemanticLyrics.Word(timeRange = 78130uL..78247uL, charRange = 13..16, isRtl = false), SemanticLyrics.Word(timeRange = 78247uL..78386uL, charRange = 18..20, isRtl = false), SemanticLyrics.Word(timeRange = 78386uL..78626uL, charRange = 22..26, isRtl = false), SemanticLyrics.Word(timeRange = 78626uL..78823uL, charRange = 28..32, isRtl = false), SemanticLyrics.Word(timeRange = 78823uL..79443uL, charRange = 34..38, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 79443uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 79582uL, text = """But Alexander""", words = mutableListOf(SemanticLyrics.Word(timeRange = 79582uL..79753uL, charRange = 0..2, isRtl = false), SemanticLyrics.Word(timeRange = 79753uL..81063uL, charRange = 4..12, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 81063uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 81073uL, text = """I'll never forget the first time I saw your face""", words = mutableListOf(SemanticLyrics.Word(timeRange = 81073uL..81281uL, charRange = 0..3, isRtl = false), SemanticLyrics.Word(timeRange = 81281uL..81468uL, charRange = 5..9, isRtl = false), SemanticLyrics.Word(timeRange = 81468uL..81846uL, charRange = 11..16, isRtl = false), SemanticLyrics.Word(timeRange = 81846uL..81980uL, charRange = 18..20, isRtl = false), SemanticLyrics.Word(timeRange = 81980uL..82220uL, charRange = 22..26, isRtl = false), SemanticLyrics.Word(timeRange = 82220uL..82457uL, charRange = 28..31, isRtl = false), SemanticLyrics.Word(timeRange = 82457uL..82702uL, charRange = 33..33, isRtl = false), SemanticLyrics.Word(timeRange = 82702uL..82926uL, charRange = 35..37, isRtl = false), SemanticLyrics.Word(timeRange = 82926uL..83118uL, charRange = 39..42, isRtl = false), SemanticLyrics.Word(timeRange = 83118uL..84233uL, charRange = 44..47, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 84233uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 84605uL, text = """I have never been the same""", words = mutableListOf(SemanticLyrics.Word(timeRange = 84605uL..84861uL, charRange = 0..0, isRtl = false), SemanticLyrics.Word(timeRange = 84861uL..85058uL, charRange = 2..5, isRtl = false), SemanticLyrics.Word(timeRange = 85058uL..85557uL, charRange = 7..11, isRtl = false), SemanticLyrics.Word(timeRange = 85557uL..85810uL, charRange = 13..16, isRtl = false), SemanticLyrics.Word(timeRange = 85810uL..86010uL, charRange = 18..20, isRtl = false), SemanticLyrics.Word(timeRange = 86010uL..86697uL, charRange = 22..25, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 86697uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 86809uL, text = """Intelligent eyes in a hunger-pang frame""", words = mutableListOf(SemanticLyrics.Word(timeRange = 86809uL..87932uL, charRange = 0..10, isRtl = false), SemanticLyrics.Word(timeRange = 87932uL..88494uL, charRange = 12..15, isRtl = false), SemanticLyrics.Word(timeRange = 88494uL..88676uL, charRange = 17..18, isRtl = false), SemanticLyrics.Word(timeRange = 88676uL..88876uL, charRange = 20..20, isRtl = false), SemanticLyrics.Word(timeRange = 88876uL..89350uL, charRange = 22..28, isRtl = false), SemanticLyrics.Word(timeRange = 89350uL..89876uL, charRange = 29..32, isRtl = false), SemanticLyrics.Word(timeRange = 89876uL..90515uL, charRange = 34..38, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 90515uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 90679uL, text = """And when you said, "Hi", I forgot my dang name""", words = mutableListOf(SemanticLyrics.Word(timeRange = 90679uL..90948uL, charRange = 0..2, isRtl = false), SemanticLyrics.Word(timeRange = 90948uL..91124uL, charRange = 4..7, isRtl = false), SemanticLyrics.Word(timeRange = 91124uL..91338uL, charRange = 9..11, isRtl = false), SemanticLyrics.Word(timeRange = 91338uL..91788uL, charRange = 13..17, isRtl = false), SemanticLyrics.Word(timeRange = 91788uL..92335uL, charRange = 19..23, isRtl = false), SemanticLyrics.Word(timeRange = 92335uL..92538uL, charRange = 25..25, isRtl = false), SemanticLyrics.Word(timeRange = 92538uL..93084uL, charRange = 27..32, isRtl = false), SemanticLyrics.Word(timeRange = 93084uL..93290uL, charRange = 34..35, isRtl = false), SemanticLyrics.Word(timeRange = 93290uL..93767uL, charRange = 37..40, isRtl = false), SemanticLyrics.Word(timeRange = 93767uL..94304uL, charRange = 42..45, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 94304uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 94304uL, text = """Set my heart aflame, every part aflame""", words = mutableListOf(SemanticLyrics.Word(timeRange = 94304uL..94581uL, charRange = 0..2, isRtl = false), SemanticLyrics.Word(timeRange = 94581uL..94763uL, charRange = 4..5, isRtl = false), SemanticLyrics.Word(timeRange = 94763uL..94957uL, charRange = 7..11, isRtl = false), SemanticLyrics.Word(timeRange = 94957uL..95693uL, charRange = 13..19, isRtl = false), SemanticLyrics.Word(timeRange = 95693uL..96221uL, charRange = 21..25, isRtl = false), SemanticLyrics.Word(timeRange = 96221uL..96435uL, charRange = 27..30, isRtl = false), SemanticLyrics.Word(timeRange = 96435uL..97270uL, charRange = 32..37, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 97270uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 97270uL, text = """This is not a game""", words = mutableListOf(SemanticLyrics.Word(timeRange = 97270uL..97462uL, charRange = 0..3, isRtl = false), SemanticLyrics.Word(timeRange = 97462uL..97699uL, charRange = 5..6, isRtl = false), SemanticLyrics.Word(timeRange = 97699uL..97905uL, charRange = 8..10, isRtl = false), SemanticLyrics.Word(timeRange = 97905uL..98091uL, charRange = 12..12, isRtl = false), SemanticLyrics.Word(timeRange = 98091uL..98952uL, charRange = 14..17, isRtl = false)), speaker = SpeakerEntity.Group, end = 98952uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 98558uL, text = """You strike me as a woman who has never been satisfied""", words = mutableListOf(SemanticLyrics.Word(timeRange = 98558uL..99019uL, charRange = 0..2, isRtl = false), SemanticLyrics.Word(timeRange = 99019uL..99563uL, charRange = 4..9, isRtl = false), SemanticLyrics.Word(timeRange = 99563uL..99964uL, charRange = 11..12, isRtl = false), SemanticLyrics.Word(timeRange = 100371uL..100491uL, charRange = 14..15, isRtl = false), SemanticLyrics.Word(timeRange = 100491uL..100609uL, charRange = 17..17, isRtl = false), SemanticLyrics.Word(timeRange = 100609uL..100873uL, charRange = 19..23, isRtl = false), SemanticLyrics.Word(timeRange = 100873uL..101027uL, charRange = 25..27, isRtl = false), SemanticLyrics.Word(timeRange = 101027uL..101195uL, charRange = 29..31, isRtl = false), SemanticLyrics.Word(timeRange = 101195uL..101369uL, charRange = 33..37, isRtl = false), SemanticLyrics.Word(timeRange = 101369uL..101593uL, charRange = 39..42, isRtl = false), SemanticLyrics.Word(timeRange = 101593uL..102717uL, charRange = 44..52, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 102717uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 102827uL, text = """I'm sure I don't know what you mean, you forget yourself""", words = mutableListOf(SemanticLyrics.Word(timeRange = 102827uL..103083uL, charRange = 0..2, isRtl = false), SemanticLyrics.Word(timeRange = 103083uL..103315uL, charRange = 4..7, isRtl = false), SemanticLyrics.Word(timeRange = 103315uL..103544uL, charRange = 9..9, isRtl = false), SemanticLyrics.Word(timeRange = 103544uL..103782uL, charRange = 11..15, isRtl = false), SemanticLyrics.Word(timeRange = 103782uL..104070uL, charRange = 17..20, isRtl = false), SemanticLyrics.Word(timeRange = 104070uL..104304uL, charRange = 22..25, isRtl = false), SemanticLyrics.Word(timeRange = 104304uL..104587uL, charRange = 27..29, isRtl = false), SemanticLyrics.Word(timeRange = 104587uL..105086uL, charRange = 31..35, isRtl = false), SemanticLyrics.Word(timeRange = 105086uL..105312uL, charRange = 37..39, isRtl = false), SemanticLyrics.Word(timeRange = 105312uL..105784uL, charRange = 41..46, isRtl = false), SemanticLyrics.Word(timeRange = 105784uL..105998uL, charRange = 48..51, isRtl = false), SemanticLyrics.Word(timeRange = 105998uL..106681uL, charRange = 52..55, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 106681uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 106491uL, text = """You're like me, I'm never satisfied""", words = mutableListOf(SemanticLyrics.Word(timeRange = 106491uL..106968uL, charRange = 0..5, isRtl = false), SemanticLyrics.Word(timeRange = 106968uL..107629uL, charRange = 7..10, isRtl = false), SemanticLyrics.Word(timeRange = 107704uL..108107uL, charRange = 12..14, isRtl = false), SemanticLyrics.Word(timeRange = 108659uL..108920uL, charRange = 16..18, isRtl = false), SemanticLyrics.Word(timeRange = 108920uL..109440uL, charRange = 20..24, isRtl = false), SemanticLyrics.Word(timeRange = 109440uL..110483uL, charRange = 26..34, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 110483uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 110767uL, text = """Is that right?""", words = mutableListOf(SemanticLyrics.Word(timeRange = 110767uL..110964uL, charRange = 0..1, isRtl = false), SemanticLyrics.Word(timeRange = 110964uL..111415uL, charRange = 3..6, isRtl = false), SemanticLyrics.Word(timeRange = 111415uL..112154uL, charRange = 8..13, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 112154uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 112653uL, text = """I have never been satisfied""", words = mutableListOf(SemanticLyrics.Word(timeRange = 112653uL..112794uL, charRange = 0..0, isRtl = false), SemanticLyrics.Word(timeRange = 112794uL..112930uL, charRange = 2..5, isRtl = false), SemanticLyrics.Word(timeRange = 112930uL..113173uL, charRange = 7..11, isRtl = false), SemanticLyrics.Word(timeRange = 113173uL..113376uL, charRange = 13..16, isRtl = false), SemanticLyrics.Word(timeRange = 113376uL..113659uL, charRange = 18..20, isRtl = false), SemanticLyrics.Word(timeRange = 113659uL..113808uL, charRange = 21..23, isRtl = false), SemanticLyrics.Word(timeRange = 113808uL..115009uL, charRange = 24..26, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 115009uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 116070uL, text = """My name is Angelica Schuyler""", words = mutableListOf(SemanticLyrics.Word(timeRange = 116070uL..116350uL, charRange = 0..1, isRtl = false), SemanticLyrics.Word(timeRange = 116350uL..116585uL, charRange = 3..6, isRtl = false), SemanticLyrics.Word(timeRange = 116585uL..116707uL, charRange = 8..9, isRtl = false), SemanticLyrics.Word(timeRange = 116707uL..117278uL, charRange = 11..18, isRtl = false), SemanticLyrics.Word(timeRange = 117278uL..118396uL, charRange = 20..27, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 118396uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 118306uL, text = """Alexander Hamilton""", words = mutableListOf(SemanticLyrics.Word(timeRange = 118306uL..119223uL, charRange = 0..8, isRtl = false), SemanticLyrics.Word(timeRange = 119223uL..120207uL, charRange = 10..17, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 120207uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 120758uL, text = """Where's your family from?""", words = mutableListOf(SemanticLyrics.Word(timeRange = 120758uL..121099uL, charRange = 0..6, isRtl = false), SemanticLyrics.Word(timeRange = 121099uL..121294uL, charRange = 8..11, isRtl = false), SemanticLyrics.Word(timeRange = 121294uL..121710uL, charRange = 13..18, isRtl = false), SemanticLyrics.Word(timeRange = 121710uL..122525uL, charRange = 20..24, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 122525uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 122765uL, text = """Unimportant, there's a million things I haven't done""", words = mutableListOf(SemanticLyrics.Word(timeRange = 122765uL..123754uL, charRange = 0..11, isRtl = false), SemanticLyrics.Word(timeRange = 123754uL..124008uL, charRange = 13..19, isRtl = false), SemanticLyrics.Word(timeRange = 124008uL..124248uL, charRange = 21..21, isRtl = false), SemanticLyrics.Word(timeRange = 124248uL..124709uL, charRange = 23..29, isRtl = false), SemanticLyrics.Word(timeRange = 124709uL..124970uL, charRange = 31..36, isRtl = false), SemanticLyrics.Word(timeRange = 124970uL..125202uL, charRange = 38..38, isRtl = false), SemanticLyrics.Word(timeRange = 125202uL..125650uL, charRange = 40..46, isRtl = false), SemanticLyrics.Word(timeRange = 125650uL..126055uL, charRange = 48..51, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 126055uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 126113uL, text = """But just you wait, just you wait""", words = mutableListOf(SemanticLyrics.Word(timeRange = 126113uL..126428uL, charRange = 0..2, isRtl = false), SemanticLyrics.Word(timeRange = 126428uL..126764uL, charRange = 4..7, isRtl = false), SemanticLyrics.Word(timeRange = 126764uL..127153uL, charRange = 9..11, isRtl = false), SemanticLyrics.Word(timeRange = 127153uL..127736uL, charRange = 13..17, isRtl = false), SemanticLyrics.Word(timeRange = 127969uL..128356uL, charRange = 19..22, isRtl = false), SemanticLyrics.Word(timeRange = 128356uL..128881uL, charRange = 24..26, isRtl = false), SemanticLyrics.Word(timeRange = 128881uL..129501uL, charRange = 28..31, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 129501uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 129374uL, text = """So, so, so""", words = mutableListOf(SemanticLyrics.Word(timeRange = 129374uL..129643uL, charRange = 0..2, isRtl = false), SemanticLyrics.Word(timeRange = 129643uL..129862uL, charRange = 4..6, isRtl = false), SemanticLyrics.Word(timeRange = 129862uL..130173uL, charRange = 8..9, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 130173uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 130199uL, text = """So this is what it feels like to match wits""", words = mutableListOf(SemanticLyrics.Word(timeRange = 130199uL..130362uL, charRange = 0..1, isRtl = false), SemanticLyrics.Word(timeRange = 130362uL..130479uL, charRange = 3..6, isRtl = false), SemanticLyrics.Word(timeRange = 130479uL..130588uL, charRange = 8..9, isRtl = false), SemanticLyrics.Word(timeRange = 130588uL..130719uL, charRange = 11..14, isRtl = false), SemanticLyrics.Word(timeRange = 130719uL..130855uL, charRange = 16..17, isRtl = false), SemanticLyrics.Word(timeRange = 130855uL..131111uL, charRange = 19..23, isRtl = false), SemanticLyrics.Word(timeRange = 131111uL..131351uL, charRange = 25..28, isRtl = false), SemanticLyrics.Word(timeRange = 131351uL..131484uL, charRange = 30..31, isRtl = false), SemanticLyrics.Word(timeRange = 131484uL..131706uL, charRange = 33..37, isRtl = false), SemanticLyrics.Word(timeRange = 131706uL..131950uL, charRange = 39..42, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 131950uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 131950uL, text = """With someone at your level""", words = mutableListOf(SemanticLyrics.Word(timeRange = 131950uL..132067uL, charRange = 0..3, isRtl = false), SemanticLyrics.Word(timeRange = 132067uL..132345uL, charRange = 5..11, isRtl = false), SemanticLyrics.Word(timeRange = 132345uL..132450uL, charRange = 13..14, isRtl = false), SemanticLyrics.Word(timeRange = 132450uL..132550uL, charRange = 16..19, isRtl = false), SemanticLyrics.Word(timeRange = 132550uL..132852uL, charRange = 21..25, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 132852uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 132821uL, text = """What the hell is the catch?""", words = mutableListOf(SemanticLyrics.Word(timeRange = 132821uL..132965uL, charRange = 0..3, isRtl = false), SemanticLyrics.Word(timeRange = 132965uL..133072uL, charRange = 5..7, isRtl = false), SemanticLyrics.Word(timeRange = 133072uL..133210uL, charRange = 9..12, isRtl = false), SemanticLyrics.Word(timeRange = 133210uL..133338uL, charRange = 14..15, isRtl = false), SemanticLyrics.Word(timeRange = 133338uL..133450uL, charRange = 17..19, isRtl = false), SemanticLyrics.Word(timeRange = 133450uL..133738uL, charRange = 21..26, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 133738uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 133738uL, text = """It's the feeling of freedom, of seein' the light""", words = mutableListOf(SemanticLyrics.Word(timeRange = 133738uL..133938uL, charRange = 0..3, isRtl = false), SemanticLyrics.Word(timeRange = 133938uL..134066uL, charRange = 5..7, isRtl = false), SemanticLyrics.Word(timeRange = 134066uL..134378uL, charRange = 9..15, isRtl = false), SemanticLyrics.Word(timeRange = 134378uL..134498uL, charRange = 17..18, isRtl = false), SemanticLyrics.Word(timeRange = 134498uL..134829uL, charRange = 20..27, isRtl = false), SemanticLyrics.Word(timeRange = 134829uL..134962uL, charRange = 29..30, isRtl = false), SemanticLyrics.Word(timeRange = 134962uL..135207uL, charRange = 32..37, isRtl = false), SemanticLyrics.Word(timeRange = 135207uL..135317uL, charRange = 39..41, isRtl = false), SemanticLyrics.Word(timeRange = 135317uL..135595uL, charRange = 43..47, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 135595uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 135605uL, text = """It's Ben Franklin with a key and a kite!""", words = mutableListOf(SemanticLyrics.Word(timeRange = 135605uL..135706uL, charRange = 0..3, isRtl = false), SemanticLyrics.Word(timeRange = 135706uL..135949uL, charRange = 5..7, isRtl = false), SemanticLyrics.Word(timeRange = 135949uL..136197uL, charRange = 9..16, isRtl = false), SemanticLyrics.Word(timeRange = 136197uL..136325uL, charRange = 18..21, isRtl = false), SemanticLyrics.Word(timeRange = 136325uL..136464uL, charRange = 23..23, isRtl = false), SemanticLyrics.Word(timeRange = 136464uL..136597uL, charRange = 25..27, isRtl = false), SemanticLyrics.Word(timeRange = 136597uL..136713uL, charRange = 29..31, isRtl = false), SemanticLyrics.Word(timeRange = 136713uL..136813uL, charRange = 33..33, isRtl = false), SemanticLyrics.Word(timeRange = 136813uL..137125uL, charRange = 35..39, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 137125uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 137295uL, text = """You see it, right?""", words = mutableListOf(SemanticLyrics.Word(timeRange = 137295uL..137439uL, charRange = 0..2, isRtl = false), SemanticLyrics.Word(timeRange = 137439uL..137575uL, charRange = 4..6, isRtl = false), SemanticLyrics.Word(timeRange = 137575uL..137682uL, charRange = 8..10, isRtl = false), SemanticLyrics.Word(timeRange = 137682uL..137907uL, charRange = 12..17, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 137907uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 138028uL, text = """The conversation lasted two minutes, maybe three minutes""", words = mutableListOf(SemanticLyrics.Word(timeRange = 138028uL..138143uL, charRange = 0..2, isRtl = false), SemanticLyrics.Word(timeRange = 138143uL..138609uL, charRange = 4..15, isRtl = false), SemanticLyrics.Word(timeRange = 138609uL..138836uL, charRange = 17..22, isRtl = false), SemanticLyrics.Word(timeRange = 138836uL..139103uL, charRange = 24..26, isRtl = false), SemanticLyrics.Word(timeRange = 139103uL..139385uL, charRange = 28..35, isRtl = false), SemanticLyrics.Word(timeRange = 139385uL..139639uL, charRange = 37..41, isRtl = false), SemanticLyrics.Word(timeRange = 139639uL..139844uL, charRange = 43..47, isRtl = false), SemanticLyrics.Word(timeRange = 139844uL..140157uL, charRange = 49..55, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 140157uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 140167uL, text = """Everything we said in total agreement""", words = mutableListOf(SemanticLyrics.Word(timeRange = 140167uL..140508uL, charRange = 0..9, isRtl = false), SemanticLyrics.Word(timeRange = 140508uL..140639uL, charRange = 11..12, isRtl = false), SemanticLyrics.Word(timeRange = 140639uL..140751uL, charRange = 14..17, isRtl = false), SemanticLyrics.Word(timeRange = 140751uL..140880uL, charRange = 19..20, isRtl = false), SemanticLyrics.Word(timeRange = 140880uL..141219uL, charRange = 22..26, isRtl = false), SemanticLyrics.Word(timeRange = 141219uL..141696uL, charRange = 28..36, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 141696uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 141696uL, text = """It's a dream and it's a bit of a dance""", words = mutableListOf(SemanticLyrics.Word(timeRange = 141696uL..141947uL, charRange = 0..3, isRtl = false), SemanticLyrics.Word(timeRange = 141947uL..142064uL, charRange = 5..5, isRtl = false), SemanticLyrics.Word(timeRange = 142064uL..142259uL, charRange = 7..11, isRtl = false), SemanticLyrics.Word(timeRange = 142259uL..142397uL, charRange = 13..15, isRtl = false), SemanticLyrics.Word(timeRange = 142397uL..142605uL, charRange = 17..20, isRtl = false), SemanticLyrics.Word(timeRange = 142605uL..142741uL, charRange = 22..22, isRtl = false), SemanticLyrics.Word(timeRange = 142741uL..142861uL, charRange = 24..26, isRtl = false), SemanticLyrics.Word(timeRange = 142861uL..142992uL, charRange = 28..29, isRtl = false), SemanticLyrics.Word(timeRange = 142992uL..143104uL, charRange = 31..31, isRtl = false), SemanticLyrics.Word(timeRange = 143104uL..143506uL, charRange = 33..37, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 143506uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 143582uL, text = """A bit of a posture, it's a bit of a stance""", words = mutableListOf(SemanticLyrics.Word(timeRange = 143582uL..143721uL, charRange = 0..0, isRtl = false), SemanticLyrics.Word(timeRange = 143721uL..143859uL, charRange = 2..4, isRtl = false), SemanticLyrics.Word(timeRange = 143859uL..143995uL, charRange = 6..7, isRtl = false), SemanticLyrics.Word(timeRange = 143995uL..144115uL, charRange = 9..9, isRtl = false), SemanticLyrics.Word(timeRange = 144115uL..144417uL, charRange = 11..18, isRtl = false), SemanticLyrics.Word(timeRange = 144417uL..144537uL, charRange = 20..23, isRtl = false), SemanticLyrics.Word(timeRange = 144537uL..144675uL, charRange = 25..25, isRtl = false), SemanticLyrics.Word(timeRange = 144675uL..144793uL, charRange = 27..29, isRtl = false), SemanticLyrics.Word(timeRange = 144793uL..144917uL, charRange = 31..32, isRtl = false), SemanticLyrics.Word(timeRange = 144917uL..145017uL, charRange = 34..34, isRtl = false), SemanticLyrics.Word(timeRange = 145017uL..145396uL, charRange = 36..41, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 145396uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 145396uL, text = """He's a bit of a flirt, but I'ma give it a chance""", words = mutableListOf(SemanticLyrics.Word(timeRange = 145396uL..145532uL, charRange = 0..3, isRtl = false), SemanticLyrics.Word(timeRange = 145532uL..145673uL, charRange = 5..5, isRtl = false), SemanticLyrics.Word(timeRange = 145673uL..145807uL, charRange = 7..9, isRtl = false), SemanticLyrics.Word(timeRange = 145807uL..145939uL, charRange = 11..12, isRtl = false), SemanticLyrics.Word(timeRange = 145939uL..146039uL, charRange = 14..14, isRtl = false), SemanticLyrics.Word(timeRange = 146039uL..146307uL, charRange = 16..21, isRtl = false), SemanticLyrics.Word(timeRange = 146329uL..146429uL, charRange = 23..25, isRtl = false), SemanticLyrics.Word(timeRange = 146429uL..146612uL, charRange = 27..30, isRtl = false), SemanticLyrics.Word(timeRange = 146612uL..146776uL, charRange = 32..35, isRtl = false), SemanticLyrics.Word(timeRange = 146776uL..146910uL, charRange = 37..38, isRtl = false), SemanticLyrics.Word(timeRange = 146910uL..147010uL, charRange = 40..40, isRtl = false), SemanticLyrics.Word(timeRange = 147010uL..147408uL, charRange = 42..47, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 147408uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 147418uL, text = """I asked about his family, did you see his answer?""", words = mutableListOf(SemanticLyrics.Word(timeRange = 147418uL..147565uL, charRange = 0..0, isRtl = false), SemanticLyrics.Word(timeRange = 147565uL..147738uL, charRange = 2..6, isRtl = false), SemanticLyrics.Word(timeRange = 147738uL..147985uL, charRange = 8..12, isRtl = false), SemanticLyrics.Word(timeRange = 147985uL..148085uL, charRange = 14..16, isRtl = false), SemanticLyrics.Word(timeRange = 148085uL..148482uL, charRange = 18..24, isRtl = false), SemanticLyrics.Word(timeRange = 148482uL..148641uL, charRange = 26..28, isRtl = false), SemanticLyrics.Word(timeRange = 148641uL..148741uL, charRange = 30..32, isRtl = false), SemanticLyrics.Word(timeRange = 148741uL..148850uL, charRange = 34..36, isRtl = false), SemanticLyrics.Word(timeRange = 148850uL..148962uL, charRange = 38..40, isRtl = false), SemanticLyrics.Word(timeRange = 148962uL..149402uL, charRange = 42..48, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 149402uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 149449uL, text = """His hands started fidgeting, he looked askance""", words = mutableListOf(SemanticLyrics.Word(timeRange = 149449uL..149596uL, charRange = 0..2, isRtl = false), SemanticLyrics.Word(timeRange = 149596uL..149796uL, charRange = 4..8, isRtl = false), SemanticLyrics.Word(timeRange = 149796uL..150006uL, charRange = 10..16, isRtl = false), SemanticLyrics.Word(timeRange = 150006uL..150348uL, charRange = 18..27, isRtl = false), SemanticLyrics.Word(timeRange = 150348uL..150502uL, charRange = 29..30, isRtl = false), SemanticLyrics.Word(timeRange = 150502uL..150745uL, charRange = 32..37, isRtl = false), SemanticLyrics.Word(timeRange = 150745uL..151194uL, charRange = 39..45, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 151194uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 151277uL, text = """He's penniless, he's flying by the seat of his pants""", words = mutableListOf(SemanticLyrics.Word(timeRange = 151277uL..151440uL, charRange = 0..3, isRtl = false), SemanticLyrics.Word(timeRange = 151440uL..151797uL, charRange = 5..14, isRtl = false), SemanticLyrics.Word(timeRange = 151797uL..151930uL, charRange = 16..19, isRtl = false), SemanticLyrics.Word(timeRange = 151930uL..152197uL, charRange = 21..26, isRtl = false), SemanticLyrics.Word(timeRange = 152197uL..152320uL, charRange = 28..29, isRtl = false), SemanticLyrics.Word(timeRange = 152320uL..152461uL, charRange = 31..33, isRtl = false), SemanticLyrics.Word(timeRange = 152461uL..152600uL, charRange = 35..38, isRtl = false), SemanticLyrics.Word(timeRange = 152600uL..152732uL, charRange = 40..41, isRtl = false), SemanticLyrics.Word(timeRange = 152732uL..152832uL, charRange = 43..45, isRtl = false), SemanticLyrics.Word(timeRange = 152832uL..153307uL, charRange = 47..51, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 153307uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 153417uL, text = """Handsome, boy, does he know it""", words = mutableListOf(SemanticLyrics.Word(timeRange = 153417uL..154313uL, charRange = 0..8, isRtl = false), SemanticLyrics.Word(timeRange = 154313uL..154641uL, charRange = 10..13, isRtl = false), SemanticLyrics.Word(timeRange = 154641uL..154766uL, charRange = 15..18, isRtl = false), SemanticLyrics.Word(timeRange = 154766uL..154902uL, charRange = 20..21, isRtl = false), SemanticLyrics.Word(timeRange = 154902uL..155095uL, charRange = 23..26, isRtl = false), SemanticLyrics.Word(timeRange = 155095uL..155236uL, charRange = 28..29, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 155236uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 155300uL, text = """Peach fuzz, and he can't even grow it""", words = mutableListOf(SemanticLyrics.Word(timeRange = 155300uL..155687uL, charRange = 0..4, isRtl = false), SemanticLyrics.Word(timeRange = 155687uL..156063uL, charRange = 6..10, isRtl = false), SemanticLyrics.Word(timeRange = 156063uL..156204uL, charRange = 12..14, isRtl = false), SemanticLyrics.Word(timeRange = 156204uL..156363uL, charRange = 16..17, isRtl = false), SemanticLyrics.Word(timeRange = 156363uL..156463uL, charRange = 19..23, isRtl = false), SemanticLyrics.Word(timeRange = 156463uL..156783uL, charRange = 25..28, isRtl = false), SemanticLyrics.Word(timeRange = 156783uL..157046uL, charRange = 30..33, isRtl = false), SemanticLyrics.Word(timeRange = 157046uL..157220uL, charRange = 35..36, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 157220uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 157427uL, text = """I wanna take him far away from this place""", words = mutableListOf(SemanticLyrics.Word(timeRange = 157427uL..157547uL, charRange = 0..0, isRtl = false), SemanticLyrics.Word(timeRange = 157547uL..157827uL, charRange = 2..6, isRtl = false), SemanticLyrics.Word(timeRange = 157827uL..157947uL, charRange = 8..11, isRtl = false), SemanticLyrics.Word(timeRange = 157947uL..158064uL, charRange = 13..15, isRtl = false), SemanticLyrics.Word(timeRange = 158064uL..158195uL, charRange = 17..19, isRtl = false), SemanticLyrics.Word(timeRange = 158195uL..158438uL, charRange = 21..24, isRtl = false), SemanticLyrics.Word(timeRange = 158438uL..158574uL, charRange = 26..29, isRtl = false), SemanticLyrics.Word(timeRange = 158574uL..158816uL, charRange = 31..34, isRtl = false), SemanticLyrics.Word(timeRange = 158816uL..159034uL, charRange = 36..40, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 159034uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 159034uL, text = """Then I turn and see my sister's face and she is""", words = mutableListOf(SemanticLyrics.Word(timeRange = 159034uL..159174uL, charRange = 0..3, isRtl = false), SemanticLyrics.Word(timeRange = 159174uL..159274uL, charRange = 5..5, isRtl = false), SemanticLyrics.Word(timeRange = 159274uL..159402uL, charRange = 7..10, isRtl = false), SemanticLyrics.Word(timeRange = 159402uL..159543uL, charRange = 12..14, isRtl = false), SemanticLyrics.Word(timeRange = 159543uL..159649uL, charRange = 16..18, isRtl = false), SemanticLyrics.Word(timeRange = 159649uL..159749uL, charRange = 20..21, isRtl = false), SemanticLyrics.Word(timeRange = 159749uL..160170uL, charRange = 23..30, isRtl = false), SemanticLyrics.Word(timeRange = 160170uL..160431uL, charRange = 32..35, isRtl = false), SemanticLyrics.Word(timeRange = 160431uL..160711uL, charRange = 37..39, isRtl = false), SemanticLyrics.Word(timeRange = 160711uL..160917uL, charRange = 41..43, isRtl = false), SemanticLyrics.Word(timeRange = 160917uL..161281uL, charRange = 45..46, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 161281uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 161091uL, text = """Helpless""", words = mutableListOf(SemanticLyrics.Word(timeRange = 161091uL..161587uL, charRange = 0..4, isRtl = false), SemanticLyrics.Word(timeRange = 161587uL..163118uL, charRange = 5..7, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 163118uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 162422uL, text = """And I know she is""", words = mutableListOf(SemanticLyrics.Word(timeRange = 162422uL..162595uL, charRange = 0..2, isRtl = false), SemanticLyrics.Word(timeRange = 162595uL..162827uL, charRange = 4..4, isRtl = false), SemanticLyrics.Word(timeRange = 162827uL..164179uL, charRange = 6..9, isRtl = false), SemanticLyrics.Word(timeRange = 164179uL..164513uL, charRange = 11..13, isRtl = false), SemanticLyrics.Word(timeRange = 164513uL..165189uL, charRange = 15..16, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 165189uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 165045uL, text = """Helpless""", words = mutableListOf(SemanticLyrics.Word(timeRange = 165045uL..165541uL, charRange = 0..4, isRtl = false), SemanticLyrics.Word(timeRange = 165541uL..166949uL, charRange = 5..7, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 166949uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 166299uL, text = """And her eyes are just""", words = mutableListOf(SemanticLyrics.Word(timeRange = 166299uL..166480uL, charRange = 0..2, isRtl = false), SemanticLyrics.Word(timeRange = 166480uL..166712uL, charRange = 4..6, isRtl = false), SemanticLyrics.Word(timeRange = 166712uL..168118uL, charRange = 8..11, isRtl = false), SemanticLyrics.Word(timeRange = 168118uL..168440uL, charRange = 13..15, isRtl = false), SemanticLyrics.Word(timeRange = 168440uL..169194uL, charRange = 17..20, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 169194uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 168856uL, text = """Helpless""", words = mutableListOf(SemanticLyrics.Word(timeRange = 168856uL..169432uL, charRange = 0..4, isRtl = false), SemanticLyrics.Word(timeRange = 169432uL..170768uL, charRange = 5..7, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 170768uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 170408uL, text = """And I realize""", words = mutableListOf(SemanticLyrics.Word(timeRange = 170408uL..170637uL, charRange = 0..2, isRtl = false), SemanticLyrics.Word(timeRange = 170637uL..171075uL, charRange = 4..4, isRtl = false), SemanticLyrics.Word(timeRange = 171075uL..172398uL, charRange = 6..12, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 172398uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 172408uL, text = """Three fundamental truths at the exact same time""", words = mutableListOf(SemanticLyrics.Word(timeRange = 172408uL..172795uL, charRange = 0..4, isRtl = false), SemanticLyrics.Word(timeRange = 172795uL..173768uL, charRange = 6..16, isRtl = false), SemanticLyrics.Word(timeRange = 173768uL..173989uL, charRange = 18..23, isRtl = false), SemanticLyrics.Word(timeRange = 173989uL..174227uL, charRange = 25..26, isRtl = false), SemanticLyrics.Word(timeRange = 174227uL..174456uL, charRange = 28..30, isRtl = false), SemanticLyrics.Word(timeRange = 174456uL..175152uL, charRange = 32..36, isRtl = false), SemanticLyrics.Word(timeRange = 175152uL..175597uL, charRange = 38..41, isRtl = false), SemanticLyrics.Word(timeRange = 175597uL..176634uL, charRange = 43..46, isRtl = false)), speaker = SpeakerEntity.Group, end = 176634uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 176962uL, text = """Where are you taking me?""", words = mutableListOf(SemanticLyrics.Word(timeRange = 176962uL..177170uL, charRange = 0..4, isRtl = false), SemanticLyrics.Word(timeRange = 177170uL..177357uL, charRange = 6..8, isRtl = false), SemanticLyrics.Word(timeRange = 177357uL..177482uL, charRange = 10..12, isRtl = false), SemanticLyrics.Word(timeRange = 177482uL..177810uL, charRange = 14..19, isRtl = false), SemanticLyrics.Word(timeRange = 177810uL..178185uL, charRange = 21..23, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 178185uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 178420uL, text = """I'm about to change your life""", words = mutableListOf(SemanticLyrics.Word(timeRange = 178420uL..178572uL, charRange = 0..2, isRtl = false), SemanticLyrics.Word(timeRange = 178572uL..178943uL, charRange = 4..8, isRtl = false), SemanticLyrics.Word(timeRange = 178943uL..179084uL, charRange = 10..11, isRtl = false), SemanticLyrics.Word(timeRange = 179084uL..179375uL, charRange = 13..18, isRtl = false), SemanticLyrics.Word(timeRange = 179375uL..179604uL, charRange = 20..23, isRtl = false), SemanticLyrics.Word(timeRange = 179604uL..180052uL, charRange = 25..28, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 180052uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 179901uL, text = """Then by all means, lead the way""", words = mutableListOf(SemanticLyrics.Word(timeRange = 179901uL..180178uL, charRange = 0..3, isRtl = false), SemanticLyrics.Word(timeRange = 180178uL..180373uL, charRange = 5..6, isRtl = false), SemanticLyrics.Word(timeRange = 180373uL..180520uL, charRange = 8..10, isRtl = false), SemanticLyrics.Word(timeRange = 180520uL..180872uL, charRange = 12..17, isRtl = false), SemanticLyrics.Word(timeRange = 180872uL..181138uL, charRange = 19..22, isRtl = false), SemanticLyrics.Word(timeRange = 181138uL..181274uL, charRange = 24..26, isRtl = false), SemanticLyrics.Word(timeRange = 181274uL..181716uL, charRange = 28..30, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 181716uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 182313uL, text = """Number one""", words = mutableListOf(SemanticLyrics.Word(timeRange = 182313uL..182550uL, charRange = 0..5, isRtl = false), SemanticLyrics.Word(timeRange = 182550uL..182937uL, charRange = 7..9, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 182937uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 182868uL, text = """I'm a girl in a world in which my only job is to marry rich""", words = mutableListOf(SemanticLyrics.Word(timeRange = 182868uL..183017uL, charRange = 0..2, isRtl = false), SemanticLyrics.Word(timeRange = 183017uL..183143uL, charRange = 4..4, isRtl = false), SemanticLyrics.Word(timeRange = 183143uL..183399uL, charRange = 6..9, isRtl = false), SemanticLyrics.Word(timeRange = 183399uL..183524uL, charRange = 11..12, isRtl = false), SemanticLyrics.Word(timeRange = 183524uL..183641uL, charRange = 14..14, isRtl = false), SemanticLyrics.Word(timeRange = 183641uL..183881uL, charRange = 16..20, isRtl = false), SemanticLyrics.Word(timeRange = 183881uL..184145uL, charRange = 22..23, isRtl = false), SemanticLyrics.Word(timeRange = 184145uL..184380uL, charRange = 25..29, isRtl = false), SemanticLyrics.Word(timeRange = 184380uL..184588uL, charRange = 31..32, isRtl = false), SemanticLyrics.Word(timeRange = 184588uL..185065uL, charRange = 34..37, isRtl = false), SemanticLyrics.Word(timeRange = 185065uL..185276uL, charRange = 39..41, isRtl = false), SemanticLyrics.Word(timeRange = 185276uL..185415uL, charRange = 43..44, isRtl = false), SemanticLyrics.Word(timeRange = 185415uL..185553uL, charRange = 46..47, isRtl = false), SemanticLyrics.Word(timeRange = 185553uL..185980uL, charRange = 49..53, isRtl = false), SemanticLyrics.Word(timeRange = 185980uL..186360uL, charRange = 55..58, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 186360uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 186470uL, text = """My father has no sons""", words = mutableListOf(SemanticLyrics.Word(timeRange = 186470uL..186697uL, charRange = 0..1, isRtl = false), SemanticLyrics.Word(timeRange = 186697uL..186942uL, charRange = 3..8, isRtl = false), SemanticLyrics.Word(timeRange = 186942uL..187201uL, charRange = 10..12, isRtl = false), SemanticLyrics.Word(timeRange = 187201uL..187451uL, charRange = 14..15, isRtl = false), SemanticLyrics.Word(timeRange = 187451uL..187651uL, charRange = 17..20, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 187651uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 187651uL, text = """So I'm the one who has to social climb for one""", words = mutableListOf(SemanticLyrics.Word(timeRange = 187651uL..187784uL, charRange = 0..1, isRtl = false), SemanticLyrics.Word(timeRange = 187784uL..188027uL, charRange = 3..5, isRtl = false), SemanticLyrics.Word(timeRange = 188027uL..188158uL, charRange = 7..9, isRtl = false), SemanticLyrics.Word(timeRange = 188158uL..188398uL, charRange = 11..13, isRtl = false), SemanticLyrics.Word(timeRange = 188398uL..188555uL, charRange = 15..17, isRtl = false), SemanticLyrics.Word(timeRange = 188555uL..188779uL, charRange = 19..21, isRtl = false), SemanticLyrics.Word(timeRange = 188779uL..188904uL, charRange = 23..24, isRtl = false), SemanticLyrics.Word(timeRange = 188904uL..189238uL, charRange = 26..31, isRtl = false), SemanticLyrics.Word(timeRange = 189238uL..189540uL, charRange = 33..37, isRtl = false), SemanticLyrics.Word(timeRange = 189540uL..189640uL, charRange = 39..41, isRtl = false), SemanticLyrics.Word(timeRange = 189640uL..189929uL, charRange = 43..45, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 189929uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 189922uL, text = """'Cause I'm the oldest and the wittiest""", words = mutableListOf(SemanticLyrics.Word(timeRange = 189922uL..190063uL, charRange = 0..5, isRtl = false), SemanticLyrics.Word(timeRange = 190063uL..190202uL, charRange = 7..9, isRtl = false), SemanticLyrics.Word(timeRange = 190202uL..190319uL, charRange = 11..13, isRtl = false), SemanticLyrics.Word(timeRange = 190319uL..190863uL, charRange = 15..20, isRtl = false), SemanticLyrics.Word(timeRange = 190863uL..190981uL, charRange = 22..24, isRtl = false), SemanticLyrics.Word(timeRange = 190981uL..191119uL, charRange = 26..28, isRtl = false), SemanticLyrics.Word(timeRange = 191119uL..191556uL, charRange = 30..37, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 191556uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 191577uL, text = """And the gossip in New York City is insidious""", words = mutableListOf(SemanticLyrics.Word(timeRange = 191577uL..191697uL, charRange = 0..2, isRtl = false), SemanticLyrics.Word(timeRange = 191697uL..191812uL, charRange = 4..6, isRtl = false), SemanticLyrics.Word(timeRange = 191812uL..192276uL, charRange = 8..13, isRtl = false), SemanticLyrics.Word(timeRange = 192276uL..192502uL, charRange = 15..16, isRtl = false), SemanticLyrics.Word(timeRange = 192502uL..192753uL, charRange = 18..20, isRtl = false), SemanticLyrics.Word(timeRange = 192753uL..193012uL, charRange = 22..25, isRtl = false), SemanticLyrics.Word(timeRange = 193012uL..193289uL, charRange = 27..30, isRtl = false), SemanticLyrics.Word(timeRange = 193289uL..193534uL, charRange = 32..33, isRtl = false), SemanticLyrics.Word(timeRange = 193534uL..194270uL, charRange = 35..43, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 194270uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 194449uL, text = """And Alexander is penniless""", words = mutableListOf(SemanticLyrics.Word(timeRange = 194449uL..194556uL, charRange = 0..2, isRtl = false), SemanticLyrics.Word(timeRange = 194556uL..195054uL, charRange = 4..12, isRtl = false), SemanticLyrics.Word(timeRange = 195054uL..195182uL, charRange = 14..15, isRtl = false), SemanticLyrics.Word(timeRange = 195182uL..195830uL, charRange = 17..25, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 195830uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 195870uL, text = """Ha, that doesn't mean I want him any less""", words = mutableListOf(SemanticLyrics.Word(timeRange = 195870uL..196342uL, charRange = 0..2, isRtl = false), SemanticLyrics.Word(timeRange = 196342uL..196470uL, charRange = 4..7, isRtl = false), SemanticLyrics.Word(timeRange = 196470uL..196633uL, charRange = 9..15, isRtl = false), SemanticLyrics.Word(timeRange = 196633uL..196769uL, charRange = 17..20, isRtl = false), SemanticLyrics.Word(timeRange = 196769uL..196883uL, charRange = 22..22, isRtl = false), SemanticLyrics.Word(timeRange = 196883uL..197037uL, charRange = 24..27, isRtl = false), SemanticLyrics.Word(timeRange = 197037uL..197137uL, charRange = 29..31, isRtl = false), SemanticLyrics.Word(timeRange = 197137uL..197523uL, charRange = 33..35, isRtl = false), SemanticLyrics.Word(timeRange = 197523uL..198139uL, charRange = 37..40, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 198139uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 198596uL, text = """Elizabeth Schuyler, it's a pleasure to meet you""", words = mutableListOf(SemanticLyrics.Word(timeRange = 198596uL..199028uL, charRange = 0..8, isRtl = false), SemanticLyrics.Word(timeRange = 199028uL..199633uL, charRange = 10..18, isRtl = false), SemanticLyrics.Word(timeRange = 200014uL..200145uL, charRange = 20..23, isRtl = false), SemanticLyrics.Word(timeRange = 200145uL..200308uL, charRange = 25..25, isRtl = false), SemanticLyrics.Word(timeRange = 200308uL..200508uL, charRange = 27..34, isRtl = false), SemanticLyrics.Word(timeRange = 200508uL..200661uL, charRange = 36..37, isRtl = false), SemanticLyrics.Word(timeRange = 200661uL..200761uL, charRange = 39..42, isRtl = false), SemanticLyrics.Word(timeRange = 200761uL..201036uL, charRange = 44..46, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 201036uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 201140uL, text = """Schuyler?""", words = mutableListOf(SemanticLyrics.Word(timeRange = 201140uL..201807uL, charRange = 0..8, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 201807uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 202122uL, text = """My sister""", words = mutableListOf(SemanticLyrics.Word(timeRange = 202122uL..202383uL, charRange = 0..1, isRtl = false), SemanticLyrics.Word(timeRange = 202383uL..202975uL, charRange = 3..8, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 202975uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 203813uL, text = """Number two""", words = mutableListOf(SemanticLyrics.Word(timeRange = 203813uL..204072uL, charRange = 0..5, isRtl = false), SemanticLyrics.Word(timeRange = 204072uL..204336uL, charRange = 7..9, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 204336uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 204373uL, text = """He's after me 'cause I'm a Schuyler sister""", words = mutableListOf(SemanticLyrics.Word(timeRange = 204373uL..204525uL, charRange = 0..3, isRtl = false), SemanticLyrics.Word(timeRange = 204525uL..204888uL, charRange = 5..9, isRtl = false), SemanticLyrics.Word(timeRange = 204888uL..205160uL, charRange = 11..12, isRtl = false), SemanticLyrics.Word(timeRange = 205160uL..205280uL, charRange = 14..19, isRtl = false), SemanticLyrics.Word(timeRange = 205280uL..205418uL, charRange = 21..23, isRtl = false), SemanticLyrics.Word(timeRange = 205418uL..205533uL, charRange = 25..25, isRtl = false), SemanticLyrics.Word(timeRange = 205533uL..205856uL, charRange = 27..34, isRtl = false), SemanticLyrics.Word(timeRange = 205856uL..206455uL, charRange = 36..41, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 206455uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 206455uL, text = """That elevates his status, I'd""", words = mutableListOf(SemanticLyrics.Word(timeRange = 206455uL..206612uL, charRange = 0..3, isRtl = false), SemanticLyrics.Word(timeRange = 206612uL..206874uL, charRange = 5..12, isRtl = false), SemanticLyrics.Word(timeRange = 206874uL..207007uL, charRange = 14..16, isRtl = false), SemanticLyrics.Word(timeRange = 207007uL..207399uL, charRange = 18..24, isRtl = false), SemanticLyrics.Word(timeRange = 207399uL..208037uL, charRange = 26..28, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 208037uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 208037uL, text = """Have to be naïve to set that aside""", words = mutableListOf(SemanticLyrics.Word(timeRange = 208037uL..208272uL, charRange = 0..3, isRtl = false), SemanticLyrics.Word(timeRange = 208272uL..208528uL, charRange = 5..6, isRtl = false), SemanticLyrics.Word(timeRange = 208528uL..208728uL, charRange = 8..9, isRtl = false), SemanticLyrics.Word(timeRange = 208728uL..209184uL, charRange = 11..15, isRtl = false), SemanticLyrics.Word(timeRange = 209184uL..209360uL, charRange = 17..18, isRtl = false), SemanticLyrics.Word(timeRange = 209360uL..209666uL, charRange = 20..22, isRtl = false), SemanticLyrics.Word(timeRange = 209666uL..209893uL, charRange = 24..27, isRtl = false), SemanticLyrics.Word(timeRange = 209893uL..210597uL, charRange = 29..33, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 210597uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 210605uL, text = """Maybe that is why""", words = mutableListOf(SemanticLyrics.Word(timeRange = 210605uL..210840uL, charRange = 0..4, isRtl = false), SemanticLyrics.Word(timeRange = 210840uL..211061uL, charRange = 6..9, isRtl = false), SemanticLyrics.Word(timeRange = 211061uL..211264uL, charRange = 11..12, isRtl = false), SemanticLyrics.Word(timeRange = 211264uL..211869uL, charRange = 14..16, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 211869uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 212065uL, text = """I introduce him to Eliza, now that's his bride""", words = mutableListOf(SemanticLyrics.Word(timeRange = 212065uL..212265uL, charRange = 0..0, isRtl = false), SemanticLyrics.Word(timeRange = 212265uL..213046uL, charRange = 2..10, isRtl = false), SemanticLyrics.Word(timeRange = 213046uL..213308uL, charRange = 12..14, isRtl = false), SemanticLyrics.Word(timeRange = 213308uL..213540uL, charRange = 16..17, isRtl = false), SemanticLyrics.Word(timeRange = 213540uL..214252uL, charRange = 19..21, isRtl = false), SemanticLyrics.Word(timeRange = 214252uL..214452uL, charRange = 22..24, isRtl = false), SemanticLyrics.Word(timeRange = 214452uL..214705uL, charRange = 26..28, isRtl = false), SemanticLyrics.Word(timeRange = 214705uL..214940uL, charRange = 30..35, isRtl = false), SemanticLyrics.Word(timeRange = 214940uL..215196uL, charRange = 37..39, isRtl = false), SemanticLyrics.Word(timeRange = 215196uL..215730uL, charRange = 41..45, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 215730uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 215842uL, text = """Nice going, Angelica, he was right""", words = mutableListOf(SemanticLyrics.Word(timeRange = 215842uL..216138uL, charRange = 0..3, isRtl = false), SemanticLyrics.Word(timeRange = 216138uL..216333uL, charRange = 5..10, isRtl = false), SemanticLyrics.Word(timeRange = 216333uL..217119uL, charRange = 12..20, isRtl = false), SemanticLyrics.Word(timeRange = 217119uL..217373uL, charRange = 22..23, isRtl = false), SemanticLyrics.Word(timeRange = 217373uL..217503uL, charRange = 25..27, isRtl = false), SemanticLyrics.Word(timeRange = 217503uL..217778uL, charRange = 29..33, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 217778uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 217904uL, text = """You will never be satisfied""", words = mutableListOf(SemanticLyrics.Word(timeRange = 217904uL..218040uL, charRange = 0..2, isRtl = false), SemanticLyrics.Word(timeRange = 218040uL..218173uL, charRange = 4..7, isRtl = false), SemanticLyrics.Word(timeRange = 218173uL..218408uL, charRange = 9..13, isRtl = false), SemanticLyrics.Word(timeRange = 218408uL..218547uL, charRange = 15..16, isRtl = false), SemanticLyrics.Word(timeRange = 218547uL..219660uL, charRange = 18..26, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 219660uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 219836uL, text = """Thank you for all your service""", words = mutableListOf(SemanticLyrics.Word(timeRange = 219836uL..220097uL, charRange = 0..4, isRtl = false), SemanticLyrics.Word(timeRange = 220097uL..220340uL, charRange = 6..8, isRtl = false), SemanticLyrics.Word(timeRange = 220340uL..220513uL, charRange = 10..12, isRtl = false), SemanticLyrics.Word(timeRange = 220513uL..220692uL, charRange = 14..16, isRtl = false), SemanticLyrics.Word(timeRange = 220692uL..220839uL, charRange = 18..21, isRtl = false), SemanticLyrics.Word(timeRange = 220839uL..221351uL, charRange = 23..29, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 221351uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 221400uL, text = """If it takes fighting a war for us to meet, it will have been worth it""", words = mutableListOf(SemanticLyrics.Word(timeRange = 221400uL..221557uL, charRange = 0..1, isRtl = false), SemanticLyrics.Word(timeRange = 221557uL..221709uL, charRange = 3..4, isRtl = false), SemanticLyrics.Word(timeRange = 221709uL..221965uL, charRange = 6..10, isRtl = false), SemanticLyrics.Word(timeRange = 221965uL..222296uL, charRange = 12..19, isRtl = false), SemanticLyrics.Word(timeRange = 222296uL..222415uL, charRange = 21..21, isRtl = false), SemanticLyrics.Word(timeRange = 222415uL..222688uL, charRange = 23..25, isRtl = false), SemanticLyrics.Word(timeRange = 222688uL..222829uL, charRange = 27..29, isRtl = false), SemanticLyrics.Word(timeRange = 222829uL..222995uL, charRange = 31..32, isRtl = false), SemanticLyrics.Word(timeRange = 222995uL..223139uL, charRange = 34..35, isRtl = false), SemanticLyrics.Word(timeRange = 223139uL..223364uL, charRange = 37..41, isRtl = false), SemanticLyrics.Word(timeRange = 223402uL..223589uL, charRange = 43..44, isRtl = false), SemanticLyrics.Word(timeRange = 223589uL..223735uL, charRange = 46..49, isRtl = false), SemanticLyrics.Word(timeRange = 223735uL..223911uL, charRange = 51..54, isRtl = false), SemanticLyrics.Word(timeRange = 223911uL..224079uL, charRange = 56..59, isRtl = false), SemanticLyrics.Word(timeRange = 224079uL..224247uL, charRange = 61..65, isRtl = false), SemanticLyrics.Word(timeRange = 224247uL..224433uL, charRange = 67..68, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 224433uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 225050uL, text = """I'll leave you to it""", words = mutableListOf(SemanticLyrics.Word(timeRange = 225050uL..225263uL, charRange = 0..3, isRtl = false), SemanticLyrics.Word(timeRange = 225263uL..225463uL, charRange = 5..9, isRtl = false), SemanticLyrics.Word(timeRange = 225463uL..225689uL, charRange = 11..13, isRtl = false), SemanticLyrics.Word(timeRange = 225689uL..225789uL, charRange = 15..16, isRtl = false), SemanticLyrics.Word(timeRange = 225789uL..226167uL, charRange = 18..19, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 226167uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 227333uL, text = """Number three""", words = mutableListOf(SemanticLyrics.Word(timeRange = 227333uL..227570uL, charRange = 0..5, isRtl = false), SemanticLyrics.Word(timeRange = 227570uL..227888uL, charRange = 7..11, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 227888uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 227798uL, text = """I know my sister like I know my own mind""", words = mutableListOf(SemanticLyrics.Word(timeRange = 227798uL..228043uL, charRange = 0..0, isRtl = false), SemanticLyrics.Word(timeRange = 228043uL..228278uL, charRange = 2..5, isRtl = false), SemanticLyrics.Word(timeRange = 228278uL..228478uL, charRange = 7..8, isRtl = false), SemanticLyrics.Word(timeRange = 228478uL..228998uL, charRange = 10..15, isRtl = false), SemanticLyrics.Word(timeRange = 228998uL..229219uL, charRange = 17..20, isRtl = false), SemanticLyrics.Word(timeRange = 229219uL..229526uL, charRange = 22..22, isRtl = false), SemanticLyrics.Word(timeRange = 229526uL..229737uL, charRange = 24..27, isRtl = false), SemanticLyrics.Word(timeRange = 229737uL..229923uL, charRange = 29..30, isRtl = false), SemanticLyrics.Word(timeRange = 229923uL..230387uL, charRange = 32..34, isRtl = false), SemanticLyrics.Word(timeRange = 230387uL..231002uL, charRange = 36..39, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 231002uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 231002uL, text = """You will never find anyone as trusting or as kind""", words = mutableListOf(SemanticLyrics.Word(timeRange = 231002uL..231253uL, charRange = 0..2, isRtl = false), SemanticLyrics.Word(timeRange = 231253uL..231431uL, charRange = 4..7, isRtl = false), SemanticLyrics.Word(timeRange = 231431uL..231845uL, charRange = 9..13, isRtl = false), SemanticLyrics.Word(timeRange = 231845uL..232317uL, charRange = 15..18, isRtl = false), SemanticLyrics.Word(timeRange = 232317uL..233002uL, charRange = 20..25, isRtl = false), SemanticLyrics.Word(timeRange = 233002uL..233263uL, charRange = 27..28, isRtl = false), SemanticLyrics.Word(timeRange = 233263uL..233714uL, charRange = 30..37, isRtl = false), SemanticLyrics.Word(timeRange = 233714uL..233917uL, charRange = 39..40, isRtl = false), SemanticLyrics.Word(timeRange = 233917uL..234189uL, charRange = 42..43, isRtl = false), SemanticLyrics.Word(timeRange = 234189uL..234923uL, charRange = 45..48, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 234923uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 235119uL, text = """If I tell her that I love him, she'd be silently resigned""", words = mutableListOf(SemanticLyrics.Word(timeRange = 235119uL..235282uL, charRange = 0..1, isRtl = false), SemanticLyrics.Word(timeRange = 235282uL..235399uL, charRange = 3..3, isRtl = false), SemanticLyrics.Word(timeRange = 235399uL..235588uL, charRange = 5..8, isRtl = false), SemanticLyrics.Word(timeRange = 235588uL..235823uL, charRange = 10..12, isRtl = false), SemanticLyrics.Word(timeRange = 235823uL..236042uL, charRange = 14..17, isRtl = false), SemanticLyrics.Word(timeRange = 236042uL..236235uL, charRange = 19..19, isRtl = false), SemanticLyrics.Word(timeRange = 236235uL..236500uL, charRange = 21..24, isRtl = false), SemanticLyrics.Word(timeRange = 236500uL..236762uL, charRange = 26..29, isRtl = false), SemanticLyrics.Word(timeRange = 236762uL..237007uL, charRange = 31..35, isRtl = false), SemanticLyrics.Word(timeRange = 237007uL..237231uL, charRange = 37..38, isRtl = false), SemanticLyrics.Word(timeRange = 237231uL..237932uL, charRange = 40..47, isRtl = false), SemanticLyrics.Word(timeRange = 237932uL..238713uL, charRange = 49..56, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 238713uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 238713uL, text = """He'd be mine""", words = mutableListOf(SemanticLyrics.Word(timeRange = 238713uL..238990uL, charRange = 0..3, isRtl = false), SemanticLyrics.Word(timeRange = 238990uL..239281uL, charRange = 5..6, isRtl = false), SemanticLyrics.Word(timeRange = 239281uL..240128uL, charRange = 8..11, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 240128uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 240360uL, text = """She would say, "I'm fine"""", words = mutableListOf(SemanticLyrics.Word(timeRange = 240360uL..240507uL, charRange = 0..2, isRtl = false), SemanticLyrics.Word(timeRange = 240507uL..240624uL, charRange = 4..8, isRtl = false), SemanticLyrics.Word(timeRange = 240624uL..240856uL, charRange = 10..13, isRtl = false), SemanticLyrics.Word(timeRange = 240856uL..241056uL, charRange = 15..18, isRtl = false), SemanticLyrics.Word(timeRange = 241056uL..241572uL, charRange = 20..24, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 241572uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 241572uL, text = """She'd be lying""", words = mutableListOf(SemanticLyrics.Word(timeRange = 241572uL..241868uL, charRange = 0..4, isRtl = false), SemanticLyrics.Word(timeRange = 241868uL..242065uL, charRange = 6..7, isRtl = false), SemanticLyrics.Word(timeRange = 242065uL..242639uL, charRange = 9..13, isRtl = false)), speaker = SpeakerEntity.Group, end = 242639uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 243311uL, text = """But when I fantasize at night, it's Alexander's eyes""", words = mutableListOf(SemanticLyrics.Word(timeRange = 243311uL..243618uL, charRange = 0..2, isRtl = false), SemanticLyrics.Word(timeRange = 243618uL..243823uL, charRange = 4..7, isRtl = false), SemanticLyrics.Word(timeRange = 243823uL..243975uL, charRange = 9..9, isRtl = false), SemanticLyrics.Word(timeRange = 243975uL..244775uL, charRange = 11..19, isRtl = false), SemanticLyrics.Word(timeRange = 244775uL..245042uL, charRange = 21..22, isRtl = false), SemanticLyrics.Word(timeRange = 245042uL..245359uL, charRange = 24..29, isRtl = false), SemanticLyrics.Word(timeRange = 245359uL..245599uL, charRange = 31..34, isRtl = false), SemanticLyrics.Word(timeRange = 245599uL..246647uL, charRange = 36..46, isRtl = false), SemanticLyrics.Word(timeRange = 246647uL..247348uL, charRange = 48..51, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 247348uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 247506uL, text = """As I romanticize""", words = mutableListOf(SemanticLyrics.Word(timeRange = 247506uL..247837uL, charRange = 0..1, isRtl = false), SemanticLyrics.Word(timeRange = 247837uL..248053uL, charRange = 3..3, isRtl = false), SemanticLyrics.Word(timeRange = 248053uL..249494uL, charRange = 5..15, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 249494uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 249494uL, text = """What might have been if I hadn't sized him up so quickly""", words = mutableListOf(SemanticLyrics.Word(timeRange = 249494uL..249694uL, charRange = 0..3, isRtl = false), SemanticLyrics.Word(timeRange = 249694uL..249971uL, charRange = 5..9, isRtl = false), SemanticLyrics.Word(timeRange = 249971uL..250153uL, charRange = 11..14, isRtl = false), SemanticLyrics.Word(timeRange = 250153uL..250510uL, charRange = 16..19, isRtl = false), SemanticLyrics.Word(timeRange = 250510uL..250827uL, charRange = 21..22, isRtl = false), SemanticLyrics.Word(timeRange = 250827uL..250961uL, charRange = 24..24, isRtl = false), SemanticLyrics.Word(timeRange = 250961uL..251233uL, charRange = 26..31, isRtl = false), SemanticLyrics.Word(timeRange = 251233uL..252937uL, charRange = 33..37, isRtl = false), SemanticLyrics.Word(timeRange = 252937uL..253166uL, charRange = 39..41, isRtl = false), SemanticLyrics.Word(timeRange = 253166uL..253427uL, charRange = 43..44, isRtl = false), SemanticLyrics.Word(timeRange = 253427uL..253726uL, charRange = 46..47, isRtl = false), SemanticLyrics.Word(timeRange = 253726uL..254883uL, charRange = 49..55, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 254883uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 255728uL, text = """At least my dear Eliza's his wife""", words = mutableListOf(SemanticLyrics.Word(timeRange = 255728uL..256032uL, charRange = 0..1, isRtl = false), SemanticLyrics.Word(timeRange = 256032uL..256347uL, charRange = 3..7, isRtl = false), SemanticLyrics.Word(timeRange = 256347uL..256757uL, charRange = 9..10, isRtl = false), SemanticLyrics.Word(timeRange = 256757uL..257043uL, charRange = 12..15, isRtl = false), SemanticLyrics.Word(timeRange = 257043uL..257438uL, charRange = 17..18, isRtl = false), SemanticLyrics.Word(timeRange = 257438uL..258204uL, charRange = 19..19, isRtl = false), SemanticLyrics.Word(timeRange = 258204uL..258587uL, charRange = 20..23, isRtl = false), SemanticLyrics.Word(timeRange = 258587uL..258934uL, charRange = 25..27, isRtl = false), SemanticLyrics.Word(timeRange = 258934uL..259587uL, charRange = 29..32, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 259587uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 261134uL, text = """At least I keep his eyes in my life""", words = mutableListOf(SemanticLyrics.Word(timeRange = 261134uL..261414uL, charRange = 0..1, isRtl = false), SemanticLyrics.Word(timeRange = 261414uL..261729uL, charRange = 3..7, isRtl = false), SemanticLyrics.Word(timeRange = 261729uL..262091uL, charRange = 9..9, isRtl = false), SemanticLyrics.Word(timeRange = 262091uL..262409uL, charRange = 11..14, isRtl = false), SemanticLyrics.Word(timeRange = 262409uL..262761uL, charRange = 16..18, isRtl = false), SemanticLyrics.Word(timeRange = 262761uL..263713uL, charRange = 20..23, isRtl = false), SemanticLyrics.Word(timeRange = 263713uL..264011uL, charRange = 25..26, isRtl = false), SemanticLyrics.Word(timeRange = 264011uL..264574uL, charRange = 28..29, isRtl = false), SemanticLyrics.Word(timeRange = 264574uL..265401uL, charRange = 31..34, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 265401uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 269699uL, text = """To the groom""", words = mutableListOf(SemanticLyrics.Word(timeRange = 269699uL..269838uL, charRange = 0..1, isRtl = false), SemanticLyrics.Word(timeRange = 269838uL..269995uL, charRange = 3..5, isRtl = false), SemanticLyrics.Word(timeRange = 269995uL..270687uL, charRange = 7..11, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 270687uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 270687uL, text = """To the groom, to the groom, to the groom""", words = mutableListOf(SemanticLyrics.Word(timeRange = 270687uL..270839uL, charRange = 0..1, isRtl = false), SemanticLyrics.Word(timeRange = 270839uL..270978uL, charRange = 3..5, isRtl = false), SemanticLyrics.Word(timeRange = 270978uL..271620uL, charRange = 7..12, isRtl = false), SemanticLyrics.Word(timeRange = 271620uL..271775uL, charRange = 14..15, isRtl = false), SemanticLyrics.Word(timeRange = 271775uL..271922uL, charRange = 17..19, isRtl = false), SemanticLyrics.Word(timeRange = 271922uL..272610uL, charRange = 21..26, isRtl = false), SemanticLyrics.Word(timeRange = 272610uL..272754uL, charRange = 28..29, isRtl = false), SemanticLyrics.Word(timeRange = 272754uL..272898uL, charRange = 31..33, isRtl = false), SemanticLyrics.Word(timeRange = 272898uL..273359uL, charRange = 35..39, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 273359uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 273472uL, text = """To the bride""", words = mutableListOf(SemanticLyrics.Word(timeRange = 273472uL..273624uL, charRange = 0..1, isRtl = false), SemanticLyrics.Word(timeRange = 273624uL..273760uL, charRange = 3..5, isRtl = false), SemanticLyrics.Word(timeRange = 273760uL..274459uL, charRange = 7..11, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 274459uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 274514uL, text = """To the bride, to the bride""", words = mutableListOf(SemanticLyrics.Word(timeRange = 274514uL..274658uL, charRange = 0..1, isRtl = false), SemanticLyrics.Word(timeRange = 274658uL..274799uL, charRange = 3..5, isRtl = false), SemanticLyrics.Word(timeRange = 274799uL..275530uL, charRange = 7..12, isRtl = false), SemanticLyrics.Word(timeRange = 275530uL..275666uL, charRange = 14..15, isRtl = false), SemanticLyrics.Word(timeRange = 275666uL..275786uL, charRange = 17..19, isRtl = false), SemanticLyrics.Word(timeRange = 275786uL..277221uL, charRange = 21..25, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 277221uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 276450uL, text = """To the bride""", words = mutableListOf(SemanticLyrics.Word(timeRange = 276450uL..276677uL, charRange = 0..1, isRtl = false), SemanticLyrics.Word(timeRange = 276677uL..276778uL, charRange = 3..5, isRtl = false), SemanticLyrics.Word(timeRange = 276778uL..278401uL, charRange = 7..11, isRtl = false)), speaker = SpeakerEntity.Voice2Background, end = 278401uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 277080uL, text = """From your sister""", words = mutableListOf(SemanticLyrics.Word(timeRange = 277080uL..277384uL, charRange = 0..3, isRtl = false), SemanticLyrics.Word(timeRange = 277384uL..277597uL, charRange = 5..8, isRtl = false), SemanticLyrics.Word(timeRange = 277597uL..278112uL, charRange = 10..13, isRtl = false), SemanticLyrics.Word(timeRange = 278112uL..279774uL, charRange = 14..15, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 279774uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 278404uL, text = """Angelica, Angelica, Angelica""", words = mutableListOf(SemanticLyrics.Word(timeRange = 278404uL..279348uL, charRange = 0..8, isRtl = false), SemanticLyrics.Word(timeRange = 279348uL..280348uL, charRange = 10..18, isRtl = false), SemanticLyrics.Word(timeRange = 280348uL..281165uL, charRange = 20..27, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 281165uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 281075uL, text = """Who is always by your side""", words = mutableListOf(SemanticLyrics.Word(timeRange = 281075uL..281339uL, charRange = 0..2, isRtl = false), SemanticLyrics.Word(timeRange = 281339uL..281531uL, charRange = 4..5, isRtl = false), SemanticLyrics.Word(timeRange = 281531uL..282243uL, charRange = 7..12, isRtl = false), SemanticLyrics.Word(timeRange = 282243uL..282675uL, charRange = 14..15, isRtl = false), SemanticLyrics.Word(timeRange = 282675uL..282920uL, charRange = 17..20, isRtl = false), SemanticLyrics.Word(timeRange = 282920uL..284569uL, charRange = 22..25, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 284569uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 283044uL, text = """By your side""", words = mutableListOf(SemanticLyrics.Word(timeRange = 283044uL..283297uL, charRange = 0..1, isRtl = false), SemanticLyrics.Word(timeRange = 283297uL..283452uL, charRange = 3..6, isRtl = false), SemanticLyrics.Word(timeRange = 283452uL..285492uL, charRange = 8..11, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 285492uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 283988uL, text = """By your side""", words = mutableListOf(SemanticLyrics.Word(timeRange = 283988uL..284263uL, charRange = 0..1, isRtl = false), SemanticLyrics.Word(timeRange = 284263uL..284417uL, charRange = 3..6, isRtl = false), SemanticLyrics.Word(timeRange = 284417uL..285503uL, charRange = 8..11, isRtl = false)), speaker = SpeakerEntity.Voice2Background, end = 285503uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 284875uL, text = """To your union""", words = mutableListOf(SemanticLyrics.Word(timeRange = 284875uL..285124uL, charRange = 0..1, isRtl = false), SemanticLyrics.Word(timeRange = 285124uL..285319uL, charRange = 3..6, isRtl = false), SemanticLyrics.Word(timeRange = 285319uL..285934uL, charRange = 8..8, isRtl = false), SemanticLyrics.Word(timeRange = 285934uL..286324uL, charRange = 9..10, isRtl = false), SemanticLyrics.Word(timeRange = 286324uL..288677uL, charRange = 11..12, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 288677uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 286648uL, text = """To the union, to the revolution""", words = mutableListOf(SemanticLyrics.Word(timeRange = 286648uL..286824uL, charRange = 0..1, isRtl = false), SemanticLyrics.Word(timeRange = 286824uL..286936uL, charRange = 3..5, isRtl = false), SemanticLyrics.Word(timeRange = 286936uL..287571uL, charRange = 7..12, isRtl = false), SemanticLyrics.Word(timeRange = 287571uL..287704uL, charRange = 14..15, isRtl = false), SemanticLyrics.Word(timeRange = 287704uL..287819uL, charRange = 17..19, isRtl = false), SemanticLyrics.Word(timeRange = 287819uL..289110uL, charRange = 21..30, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 289110uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 289120uL, text = """And the hope that you provide""", words = mutableListOf(SemanticLyrics.Word(timeRange = 289120uL..289256uL, charRange = 0..2, isRtl = false), SemanticLyrics.Word(timeRange = 289256uL..289371uL, charRange = 4..6, isRtl = false), SemanticLyrics.Word(timeRange = 289371uL..289603uL, charRange = 8..11, isRtl = false), SemanticLyrics.Word(timeRange = 289603uL..289837uL, charRange = 13..16, isRtl = false), SemanticLyrics.Word(timeRange = 289837uL..290013uL, charRange = 18..20, isRtl = false), SemanticLyrics.Word(timeRange = 290013uL..292293uL, charRange = 22..28, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 292293uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 290778uL, text = """You provide, you provide""", words = mutableListOf(SemanticLyrics.Word(timeRange = 290778uL..291021uL, charRange = 0..2, isRtl = false), SemanticLyrics.Word(timeRange = 291021uL..291711uL, charRange = 4..11, isRtl = false), SemanticLyrics.Word(timeRange = 291711uL..291914uL, charRange = 13..15, isRtl = false), SemanticLyrics.Word(timeRange = 291914uL..294032uL, charRange = 17..23, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 294032uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 292690uL, text = """May you always""", words = mutableListOf(SemanticLyrics.Word(timeRange = 292690uL..292970uL, charRange = 0..2, isRtl = false), SemanticLyrics.Word(timeRange = 292970uL..293146uL, charRange = 4..6, isRtl = false), SemanticLyrics.Word(timeRange = 293146uL..293919uL, charRange = 8..10, isRtl = false), SemanticLyrics.Word(timeRange = 293919uL..296411uL, charRange = 11..13, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 296411uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 294795uL, text = """Always""", words = mutableListOf(SemanticLyrics.Word(timeRange = 294795uL..295818uL, charRange = 0..2, isRtl = false), SemanticLyrics.Word(timeRange = 295818uL..296958uL, charRange = 3..5, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 296958uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 296487uL, text = """Be satisfied""", words = mutableListOf(SemanticLyrics.Word(timeRange = 296487uL..296674uL, charRange = 0..1, isRtl = false), SemanticLyrics.Word(timeRange = 296674uL..297090uL, charRange = 3..5, isRtl = false), SemanticLyrics.Word(timeRange = 297090uL..297276uL, charRange = 6..8, isRtl = false), SemanticLyrics.Word(timeRange = 297276uL..300052uL, charRange = 9..11, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 300052uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 297518uL, text = """Be satisfied, be satisfied, be satisfied""", words = mutableListOf(SemanticLyrics.Word(timeRange = 297518uL..297707uL, charRange = 0..1, isRtl = false), SemanticLyrics.Word(timeRange = 297707uL..298427uL, charRange = 3..12, isRtl = false), SemanticLyrics.Word(timeRange = 298427uL..298662uL, charRange = 14..15, isRtl = false), SemanticLyrics.Word(timeRange = 298662uL..299425uL, charRange = 17..26, isRtl = false), SemanticLyrics.Word(timeRange = 299425uL..299654uL, charRange = 28..29, isRtl = false), SemanticLyrics.Word(timeRange = 299654uL..300744uL, charRange = 31..39, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 300744uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 300254uL, text = """And I know she'll be happy as his bride""", words = mutableListOf(SemanticLyrics.Word(timeRange = 300254uL..300475uL, charRange = 0..2, isRtl = false), SemanticLyrics.Word(timeRange = 300475uL..300675uL, charRange = 4..4, isRtl = false), SemanticLyrics.Word(timeRange = 300675uL..303558uL, charRange = 6..9, isRtl = false), SemanticLyrics.Word(timeRange = 304027uL..304254uL, charRange = 11..16, isRtl = false), SemanticLyrics.Word(timeRange = 304254uL..304475uL, charRange = 18..19, isRtl = false), SemanticLyrics.Word(timeRange = 304475uL..305261uL, charRange = 21..22, isRtl = false), SemanticLyrics.Word(timeRange = 305261uL..305483uL, charRange = 23..25, isRtl = false), SemanticLyrics.Word(timeRange = 305483uL..306230uL, charRange = 27..28, isRtl = false), SemanticLyrics.Word(timeRange = 306230uL..306510uL, charRange = 30..32, isRtl = false), SemanticLyrics.Word(timeRange = 306510uL..308027uL, charRange = 34..38, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 308027uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 301402uL, text = """Be satisfied, be satisfied, be satisfied""", words = mutableListOf(SemanticLyrics.Word(timeRange = 301402uL..301599uL, charRange = 0..1, isRtl = false), SemanticLyrics.Word(timeRange = 301599uL..302301uL, charRange = 3..12, isRtl = false), SemanticLyrics.Word(timeRange = 302301uL..302543uL, charRange = 14..15, isRtl = false), SemanticLyrics.Word(timeRange = 302543uL..303311uL, charRange = 17..26, isRtl = false), SemanticLyrics.Word(timeRange = 303311uL..303567uL, charRange = 28..29, isRtl = false), SemanticLyrics.Word(timeRange = 303567uL..304322uL, charRange = 31..39, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 304322uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 304322uL, text = """Be satisfied, be satisfied, be satisfied""", words = mutableListOf(SemanticLyrics.Word(timeRange = 304322uL..304538uL, charRange = 0..1, isRtl = false), SemanticLyrics.Word(timeRange = 304538uL..305298uL, charRange = 3..12, isRtl = false), SemanticLyrics.Word(timeRange = 305298uL..305495uL, charRange = 14..15, isRtl = false), SemanticLyrics.Word(timeRange = 305495uL..306215uL, charRange = 17..26, isRtl = false), SemanticLyrics.Word(timeRange = 306215uL..306455uL, charRange = 28..29, isRtl = false), SemanticLyrics.Word(timeRange = 306455uL..307216uL, charRange = 31..39, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 307216uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 307216uL, text = """Be satisfied, be satisfied, be satisfied""", words = mutableListOf(SemanticLyrics.Word(timeRange = 307216uL..307437uL, charRange = 0..1, isRtl = false), SemanticLyrics.Word(timeRange = 307437uL..308141uL, charRange = 3..12, isRtl = false), SemanticLyrics.Word(timeRange = 308141uL..308379uL, charRange = 14..15, isRtl = false), SemanticLyrics.Word(timeRange = 308379uL..309131uL, charRange = 17..26, isRtl = false), SemanticLyrics.Word(timeRange = 309131uL..309352uL, charRange = 28..29, isRtl = false), SemanticLyrics.Word(timeRange = 309352uL..310110uL, charRange = 31..39, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 310110uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 308037uL, text = """And I know""", words = mutableListOf(SemanticLyrics.Word(timeRange = 308037uL..308232uL, charRange = 0..2, isRtl = false), SemanticLyrics.Word(timeRange = 308232uL..308405uL, charRange = 4..4, isRtl = false), SemanticLyrics.Word(timeRange = 308405uL..312152uL, charRange = 6..9, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 312152uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 310111uL, text = """Be satisfied, be satisfied""", words = mutableListOf(SemanticLyrics.Word(timeRange = 310111uL..310303uL, charRange = 0..1, isRtl = false), SemanticLyrics.Word(timeRange = 310303uL..311074uL, charRange = 3..12, isRtl = false), SemanticLyrics.Word(timeRange = 311074uL..311279uL, charRange = 14..15, isRtl = false), SemanticLyrics.Word(timeRange = 311279uL..311658uL, charRange = 17..19, isRtl = false), SemanticLyrics.Word(timeRange = 311658uL..311855uL, charRange = 20..22, isRtl = false), SemanticLyrics.Word(timeRange = 311855uL..313159uL, charRange = 23..25, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 313159uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 313012uL, text = """He will never be satisfied""", words = mutableListOf(SemanticLyrics.Word(timeRange = 313012uL..313135uL, charRange = 0..1, isRtl = false), SemanticLyrics.Word(timeRange = 313135uL..313271uL, charRange = 3..6, isRtl = false), SemanticLyrics.Word(timeRange = 313271uL..313508uL, charRange = 8..12, isRtl = false), SemanticLyrics.Word(timeRange = 313508uL..313713uL, charRange = 14..15, isRtl = false), SemanticLyrics.Word(timeRange = 313713uL..315055uL, charRange = 17..25, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 315055uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 315177uL, text = """I will never be satisfied""", words = mutableListOf(SemanticLyrics.Word(timeRange = 315177uL..315326uL, charRange = 0..0, isRtl = false), SemanticLyrics.Word(timeRange = 315326uL..315481uL, charRange = 2..5, isRtl = false), SemanticLyrics.Word(timeRange = 315481uL..315788uL, charRange = 7..11, isRtl = false), SemanticLyrics.Word(timeRange = 315788uL..316164uL, charRange = 13..14, isRtl = false), SemanticLyrics.Word(timeRange = 316164uL..316631uL, charRange = 16..18, isRtl = false), SemanticLyrics.Word(timeRange = 316631uL..316957uL, charRange = 19..21, isRtl = false), SemanticLyrics.Word(timeRange = 316957uL..321390uL, charRange = 22..23, isRtl = false), SemanticLyrics.Word(timeRange = 321390uL..321523uL, charRange = 24..24, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 321523uL, isTranslated = false, endIsImplicit = false),
+    )
 
     // wonder what happened to the formatting
     val TTML_DEATH_BED = """
@@ -8887,2352 +9239,54 @@ object LrcTestData {
 		>
 	""".trimIndent()
     val TTML_DEATH_BED_PARSED = listOf(
-        LyricLine(
-            start = 0uL,
-            text = """Don't stay awake for too long, don't go to bed""",
-            words = mutableListOf(
-                SemanticLyrics.Word(
-                    timeRange = 0uL..843uL,
-                    charRange = 0..4,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(timeRange = 843uL..1325uL, charRange = 6..9, isRtl = false),
-                SemanticLyrics.Word(timeRange = 1325uL..2109uL, charRange = 11..15, isRtl = false),
-                SemanticLyrics.Word(timeRange = 2109uL..2341uL, charRange = 17..19, isRtl = false),
-                SemanticLyrics.Word(timeRange = 2341uL..2760uL, charRange = 21..23, isRtl = false),
-                SemanticLyrics.Word(timeRange = 2760uL..3360uL, charRange = 25..29, isRtl = false),
-                SemanticLyrics.Word(timeRange = 3360uL..4176uL, charRange = 31..35, isRtl = false),
-                SemanticLyrics.Word(timeRange = 4176uL..4627uL, charRange = 37..38, isRtl = false),
-                SemanticLyrics.Word(timeRange = 4627uL..4845uL, charRange = 40..41, isRtl = false),
-                SemanticLyrics.Word(timeRange = 4845uL..5450uL, charRange = 43..45, isRtl = false)
-            ),
-            speaker = SpeakerEntity.Voice2,
-            end = 5450uL,
-            isTranslated = false,
-            endIsImplicit = false
-        ),
-        LyricLine(
-            start = 5595uL,
-            text = """I'll make a cup of coffee for your head""",
-            words = mutableListOf(
-                SemanticLyrics.Word(
-                    timeRange = 5595uL..5858uL,
-                    charRange = 0..3,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(timeRange = 5858uL..6109uL, charRange = 5..8, isRtl = false),
-                SemanticLyrics.Word(timeRange = 6109uL..6258uL, charRange = 10..10, isRtl = false),
-                SemanticLyrics.Word(timeRange = 6258uL..6525uL, charRange = 12..14, isRtl = false),
-                SemanticLyrics.Word(timeRange = 6525uL..6693uL, charRange = 16..17, isRtl = false),
-                SemanticLyrics.Word(timeRange = 6693uL..7446uL, charRange = 19..24, isRtl = false),
-                SemanticLyrics.Word(timeRange = 7525uL..7810uL, charRange = 26..28, isRtl = false),
-                SemanticLyrics.Word(timeRange = 7810uL..8226uL, charRange = 30..33, isRtl = false),
-                SemanticLyrics.Word(timeRange = 8226uL..8682uL, charRange = 35..38, isRtl = false)
-            ),
-            speaker = SpeakerEntity.Voice2,
-            end = 8682uL,
-            isTranslated = false,
-            endIsImplicit = false
-        ),
-        LyricLine(
-            start = 8989uL,
-            text = """It'll get you up and going out of bed""",
-            words = mutableListOf(
-                SemanticLyrics.Word(
-                    timeRange = 8989uL..9207uL,
-                    charRange = 0..4,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(timeRange = 9207uL..9458uL, charRange = 6..8, isRtl = false),
-                SemanticLyrics.Word(timeRange = 9458uL..9626uL, charRange = 10..12, isRtl = false),
-                SemanticLyrics.Word(timeRange = 9626uL..9874uL, charRange = 14..15, isRtl = false),
-                SemanticLyrics.Word(timeRange = 9874uL..10026uL, charRange = 17..19, isRtl = false),
-                SemanticLyrics.Word(
-                    timeRange = 10026uL..10740uL,
-                    charRange = 21..25,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 10740uL..11124uL,
-                    charRange = 27..29,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 11124uL..11559uL,
-                    charRange = 31..32,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(timeRange = 11559uL..12076uL, charRange = 34..36, isRtl = false)
-            ),
-            speaker = SpeakerEntity.Voice2,
-            end = 12076uL,
-            isTranslated = false,
-            endIsImplicit = false
-        ),
-        LyricLine(
-            start = 12090uL,
-            text = """Yeah, I don't wanna fall asleep, I don't wanna pass away""",
-            words = mutableListOf(
-                SemanticLyrics.Word(
-                    timeRange = 12090uL..12653uL,
-                    charRange = 0..4,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(timeRange = 13025uL..13191uL, charRange = 6..6, isRtl = false),
-                SemanticLyrics.Word(timeRange = 13191uL..13391uL, charRange = 8..12, isRtl = false),
-                SemanticLyrics.Word(
-                    timeRange = 13391uL..13791uL,
-                    charRange = 14..18,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 13791uL..13991uL,
-                    charRange = 20..23,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 13991uL..14641uL,
-                    charRange = 25..31,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 14641uL..14825uL,
-                    charRange = 33..33,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 14825uL..15025uL,
-                    charRange = 35..39,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 15025uL..15425uL,
-                    charRange = 41..45,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 15425uL..15743uL,
-                    charRange = 47..50,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(timeRange = 15743uL..16149uL, charRange = 52..55, isRtl = false)
-            ),
-            speaker = SpeakerEntity.Voice1,
-            end = 16149uL,
-            isTranslated = false,
-            endIsImplicit = false
-        ),
-        LyricLine(
-            start = 16259uL,
-            text = """I been thinking of our future 'cause I'll never see those days""",
-            words = mutableListOf(
-                SemanticLyrics.Word(timeRange = 16259uL..16493uL, charRange = 0..0, isRtl = false),
-                SemanticLyrics.Word(timeRange = 16493uL..16693uL, charRange = 2..5, isRtl = false),
-                SemanticLyrics.Word(timeRange = 16693uL..17112uL, charRange = 7..14, isRtl = false),
-                SemanticLyrics.Word(
-                    timeRange = 17112uL..17312uL,
-                    charRange = 16..17,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 17312uL..17512uL,
-                    charRange = 19..21,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 17512uL..17928uL,
-                    charRange = 23..28,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 17928uL..18144uL,
-                    charRange = 30..35,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 18144uL..18362uL,
-                    charRange = 37..40,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 18362uL..18782uL,
-                    charRange = 42..46,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 18782uL..18979uL,
-                    charRange = 48..50,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 18979uL..19166uL,
-                    charRange = 52..56,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(timeRange = 19166uL..19499uL, charRange = 58..61, isRtl = false)
-            ),
-            speaker = SpeakerEntity.Voice1,
-            end = 19499uL,
-            isTranslated = false,
-            endIsImplicit = false
-        ),
-        LyricLine(
-            start = 19588uL,
-            text = """I don't know why this has happened, but I probably deserve it""",
-            words = mutableListOf(
-                SemanticLyrics.Word(timeRange = 19588uL..19878uL, charRange = 0..0, isRtl = false),
-                SemanticLyrics.Word(timeRange = 19878uL..20062uL, charRange = 2..6, isRtl = false),
-                SemanticLyrics.Word(timeRange = 20062uL..20246uL, charRange = 8..11, isRtl = false),
-                SemanticLyrics.Word(
-                    timeRange = 20246uL..20443uL,
-                    charRange = 13..15,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 20443uL..20627uL,
-                    charRange = 17..20,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 20627uL..20846uL,
-                    charRange = 22..24,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 20846uL..21294uL,
-                    charRange = 26..34,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 21294uL..21510uL,
-                    charRange = 36..38,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 21510uL..21694uL,
-                    charRange = 40..40,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 21694uL..22345uL,
-                    charRange = 42..49,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 22345uL..22745uL,
-                    charRange = 51..57,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(timeRange = 22745uL..23044uL, charRange = 59..60, isRtl = false)
-            ),
-            speaker = SpeakerEntity.Voice1,
-            end = 23044uL,
-            isTranslated = false,
-            endIsImplicit = false
-        ),
-        LyricLine(
-            start = 23124uL,
-            text = """I tried to do my best, but you know that I'm not perfect""",
-            words = mutableListOf(
-                SemanticLyrics.Word(timeRange = 23124uL..23385uL, charRange = 0..0, isRtl = false),
-                SemanticLyrics.Word(timeRange = 23385uL..23601uL, charRange = 2..6, isRtl = false),
-                SemanticLyrics.Word(timeRange = 23601uL..23785uL, charRange = 8..9, isRtl = false),
-                SemanticLyrics.Word(
-                    timeRange = 23785uL..23982uL,
-                    charRange = 11..12,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 23982uL..24185uL,
-                    charRange = 14..15,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 24185uL..24601uL,
-                    charRange = 17..21,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 24601uL..24867uL,
-                    charRange = 23..25,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 24867uL..25033uL,
-                    charRange = 27..29,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 25033uL..25251uL,
-                    charRange = 31..34,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 25251uL..25435uL,
-                    charRange = 36..39,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 25435uL..25651uL,
-                    charRange = 41..43,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 25651uL..25867uL,
-                    charRange = 45..47,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(timeRange = 25867uL..26283uL, charRange = 49..55, isRtl = false)
-            ),
-            speaker = SpeakerEntity.Voice1,
-            end = 26283uL,
-            isTranslated = false,
-            endIsImplicit = false
-        ),
-        LyricLine(
-            start = 26287uL,
-            text = """I been praying for forgiveness, you've been praying for my health""",
-            words = mutableListOf(
-                SemanticLyrics.Word(
-                    timeRange = 26287uL..26510uL,
-                    charRange = 0..0,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(timeRange = 26510uL..26710uL, charRange = 2..5, isRtl = false),
-                SemanticLyrics.Word(timeRange = 26710uL..27113uL, charRange = 7..13, isRtl = false),
-                SemanticLyrics.Word(
-                    timeRange = 27113uL..27329uL,
-                    charRange = 15..17,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 27329uL..27996uL,
-                    charRange = 19..30,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 27996uL..28196uL,
-                    charRange = 32..37,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 28196uL..28396uL,
-                    charRange = 39..42,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 28396uL..28764uL,
-                    charRange = 44..50,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 28764uL..28980uL,
-                    charRange = 52..54,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 28980uL..29180uL,
-                    charRange = 56..57,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(timeRange = 29180uL..29510uL, charRange = 59..64, isRtl = false)
-            ),
-            speaker = SpeakerEntity.Voice1,
-            end = 29510uL,
-            isTranslated = false,
-            endIsImplicit = false
-        ),
-        LyricLine(
-            start = 29906uL,
-            text = """When I leave this earth, hopin' you'll find someone else""",
-            words = mutableListOf(
-                SemanticLyrics.Word(
-                    timeRange = 29906uL..30249uL,
-                    charRange = 0..3,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(timeRange = 30249uL..30433uL, charRange = 5..5, isRtl = false),
-                SemanticLyrics.Word(timeRange = 30433uL..30633uL, charRange = 7..11, isRtl = false),
-                SemanticLyrics.Word(
-                    timeRange = 30633uL..30833uL,
-                    charRange = 13..16,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 30833uL..31249uL,
-                    charRange = 18..23,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 31249uL..31684uL,
-                    charRange = 25..30,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 31684uL..31900uL,
-                    charRange = 32..37,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 31900uL..32100uL,
-                    charRange = 39..42,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 32100uL..32519uL,
-                    charRange = 44..50,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(timeRange = 32519uL..32866uL, charRange = 52..55, isRtl = false)
-            ),
-            speaker = SpeakerEntity.Voice1,
-            end = 32866uL,
-            isTranslated = false,
-            endIsImplicit = false
-        ),
-        LyricLine(
-            start = 32878uL,
-            text = """'Cause yeah, we still young, there's so much we haven't done""",
-            words = mutableListOf(
-                SemanticLyrics.Word(
-                    timeRange = 32878uL..33246uL,
-                    charRange = 0..5,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(timeRange = 33405uL..33589uL, charRange = 7..11, isRtl = false),
-                SemanticLyrics.Word(
-                    timeRange = 33589uL..33773uL,
-                    charRange = 13..14,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 33773uL..34173uL,
-                    charRange = 16..20,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 34173uL..34589uL,
-                    charRange = 22..27,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 34589uL..34805uL,
-                    charRange = 29..35,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 34805uL..35024uL,
-                    charRange = 37..38,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 35024uL..35256uL,
-                    charRange = 40..43,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 35256uL..35456uL,
-                    charRange = 45..46,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 35456uL..35840uL,
-                    charRange = 48..54,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(timeRange = 35840uL..36200uL, charRange = 56..59, isRtl = false)
-            ),
-            speaker = SpeakerEntity.Voice1,
-            end = 36200uL,
-            isTranslated = false,
-            endIsImplicit = false
-        ),
-        LyricLine(
-            start = 36222uL,
-            text = """Getting married, start a family, watch your husband with his son""",
-            words = mutableListOf(
-                SemanticLyrics.Word(
-                    timeRange = 36222uL..36696uL,
-                    charRange = 0..6,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(timeRange = 36696uL..37096uL, charRange = 8..15, isRtl = false),
-                SemanticLyrics.Word(
-                    timeRange = 37096uL..37315uL,
-                    charRange = 17..21,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 37315uL..37515uL,
-                    charRange = 23..23,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 37515uL..37965uL,
-                    charRange = 25..31,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 37965uL..38181uL,
-                    charRange = 33..37,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 38181uL..38363uL,
-                    charRange = 39..42,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 38363uL..38781uL,
-                    charRange = 44..50,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 38781uL..38981uL,
-                    charRange = 52..55,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 38981uL..39197uL,
-                    charRange = 57..59,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(timeRange = 39197uL..39566uL, charRange = 61..63, isRtl = false)
-            ),
-            speaker = SpeakerEntity.Voice1,
-            end = 39566uL,
-            isTranslated = false,
-            endIsImplicit = false
-        ),
-        LyricLine(
-            start = 39572uL,
-            text = """I wish it could be me, but I won't make it out this bed""",
-            words = mutableListOf(
-                SemanticLyrics.Word(timeRange = 39572uL..39840uL, charRange = 0..0, isRtl = false),
-                SemanticLyrics.Word(timeRange = 40038uL..40254uL, charRange = 2..5, isRtl = false),
-                SemanticLyrics.Word(timeRange = 40254uL..40454uL, charRange = 7..8, isRtl = false),
-                SemanticLyrics.Word(
-                    timeRange = 40454uL..40673uL,
-                    charRange = 10..14,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 40673uL..40873uL,
-                    charRange = 16..17,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 40873uL..41070uL,
-                    charRange = 19..21,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 41070uL..41289uL,
-                    charRange = 23..25,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 41289uL..41489uL,
-                    charRange = 27..27,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 41489uL..41689uL,
-                    charRange = 29..33,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 41689uL..41905uL,
-                    charRange = 35..38,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 41905uL..42105uL,
-                    charRange = 40..41,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 42105uL..42305uL,
-                    charRange = 43..45,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 42305uL..42505uL,
-                    charRange = 47..50,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(timeRange = 42505uL..42918uL, charRange = 52..54, isRtl = false)
-            ),
-            speaker = SpeakerEntity.Voice1,
-            end = 42918uL,
-            isTranslated = false,
-            endIsImplicit = false
-        ),
-        LyricLine(
-            start = 43089uL,
-            text = """I hope I go to heaven so I see you once again""",
-            words = mutableListOf(
-                SemanticLyrics.Word(timeRange = 43089uL..43371uL, charRange = 0..0, isRtl = false),
-                SemanticLyrics.Word(timeRange = 43371uL..43587uL, charRange = 2..5, isRtl = false),
-                SemanticLyrics.Word(timeRange = 43587uL..43771uL, charRange = 7..7, isRtl = false),
-                SemanticLyrics.Word(timeRange = 43771uL..43990uL, charRange = 9..10, isRtl = false),
-                SemanticLyrics.Word(
-                    timeRange = 43990uL..44171uL,
-                    charRange = 12..13,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 44171uL..44590uL,
-                    charRange = 15..20,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 44590uL..44806uL,
-                    charRange = 22..23,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 44806uL..45006uL,
-                    charRange = 25..25,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 45006uL..45222uL,
-                    charRange = 27..29,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 45222uL..45438uL,
-                    charRange = 31..33,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 45438uL..45638uL,
-                    charRange = 35..38,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(timeRange = 45638uL..46245uL, charRange = 40..44, isRtl = false)
-            ),
-            speaker = SpeakerEntity.Voice1,
-            end = 46245uL,
-            isTranslated = false,
-            endIsImplicit = false
-        ),
-        LyricLine(
-            start = 46447uL,
-            text = """My life was kinda short, but I got so many blessings""",
-            words = mutableListOf(
-                SemanticLyrics.Word(
-                    timeRange = 46447uL..46678uL,
-                    charRange = 0..1,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(timeRange = 46678uL..46929uL, charRange = 3..6, isRtl = false),
-                SemanticLyrics.Word(timeRange = 46929uL..47113uL, charRange = 8..10, isRtl = false),
-                SemanticLyrics.Word(
-                    timeRange = 47113uL..47513uL,
-                    charRange = 12..16,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 47513uL..47964uL,
-                    charRange = 18..23,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 47964uL..48164uL,
-                    charRange = 25..27,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 48164uL..48364uL,
-                    charRange = 29..29,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 48364uL..48580uL,
-                    charRange = 31..33,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 48580uL..48796uL,
-                    charRange = 35..36,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 48796uL..49164uL,
-                    charRange = 38..41,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(timeRange = 49164uL..49791uL, charRange = 43..51, isRtl = false)
-            ),
-            speaker = SpeakerEntity.Voice1,
-            end = 49791uL,
-            isTranslated = false,
-            endIsImplicit = false
-        ),
-        LyricLine(
-            start = 49884uL,
-            text = """Happy you were mine, it sucks that it's all ending""",
-            words = mutableListOf(
-                SemanticLyrics.Word(
-                    timeRange = 49884uL..50441uL,
-                    charRange = 0..4,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(timeRange = 50441uL..50641uL, charRange = 6..8, isRtl = false),
-                SemanticLyrics.Word(
-                    timeRange = 50641uL..50841uL,
-                    charRange = 10..13,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 50841uL..51288uL,
-                    charRange = 15..19,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 51459uL..51659uL,
-                    charRange = 21..22,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 51659uL..51942uL,
-                    charRange = 24..28,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 51942uL..52107uL,
-                    charRange = 30..33,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 52107uL..52326uL,
-                    charRange = 35..38,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 52326uL..52523uL,
-                    charRange = 40..42,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(timeRange = 52523uL..52964uL, charRange = 44..49, isRtl = false)
-            ),
-            speaker = SpeakerEntity.Voice1,
-            end = 52964uL,
-            isTranslated = false,
-            endIsImplicit = false
-        ),
-        LyricLine(
-            start = 53321uL,
-            text = """Don't stay awake for too long, don't go to bed""",
-            words = mutableListOf(
-                SemanticLyrics.Word(
-                    timeRange = 53321uL..54187uL,
-                    charRange = 0..4,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(timeRange = 54187uL..54622uL, charRange = 6..9, isRtl = false),
-                SemanticLyrics.Word(
-                    timeRange = 54622uL..55470uL,
-                    charRange = 11..15,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 55470uL..55670uL,
-                    charRange = 17..19,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 55670uL..56104uL,
-                    charRange = 21..23,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 56104uL..56704uL,
-                    charRange = 25..29,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 56704uL..57504uL,
-                    charRange = 31..35,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 57504uL..57936uL,
-                    charRange = 37..38,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 57936uL..58171uL,
-                    charRange = 40..41,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(timeRange = 58171uL..58801uL, charRange = 43..45, isRtl = false)
-            ),
-            speaker = SpeakerEntity.Group,
-            end = 58801uL,
-            isTranslated = false,
-            endIsImplicit = false
-        ),
-        LyricLine(
-            start = 58908uL,
-            text = """I'll make a cup of coffee for your head""",
-            words = mutableListOf(
-                SemanticLyrics.Word(
-                    timeRange = 58908uL..59193uL,
-                    charRange = 0..3,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(timeRange = 59193uL..59427uL, charRange = 5..8, isRtl = false),
-                SemanticLyrics.Word(
-                    timeRange = 59427uL..59595uL,
-                    charRange = 10..10,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 59595uL..59827uL,
-                    charRange = 12..14,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 59827uL..60011uL,
-                    charRange = 16..17,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 60011uL..60843uL,
-                    charRange = 19..24,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 60843uL..61129uL,
-                    charRange = 26..28,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 61129uL..61529uL,
-                    charRange = 30..33,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(timeRange = 61529uL..62184uL, charRange = 35..38, isRtl = false)
-            ),
-            speaker = SpeakerEntity.Group,
-            end = 62184uL,
-            isTranslated = false,
-            endIsImplicit = false
-        ),
-        LyricLine(
-            start = 62252uL,
-            text = """It'll get you up and going out of bed """,
-            words = mutableListOf(
-                SemanticLyrics.Word(
-                    timeRange = 62252uL..62507uL,
-                    charRange = 0..4,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(timeRange = 62507uL..62771uL, charRange = 6..8, isRtl = false),
-                SemanticLyrics.Word(
-                    timeRange = 62771uL..62939uL,
-                    charRange = 10..12,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 62939uL..63222uL,
-                    charRange = 14..15,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 63222uL..63390uL,
-                    charRange = 17..19,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 63390uL..64041uL,
-                    charRange = 21..25,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 64041uL..64422uL,
-                    charRange = 27..29,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 64422uL..64873uL,
-                    charRange = 31..32,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(timeRange = 64873uL..65439uL, charRange = 34..36, isRtl = false)
-            ),
-            speaker = SpeakerEntity.Voice2,
-            end = 66619uL,
-            isTranslated = false,
-            endIsImplicit = false
-        ),
-        LyricLine(
-            start = 65371uL,
-            text = """Yeah, ay""",
-            words = mutableListOf(
-                SemanticLyrics.Word(
-                    timeRange = 65371uL..65766uL,
-                    charRange = 0..4,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(timeRange = 66299uL..66619uL, charRange = 6..7, isRtl = false)
-            ),
-            speaker = SpeakerEntity.Voice2Background,
-            end = 66619uL,
-            isTranslated = false,
-            endIsImplicit = false
-        ),
-        LyricLine(
-            start = 66642uL,
-            text = """Don't stay awake for too long, don't go to bed""",
-            words = mutableListOf(
-                SemanticLyrics.Word(
-                    timeRange = 66642uL..67465uL,
-                    charRange = 0..4,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(timeRange = 67465uL..67964uL, charRange = 6..9, isRtl = false),
-                SemanticLyrics.Word(
-                    timeRange = 67964uL..68764uL,
-                    charRange = 11..15,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 68764uL..68999uL,
-                    charRange = 17..19,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 68999uL..69431uL,
-                    charRange = 21..23,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 69431uL..70031uL,
-                    charRange = 25..29,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 70031uL..70815uL,
-                    charRange = 31..35,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 70815uL..71265uL,
-                    charRange = 37..38,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 71265uL..71516uL,
-                    charRange = 40..41,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(timeRange = 71516uL..72082uL, charRange = 43..45, isRtl = false)
-            ),
-            speaker = SpeakerEntity.Voice2,
-            end = 72082uL,
-            isTranslated = false,
-            endIsImplicit = false
-        ),
-        LyricLine(
-            start = 72316uL,
-            text = """I'll make a cup of coffee for your head""",
-            words = mutableListOf(
-                SemanticLyrics.Word(
-                    timeRange = 72316uL..72534uL,
-                    charRange = 0..3,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(timeRange = 72534uL..72785uL, charRange = 5..8, isRtl = false),
-                SemanticLyrics.Word(
-                    timeRange = 72785uL..72918uL,
-                    charRange = 10..10,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 72918uL..73153uL,
-                    charRange = 12..14,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 73153uL..73353uL,
-                    charRange = 16..17,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 73353uL..74153uL,
-                    charRange = 19..24,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 74153uL..74470uL,
-                    charRange = 26..28,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 74470uL..74886uL,
-                    charRange = 30..33,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(timeRange = 74886uL..75412uL, charRange = 35..38, isRtl = false)
-            ),
-            speaker = SpeakerEntity.Voice2,
-            end = 75412uL,
-            isTranslated = false,
-            endIsImplicit = false
-        ),
-        LyricLine(
-            start = 75628uL,
-            text = """It'll get you up and going out of bed """,
-            words = mutableListOf(
-                SemanticLyrics.Word(
-                    timeRange = 75628uL..75873uL,
-                    charRange = 0..4,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(timeRange = 75873uL..76123uL, charRange = 6..8, isRtl = false),
-                SemanticLyrics.Word(
-                    timeRange = 76123uL..76273uL,
-                    charRange = 10..12,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 76273uL..76539uL,
-                    charRange = 14..15,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 76539uL..76705uL,
-                    charRange = 17..19,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 76705uL..77390uL,
-                    charRange = 21..25,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 77390uL..77790uL,
-                    charRange = 27..29,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 77790uL..78206uL,
-                    charRange = 31..32,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(timeRange = 78206uL..78562uL, charRange = 34..36, isRtl = false)
-            ),
-            speaker = SpeakerEntity.Voice2,
-            end = 79214uL,
-            isTranslated = false,
-            endIsImplicit = false
-        ),
-        LyricLine(
-            start = 77061uL,
-            text = """Ay, yeah""",
-            words = mutableListOf(
-                SemanticLyrics.Word(
-                    timeRange = 77061uL..77485uL,
-                    charRange = 0..2,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(timeRange = 78742uL..79214uL, charRange = 4..7, isRtl = false)
-            ),
-            speaker = SpeakerEntity.Voice2Background,
-            end = 79214uL,
-            isTranslated = false,
-            endIsImplicit = false
-        ),
-        LyricLine(
-            start = 79770uL,
-            text = """I'm happy that you here with me, I'm sorry if I tear up""",
-            words = mutableListOf(
-                SemanticLyrics.Word(timeRange = 79770uL..80055uL, charRange = 0..2, isRtl = false),
-                SemanticLyrics.Word(timeRange = 80055uL..80473uL, charRange = 4..8, isRtl = false),
-                SemanticLyrics.Word(
-                    timeRange = 80473uL..80673uL,
-                    charRange = 10..13,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 80673uL..80873uL,
-                    charRange = 15..17,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 80873uL..81073uL,
-                    charRange = 19..22,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 81073uL..81273uL,
-                    charRange = 24..27,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 81273uL..81505uL,
-                    charRange = 29..31,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 81505uL..81673uL,
-                    charRange = 33..35,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 81673uL..82057uL,
-                    charRange = 37..41,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 82057uL..82305uL,
-                    charRange = 43..44,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 82305uL..82505uL,
-                    charRange = 46..46,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 82505uL..82739uL,
-                    charRange = 48..51,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(timeRange = 82739uL..83085uL, charRange = 53..54, isRtl = false)
-            ),
-            speaker = SpeakerEntity.Voice1,
-            end = 83085uL,
-            isTranslated = false,
-            endIsImplicit = false
-        ),
-        LyricLine(
-            start = 83091uL,
-            text = """When me and you were younger, you would always make me cheer up""",
-            words = mutableListOf(
-                SemanticLyrics.Word(timeRange = 83091uL..83402uL, charRange = 0..3, isRtl = false),
-                SemanticLyrics.Word(timeRange = 83402uL..83602uL, charRange = 5..6, isRtl = false),
-                SemanticLyrics.Word(timeRange = 83602uL..83786uL, charRange = 8..10, isRtl = false),
-                SemanticLyrics.Word(
-                    timeRange = 83786uL..83968uL,
-                    charRange = 12..14,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 83968uL..84186uL,
-                    charRange = 16..19,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 84186uL..84618uL,
-                    charRange = 21..28,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 84618uL..84821uL,
-                    charRange = 30..32,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 84821uL..85021uL,
-                    charRange = 34..38,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 85021uL..85453uL,
-                    charRange = 40..45,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 85453uL..85669uL,
-                    charRange = 47..50,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 85669uL..85888uL,
-                    charRange = 52..53,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 85888uL..86138uL,
-                    charRange = 55..59,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(timeRange = 86138uL..86445uL, charRange = 61..62, isRtl = false)
-            ),
-            speaker = SpeakerEntity.Voice1,
-            end = 86445uL,
-            isTranslated = false,
-            endIsImplicit = false
-        ),
-        LyricLine(
-            start = 86634uL,
-            text = """Taking goofy videos and walking through the park""",
-            words = mutableListOf(
-                SemanticLyrics.Word(
-                    timeRange = 86634uL..87100uL,
-                    charRange = 0..5,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(timeRange = 87100uL..87516uL, charRange = 7..11, isRtl = false),
-                SemanticLyrics.Word(
-                    timeRange = 87516uL..88185uL,
-                    charRange = 13..18,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 88185uL..88367uL,
-                    charRange = 20..22,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 88367uL..88751uL,
-                    charRange = 24..30,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 88751uL..89001uL,
-                    charRange = 32..38,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 89001uL..89185uL,
-                    charRange = 40..42,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(timeRange = 89185uL..89506uL, charRange = 44..47, isRtl = false)
-            ),
-            speaker = SpeakerEntity.Voice1,
-            end = 89506uL,
-            isTranslated = false,
-            endIsImplicit = false
-        ),
-        LyricLine(
-            start = 89516uL,
-            text = """You would jump into my arms every time you heard a bark""",
-            words = mutableListOf(
-                SemanticLyrics.Word(timeRange = 89516uL..89835uL, charRange = 0..2, isRtl = false),
-                SemanticLyrics.Word(timeRange = 89835uL..90035uL, charRange = 4..8, isRtl = false),
-                SemanticLyrics.Word(
-                    timeRange = 90035uL..90235uL,
-                    charRange = 10..13,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 90235uL..90686uL,
-                    charRange = 15..18,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 90686uL..90867uL,
-                    charRange = 20..21,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 90867uL..91235uL,
-                    charRange = 23..26,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 91235uL..91686uL,
-                    charRange = 28..32,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 91686uL..91937uL,
-                    charRange = 34..37,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 91937uL..92102uL,
-                    charRange = 39..41,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 92102uL..92337uL,
-                    charRange = 43..47,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 92337uL..92537uL,
-                    charRange = 49..49,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(timeRange = 92537uL..93008uL, charRange = 51..54, isRtl = false)
-            ),
-            speaker = SpeakerEntity.Voice1,
-            end = 93008uL,
-            isTranslated = false,
-            endIsImplicit = false
-        ),
-        LyricLine(
-            start = 93297uL,
-            text = """Cuddle in your sheets, sing me sound asleep""",
-            words = mutableListOf(
-                SemanticLyrics.Word(
-                    timeRange = 93297uL..93752uL,
-                    charRange = 0..5,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(timeRange = 93752uL..93968uL, charRange = 7..8, isRtl = false),
-                SemanticLyrics.Word(
-                    timeRange = 93968uL..94168uL,
-                    charRange = 10..13,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 94168uL..94690uL,
-                    charRange = 15..21,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 94984uL..95200uL,
-                    charRange = 23..26,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 95200uL..95419uL,
-                    charRange = 28..29,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 95419uL..95670uL,
-                    charRange = 31..35,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(timeRange = 95670uL..96281uL, charRange = 37..42, isRtl = false)
-            ),
-            speaker = SpeakerEntity.Voice1,
-            end = 96281uL,
-            isTranslated = false,
-            endIsImplicit = false
-        ),
-        LyricLine(
-            start = 96373uL,
-            text = """And sneak out through your kitchen at exactly 1:03""",
-            words = mutableListOf(
-                SemanticLyrics.Word(
-                    timeRange = 96373uL..96668uL,
-                    charRange = 0..2,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(timeRange = 96668uL..96868uL, charRange = 4..8, isRtl = false),
-                SemanticLyrics.Word(
-                    timeRange = 96868uL..97068uL,
-                    charRange = 10..12,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 97068uL..97271uL,
-                    charRange = 14..20,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 97271uL..97487uL,
-                    charRange = 22..25,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 97487uL..97938uL,
-                    charRange = 27..33,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 97938uL..98154uL,
-                    charRange = 35..36,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 98154uL..98820uL,
-                    charRange = 38..44,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(timeRange = 98820uL..99577uL, charRange = 46..49, isRtl = false)
-            ),
-            speaker = SpeakerEntity.Voice1,
-            end = 99577uL,
-            isTranslated = false,
-            endIsImplicit = false
-        ),
-        LyricLine(
-            start = 99915uL,
-            text = """Sundays, went to church, on Mondays, watched a movie""",
-            words = mutableListOf(
-                SemanticLyrics.Word(
-                    timeRange = 99915uL..100408uL,
-                    charRange = 0..7,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 100408uL..100658uL,
-                    charRange = 9..12,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 100658uL..100858uL,
-                    charRange = 14..15,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 100858uL..101382uL,
-                    charRange = 17..23,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 101525uL..101709uL,
-                    charRange = 25..26,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 101709uL..102109uL,
-                    charRange = 28..35,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 102109uL..102341uL,
-                    charRange = 37..43,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 102341uL..102541uL,
-                    charRange = 45..45,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 102541uL..103092uL,
-                    charRange = 47..51,
-                    isRtl = false
-                )
-            ),
-            speaker = SpeakerEntity.Voice1,
-            end = 103092uL,
-            isTranslated = false,
-            endIsImplicit = false
-        ),
-        LyricLine(
-            start = 103294uL,
-            text = """Soon, you'll be alone, sorry that you have to lose me""",
-            words = mutableListOf(
-                SemanticLyrics.Word(
-                    timeRange = 103294uL..103587uL,
-                    charRange = 0..4,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 103587uL..103768uL,
-                    charRange = 6..11,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 103768uL..103987uL,
-                    charRange = 13..14,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 103987uL..104568uL,
-                    charRange = 16..21,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 104568uL..105019uL,
-                    charRange = 23..27,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 105019uL..105253uL,
-                    charRange = 29..32,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 105253uL..105435uL,
-                    charRange = 34..36,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 105435uL..105653uL,
-                    charRange = 38..41,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 105653uL..105869uL,
-                    charRange = 43..44,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 105869uL..106253uL,
-                    charRange = 46..49,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 106253uL..106583uL,
-                    charRange = 51..52,
-                    isRtl = false
-                )
-            ),
-            speaker = SpeakerEntity.Voice1,
-            end = 106583uL,
-            isTranslated = false,
-            endIsImplicit = false
-        ),
-        LyricLine(
-            start = 106675uL,
-            text = """Don't stay awake for too long, don't go to bed""",
-            words = mutableListOf(
-                SemanticLyrics.Word(
-                    timeRange = 106675uL..107472uL,
-                    charRange = 0..4,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 107472uL..107938uL,
-                    charRange = 6..9,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 107938uL..108754uL,
-                    charRange = 11..15,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 108754uL..108986uL,
-                    charRange = 17..19,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 108986uL..109437uL,
-                    charRange = 21..23,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 109437uL..110005uL,
-                    charRange = 25..29,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 110005uL..110856uL,
-                    charRange = 31..35,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 110856uL..111288uL,
-                    charRange = 37..38,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 111288uL..111522uL,
-                    charRange = 40..41,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 111522uL..112065uL,
-                    charRange = 43..45,
-                    isRtl = false
-                )
-            ),
-            speaker = SpeakerEntity.Group,
-            end = 112065uL,
-            isTranslated = false,
-            endIsImplicit = false
-        ),
-        LyricLine(
-            start = 112329uL,
-            text = """I'll make a cup of coffee for your head""",
-            words = mutableListOf(
-                SemanticLyrics.Word(
-                    timeRange = 112329uL..112534uL,
-                    charRange = 0..3,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 112534uL..112784uL,
-                    charRange = 5..8,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 112784uL..112952uL,
-                    charRange = 10..10,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 112952uL..113184uL,
-                    charRange = 12..14,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 113184uL..113368uL,
-                    charRange = 16..17,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 113368uL..114203uL,
-                    charRange = 19..24,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 114203uL..114486uL,
-                    charRange = 26..28,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 114486uL..114870uL,
-                    charRange = 30..33,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 114870uL..115506uL,
-                    charRange = 35..38,
-                    isRtl = false
-                )
-            ),
-            speaker = SpeakerEntity.Group,
-            end = 115506uL,
-            isTranslated = false,
-            endIsImplicit = false
-        ),
-        LyricLine(
-            start = 115634uL,
-            text = """It'll get you up and going out of bed""",
-            words = mutableListOf(
-                SemanticLyrics.Word(
-                    timeRange = 115634uL..115844uL,
-                    charRange = 0..4,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 115844uL..116095uL,
-                    charRange = 6..8,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 116095uL..116263uL,
-                    charRange = 10..12,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 116263uL..116513uL,
-                    charRange = 14..15,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 116513uL..116695uL,
-                    charRange = 17..19,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 116695uL..117345uL,
-                    charRange = 21..25,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 117345uL..117764uL,
-                    charRange = 27..29,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 117764uL..118196uL,
-                    charRange = 31..32,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 118196uL..118937uL,
-                    charRange = 34..36,
-                    isRtl = false
-                )
-            ),
-            speaker = SpeakerEntity.Group,
-            end = 118937uL,
-            isTranslated = false,
-            endIsImplicit = false
-        ),
-        LyricLine(
-            start = 119907uL,
-            text = """Don't stay awake for too long, don't go to bed""",
-            words = mutableListOf(
-                SemanticLyrics.Word(
-                    timeRange = 119907uL..120826uL,
-                    charRange = 0..4,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 120826uL..121288uL,
-                    charRange = 6..9,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 121288uL..122128uL,
-                    charRange = 11..15,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 122128uL..122394uL,
-                    charRange = 17..19,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 122394uL..122794uL,
-                    charRange = 21..23,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 122794uL..123376uL,
-                    charRange = 25..29,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 123376uL..124178uL,
-                    charRange = 31..35,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 124178uL..124610uL,
-                    charRange = 37..38,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 124610uL..124845uL,
-                    charRange = 40..41,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 124845uL..125357uL,
-                    charRange = 43..45,
-                    isRtl = false
-                )
-            ),
-            speaker = SpeakerEntity.Voice2,
-            end = 125357uL,
-            isTranslated = false,
-            endIsImplicit = false
-        ),
-        LyricLine(
-            start = 125619uL,
-            text = """I'll make a cup of coffee for your head""",
-            words = mutableListOf(
-                SemanticLyrics.Word(
-                    timeRange = 125619uL..125861uL,
-                    charRange = 0..3,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 125861uL..126112uL,
-                    charRange = 5..8,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 126112uL..126261uL,
-                    charRange = 10..10,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 126261uL..126493uL,
-                    charRange = 12..14,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 126493uL..126680uL,
-                    charRange = 16..17,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 126680uL..127496uL,
-                    charRange = 19..24,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 127496uL..127794uL,
-                    charRange = 26..28,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 127794uL..128213uL,
-                    charRange = 30..33,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 128213uL..128778uL,
-                    charRange = 35..38,
-                    isRtl = false
-                )
-            ),
-            speaker = SpeakerEntity.Voice2,
-            end = 128778uL,
-            isTranslated = false,
-            endIsImplicit = false
-        ),
-        LyricLine(
-            start = 128992uL,
-            text = """It'll get you up and going out of bed""",
-            words = mutableListOf(
-                SemanticLyrics.Word(
-                    timeRange = 128992uL..129231uL,
-                    charRange = 0..4,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 129231uL..129450uL,
-                    charRange = 6..8,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 129450uL..129631uL,
-                    charRange = 10..12,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 129631uL..129866uL,
-                    charRange = 14..15,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 129866uL..130050uL,
-                    charRange = 17..19,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 130050uL..130733uL,
-                    charRange = 21..25,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 130733uL..131133uL,
-                    charRange = 27..29,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 131133uL..131517uL,
-                    charRange = 31..32,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 131517uL..132196uL,
-                    charRange = 34..36,
-                    isRtl = false
-                )
-            ),
-            speaker = SpeakerEntity.Voice2,
-            end = 132196uL,
-            isTranslated = false,
-            endIsImplicit = false
-        ),
-        LyricLine(
-            start = 133254uL,
-            text = """Don't stay awake for too long, don't go to bed""",
-            words = mutableListOf(
-                SemanticLyrics.Word(
-                    timeRange = 133254uL..134168uL,
-                    charRange = 0..4,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 134168uL..134616uL,
-                    charRange = 6..9,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 134616uL..135435uL,
-                    charRange = 11..15,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 135435uL..135635uL,
-                    charRange = 17..19,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 135635uL..136067uL,
-                    charRange = 21..23,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 136067uL..136667uL,
-                    charRange = 25..29,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 136667uL..137533uL,
-                    charRange = 31..35,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 137533uL..137952uL,
-                    charRange = 37..38,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 137952uL..138184uL,
-                    charRange = 40..41,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 138184uL..138754uL,
-                    charRange = 43..45,
-                    isRtl = false
-                )
-            ),
-            speaker = SpeakerEntity.Group,
-            end = 138754uL,
-            isTranslated = false,
-            endIsImplicit = false
-        ),
-        LyricLine(
-            start = 138977uL,
-            text = """I'll make a cup of coffee for your head""",
-            words = mutableListOf(
-                SemanticLyrics.Word(
-                    timeRange = 138977uL..139174uL,
-                    charRange = 0..3,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 139174uL..139424uL,
-                    charRange = 5..8,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 139424uL..139590uL,
-                    charRange = 10..10,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 139590uL..139840uL,
-                    charRange = 12..14,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 139840uL..140024uL,
-                    charRange = 16..17,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 140024uL..140824uL,
-                    charRange = 19..24,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 140824uL..141107uL,
-                    charRange = 26..28,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 141107uL..141491uL,
-                    charRange = 30..33,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 141491uL..142190uL,
-                    charRange = 35..38,
-                    isRtl = false
-                )
-            ),
-            speaker = SpeakerEntity.Group,
-            end = 142190uL,
-            isTranslated = false,
-            endIsImplicit = false
-        ),
-        LyricLine(
-            start = 142312uL,
-            text = """It'll get you up and going out of bed""",
-            words = mutableListOf(
-                SemanticLyrics.Word(
-                    timeRange = 142312uL..142495uL,
-                    charRange = 0..4,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 142495uL..142765uL,
-                    charRange = 6..8,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 142765uL..142930uL,
-                    charRange = 10..12,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 142930uL..143181uL,
-                    charRange = 14..15,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 143181uL..143365uL,
-                    charRange = 17..19,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 143365uL..144031uL,
-                    charRange = 21..25,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 144031uL..144415uL,
-                    charRange = 27..29,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 144415uL..144847uL,
-                    charRange = 31..32,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 144847uL..145489uL,
-                    charRange = 34..36,
-                    isRtl = false
-                )
-            ),
-            speaker = SpeakerEntity.Group,
-            end = 145489uL,
-            isTranslated = false,
-            endIsImplicit = false
-        ),
-        LyricLine(
-            start = 146547uL,
-            text = """Don't stay awake for too long, don't go to bed""",
-            words = mutableListOf(
-                SemanticLyrics.Word(
-                    timeRange = 146547uL..147445uL,
-                    charRange = 0..4,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 147445uL..147912uL,
-                    charRange = 6..9,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 147912uL..148762uL,
-                    charRange = 11..15,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 148762uL..148994uL,
-                    charRange = 17..19,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 148994uL..149429uL,
-                    charRange = 21..23,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 149429uL..150013uL,
-                    charRange = 25..29,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 150013uL..150829uL,
-                    charRange = 31..35,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 150829uL..151280uL,
-                    charRange = 37..38,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 151280uL..151530uL,
-                    charRange = 40..41,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 151530uL..152087uL,
-                    charRange = 43..45,
-                    isRtl = false
-                )
-            ),
-            speaker = SpeakerEntity.Voice2,
-            end = 152087uL,
-            isTranslated = false,
-            endIsImplicit = false
-        ),
-        LyricLine(
-            start = 152314uL,
-            text = """I'll make a cup of coffee for your head""",
-            words = mutableListOf(
-                SemanticLyrics.Word(
-                    timeRange = 152314uL..152524uL,
-                    charRange = 0..3,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 152524uL..152756uL,
-                    charRange = 5..8,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 152756uL..152924uL,
-                    charRange = 10..10,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 152924uL..153175uL,
-                    charRange = 12..14,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 153175uL..153340uL,
-                    charRange = 16..17,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 153340uL..154156uL,
-                    charRange = 19..24,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 154156uL..154473uL,
-                    charRange = 26..28,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 154473uL..154873uL,
-                    charRange = 30..33,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 154873uL..155473uL,
-                    charRange = 35..38,
-                    isRtl = false
-                )
-            ),
-            speaker = SpeakerEntity.Voice2,
-            end = 155473uL,
-            isTranslated = false,
-            endIsImplicit = false
-        ),
-        LyricLine(
-            start = 155684uL,
-            text = """It'll get you up and going out of bed""",
-            words = mutableListOf(
-                SemanticLyrics.Word(
-                    timeRange = 155684uL..155865uL,
-                    charRange = 0..4,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 155865uL..156113uL,
-                    charRange = 6..8,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 156113uL..156281uL,
-                    charRange = 10..12,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 156281uL..156513uL,
-                    charRange = 14..15,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 156513uL..156697uL,
-                    charRange = 17..19,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 156697uL..157363uL,
-                    charRange = 21..25,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 157363uL..157747uL,
-                    charRange = 27..29,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 157747uL..158179uL,
-                    charRange = 31..32,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 158179uL..158807uL,
-                    charRange = 34..36,
-                    isRtl = false
-                )
-            ),
-            speaker = SpeakerEntity.Voice2,
-            end = 158807uL,
-            isTranslated = false,
-            endIsImplicit = false
-        ),
-        LyricLine(
-            start = 6159985uL,
-            text = """Don't stay awake for too long, don't go to bed""",
-            words = mutableListOf(
-                SemanticLyrics.Word(
-                    timeRange = 6159985uL..6160859uL,
-                    charRange = 0..4,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 6160859uL..6161227uL,
-                    charRange = 6..9,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 6161227uL..6162017uL,
-                    charRange = 11..15,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 6162075uL..6162326uL,
-                    charRange = 17..19,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 6162326uL..6162760uL,
-                    charRange = 21..23,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 6162760uL..6163360uL,
-                    charRange = 25..29,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 6163360uL..6164176uL,
-                    charRange = 31..35,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 6164176uL..6164611uL,
-                    charRange = 37..38,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 6164611uL..6164862uL,
-                    charRange = 40..41,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 6164862uL..6165385uL,
-                    charRange = 43..45,
-                    isRtl = false
-                )
-            ),
-            speaker = SpeakerEntity.Voice2,
-            end = 6165385uL,
-            isTranslated = false,
-            endIsImplicit = false
-        ),
-        LyricLine(
-            start = 6165636uL,
-            text = """I'll make a cup of coffee for your head""",
-            words = mutableListOf(
-                SemanticLyrics.Word(
-                    timeRange = 6165636uL..6165870uL,
-                    charRange = 0..3,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 6165870uL..6166121uL,
-                    charRange = 5..8,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 6166121uL..6166270uL,
-                    charRange = 10..10,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 6166270uL..6166505uL,
-                    charRange = 12..14,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 6166505uL..6166670uL,
-                    charRange = 16..17,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 6166670uL..6167505uL,
-                    charRange = 19..24,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 6167505uL..6167806uL,
-                    charRange = 26..28,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 6167806uL..6168206uL,
-                    charRange = 30..33,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 6168206uL..6168795uL,
-                    charRange = 35..38,
-                    isRtl = false
-                )
-            ),
-            speaker = SpeakerEntity.Voice2,
-            end = 6168795uL,
-            isTranslated = false,
-            endIsImplicit = false
-        ),
-        LyricLine(
-            start = 6168941uL,
-            text = """It'll get you up and going out of bed""",
-            words = mutableListOf(
-                SemanticLyrics.Word(
-                    timeRange = 6168941uL..6169223uL,
-                    charRange = 0..4,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 6169223uL..6169474uL,
-                    charRange = 6..8,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 6169474uL..6169623uL,
-                    charRange = 10..12,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 6169623uL..6169858uL,
-                    charRange = 14..15,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 6169858uL..6170042uL,
-                    charRange = 17..19,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 6170042uL..6170724uL,
-                    charRange = 21..25,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 6170724uL..6171140uL,
-                    charRange = 27..29,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 6171140uL..6171575uL,
-                    charRange = 31..32,
-                    isRtl = false
-                ),
-                SemanticLyrics.Word(
-                    timeRange = 6171575uL..6172082uL,
-                    charRange = 34..36,
-                    isRtl = false
-                )
-            ),
-            speaker = SpeakerEntity.Voice2,
-            end = 6172082uL,
-            isTranslated = false,
-            endIsImplicit = false
-        ),
+        LyricLine(start = 0uL, text = """Don't stay awake for too long, don't go to bed""", words = mutableListOf(SemanticLyrics.Word(timeRange = 0uL..843uL, charRange = 0..4, isRtl = false), SemanticLyrics.Word(timeRange = 843uL..1325uL, charRange = 6..9, isRtl = false), SemanticLyrics.Word(timeRange = 1325uL..2109uL, charRange = 11..15, isRtl = false), SemanticLyrics.Word(timeRange = 2109uL..2341uL, charRange = 17..19, isRtl = false), SemanticLyrics.Word(timeRange = 2341uL..2760uL, charRange = 21..23, isRtl = false), SemanticLyrics.Word(timeRange = 2760uL..3360uL, charRange = 25..29, isRtl = false), SemanticLyrics.Word(timeRange = 3360uL..4176uL, charRange = 31..35, isRtl = false), SemanticLyrics.Word(timeRange = 4176uL..4627uL, charRange = 37..38, isRtl = false), SemanticLyrics.Word(timeRange = 4627uL..4845uL, charRange = 40..41, isRtl = false), SemanticLyrics.Word(timeRange = 4845uL..5450uL, charRange = 43..45, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 5450uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 5595uL, text = """I'll make a cup of coffee for your head""", words = mutableListOf(SemanticLyrics.Word(timeRange = 5595uL..5858uL, charRange = 0..3, isRtl = false), SemanticLyrics.Word(timeRange = 5858uL..6109uL, charRange = 5..8, isRtl = false), SemanticLyrics.Word(timeRange = 6109uL..6258uL, charRange = 10..10, isRtl = false), SemanticLyrics.Word(timeRange = 6258uL..6525uL, charRange = 12..14, isRtl = false), SemanticLyrics.Word(timeRange = 6525uL..6693uL, charRange = 16..17, isRtl = false), SemanticLyrics.Word(timeRange = 6693uL..7446uL, charRange = 19..24, isRtl = false), SemanticLyrics.Word(timeRange = 7525uL..7810uL, charRange = 26..28, isRtl = false), SemanticLyrics.Word(timeRange = 7810uL..8226uL, charRange = 30..33, isRtl = false), SemanticLyrics.Word(timeRange = 8226uL..8682uL, charRange = 35..38, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 8682uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 8989uL, text = """It'll get you up and going out of bed""", words = mutableListOf(SemanticLyrics.Word(timeRange = 8989uL..9207uL, charRange = 0..4, isRtl = false), SemanticLyrics.Word(timeRange = 9207uL..9458uL, charRange = 6..8, isRtl = false), SemanticLyrics.Word(timeRange = 9458uL..9626uL, charRange = 10..12, isRtl = false), SemanticLyrics.Word(timeRange = 9626uL..9874uL, charRange = 14..15, isRtl = false), SemanticLyrics.Word(timeRange = 9874uL..10026uL, charRange = 17..19, isRtl = false), SemanticLyrics.Word(timeRange = 10026uL..10740uL, charRange = 21..25, isRtl = false), SemanticLyrics.Word(timeRange = 10740uL..11124uL, charRange = 27..29, isRtl = false), SemanticLyrics.Word(timeRange = 11124uL..11559uL, charRange = 31..32, isRtl = false), SemanticLyrics.Word(timeRange = 11559uL..12076uL, charRange = 34..36, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 12076uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 12090uL, text = """Yeah, I don't wanna fall asleep, I don't wanna pass away""", words = mutableListOf(SemanticLyrics.Word(timeRange = 12090uL..12653uL, charRange = 0..4, isRtl = false), SemanticLyrics.Word(timeRange = 13025uL..13191uL, charRange = 6..6, isRtl = false), SemanticLyrics.Word(timeRange = 13191uL..13391uL, charRange = 8..12, isRtl = false), SemanticLyrics.Word(timeRange = 13391uL..13791uL, charRange = 14..18, isRtl = false), SemanticLyrics.Word(timeRange = 13791uL..13991uL, charRange = 20..23, isRtl = false), SemanticLyrics.Word(timeRange = 13991uL..14641uL, charRange = 25..31, isRtl = false), SemanticLyrics.Word(timeRange = 14641uL..14825uL, charRange = 33..33, isRtl = false), SemanticLyrics.Word(timeRange = 14825uL..15025uL, charRange = 35..39, isRtl = false), SemanticLyrics.Word(timeRange = 15025uL..15425uL, charRange = 41..45, isRtl = false), SemanticLyrics.Word(timeRange = 15425uL..15743uL, charRange = 47..50, isRtl = false), SemanticLyrics.Word(timeRange = 15743uL..16149uL, charRange = 52..55, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 16149uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 16259uL, text = """I been thinking of our future 'cause I'll never see those days""", words = mutableListOf(SemanticLyrics.Word(timeRange = 16259uL..16493uL, charRange = 0..0, isRtl = false), SemanticLyrics.Word(timeRange = 16493uL..16693uL, charRange = 2..5, isRtl = false), SemanticLyrics.Word(timeRange = 16693uL..17112uL, charRange = 7..14, isRtl = false), SemanticLyrics.Word(timeRange = 17112uL..17312uL, charRange = 16..17, isRtl = false), SemanticLyrics.Word(timeRange = 17312uL..17512uL, charRange = 19..21, isRtl = false), SemanticLyrics.Word(timeRange = 17512uL..17928uL, charRange = 23..28, isRtl = false), SemanticLyrics.Word(timeRange = 17928uL..18144uL, charRange = 30..35, isRtl = false), SemanticLyrics.Word(timeRange = 18144uL..18362uL, charRange = 37..40, isRtl = false), SemanticLyrics.Word(timeRange = 18362uL..18782uL, charRange = 42..46, isRtl = false), SemanticLyrics.Word(timeRange = 18782uL..18979uL, charRange = 48..50, isRtl = false), SemanticLyrics.Word(timeRange = 18979uL..19166uL, charRange = 52..56, isRtl = false), SemanticLyrics.Word(timeRange = 19166uL..19499uL, charRange = 58..61, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 19499uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 19588uL, text = """I don't know why this has happened, but I probably deserve it""", words = mutableListOf(SemanticLyrics.Word(timeRange = 19588uL..19878uL, charRange = 0..0, isRtl = false), SemanticLyrics.Word(timeRange = 19878uL..20062uL, charRange = 2..6, isRtl = false), SemanticLyrics.Word(timeRange = 20062uL..20246uL, charRange = 8..11, isRtl = false), SemanticLyrics.Word(timeRange = 20246uL..20443uL, charRange = 13..15, isRtl = false), SemanticLyrics.Word(timeRange = 20443uL..20627uL, charRange = 17..20, isRtl = false), SemanticLyrics.Word(timeRange = 20627uL..20846uL, charRange = 22..24, isRtl = false), SemanticLyrics.Word(timeRange = 20846uL..21294uL, charRange = 26..34, isRtl = false), SemanticLyrics.Word(timeRange = 21294uL..21510uL, charRange = 36..38, isRtl = false), SemanticLyrics.Word(timeRange = 21510uL..21694uL, charRange = 40..40, isRtl = false), SemanticLyrics.Word(timeRange = 21694uL..22345uL, charRange = 42..49, isRtl = false), SemanticLyrics.Word(timeRange = 22345uL..22745uL, charRange = 51..57, isRtl = false), SemanticLyrics.Word(timeRange = 22745uL..23044uL, charRange = 59..60, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 23044uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 23124uL, text = """I tried to do my best, but you know that I'm not perfect""", words = mutableListOf(SemanticLyrics.Word(timeRange = 23124uL..23385uL, charRange = 0..0, isRtl = false), SemanticLyrics.Word(timeRange = 23385uL..23601uL, charRange = 2..6, isRtl = false), SemanticLyrics.Word(timeRange = 23601uL..23785uL, charRange = 8..9, isRtl = false), SemanticLyrics.Word(timeRange = 23785uL..23982uL, charRange = 11..12, isRtl = false), SemanticLyrics.Word(timeRange = 23982uL..24185uL, charRange = 14..15, isRtl = false), SemanticLyrics.Word(timeRange = 24185uL..24601uL, charRange = 17..21, isRtl = false), SemanticLyrics.Word(timeRange = 24601uL..24867uL, charRange = 23..25, isRtl = false), SemanticLyrics.Word(timeRange = 24867uL..25033uL, charRange = 27..29, isRtl = false), SemanticLyrics.Word(timeRange = 25033uL..25251uL, charRange = 31..34, isRtl = false), SemanticLyrics.Word(timeRange = 25251uL..25435uL, charRange = 36..39, isRtl = false), SemanticLyrics.Word(timeRange = 25435uL..25651uL, charRange = 41..43, isRtl = false), SemanticLyrics.Word(timeRange = 25651uL..25867uL, charRange = 45..47, isRtl = false), SemanticLyrics.Word(timeRange = 25867uL..26283uL, charRange = 49..55, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 26283uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 26287uL, text = """I been praying for forgiveness, you've been praying for my health""", words = mutableListOf(SemanticLyrics.Word(timeRange = 26287uL..26510uL, charRange = 0..0, isRtl = false), SemanticLyrics.Word(timeRange = 26510uL..26710uL, charRange = 2..5, isRtl = false), SemanticLyrics.Word(timeRange = 26710uL..27113uL, charRange = 7..13, isRtl = false), SemanticLyrics.Word(timeRange = 27113uL..27329uL, charRange = 15..17, isRtl = false), SemanticLyrics.Word(timeRange = 27329uL..27996uL, charRange = 19..30, isRtl = false), SemanticLyrics.Word(timeRange = 27996uL..28196uL, charRange = 32..37, isRtl = false), SemanticLyrics.Word(timeRange = 28196uL..28396uL, charRange = 39..42, isRtl = false), SemanticLyrics.Word(timeRange = 28396uL..28764uL, charRange = 44..50, isRtl = false), SemanticLyrics.Word(timeRange = 28764uL..28980uL, charRange = 52..54, isRtl = false), SemanticLyrics.Word(timeRange = 28980uL..29180uL, charRange = 56..57, isRtl = false), SemanticLyrics.Word(timeRange = 29180uL..29510uL, charRange = 59..64, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 29510uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 29906uL, text = """When I leave this earth, hopin' you'll find someone else""", words = mutableListOf(SemanticLyrics.Word(timeRange = 29906uL..30249uL, charRange = 0..3, isRtl = false), SemanticLyrics.Word(timeRange = 30249uL..30433uL, charRange = 5..5, isRtl = false), SemanticLyrics.Word(timeRange = 30433uL..30633uL, charRange = 7..11, isRtl = false), SemanticLyrics.Word(timeRange = 30633uL..30833uL, charRange = 13..16, isRtl = false), SemanticLyrics.Word(timeRange = 30833uL..31249uL, charRange = 18..23, isRtl = false), SemanticLyrics.Word(timeRange = 31249uL..31684uL, charRange = 25..30, isRtl = false), SemanticLyrics.Word(timeRange = 31684uL..31900uL, charRange = 32..37, isRtl = false), SemanticLyrics.Word(timeRange = 31900uL..32100uL, charRange = 39..42, isRtl = false), SemanticLyrics.Word(timeRange = 32100uL..32519uL, charRange = 44..50, isRtl = false), SemanticLyrics.Word(timeRange = 32519uL..32866uL, charRange = 52..55, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 32866uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 32878uL, text = """'Cause yeah, we still young, there's so much we haven't done""", words = mutableListOf(SemanticLyrics.Word(timeRange = 32878uL..33246uL, charRange = 0..5, isRtl = false), SemanticLyrics.Word(timeRange = 33405uL..33589uL, charRange = 7..11, isRtl = false), SemanticLyrics.Word(timeRange = 33589uL..33773uL, charRange = 13..14, isRtl = false), SemanticLyrics.Word(timeRange = 33773uL..34173uL, charRange = 16..20, isRtl = false), SemanticLyrics.Word(timeRange = 34173uL..34589uL, charRange = 22..27, isRtl = false), SemanticLyrics.Word(timeRange = 34589uL..34805uL, charRange = 29..35, isRtl = false), SemanticLyrics.Word(timeRange = 34805uL..35024uL, charRange = 37..38, isRtl = false), SemanticLyrics.Word(timeRange = 35024uL..35256uL, charRange = 40..43, isRtl = false), SemanticLyrics.Word(timeRange = 35256uL..35456uL, charRange = 45..46, isRtl = false), SemanticLyrics.Word(timeRange = 35456uL..35840uL, charRange = 48..54, isRtl = false), SemanticLyrics.Word(timeRange = 35840uL..36200uL, charRange = 56..59, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 36200uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 36222uL, text = """Getting married, start a family, watch your husband with his son""", words = mutableListOf(SemanticLyrics.Word(timeRange = 36222uL..36696uL, charRange = 0..6, isRtl = false), SemanticLyrics.Word(timeRange = 36696uL..37096uL, charRange = 8..15, isRtl = false), SemanticLyrics.Word(timeRange = 37096uL..37315uL, charRange = 17..21, isRtl = false), SemanticLyrics.Word(timeRange = 37315uL..37515uL, charRange = 23..23, isRtl = false), SemanticLyrics.Word(timeRange = 37515uL..37965uL, charRange = 25..31, isRtl = false), SemanticLyrics.Word(timeRange = 37965uL..38181uL, charRange = 33..37, isRtl = false), SemanticLyrics.Word(timeRange = 38181uL..38363uL, charRange = 39..42, isRtl = false), SemanticLyrics.Word(timeRange = 38363uL..38781uL, charRange = 44..50, isRtl = false), SemanticLyrics.Word(timeRange = 38781uL..38981uL, charRange = 52..55, isRtl = false), SemanticLyrics.Word(timeRange = 38981uL..39197uL, charRange = 57..59, isRtl = false), SemanticLyrics.Word(timeRange = 39197uL..39566uL, charRange = 61..63, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 39566uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 39572uL, text = """I wish it could be me, but I won't make it out this bed""", words = mutableListOf(SemanticLyrics.Word(timeRange = 39572uL..39840uL, charRange = 0..0, isRtl = false), SemanticLyrics.Word(timeRange = 40038uL..40254uL, charRange = 2..5, isRtl = false), SemanticLyrics.Word(timeRange = 40254uL..40454uL, charRange = 7..8, isRtl = false), SemanticLyrics.Word(timeRange = 40454uL..40673uL, charRange = 10..14, isRtl = false), SemanticLyrics.Word(timeRange = 40673uL..40873uL, charRange = 16..17, isRtl = false), SemanticLyrics.Word(timeRange = 40873uL..41070uL, charRange = 19..21, isRtl = false), SemanticLyrics.Word(timeRange = 41070uL..41289uL, charRange = 23..25, isRtl = false), SemanticLyrics.Word(timeRange = 41289uL..41489uL, charRange = 27..27, isRtl = false), SemanticLyrics.Word(timeRange = 41489uL..41689uL, charRange = 29..33, isRtl = false), SemanticLyrics.Word(timeRange = 41689uL..41905uL, charRange = 35..38, isRtl = false), SemanticLyrics.Word(timeRange = 41905uL..42105uL, charRange = 40..41, isRtl = false), SemanticLyrics.Word(timeRange = 42105uL..42305uL, charRange = 43..45, isRtl = false), SemanticLyrics.Word(timeRange = 42305uL..42505uL, charRange = 47..50, isRtl = false), SemanticLyrics.Word(timeRange = 42505uL..42918uL, charRange = 52..54, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 42918uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 43089uL, text = """I hope I go to heaven so I see you once again""", words = mutableListOf(SemanticLyrics.Word(timeRange = 43089uL..43371uL, charRange = 0..0, isRtl = false), SemanticLyrics.Word(timeRange = 43371uL..43587uL, charRange = 2..5, isRtl = false), SemanticLyrics.Word(timeRange = 43587uL..43771uL, charRange = 7..7, isRtl = false), SemanticLyrics.Word(timeRange = 43771uL..43990uL, charRange = 9..10, isRtl = false), SemanticLyrics.Word(timeRange = 43990uL..44171uL, charRange = 12..13, isRtl = false), SemanticLyrics.Word(timeRange = 44171uL..44590uL, charRange = 15..20, isRtl = false), SemanticLyrics.Word(timeRange = 44590uL..44806uL, charRange = 22..23, isRtl = false), SemanticLyrics.Word(timeRange = 44806uL..45006uL, charRange = 25..25, isRtl = false), SemanticLyrics.Word(timeRange = 45006uL..45222uL, charRange = 27..29, isRtl = false), SemanticLyrics.Word(timeRange = 45222uL..45438uL, charRange = 31..33, isRtl = false), SemanticLyrics.Word(timeRange = 45438uL..45638uL, charRange = 35..38, isRtl = false), SemanticLyrics.Word(timeRange = 45638uL..46245uL, charRange = 40..44, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 46245uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 46447uL, text = """My life was kinda short, but I got so many blessings""", words = mutableListOf(SemanticLyrics.Word(timeRange = 46447uL..46678uL, charRange = 0..1, isRtl = false), SemanticLyrics.Word(timeRange = 46678uL..46929uL, charRange = 3..6, isRtl = false), SemanticLyrics.Word(timeRange = 46929uL..47113uL, charRange = 8..10, isRtl = false), SemanticLyrics.Word(timeRange = 47113uL..47513uL, charRange = 12..16, isRtl = false), SemanticLyrics.Word(timeRange = 47513uL..47964uL, charRange = 18..23, isRtl = false), SemanticLyrics.Word(timeRange = 47964uL..48164uL, charRange = 25..27, isRtl = false), SemanticLyrics.Word(timeRange = 48164uL..48364uL, charRange = 29..29, isRtl = false), SemanticLyrics.Word(timeRange = 48364uL..48580uL, charRange = 31..33, isRtl = false), SemanticLyrics.Word(timeRange = 48580uL..48796uL, charRange = 35..36, isRtl = false), SemanticLyrics.Word(timeRange = 48796uL..49164uL, charRange = 38..41, isRtl = false), SemanticLyrics.Word(timeRange = 49164uL..49791uL, charRange = 43..51, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 49791uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 49884uL, text = """Happy you were mine, it sucks that it's all ending""", words = mutableListOf(SemanticLyrics.Word(timeRange = 49884uL..50441uL, charRange = 0..4, isRtl = false), SemanticLyrics.Word(timeRange = 50441uL..50641uL, charRange = 6..8, isRtl = false), SemanticLyrics.Word(timeRange = 50641uL..50841uL, charRange = 10..13, isRtl = false), SemanticLyrics.Word(timeRange = 50841uL..51288uL, charRange = 15..19, isRtl = false), SemanticLyrics.Word(timeRange = 51459uL..51659uL, charRange = 21..22, isRtl = false), SemanticLyrics.Word(timeRange = 51659uL..51942uL, charRange = 24..28, isRtl = false), SemanticLyrics.Word(timeRange = 51942uL..52107uL, charRange = 30..33, isRtl = false), SemanticLyrics.Word(timeRange = 52107uL..52326uL, charRange = 35..38, isRtl = false), SemanticLyrics.Word(timeRange = 52326uL..52523uL, charRange = 40..42, isRtl = false), SemanticLyrics.Word(timeRange = 52523uL..52964uL, charRange = 44..49, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 52964uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 53321uL, text = """Don't stay awake for too long, don't go to bed""", words = mutableListOf(SemanticLyrics.Word(timeRange = 53321uL..54187uL, charRange = 0..4, isRtl = false), SemanticLyrics.Word(timeRange = 54187uL..54622uL, charRange = 6..9, isRtl = false), SemanticLyrics.Word(timeRange = 54622uL..55470uL, charRange = 11..15, isRtl = false), SemanticLyrics.Word(timeRange = 55470uL..55670uL, charRange = 17..19, isRtl = false), SemanticLyrics.Word(timeRange = 55670uL..56104uL, charRange = 21..23, isRtl = false), SemanticLyrics.Word(timeRange = 56104uL..56704uL, charRange = 25..29, isRtl = false), SemanticLyrics.Word(timeRange = 56704uL..57504uL, charRange = 31..35, isRtl = false), SemanticLyrics.Word(timeRange = 57504uL..57936uL, charRange = 37..38, isRtl = false), SemanticLyrics.Word(timeRange = 57936uL..58171uL, charRange = 40..41, isRtl = false), SemanticLyrics.Word(timeRange = 58171uL..58801uL, charRange = 43..45, isRtl = false)), speaker = SpeakerEntity.Group, end = 58801uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 58908uL, text = """I'll make a cup of coffee for your head""", words = mutableListOf(SemanticLyrics.Word(timeRange = 58908uL..59193uL, charRange = 0..3, isRtl = false), SemanticLyrics.Word(timeRange = 59193uL..59427uL, charRange = 5..8, isRtl = false), SemanticLyrics.Word(timeRange = 59427uL..59595uL, charRange = 10..10, isRtl = false), SemanticLyrics.Word(timeRange = 59595uL..59827uL, charRange = 12..14, isRtl = false), SemanticLyrics.Word(timeRange = 59827uL..60011uL, charRange = 16..17, isRtl = false), SemanticLyrics.Word(timeRange = 60011uL..60843uL, charRange = 19..24, isRtl = false), SemanticLyrics.Word(timeRange = 60843uL..61129uL, charRange = 26..28, isRtl = false), SemanticLyrics.Word(timeRange = 61129uL..61529uL, charRange = 30..33, isRtl = false), SemanticLyrics.Word(timeRange = 61529uL..62184uL, charRange = 35..38, isRtl = false)), speaker = SpeakerEntity.Group, end = 62184uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 62252uL, text = """It'll get you up and going out of bed""", words = mutableListOf(SemanticLyrics.Word(timeRange = 62252uL..62507uL, charRange = 0..4, isRtl = false), SemanticLyrics.Word(timeRange = 62507uL..62771uL, charRange = 6..8, isRtl = false), SemanticLyrics.Word(timeRange = 62771uL..62939uL, charRange = 10..12, isRtl = false), SemanticLyrics.Word(timeRange = 62939uL..63222uL, charRange = 14..15, isRtl = false), SemanticLyrics.Word(timeRange = 63222uL..63390uL, charRange = 17..19, isRtl = false), SemanticLyrics.Word(timeRange = 63390uL..64041uL, charRange = 21..25, isRtl = false), SemanticLyrics.Word(timeRange = 64041uL..64422uL, charRange = 27..29, isRtl = false), SemanticLyrics.Word(timeRange = 64422uL..64873uL, charRange = 31..32, isRtl = false), SemanticLyrics.Word(timeRange = 64873uL..65439uL, charRange = 34..36, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 65439uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 65371uL, text = """Yeah, ay""", words = mutableListOf(SemanticLyrics.Word(timeRange = 65371uL..65766uL, charRange = 0..4, isRtl = false), SemanticLyrics.Word(timeRange = 66299uL..66619uL, charRange = 6..7, isRtl = false)), speaker = SpeakerEntity.Voice1Background, end = 66619uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 66642uL, text = """Don't stay awake for too long, don't go to bed""", words = mutableListOf(SemanticLyrics.Word(timeRange = 66642uL..67465uL, charRange = 0..4, isRtl = false), SemanticLyrics.Word(timeRange = 67465uL..67964uL, charRange = 6..9, isRtl = false), SemanticLyrics.Word(timeRange = 67964uL..68764uL, charRange = 11..15, isRtl = false), SemanticLyrics.Word(timeRange = 68764uL..68999uL, charRange = 17..19, isRtl = false), SemanticLyrics.Word(timeRange = 68999uL..69431uL, charRange = 21..23, isRtl = false), SemanticLyrics.Word(timeRange = 69431uL..70031uL, charRange = 25..29, isRtl = false), SemanticLyrics.Word(timeRange = 70031uL..70815uL, charRange = 31..35, isRtl = false), SemanticLyrics.Word(timeRange = 70815uL..71265uL, charRange = 37..38, isRtl = false), SemanticLyrics.Word(timeRange = 71265uL..71516uL, charRange = 40..41, isRtl = false), SemanticLyrics.Word(timeRange = 71516uL..72082uL, charRange = 43..45, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 72082uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 72316uL, text = """I'll make a cup of coffee for your head""", words = mutableListOf(SemanticLyrics.Word(timeRange = 72316uL..72534uL, charRange = 0..3, isRtl = false), SemanticLyrics.Word(timeRange = 72534uL..72785uL, charRange = 5..8, isRtl = false), SemanticLyrics.Word(timeRange = 72785uL..72918uL, charRange = 10..10, isRtl = false), SemanticLyrics.Word(timeRange = 72918uL..73153uL, charRange = 12..14, isRtl = false), SemanticLyrics.Word(timeRange = 73153uL..73353uL, charRange = 16..17, isRtl = false), SemanticLyrics.Word(timeRange = 73353uL..74153uL, charRange = 19..24, isRtl = false), SemanticLyrics.Word(timeRange = 74153uL..74470uL, charRange = 26..28, isRtl = false), SemanticLyrics.Word(timeRange = 74470uL..74886uL, charRange = 30..33, isRtl = false), SemanticLyrics.Word(timeRange = 74886uL..75412uL, charRange = 35..38, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 75412uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 75628uL, text = """It'll get you up and going out of bed""", words = mutableListOf(SemanticLyrics.Word(timeRange = 75628uL..75873uL, charRange = 0..4, isRtl = false), SemanticLyrics.Word(timeRange = 75873uL..76123uL, charRange = 6..8, isRtl = false), SemanticLyrics.Word(timeRange = 76123uL..76273uL, charRange = 10..12, isRtl = false), SemanticLyrics.Word(timeRange = 76273uL..76539uL, charRange = 14..15, isRtl = false), SemanticLyrics.Word(timeRange = 76539uL..76705uL, charRange = 17..19, isRtl = false), SemanticLyrics.Word(timeRange = 76705uL..77390uL, charRange = 21..25, isRtl = false), SemanticLyrics.Word(timeRange = 77390uL..77790uL, charRange = 27..29, isRtl = false), SemanticLyrics.Word(timeRange = 77790uL..78206uL, charRange = 31..32, isRtl = false), SemanticLyrics.Word(timeRange = 78206uL..78562uL, charRange = 34..36, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 78562uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 77061uL, text = """Ay, yeah""", words = mutableListOf(SemanticLyrics.Word(timeRange = 77061uL..77485uL, charRange = 0..2, isRtl = false), SemanticLyrics.Word(timeRange = 78742uL..79214uL, charRange = 4..7, isRtl = false)), speaker = SpeakerEntity.Voice1Background, end = 79214uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 79770uL, text = """I'm happy that you here with me, I'm sorry if I tear up""", words = mutableListOf(SemanticLyrics.Word(timeRange = 79770uL..80055uL, charRange = 0..2, isRtl = false), SemanticLyrics.Word(timeRange = 80055uL..80473uL, charRange = 4..8, isRtl = false), SemanticLyrics.Word(timeRange = 80473uL..80673uL, charRange = 10..13, isRtl = false), SemanticLyrics.Word(timeRange = 80673uL..80873uL, charRange = 15..17, isRtl = false), SemanticLyrics.Word(timeRange = 80873uL..81073uL, charRange = 19..22, isRtl = false), SemanticLyrics.Word(timeRange = 81073uL..81273uL, charRange = 24..27, isRtl = false), SemanticLyrics.Word(timeRange = 81273uL..81505uL, charRange = 29..31, isRtl = false), SemanticLyrics.Word(timeRange = 81505uL..81673uL, charRange = 33..35, isRtl = false), SemanticLyrics.Word(timeRange = 81673uL..82057uL, charRange = 37..41, isRtl = false), SemanticLyrics.Word(timeRange = 82057uL..82305uL, charRange = 43..44, isRtl = false), SemanticLyrics.Word(timeRange = 82305uL..82505uL, charRange = 46..46, isRtl = false), SemanticLyrics.Word(timeRange = 82505uL..82739uL, charRange = 48..51, isRtl = false), SemanticLyrics.Word(timeRange = 82739uL..83085uL, charRange = 53..54, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 83085uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 83091uL, text = """When me and you were younger, you would always make me cheer up""", words = mutableListOf(SemanticLyrics.Word(timeRange = 83091uL..83402uL, charRange = 0..3, isRtl = false), SemanticLyrics.Word(timeRange = 83402uL..83602uL, charRange = 5..6, isRtl = false), SemanticLyrics.Word(timeRange = 83602uL..83786uL, charRange = 8..10, isRtl = false), SemanticLyrics.Word(timeRange = 83786uL..83968uL, charRange = 12..14, isRtl = false), SemanticLyrics.Word(timeRange = 83968uL..84186uL, charRange = 16..19, isRtl = false), SemanticLyrics.Word(timeRange = 84186uL..84618uL, charRange = 21..28, isRtl = false), SemanticLyrics.Word(timeRange = 84618uL..84821uL, charRange = 30..32, isRtl = false), SemanticLyrics.Word(timeRange = 84821uL..85021uL, charRange = 34..38, isRtl = false), SemanticLyrics.Word(timeRange = 85021uL..85453uL, charRange = 40..45, isRtl = false), SemanticLyrics.Word(timeRange = 85453uL..85669uL, charRange = 47..50, isRtl = false), SemanticLyrics.Word(timeRange = 85669uL..85888uL, charRange = 52..53, isRtl = false), SemanticLyrics.Word(timeRange = 85888uL..86138uL, charRange = 55..59, isRtl = false), SemanticLyrics.Word(timeRange = 86138uL..86445uL, charRange = 61..62, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 86445uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 86634uL, text = """Taking goofy videos and walking through the park""", words = mutableListOf(SemanticLyrics.Word(timeRange = 86634uL..87100uL, charRange = 0..5, isRtl = false), SemanticLyrics.Word(timeRange = 87100uL..87516uL, charRange = 7..11, isRtl = false), SemanticLyrics.Word(timeRange = 87516uL..88185uL, charRange = 13..18, isRtl = false), SemanticLyrics.Word(timeRange = 88185uL..88367uL, charRange = 20..22, isRtl = false), SemanticLyrics.Word(timeRange = 88367uL..88751uL, charRange = 24..30, isRtl = false), SemanticLyrics.Word(timeRange = 88751uL..89001uL, charRange = 32..38, isRtl = false), SemanticLyrics.Word(timeRange = 89001uL..89185uL, charRange = 40..42, isRtl = false), SemanticLyrics.Word(timeRange = 89185uL..89506uL, charRange = 44..47, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 89506uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 89516uL, text = """You would jump into my arms every time you heard a bark""", words = mutableListOf(SemanticLyrics.Word(timeRange = 89516uL..89835uL, charRange = 0..2, isRtl = false), SemanticLyrics.Word(timeRange = 89835uL..90035uL, charRange = 4..8, isRtl = false), SemanticLyrics.Word(timeRange = 90035uL..90235uL, charRange = 10..13, isRtl = false), SemanticLyrics.Word(timeRange = 90235uL..90686uL, charRange = 15..18, isRtl = false), SemanticLyrics.Word(timeRange = 90686uL..90867uL, charRange = 20..21, isRtl = false), SemanticLyrics.Word(timeRange = 90867uL..91235uL, charRange = 23..26, isRtl = false), SemanticLyrics.Word(timeRange = 91235uL..91686uL, charRange = 28..32, isRtl = false), SemanticLyrics.Word(timeRange = 91686uL..91937uL, charRange = 34..37, isRtl = false), SemanticLyrics.Word(timeRange = 91937uL..92102uL, charRange = 39..41, isRtl = false), SemanticLyrics.Word(timeRange = 92102uL..92337uL, charRange = 43..47, isRtl = false), SemanticLyrics.Word(timeRange = 92337uL..92537uL, charRange = 49..49, isRtl = false), SemanticLyrics.Word(timeRange = 92537uL..93008uL, charRange = 51..54, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 93008uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 93297uL, text = """Cuddle in your sheets, sing me sound asleep""", words = mutableListOf(SemanticLyrics.Word(timeRange = 93297uL..93752uL, charRange = 0..5, isRtl = false), SemanticLyrics.Word(timeRange = 93752uL..93968uL, charRange = 7..8, isRtl = false), SemanticLyrics.Word(timeRange = 93968uL..94168uL, charRange = 10..13, isRtl = false), SemanticLyrics.Word(timeRange = 94168uL..94690uL, charRange = 15..21, isRtl = false), SemanticLyrics.Word(timeRange = 94984uL..95200uL, charRange = 23..26, isRtl = false), SemanticLyrics.Word(timeRange = 95200uL..95419uL, charRange = 28..29, isRtl = false), SemanticLyrics.Word(timeRange = 95419uL..95670uL, charRange = 31..35, isRtl = false), SemanticLyrics.Word(timeRange = 95670uL..96281uL, charRange = 37..42, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 96281uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 96373uL, text = """And sneak out through your kitchen at exactly 1:03""", words = mutableListOf(SemanticLyrics.Word(timeRange = 96373uL..96668uL, charRange = 0..2, isRtl = false), SemanticLyrics.Word(timeRange = 96668uL..96868uL, charRange = 4..8, isRtl = false), SemanticLyrics.Word(timeRange = 96868uL..97068uL, charRange = 10..12, isRtl = false), SemanticLyrics.Word(timeRange = 97068uL..97271uL, charRange = 14..20, isRtl = false), SemanticLyrics.Word(timeRange = 97271uL..97487uL, charRange = 22..25, isRtl = false), SemanticLyrics.Word(timeRange = 97487uL..97938uL, charRange = 27..33, isRtl = false), SemanticLyrics.Word(timeRange = 97938uL..98154uL, charRange = 35..36, isRtl = false), SemanticLyrics.Word(timeRange = 98154uL..98820uL, charRange = 38..44, isRtl = false), SemanticLyrics.Word(timeRange = 98820uL..99577uL, charRange = 46..49, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 99577uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 99915uL, text = """Sundays, went to church, on Mondays, watched a movie""", words = mutableListOf(SemanticLyrics.Word(timeRange = 99915uL..100408uL, charRange = 0..7, isRtl = false), SemanticLyrics.Word(timeRange = 100408uL..100658uL, charRange = 9..12, isRtl = false), SemanticLyrics.Word(timeRange = 100658uL..100858uL, charRange = 14..15, isRtl = false), SemanticLyrics.Word(timeRange = 100858uL..101382uL, charRange = 17..23, isRtl = false), SemanticLyrics.Word(timeRange = 101525uL..101709uL, charRange = 25..26, isRtl = false), SemanticLyrics.Word(timeRange = 101709uL..102109uL, charRange = 28..35, isRtl = false), SemanticLyrics.Word(timeRange = 102109uL..102341uL, charRange = 37..43, isRtl = false), SemanticLyrics.Word(timeRange = 102341uL..102541uL, charRange = 45..45, isRtl = false), SemanticLyrics.Word(timeRange = 102541uL..103092uL, charRange = 47..51, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 103092uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 103294uL, text = """Soon, you'll be alone, sorry that you have to lose me""", words = mutableListOf(SemanticLyrics.Word(timeRange = 103294uL..103587uL, charRange = 0..4, isRtl = false), SemanticLyrics.Word(timeRange = 103587uL..103768uL, charRange = 6..11, isRtl = false), SemanticLyrics.Word(timeRange = 103768uL..103987uL, charRange = 13..14, isRtl = false), SemanticLyrics.Word(timeRange = 103987uL..104568uL, charRange = 16..21, isRtl = false), SemanticLyrics.Word(timeRange = 104568uL..105019uL, charRange = 23..27, isRtl = false), SemanticLyrics.Word(timeRange = 105019uL..105253uL, charRange = 29..32, isRtl = false), SemanticLyrics.Word(timeRange = 105253uL..105435uL, charRange = 34..36, isRtl = false), SemanticLyrics.Word(timeRange = 105435uL..105653uL, charRange = 38..41, isRtl = false), SemanticLyrics.Word(timeRange = 105653uL..105869uL, charRange = 43..44, isRtl = false), SemanticLyrics.Word(timeRange = 105869uL..106253uL, charRange = 46..49, isRtl = false), SemanticLyrics.Word(timeRange = 106253uL..106583uL, charRange = 51..52, isRtl = false)), speaker = SpeakerEntity.Voice2, end = 106583uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 106675uL, text = """Don't stay awake for too long, don't go to bed""", words = mutableListOf(SemanticLyrics.Word(timeRange = 106675uL..107472uL, charRange = 0..4, isRtl = false), SemanticLyrics.Word(timeRange = 107472uL..107938uL, charRange = 6..9, isRtl = false), SemanticLyrics.Word(timeRange = 107938uL..108754uL, charRange = 11..15, isRtl = false), SemanticLyrics.Word(timeRange = 108754uL..108986uL, charRange = 17..19, isRtl = false), SemanticLyrics.Word(timeRange = 108986uL..109437uL, charRange = 21..23, isRtl = false), SemanticLyrics.Word(timeRange = 109437uL..110005uL, charRange = 25..29, isRtl = false), SemanticLyrics.Word(timeRange = 110005uL..110856uL, charRange = 31..35, isRtl = false), SemanticLyrics.Word(timeRange = 110856uL..111288uL, charRange = 37..38, isRtl = false), SemanticLyrics.Word(timeRange = 111288uL..111522uL, charRange = 40..41, isRtl = false), SemanticLyrics.Word(timeRange = 111522uL..112065uL, charRange = 43..45, isRtl = false)), speaker = SpeakerEntity.Group, end = 112065uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 112329uL, text = """I'll make a cup of coffee for your head""", words = mutableListOf(SemanticLyrics.Word(timeRange = 112329uL..112534uL, charRange = 0..3, isRtl = false), SemanticLyrics.Word(timeRange = 112534uL..112784uL, charRange = 5..8, isRtl = false), SemanticLyrics.Word(timeRange = 112784uL..112952uL, charRange = 10..10, isRtl = false), SemanticLyrics.Word(timeRange = 112952uL..113184uL, charRange = 12..14, isRtl = false), SemanticLyrics.Word(timeRange = 113184uL..113368uL, charRange = 16..17, isRtl = false), SemanticLyrics.Word(timeRange = 113368uL..114203uL, charRange = 19..24, isRtl = false), SemanticLyrics.Word(timeRange = 114203uL..114486uL, charRange = 26..28, isRtl = false), SemanticLyrics.Word(timeRange = 114486uL..114870uL, charRange = 30..33, isRtl = false), SemanticLyrics.Word(timeRange = 114870uL..115506uL, charRange = 35..38, isRtl = false)), speaker = SpeakerEntity.Group, end = 115506uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 115634uL, text = """It'll get you up and going out of bed""", words = mutableListOf(SemanticLyrics.Word(timeRange = 115634uL..115844uL, charRange = 0..4, isRtl = false), SemanticLyrics.Word(timeRange = 115844uL..116095uL, charRange = 6..8, isRtl = false), SemanticLyrics.Word(timeRange = 116095uL..116263uL, charRange = 10..12, isRtl = false), SemanticLyrics.Word(timeRange = 116263uL..116513uL, charRange = 14..15, isRtl = false), SemanticLyrics.Word(timeRange = 116513uL..116695uL, charRange = 17..19, isRtl = false), SemanticLyrics.Word(timeRange = 116695uL..117345uL, charRange = 21..25, isRtl = false), SemanticLyrics.Word(timeRange = 117345uL..117764uL, charRange = 27..29, isRtl = false), SemanticLyrics.Word(timeRange = 117764uL..118196uL, charRange = 31..32, isRtl = false), SemanticLyrics.Word(timeRange = 118196uL..118937uL, charRange = 34..36, isRtl = false)), speaker = SpeakerEntity.Group, end = 118937uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 119907uL, text = """Don't stay awake for too long, don't go to bed""", words = mutableListOf(SemanticLyrics.Word(timeRange = 119907uL..120826uL, charRange = 0..4, isRtl = false), SemanticLyrics.Word(timeRange = 120826uL..121288uL, charRange = 6..9, isRtl = false), SemanticLyrics.Word(timeRange = 121288uL..122128uL, charRange = 11..15, isRtl = false), SemanticLyrics.Word(timeRange = 122128uL..122394uL, charRange = 17..19, isRtl = false), SemanticLyrics.Word(timeRange = 122394uL..122794uL, charRange = 21..23, isRtl = false), SemanticLyrics.Word(timeRange = 122794uL..123376uL, charRange = 25..29, isRtl = false), SemanticLyrics.Word(timeRange = 123376uL..124178uL, charRange = 31..35, isRtl = false), SemanticLyrics.Word(timeRange = 124178uL..124610uL, charRange = 37..38, isRtl = false), SemanticLyrics.Word(timeRange = 124610uL..124845uL, charRange = 40..41, isRtl = false), SemanticLyrics.Word(timeRange = 124845uL..125357uL, charRange = 43..45, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 125357uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 125619uL, text = """I'll make a cup of coffee for your head""", words = mutableListOf(SemanticLyrics.Word(timeRange = 125619uL..125861uL, charRange = 0..3, isRtl = false), SemanticLyrics.Word(timeRange = 125861uL..126112uL, charRange = 5..8, isRtl = false), SemanticLyrics.Word(timeRange = 126112uL..126261uL, charRange = 10..10, isRtl = false), SemanticLyrics.Word(timeRange = 126261uL..126493uL, charRange = 12..14, isRtl = false), SemanticLyrics.Word(timeRange = 126493uL..126680uL, charRange = 16..17, isRtl = false), SemanticLyrics.Word(timeRange = 126680uL..127496uL, charRange = 19..24, isRtl = false), SemanticLyrics.Word(timeRange = 127496uL..127794uL, charRange = 26..28, isRtl = false), SemanticLyrics.Word(timeRange = 127794uL..128213uL, charRange = 30..33, isRtl = false), SemanticLyrics.Word(timeRange = 128213uL..128778uL, charRange = 35..38, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 128778uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 128992uL, text = """It'll get you up and going out of bed""", words = mutableListOf(SemanticLyrics.Word(timeRange = 128992uL..129231uL, charRange = 0..4, isRtl = false), SemanticLyrics.Word(timeRange = 129231uL..129450uL, charRange = 6..8, isRtl = false), SemanticLyrics.Word(timeRange = 129450uL..129631uL, charRange = 10..12, isRtl = false), SemanticLyrics.Word(timeRange = 129631uL..129866uL, charRange = 14..15, isRtl = false), SemanticLyrics.Word(timeRange = 129866uL..130050uL, charRange = 17..19, isRtl = false), SemanticLyrics.Word(timeRange = 130050uL..130733uL, charRange = 21..25, isRtl = false), SemanticLyrics.Word(timeRange = 130733uL..131133uL, charRange = 27..29, isRtl = false), SemanticLyrics.Word(timeRange = 131133uL..131517uL, charRange = 31..32, isRtl = false), SemanticLyrics.Word(timeRange = 131517uL..132196uL, charRange = 34..36, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 132196uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 133254uL, text = """Don't stay awake for too long, don't go to bed""", words = mutableListOf(SemanticLyrics.Word(timeRange = 133254uL..134168uL, charRange = 0..4, isRtl = false), SemanticLyrics.Word(timeRange = 134168uL..134616uL, charRange = 6..9, isRtl = false), SemanticLyrics.Word(timeRange = 134616uL..135435uL, charRange = 11..15, isRtl = false), SemanticLyrics.Word(timeRange = 135435uL..135635uL, charRange = 17..19, isRtl = false), SemanticLyrics.Word(timeRange = 135635uL..136067uL, charRange = 21..23, isRtl = false), SemanticLyrics.Word(timeRange = 136067uL..136667uL, charRange = 25..29, isRtl = false), SemanticLyrics.Word(timeRange = 136667uL..137533uL, charRange = 31..35, isRtl = false), SemanticLyrics.Word(timeRange = 137533uL..137952uL, charRange = 37..38, isRtl = false), SemanticLyrics.Word(timeRange = 137952uL..138184uL, charRange = 40..41, isRtl = false), SemanticLyrics.Word(timeRange = 138184uL..138754uL, charRange = 43..45, isRtl = false)), speaker = SpeakerEntity.Group, end = 138754uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 138977uL, text = """I'll make a cup of coffee for your head""", words = mutableListOf(SemanticLyrics.Word(timeRange = 138977uL..139174uL, charRange = 0..3, isRtl = false), SemanticLyrics.Word(timeRange = 139174uL..139424uL, charRange = 5..8, isRtl = false), SemanticLyrics.Word(timeRange = 139424uL..139590uL, charRange = 10..10, isRtl = false), SemanticLyrics.Word(timeRange = 139590uL..139840uL, charRange = 12..14, isRtl = false), SemanticLyrics.Word(timeRange = 139840uL..140024uL, charRange = 16..17, isRtl = false), SemanticLyrics.Word(timeRange = 140024uL..140824uL, charRange = 19..24, isRtl = false), SemanticLyrics.Word(timeRange = 140824uL..141107uL, charRange = 26..28, isRtl = false), SemanticLyrics.Word(timeRange = 141107uL..141491uL, charRange = 30..33, isRtl = false), SemanticLyrics.Word(timeRange = 141491uL..142190uL, charRange = 35..38, isRtl = false)), speaker = SpeakerEntity.Group, end = 142190uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 142312uL, text = """It'll get you up and going out of bed""", words = mutableListOf(SemanticLyrics.Word(timeRange = 142312uL..142495uL, charRange = 0..4, isRtl = false), SemanticLyrics.Word(timeRange = 142495uL..142765uL, charRange = 6..8, isRtl = false), SemanticLyrics.Word(timeRange = 142765uL..142930uL, charRange = 10..12, isRtl = false), SemanticLyrics.Word(timeRange = 142930uL..143181uL, charRange = 14..15, isRtl = false), SemanticLyrics.Word(timeRange = 143181uL..143365uL, charRange = 17..19, isRtl = false), SemanticLyrics.Word(timeRange = 143365uL..144031uL, charRange = 21..25, isRtl = false), SemanticLyrics.Word(timeRange = 144031uL..144415uL, charRange = 27..29, isRtl = false), SemanticLyrics.Word(timeRange = 144415uL..144847uL, charRange = 31..32, isRtl = false), SemanticLyrics.Word(timeRange = 144847uL..145489uL, charRange = 34..36, isRtl = false)), speaker = SpeakerEntity.Group, end = 145489uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 146547uL, text = """Don't stay awake for too long, don't go to bed""", words = mutableListOf(SemanticLyrics.Word(timeRange = 146547uL..147445uL, charRange = 0..4, isRtl = false), SemanticLyrics.Word(timeRange = 147445uL..147912uL, charRange = 6..9, isRtl = false), SemanticLyrics.Word(timeRange = 147912uL..148762uL, charRange = 11..15, isRtl = false), SemanticLyrics.Word(timeRange = 148762uL..148994uL, charRange = 17..19, isRtl = false), SemanticLyrics.Word(timeRange = 148994uL..149429uL, charRange = 21..23, isRtl = false), SemanticLyrics.Word(timeRange = 149429uL..150013uL, charRange = 25..29, isRtl = false), SemanticLyrics.Word(timeRange = 150013uL..150829uL, charRange = 31..35, isRtl = false), SemanticLyrics.Word(timeRange = 150829uL..151280uL, charRange = 37..38, isRtl = false), SemanticLyrics.Word(timeRange = 151280uL..151530uL, charRange = 40..41, isRtl = false), SemanticLyrics.Word(timeRange = 151530uL..152087uL, charRange = 43..45, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 152087uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 152314uL, text = """I'll make a cup of coffee for your head""", words = mutableListOf(SemanticLyrics.Word(timeRange = 152314uL..152524uL, charRange = 0..3, isRtl = false), SemanticLyrics.Word(timeRange = 152524uL..152756uL, charRange = 5..8, isRtl = false), SemanticLyrics.Word(timeRange = 152756uL..152924uL, charRange = 10..10, isRtl = false), SemanticLyrics.Word(timeRange = 152924uL..153175uL, charRange = 12..14, isRtl = false), SemanticLyrics.Word(timeRange = 153175uL..153340uL, charRange = 16..17, isRtl = false), SemanticLyrics.Word(timeRange = 153340uL..154156uL, charRange = 19..24, isRtl = false), SemanticLyrics.Word(timeRange = 154156uL..154473uL, charRange = 26..28, isRtl = false), SemanticLyrics.Word(timeRange = 154473uL..154873uL, charRange = 30..33, isRtl = false), SemanticLyrics.Word(timeRange = 154873uL..155473uL, charRange = 35..38, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 155473uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 155684uL, text = """It'll get you up and going out of bed""", words = mutableListOf(SemanticLyrics.Word(timeRange = 155684uL..155865uL, charRange = 0..4, isRtl = false), SemanticLyrics.Word(timeRange = 155865uL..156113uL, charRange = 6..8, isRtl = false), SemanticLyrics.Word(timeRange = 156113uL..156281uL, charRange = 10..12, isRtl = false), SemanticLyrics.Word(timeRange = 156281uL..156513uL, charRange = 14..15, isRtl = false), SemanticLyrics.Word(timeRange = 156513uL..156697uL, charRange = 17..19, isRtl = false), SemanticLyrics.Word(timeRange = 156697uL..157363uL, charRange = 21..25, isRtl = false), SemanticLyrics.Word(timeRange = 157363uL..157747uL, charRange = 27..29, isRtl = false), SemanticLyrics.Word(timeRange = 157747uL..158179uL, charRange = 31..32, isRtl = false), SemanticLyrics.Word(timeRange = 158179uL..158807uL, charRange = 34..36, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 158807uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 6159985uL, text = """Don't stay awake for too long, don't go to bed""", words = mutableListOf(SemanticLyrics.Word(timeRange = 6159985uL..6160859uL, charRange = 0..4, isRtl = false), SemanticLyrics.Word(timeRange = 6160859uL..6161227uL, charRange = 6..9, isRtl = false), SemanticLyrics.Word(timeRange = 6161227uL..6162017uL, charRange = 11..15, isRtl = false), SemanticLyrics.Word(timeRange = 6162075uL..6162326uL, charRange = 17..19, isRtl = false), SemanticLyrics.Word(timeRange = 6162326uL..6162760uL, charRange = 21..23, isRtl = false), SemanticLyrics.Word(timeRange = 6162760uL..6163360uL, charRange = 25..29, isRtl = false), SemanticLyrics.Word(timeRange = 6163360uL..6164176uL, charRange = 31..35, isRtl = false), SemanticLyrics.Word(timeRange = 6164176uL..6164611uL, charRange = 37..38, isRtl = false), SemanticLyrics.Word(timeRange = 6164611uL..6164862uL, charRange = 40..41, isRtl = false), SemanticLyrics.Word(timeRange = 6164862uL..6165385uL, charRange = 43..45, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 6165385uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 6165636uL, text = """I'll make a cup of coffee for your head""", words = mutableListOf(SemanticLyrics.Word(timeRange = 6165636uL..6165870uL, charRange = 0..3, isRtl = false), SemanticLyrics.Word(timeRange = 6165870uL..6166121uL, charRange = 5..8, isRtl = false), SemanticLyrics.Word(timeRange = 6166121uL..6166270uL, charRange = 10..10, isRtl = false), SemanticLyrics.Word(timeRange = 6166270uL..6166505uL, charRange = 12..14, isRtl = false), SemanticLyrics.Word(timeRange = 6166505uL..6166670uL, charRange = 16..17, isRtl = false), SemanticLyrics.Word(timeRange = 6166670uL..6167505uL, charRange = 19..24, isRtl = false), SemanticLyrics.Word(timeRange = 6167505uL..6167806uL, charRange = 26..28, isRtl = false), SemanticLyrics.Word(timeRange = 6167806uL..6168206uL, charRange = 30..33, isRtl = false), SemanticLyrics.Word(timeRange = 6168206uL..6168795uL, charRange = 35..38, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 6168795uL, isTranslated = false, endIsImplicit = false),
+        LyricLine(start = 6168941uL, text = """It'll get you up and going out of bed""", words = mutableListOf(SemanticLyrics.Word(timeRange = 6168941uL..6169223uL, charRange = 0..4, isRtl = false), SemanticLyrics.Word(timeRange = 6169223uL..6169474uL, charRange = 6..8, isRtl = false), SemanticLyrics.Word(timeRange = 6169474uL..6169623uL, charRange = 10..12, isRtl = false), SemanticLyrics.Word(timeRange = 6169623uL..6169858uL, charRange = 14..15, isRtl = false), SemanticLyrics.Word(timeRange = 6169858uL..6170042uL, charRange = 17..19, isRtl = false), SemanticLyrics.Word(timeRange = 6170042uL..6170724uL, charRange = 21..25, isRtl = false), SemanticLyrics.Word(timeRange = 6170724uL..6171140uL, charRange = 27..29, isRtl = false), SemanticLyrics.Word(timeRange = 6171140uL..6171575uL, charRange = 31..32, isRtl = false), SemanticLyrics.Word(timeRange = 6171575uL..6172082uL, charRange = 34..36, isRtl = false)), speaker = SpeakerEntity.Voice1, end = 6172082uL, isTranslated = false, endIsImplicit = false),
     )
-}
 
-// have to use a new object to avoid "Method too large" compliation error for initializers
-object LrcTestData2 {
     const val RENDER_BENCHMARK =
         """[00:02.333]<00:02.333>ب<00:04.088>ب<00:05.557>ب<00:06.825>ب<00:08.130>ب<00:09.268>ب<00:10.443>ب<00:11.652>ب <00:13.041>
 [00:04.00] <00:04.00>تست <00:05.00>persian before english<00:06.60>

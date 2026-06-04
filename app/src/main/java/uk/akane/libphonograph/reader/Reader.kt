@@ -121,6 +121,7 @@ internal object Reader {
         context: Context,
         minSongLengthSeconds: Long = 0,
         blackListSet: Set<String> = setOf(),
+        whiteListSet: Set<String> = setOf(),
         shouldUseEnhancedCoverReading: Boolean? = false, // null means load if permission is granted
         shouldIncludeExtraFormat: Boolean = true,
         shouldLoadAlbums: Boolean = true, // implies album artists too
@@ -162,6 +163,7 @@ internal object Reader {
         val coverCache = if (shouldLoadAlbums && useEnhancedCoverReading)
             hashMapOf<Long, Pair<File, FileNode>>() else null
         val folders = if (shouldLoadFolders) hashSetOf<String>() else null
+        val foldersForWhitelist = if (shouldLoadFolders) hashSetOf<String>() else null
         val root = if (shouldLoadFilesystem) MiscUtils.FileNodeImpl("storage") else null
         val shallowRoot = if (shouldLoadFolders) MiscUtils.FileNodeImpl("shallow") else null
         val songs = mutableListOf<MediaItem>()
@@ -251,7 +253,18 @@ internal object Reader {
                 val parent = pathFile?.parentFile?.takeIf { it.absolutePath != "/" }
                 val fldPath = parent?.absolutePath
                 var isBlacklisted = false
-                if (blackListSet.isNotEmpty()) {
+                if (whiteListSet.isNotEmpty()) {
+                    isBlacklisted = true
+                    var f = pathFile
+                    while (f != null) {
+                        if (whiteListSet.contains(f.absolutePath)) {
+                            isBlacklisted = false
+                            break
+                        }
+                        f = f.parentFile
+                    }
+                }
+                if (!isBlacklisted && blackListSet.isNotEmpty()) {
                     var f = pathFile
                     while (f != null) {
                         if (blackListSet.contains(f.absolutePath)) {
@@ -259,6 +272,17 @@ internal object Reader {
                             break
                         }
                         f = f.parentFile
+                    }
+                }
+                if (shouldLoadFolders) {
+                    var tmpPath = parent
+                    while (tmpPath != null) {
+                        foldersForWhitelist!!.add(tmpPath.absolutePath)
+                        tmpPath = tmpPath.parentFile
+                        if (tmpPath != null && (tmpPath.absolutePath == "/storage/emulated"
+                                    || tmpPath.absolutePath == "/storage")
+                        )
+                            tmpPath = null // let's not allow to whitelist more than entire volumes
                     }
                 }
                 val skip = (duration != null && duration != 0L &&
@@ -512,16 +536,44 @@ internal object Reader {
         val dateList = dateMap?.values?.toList()
 
         if (folders != null) {
-            for (blacklistedFolder in blackListSet) {
-                var tmpPath: File? = File(blacklistedFolder)
+            val whiteListSetNoDuplicates = whiteListSet.filter {
+                var tmpPath: File? = File(it).parentFile
                 while (tmpPath != null) {
-                    folders.add(tmpPath.absolutePath)
+                    if (whiteListSet.contains(tmpPath.absolutePath))
+                        return@filter false
+                    folders.remove(tmpPath.absolutePath)
                     tmpPath = tmpPath.parentFile
                     if (tmpPath != null && (tmpPath.absolutePath == "/storage/emulated"
                                 || tmpPath.absolutePath == "/storage")
                     )
                         tmpPath = null // let's not allow to blacklist more than entire volumes
                 }
+                return@filter true
+            }
+            for (whitelistedFolder in whiteListSetNoDuplicates) {
+                var tmpPath: File? = File(whitelistedFolder)
+                while (tmpPath != null) {
+                    folders.remove(tmpPath.absolutePath)
+                    tmpPath = tmpPath.parentFile
+                    if (tmpPath != null && (tmpPath.absolutePath == "/storage/emulated"
+                                || tmpPath.absolutePath == "/storage")
+                    )
+                        tmpPath = null // let's not allow to blacklist more than entire volumes
+                }
+            }
+            for (blacklistedFolder in blackListSet) {
+                if (!(blacklistedFolder == "/storage/emulated" || blacklistedFolder == "/storage"))
+                    folders.add(blacklistedFolder) // let's not allow to blacklist more than entire volumes
+            }
+        }
+        if (foldersForWhitelist != null) {
+            for (blacklistedFolder in blackListSet) {
+                foldersForWhitelist.removeAll { it.startsWith("$blacklistedFolder/",
+                    ignoreCase = true) || it.equals(blacklistedFolder, ignoreCase = true) }
+            }
+            for (whitelistedFolder in whiteListSet) {
+                foldersForWhitelist.removeAll { it.startsWith("$whitelistedFolder/",
+                    ignoreCase = true) }
             }
         }
 
@@ -536,7 +588,8 @@ internal object Reader {
             pathMap,
             root,
             shallowRoot,
-            folders
+            folders,
+            foldersForWhitelist
         )
     }
 
@@ -837,24 +890,27 @@ internal object Reader {
         var foundPlaylistContent = false
         val playlists = mutableListOf<RawPlaylist>()
         context.contentResolver.query(
+            if (hasImprovedMediaStore()) MediaStoreCompat.FILES_EXTERNAL_CONTENT_URI else
             @Suppress("DEPRECATION")
-            MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, arrayOf(
-                @Suppress("DEPRECATION") MediaStore.Audio.Playlists._ID,
+            MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, if (hasImprovedMediaStore())
+                arrayOf(MediaStore.MediaColumns._ID, MediaStore.MediaColumns.DATA,
+                MediaStore.MediaColumns.DATE_ADDED, MediaStore.MediaColumns.DATE_MODIFIED) else
+                    arrayOf(MediaStore.MediaColumns._ID, MediaStore.MediaColumns.DATA,
+                        MediaStore.MediaColumns.DATE_ADDED, MediaStore.MediaColumns.DATE_MODIFIED,
                 @Suppress("DEPRECATION") MediaStore.Audio.Playlists.NAME,
-                @Suppress("DEPRECATION") MediaStore.Audio.Playlists.DATA,
-                @Suppress("DEPRECATION") MediaStore.Audio.Playlists.DATE_ADDED,
-                @Suppress("DEPRECATION") MediaStore.Audio.Playlists.DATE_MODIFIED
-            ), null, null, null
-        )?.use {
+            ), if (hasImprovedMediaStore()) MediaStore.Files.FileColumns.MEDIA_TYPE +
+                    " = ${MediaStoreCompat.MEDIA_TYPE_PLAYLIST}" else null, null,
+            null)?.
+        use {
             val playlistIdColumn = it.getColumnIndexOrThrow(
                 @Suppress("DEPRECATION") MediaStore.Audio.Playlists._ID
             )
             val playlistPathColumn = it.getColumnIndexOrThrow(
                 @Suppress("DEPRECATION") MediaStore.Audio.Playlists.DATA
             )
-            val playlistNameColumn = it.getColumnIndexOrThrow(
+            val playlistNameColumn = if (!hasImprovedMediaStore()) it.getColumnIndexOrThrow(
                 @Suppress("DEPRECATION") MediaStore.Audio.Playlists.NAME
-            )
+            ) else null
             val playlistDateAddedColumn = it.getColumnIndexOrThrow(
                 @Suppress("DEPRECATION") MediaStore.Audio.Playlists.DATE_ADDED
             )
@@ -865,15 +921,19 @@ internal object Reader {
                 StorageManagerCompat.getStorageVolumes(context) else null
             while (it.moveToNext()) {
                 val playlistId = it.getLong(playlistIdColumn)
-                val playlistName = it.getString(playlistNameColumn)?.ifEmpty { null }
                 val playlistPath =
                     it.getString(playlistPathColumn)?.ifEmpty { null }?.let { p -> File(p) }
+                val playlistName = playlistNameColumn?.let { p0 -> it.getString(p0) }
+                    ?.ifEmpty { null } ?: playlistPath?.nameWithoutExtension
                 val playlistDateAdded = it.getLongOrNullIfThrow(playlistDateAddedColumn)
                 val playlistDateModified = it.getLongOrNullIfThrow(playlistDateModifiedColumn)
                 val paths = try {
-                    readPlaylist(context, ContentUris.withAppendedId(
-                        @Suppress("DEPRECATION") MediaStore.Audio.Playlists
-                            .getContentUri("external"), playlistId), volumes)
+                    readPlaylist(
+                        context, ContentUris.withAppendedId(
+                            @Suppress("DEPRECATION") MediaStore.Audio.Playlists
+                                .getContentUri("external"), playlistId
+                        ), volumes
+                    )
                 } catch (e: Exception) {
                     Log.w(TAG, "failed to read playlist $playlistPath", e)
                     null

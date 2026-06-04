@@ -20,14 +20,15 @@ data class ReaderResult(
     val pathMap: Map<String, MediaItem>?,
     val folderStructure: FileNode?,
     val shallowFolder: FileNode?,
-    val folders: Set<String>?
+    val folders: Set<String>?,
+    val foldersForWhitelist: Set<String>?
 ) {
     companion object {
         fun emptyReaderResult() = ReaderResult(
             listOf(), listOf(), listOf(), listOf(), listOf(), listOf(),
             mapOf(), mapOf(),
             EmptyFileNode, EmptyFileNode,
-            setOf()
+            setOf(), setOf()
         )
     }
 }
@@ -42,5 +43,6 @@ data class SimpleReaderResult(
     val playlistList: List<Playlist>,
     val folderStructure: FileNode,
     val shallowFolder: FileNode,
-    val folders: Set<String>
+    val folders: Set<String>,
+    val foldersForWhitelist: Set<String>
 )

@@ -56,4 +56,18 @@
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
+    <PreferenceCategory
+        android:layout="@layout/preference_category_md"
+        android:title="@string/settings_preference_category_folders_filesystem">
+
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="show_file_names"
+            android:layout="@layout/preference_switch"
+            android:summary="@string/show_file_names_summary"
+            android:title="@string/show_file_names"
+            android:widgetLayout="@layout/preference_switch_widget"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+
 </PreferenceScreen>

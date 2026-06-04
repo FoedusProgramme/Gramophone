@@ -101,7 +101,6 @@
     <string name="settings_player_options">オーディオ</string>
     <string name="settings_appearance_summary">アプリの外観とテーマを設定します</string>
     <string name="settings_title_center_summary">フルプレーヤーのタイトルに中央揃えを使用します</string>
-    <string name="settings_album_round_corner_summary">フルプレーヤー内の角の丸みを有効化します</string>
     <string name="settings_player_options_summary">出力の音質と再生時の動作を設定します</string>
     <string name="settings_title_bold">タイトルを太字にする</string>
     <string name="settings_title_bold_summary">フルプレーヤーのタイトルに太字を使用します</string>
@@ -138,8 +137,6 @@
     <string name="grant_images"><![CDATA[「写真と動画」の権限を許可してください]]></string>
     <string name="crash_clipboard">クラッシュログをクリップボードにコピー</string>
     <string name="settings_trim_lyrics">歌詞の空白を削除する</string>
-    <string name="settings_lyrics_multiline_summary">同期ポイント間のすべての行を 1 つの歌詞のテキストで扱います</string>
-    <string name="settings_lyrics_multiline">複数行の歌詞を読む</string>
     <string name="current_playlist">現在のプレイリスト</string>
     <string name="timer">スリープタイマー</string>
     <string name="fgs_failed_title">音楽の再生を再開できませんでした</string>
@@ -386,8 +383,6 @@
     <string name="cannot_find_file">ファイルが見つかりません</string>
     <string name="settings_translation_auto_word">翻訳を自動的にアニメーション</string>
     <string name="settings_translation_auto_word_summary">単語の同期がされた歌詞の再生時に翻訳のメタデータがない場合は、翻訳行に直線的なグラデーションを適用します</string>
-    <string name="settings_mp3_index_seeking">MP3 インデックスシーク</string>
-    <string name="settings_mp3_index_seeking_summary">VBR シークで Xing ヘッダーが欠落している可能性を考慮する代替としてシークに必要となる MP3 ファイル全体をメモリ上に読み込みます。このオプションを無効化すると Xing ヘッダーが欠落時に CBR シークを使用します。適切な形式の VBR MP3 ファイルは Xing ヘッダーが含まれているため、基本的にこのオプションを使う必要はありません (適用するにはアプリを再起動してください)。</string>
     <string name="log_attachment">ログは添付ファイルとして自動送信されます</string>
     <string name="delete_failed_playlist">プレイリストの削除に失敗しました: %s</string>
     <string name="do_not_enter_email_enter_msg">メールアドレスではなくメッセージを入力してください</string>
@@ -405,7 +400,6 @@
     <string name="rename_playlist">プレイリスト名を変更</string>
     <string name="add_to_playlist">プレイリストに追加</string>
     <string name="refresh_did_you_know">Gramophone はアプリを起動するたびに曲の一覧を要求して起動中に新しいメディアを自動的に検出します。この「更新」ボタンは Gramophone 内のメディアを再読み込みするのではなく、すべてのメディアストレージデバイスからすべてのファイルを再スキャンするようシステムに要求します (そのため、多少時間を要します)。つまり、システムや他のアプリに不具合がない限り、この機能を使用する必要はありません。\n\n曲が不足している場合は「設定」→「動作」から「曲の最小の長さ」と「フォルダのブラックリスト」を確認し、これらの設定が適切な値に設定されているか確認してください。その他の考えられる原因については FAQ をご確認ください。</string>
-    <string name="playlist_editing_pref_desc">プレイリストに曲を追加可能にします (移動と削除は未実装です)</string>
     <string name="no_app_found">実行できるアプリが見つかりません</string>
     <string name="contributors_nift4">メンテナー / リードデベロッパー</string>
     <string name="contributors_123duo3">リードデザイナー</string>

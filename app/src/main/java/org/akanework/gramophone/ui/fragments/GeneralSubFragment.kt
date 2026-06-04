@@ -36,7 +36,6 @@ import kotlinx.coroutines.withContext
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.enableEdgeToEdgePaddingListener
 import org.akanework.gramophone.logic.ui.MyRecyclerView
-import org.akanework.gramophone.logic.utils.Flags
 import org.akanework.gramophone.logic.utils.flows.PauseManagingSharedFlow.Companion.sharePauseableIn
 import org.akanework.gramophone.logic.utils.flows.provideReplayCacheInvalidationManager
 import org.akanework.gramophone.ui.adapters.SongAdapter
@@ -121,7 +120,7 @@ class GeneralSubFragment : BaseFragment(true) {
                 // Playlists
                 val clazz = arguments?.getString("Class") ?: "null"
                 val item = mainActivity.reader.playlistListFlow.map {
-                    it.find { it.id == id && it.javaClass.name == clazz }
+                    it.find { if (id != null) it.id == id else it.javaClass.name == clazz }
                 }
                     .provideReplayCacheInvalidationManager()
                     .sharePauseableIn(
@@ -142,14 +141,13 @@ class GeneralSubFragment : BaseFragment(true) {
                 qTitle = title
                 itemList = item.map { it?.songList }
                 rawOrderExposed = Sorter.Type.NaturalOrder
-                if (clazz == Playlist::class.java.name && Flags.PLAYLIST_EDITING!!) {
+                if (clazz == Playlist::class.java.name) {
                     topAppBar.inflateMenu(R.menu.playlist_subfragment_menu)
                     topAppBar.setOnMenuItemClickListener {
                         when (it.itemId) {
                             R.id.edit -> {
                                 mainActivity.startFragment(PlaylistEditFragment()) {
                                     putString("Id", id?.toString())
-                                    putString("Class", arguments?.getString("Class"))
                                 }
                                 true
                             }

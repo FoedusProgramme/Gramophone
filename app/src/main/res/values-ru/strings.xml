@@ -89,7 +89,7 @@
     <string name="settings_content_based_color_summary">Включает генерацию цветов на основе обложки альбома</string>
     <string name="opensource_info">С открытым исходным кодом под лицензией GPL-3.0
 \nАвторские права %s</string>
-    <string name="playlist_favourite">Избранное</string>
+    <string name="playlist_favourite">Избранные</string>
     <string name="now_playing">Сейчас играет</string>
     <string name="settings_default_progress_bar_summary">Включает полосу прогресса в стиле Material</string>
     <string name="settings_package_type">Тип пакета</string>
@@ -112,7 +112,6 @@
     <string name="settings_player_options">Звук</string>
     <string name="settings_category_links">Ссылки</string>
     <string name="settings_appearance_summary">Внешний вид приложения</string>
-    <string name="settings_album_round_corner_summary">Включает скругление углов в полноэкранном плеере</string>
     <string name="settings_player_options_summary">Качество вывода, поведение при воспроизведении</string>
     <string name="settings_library">Библиотека</string>
     <string name="settings_customization">Персонализация</string>
@@ -152,8 +151,6 @@
     <string name="crash_clipboard">Журнал сбоев скопирован в буфер обмена</string>
     <string name="grant_images"><![CDATA[Пожалуйста, предоставьте разрешение \"Фото и видео\"]]></string>
     <string name="settings_trim_lyrics">Удаляет пробелы вокруг текста песни</string>
-    <string name="settings_lyrics_multiline">Чтение многострочных текстов песен</string>
-    <string name="settings_lyrics_multiline_summary">Считывает все строки между точками синхронизации единым текстом песни</string>
     <string name="current_playlist">Текущий плейлист</string>
     <string name="timer">Таймер сна</string>
     <string name="sort_by_release_date">Дата выхода</string>
@@ -360,7 +357,6 @@
     <string name="spk_encoding_pcm_16bit_offload">Выгрузка 16-битного PCM</string>
     <string name="spk_encoding_pcm_24bit_offload">24-разрядный (8.24) PCM выгрузка</string>
     <string name="cannot_find_file">Файл не найден</string>
-    <string name="settings_mp3_index_seeking">Поиск индекса MP3</string>
     <string name="failed_to_parse_lyric">При парсинге текста произошла ошибка</string>
     <string name="spk_encoding_aac_he_v1">HE-AAC v1</string>
     <string name="device_type_hearing_aid">Слуховой аппарат</string>
@@ -395,7 +391,6 @@
     <string name="spk_encoding_aac_latm_lc">AAC-LC в LATM</string>
     <string name="spk_encoding_unknown">Неизвестный формат %s</string>
     <string name="spk_encoding_mpegh_sub_bl_l3">MPEG-H Базовый профиль L3</string>
-    <string name="settings_mp3_index_seeking_summary">Считывание всего MP3-файла в память для обеспечения корректной перемотки, вместо того чтобы полагаться на заголовок Xing для перемотки в файлах с переменным битрейтом (VBR), который может отсутствовать. Если эта опция отключена, при отсутствии заголовка Xing будет использована перемотка, предназначенная для файлов с постоянным битрейтом (CBR). Корректно сформированный VBR MP3-файл содержит заголовок Xing, поэтому в подавляющем большинстве случаев данная опция не требуется. (Для вступления изменений в силу требуется перезапуск приложения)</string>
     <string name="spk_encoding_aac_adts_he_v1">HE-AAC v1 в ADTS</string>
     <string name="spk_encoding_aac_latm_he_v1">HE-AAC v1 в LATM</string>
     <string name="spk_encoding_mpegh_sub_bl_l4">MPEG-H Базовый профиль L4</string>
@@ -419,7 +414,6 @@
     <string name="log_will_auto_send">Логи будут отправлены автоматически, вместо этого объясните проблему</string>
     <string name="rename">Переименовать</string>
     <string name="refresh_did_you_know">Gramophone обновляет список песен при каждом запуске приложения, а также автоматически обнаруживает новые медиафайлы во время своей работы. Кнопка «Обновить» не просто перезагружает медиатеку в Gramophone, а запрашивает у вашей системы полное повторное сканирование всех файлов на всех подключенных постоянных накопителях (именно поэтому процесс занимает некоторое время). Это означает, что если ваша система и другие приложения работают исправно, вам никогда не понадобится использовать эту функцию.\n\nНе хватает каких-то песен? Обязательно проверьте раздел «Настройки» &gt; «Поведение» на предмет фильтра по минимальной длительности и чёрного списка папок и убедитесь, что для этих параметров установлены ожидаемые значения. Чтобы узнать о других возможных причинах, пожалуйста, ознакомьтесь с нашим разделом FAQ.</string>
-    <string name="playlist_editing_pref_desc">Позволяет добавлять песни в плейлисты (перемещение/удаление пока не реализовано)</string>
     <string name="no_app_found">Не найдено ни одного приложения, которое могло бы это сделать</string>
     <string name="contributors_nift4">Ведущий разработчик</string>
     <string name="contributors_123duo3">Ведущий дизайнер</string>
@@ -496,4 +490,32 @@
     <string name="actions_query_shuffle_specific">Перемешать $item_name</string>
     <string name="please_allow_to_delete">Нажмите «Разрешить», чтобы удалить файлы</string>
     <string name="choose_sd">Выберите %s</string>
+    <string name="edit_favorites_failed">Ошибка при редактировании избранного: %s</string>
+    <string name="favorite">Избранное</string>
+    <string name="favorite_failed_title">Не удалось изменить статус «Избранного» для трека</string>
+    <string name="favorite_failed_text">Нажмите здесь, чтобы применить изменения, предоставив доступ к файлу плейлиста «Избранное»</string>
+    <string name="error_in_bg">Ошибки в фоновом режиме</string>
+    <string name="settings_whitelist">Белый список</string>
+    <string name="whitelist_and_blacklist">Если в белом списке не выбраны папки, доступ будет открыт ко всем папкам.\n\nБелый и чёрный списки работают вместе, но приоритет остаётся за чёрным списком. Например, вы можете добавить папку в белый список, а одну из её вложенных папок — в чёрный, тем самым исключив её.</string>
+    <string name="discard_changes_title">Не сохранять изменения?</string>
+    <string name="save">Сохранить</string>
+    <string name="discard">Отменить</string>
+    <string name="discard_changes_msg">Вы точно хотите отменить изменения в плейлисте \"%s\"?</string>
+    <string name="apply">Применить</string>
+    <string name="restore_edits">Восстановить изменения?</string>
+    <string name="restore_edits_msg">В плейлисте \"%s\" остались несохранённые изменения. Хотите восстановить эти изменения или удалить их и открыть первоначальную версию плейлиста?</string>
+    <string name="restore">Восстановить</string>
+    <string name="mount_storage">Для использования этой функции вставьте SD-карту</string>
+    <string name="failed_to_restore">Не удалось восстановить изменения: %s</string>
+    <string name="playlist_empty">Плейлист пуст</string>
+    <string name="playlist_empty_msg">Чтобы добавить песни, нажмите на значок с тремя точками рядом с нужным треком и выберите \"Добавить в плейлист\".</string>
+    <string name="delete_really_artist">Вы действительно хотите удалить все песни \"%s\"? Это действие нельзя отменить.</string>
+    <string name="search_desc">Исполнители, альбомы и треки</string>
+    <string name="search_hint">Поиск песен и исполнителей</string>
+    <string name="picker_activity">Выберите трек</string>
+    <string name="playlist_picker_activity">Выберите плейлист</string>
+    <string name="settings_preference_category_folders_filesystem"><![CDATA[Вкладки папок и файловой системы]]></string>
+    <string name="show_file_names">Показывать имена файлов</string>
+    <string name="show_file_names_summary">Показывать имена файлов вместо названий песен во вкладках папок и файловой системы</string>
+    <string name="another_with_name">Это имя уже используется</string>
 </resources>

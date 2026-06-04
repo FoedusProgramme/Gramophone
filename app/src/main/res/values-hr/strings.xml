@@ -90,7 +90,7 @@
     <string name="settings_default_progress_bar">Zadana traka napretka</string>
     <string name="settings_default_progress_bar_summary">Uključi traku napretka u „material“ stilu</string>
     <string name="opensource_info">Aplikacija otvorenog koda, licenca GPL-3.0\nAutorska prava %s</string>
-    <string name="playlist_favourite">Favorit</string>
+    <string name="playlist_favourite">Favoriti</string>
     <string name="settings_contributors_click">%s (klikni za više!)</string>
     <string name="now_playing">Sada se izvodi</string>
     <string name="settings_content_based_color_summary">Uključi generiranje boja na temelju albuma</string>
@@ -117,7 +117,6 @@
     <string name="settings_player_options_summary">Kvaliteta izlaza, ponašanje reprodukcije</string>
     <string name="settings_customization">Prilagođavanje</string>
     <string name="settings_customization_summary">Upravljaj opcijama prilagođavanja</string>
-    <string name="settings_album_round_corner_summary">Uključi zaobljene kutove kada player zauzima cijeli ekran</string>
     <string name="settings_album_round_corner">Albumi sa zaobljenim kutovima</string>
     <string name="settings_audio">Audio</string>
     <string name="settings_title_bold">Podebljani naslov</string>
@@ -135,8 +134,6 @@
     <string name="settings_lyrics_bold_summary">Koristi deblji font za tekstove pjesama</string>
     <string name="settings_lyrics_center">Centrirano poravnanje</string>
     <string name="settings_lyrics_center_summary">Koristi centrirano poravnanje za tekstove pjesama</string>
-    <string name="settings_lyrics_multiline">Čitaj tekstove pjesama u više redaka</string>
-    <string name="settings_lyrics_multiline_summary">Tretiraj sve retke između sinkronizacijskih točaka kao jedan tekst pjesme</string>
     <string name="settings_play_on_launch">Reproduciraj nakon pokretanja aplikacje</string>
     <string name="settings_play_on_launch_summary">Reproduciraj glazbu nakon pokretanja aplikacje</string>
     <string name="settings_blacklist">Popis nepoželjnih</string>
@@ -404,7 +401,6 @@
     <string name="settings_translation_auto_word">Automatski animiraj prijevode</string>
     <string name="settings_translation_auto_word_summary">Primijeni linearni gradijent na retke prijevoda u sinkroniziranoj reprodukciji tekstova ako prijevodi nemaju metapodatke za sinkronizaciju riječi</string>
     <string name="cannot_find_file">Ova se datoteka ne može pronaći</string>
-    <string name="settings_mp3_index_seeking">Premještanje putem MP3 indeksa</string>
     <string name="enter_msg_for_dev_here">Ovdje upiši poruku za programera</string>
     <string name="do_not_enter_email_enter_msg">Upiši poruku, ne e-mail adresu</string>
     <string name="log_will_auto_send">Dnevnici će se automatski slati, umjesto toga objasni problem</string>
@@ -421,7 +417,6 @@
     <string name="rename_playlist">Preimenuj playlistu</string>
     <string name="edit_playlist_failed">Uređivanje playliste nije uspjelo: %s</string>
     <string name="add_to_playlist">Dodaj u playlistu</string>
-    <string name="playlist_editing_pref_desc">Omogućuje dodavanje pjesama na playliste (premještanje / uklanjanje još nije implementirano)</string>
     <string name="no_app_found">Nije pronađena nijedna aplikacija koja to može uraditi</string>
     <string name="contributors_nift4">Održavatelj / Glavni programer</string>
     <string name="contributors_123duo3">Glavni dizajner</string>
@@ -468,7 +463,6 @@
     <string name="settings_replaygain_preamp">Predpojačalo</string>
     <string name="settings_audio_offload">Prebacivanje audio signala (štedi bateriju)</string>
     <string name="mix_port_flag_deep_buffer">Duboka/Velika predmemorija</string>
-    <string name="settings_mp3_index_seeking_summary">Učitaj cijelu MP3 datoteku u memoriju prema potrebi za premještanje (seeking), umjesto da se oslanjaš na potencijalno nedostajuće Xing zaglavlje za VBR premještanje. Ako je ova opcija isključena, za premještanje će se koristiti CBR metoda ako Xing zaglavlje nedostaje. Dobro formatirana VBR MP3 datoteka obično ima Xing zaglavlje, stoga ova opcija u većini slučajeva ne bi trebala biti potrebna. (Za primjenu promjene ponovo pokreni aplikaciju)</string>
     <string name="d_db">%d dB</string>
     <string name="contributors_saladnoober">Osiguranje kvalitete</string>
     <string name="settings_replaygain_no_rg_amp_desc">Smanji glasnoću za glasne pjesme koje nemaju oznake „Ujednačavanje glasnoće”</string>
@@ -488,4 +482,10 @@
     <string name="actions_query_shuffle_specific">primiješaj $item_name</string>
     <string name="please_allow_to_delete">Pritisni „Dozvoli” za brisanje datoteka</string>
     <string name="choose_sd">Odaberi %s</string>
+    <string name="edit_favorites_failed">Uređivanje favorita neuspjelo: %s</string>
+    <string name="favorite">Favorit</string>
+    <string name="favorite_failed_title">Nije bilo moguće promijenit stanje pjesme</string>
+    <string name="favorite_failed_text">Pritisni ovdje za primjenu promjena, davajući dozvole favoritnoj datoteci playliste</string>
+    <string name="error_in_bg">Događaju se greške u pozadini</string>
+    <string name="settings_whitelist">Bijela lista</string>
 </resources>

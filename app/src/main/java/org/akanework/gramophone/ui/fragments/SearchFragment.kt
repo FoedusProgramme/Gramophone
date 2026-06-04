@@ -94,6 +94,7 @@ class SearchFragment : BaseFragment(true) {
         // Build FastScroller.
         recyclerView.fastScroll(songAdapter, songAdapter.itemHeightHelper)
 
+        editText.setText(searchTextFlow.value)
         editText.addTextChangedListener { rawText ->
             searchTextFlow.value = rawText?.toString() ?: ""
         }

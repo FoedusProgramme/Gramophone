@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@android:id/background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorSurface"
+    android:orientation="vertical"
+    android:theme="@style/Theme.Gramophone"
+    android:padding="16dp"
+    tools:ignore="HardcodedText,UnusedAttribute">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:textColor="@color/sl_lyric_text"
+        android:textFontWeight="500"
+        android:textSize="@dimen/lyric_widget_nn"
+        android:theme="@style/Theme.Gramophone"
+        android:text="My face above the water" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:textColor="@color/sl_lyric_active"
+        android:textFontWeight="500"
+        android:textSize="@dimen/lyric_widget_nn"
+        android:theme="@style/Theme.Gramophone"
+        android:text="My feet can't touch the ground" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:textColor="@color/sl_lyric_text"
+        android:textFontWeight="500"
+        android:textSize="@dimen/lyric_widget_nn"
+        android:theme="@style/Theme.Gramophone"
+        android:text="Touch the ground, and it feels like" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:textColor="@color/sl_lyric_text"
+        android:textFontWeight="500"
+        android:textSize="@dimen/lyric_widget_nn"
+        android:theme="@style/Theme.Gramophone"
+        android:text="I can see the sands on the horizon" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:textColor="@color/sl_lyric_text"
+        android:textFontWeight="500"
+        android:textSize="@dimen/lyric_widget_nn"
+        android:theme="@style/Theme.Gramophone"
+        android:text="Every time you are not around" />
+</LinearLayout>

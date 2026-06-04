@@ -118,13 +118,10 @@
     <string name="settings_title_bold">Judul tebal</string>
     <string name="settings_about_app">Tentang</string>
     <string name="settings_experimental_settings_summary">Fitur pengujian, lain-lain</string>
-    <string name="settings_album_round_corner_summary">Aktifkan sudut melengkung di pemutar penuh</string>
     <string name="settings_default_progress_bar_summary">Aktifkan bilah progres bergaya material</string>
     <string name="go_to_artist">Buka artis</string>
     <string name="dialog_track_number">Nomor trek</string>
     <string name="share">Bagikan</string>
-    <string name="settings_lyrics_multiline">Baca lirik multibaris</string>
-    <string name="settings_lyrics_multiline_summary">Perlakukan semua baris di antara titik sinkronisasi sebagai satu teks lirik</string>
     <string name="deny_images"><![CDATA[Harap tolak izin \"Foto dan video\"]]></string>
     <string name="grant_images"><![CDATA[Harap berikan izin \"Foto dan video\"]]></string>
     <string name="settings_preference_category_application">Aplikasi</string>
@@ -398,8 +395,6 @@
     <string name="settings_translation_auto_word">Animasi terjemahan otomatis</string>
     <string name="settings_translation_auto_word_summary">Terapkan gradasi linier pada baris terjemahan dalam pemutaran lirik tersinkronisasi kata jika terjemahan tidak memiliki metadata sinkronisasi kata</string>
     <string name="cannot_find_file">Tidak dapat menemukan berkas ini</string>
-    <string name="settings_mp3_index_seeking_summary">Baca seluruh berkas MP3 ke dalam memori sebagaimana diperlukan untuk pencarian, alih-alih mengandalkan header Xing yang mungkin tidak ada untuk pencarian VBR. Jika ini dinonaktifkan, pencarian CBR akan digunakan jika header Xing tidak ada. Berkas MP3 VBR yang terformat dengan baik memiliki header Xing, sehingga opsi ini seharusnya tidak diperlukan di hampir semua kasus. (Memerlukan mulai ulang aplikasi untuk diterapkan)</string>
-    <string name="settings_mp3_index_seeking">Pencarian indeks MP3</string>
     <string name="enter_msg_for_dev_here">Masukkan pesan untuk pengembang di sini</string>
     <string name="do_not_enter_email_enter_msg">Masukkan pesan, bukan alamat email</string>
     <string name="log_will_auto_send">Log akan dikirim secara otomatis, jelaskan masalahnya</string>
@@ -416,7 +411,6 @@
     <string name="rename_playlist">Ganti nama daftar putar</string>
     <string name="edit_playlist_failed">Pengeditan daftar putar gagal: %s</string>
     <string name="add_to_playlist">Tambahkan ke daftar putar</string>
-    <string name="playlist_editing_pref_desc">Memungkinkan penambahan lagu ke daftar putar (pemindahan / penghapusan belum diimplementasikan)</string>
     <string name="no_app_found">Tidak ada aplikasi yang dapat melakukan ini</string>
     <string name="contributors_nift4">Pemelihara / Pengembang Utama</string>
     <string name="contributors_123duo3">Desainer Utama</string>

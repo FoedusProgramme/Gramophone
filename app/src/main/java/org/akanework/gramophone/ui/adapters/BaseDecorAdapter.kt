@@ -64,10 +64,17 @@ open class BaseDecorAdapter<T : AdapterFragment.BaseInterface<*>>(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val count = adapter.itemCountForDecor
         holder.playAll.visibility =
-            if (adapter is SongAdapter || adapter is AlbumAdapter) View.VISIBLE else View.GONE
+            if (adapter is SongAdapter && adapter.isSubFragment != R.id.songs ||
+                adapter is AlbumAdapter) View.VISIBLE else View.GONE
         holder.shuffleAll.visibility =
-            if (adapter is SongAdapter || adapter is AlbumAdapter) View.VISIBLE else View.GONE
+            if (adapter is SongAdapter && adapter.isSubFragment != R.id.songs ||
+                adapter is AlbumAdapter) View.VISIBLE else View.GONE
         holder.counter.text = context.resources.getQuantityString(pluralStr, count, count)
+        if (adapter is SongAdapter) {
+            holder.counter.setOnClickListener {
+                adapter.getPlayingSong()?.let { scrollToViewPosition(it) }
+            }
+        }
         holder.sortButton.visibility =
             if (adapter.sortType.value != Sorter.Type.None || adapter.canChangeLayout) View.VISIBLE else View.GONE
         holder.sortButton.setOnClickListener { view ->

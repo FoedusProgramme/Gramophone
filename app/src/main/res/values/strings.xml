@@ -132,7 +132,6 @@
     <string name="settings_player_options_summary">Output quality, playback behavior</string>
     <string name="settings_customization">Customization</string>
     <string name="settings_customization_summary">Manage customization options</string>
-    <string name="settings_album_round_corner_summary">Enable round corner in full player</string>
     <string name="settings_album_round_corner">Album round corner</string>
     <string name="settings_audio">Audio</string>
     <string name="settings_title_bold">Bold title</string>
@@ -150,8 +149,6 @@
     <string name="settings_lyrics_bold_summary">Use a heavier font weight for lyrics</string>
     <string name="settings_lyrics_center">Center alignment</string>
     <string name="settings_lyrics_center_summary">Use center alignment for lyrics</string>
-    <string name="settings_lyrics_multiline">Read multiline lyrics</string>
-    <string name="settings_lyrics_multiline_summary">Treat all the lines between sync points as one lyric text</string>
     <string name="settings_play_on_launch">Play on launch</string>
     <string name="settings_play_on_launch_summary">Play music on launch</string>
     <string name="settings_blacklist">Blacklist</string>
@@ -217,6 +214,7 @@
     <string name="lyric_widget_description">Widget that shows lyrics of currently playing media</string>
     <string name="delete">Delete</string>
     <string name="delete_really">Do you really want to delete \"%s\"? This action cannot be undone.</string>
+    <string name="delete_really_artist">Do you really want to delete all songs by \"%s\"? This action cannot be undone.</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="sort_by_file_path">File path</string>
@@ -424,8 +422,6 @@
     <string name="settings_translation_auto_word">Auto-animate translations</string>
     <string name="settings_translation_auto_word_summary">Apply linear gradient to translation lines in word-synced lyric playback if translations do not have word-sync metadata</string>
     <string name="cannot_find_file">Cannot find this file</string>
-    <string name="settings_mp3_index_seeking_summary">Read all of the MP3 file into memory as required for seeking, instead of relying on potentially missing Xing header for VBR seeking. If this is disabled, CBR seeking will be used if Xing header is missing. A well-formed VBR MP3 file has a Xing header, hence this option shouldn\'t be needed in almost all cases. (Requires app restart to apply)</string>
-    <string name="settings_mp3_index_seeking">MP3 index seeking</string>
     <string name="enter_msg_for_dev_here">Enter message for developer here</string>
     <string name="do_not_enter_email_enter_msg">Enter message, not an e-mail address</string>
     <string name="log_will_auto_send">Logs will be sent automatically, explain the issue instead</string>
@@ -443,7 +439,6 @@
     <string name="edit_playlist_failed">Editing playlist failed: %s</string>
     <string name="edit_favorites_failed">Editing favorites failed: %s</string>
     <string name="add_to_playlist">Add to playlist</string>
-    <string name="playlist_editing_pref_desc">Allows to add songs to playlists (moving / removing not yet implemented)</string>
     <string name="no_app_found">No app found that can do this</string>
     <string name="contributors_nift4">Maintainer / Lead Developer</string>
     <string name="contributors_123duo3">Lead Designer</string>
@@ -508,7 +503,40 @@
     <string name="favorite">Favorite</string>
     <string name="favorite_failed_title">Failed to change favourite state of song</string>
     <string name="favorite_failed_text">Please click here to apply changes, by granting permission to the favourite playlist file</string>
-    <string name="error_in_bg">Errors occuring in the background</string>
+    <string name="error_in_bg">Errors occurring in the background</string>
+    <string name="settings_whitelist">Whitelist</string>
+    <string name="whitelist_and_blacklist">If no folders are selected in the Whitelist, all folders will be allowed.\n\nWhitelist and Blacklist are applied together, with Blacklist taking priority. For example, you can allow a folder in the Whitelist while excluding one of its subfolders in the Blacklist.</string>
+    <string name="discard_changes_title">Discard changes?</string>
+    <string name="save">Save</string>
+    <string name="discard">Discard</string>
+    <string name="discard_changes_msg">Do you really want to discard your changes to playlist \"%s\"?</string>
+    <string name="apply">Apply</string>
+    <string name="restore_edits">Restore changes?</string>
+    <string name="restore_edits_msg">There are unsaved changes for the playlist \"%s\". Do you wish to restore these changes, or discard them and start over with a fresh version of the playlist?</string>
+    <string name="restore">Restore</string>
+    <string name="mount_storage">Please insert SD card to use this feature</string>
+    <string name="failed_to_restore">Failed to restore changes: %s</string>
+    <string name="playlist_empty">Playlist is empty</string>
+    <string name="playlist_empty_msg">Add some songs by clicking on \"Add to playlist\" in the three-dot menu of a song.</string>
+    <string name="search_desc">Artists, albums and tracks</string>
+    <string name="search_hint">Search songs and artists</string>
+    <string name="picker_activity">Choose music track</string>
+    <string name="playlist_picker_activity">Choose playlist</string>
+    <string name="settings_preference_category_folders_filesystem"><![CDATA[Folder & filesystem tabs]]></string>
+    <string name="show_file_names">Show file names</string>
+    <string name="show_file_names_summary">Show file names in the place of song names in the folder and filesystem tabs</string>
+    <string name="another_with_name">Name is already in use</string>
+    <string name="settings_font_size">Font size</string>
+    <string name="set">Set</string>
+    <string name="timer_eos">Wait for song to end</string>
+    <string name="timer_end_of_this_song">End of this song</string>
+    <string name="other">Custom</string>
+    <string name="unset">Unset</string>
+    <string name="timer_hint">Minutes to pause music in…</string>
+    <plurals name="minutes">
+        <item quantity="one">%d minute</item>
+        <item quantity="other">%d minutes</item>
+    </plurals>
     <string name="settings_mq_enabled">Multiple queues</string>
     <string name="song_queue">Queue</string>
 </resources>

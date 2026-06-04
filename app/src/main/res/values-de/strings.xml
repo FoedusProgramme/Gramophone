@@ -93,7 +93,7 @@
     <string name="settings_default_progress_bar_summary">Fortschrittsbalken im MD3-Stil aktivieren</string>
     <string name="dialog_mime">MIME-Typ</string>
     <string name="now_playing">Aktuelle Wiedergabe</string>
-    <string name="playlist_favourite">Favorit</string>
+    <string name="playlist_favourite">Favoriten</string>
     <string name="no_lyric_found">Kein Liedtext gefunden</string>
     <string name="settings_player_ui">Abspieloberfläche</string>
     <string name="settings_customization_summary">Anpassungsoptionen verwalten</string>
@@ -103,7 +103,6 @@
     <string name="settings_library_summary">Mediathek verwalten</string>
     <string name="settings_player_options_summary">Ausgabequalität, Wiedergabeverhalten</string>
     <string name="unknown_title">Unbekannter Titel</string>
-    <string name="settings_album_round_corner_summary">Runde Ecken im Vollbildmodus aktivieren</string>
     <string name="settings_lyrics_center">Zentriert</string>
     <string name="settings_play_on_launch_summary">Beim Start Musik wiedergeben</string>
     <string name="settings_play_on_launch">Beim Start wiedergeben</string>
@@ -150,8 +149,6 @@
     <string name="album_covers_enhance_desc">Zeigt Albumcover mit höherer Qualität an, und erlaubt, dass sich Album- und Titelcover unterscheiden (benötigt Zugriff auf Fotos)</string>
     <string name="fgs_failed_text">Klicke hier, um die App zu öffnen und die Wiedergabe fortzusetzen</string>
     <string name="fgs_failed_channel">Wiedergabe konnte nicht fortgesetzt werden</string>
-    <string name="settings_lyrics_multiline">Lese mehrzeilige Liedtexte</string>
-    <string name="settings_lyrics_multiline_summary">Behandele alle Zeilen zwischen Synchronisationspunkten als ein Liedtext</string>
     <string name="timer">Einschlaftimer</string>
     <string name="scroll_to_albums">Zu den Alben scrollen</string>
     <string name="position_slider">Positionsschieberegler</string>
@@ -384,7 +381,6 @@
     <string name="settings_translation_auto_word">Übersetzungen automatisch animieren</string>
     <string name="settings_translation_auto_word_summary">Linearen Farbverlauf auf übersetzte Verse bei der Wiedergabe wortsynchroner Liedtexte anwenden wenn die Übersetzungen keine wortsynchronen Metadaten haben</string>
     <string name="cannot_find_file">Datei kann nicht gefunden werden</string>
-    <string name="settings_mp3_index_seeking_summary">Die gesamte MP3-Datei in den Speicher lesen, wie es für das Seeking erforderlich ist, anstatt einen potenziell fehlenden Xing-Header für VBR-Seeking zu verwenden. Wenn dies deaktiviert ist, wird CBR-Seeking verwendet, wenn der Xing-Header fehlt. Eine gut kodierte VBR MP3-Datei hat einen Xing Header, daher sollte diese Option in fast allen Fällen nicht benötigt werden. (Benötigt App-Neustart zum Anwenden)</string>
     <string name="enter_msg_for_dev_here">Nachricht an den Entwickler hier eingeben</string>
     <string name="do_not_enter_email_enter_msg">Nachricht eingeben, keine E-Mail-Adresse</string>
     <string name="log_will_auto_send">Protokolle werden automatisch gesendet, erkläre stattdessen das Problem</string>
@@ -398,7 +394,6 @@
     <string name="rename_playlist">Wiedergabeliste umbenennen</string>
     <string name="edit_playlist_failed">Bearbeiten der Wiedergabeliste fehlgeschlagen: %s</string>
     <string name="add_to_playlist">Zur Wiedergabeliste hinzufügen</string>
-    <string name="playlist_editing_pref_desc">Ermöglicht, Lieder zu Wiedergabelisten hinzuzufügen (bewegen/entfernen ist noch nicht implementiert)</string>
     <string name="no_app_found">Keine passende App gefunden</string>
     <string name="contributors_nift4">Maintainer / Hauptentwickler</string>
     <string name="contributors_123duo3">Hauptdesigner</string>
@@ -426,7 +421,6 @@
     <string name="contributors_lambada10">Bereitstellung von Liedtextbeispielen &amp; SongSync</string>
     <string name="contributors_code_contributions">Codebeiträge</string>
     <string name="mix_port_flag_fast">Schnell</string>
-    <string name="settings_mp3_index_seeking">MP3-Indexsuche</string>
     <plurals name="folders_plural">
         <item quantity="one">%d Ordner</item>
         <item quantity="other">%d Ordner</item>
@@ -451,4 +445,14 @@
     <string name="clear_queue">Warteschlange leeren</string>
     <string name="choose_sd">%s auswählen</string>
     <string name="contributors_saladnoober">Qualitätssicherung</string>
+    <string name="discard">Verwerfen</string>
+    <string name="apply">Anwenden</string>
+    <string name="restore_edits">Änderungen wiederherstellen?</string>
+    <string name="discard_changes_title">Änderungen verwerfen?</string>
+    <string name="save">Speichern</string>
+    <string name="restore">Wiederherstellen</string>
+    <string name="playlist_empty">Wiedergabeliste ist leer</string>
+    <string name="picker_activity">Musiktitel auswählen</string>
+    <string name="playlist_picker_activity">Wiedergabeliste auswählen</string>
+    <string name="settings_replaygain_drc">DRC aktivieren</string>
 </resources>

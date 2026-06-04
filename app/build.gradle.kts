@@ -290,7 +290,7 @@ dependencies {
     implementation("androidx.fragment:fragment-ktx:1.8.9")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.4")
     implementation("androidx.mediarouter:mediarouter:1.8.1")
-    implementation("io.github.nift4.mediastorecompat:mediastorecompat:1.0.0-alpha27")
+    implementation("io.github.nift4.mediastorecompat:mediastorecompat:1.0.0-alpha28")
     val media3Version = "1.10.1"
     implementation("androidx.media3:media3-common-ktx:$media3Version")
     implementation("androidx.media3:media3-exoplayer:$media3Version")
@@ -303,7 +303,9 @@ dependencies {
     implementation("com.mikepenz:aboutlibraries-compose-m3:$aboutLibsVersion")
     implementation("com.google.android.material:material:1.13.0")
     implementation("me.zhanghai.android.fastscroll:library:1.3.0")
-    implementation("io.coil-kt.coil3:coil-compose:3.3.0")
+    val coilVersion = "3.4.0"
+    implementation("io.coil-kt.coil3:coil-compose:$coilVersion")
+    lintChecks("io.coil-kt.coil3:coil-lint:$coilVersion")
     implementation("org.lsposed.hiddenapibypass:hiddenapibypass:6.1")
     //noinspection GradleDependency newer versions need java.nio which is api 26+
     //implementation("com.github.albfernandez:juniversalchardet:2.0.3") TODO

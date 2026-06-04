@@ -41,7 +41,7 @@
     <string name="home_menu_equalizer">Equalitzador</string>
     <string name="compact_list">Llista (compacta)</string>
     <string name="check_for_updates">Consulteu les actualitzacions al nostre canal!</string>
-    <string name="playlist_favourite">Preferida</string>
+    <string name="playlist_favourite">Preferides</string>
     <string name="now_playing">Ara s\'està reproduint</string>
     <string name="home_menu_search">Cerca</string>
     <string name="home_menu_refresh">Actualitza</string>
@@ -103,7 +103,6 @@
     <string name="settings_behavior_summary">Filtres, comportaments de llançament</string>
     <string name="settings_category_links">Enllaços</string>
     <string name="settings_library">Biblioteca</string>
-    <string name="settings_album_round_corner_summary">Activa les cantonades arrodonides en el reproductor complet</string>
     <string name="settings_title_bold">Títols en negreta</string>
     <string name="settings_color_accuracy_summary">Fes que la generació de color sigui precisa</string>
     <string name="settings_experimental_settings_summary">Funcionalitats de prova, miscel·lània</string>
@@ -115,8 +114,6 @@
     <string name="settings_lyrics_bold_summary">Usa un estil de lletra més gruixut per a les lletres</string>
     <string name="settings_lyrics_center">Alineació central</string>
     <string name="settings_lyrics_center_summary">Usa l\'alineació central per a les lletres</string>
-    <string name="settings_lyrics_multiline">Llegeix lletres multilínia</string>
-    <string name="settings_lyrics_multiline_summary">Tracta totes les línies entre els punts de sincronització com un text de lletra</string>
     <string name="settings_play_on_launch">Reprodueix en llançar</string>
     <string name="settings_blacklist">Llista negra</string>
     <string name="settings_category_basic_info">Informació bàsica</string>
@@ -177,7 +174,7 @@
     <string name="remove">Elimina</string>
     <string name="skip_next">Salta al següent</string>
     <string name="settings_lyrics_ui">Activa la interfície d\'usuari nova de lletres</string>
-    <string name="settings_lyrics_ui_summary">IU experimental per a mostrar la lletra paraula a paraula amb característiques avançades</string>
+    <string name="settings_lyrics_ui_summary">IU experimental per a mostrar la lletra paraula a paraula amb funcions avançades</string>
     <string name="settings_status_bar_lyrics_title">Lletres a la barra d\'estat</string>
     <string name="settings_status_bar_lyrics_summary">Activa el mètode MeiZu per a mostrar les lletres a la barra d\'estat (disponible només en alguns dispositius)</string>
     <string name="lyric_widget_description">Giny que mostra la lletra de l\'element multimèdia actualment en reproducció</string>
@@ -393,8 +390,6 @@
     <string name="settings_translation_auto_word">Traduccions animades automàticament</string>
     <string name="settings_translation_auto_word_summary">Aplica un degradat lineal a les línies de traducció en la reproducció de lletres sincronitzada de paraules si les traduccions no tenen metadades de sincronització de paraules</string>
     <string name="cannot_find_file">No s\'ha pogut trobar aquest fitxer</string>
-    <string name="settings_mp3_index_seeking">Cerca de l\'índex MP3</string>
-    <string name="settings_mp3_index_seeking_summary">Llegeix tot el fitxer MP3 a la memòria segons sigui necessari per a la cerca, en lloc de confiar en la capçalera Xing potencialment absent per a la cerca VBR. Si això està desactivat, s\'utilitzarà la cerca CBR si manca la capçalera Xing. Un fitxer VBR MP3 amb format correcte té una capçalera Xing, per tant aquesta opció no hauria de ser necessària en gairebé cap cas. (Cal reiniciar l\'aplicació per a aplicar-ho)</string>
     <string name="enter_msg_for_dev_here">Introduïu aquí un missatge per al desenvolupador</string>
     <string name="log_will_auto_send">Els registres s\'enviaran automàticament, expliqueu el problema</string>
     <string name="do_not_enter_email_enter_msg">Introduïu un missatge, no una adreça de correu</string>
@@ -412,7 +407,6 @@
     <string name="rename_playlist">Canvia el nom de la llista de reproducció</string>
     <string name="add_to_playlist">Afegeix a la llista de reproducció</string>
     <string name="refresh_did_you_know">El Gramophone demana una llista de cançons actualitzada en cada inici d\'aplicació, i mentre el Gramophone s\'està executant, també detectarà automàticament mitjans nous. Aquest botó «Actualitza» no tornarà a carregar el mitjà al Gramophone, sinó que demanarà al vostre sistema que torni a explorar tots els fitxers de tots els dispositius d\'emmagatzematge permanent connectats (per això triga una estona). Això vol dir que, tret que el vostre sistema o altres aplicacions estiguin funcionant malament, mai haureu d\'utilitzar aquesta funció.\n\nFalten algunes cançons? Assegureu-vos de comprovar la Configuració &gt; Comportament per al filtre de longitud mínima i la llista negra de carpetes, i confirmeu que aquests paràmetres estan definits amb el valor esperat. Per altres motius possibles, consulteu les nostres PMF.</string>
-    <string name="playlist_editing_pref_desc">Permet afegir cançons a les llistes de reproducció (encara no s\'ha implementat moure/eliminar)</string>
     <string name="no_app_found">No s\'ha trobat cap aplicació que pugui fer això</string>
     <string name="contributors_ghhccghk">Lletres a la barra d\'estat i altres millores</string>
     <string name="contributors_nift4">Mantenidor / Desenvolupador principal</string>
@@ -488,4 +482,33 @@
     <string name="actions_query_shuffle_specific">barreja $item_name</string>
     <string name="please_allow_to_delete">Premeu «Permet» per a suprimir fitxers</string>
     <string name="choose_sd">Tria %s</string>
+    <string name="edit_favorites_failed">Ha fallat l\'edició de les preferides: %s</string>
+    <string name="favorite">Preferida</string>
+    <string name="favorite_failed_title">Ha fallat en canviar l\'estat de preferida de la cançó</string>
+    <string name="favorite_failed_text">Feu clic aquí per aplicar els canvis, concedint permís al fitxer de llista de reproducció de preferides</string>
+    <string name="error_in_bg">S\'han produït errors en segon pla</string>
+    <string name="settings_whitelist">Llista blanca</string>
+    <string name="whitelist_and_blacklist">Si no hi ha cap carpeta seleccionada a la llista blanca, es permetran totes les carpetes.\n\nLa llista blanca i la llista negra s\'apliquen conjuntament, i la llista negra té prioritat. Per exemple, podeu permetre una carpeta a la llista blanca mentre s\'exclou una de les seves subcarpetes a la llista negra.</string>
+    <string name="discard_changes_title">Descarto els canvis?</string>
+    <string name="save">Desa</string>
+    <string name="discard">Descarta</string>
+    <string name="discard_changes_msg">Voleu descartar els canvis a la llista de reproducció \"%s\"?</string>
+    <string name="apply">Aplica</string>
+    <string name="restore_edits">Restauro els canvis?</string>
+    <string name="restore_edits_msg">Hi ha canvis sense desar a la llista de reproducció «%s». Voleu restaurar aquests canvis o descartar-los i començar de nou amb una versió nova de la llista de reproducció?</string>
+    <string name="restore">Restaura</string>
+    <string name="mount_storage">Inseriu una targeta SD per a fer servir aquesta funció</string>
+    <string name="failed_to_restore">Ha fallat en restaurar els canvis: %s</string>
+    <string name="playlist_empty">La llista de reproducció és buida</string>
+    <string name="playlist_empty_msg">Afegiu cançons fent clic a «Afegeix a la llista de reproducció» al menú de tres punts d\'una cançó.</string>
+    <string name="delete_really_artist">Segur que voleu suprimir totes les cançons de «%s»? Aquesta acció no es pot desfer.</string>
+    <string name="search_desc">Artistes, àlbums i pistes</string>
+    <string name="picker_activity">Tria una pista de música</string>
+    <string name="search_hint">Cerca cançons i artistes</string>
+    <string name="playlist_picker_activity">Tria una llista de reproducció</string>
+    <string name="show_file_names">Mostra els noms del fitxers</string>
+    <string name="show_file_names_summary">Mostra els noms dels fitxers en lloc dels noms de les cançons a les pestanyes de carpetes i del sistema de fitxers</string>
+    <string name="settings_preference_category_folders_filesystem"><![CDATA[Pestanyes de carpetes i del sistema de fitxers]]></string>
+    <string name="another_with_name">El nom ja està en ús</string>
+    <string name="settings_font_size">Mida de la lletra</string>
 </resources>

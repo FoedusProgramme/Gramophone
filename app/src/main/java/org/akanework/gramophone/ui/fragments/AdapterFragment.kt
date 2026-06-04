@@ -72,7 +72,7 @@ class AdapterFragment : BaseFragment(null) {
         recyclerView = rootView.findViewById(R.id.recyclerview)
         recyclerView.setRecycledViewPool((requireParentFragment() as ViewPagerFragment).recycledViewPool)
         recyclerView.enableEdgeToEdgePaddingListener()
-        adapter = createAdapter()
+        adapter = createAdapter(savedInstanceState)
         recyclerView.adapter = adapter.concatAdapter
         recyclerView.setAppBar((requireParentFragment() as ViewPagerFragment).appBarLayout)
         recyclerView.fastScroll(adapter, adapter.itemHeightHelper)
@@ -101,9 +101,12 @@ class AdapterFragment : BaseFragment(null) {
         if (pendingRequest != null) {
             outState.putBundle("pendingRequest", pendingRequest)
         }
+        if (adapter is DetailedFolderAdapter) {
+            (adapter as DetailedFolderAdapter).onSaveInstanceState(outState)
+        }
     }
 
-    private fun createAdapter(): BaseInterface<*> {
+    private fun createAdapter(savedInstanceState: Bundle?): BaseInterface<*> {
         val id = arguments?.getInt("ID", -1)
         val qTitle = getQueueTitle()
         return when (id) {
@@ -112,8 +115,8 @@ class AdapterFragment : BaseFragment(null) {
             R.id.artists -> ArtistAdapter(this)
             R.id.genres -> GenreAdapter(this)
             R.id.dates -> DateAdapter(this)
-            R.id.folders -> DetailedFolderAdapter(this, false)
-            R.id.detailed_folders -> DetailedFolderAdapter(this, true)
+            R.id.folders -> DetailedFolderAdapter(this, false, savedInstanceState)
+            R.id.detailed_folders -> DetailedFolderAdapter(this, true, savedInstanceState)
             R.id.playlists -> PlaylistAdapter(this)
             -1, null -> throw IllegalArgumentException("unset ID value")
             else -> throw IllegalArgumentException("invalid ID value")

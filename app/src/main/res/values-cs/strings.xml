@@ -64,7 +64,6 @@
     <string name="equalizer_not_found">Nebyl nalezen žádný ekvalizér!</string>
     <string name="playlist_favourite">Oblíbené</string>
     <string name="filesystem">Souborový systém</string>
-    <string name="settings_album_round_corner_summary">Povolit zaoblené rohy pro přehrávač</string>
     <string name="settings_experimental_settings">Experimentální</string>
     <string name="settings_category_filters">Filtry</string>
     <plurals name="items">
@@ -214,7 +213,6 @@
     <string name="settings_preference_category_home">Domovská obrazovka</string>
     <string name="seekbar">Seekbar</string>
     <string name="scroll_to_songs">Přejít do skladeb</string>
-    <string name="settings_lyrics_multiline">Zobrazit více řádků textu skladby</string>
     <string name="settings_play_on_launch_summary">Začít hrát hudbu při spuštění aplikace</string>
     <string name="settings_category_full_player">Plný přehrávač</string>
     <string name="deny_images"><![CDATA[Prosím odmítněte \"Fotky a Videa\" povolení]]></string>
@@ -258,7 +256,6 @@
     <string name="settings_library_summary">Správa mediální knihovny</string>
     <string name="settings_color_accuracy_summary">Udělat barevný gradient přesný</string>
     <string name="settings_lyrics_configuration">Konfigurace textu skladby</string>
-    <string name="settings_lyrics_multiline_summary">Považovat všechny řádky text skladby jako za jeden</string>
     <string name="settings_category_misc">Ostatní</string>
     <string name="grant_images"><![CDATA[Prosím povolte \"Fotky a Videa\" povolení]]></string>
     <string name="tab_order_summary">Aplikace ukáže první lištu při spuštění aplikace. Lišta se za rozdělovačem skryje.</string>
@@ -366,7 +363,6 @@
     <string name="settings_translation_auto_word">Automatické animace překladů</string>
     <string name="settings_translation_auto_word_summary">Použít lineární přechod na překladové řádky v synchronizovaném přehrávání textů písní, pokud překlady nemají metadata synchronizace slov</string>
     <string name="cannot_find_file">Tento soubor nelze najít</string>
-    <string name="settings_mp3_index_seeking_summary">Načtěte celý soubor MP3 do paměti, jak je požadováno pro vyhledávání, namísto spoléhání se na potenciálně chybějící hlavičku Xing pro vyhledávání VBR. Pokud je tato funkce vypnuta, bude v případě chybějící hlavičky Xing použito vyhledávání CBR. Správně vytvořený soubor MP3 VBR má hlavičku Xing, proto by tato možnost neměla být téměř ve všech případech potřebná. (K použití je nutné restartovat aplikaci.)</string>
     <string name="enter_msg_for_dev_here">Zde zadejte zprávu pro vývojáře</string>
     <string name="do_not_enter_email_enter_msg">Zadejte zprávu, ne e-mailovou adresu</string>
     <string name="settings_contributors_click">%s (Klikněte pro více!)</string>

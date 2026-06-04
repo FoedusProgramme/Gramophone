@@ -52,7 +52,6 @@
     <string name="settings_player_options">오디오</string>
     <string name="settings_player_options_summary">출력 품질, 재생 동작</string>
     <string name="settings_customization_summary">사용자 정의 옵션 관리</string>
-    <string name="settings_album_round_corner_summary">플레이어 화면에서 앨범 커버 모서리를 둥글게 표시</string>
     <string name="settings_audio">오디오</string>
     <string name="settings_album_round_corner">둥근 앨범 커버</string>
     <string name="settings_title_bold">제목 굵게</string>
@@ -67,7 +66,6 @@
     <string name="settings_color_accuracy_summary">정확한 색상 생성</string>
     <string name="settings_color_accuracy">색상 정확도</string>
     <string name="settings_lyrics_center">가운데 정렬</string>
-    <string name="settings_lyrics_multiline">가사 여러 줄 읽기</string>
     <string name="settings_blacklist">블랙리스트</string>
     <string name="settings_blacklist_folder_summary">지정한 폴더의 음악 제외</string>
     <string name="settings_blacklist_folder">블랙리스트 폴더</string>
@@ -79,7 +77,6 @@
     <string name="dialog_edit_metadata">편집</string>
     <string name="dialog_lyrics">가사</string>
     <string name="delete_failed">삭제 노래 실패: %s</string>
-    <string name="settings_lyrics_multiline_summary">각 동기화 지점 사이에 있는 모든 줄을 하나의 가사 텍스트로 처리</string>
     <string name="settings_play_on_launch">앱을 실행할 때 재생</string>
     <string name="settings_play_on_launch_summary">앱을 실행하면 자동으로 음악 재생</string>
     <string name="album_covers_enhance">개선된 방식으로 앨범 커버 불러오기</string>
@@ -396,14 +393,12 @@
     <string name="offload_enabled_if_supported">항상 켜짐</string>
     <string name="settings_telegram">Telegram</string>
     <string name="settings_replaygain_boost_desc">"\"Boost\"는 장치를 장치에서 장치로 전환하는 경우 높은 볼륨과 동일한 음량을 다른 볼륨으로 출력합니다. (Docec 볼륨이 100 % 가까이 인 경우 부스트는 볼륨을 늘리지 않습니다). 부스트와 함께 음악을 낭비 할 수 있습니다. "</string>
-    <string name="settings_mp3_index_seeking_summary">VBR을 찾아 볼 수있는 잠재적 인 Xing 헤더를 사용하는 대신 검색하는대로 메모리에 대한 모든 파일을 모두 읽으십시오.이 경우 사용 중지되면 CBR이 XE 헤더가없는 경우 사용하는 경우 CER를 참조하십시오. 잘 정상적인 VPR MP3 파일에는 Xing 헤더가 있으며, 헨스는이 거래소에서 거의 모든 경우에 필요합니다. (앱을 다시 시작해야합니다)</string>
     <string name="settings_trim_lyrics_summary">첫 번째 문자 또는 가사 라인의 끝 이후의 공백은 예술적 가치가있을 수 있습니다. 동의하지 않으면이 토글을 켜면 공간 샤알을 자동으로 쉽게 원격으로 만들 수 있습니다.</string>
     <string name="settings_replaygain_drc_desc">클라이핑 팩 (즉, 동적 범위 압축)을 사용하여 클리핑 보호 (권장)로 사용하십시오. 비활성화 된 경우 볼륨이 대폭 줄어옵니다 (볼륨은 동일한 레벨이며 정규화 효과를 파괴하는 경우).</string>
     <string name="settings_replaygain_preamp_desc">Replaygain 태그로 노래의 볼륨을 늘리거나 줄입니다. 높은 가치는 클리핑 방지로 인한 역학을 손실시킬 수 있습니다.</string>
     <string name="settings_pure_dark_summary">앱의 순서가 풀 한 블랙 (모든 블랙에 흑색 호출이 발생할 수 있음) 테마</string>
     <string name="settings_translation_auto_word_summary">변환기에 대한 선형 그라데이션 적용 교환기가 번역을 답변하는 경우 단어를 동기화하는 메타 데이터가 없습니다</string>
     <string name="settings_replaygain_mode_desc">\"Smart\"는 앨범을 동시에 앨범에서 연주하는 채우기만으로 앨범 다이나믹스를 자동으로 보존합니다.</string>
-    <string name="playlist_editing_pref_desc">재생 목록에 노래를 추가 할 수 있습니다 (이동, 제거 또는 제거되지 않음)</string>
     <string name="timer_expiry_eos">수면 타이머는 %s에서 노래 할 때 음악을 일시 중지합니다</string>
     <string name="timer_expiry_end_of_this_song">수면 타이머는이 노래의 끝에 음악을 깨뜨릴 것입니다</string>
     <string name="settings_replaygain_no_rg_amp_desc">시끄러운 노래 용 볼륨 줄이는 것은 태그를 표현하지 않습니다</string>

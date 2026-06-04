@@ -36,6 +36,16 @@
         android:widgetLayout="@layout/preference_switch_widget"
         app:iconSpaceReserved="false" />
 
+    <SeekBarPreference
+        android:defaultValue="34"
+        android:icon="@drawable/ic_font_size"
+        android:key="lyric_text_size"
+        android:layout="@layout/preference_seekbar"
+        app:min="26"
+        android:max="40"
+        android:title="@string/settings_font_size"
+        app:showSeekBarValue="true" />
+
     <SwitchPreferenceCompat
         android:defaultValue="false"
         android:key="status_bar_lyrics"
@@ -51,15 +61,6 @@
         android:layout="@layout/preference_switch"
         android:summary="@string/settings_trim_lyrics_summary"
         android:title="@string/settings_trim_lyrics"
-        android:widgetLayout="@layout/preference_switch_widget"
-        app:iconSpaceReserved="false" />
-
-    <SwitchPreferenceCompat
-        android:defaultValue="false"
-        android:key="lyric_multiline"
-        android:layout="@layout/preference_switch"
-        android:summary="@string/settings_lyrics_multiline_summary"
-        android:title="@string/settings_lyrics_multiline"
         android:widgetLayout="@layout/preference_switch_widget"
         app:iconSpaceReserved="false" />
 

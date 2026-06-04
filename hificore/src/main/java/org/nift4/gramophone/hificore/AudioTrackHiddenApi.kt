@@ -20,6 +20,7 @@ package org.nift4.gramophone.hificore
 import android.annotation.SuppressLint
 import android.media.AudioTrack
 import android.os.Build
+import android.os.Environment
 import androidx.media3.common.util.Log
 
 object AudioTrackHiddenApi {
@@ -50,11 +51,14 @@ object AudioTrackHiddenApi {
      * ban can be lifted again because it's not our fault. If there are no further crashes, it may
      * indicate an incompatibility of `libhificore.so` with the device's firmware.
      */
+    @SuppressLint("PrivateApi")
     fun canLoadLib(): Boolean {
         return !(Build.VERSION.SDK_INT == 33 && Build.BRAND == "TECNO" &&
                 Build.PRODUCT.startsWith("BG6-")) && // Tecno SPARK Go 2024
                 !(Build.VERSION.SDK_INT == 34 && Build.BRAND == "samsung" &&
                         Build.DEVICE == "dm1q") // Samsung Galaxy S23
+                && !(try { Environment::class.java.getMethod("isMemoryDclRestricted")
+            .invoke(null) as Boolean } catch (_: Exception) { false }) // GrapheneOS
     }
 
     @SuppressLint("PrivateApi", "DiscouragedPrivateApi")

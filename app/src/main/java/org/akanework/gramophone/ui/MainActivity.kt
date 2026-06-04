@@ -37,6 +37,7 @@ import android.os.Looper
 import android.provider.MediaStore
 import android.provider.Settings
 import android.view.Choreographer
+import android.view.SearchEvent
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
@@ -85,6 +86,7 @@ import org.akanework.gramophone.logic.ui.BaseActivity
 import org.akanework.gramophone.ui.adapters.PlaylistAdapter
 import org.akanework.gramophone.ui.components.PlayerBottomSheet
 import org.akanework.gramophone.ui.fragments.BaseFragment
+import org.akanework.gramophone.ui.fragments.GeneralSubFragment
 import org.akanework.gramophone.ui.fragments.SearchFragment
 import org.akanework.gramophone.ui.fragments.ViewPagerFragment
 import org.nift4.mediastorecompat.MediaStoreCompat
@@ -167,7 +169,7 @@ class MainActivity : BaseActivity() {
                     ?: throw IllegalStateException("pending delete request is null")
                 pendingDeleteRequest = null
                 CoroutineScope(Dispatchers.Default).launch {
-                    ItemManipulator.continueDeleteFromPendingIntent(this@MainActivity, it.resultCode, req)
+                    ItemManipulator.continueDeleteFromPendingIntent(this@MainActivity, it.resultCode, it.data, req)
                 }
             }
         addToPlaylistIntentSender =
@@ -268,7 +270,9 @@ class MainActivity : BaseActivity() {
             } + getString(R.string.create_playlist)).toTypedArray())
             { _, item ->
                 if (playlists.size == item) {
-                    PlaylistAdapter.playlistNameDialog(this, R.string.create_playlist, "") { name ->
+                    PlaylistAdapter.playlistNameDialog(this,
+                        R.string.create_playlist, "",
+                        { ItemManipulator.getDefaultPlaylistFile(it) }) { name ->
                         addToPlaylist(null, name, listOf(song))
                     }
                     return@setItems
@@ -285,18 +289,18 @@ class MainActivity : BaseActivity() {
             .show()
     }
 
-    fun addToPlaylist(uri: Uri?, name: String?, songs: List<Entry>) {
+    fun addToPlaylist(uri: Uri?, name: File?, songs: List<Entry>) {
         val data = Bundle().apply {
             putParcelableArrayList("Songs", ArrayList(songs))
             putParcelable("Uri", uri)
-            putString("Name", name)
+            putString("Name", name?.path)
         }
         CoroutineScope(Dispatchers.Default).launch {
             val token = if (uri != null) {
                 MediaStoreCompat.needRequestBytesWrite(this@MainActivity, uri)
             } else {
                 MediaStoreCompat.needRequestCreate(this@MainActivity,
-                    ItemManipulator.getDefaultPlaylistFile(name!!).path)
+                    name!!.path)
             }
             if (token != null) {
                 pendingPlaylistRequest = data
@@ -353,8 +357,8 @@ class MainActivity : BaseActivity() {
             Log.e("MainActivity", "error launching intent", e)
             CoroutineScope(Dispatchers.Default).launch {
                 ItemManipulator.continueDeleteFromPendingIntent(
-                    this@MainActivity, RESULT_CANCELED,
-                    bundle
+                    this@MainActivity, RESULT_FIRST_USER,
+                    null, bundle
                 )
             }
         }
@@ -373,7 +377,7 @@ class MainActivity : BaseActivity() {
             val favorite = data.getBoolean("Favorite")
             try {
                 val uri = uriIn ?: ItemManipulator.createPlaylist(this,
-                    ItemManipulator.FAVORITES)
+                    ItemManipulator.getDefaultPlaylistFile(ItemManipulator.FAVORITES))
                 val readback = if (uriIn != null) ItemManipulator.readbackPlaylist(this,
                     uri) else emptyList()
                 val newSongs = if (favorite) {
@@ -418,7 +422,8 @@ class MainActivity : BaseActivity() {
             try {
                 val readback = if (uriIn != null) ItemManipulator.readbackPlaylist(this,
                     uriIn) else emptyList()
-                val uri = uriIn ?: ItemManipulator.createPlaylist(this, name!!)
+                val uri = uriIn ?: ItemManipulator.createPlaylist(this,
+                    File(name!!))
                 ItemManipulator.setPlaylistContent(this, uri, readback + songs,
                     uriIn == null)
             } catch (e: Exception) {
@@ -468,8 +473,17 @@ class MainActivity : BaseActivity() {
 
     private fun doPlayFromIntent(intent: Intent) {
         Log.i("MainActivity", "doPlayFromIntent($intent)")
+        val autoPlayId = intent.extras?.getString(PLAYBACK_AUTO_PLAY_ID) ?: (if
+                (intent.action == "org.akanework.gramophone.action.PLAY_MEDIA_FROM_SUGGESTION")
+                intent.data?.let {
+                    try {
+                        ContentUris.parseId(it)
+                        "MediaStore:${it.lastPathSegment}"
+                    } catch (_: NumberFormatException) {
+                        null
+                    } } else null)
         var willAutoPlayLater = false
-        intent.extras?.getString(PLAYBACK_AUTO_PLAY_ID)?.let { id ->
+        autoPlayId?.let { id ->
             willAutoPlayLater = true
             val pos =
                 intent.extras?.getLong(PLAYBACK_AUTO_PLAY_POSITION, C.TIME_UNSET) ?: C.TIME_UNSET
@@ -507,12 +521,19 @@ class MainActivity : BaseActivity() {
                 val state = intent.getBooleanExtra(FAVORITE_STATE, false)
                 markIsFavoriteStatus(listOf(it), state)
             }
+        if (intent.action == Intent.ACTION_VIEW) {
+            val id = intent.getStringExtra("playlist")?.toLongOrNull()
+            if (id != null) {
+                startFragment(GeneralSubFragment()) {
+                    putString("Id", id.toString())
+                    putInt("Item", R.id.playlist)
+                }
+            }
+        }
         if (intent.action == Intent.ACTION_SEARCH ||
             intent.action == "com.google.android.gms.actions.SEARCH_ACTION") {
             startFragment(SearchFragment()) {
-                Bundle().apply {
-                    putString("query", intent.getStringExtra(SearchManager.QUERY))
-                }
+                putString("query", intent.getStringExtra(SearchManager.QUERY))
             }
         }
         if (intent.action == MediaStore.INTENT_ACTION_MEDIA_SEARCH
@@ -611,11 +632,9 @@ class MainActivity : BaseActivity() {
                 }
             } else {
                 startFragment(SearchFragment()) {
-                    Bundle().apply {
-                        putString("query", intent.getStringExtra(SearchManager.QUERY))
-                        // TODO: support sub queries or at least focus to use a different type of
-                        //  search fragment.
-                    }
+                    putString("query", mainQuery)
+                    // TODO: support sub queries or at least focus to use a different type of
+                    //  search fragment.
                 }
             }
         }
@@ -649,6 +668,15 @@ class MainActivity : BaseActivity() {
                 dispose()
             }
         }
+    }
+
+    override fun onSearchRequested(): Boolean {
+        startFragment(SearchFragment())
+        return true
+    }
+
+    override fun onSearchRequested(searchEvent: SearchEvent?): Boolean {
+        return onSearchRequested()
     }
 
     // https://twitter.com/Piwai/status/1529510076196630528

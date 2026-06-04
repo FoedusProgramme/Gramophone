@@ -1,5 +1,6 @@
 package uk.akane.libphonograph.manipulator
 
+import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
 import android.os.Parcelable
@@ -7,10 +8,13 @@ import android.util.SparseArray
 import android.util.Xml
 import androidx.core.util.keyIterator
 import androidx.media3.common.MediaItem
+import kotlinx.coroutines.flow.Flow
 import kotlinx.parcelize.Parcelize
 import okio.Path.Companion.toOkioPath
 import org.akanework.gramophone.BuildConfig
 import org.akanework.gramophone.logic.getFile
+import org.akanework.gramophone.logic.utils.flows.IncrementalMap
+import org.akanework.gramophone.logic.utils.flows.forKey
 import org.nift4.mediastorecompat.MediaStoreCompat
 import org.xmlpull.v1.XmlPullParser
 import java.io.File
@@ -115,7 +119,9 @@ object PlaylistSerializer {
     private fun write(context: Context, format: PlaylistFormat, outFile: File, uri: Uri, songs: List<Entry>) {
         val parent = outFile.parentFile
             ?: throw NullPointerException("parentFile of playlist is null")
-        val os = MediaStoreCompat.openOutputStream(context, uri, "wt")!!
+        val os = if (uri.scheme == ContentResolver.SCHEME_FILE)
+            outFile.outputStream()
+        else MediaStoreCompat.openOutputStream(context, uri, "wt")!!
         when (format) {
             PlaylistFormat.M3u -> {
                 val out = "#EXTM3U\n" + songs.joinToString("\n") {
@@ -205,6 +211,8 @@ object PlaylistSerializer {
         }
         fun resolveMediaItem(pathMap: Map<String, MediaItem>?) =
             pathMap!![file.absolutePath]
+        fun resolveMediaItem2(pathMapFlow: Flow<IncrementalMap<String, MediaItem>>) =
+            pathMapFlow.forKey(file.absolutePath)
         fun copyFromMediaItem(song: MediaItem) = copy(
             title = song.mediaMetadata.title?.toString(),
             durationSeconds = song.mediaMetadata.durationMs?.div(1000L),

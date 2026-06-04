@@ -17,6 +17,9 @@
         android:title="@string/rename"
         android:visible="false" />
     <item
+        android:id="@+id/add_to_playlist"
+        android:title="@string/add_to_playlist" />
+    <item
         android:id="@+id/details"
         android:title="@string/details" />
     <item
@@ -25,7 +28,4 @@
     <item
         android:id="@+id/share"
         android:title="@string/share" />
-    <item
-        android:id="@+id/add_to_playlist"
-        android:title="@string/add_to_playlist" />
 </menu>

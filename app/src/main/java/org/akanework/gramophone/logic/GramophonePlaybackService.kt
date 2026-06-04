@@ -45,6 +45,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.IntentCompat
+import androidx.core.content.edit
 import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.BundleListRetriever
@@ -374,8 +375,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                     DefaultDataSource.Factory(this),
                     GramophoneExtractorsFactory().also {
                         it.setConstantBitrateSeekingEnabled(true)
-                        if (prefs.getBooleanStrict("mp3_index_seeking", false))
-                            it.setMp3ExtractorFlags(Mp3Extractor.FLAG_ENABLE_INDEX_SEEKING)
+                        it.setMp3ExtractorFlags(Mp3Extractor.FLAG_ENABLE_INDEX_SEEKING)
                     })
             )
                 .setWakeMode(C.WAKE_MODE_LOCAL)
@@ -556,6 +556,8 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                 if (items != null) {
                     if (endedWorkaroundPlayer?.nextShuffleOrder != null)
                         throw IllegalStateException("shuffleFactory was found orphaned")
+                    if (lastPlayedManager.allowSavingState)
+                        return@restore // media items were already applied to player
                     endedWorkaroundPlayer?.nextShuffleOrder = factory.toFactory()
                     val list = runBlocking { mapMediaItemsForFavorites(items.mediaItems) }
                     try {
@@ -583,7 +585,6 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                         handler.post { mediaSession?.player?.prepare() }
                     }
                 }
-                lastPlayedManager.allowSavingState = true
             }
         }
         scope.launch {
@@ -668,7 +669,8 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
             if (token == null) {
                 try {
                     val uri = uriIn ?: ItemManipulator.createPlaylist(
-                        this@GramophonePlaybackService, ItemManipulator.FAVORITES)
+                        this@GramophonePlaybackService, ItemManipulator
+                            .getDefaultPlaylistFile(ItemManipulator.FAVORITES))
                     val readback = if (uriIn != null) ItemManipulator.readbackPlaylist(
                         this@GramophonePlaybackService, uri) else emptyList()
                     val newSongs = if (rating.isHeart) {
@@ -786,7 +788,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
             }
         }
         if (controller.connectionHints.getBoolean("PrepareWhenReady", false) &&
-            this.controller?.currentTimeline?.isEmpty == false
+            this.mediaSession?.player?.currentTimeline?.isEmpty == false
         ) {
             handler.post { this.controller?.prepare() }
         }
@@ -924,8 +926,21 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                         timerPauseOnEnd = pauseOnEnd
                         timerDuration = SystemClock.elapsedRealtime() + duration
                     } else {
-                        timerDuration = null
+                        val currentPauseOnEnd = this.endedWorkaroundPlayer!!.exoPlayer.pauseAtEndOfMediaItems
                         this.endedWorkaroundPlayer!!.exoPlayer.pauseAtEndOfMediaItems = pauseOnEnd
+                        if (timerDuration != null) {
+                            timerDuration = null
+                        } else if (pauseOnEnd != currentPauseOnEnd) {
+                            mediaSession!!.broadcastCustomCommand(
+                                SessionCommand(SERVICE_TIMER_CHANGED, Bundle.EMPTY),
+                                Bundle.EMPTY
+                            )
+                        }
+                    }
+                    if (duration > 0 || pauseOnEnd) {
+                        prefs.edit {
+                            putBoolean("lastTimerEos", pauseOnEnd)
+                        }
                     }
                     SessionResult(SessionResult.RESULT_SUCCESS)
                 }
@@ -1164,9 +1179,8 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         val mediaItem = controller?.currentMediaItem
         lyricsFetcher.launch {
             val trim = prefs.getBoolean("trim_lyrics", true)
-            val multiLine = prefs.getBoolean("lyric_multiline", false)
             val options = LrcParserOptions(
-                trim = trim, multiLine = multiLine,
+                trim = trim, multiLine = true,
                 errorText = getString(R.string.failed_to_parse_lyric)
             )
             // TODO: allow multiple lyric files/tags combining them for translations...maybe?
@@ -1315,16 +1329,19 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
     }
 
     override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
-        bitrate = null
-        bitrateFetcher.launch {
-            bitrate = mediaItem?.getBitrate() // TODO subtract cover size
-            this@GramophonePlaybackService.mediaSession?.broadcastCustomCommand(
-                SessionCommand(SERVICE_GET_AUDIO_FORMAT, Bundle.EMPTY),
-                Bundle.EMPTY
-            )
+        if (reason != Player.MEDIA_ITEM_TRANSITION_REASON_REPEAT) {
+            bitrate = null
+            bitrateFetcher.launch {
+                bitrate = mediaItem?.getBitrate() // TODO subtract cover size
+                this@GramophonePlaybackService.mediaSession?.broadcastCustomCommand(
+                    SessionCommand(SERVICE_GET_AUDIO_FORMAT, Bundle.EMPTY),
+                    Bundle.EMPTY
+                )
+            }
+            // TODO: re-enable this when https://github.com/androidx/media/issues/3248 is fixed
+            //lyrics = null
+            //scheduleSendingLyrics(true)
         }
-        lyrics = null
-        scheduleSendingLyrics(true)
 
         // reshuffle queue when shuffle AND repeat all are enabled
         val player = endedWorkaroundPlayer
@@ -1456,6 +1473,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
 
     override fun onTimelineChanged(timeline: Timeline, reason: @Player.TimelineChangeReason Int) {
         if (reason == Player.TIMELINE_CHANGE_REASON_PLAYLIST_CHANGED) {
+            lastPlayedManager.allowSavingState = true
             refreshMediaButtonCustomLayout()
             if (!computeRgMode(false))
                 throw IllegalStateException("unreachable, mode failed with force=false")

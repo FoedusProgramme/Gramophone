@@ -57,7 +57,7 @@ class LifecyclePauseManager(
 ) : PauseManager {
     @OptIn(ExperimentalCoroutinesApi::class)
     override val isPaused = bypassFlow.flatMapLatest {
-        if (it || true) flowOf(false) else
+        if (it) flowOf(false) else
             source.lifecycle.currentStateFlow.map { !it.isAtLeast(minimumState) }
     }
         .stateIn(scope, WhileSubscribed(), !source.lifecycle.currentState.isAtLeast(minimumState))

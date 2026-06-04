@@ -28,8 +28,8 @@ import android.provider.MediaStore
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.result.IntentSenderRequest
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.app.DialogCompat
 import androidx.core.view.ViewCompat
@@ -43,17 +43,21 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.akanework.gramophone.R
-import org.akanework.gramophone.logic.utils.Flags
-import org.akanework.gramophone.ui.MainActivity
+import org.akanework.gramophone.logic.gramophoneApplication
+import org.akanework.gramophone.ui.PlaylistPickerActivity
 import org.akanework.gramophone.ui.fragments.AdapterFragment
 import org.akanework.gramophone.ui.fragments.GeneralSubFragment
 import org.nift4.mediastorecompat.MediaStoreCompat
-import org.nift4.mediastorecompat.StorageManagerCompat
 import uk.akane.libphonograph.dynamicitem.Favorite
 import uk.akane.libphonograph.dynamicitem.RecentlyAdded
+import uk.akane.libphonograph.items.Item
 import uk.akane.libphonograph.items.Playlist
 import uk.akane.libphonograph.manipulator.ItemManipulator
 import java.io.File
@@ -62,16 +66,28 @@ import java.io.File
  * [PlaylistAdapter] is an adapter for displaying playlists.
  */
 class PlaylistAdapter(
-    fragment: AdapterFragment,
+    private val fragment: AdapterFragment?,
+    isSubFragment: Int? = null,
+    fallbackContext: AppCompatActivity? = null,
 ) : BaseAdapter<Playlist>
     (
     fragment,
-    liveData = (fragment.requireActivity() as MainActivity).reader.playlistListFlow,
+    liveData = (fragment?.requireActivity() ?: fallbackContext)!!
+        .gramophoneApplication.reader.playlistListFlow.let {
+            if (isSubFragment == R.id.songs)
+                it.map { playlistsList ->
+                    playlistsList.filter { p -> p.id != null && p.path != null }
+                }
+            else it
+        },
     sortHelper = StorePlaylistHelper,
     naturalOrderHelper = null,
     initialSortType = Sorter.Type.ByTitleAscending,
     pluralStr = R.plurals.items,
-    defaultLayoutType = LayoutType.LIST
+    defaultLayoutType = LayoutType.LIST,
+    isSubFragment = isSubFragment,
+    hasMenu = fragment != null,
+    fallbackContext = fallbackContext
 ), AdapterFragment.RequestAdapter {
 
     init {
@@ -91,6 +107,16 @@ class PlaylistAdapter(
         }
     }
 
+    override fun getPinnedOrder(item: Playlist): Int {
+        return when (item) {
+            is RecentlyAdded -> 1
+            // is RecentlyPlayed -> 2
+            // is MostPlayed -> 3
+            is Favorite -> 4
+            else -> 999
+        }
+    }
+
     override fun coverOf(item: Playlist): Uri? {
         return if (item.title != null) super.coverOf(item) else
             Uri.Builder()
@@ -106,6 +132,9 @@ class PlaylistAdapter(
     }
 
     override fun onClick(item: Playlist, position: Int) {
+        if (fragment == null) {
+            return (context as PlaylistPickerActivity).onSelected(item)
+        }
         mainActivity.startFragment(GeneralSubFragment()) {
             putString("Class", item.javaClass.name) // TODO kinda stupid
             putString("Id", item.id?.toString())
@@ -115,8 +144,8 @@ class PlaylistAdapter(
 
     override fun onMenu(item: Playlist, popupMenu: PopupMenu) {
         popupMenu.inflate(R.menu.more_menu)
-        val canRename = Flags.PLAYLIST_EDITING!! && item.title != null
-        val canDelete = Flags.PLAYLIST_EDITING!! && item.id != null
+        val canRename = item.title != null
+        val canDelete = item.id != null
         popupMenu.menu.iterator().forEach {
             it.isVisible = it.itemId == R.id.play_next || it.itemId == R.id.add_to_queue
                     || (canRename && it.itemId == R.id.rename)
@@ -163,10 +192,10 @@ class PlaylistAdapter(
                                             else item.title
                                         )
                                     )
-                                    .setPositiveButton(R.string.yes) { _, _ ->
+                                    .setPositiveButton(R.string.delete) { _, _ ->
                                         res.invoke()
                                     }
-                                    .setNegativeButton(R.string.no) { _, _ -> }
+                                    .setNegativeButton(android.R.string.cancel) { _, _ -> }
                                     .show()
                             }
                         }
@@ -185,26 +214,27 @@ class PlaylistAdapter(
                     playlistNameDialog(
                         context,
                         R.string.rename_playlist,
-                        item.title ?: ""
-                    ) { name ->
+                        item.title ?: "",
+                        { name -> item.path!!.resolveSibling(
+                            if (item.path.extension != "") "$name.${item.path.extension}"
+                            else name) }
+                    ) { path ->
                         val id = item.id!!
                         val uri = ContentUris.withAppendedId(
                             @Suppress("deprecation") MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI,
                             id
                         )
-                        val path = item.path!!.resolveSibling(if (item.path.extension != "")
-                            "$name.${item.path.extension}" else name).absolutePath
                         val data = Bundle().apply {
                             putLong("Id", id)
-                            putString("Path", path)
+                            putString("Path", path.absolutePath)
                         }
                         CoroutineScope(Dispatchers.Default).launch {
                             val token = MediaStoreCompat.needRequestEfficientMove(context, uri,
-                                path)
+                                path.parent ?: "")
                             if (token != null) {
                                 val pendingIntent = MediaStoreCompat.createWriteRequest(
                                     context, listOf(token))
-                                (fragment as AdapterFragment).startRequest(
+                                fragment!!.startRequest(
                                     pendingIntent.intentSender,
                                     data
                                 )
@@ -256,6 +286,9 @@ class PlaylistAdapter(
     }
 
     override fun createDecorAdapter(): BaseDecorAdapter<out BaseAdapter<Playlist>> {
+        if (fragment == null) {
+            return super.createDecorAdapter()
+        }
         return PlaylistDecorAdapter(this)
     }
 
@@ -269,13 +302,13 @@ class PlaylistAdapter(
             payloads: List<Any?>
         ) {
             super.onBindViewHolder(holder, position, payloads)
-            if (!Flags.PLAYLIST_EDITING!!) return
             holder.createPlaylist.visibility = View.VISIBLE
             holder.createPlaylist.setOnClickListener { _ ->
-                playlistNameDialog(context, R.string.create_playlist, "") { name ->
+                playlistNameDialog(context, R.string.create_playlist, "",
+                    { ItemManipulator.getDefaultPlaylistFile(it) }) { path ->
                     ioScope.launch {
                         try {
-                            val uri = ItemManipulator.createPlaylist(context, name)
+                            val uri = ItemManipulator.createPlaylist(context, path)
                             ItemManipulator.setPlaylistContent(context, uri, emptyList(),
                                 true)
                         } catch (e: Exception) {
@@ -309,7 +342,8 @@ class PlaylistAdapter(
             context: Context,
             title: Int,
             initialValue: String,
-            then: (String) -> Unit
+            nameToFile: (String) -> File,
+            then: (File) -> Unit
         ) {
             val d = MaterialAlertDialogBuilder(context)
                 .setTitle(title)
@@ -320,7 +354,7 @@ class PlaylistAdapter(
                         R.id.editText
                     ) as TextInputEditText
                     val name = et.editableText.toString()
-                    then(name)
+                    then(nameToFile(name))
                 }
                 .setNegativeButton(android.R.string.cancel) { _, _ -> }
                 .show()
@@ -336,16 +370,36 @@ class PlaylistAdapter(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 d.window!!.decorView.measuredHeight
             )
+            var job: Job? = null
             et.addTextChangedListener(afterTextChanged = {
                 val tmp = et.editableText.toString()
                 val hasForbidden =
                     tmp.any { it in "/\\:*?\"<>|" || it.code <= 0x1F || it.code == 0x7F }
+                job?.cancel()
                 if (hasForbidden) {
                     inL.error = context.getString(R.string.forbidden_symbol_error)
                 } else {
                     inL.error = null
                 }
-                b.isEnabled = !tmp.isBlank() && !hasForbidden
+                b.isEnabled = false
+                if (!hasForbidden) {
+                    lateinit var myJob: Job
+                    myJob = CoroutineScope(Dispatchers.Default).launch {
+                        val exists = nameToFile(tmp).exists()
+                        withContext(Dispatchers.Main) {
+                            if (job == myJob) {
+                                job = null
+                                if (exists) {
+                                    inL.error = context.getString(R.string.another_with_name)
+                                } else {
+                                    inL.error = null
+                                }
+                                b.isEnabled = !exists
+                            }
+                        }
+                    }
+                    job = myJob
+                }
             })
             et.requestFocus()
             et.post {

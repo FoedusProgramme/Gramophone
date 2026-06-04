@@ -413,11 +413,11 @@ class Sorter<T>(
             }
 
             Type.NaturalOrder -> {
-                if (rawOrderExposed == sortType) {
+                (if (rawOrderExposed == sortType) {
                     pos
                 } else {
                     naturalOrderHelper!!.lookup(item)
-                }.toString()
+                } + 1).toString()
             }
 
             Type.None -> null

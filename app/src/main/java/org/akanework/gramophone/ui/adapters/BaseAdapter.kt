@@ -18,6 +18,8 @@
 package org.akanework.gramophone.ui.adapters
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Context
 import android.content.res.Configuration
 import android.net.Uri
 import android.view.LayoutInflater
@@ -25,6 +27,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.doOnLayout
 import androidx.core.view.updateLayoutParams
@@ -39,6 +42,7 @@ import coil3.load
 import coil3.request.crossfade
 import coil3.request.error
 import com.google.android.material.button.MaterialButton
+import com.google.common.collect.Comparators
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -73,7 +77,7 @@ import uk.akane.libphonograph.items.Item
 
 @OptIn(ExperimentalCoroutinesApi::class)
 abstract class BaseAdapter<T : Any>(
-    protected val fragment: Fragment,
+    private val fragment: Fragment?,
     liveData: Flow<List<T>?>,
     sortHelper: Sorter.Helper<T>,
     naturalOrderHelper: Sorter.NaturalOrderHelper<T>?,
@@ -83,16 +87,18 @@ abstract class BaseAdapter<T : Any>(
     val isSubFragment: Int? = null,
     private val rawOrderExposed: Sorter.Type? = null,
     private val allowDiffUtils: Boolean = false,
-    private val canSort: Boolean = true
+    private val canSort: Boolean = true,
+    private val hasMenu: Boolean = true,
+    private val fallbackContext: AppCompatActivity? = null,
 ) : AdapterFragment.BaseInterface<BaseAdapter.ViewHolder>(), PopupTextProvider, ItemHeightHelper {
 
     override val canChangeLayout = true
-    override val context = fragment.requireContext()
+    override val context = fragment?.requireContext() ?: fallbackContext!!
     protected val liveDataAgent = MutableStateFlow(liveData)
     protected inline val mainActivity
         get() = context as MainActivity
     override val layoutInflater: LayoutInflater
-        get() = fragment.layoutInflater
+        get() = fragment?.layoutInflater ?: LayoutInflater.from(fallbackContext)
     private val listHeight = context.resources.getDimensionPixelSize(R.dimen.list_height)
     private val largerListHeight =
         context.resources.getDimensionPixelSize(R.dimen.larger_list_height)
@@ -114,7 +120,7 @@ abstract class BaseAdapter<T : Any>(
     protected var recyclerView: MyRecyclerView? = null
         private set
 
-    private val prefs = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
+    protected val prefs = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
 
     override var layoutType: LayoutType? = null
         @SuppressLint("NotifyDataSetChanged")
@@ -143,6 +149,8 @@ abstract class BaseAdapter<T : Any>(
                         sortWith { o1, o2 ->
                             if (isPinned(o1) && !isPinned(o2)) -1
                             else if (!isPinned(o1) && isPinned(o2)) 1
+                            else if (isPinned(o1) && isPinned(o2))
+                                compareBy<T> { getPinnedOrder(it) }.compare(o1, o2)
                             else cmp.compare(o1, o2)
                         }
                     }
@@ -211,7 +219,8 @@ abstract class BaseAdapter<T : Any>(
                     recyclerView?.postOnAnimation { reportFullyDrawn() }
                 }
             }
-        repeatPausingWithLifecycle(fragment.viewLifecycleOwner, Dispatchers.Default) {
+        repeatPausingWithLifecycle(fragment?.viewLifecycleOwner ?: fallbackContext!!,
+            Dispatchers.Default) {
             flow.collectLatest {
                 val old = list
                 if (old === it) {
@@ -340,11 +349,13 @@ abstract class BaseAdapter<T : Any>(
                 }
             }
             holder.trackCount!!.text = trackCountOf(item)
-            holder.itemView.setOnLongClickListener {
-                val popupMenu = PopupMenu(it.context, it)
-                onMenu(item, popupMenu)
-                popupMenu.show()
-                true
+            if (hasMenu) {
+                holder.itemView.setOnLongClickListener {
+                    val popupMenu = PopupMenu(it.context, it)
+                    onMenu(item, popupMenu)
+                    popupMenu.show()
+                    true
+                }
             }
         }
         holder.title.text = titleOf(item) ?: virtualTitleOf(item)
@@ -357,10 +368,14 @@ abstract class BaseAdapter<T : Any>(
         holder.itemView.setOnClickListener {
             onClick(item, holder.bindingAdapterPosition)
         }
-        holder.moreButton?.setOnClickListener {
-            val popupMenu = PopupMenu(it.context, it)
-            onMenu(item, popupMenu)
-            popupMenu.show()
+        if (hasMenu) {
+            holder.moreButton?.setOnClickListener {
+                val popupMenu = PopupMenu(it.context, it)
+                onMenu(item, popupMenu)
+                popupMenu.show()
+            }
+        } else {
+            holder.moreButton?.visibility = View.GONE
         }
     }
 
@@ -450,6 +465,9 @@ abstract class BaseAdapter<T : Any>(
     }
 
     protected abstract fun virtualTitleOf(item: T): String
+    protected open fun getPinnedOrder(item: T): Int {
+        return 0
+    }
     private fun subTitleOf(item: T): String {
         return if (sorter.sortingHelper.canGetArtist())
             sorter.sortingHelper.getArtist(item) ?: context.getString(R.string.unknown_artist)

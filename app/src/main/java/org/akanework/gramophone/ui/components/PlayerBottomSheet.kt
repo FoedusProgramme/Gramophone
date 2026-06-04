@@ -46,6 +46,10 @@ import androidx.preference.PreferenceManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.google.android.material.motion.MaterialBottomContainerBackHelper
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.akanework.gramophone.BuildConfig
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.clone
@@ -76,7 +80,6 @@ class PlayerBottomSheet private constructor(
 
     private val activity
         get() = context as MainActivity
-    private val prefs = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
     private val lifecycleOwner: LifecycleOwner
         get() = activity
     private val handler = Handler(Looper.getMainLooper())
@@ -112,17 +115,19 @@ class PlayerBottomSheet private constructor(
         previewPlayer = findViewById(R.id.preview_player)
         fullPlayer = findViewById(R.id.full_player)
 
-        setOnClickListener {
-            if (standardBottomSheetBehavior!!.state == BottomSheetBehavior.STATE_COLLAPSED) {
-                standardBottomSheetBehavior!!.state = BottomSheetBehavior.STATE_EXPANDED
-            }
-        }
+        setOnClickListener { open() }
 
         activity.controllerViewModel.addRecreationalPlayerListener(activity.lifecycle, this) {
             onMediaItemTransition(
                 instance?.currentMediaItem,
                 Player.MEDIA_ITEM_TRANSITION_REASON_PLAYLIST_CHANGED
             )
+        }
+    }
+
+    fun open() {
+        if (standardBottomSheetBehavior!!.state == BottomSheetBehavior.STATE_COLLAPSED) {
+            standardBottomSheetBehavior!!.state = BottomSheetBehavior.STATE_EXPANDED
         }
     }
 
@@ -346,18 +351,27 @@ class PlayerBottomSheet private constructor(
         mediaItem: MediaItem?,
         reason: Int,
     ) {
-        var newState = standardBottomSheetBehavior?.state
-        if ((instance?.mediaItemCount ?: 0) > 0 && visible) {
-            if (newState != BottomSheetBehavior.STATE_EXPANDED) {
-                newState = BottomSheetBehavior.STATE_COLLAPSED
+        val shouldBeHidden = (instance?.mediaItemCount ?: 0) <= 0 || !visible
+        CoroutineScope(Dispatchers.Main).launch {
+            while (standardBottomSheetBehavior?.state == BottomSheetBehavior.STATE_SETTLING) {
+                delay(100)
             }
-        } else {
-            newState = BottomSheetBehavior.STATE_HIDDEN
-        }
-        handler.post {
-            // if we are destroyed after onMediaItemTransition but before this runs,
-            // standardBottomSheetBehavior will be null
-            standardBottomSheetBehavior?.state = newState
+            doOnLayout {
+                val state = standardBottomSheetBehavior?.state
+                val newState = if (!shouldBeHidden) {
+                    if (state != BottomSheetBehavior.STATE_EXPANDED
+                        && state != BottomSheetBehavior.STATE_COLLAPSED) {
+                        BottomSheetBehavior.STATE_COLLAPSED
+                    } else null
+                } else {
+                    BottomSheetBehavior.STATE_HIDDEN
+                }
+                // if we are destroyed after onMediaItemTransition but before this runs,
+                // standardBottomSheetBehavior will be null
+                if (newState != null) {
+                    standardBottomSheetBehavior?.state = newState
+                }
+            }
         }
     }
 

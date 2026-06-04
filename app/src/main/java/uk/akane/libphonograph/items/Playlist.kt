@@ -55,7 +55,7 @@ internal data class RawPlaylist(
     val path: File?,
     val dateAdded: Long?,
     val dateModified: Long?,
-    val entries: List<PlaylistSerializer.Entry?>?,
+    val entries: List<PlaylistSerializer.Entry>?,
 ) {
     // pathMap may be null if and only if all playlists are empty
     fun toPlaylist(pathMap: Map<String, MediaItem>?): Playlist? {

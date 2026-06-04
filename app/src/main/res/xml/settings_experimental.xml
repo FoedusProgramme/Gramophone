@@ -46,20 +46,11 @@
             app:iconSpaceReserved="false" />
 
         <SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="lyric_ui"
+            android:defaultValue="true"
+            android:key="lyric_ui_v2"
             android:layout="@layout/preference_switch"
             android:summary="@string/settings_lyrics_ui_summary"
             android:title="@string/settings_lyrics_ui"
-            android:widgetLayout="@layout/preference_switch_widget"
-            app:iconSpaceReserved="false" />
-
-        <SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="playlist_editing"
-            android:layout="@layout/preference_switch"
-            android:summary="@string/playlist_editing_pref_desc"
-            android:title="@string/add_to_playlist"
             android:widgetLayout="@layout/preference_switch_widget"
             app:iconSpaceReserved="false" />
 

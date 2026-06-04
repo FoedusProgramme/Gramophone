@@ -123,7 +123,6 @@
     </plurals>
     <string name="delete_failed">پاک کردن آهنگ شکست خورد: %s</string>
     <string name="details">ریزگان</string>
-    <string name="settings_album_round_corner_summary">به کار انداختن گوشۀ گرد در پخش کنندۀ کامل</string>
     <string name="settings_player_ui_summary">رابط کاربری پخش‌کننده، ترانه‌ها</string>
     <string name="dialog_genre">سبک</string>
     <string name="compact_list">فهرست (جمع و جور)</string>
@@ -141,8 +140,6 @@
     <string name="unknown_playlist">فهرست پخش ناشناخته</string>
     <string name="settings_lyrics_center_summary">استغاده از متن ترانۀ وسطچین</string>
     <string name="dialog_year">سال</string>
-    <string name="settings_lyrics_multiline">خواندن ترانه‌های چند خطی</string>
-    <string name="settings_lyrics_multiline_summary">با همۀ خط‌های بین نقاط همگام همچون یک متن ترانه رفتار شود</string>
     <string name="sort_by_release_date">تاریخ انتشار</string>
     <string name="album_covers_enhance">بارگذاری بهبود یافتهٔ جلد آلبوم</string>
     <string name="share">هم‌رسانی</string>
@@ -389,8 +386,6 @@
     <string name="spk_encoding_pcm_16bit_offload">تخلیۀ ۱۶-بیت PCM</string>
     <string name="spk_encoding_pcm_24bit_offload">تخلیۀ ۲۴-بیت (۸.۲۴) PCM</string>
     <string name="cannot_find_file">نمی‌توان این پرونده را پیدا کرد</string>
-    <string name="settings_mp3_index_seeking">جویش فهرست MP3</string>
-    <string name="settings_mp3_index_seeking_summary">خواندن تمامی پرونده MP3 به حافظه لازم برای جویش، بحای اتکا به سری Xing بالقوه گم شده برای جویش VBR. اگر این از کار افتاده باشد، جویش CBR اگر سری Xing گم شده باشد استفاده می‌شود. یک پرونده MP3 خوش ساختع VBR یک سری Xing دارد، پس این گزینه در اکثر موارد نباید مورد نیاز باشد. (نیاز به ازسرگیری برنامه برای اعمال دارد)</string>
     <string name="create_playlist">ایجاد فهرست پخش…</string>
     <string name="refreshing_wait">درحال بازخوانی، لطفا صبر کنید…</string>
     <string name="still_refreshing">درحال بازخوانی، گام %1$d/%2$d: %3$s</string>
@@ -408,7 +403,6 @@
     <string name="refresh_did_you_know">گرامافون در هر بار شروع برنامه، لیست آهنگ‌های به‌روز شده را درخواست می‌کند و در حالی که گرامافون در حال اجرا است، رسانه‌های جدید را نیز به‌طور خودکار شناسایی می‌کند. دکمه «بازخوانی» رسانه‌ها را در گرامافون بارگیری مجدد نمی‌کند، در عوض، از سیستم شما می‌خواهد که تمام فایل‌ها را از تمام دستگاه‌های ذخیره‌سازی دائمی متصل دوباره اسکن کند (به همین دلیل است که مدتی طول می‌کشد). این یعنی هرگز نیازی به استفاده از این ویژگی نخواهید داشت، مگر این‌که سیستم یا برنامه‌های دیگر شما دچار نقص شوند.\n\nآیا برخی از آهنگ‌ها را از دست داده‌اید؟ حتماً «تنظیمات &gt; رفتار» را برای پالایۀ کمینۀ مدت زمان و لیست سیاه پوشه بررسی کنید و تأیید کنید که این تنظیمات روی مقدار مورد انتظار تنظیم شده‌اند. برای دلایل احتمالی بیشتر، لطفا سوالات پرتکرار ما را بررسی کنید.</string>
     <string name="delete_failed_playlist">پاک کردن فهرست پخش شکست خورد: %s</string>
     <string name="rename">تغییر نام</string>
-    <string name="playlist_editing_pref_desc">امکان افزودن آهنگ‌ها به لیست‌های پخش (جابه‌جایی/حذف هنوز پیاده‌سازی نشده است)</string>
     <string name="no_app_found">هیچ برنامه‌ای پیدا نشد که بتواند این کار را انجام دهد</string>
     <string name="contributors_nift4">نگه‌دارنده / توسعه‌دهندۀ راهبر</string>
     <string name="contributors_123duo3">طراح راهبر</string>

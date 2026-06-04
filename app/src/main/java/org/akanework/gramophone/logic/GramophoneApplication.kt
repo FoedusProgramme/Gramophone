@@ -23,6 +23,7 @@ import android.app.NotificationManager
 import android.content.ContentUris
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Bitmap
 import android.os.Build
 import android.os.Debug
 import android.os.StrictMode
@@ -50,7 +51,9 @@ import coil3.fetch.Fetcher
 import coil3.fetch.ImageFetchResult
 import coil3.fetch.SourceFetchResult
 import coil3.request.NullRequestDataException
+import coil3.request.allowHardware
 import coil3.size.pxOrElse
+import coil3.toBitmap
 import coil3.toCoilUri
 import coil3.util.Logger
 import kotlinx.coroutines.CoroutineScope
@@ -93,7 +96,7 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
     init {
         @SuppressLint("DefaultUncaughtExceptionDelegation")
         Thread.setDefaultUncaughtExceptionHandler(this)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && Build.MODEL != "robolectric") {
             HiddenApiBypass.setHiddenApiExemptions("")
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             LSPass.setHiddenApiExemptions("")
@@ -107,6 +110,7 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
 
     val minSongLengthSecondsFlow = MutableSharedFlow<Long>(replay = 1)
     val blackListSetFlow = MutableSharedFlow<Set<String>>(replay = 1)
+    val whiteListSetFlow = MutableSharedFlow<Set<String>>(replay = 1)
     val shouldUseEnhancedCoverReadingFlow = if (hasScopedStorageWithMediaTypes()) null else
         MutableSharedFlow<Boolean?>(replay = 1)
     val recentlyAddedFilterSecondFlow = MutableStateFlow(1_209_600L)
@@ -238,12 +242,12 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
             })
         }
         uacManager = UacManager(this)
-        Flags.PLAYLIST_EDITING = prefs.getBooleanStrict("playlist_editing", false)
         reader = FlowReader(
             this,
             if (BuildConfig.DISABLE_MEDIA_STORE_FILTER) MutableStateFlow(0) else
                 minSongLengthSecondsFlow,
             blackListSetFlow,
+            whiteListSetFlow,
             if (hasScopedStorageWithMediaTypes()) MutableStateFlow(null) else
                 shouldUseEnhancedCoverReadingFlow!!,
             recentlyAddedFilterSecondFlow,
@@ -291,6 +295,9 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
             if (key == null || key == "folderFilter") {
                 blackListSetFlow.emit(prefs.getStringSet("folderFilter", setOf()) ?: setOf())
             }
+            if (key == null || key == "folderAllow") {
+                whiteListSetFlow.emit(prefs.getStringSet("folderAllow", setOf()) ?: setOf())
+            }
             if ((key == null || key == "album_covers") && !hasScopedStorageWithMediaTypes()) {
                 shouldUseEnhancedCoverReadingFlow!!.emit(prefs.getBoolean("album_covers", true))
             }
@@ -327,6 +334,10 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
                             null
                         } else null
                         if (bmp != null) {
+                            // This would crash while drawing if we don't catch it here
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
+                                bmp.config == Bitmap.Config.HARDWARE && !options.allowHardware)
+                                throw IllegalStateException("Got hardware bitmap unexpectedly")
                             ImageFetchResult(
                                 bmp.asImage(), true, DataSource.DISK
                             )
@@ -404,7 +415,8 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
                             // Let's keep the log readable and ignore normal events' stack traces.
                             if (throwable != null && throwable !is NullRequestDataException
                                 && (throwable !is IOException
-                                        || throwable.message != "No album art found")
+                                        || throwable.message != "No album art found"
+                                        && throwable.message != "No thumbnails in top-level directories")
                             ) {
                                 println(Log.getThrowableString(throwable)!!)
                             }

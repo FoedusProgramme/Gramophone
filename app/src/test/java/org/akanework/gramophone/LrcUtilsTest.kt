@@ -447,9 +447,23 @@ class LrcUtilsTest {
     }
 
     @Test
+    fun testParserSkippedDoesNotEatNewlines() {
+        assertEquals(listOf("Hello" to null, "" to null, "It's me" to null),
+            parse("Hello\n\nIt's me", mustSkip = true)!!.unsyncedText)
+        assertEquals(listOf("Hello" to null, "" to null, "It's me" to null, "" to null),
+            parse("Hello\n\nIt's me\n", mustSkip = true)!!.unsyncedText)
+    }
+
+    @Test
     fun testParserTtmlTemplate() {
-        val ttml = parseSynced(LrcTestData.TTML_DEATH_BED)
-        assertEquals(LrcTestData.TTML_DEATH_BED_PARSED, ttml)
+        val ttml = parseSynced(LrcTestData2.TTML_DEATH_BED)
+        assertEquals(LrcTestData2.TTML_DEATH_BED_PARSED, ttml)
+    }
+
+    @Test
+    fun testParserTtmlTemplate2() {
+        val ttml = parseSynced(LrcTestData2.TTML_SATISIFED)
+        assertEquals(LrcTestData2.TTML_SATISFIED_PARSED, ttml)
     }
 
     @Test
