@@ -22,6 +22,7 @@ import android.app.PendingIntent
 import android.bluetooth.BluetoothCodecStatus
 import android.bluetooth.BluetoothProfile
 import android.content.BroadcastReceiver
+import android.content.ComponentName
 import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
@@ -128,6 +129,7 @@ import org.akanework.gramophone.logic.utils.exoplayer.EndedWorkaroundPlayer.Comp
 import org.akanework.gramophone.logic.utils.exoplayer.GramophoneExtractorsFactory
 import org.akanework.gramophone.logic.utils.exoplayer.GramophoneMediaSourceFactory
 import org.akanework.gramophone.logic.utils.exoplayer.GramophoneRenderFactory
+import org.akanework.gramophone.ui.AudioPreviewActivity
 import org.akanework.gramophone.ui.LyricWidgetProvider
 import org.akanework.gramophone.ui.MainActivity
 import org.nift4.mediastorecompat.MediaStoreCompat
@@ -1363,7 +1365,9 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {
-        if (prefs.getBooleanStrict("stopPlayingWhenDismissTask", false)) {
+        if (prefs.getBooleanStrict("stopPlayingWhenDismissTask", false) &&
+            rootIntent?.component != ComponentName(this, AudioPreviewActivity::class.java)
+        ) {
             pauseAllPlayersAndStopSelf()
         } else {
             super.onTaskRemoved(rootIntent)
