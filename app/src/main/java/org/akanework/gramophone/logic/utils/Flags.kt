@@ -11,4 +11,7 @@ object Flags {
     // Before turning offload to true in prod we'd need a conflict resolution UI in case DPE is not
     // offloadable and RG is turned on while user tries to turn on offload (and other way around).
     const val OFFLOAD = false
+
+    // Multiple queues
+    const val MQ_PREVIEW: Boolean = false
 }

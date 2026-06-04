@@ -18,6 +18,7 @@
 package org.akanework.gramophone.ui.adapters
 
 import android.content.Context
+import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
@@ -25,14 +26,18 @@ import android.widget.TextView
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.edit
 import androidx.core.content.pm.ShortcutManagerCompat
+import androidx.media3.common.MediaItem
 import androidx.media3.common.Player.REPEAT_MODE_OFF
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.ui.ItemHeightHelper
 import org.akanework.gramophone.logic.ui.MyRecyclerView
+import org.akanework.gramophone.logic.utils.exoplayer.EndedWorkaroundPlayer.Companion.queueWithTitle
 import org.akanework.gramophone.ui.fragments.AdapterFragment
 import org.akanework.gramophone.ui.getAdapterType
 
@@ -165,12 +170,17 @@ open class BaseDecorAdapter<T : AdapterFragment.BaseInterface<*>>(
         }
         holder.playAll.setOnClickListener {
             if (adapter is SongAdapter) {
-                val mediaController = adapter.getActivity().getPlayer()
+                val controller = adapter.getActivity().getPlayer()
                 val songList = adapter.getSongList()
-                mediaController?.apply {
+                controller?.apply {
                     shuffleModeEnabled = false
                     repeatMode = REPEAT_MODE_OFF
-                    setMediaItems(songList)
+                    setMediaItems(
+                        queueWithTitle(
+                            songList,
+                            runBlocking { adapter.queueTitle.first() }
+                        )
+                    )
                     if (songList.isNotEmpty()) {
                         prepare()
                         play()
@@ -179,13 +189,20 @@ open class BaseDecorAdapter<T : AdapterFragment.BaseInterface<*>>(
             } else if (adapter is AlbumAdapter) {
                 val list = adapter.getAlbumList()
                 val controller = adapter.getActivity().getPlayer()
-                controller?.repeatMode = REPEAT_MODE_OFF
-                controller?.shuffleModeEnabled = false
-                list.takeIf { it.isNotEmpty() }?.also { albums ->
-                    controller?.setMediaItems(albums.flatMap { it.songList })
-                    controller?.prepare()
-                    controller?.play()
-                } ?: controller?.setMediaItems(listOf())
+                controller?.apply {
+                    repeatMode = REPEAT_MODE_OFF
+                    shuffleModeEnabled = false
+                    list.takeIf { it.isNotEmpty() }?.also { albums ->
+                        setMediaItems(
+                            queueWithTitle(
+                                albums.flatMap { it.songList },
+                                runBlocking { adapter.queueTitle.first() }
+                            )
+                        )
+                        prepare()
+                        play()
+                    } ?: setMediaItems(listOf())
+                }
             }
         }
         holder.shuffleAll.setOnClickListener {
@@ -193,22 +210,36 @@ open class BaseDecorAdapter<T : AdapterFragment.BaseInterface<*>>(
             if (adapter is SongAdapter) {
                 val songList = adapter.getSongList()
                 val controller = adapter.getActivity().getPlayer()
-                controller?.shuffleModeEnabled = true
-                controller?.setMediaItems(songList)
-                if (songList.isNotEmpty()) {
-                    controller?.prepare()
-                    controller?.play()
+                controller?.apply {
+                    shuffleModeEnabled = true
+                    setMediaItems(
+                        queueWithTitle(
+                            songList,
+                            runBlocking { adapter.queueTitle.first() }
+                        )
+                    )
+                    if (songList.isNotEmpty()) {
+                        prepare()
+                        play()
+                    }
                 }
             } else if (adapter is AlbumAdapter) {
                 val list = adapter.getAlbumList()
                 val controller = adapter.getActivity().getPlayer()
-                controller?.repeatMode = REPEAT_MODE_OFF
-                controller?.shuffleModeEnabled = false
-                list.takeIf { it.isNotEmpty() }?.also { albums ->
-                    controller?.setMediaItems(albums.shuffled().flatMap { it.songList })
-                    controller?.prepare()
-                    controller?.play()
-                } ?: controller?.setMediaItems(listOf())
+                controller?.apply {
+                    repeatMode = REPEAT_MODE_OFF
+                    shuffleModeEnabled = false
+                    list.takeIf { it.isNotEmpty() }?.also { albums ->
+                        setMediaItems(
+                            queueWithTitle(
+                                albums.shuffled().flatMap { it.songList },
+                                runBlocking { adapter.queueTitle.first() }
+                            )
+                        )
+                        prepare()
+                        play()
+                    } ?: setMediaItems(listOf())
+                }
             }
         }
         holder.jumpUp.visibility = if (jumpUpPos != null) View.VISIBLE else View.GONE

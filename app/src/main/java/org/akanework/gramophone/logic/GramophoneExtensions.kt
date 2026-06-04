@@ -59,12 +59,14 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.children
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updateMargins
+import androidx.media3.common.BundleListRetriever
 import androidx.media3.common.C
 import androidx.media3.common.Format
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.Tracks
 import androidx.media3.common.util.Log
+import androidx.media3.exoplayer.source.ShuffleOrder
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionCommand
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
@@ -75,6 +77,13 @@ import org.akanework.gramophone.BuildConfig
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_GET_AUDIO_FORMAT
 import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_GET_LYRICS
+import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QB_DEL
+import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QB_GET_INACTIVE_LIST
+import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QB_GET_QUEUE_FOR_UI
+import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QB_LOAD_QUEUE
+import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QB_PIN_QUEUE
+import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QB_REORDER
+import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QB_UNPIN_QUEUE
 import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QUERY_TIMER
 import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_SET_TIMER
 import org.akanework.gramophone.logic.utils.AfFormatInfo
@@ -337,6 +346,129 @@ fun MediaController.getAudioFormat(): AudioFormatDetector.AudioFormats =
         )
     }
 
+fun MediaController.getInactiveQueues(): List<MultiQueueObject> =
+    sendCustomCommand(
+        SessionCommand(SERVICE_QB_GET_INACTIVE_LIST, Bundle.EMPTY),
+        Bundle.EMPTY
+    ).get().extras.run {
+        val binder = getBinder("allQueues")!!
+        BundleListRetriever.getList(binder).map {
+            MultiQueueObject.fromBundle(it)
+        }
+    }
+
+fun MediaController.getQueue(index: Int = C.INDEX_UNSET): MultiQueueObject? =
+    sendCustomCommand(
+        SessionCommand(SERVICE_QB_GET_QUEUE_FOR_UI, Bundle.EMPTY).apply {
+            customExtras.putInt("index", index)
+        }, Bundle.EMPTY
+    ).get().extras.run {
+        val binder = getBinder("allQueues")!!
+        BundleListRetriever.getList(binder).map {
+            MultiQueueObject.fromBundle(it)
+        }.firstOrNull()
+    }
+
+
+fun shuffledItems(
+    items: List<MediaItem>,
+    order: ShuffleOrder
+): List<MediaItem> {
+    val result = mutableListOf<MediaItem>()
+
+    var i = order.firstIndex
+    while (i != C.INDEX_UNSET) {
+        result.add(items[i])
+        i = order.getNextIndex(i)
+    }
+
+    return result
+}
+
+fun shuffledIndices(order: ShuffleOrder): MutableList<Int> {
+    val result = mutableListOf<Int>()
+
+    var i = order.firstIndex
+    while (i != C.INDEX_UNSET) {
+        result.add(i)
+        i = order.getNextIndex(i)
+    }
+
+    return result
+}
+
+fun MediaController.getQueueForUi(index: Int = -1): Pair<MutableList<Int>, MultiQueueObject>? {
+    if (index == -1) {
+        return null
+    }
+    return sendCustomCommand(
+        SessionCommand(SERVICE_QB_GET_QUEUE_FOR_UI, Bundle.EMPTY).apply {
+            customExtras.putInt("index", index)
+        }, Bundle.EMPTY
+    ).get().extras.run {
+        val binder = getBinder("allQueues")!!
+        BundleListRetriever.getList(binder).map {
+            val mq = MultiQueueObject.fromBundle(it)
+            val indexes: MutableList<Int> = if (mq.shuffleOrder == null) {
+                (0 until mq.getSize()).toMutableList()
+            } else {
+                getIntArray("shuffleIndexes")!!.toMutableList()
+            }
+
+            Pair(indexes, mq)
+        }.firstOrNull()
+    }
+}
+
+fun MediaController.loadQueue(index: Int) {
+    sendCustomCommand(
+        SessionCommand(SERVICE_QB_LOAD_QUEUE, Bundle.EMPTY).apply {
+            customExtras.putInt("index", index)
+        }, Bundle.EMPTY
+    )
+}
+
+fun MediaController.pinQueue(index: Int) {
+    sendCustomCommand(
+        SessionCommand(SERVICE_QB_PIN_QUEUE, Bundle.EMPTY).apply {
+            customExtras.putInt("index", index)
+        }, Bundle.EMPTY
+    )
+}
+
+
+fun MediaController.unQueue(index: Int) {
+    sendCustomCommand(
+        SessionCommand(SERVICE_QB_UNPIN_QUEUE, Bundle.EMPTY).apply {
+            customExtras.putInt("index", index)
+        }, Bundle.EMPTY
+    )
+}
+
+
+fun MediaController.deleteQueue(index: Int): Boolean =
+    sendCustomCommand(
+        SessionCommand(SERVICE_QB_DEL, Bundle.EMPTY).apply {
+            customExtras.putInt("index", index)
+        }, Bundle.EMPTY
+    ).get().extras.run {
+        if (containsKey("status"))
+            getBoolean("status")
+        else throw IllegalArgumentException("expected status to be set")
+    }
+
+fun MediaController.reorderQueue(from: Int, to: Int): Boolean =
+    sendCustomCommand(
+        SessionCommand(SERVICE_QB_REORDER, Bundle.EMPTY).apply {
+            customExtras.putInt("from", from)
+            customExtras.putInt("to", to)
+        }, Bundle.EMPTY
+    ).get().extras.run {
+        if (containsKey("status"))
+            getBoolean("status")
+        else throw IllegalArgumentException("expected status to be set")
+    }
+
 fun Tracks.getFirstSelectedTrackFormatByType(type: @C.TrackType Int): Format? {
     for (i in groups) {
         if (i.type == type) {
@@ -502,6 +634,16 @@ fun WindowInsetsCompat.clone(): WindowInsetsCompat =
     WindowInsetsCompat.toWindowInsetsCompat(WindowInsets(toWindowInsets()).also {
         it.unconsumeIfNeeded()
     })
+
+fun Context.supportsWideScreen() : Boolean {
+    val config = resources.configuration
+    return config.screenWidthDp >= 780
+}
+
+fun Context.isTablet() : Boolean {
+    val config = resources.configuration
+    return config.smallestScreenWidthDp >= 780
+}
 
 val Context.gramophoneApplication
     get() = this.applicationContext as GramophoneApplication

@@ -1,11 +1,18 @@
 package org.akanework.gramophone.logic.utils.exoplayer
 
+import android.os.Bundle
+import androidx.media3.common.C
 import androidx.media3.common.DeviceInfo
 import androidx.media3.common.ForwardingSimpleBasePlayer
+import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.util.Log
 import androidx.media3.exoplayer.ExoPlayer
+import com.google.common.util.concurrent.Futures
+import com.google.common.util.concurrent.ListenableFuture
 import org.akanework.gramophone.BuildConfig
+import org.akanework.gramophone.R
+import org.akanework.gramophone.logic.QueueBoard
 import org.akanework.gramophone.logic.utils.CircularShuffleOrder
 
 
@@ -14,11 +21,27 @@ import org.akanework.gramophone.logic.utils.CircularShuffleOrder
  * update to STATE_ENDED and only then media3 will wrap around playlist for us. This is a workaround
  * to restore STATE_ENDED as well and fake it for media3 until it indeed wraps around playlist.
  */
-class EndedWorkaroundPlayer(exoPlayer: ExoPlayer) : ForwardingSimpleBasePlayer(exoPlayer),
+class EndedWorkaroundPlayer(
+    exoPlayer: ExoPlayer,
+    val queueBoard: QueueBoard
+) : ForwardingSimpleBasePlayer(exoPlayer),
     Player.Listener {
 
     companion object {
         private const val TAG = "EndedWorkaroundPlayer"
+
+        fun queueWithTitle(mediaItems: List<MediaItem>, mqTitle: String?): List<MediaItem> {
+            if (mediaItems.isEmpty() || mqTitle == null) return mediaItems
+            val firstMediaItem = mediaItems.first()
+            val newFirstMediaItem = firstMediaItem.buildUpon().setMediaMetadata(
+                firstMediaItem.mediaMetadata.buildUpon().setExtras(
+                    Bundle().apply {
+                        putString("mq_title", mqTitle)
+                    }
+                ).build()
+            ).build()
+            return listOf(newFirstMediaItem) + mediaItems.drop(1)
+        }
     }
 
     private val remoteDeviceInfo = DeviceInfo.Builder(DeviceInfo.PLAYBACK_TYPE_REMOTE).build()
@@ -66,5 +89,30 @@ class EndedWorkaroundPlayer(exoPlayer: ExoPlayer) : ForwardingSimpleBasePlayer(e
             return super.state.buildUpon().setDeviceInfo(remoteDeviceInfo).build()
         }
         return super.getState()
+    }
+
+    fun realSetMediaItems(
+        mediaItems: List<MediaItem>,
+        startIndex: Int,
+        startPositionMs: Long
+    ) = super.handleSetMediaItems(mediaItems, startIndex, startPositionMs)
+
+    override fun handleSetMediaItems(
+        mediaItems: List<MediaItem>,
+        startIndex: Int,
+        startPositionMs: Long
+    ): ListenableFuture<*> {
+        val defaultQueueTitle = queueBoard.context.getString(R.string.unknown_playlist)
+        val firstMediaItem = mediaItems.firstOrNull()
+        val mqTitle = firstMediaItem?.mediaMetadata?.extras?.getString("mq_title")
+
+        val mq = queueBoard.addQueue(
+            title = mqTitle ?: defaultQueueTitle,
+            mediaList = ArrayList(),
+            mediaItemIndex = C.INDEX_UNSET,
+            startPositionMs = C.TIME_UNSET,
+        )
+        queueBoard.commitQueue(mq, setMediaItems = false)
+        return super.handleSetMediaItems(mediaItems, startIndex, startPositionMs)
     }
 }

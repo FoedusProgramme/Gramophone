@@ -56,6 +56,7 @@
     <string name="unknown_year">Unknown year</string>
     <string name="refreshed_songs">Refreshed %1$d songs</string>
     <string name="search">Search</string>
+    <string name="search_query">Search: %s</string>
     <string name="share">Share</string>
     <string name="settings_app_name">App name</string>
     <string name="settings_contributors">Contributors</string>
@@ -536,4 +537,6 @@
         <item quantity="one">%d minute</item>
         <item quantity="other">%d minutes</item>
     </plurals>
+    <string name="settings_mq_enabled">Multiple queues</string>
+    <string name="song_queue">Queue</string>
 </resources>

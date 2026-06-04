@@ -28,7 +28,10 @@ import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flowOf
 import me.zhanghai.android.fastscroll.PopupTextProvider
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.enableEdgeToEdgePaddingListener
@@ -105,9 +108,10 @@ class AdapterFragment : BaseFragment(null) {
 
     private fun createAdapter(savedInstanceState: Bundle?): BaseInterface<*> {
         val id = arguments?.getInt("ID", -1)
+        val qTitle = getQueueTitle()
         return when (id) {
-            R.id.songs -> SongAdapter(this)
-            R.id.albums -> AlbumAdapter(this)
+            R.id.songs -> SongAdapter(this, qTitle)
+            R.id.albums -> AlbumAdapter(this, qTitle)
             R.id.artists -> ArtistAdapter(this)
             R.id.genres -> GenreAdapter(this)
             R.id.dates -> DateAdapter(this)
@@ -120,6 +124,22 @@ class AdapterFragment : BaseFragment(null) {
             onFullyDrawnListener =
                 { (requireParentFragment() as ViewPagerFragment).maybeReportFullyDrawn(id) }
         }
+    }
+
+    fun getQueueTitle(): Flow<String> {
+        val stringId = when (arguments?.getInt("ID", -1)) {
+            R.id.songs -> R.string.category_songs
+            R.id.albums -> R.string.category_albums
+            R.id.artists -> R.string.category_artists
+            R.id.genres -> R.string.category_genres
+            R.id.dates -> R.string.category_dates
+            R.id.folders -> R.string.folders
+            R.id.detailed_folders -> R.string.folders
+            R.id.playlists -> R.string.category_playlists
+            else -> null
+        }
+        if (stringId == null) return flowOf("MISSING TITLE (AdapterFragment)")
+        return flowOf(requireContext().getString( stringId))
     }
 
     abstract class BaseInterface<T : RecyclerView.ViewHolder>

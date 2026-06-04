@@ -28,11 +28,13 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -69,6 +71,7 @@ class PlaylistEditFragment : BaseFragment(false) {
     private var doneEditing = false
     private var entries = MutableStateFlow<Pair<Int, List<PlaylistSerializer.Entry>>>(0 to listOf())
     private var renderedEntries = mapOf<PlaylistSerializer.Entry, MediaItem>()
+    private lateinit var qTitle: Flow<String>
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -80,6 +83,7 @@ class PlaylistEditFragment : BaseFragment(false) {
                 onRequest(it.resultCode)
             }
         theItem = MutableSharedFlow(replay = 1)
+        qTitle = theItem.map { it?.title ?: "MISSING TITLE (PlaylistEditFragment)" }
 
         val rootView = inflater.inflate(R.layout.fragment_edit_playlist, container, false)
         topAppBar = rootView.findViewById(R.id.topAppBar)

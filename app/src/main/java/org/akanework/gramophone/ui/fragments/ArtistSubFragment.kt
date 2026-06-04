@@ -26,6 +26,9 @@ import androidx.recyclerview.widget.ConcatAdapter
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.MaterialToolbar
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -69,14 +72,15 @@ class ArtistSubFragment : BaseFragment(true), PopupTextProvider {
             if (itemType == R.id.album_artist)
                 it.albumArtistListFlow else it.artistListFlow
         }.map { it.find { it.id == id } }
+        val qTitle = item.map { it?.title ?: "MISSING TITLE (ArtistSubFragment)" }
         albumAdapter = AlbumAdapter(
-            this, item.map { it?.albumList },
+            this, qTitle, item.map { it?.albumList },
             isSubFragment = itemType
         )
         albumAdapter.decorAdapter.jumpDownPos = { albumAdapter.concatAdapter.itemCount }
         songAdapter = SongAdapter(
             this,
-            item.map { it?.songList },
+            qTitle,
             isSubFragment = itemType
         )
         songAdapter.decorAdapter.jumpUpPos = { 0 }
