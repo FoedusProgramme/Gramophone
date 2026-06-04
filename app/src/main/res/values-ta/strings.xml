@@ -112,7 +112,6 @@
     <string name="settings_album_round_corner">ஆல்பம் சுற்று மூலையில்</string>
     <string name="settings_customization">தனிப்பயனாக்கம்</string>
     <string name="settings_customization_summary">தனிப்பயனாக்குதல் விருப்பங்களை நிர்வகிக்கவும்</string>
-    <string name="settings_audio">ஆடியோ</string>
     <string name="settings_title_bold">தைரியமான தலைப்பு</string>
     <string name="settings_title_bold_summary">முழு பிளேயருக்கு தைரியமான தலைப்பைப் பயன்படுத்தவும்</string>
     <string name="settings_experimental_settings">சோதனை</string>
@@ -475,6 +474,4 @@
     <string name="actions_query_start_random_music">சீரற்ற இசையைத் தொடங்குங்கள்</string>
     <string name="actions_query_start_random_songs">சீரற்ற பாடல்களைத் தொடங்குங்கள்</string>
     <string name="actions_query_shuffle_specific">$item_name ஐ கலக்கவும்</string>
-    <string name="please_allow_to_delete">கோப்புகளை நீக்க அனுமதியை அழுத்தவும்</string>
-    <string name="choose_sd">%sஐத் தேர்ந்தெடுக்கவும்</string>
 </resources>

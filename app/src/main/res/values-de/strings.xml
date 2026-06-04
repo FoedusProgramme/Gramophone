@@ -77,7 +77,6 @@
     <string name="layout">Anzeige</string>
     <string name="settings_about_gramophone">Über diese Anwendung</string>
     <string name="settings_title_bold">Fettgedruckter Titel</string>
-    <string name="settings_audio">Audio</string>
     <string name="settings_lyrics_bold">Fettgedruckte Liedtexte</string>
     <string name="settings_player_options">Audio</string>
     <string name="settings_appearance_summary">Erscheinungsbild der Anwendung, Farbschemen</string>
@@ -443,7 +442,6 @@
     <string name="settings_replaygain_mode">Modus</string>
     <string name="duration_queue">Noch %s, %s insgesamt</string>
     <string name="clear_queue">Warteschlange leeren</string>
-    <string name="choose_sd">%s auswählen</string>
     <string name="contributors_saladnoober">Qualitätssicherung</string>
     <string name="discard">Verwerfen</string>
     <string name="apply">Anwenden</string>

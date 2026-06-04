@@ -27,7 +27,6 @@
     <string name="settings_customization_summary">Zarządzaj opcjami personalizacji</string>
     <string name="equalizer_not_found">Nie znaleziono korektora dźwięku!</string>
     <string name="settings_title_bold">Pogrubiony tytuł</string>
-    <string name="settings_audio">Dźwięk</string>
     <string name="settings_title_center">Wyśrodkuj tytuł</string>
     <plurals name="items">
         <item quantity="one">%d element</item>
@@ -486,8 +485,6 @@
     <string name="actions_query_start_random_music">uruchom losową muzykę</string>
     <string name="actions_query_start_random_songs">uruchom losowe piosenki</string>
     <string name="actions_query_shuffle_specific">mieszaj $item_name</string>
-    <string name="please_allow_to_delete">Zezwól na usuwanie plików</string>
-    <string name="choose_sd">Wybierz %s</string>
     <string name="edit_favorites_failed">Edytowanie ulubionych nie powiodło się: %s</string>
     <string name="favorite">Ulubiony</string>
     <string name="favorite_failed_title">Nie udało się zmienić statusu utworu jako ulubionego</string>
@@ -529,4 +526,6 @@
         <item quantity="many">%d minut</item>
         <item quantity="other">%d minut</item>
     </plurals>
+    <string name="search_query">Szukaj: %s</string>
+    <string name="settings_mq_enabled">Wiele kolejek</string>
 </resources>

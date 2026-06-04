@@ -94,7 +94,6 @@
     <string name="settings_behavior_summary">フィルターと起動時の動作を設定します</string>
     <string name="settings_about_gramophone">アプリについて</string>
     <string name="settings_customization_summary">カスタマイズオプションの管理</string>
-    <string name="settings_audio">オーディオ</string>
     <string name="settings_title_center">タイトルを中央揃えにする</string>
     <string name="settings_about_app">アプリの情報</string>
     <string name="settings_player_ui_summary">フルプレーヤーの UI と歌詞を設定します</string>
@@ -471,6 +470,4 @@
     <string name="actions_query_start_random_music">音楽をランダムで開始</string>
     <string name="actions_query_start_random_songs">曲をランダムで開始</string>
     <string name="actions_query_shuffle_specific">$item_name をシャッフル</string>
-    <string name="please_allow_to_delete">ファイルを削除するには許可してください</string>
-    <string name="choose_sd">「%s」を選択</string>
 </resources>
