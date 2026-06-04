@@ -112,7 +112,6 @@
     <string name="settings_customization">Personalización</string>
     <string name="settings_customization_summary">Xestionar opcións de personalización</string>
     <string name="settings_album_round_corner">Canto redondeado do álbum</string>
-    <string name="settings_audio">Audio</string>
     <string name="settings_title_bold">Título resaltado</string>
     <string name="settings_title_bold_summary">Usar letra grosa no reprodutor completo</string>
     <string name="settings_experimental_settings">Experimental</string>
@@ -475,8 +474,6 @@
     <string name="actions_query_start_random_music">comezar coa música ao chou</string>
     <string name="actions_query_start_random_songs">comezar con cancións ao chou</string>
     <string name="actions_query_shuffle_specific">barallar $item_name</string>
-    <string name="please_allow_to_delete">Preme permitir para eliminar ficheiros</string>
-    <string name="choose_sd">Seleccionar %s</string>
     <string name="favorite">Favorecer</string>
     <string name="favorite_failed_title">Fallou o cambio do estado de canción favorita</string>
     <string name="favorite_failed_text">Preme aquí para aplicar os cambios, concedendo o permiso ao ficheiro da lista de cancións favoritas</string>

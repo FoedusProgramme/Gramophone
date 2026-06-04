@@ -101,7 +101,6 @@
     <string name="settings_app_name">Numele aplicației</string>
     <string name="settings_app_theme">Tema aplicației</string>
     <string name="sort_by_artist">Artist</string>
-    <string name="settings_audio">Audio</string>
     <string name="settings_category_basic_info">Informații de bază</string>
     <string name="settings_blacklist">Lista neagră</string>
     <string name="settings_blacklist_folder">Dosare în lista neagră</string>

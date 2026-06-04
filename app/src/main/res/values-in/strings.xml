@@ -90,7 +90,6 @@
     <string name="settings_customization">Kustomisasi</string>
     <string name="settings_player_options_summary">Kualitas keluaran, perilaku pemutaran</string>
     <string name="settings_library_summary">Kelola pustaka media</string>
-    <string name="settings_audio">Audio</string>
     <string name="settings_album_round_corner">Sudut melengkung album</string>
     <string name="settings_color_accuracy">Akurasi warna</string>
     <string name="settings_experimental_settings">Eksperimental</string>
@@ -470,6 +469,4 @@
     <string name="actions_query_start_random_music">mulai musik acak</string>
     <string name="actions_query_start_random_songs">mulai lagu acak</string>
     <string name="actions_query_shuffle_specific">acak $item_name</string>
-    <string name="please_allow_to_delete">Tekan izinkan untuk menghapus berkas</string>
-    <string name="choose_sd">Pilih %s</string>
 </resources>

@@ -118,7 +118,6 @@
     <string name="settings_customization">Prilagođavanje</string>
     <string name="settings_customization_summary">Upravljaj opcijama prilagođavanja</string>
     <string name="settings_album_round_corner">Albumi sa zaobljenim kutovima</string>
-    <string name="settings_audio">Audio</string>
     <string name="settings_title_bold">Podebljani naslov</string>
     <string name="settings_title_bold_summary">Koristi podebljani naslov kada player zauzima cijeli ekran</string>
     <string name="settings_experimental_settings">Eksperimentalno</string>
@@ -480,8 +479,6 @@
     <string name="actions_query_start_random_music">pokreni nasumičnu glazbu</string>
     <string name="actions_query_start_random_songs">pokreni nasumične glazbe</string>
     <string name="actions_query_shuffle_specific">primiješaj $item_name</string>
-    <string name="please_allow_to_delete">Pritisni „Dozvoli” za brisanje datoteka</string>
-    <string name="choose_sd">Odaberi %s</string>
     <string name="edit_favorites_failed">Uređivanje favorita neuspjelo: %s</string>
     <string name="favorite">Favorit</string>
     <string name="favorite_failed_title">Nije bilo moguće promijenit stanje pjesme</string>

@@ -100,7 +100,6 @@
     <string name="settings_customization">自定义</string>
     <string name="settings_customization_summary">管理自定义选项</string>
     <string name="settings_album_round_corner">专辑圆角</string>
-    <string name="settings_audio">音频</string>
     <string name="settings_title_bold">粗体标题</string>
     <string name="settings_title_bold_summary">在播放器的标题上使用粗体</string>
     <string name="settings_experimental_settings">实验性功能</string>
@@ -470,8 +469,6 @@
     <string name="actions_query_start_random_music">开始随机播放音乐</string>
     <string name="actions_query_start_random_songs">开始随机播放歌曲</string>
     <string name="actions_query_shuffle_specific">随机播放 $item_name</string>
-    <string name="please_allow_to_delete">按允许删除文件</string>
-    <string name="choose_sd">选择 %s</string>
     <string name="edit_favorites_failed">编辑收藏失败：%s</string>
     <string name="favorite">收藏</string>
     <string name="favorite_failed_title">无法更改歌曲的收藏状态</string>

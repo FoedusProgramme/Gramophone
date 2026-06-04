@@ -25,7 +25,6 @@
     <string name="dialog_year">İl</string>
     <string name="dialog_album">Albom</string>
     <string name="dialog_genre">Janr</string>
-    <string name="settings_audio">Səs</string>
     <string name="sort_by_artist">İfaçı üzrə</string>
     <string name="sort_by_album">Albom üzrə</string>
     <string name="share">Paylaş</string>

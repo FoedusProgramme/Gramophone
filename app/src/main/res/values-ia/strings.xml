@@ -18,7 +18,6 @@
     <string name="settings_preference_category_application">Application</string>
     <string name="settings_app_name">Nomine del application</string>
     <string name="category_artists">Artistas</string>
-    <string name="settings_audio">Audio</string>
     <string name="settings_blacklist">Lista nigre</string>
     <string name="home_menu_settings">Parametros</string>
     <string name="home_menu_refresh">Actualisar</string>

@@ -47,7 +47,6 @@
     <string name="settings_category_links">ลิงก์</string>
     <string name="settings_player_options">เสียง</string>
     <string name="settings_lyric">เนื้อเพลง</string>
-    <string name="settings_audio">เสียง</string>
     <string name="settings_lyrics_configuration_summary">แก้ไขลักษณะที่ปรากฏของเนื้อเพลง</string>
     <string name="settings_lyrics_bold">เนื้อเพลงตัวหนา</string>
     <string name="sort_by_add_date">วันที่เพิ่ม</string>

@@ -27,7 +27,6 @@
     <string name="settings_customization_summary">إدارة إعدادات التَّخصيص</string>
     <string name="equalizer_not_found">لم يَتِمّ العثور على مُعادِل الصَّوت!</string>
     <string name="settings_title_bold">تغميق خط الاسم</string>
-    <string name="settings_audio">الصوت</string>
     <string name="settings_title_center">توسيط الاسم</string>
     <plurals name="items">
         <item quantity="zero">لا أغراض</item>

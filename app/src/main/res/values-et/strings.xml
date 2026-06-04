@@ -96,7 +96,6 @@
     <string name="settings_about_gramophone">Teave selle rakenduse kohta</string>
     <string name="settings_category_links">Lingid</string>
     <string name="settings_album_round_corner">Albumi kaanepildi ümarad nurgad</string>
-    <string name="settings_audio">Heli seadistused</string>
     <string name="settings_color_accuracy_summary">Loo värvid väga täpselt</string>
     <string name="settings_color_accuracy">Värvitäpsus</string>
     <string name="sort_by_add_date">Lisa kuupäev</string>
@@ -476,8 +475,6 @@
     <string name="actions_query_start_random_music">käivita juhuslik muusikavalik</string>
     <string name="actions_query_start_random_songs">käivita juhuslik lugude valik</string>
     <string name="actions_query_shuffle_specific">sega $item_name</string>
-    <string name="please_allow_to_delete">Failide kustutamiseks klõpsa „Luba“</string>
-    <string name="choose_sd">Vali %s</string>
     <string name="edit_favorites_failed">Lemmiku muutmine ei õnnestunud: %s</string>
     <string name="favorite">Lemmik</string>
     <string name="favorite_failed_title">Loo oleku muutmine lemmikuna ei õnnestunud</string>
@@ -519,5 +516,4 @@
     </plurals>
     <string name="search_query">Otsing: %s</string>
     <string name="settings_mq_enabled">Mitu esitusjärjekorda</string>
-    <string name="song_queue">Esitusjärjekord</string>
 </resources>

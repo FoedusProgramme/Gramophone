@@ -98,7 +98,6 @@
     <string name="settings_player_ui">Interfaz del reproductor</string>
     <string name="settings_about_gramophone">Acerca de la aplicación</string>
     <string name="settings_title_bold">Título en negrita</string>
-    <string name="settings_audio">Sonido</string>
     <string name="settings_title_center">Título centrado</string>
     <string name="settings_about_app">Acerca de</string>
     <string name="settings_lyrics_bold">Letra en negrita</string>
@@ -445,6 +444,5 @@
     <string name="spk_encoding_aptx_adaptive">aptX Adaptive</string>
     <string name="clear_queue">Vaciar cola</string>
     <string name="sort_by_artist_year"><![CDATA[Artista -&gt; año]]></string>
-    <string name="please_allow_to_delete">Presione permitir para eliminar archivos</string>
     <string name="actions_query_shuffle_everything">mezclar todo</string>
 </resources>

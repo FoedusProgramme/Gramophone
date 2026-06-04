@@ -24,7 +24,6 @@
     <string name="dialog_disc_number">Número do disco</string>
     <string name="unknown_title">Título desconhecido</string>
     <string name="filesystem">Ficheiros</string>
-    <string name="settings_audio">Áudio</string>
     <string name="settings_lyric">Letras</string>
     <string name="settings_lyrics_configuration">Configurar letras</string>
     <string name="settings_lyrics_configuration_summary">Configurar a aparência das letras</string>
@@ -454,7 +453,6 @@
     <string name="smart">Inteligente</string>
     <string name="d_db">%d dB</string>
     <string name="clear_queue">Limpar fila</string>
-    <string name="choose_sd">Escolher %s</string>
     <string name="favorite">Favorito</string>
     <string name="settings_whitelist">Lista branca</string>
 </resources>

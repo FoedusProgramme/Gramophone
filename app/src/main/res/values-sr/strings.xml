@@ -49,7 +49,6 @@
     <string name="settings_player_options">Audio</string>
     <string name="settings_customization">Prilagođavanje</string>
     <string name="settings_customization_summary">Upravljajte opcijama prilagođavanja</string>
-    <string name="settings_audio">Audio</string>
     <string name="settings_title_bold">Podebljani naslov</string>
     <string name="settings_experimental_settings">Eksperimentalno</string>
     <string name="settings_experimental_settings_summary">Karakteristike testiranja, ostalo</string>

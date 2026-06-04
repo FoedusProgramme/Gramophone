@@ -136,7 +136,6 @@
     <string name="settings_lyrics_bold">Testi in grassetto</string>
     <string name="settings_lyrics_center">Allineamento centrato</string>
     <string name="settings_blacklist">Lista nera</string>
-    <string name="settings_audio">Audio</string>
     <string name="settings_album_round_corner">Angoli arrotondati album</string>
     <string name="settings_experimental_settings">Sperimentale</string>
     <string name="settings_lyrics_bold_summary">Usa un font più spesso per i testi</string>

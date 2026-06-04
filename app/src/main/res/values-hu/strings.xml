@@ -74,7 +74,6 @@
     <string name="settings_app_theme">App téma</string>
     <string name="sort_by_artist">Előadó</string>
     <string name="dialog_artist">Előadó</string>
-    <string name="settings_audio">Hang</string>
     <string name="settings_category_basic_info">Alap infó</string>
     <string name="settings_category_behavior">Működés</string>
     <string name="settings_blacklist">Feketelista</string>
