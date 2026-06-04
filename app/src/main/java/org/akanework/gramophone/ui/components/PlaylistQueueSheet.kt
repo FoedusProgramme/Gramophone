@@ -3,23 +3,14 @@ package org.akanework.gramophone.ui.components
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.SystemClock
-import android.view.LayoutInflater
 import android.view.View
-import android.widget.Button
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.graphics.Insets
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -50,7 +41,6 @@ import org.akanework.gramophone.logic.utils.Flags
 import org.akanework.gramophone.logic.utils.convertDurationToTimeStamp
 import org.akanework.gramophone.ui.GramophoneTheme
 import org.akanework.gramophone.ui.MainActivity
-import org.akanework.gramophone.ui.fragments.compose.BottomSheetActions
 import org.akanework.gramophone.ui.fragments.compose.QueueRoot
 import org.akanework.gramophone.ui.fragments.compose.rememberMqState
 import java.util.LinkedList
@@ -79,16 +69,7 @@ class PlaylistQueueSheet(
             behavior.maxWidth = 900.dpToPx(context)
         }
 
-        val recyclerView = if (mqEnabled) {
-            MyRecyclerView(context)
-        } else {
-            findViewById<MyRecyclerView>(R.id.recyclerview)!!
-        }
-
-        if (mqEnabled) {
-            findViewById<View>(R.id.divider)?.visibility = View.GONE
-            findViewById<View>(R.id.recyclerview)?.visibility = View.GONE
-        }
+        val recyclerView = findViewById<MyRecyclerView>(R.id.recyclerview)!!
 
         ViewCompat.setOnApplyWindowInsetsListener(recyclerView) { v, ic ->
             val i = ic.getInsets(
@@ -200,7 +181,6 @@ class PlaylistQueueSheet(
                         pagerState = pagerState,
                         coroutineScope = coroutineScope,
                         durationView = durationView,
-                        recyclerView = recyclerView,
                         mqEnabled = mqEnabled,
                         onDismiss = { dismiss() },
                         onRecyclerScrollTo = {

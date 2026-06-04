@@ -39,7 +39,6 @@ import androidx.compose.material.icons.rounded.ExpandLess
 import androidx.compose.material.icons.rounded.ExpandMore
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
@@ -87,7 +86,6 @@ import org.akanework.gramophone.logic.getQueue
 import org.akanework.gramophone.logic.loadQueue
 import org.akanework.gramophone.logic.playOrPause
 import org.akanework.gramophone.logic.supportsWideScreen
-import org.akanework.gramophone.logic.ui.MyRecyclerView
 import org.akanework.gramophone.ui.components.Chronometer
 import org.akanework.gramophone.ui.components.PlaylistQueueSheet
 
@@ -194,13 +192,11 @@ fun MqContent(
         )
 
         val lazyQueuesListState = rememberLazyListState()
-        val scrollConnection = rememberNestedScrollInteropConnection()
         MqList(
             mqState = mqState,
             lazyQueuesListState = lazyQueuesListState,
             modifier = Modifier
                 .heightIn(Dp.Unspecified, if (!landscape) animatedMaxHeight else Dp.Unspecified)
-                .nestedScroll(scrollConnection)
         )
 
         ActionBar(
@@ -298,6 +294,7 @@ fun MqList(
         state = lazyQueuesListState,
         modifier = modifier
             .fillMaxWidth()
+            .nestedScroll(rememberNestedScrollInteropConnection())
     ) {
         if (mqState.getQueueListSize() == 0) {
             item {
@@ -531,7 +528,6 @@ fun QueueRoot(
     pagerState: PagerState,
     coroutineScope: CoroutineScope,
     durationView: Chronometer,
-    recyclerView: MyRecyclerView,
     mqEnabled: Boolean,
     modifier: Modifier = Modifier,
     onDismiss: (() -> Unit)? = null,
@@ -641,25 +637,13 @@ fun QueueRoot(
                 )
 
                 val lazyQueuesListState = rememberLazyListState()
-                val scrollConnection = rememberNestedScrollInteropConnection()
                 MqList(
                     mqState = mqState,
                     lazyQueuesListState = lazyQueuesListState,
                     modifier = Modifier
                         .heightIn(Dp.Unspecified, Dp.Unspecified)
-                        .nestedScroll(scrollConnection)
                 )
             }
-
-            if (!mqEnabled) return@Row
-            AndroidView(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .weight(0.5f),
-                factory = {
-                    recyclerView
-                },
-            )
         }
     } else {
         Column(
@@ -669,16 +653,6 @@ fun QueueRoot(
             Box {
                 pager()
             }
-
-            HorizontalDivider(thickness = 2.dp)
-
-            if (!mqEnabled) return@Column
-            AndroidView(
-                modifier = Modifier.fillMaxSize(),
-                factory = {
-                    recyclerView
-                },
-            )
         }
     }
 }

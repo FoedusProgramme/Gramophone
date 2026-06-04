@@ -35,7 +35,8 @@ import me.zhanghai.android.fastscroll.PopupTextProvider
 import org.akanework.gramophone.R
 import org.akanework.gramophone.ui.components.GridPaddingDecoration
 
-class MyRecyclerView : FixOnItemTouchListenerRecyclerView, AppBarLayout.OnOffsetChangedListener {
+open class MyRecyclerView : FixOnItemTouchListenerRecyclerView,
+    AppBarLayout.OnOffsetChangedListener {
     constructor(context: Context, attributeSet: AttributeSet?, defStyleAttr: Int) :
             super(context, attributeSet, defStyleAttr) {
         val arr = context.theme.obtainStyledAttributes(

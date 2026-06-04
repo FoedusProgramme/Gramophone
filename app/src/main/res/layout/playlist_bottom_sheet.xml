@@ -33,7 +33,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/queue_head" />
 
-    <org.akanework.gramophone.logic.ui.MyRecyclerView
+    <org.akanework.gramophone.logic.ui.QueueRecyclerView
         android:id="@+id/recyclerview"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
