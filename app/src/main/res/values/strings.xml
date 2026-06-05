@@ -1081,7 +1081,7 @@
     <!-- Shown below a contributor's nickname in about screen. This is the feature they worked on -->
     <string name="contributors_ghhccghk">Status Bar lyrics &amp; other improvements</string>
     <!-- Shown below a contributor's nickname in about screen -->
-    <string name="contributors_saladnoober">Quality assurance</string>
+    <string name="contributors_saladnoober">Quality Assurance</string>
     <!-- Home menu item to refresh song list quickly -->
     <string name="home_menu_quick_refresh">Quick refresh</string>
     <!-- Context menu item to add song to currently playing queue (as opposed to playlist which is
