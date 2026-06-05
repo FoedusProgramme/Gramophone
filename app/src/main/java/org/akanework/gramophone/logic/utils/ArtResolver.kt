@@ -7,6 +7,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.ThumbnailUtils
 import android.net.Uri
+import android.os.Build
 import android.provider.MediaStore
 import android.util.Size
 import android.webkit.MimeTypeMap
@@ -18,6 +19,10 @@ import uk.akane.libphonograph.utils.MiscUtils
 import java.io.File
 import java.io.IOException
 import java.io.InputStream
+import android.os.CancellationSignal
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.job
 
 /**
  * Shared artwork resolution logic used by both the in-process Coil image loader
@@ -32,6 +37,19 @@ import java.io.InputStream
 object ArtResolver {
 
     private const val TAG = "ArtResolver"
+
+    private suspend inline fun <T> runWithCancellationSignal(block: (CancellationSignal) -> T): T {
+        val signal = CancellationSignal()
+        val job = currentCoroutineContext().job
+        val listener = job.invokeOnCompletion { e ->
+            if (e != null) signal.cancel()
+        }
+        try {
+            return block(signal)
+        } finally {
+            listener.dispose()
+        }
+    }
 
     /**
      * Represents a canonical artwork source.
@@ -57,7 +75,7 @@ object ArtResolver {
     const val PROVIDER_AUTHORITY = "${BuildConfig.APPLICATION_ID}.albumart"
 
     // not actually defined in API, but CTS tested
-    // https://cs.android.com/android/platform/superproject/main/+/main:packages/providers/MediaProvider/src/com/android/providers/media/LocalUriMatcher.java;drc=ddf0d00b2b84b205a2ab3581df8184e756462e8d;l=182
+    // https://cs.android.com/android/platform/superproject/main/+/main:packages/providers/media/LocalUriMatcher.java;drc=ddf0d00b2b84b205a2ab3581df8184e756462e8d;l=182
     private const val MEDIA_ALBUM_ART = "albumart"
 
     /**
@@ -74,47 +92,75 @@ object ArtResolver {
                 val filePath = path
                 val parentPath = File(filePath).parent
                 val list = mutableListOf<ArtResource>()
-                if (parentPath != null) {
-                    list.add(ArtResource.AlbumFolder(parentPath))
-                }
-                // Skip embedded art for small thumbnails to use folder art or mediastore fallback
-                if (size > 300) {
+                if (size <= 320) {
+                    list.add(ArtResource.SongMediaStore(songId))
+                    if (parentPath != null) {
+                        list.add(ArtResource.AlbumFolder(parentPath))
+                    }
                     list.add(ArtResource.SongEmbedded(songId, filePath))
+                } else {
+                    list.add(ArtResource.SongEmbedded(songId, filePath))
+                    if (parentPath != null) {
+                        list.add(ArtResource.AlbumFolder(parentPath))
+                    }
+                    list.add(ArtResource.SongMediaStore(songId))
                 }
-                list.add(ArtResource.SongMediaStore(songId))
                 list
             }
             scheme == "gramophoneAlbumCover" -> {
                 val albumId = authority
                 val folderPath = path
-                listOf(
-                    ArtResource.AlbumFolder(folderPath),
-                    ArtResource.AlbumMediaStore(albumId)
-                )
+                if (size <= 320) {
+                    listOf(
+                        ArtResource.AlbumMediaStore(albumId),
+                        ArtResource.AlbumFolder(folderPath)
+                    )
+                } else {
+                    listOf(
+                        ArtResource.AlbumFolder(folderPath),
+                        ArtResource.AlbumMediaStore(albumId)
+                    )
+                }
             }
             scheme == ContentResolver.SCHEME_CONTENT && authority == PROVIDER_AUTHORITY -> {
                 val segments = uri.pathSegments
                 if (segments.size < 3) return emptyList()
                 val type = segments[0]
                 val id = segments[1]
-                val realPath = Uri.decode(segments[2])
+                val pathSegment = segments[2]
+                val realPath = try {
+                    String(android.util.Base64.decode(pathSegment, android.util.Base64.URL_SAFE))
+                } catch (e: Exception) { "" }
 
                 if (type == "song") {
                     val parentPath = File(realPath).parent
                     val list = mutableListOf<ArtResource>()
-                    if (parentPath != null) {
-                        list.add(ArtResource.AlbumFolder(parentPath))
-                    }
-                    if (size > 300) {
+                    if (size <= 320) {
+                        list.add(ArtResource.SongMediaStore(id))
+                        if (parentPath != null) {
+                            list.add(ArtResource.AlbumFolder(parentPath))
+                        }
                         list.add(ArtResource.SongEmbedded(id, realPath))
+                    } else {
+                        list.add(ArtResource.SongEmbedded(id, realPath))
+                        if (parentPath != null) {
+                            list.add(ArtResource.AlbumFolder(parentPath))
+                        }
+                        list.add(ArtResource.SongMediaStore(id))
                     }
-                    list.add(ArtResource.SongMediaStore(id))
                     list
                 } else if (type == "album") {
-                    listOf(
-                        ArtResource.AlbumFolder(realPath),
-                        ArtResource.AlbumMediaStore(id)
-                    )
+                    if (size <= 320) {
+                        listOf(
+                            ArtResource.AlbumMediaStore(id),
+                            ArtResource.AlbumFolder(realPath)
+                        )
+                    } else {
+                        listOf(
+                            ArtResource.AlbumFolder(realPath),
+                            ArtResource.AlbumMediaStore(id)
+                        )
+                    }
                 } else emptyList()
             }
             else -> emptyList()
@@ -129,21 +175,21 @@ object ArtResolver {
     /**
      * Opens an [ArtStream] for the specific [ArtResource] and size.
      */
-    fun openResourceStream(context: Context, resource: ArtResource, size: Int): ArtStream? {
-        return when (resource) {
-            is ArtResource.SongEmbedded -> {
-                val bmp = extractSongThumbnail(File(resource.path), size, size)
-                if (bmp != null) {
-                    val stream = java.io.ByteArrayOutputStream()
-                    bmp.compress(Bitmap.CompressFormat.JPEG, 85, stream)
-                    bmp.recycle()
-                    ArtStream(java.io.ByteArrayInputStream(stream.toByteArray()), "image/jpeg")
-                } else null
-            }
-            is ArtResource.AlbumFolder -> {
-                val cover = MiscUtils.findBestCover(File(resource.folderPath))
-                if (cover != null) {
-                    try {
+    suspend fun openResourceStream(context: Context, resource: ArtResource, size: Int): ArtStream? {
+        return try {
+            when (resource) {
+                is ArtResource.SongEmbedded -> {
+                    val bmp = extractSongThumbnail(File(resource.path), size, size)
+                    if (bmp != null) {
+                        val stream = java.io.ByteArrayOutputStream()
+                        bmp.compress(Bitmap.CompressFormat.JPEG, 85, stream)
+                        bmp.recycle()
+                        ArtStream(java.io.ByteArrayInputStream(stream.toByteArray()), "image/jpeg")
+                    } else null
+                }
+                is ArtResource.AlbumFolder -> {
+                    val cover = MiscUtils.findBestCover(File(resource.folderPath))
+                    if (cover != null) {
                         val bmp = decodeAndResize(cover, size)
                         if (bmp != null) {
                             val stream = java.io.ByteArrayOutputStream()
@@ -155,34 +201,50 @@ object ArtResolver {
                             val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(cover.extension) ?: "image/jpeg"
                             ArtStream(cover.inputStream(), mimeType)
                         }
-                    } catch (e: Exception) {
-                        Log.d(TAG, "Failed to open folder cover at ${cover.path}", e)
-                        null
+                    } else null
+                }
+                is ArtResource.SongMediaStore -> {
+                    val songId = resource.songId.toLong()
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        runWithCancellationSignal { signal ->
+                            val uri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, songId)
+                            val bmp = context.contentResolver.loadThumbnail(uri, android.util.Size(size, size), signal)
+                            val stream = java.io.ByteArrayOutputStream()
+                            bmp.compress(Bitmap.CompressFormat.JPEG, 85, stream)
+                            bmp.recycle()
+                            ArtStream(java.io.ByteArrayInputStream(stream.toByteArray()), "image/jpeg")
+                        }
+                    } else {
+                        val mediaStoreUri = buildSongAlbumArtUri(songId)
+                        val stream = context.contentResolver.openInputStream(mediaStoreUri)
+                        val mimeType = context.contentResolver.getType(mediaStoreUri) ?: "image/jpeg"
+                        if (stream != null) ArtStream(stream, mimeType) else null
                     }
-                } else null
-            }
-            is ArtResource.SongMediaStore -> {
-                val mediaStoreUri = buildSongAlbumArtUri(resource.songId.toLong())
-                try {
-                    val stream = context.contentResolver.openInputStream(mediaStoreUri)
-                    val mimeType = context.contentResolver.getType(mediaStoreUri) ?: "image/jpeg"
-                    if (stream != null) ArtStream(stream, mimeType) else null
-                } catch (e: Exception) {
-                    Log.d(TAG, "Failed to open MediaStore song art for id=${resource.songId}", e)
-                    null
+                }
+                is ArtResource.AlbumMediaStore -> {
+                    val albumId = resource.albumId.toLong()
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        runWithCancellationSignal { signal ->
+                            val uri = ContentUris.withAppendedId(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI, albumId)
+                            val bmp = context.contentResolver.loadThumbnail(uri, android.util.Size(size, size), signal)
+                            val stream = java.io.ByteArrayOutputStream()
+                            bmp.compress(Bitmap.CompressFormat.JPEG, 85, stream)
+                            bmp.recycle()
+                            ArtStream(java.io.ByteArrayInputStream(stream.toByteArray()), "image/jpeg")
+                        }
+                    } else {
+                        val mediaStoreUri = buildAlbumCoverUri(albumId)
+                        val stream = context.contentResolver.openInputStream(mediaStoreUri)
+                        val mimeType = context.contentResolver.getType(mediaStoreUri) ?: "image/jpeg"
+                        if (stream != null) ArtStream(stream, mimeType) else null
+                    }
                 }
             }
-            is ArtResource.AlbumMediaStore -> {
-                val mediaStoreUri = buildAlbumCoverUri(resource.albumId.toLong())
-                try {
-                    val stream = context.contentResolver.openInputStream(mediaStoreUri)
-                    val mimeType = context.contentResolver.getType(mediaStoreUri) ?: "image/jpeg"
-                    if (stream != null) ArtStream(stream, mimeType) else null
-                } catch (e: Exception) {
-                    Log.d(TAG, "Failed to open MediaStore album art for id=${resource.albumId}", e)
-                    null
-                }
-            }
+        } catch (e: Exception) {
+            if (e is CancellationException) throw e
+            if (e is android.os.OperationCanceledException) throw CancellationException("Cancelled by signal", e)
+            Log.d(TAG, "Failed to open resource stream for $resource", e)
+            null
         }
     }
 
@@ -244,7 +306,7 @@ object ArtResolver {
             .authority(PROVIDER_AUTHORITY)
             .appendPath(type)
             .appendPath(id)
-            .appendPath(Uri.encode(path))
+            .appendPath(android.util.Base64.encodeToString(path.toByteArray(), android.util.Base64.URL_SAFE or android.util.Base64.NO_WRAP))
             .build()
 
     /**
@@ -258,12 +320,12 @@ object ArtResolver {
             "gramophoneSongCover" -> buildProviderUri(
                 "song",
                 uri.authority ?: "0",
-                uri.path ?: ""
+                uri.path?.removePrefix("/") ?: ""
             )
             "gramophoneAlbumCover" -> buildProviderUri(
                 "album",
                 uri.authority ?: "0",
-                uri.path ?: ""
+                uri.path?.removePrefix("/") ?: ""
             )
             else -> null
         }
@@ -278,17 +340,21 @@ object ArtResolver {
      * @param height desired thumbnail height (use 0 for default)
      * @return the extracted bitmap, or `null` if extraction failed or is unavailable
      */
-    fun extractSongThumbnail(file: File, width: Int = 512, height: Int = 512): Bitmap? {
+    suspend fun extractSongThumbnail(file: File, width: Int = 512, height: Int = 512): Bitmap? {
         if (!hasScopedStorageV1()) return null // ThumbnailUtils.createAudioThumbnail requires Q+
         return try {
-            ThumbnailUtils.createAudioThumbnail(file, Size(width, height), null)
-        } catch (e: IOException) {
+            runWithCancellationSignal { signal ->
+                ThumbnailUtils.createAudioThumbnail(file, Size(width, height), signal)
+            }
+        } catch (e: Exception) {
+            if (e is CancellationException) throw e
+            if (e is android.os.OperationCanceledException) throw CancellationException("Cancelled by signal", e)
             if (e.message != "No embedded album art found" &&
                 e.message != "No thumbnails in Downloads directories" &&
                 e.message != "No thumbnails in top-level directories" &&
                 e.message != "No album art found"
             ) {
-                Log.w(TAG, "Unexpected IOException extracting song thumbnail", e)
+                Log.w(TAG, "Unexpected Exception extracting song thumbnail", e)
             }
             null
         }
@@ -307,60 +373,4 @@ object ArtResolver {
      */
     fun buildAlbumCoverUri(albumId: Long): Uri =
         ContentUris.withAppendedId(Constants.baseAlbumCoverUri, albumId)
-
-    /**
-     * Opens an [InputStream] for the song's artwork, trying embedded art first
-     * then falling back to the MediaStore album art URI.
-     *
-     * @return an [InputStream] for the artwork, or `null` if no artwork is available
-     */
-    fun openSongArtwork(context: Context, songId: String, filePath: String): InputStream? {
-        val file = File(filePath)
-
-        // Try extracting embedded thumbnail and writing to a temp bitmap stream
-        val bmp = extractSongThumbnail(file)
-        if (bmp != null) {
-            val stream = java.io.ByteArrayOutputStream()
-            bmp.compress(Bitmap.CompressFormat.JPEG, 85, stream)
-            bmp.recycle()
-            return java.io.ByteArrayInputStream(stream.toByteArray())
-        }
-
-        // Fallback to MediaStore album art
-        val mediaStoreUri = buildSongAlbumArtUri(songId.toLong())
-        return try {
-            context.contentResolver.openInputStream(mediaStoreUri)
-        } catch (e: Exception) {
-            Log.d(TAG, "Failed to open MediaStore song art for id=$songId", e)
-            null
-        }
-    }
-
-    /**
-     * Opens an [InputStream] for the album's artwork, trying folder-based cover art first
-     * (via [MiscUtils.findBestCover]) then falling back to the MediaStore album cover URI.
-     *
-     * @return an [InputStream] for the artwork, or `null` if no artwork is available
-     */
-    fun openAlbumArtwork(context: Context, albumId: String, folderPath: String): InputStream? {
-        // Try folder-based cover art (cover.jpg, albumart.png, etc.)
-        val cover = MiscUtils.findBestCover(File(folderPath))
-        if (cover != null) {
-            return try {
-                cover.inputStream()
-            } catch (e: Exception) {
-                Log.d(TAG, "Failed to open folder cover at ${cover.path}", e)
-                null
-            }
-        }
-
-        // Fallback to MediaStore album cover
-        val mediaStoreUri = buildAlbumCoverUri(albumId.toLong())
-        return try {
-            context.contentResolver.openInputStream(mediaStoreUri)
-        } catch (e: Exception) {
-            Log.d(TAG, "Failed to open MediaStore album art for id=$albumId", e)
-            null
-        }
-    }
 }

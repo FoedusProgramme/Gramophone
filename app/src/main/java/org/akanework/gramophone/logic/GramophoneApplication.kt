@@ -27,8 +27,6 @@ import android.os.Debug
 import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy
 import android.os.StrictMode.VmPolicy
-
-import android.webkit.MimeTypeMap
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.runtime.Composer
 import androidx.compose.runtime.ExperimentalComposeRuntimeApi
@@ -48,13 +46,18 @@ import coil3.decode.ImageSource
 import coil3.fetch.Fetcher
 import coil3.fetch.ImageFetchResult
 import coil3.fetch.SourceFetchResult
+import coil3.key.Keyer
 import coil3.request.NullRequestDataException
-import coil3.size.pxOrElse
 import coil3.size.pxOrElse
 import coil3.toCoilUri
 import coil3.util.Logger
+import coil3.disk.DiskCache
+import coil3.disk.directory
+import coil3.toAndroidUri
+import coil3.request.Options
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -69,7 +72,7 @@ import org.akanework.gramophone.logic.utils.Flags
 import org.akanework.gramophone.ui.LyricWidgetProvider
 import org.lsposed.hiddenapibypass.LSPass
 import org.nift4.gramophone.hificore.UacManager
-import org.akanework.gramophone.logic.utils.ArtCacheManager
+import org.akanework.gramophone.logic.utils.ArtResolver
 import uk.akane.libphonograph.reader.FlowReader
 import uk.akane.libphonograph.utils.MiscUtils
 import java.io.File
@@ -84,7 +87,7 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
     }
 
     init {
-        @SuppressLint("DefaultUncaughtExceptionDelegation")
+        @SuppressLint("UncaughtExceptionDelegation")
         Thread.setDefaultUncaughtExceptionHandler(this)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             LSPass.setHiddenApiExemptions("")
@@ -105,6 +108,7 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
         private set
     lateinit var uacManager: UacManager
         private set
+    val providerScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     override fun onCreate() {
         super.onCreate()
@@ -254,26 +258,38 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
 
     override fun newImageLoader(context: PlatformContext): ImageLoader {
         return ImageLoader.Builder(context)
-            .diskCache(null)
+            .diskCache {
+                DiskCache.Builder()
+                    .directory(context.cacheDir.resolve("image_cache").toOkioPath())
+                    .maxSizeBytes(50L * 1024 * 1024) // 50MB
+                    .build()
+            }
             .components {
+                add(GramophoneArtKeyer())
                 add(Fetcher.Factory { data, options, _ ->
                     if (data !is Uri) return@Factory null
                     if (data.scheme != "gramophoneSongCover" && data.scheme != "gramophoneAlbumCover") return@Factory null
                     return@Factory Fetcher {
-                        val requestWidth = options.size.width.pxOrElse { 0 }
-                        val requestHeight = options.size.height.pxOrElse { 0 }
-                        val size = if (requestWidth > 0 && requestWidth <= 300 && requestHeight > 0 && requestHeight <= 300) 300 else 1024
+                        val size = options.getArtworkBucketSize()
+                        val androidUri = data.toAndroidUri()
                         
-                        val art = ArtCacheManager.getArt(options.context, data.toString().toUri(), size)
-                        checkNotNull(art) { "Unable to open '$data'." }
-                        SourceFetchResult(
-                            source = ImageSource(
-                                source = art.file.inputStream().source().buffer(),
-                                fileSystem = options.fileSystem,
-                            ),
-                            mimeType = art.mimeType,
-                            dataSource = DataSource.DISK,
-                        )
+                        val candidates = ArtResolver.getResolutionList(androidUri, size)
+                        for (candidate in candidates) {
+                            val art = ArtResolver.openResourceStream(options.context, candidate, size)
+                            if (art != null) {
+                                return@Fetcher SourceFetchResult(
+                                    source = ImageSource(
+                                        source = art.stream.source().buffer(),
+                                        fileSystem = options.fileSystem
+                                    ),
+                                    mimeType = art.mimeType,
+                                    dataSource = if (size <= 320 && (candidate is ArtResolver.ArtResource.SongMediaStore ||
+                                                     candidate is ArtResolver.ArtResource.AlbumMediaStore))
+                                                     DataSource.DISK else DataSource.MEMORY,
+                                )
+                            }
+                        }
+                        throw IOException("Unable to open '$data'.")
                     }
                 })
             }
@@ -335,5 +351,23 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
         } catch (_: Throwable) {
             return false
         }
+    }
+}
+
+private fun Options.getArtworkBucketSize(): Int {
+    val requestWidth = size.width.pxOrElse { 0 }
+    val requestHeight = size.height.pxOrElse { 0 }
+    return if (requestWidth > 320 || requestHeight > 320) 1024 else 320
+}
+
+class GramophoneArtKeyer : Keyer<Uri> {
+    override fun key(data: Uri, options: Options): String? {
+        if (data.scheme != "gramophoneSongCover" && data.scheme != "gramophoneAlbumCover") return null
+        
+        val size = options.getArtworkBucketSize()
+        val androidUri = data.toAndroidUri()
+
+        val candidates = ArtResolver.getResolutionList(androidUri, size)
+        return candidates.firstOrNull()?.toCacheKey(size)
     }
 }

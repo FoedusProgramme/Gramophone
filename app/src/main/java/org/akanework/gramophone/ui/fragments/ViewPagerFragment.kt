@@ -49,8 +49,8 @@ import org.akanework.gramophone.logic.clone
 import org.akanework.gramophone.logic.enableEdgeToEdgePaddingListener
 import org.akanework.gramophone.logic.needsManualSnackBarInset
 import org.akanework.gramophone.logic.updateMargin
-import org.akanework.gramophone.logic.utils.ArtCacheManager
 import org.akanework.gramophone.logic.utils.SdScanner
+import coil3.SingletonImageLoader
 import org.akanework.gramophone.ui.MainActivity
 import org.akanework.gramophone.ui.adapters.ViewPager2Adapter
 import org.akanework.gramophone.ui.components.PlayerBottomSheet
@@ -122,7 +122,9 @@ class ViewPagerFragment : BaseFragment(true) {
                 }
 
                 R.id.quick_refresh -> {
-                    ArtCacheManager.clearCache(requireContext())
+                    val imageLoader = SingletonImageLoader.get(requireContext())
+                    imageLoader.memoryCache?.clear()
+                    imageLoader.diskCache?.clear()
                     val playerLayout = activity.playerBottomSheet
                     activity.updateLibrary {
                         showRefreshDoneSnackBar(
@@ -132,7 +134,9 @@ class ViewPagerFragment : BaseFragment(true) {
                 }
 
                 R.id.refresh -> {
-                    ArtCacheManager.clearCache(requireContext())
+                    val imageLoader = SingletonImageLoader.get(requireContext())
+                    imageLoader.memoryCache?.clear()
+                    imageLoader.diskCache?.clear()
                     val context = requireContext()
                     val playerLayout = activity.playerBottomSheet
                     MaterialAlertDialogBuilder(context)

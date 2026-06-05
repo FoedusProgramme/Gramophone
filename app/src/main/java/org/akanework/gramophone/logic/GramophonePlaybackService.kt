@@ -118,6 +118,7 @@ import org.akanework.gramophone.logic.utils.ReplayGainAudioProcessor
 import org.akanework.gramophone.logic.utils.ReplayGainUtil
 import org.akanework.gramophone.logic.utils.SemanticLyrics
 import org.akanework.gramophone.logic.utils.ArtResolver
+import org.akanework.gramophone.logic.utils.ArtUtils
 import org.akanework.gramophone.logic.utils.exoplayer.EndedWorkaroundPlayer
 import org.akanework.gramophone.logic.utils.exoplayer.GramophoneExtractorsFactory
 import org.akanework.gramophone.logic.utils.exoplayer.GramophoneMediaSourceFactory
@@ -203,7 +204,6 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
     private val scope = CoroutineScope(Dispatchers.Default)
     private val lyricsFetcher = CoroutineScope(Dispatchers.IO.limitedParallelism(1))
     private val bitrateFetcher = CoroutineScope(Dispatchers.IO.limitedParallelism(1))
-
     private fun getRepeatCommand() =
         when (controller!!.repeatMode) {
             Player.REPEAT_MODE_OFF -> customCommands[2]
