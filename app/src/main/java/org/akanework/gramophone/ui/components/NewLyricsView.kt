@@ -272,7 +272,7 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
             requestLayout()
             return
         }
-        var animating = currentSmoothScroll != null
+        var animating = false
         var delayedScrollDoneForFrame = false
         val globalPaddingTop = spForRender!!.first[2]
         var heightSoFar = globalPaddingTop.toDouble()
@@ -600,8 +600,6 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
         }
         //heightSoFar += globalPaddingBottom
         canvas.restore()
-        if (animating)
-            invalidate()
         if (isUserInteractingWithScrollView) {
             handler.removeCallbacks(invalidateCallback)
             handler.postDelayed(invalidateCallback, 5000)
@@ -627,6 +625,10 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
                 }
             }
         }
+        if (currentSmoothScroll != null)
+            animating = true
+        if (animating)
+            invalidate()
     }
 
     override fun onTouchEventForChild(event: MotionEvent): Boolean {
