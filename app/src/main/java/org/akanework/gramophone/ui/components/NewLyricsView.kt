@@ -272,7 +272,7 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
             requestLayout()
             return
         }
-        var animating = false
+        var animating = currentSmoothScroll != null
         var delayedScrollDoneForFrame = false
         val globalPaddingTop = spForRender!!.first[2]
         var heightSoFar = globalPaddingTop.toDouble()
