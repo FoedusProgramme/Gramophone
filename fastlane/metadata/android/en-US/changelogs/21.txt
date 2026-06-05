@@ -1,0 +1,9 @@
+- Playlist editing
+- Favourite songs
+- New lyrics UI with word-synced lyrics (+ parse ID3 SYLT lyrics)
+- ReplayGain 2.0 support
+- Pure dark theme
+- Folder whitelist
+- ALAC decoder
+- Redesigned queue and sleep timer
+- Fix a lot of crashes and bugs
