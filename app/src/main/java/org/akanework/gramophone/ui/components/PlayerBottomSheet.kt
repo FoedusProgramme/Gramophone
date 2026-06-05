@@ -42,7 +42,6 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.util.Log
 import androidx.media3.session.MediaController
-import androidx.preference.PreferenceManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.google.android.material.motion.MaterialBottomContainerBackHelper
@@ -54,7 +53,6 @@ import org.akanework.gramophone.BuildConfig
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.clone
 import org.akanework.gramophone.logic.fadOutAnimation
-import org.akanework.gramophone.logic.getBooleanStrict
 import org.akanework.gramophone.logic.ui.MyBottomSheetBehavior
 import org.akanework.gramophone.ui.MainActivity
 
@@ -140,7 +138,7 @@ class PlayerBottomSheet private constructor(
         ) {
             when (newState) {
                 BottomSheetBehavior.STATE_COLLAPSED -> {
-                    fullPlayer.visibilityDueToBottomSheet = GONE
+                    fullPlayer.visibilityDueToBottomSheet = INVISIBLE
                     previewPlayer.visibility = VISIBLE
                     fragmentContainer.visibility = VISIBLE
                     previewPlayer.alpha = 1f
@@ -157,7 +155,7 @@ class PlayerBottomSheet private constructor(
                 }
 
                 BottomSheetBehavior.STATE_EXPANDED -> {
-                    previewPlayer.visibility = GONE
+                    previewPlayer.visibility = INVISIBLE
                     fullPlayer.visibilityDueToBottomSheet = VISIBLE
                     fragmentContainer.visibility = INVISIBLE
                     previewPlayer.alpha = 0f
@@ -167,7 +165,7 @@ class PlayerBottomSheet private constructor(
                 }
 
                  BottomSheetBehavior.STATE_HALF_EXPANDED -> {
-                    previewPlayer.visibility = GONE
+                    previewPlayer.visibility = INVISIBLE
                     fullPlayer.visibilityDueToBottomSheet = VISIBLE
                     fragmentContainer.visibility = VISIBLE
                     previewPlayer.alpha = 0f
@@ -177,8 +175,8 @@ class PlayerBottomSheet private constructor(
                 }
 
                 BottomSheetBehavior.STATE_HIDDEN -> {
-                    previewPlayer.visibility = GONE
-                    fullPlayer.visibilityDueToBottomSheet = GONE
+                    previewPlayer.visibility = INVISIBLE
+                    fullPlayer.visibilityDueToBottomSheet = INVISIBLE
                     fragmentContainer.visibility = VISIBLE
                     previewPlayer.alpha = 0f
                     fullPlayer.alpha = 0f
