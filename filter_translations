@@ -31,7 +31,7 @@ async def get_languages(session: aiohttp.ClientSession, component_slug: str) -> 
 
 async def get_units_list(session: aiohttp.ClientSession, language_code: str, component_slug: str) -> list:
     url = f"{WEBLATE_API}/translations/{PROJECT_SLUG}/{component_slug}/{language_code}/units/"
-    params = {'q': 'state:needs-editing', 'page_size': 500}
+    params = {'q': 'state:<translated', 'page_size': 500}
 
     async with session.get(url, headers=HEADERS, params=params) as response:
         data = await response.json()
@@ -99,9 +99,9 @@ def manage_fastlane_files(files_path: Path, editings: list[str]) -> None:
             title_file.write('Gramophone')
 
     files = ["short_description.txt", "full_description.txt"]
-    needs_edit = any(file.split(":")[0] in files + ["title.txt"] for file in editings)
+    unfinished = any(file.split(":")[0] in files + ["title.txt"] for file in editings)
     all_exist = all(source_files_path.joinpath(f).exists() for f in files)
-    delete_files = not all_exist or needs_edit
+    delete_files = not all_exist or unfinished
     if not delete_files:
         print("  Skipped deleting")
         return
@@ -120,8 +120,8 @@ async def filter_component(session: aiohttp.ClientSession, language: dict, compo
     language_code = language['language']['code']
     translated_percent = language['translated_percent']
     filepath = Path(language['filename'])
-    units = await get_units_list(session, language_code, component_slug)
-    editings = [u.get('context') for u in units]
+    unfinished_units = await get_units_list(session, language_code, component_slug)
+    units_context = [u.get('context') for u in unfinished_units]
 
     if component_slug == "strings-xml":
         if translated_percent < MIN_TRANSLATED_PERCENT:
@@ -131,11 +131,11 @@ async def filter_component(session: aiohttp.ClientSession, language: dict, compo
                 shutil.rmtree(filepath.parent)
                 print(f"  Deleted {filepath.parent}/")
         else:
-            delete_strings(filepath, editings)
+            delete_strings(filepath, units_context)
 
     elif component_slug == "fastlane":
-        print(f"  Files to delete: {editings}")
-        manage_fastlane_files(filepath, editings)
+        print(f"  Files to delete: {units_context}")
+        manage_fastlane_files(filepath, units_context)
 
 
 async def main():
