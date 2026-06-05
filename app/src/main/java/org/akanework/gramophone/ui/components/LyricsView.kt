@@ -92,6 +92,8 @@ class LyricsView(context: Context, attrs: AttributeSet?) : FrameLayout(context, 
                     ?.endedWorkaroundPlayer?.currentPosition?.toULong()
                     ?: (context as MainActivity).getPlayer()?.currentPosition?.toULong() ?: 0uL
 
+            override fun isPlaying() = (context as MainActivity).getPlayer()?.isPlaying == true
+
             override fun seekTo(position: ULong) {
                 // TODO: call handleSeek from onPositionDiscontinuity once there is a synchronized
                 //  way of getting position (ie not relying on ExoPlayer and MediaController both

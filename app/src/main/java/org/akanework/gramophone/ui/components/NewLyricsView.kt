@@ -112,6 +112,7 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
 
     interface Callbacks {
         fun getCurrentPosition(): ULong
+        fun isPlaying(): Boolean
         fun seekTo(position: ULong)
         fun setPlayWhenReady(play: Boolean)
         fun speed(): Float
@@ -268,6 +269,7 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
                     "regressing position by ${posForRender - it}ms from $posForRender to $it!"
                 )
         }
+        val isPlaying = instance.isPlaying()
         if (spForRender == null) {
             requestLayout()
             return
@@ -378,7 +380,7 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
             else it.layout.alignment == Layout.Alignment.ALIGN_NORMAL
             if (((scaleInProgress >= -.1f && scaleInProgress <= 1f) ||
                 (scaleOutProgress >= -.1f && scaleOutProgress <= 1f)) &&
-                timeOffsetForUse > 0f && it.line != null
+                timeOffsetForUse > 0f && it.line != null && isPlaying
             )
                 animating = true
             if (it.line?.isTranslated != true && it.speaker?.isBackground != true) {
@@ -499,7 +501,7 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
                     else // Layout.Alignment.ALIGN_CENTER
                         canvas.translate(width * ((1 - smallSizeFactor / hlScaleFactor) / 2), 0f)
                 }
-                if (gradientProgress >= -.1f && gradientProgress <= 1f)
+                if (gradientProgress >= -.1f && gradientProgress <= 1f && isPlaying)
                     animating = true
             }
             val spanEndWithoutGradient = if (realGradientStart == -1) spanEnd else realGradientStart
