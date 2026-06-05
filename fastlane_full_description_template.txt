@@ -9,7 +9,7 @@ Gramophone is an offline, local music player that can play .mp3, .flac, .ogg, .o
 - List and grid views<br>
 - Browse songs by folder and filesystem<br>
 - Natural sorting and various other sorting options<br>
-- Read-only playlist support<br>
+- Playlist support<br>
 - Synced lyrics (LRC, TTML, SRT)<br>
 - Supports word/syllable Karaoke lyrics synchronization<br>
 - Full support for ReplayGain 2.0<br>

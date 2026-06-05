@@ -24,7 +24,7 @@ A sane music player built with media3 and the Material Design library that is fo
   - List and grid views
   - Browse songs by folder and filesystem
   - Natural sorting and various other sorting options
-  - Read-only playlist support
+  - Playlist support
 - Synced lyrics
   - LRC, TTML, SRT
   - Supports word/syllable Karaoke lyrics synchronization
