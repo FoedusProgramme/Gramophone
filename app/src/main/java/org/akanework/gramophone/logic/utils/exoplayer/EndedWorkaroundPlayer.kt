@@ -35,7 +35,7 @@ class EndedWorkaroundPlayer(
             val firstMediaItem = mediaItems.first()
             val newFirstMediaItem = firstMediaItem.buildUpon().setMediaMetadata(
                 firstMediaItem.mediaMetadata.buildUpon().setExtras(
-                    Bundle().apply {
+                    (firstMediaItem.mediaMetadata.extras?.let { Bundle(it) } ?: Bundle()).apply {
                         putString("mq_title", mqTitle)
                     }
                 ).build()
