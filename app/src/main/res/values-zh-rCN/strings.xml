@@ -507,4 +507,6 @@
     <plurals name="minutes">
         <item quantity="other">%d 分钟</item>
     </plurals>
+    <string name="search_query">搜索：%s</string>
+    <string name="settings_mq_enabled">多个队列</string>
 </resources>

@@ -145,9 +145,9 @@
     <string name="delete_failed">Fallou o borrado da canción: %s</string>
     <string name="album_covers_enhance">Carga de portada mellorada</string>
     <string name="album_covers_enhance_desc">Mostrar portadas de maior calidade e permitir que a portada do álbum e a canción sexan diferentes (require acceso a fotos)</string>
-    <string name="deny_images"><![CDATA[Please deny \"Photos and videos\" permission]]></string>
-    <string name="grant_images"><![CDATA[Please grant \"Photos and videos\" permission]]></string>
-    <string name="grant_audio"><![CDATA[Please grant \"Music and audio\" permission]]></string>
+    <string name="deny_images"><![CDATA[Por favor rexeita o permiso para «Fotos e vídeos»]]></string>
+    <string name="grant_images"><![CDATA[Por favor concede o permiso para «Fotos e vídeos»]]></string>
+    <string name="grant_audio"><![CDATA[Concede o permiso para «Música e son»]]></string>
     <string name="crash_clipboard">Copiouse o informe do fallo ao portapapeis</string>
     <string name="timer">Temporizador</string>
     <string name="current_playlist">Lista actual</string>
@@ -503,4 +503,16 @@
     <string name="show_file_names_summary">Motrar nomes dos ficheiros no lugar dos nomes das cancións nas pestanas do cartafol e sistema de ficheiros</string>
     <string name="another_with_name">O nome xa se está a utilizar</string>
     <string name="settings_font_size">Tamaño da letra</string>
+    <string name="search_query">Buscar: %s</string>
+    <string name="set">Establecer</string>
+    <string name="timer_eos">Agardar que finalice a canción</string>
+    <string name="timer_end_of_this_song">Ao finalizar esta canción</string>
+    <string name="other">Personalizado</string>
+    <string name="unset">Desactivar</string>
+    <string name="timer_hint">Minutos aos que deter a música…</string>
+    <plurals name="minutes">
+        <item quantity="one">%d minuto</item>
+        <item quantity="other">%d minutos</item>
+    </plurals>
+    <string name="settings_mq_enabled">Varias colas</string>
 </resources>

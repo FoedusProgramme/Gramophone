@@ -519,4 +519,6 @@
         <item quantity="other">%d minuts</item>
     </plurals>
     <string name="set">Assigna</string>
+    <string name="search_query">Cerca: %s</string>
+    <string name="settings_mq_enabled">Cues múltiples</string>
 </resources>
