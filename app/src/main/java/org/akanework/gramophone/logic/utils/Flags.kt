@@ -6,12 +6,12 @@ object Flags {
     const val HIDE_SAME_TRANSLATIONS = true
 
     // Before turning it on in prod we need i18n.
-    const val FORMAT_INFO_DIALOG = true // TODO(ASAP)
+    const val FORMAT_INFO_DIALOG = false
 
     // Before turning offload to true in prod we'd need a conflict resolution UI in case DPE is not
     // offloadable and RG is turned on while user tries to turn on offload (and other way around).
     const val OFFLOAD = false
 
     // Multiple queues
-    const val MQ_PREVIEW: Boolean = false
+    const val MQ_PREVIEW = false
 }

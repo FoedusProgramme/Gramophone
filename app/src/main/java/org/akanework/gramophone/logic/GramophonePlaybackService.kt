@@ -1324,7 +1324,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         if (deviceInfo.playbackType == DeviceInfo.PLAYBACK_TYPE_REMOTE) {
             handler.postDelayed({
                 setShowNotificationForEmptyPlayer(SHOW_NOTIFICATION_FOR_EMPTY_PLAYER_NEVER)
-            }, 2000) // TODO(ASAP) lol
+            }, 2000) // TODO lol
         } else {
             setShowNotificationForEmptyPlayer(SHOW_NOTIFICATION_FOR_EMPTY_PLAYER_AFTER_STOP_OR_ERROR)
         }

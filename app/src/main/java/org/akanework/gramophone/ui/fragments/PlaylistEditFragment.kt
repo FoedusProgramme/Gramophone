@@ -135,7 +135,7 @@ class PlaylistEditFragment : BaseFragment(false) {
                 context?.getString(R.string.playlist_favourite) else item.title
                 ?: context?.getString(R.string.unknown_playlist)
             // User can visit the folder in DocsUI to get old cached versions if needed
-            tmpName = "${item.path.name}_${item.path.lastModified()}.m3u" // TODO(ASAP) use some format that can store 100% of entry, maybe custom format or xspf if i bother
+            tmpName = "${item.path.name}_${item.path.lastModified()}.xspf"
             val hasRestorablePlaylist = try {
                 hasChanges(application)
             } catch (e: Exception) {
