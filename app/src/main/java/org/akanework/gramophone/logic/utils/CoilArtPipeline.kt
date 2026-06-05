@@ -29,7 +29,7 @@ object CoilArtPipeline {
     fun Options.getArtworkBucketSize(): Int {
         val requestWidth = size.width.pxOrElse { 0 }
         val requestHeight = size.height.pxOrElse { 0 }
-        return if (requestWidth > 320 || requestHeight > 320) 1024 else 320
+        return if (requestWidth > 512 || requestHeight > 512) 1024 else 512
     }
 
     class ResolutionInterceptor : Interceptor {
@@ -52,7 +52,7 @@ object CoilArtPipeline {
                 val size = chain.size
                 val androidUri = coilUri.toAndroidUri()
                 // Use a stable bucket size for candidates to improve cache hits
-                val bucketSize = if (size.width.pxOrElse { 0 } > 320 || size.height.pxOrElse { 0 } > 320) 1024 else 320
+                val bucketSize = if (size.width.pxOrElse { 0 } > 512 || size.height.pxOrElse { 0 } > 512) 1024 else 512
                 val candidates = ArtResolver.getResolutionList(androidUri, bucketSize)
 
                 Log.d(TAG, "Intercepted artwork URI: $coilUri, bucketSize: $bucketSize, candidates: ${candidates.size}")

@@ -92,7 +92,7 @@ object ArtResolver {
                 val filePath = path
                 val parentPath = File(filePath).parent
                 val list = mutableListOf<ArtResource>()
-                if (size <= 320) {
+                if (size <= 512) {
                     list.add(ArtResource.SongMediaStore(songId))
                     if (parentPath != null) {
                         list.add(ArtResource.AlbumFolder(parentPath))
@@ -110,7 +110,7 @@ object ArtResolver {
             scheme == "gramophoneAlbumCover" -> {
                 val albumId = authority
                 val folderPath = path
-                if (size <= 320) {
+                if (size <= 512) {
                     listOf(
                         ArtResource.AlbumMediaStore(albumId),
                         ArtResource.AlbumFolder(folderPath)
@@ -135,7 +135,7 @@ object ArtResolver {
                 if (type == "song") {
                     val parentPath = File(realPath).parent
                     val list = mutableListOf<ArtResource>()
-                    if (size <= 320) {
+                    if (size <= 512) {
                         list.add(ArtResource.SongMediaStore(id))
                         if (parentPath != null) {
                             list.add(ArtResource.AlbumFolder(parentPath))
@@ -150,7 +150,7 @@ object ArtResolver {
                     }
                     list
                 } else if (type == "album") {
-                    if (size <= 320) {
+                    if (size <= 512) {
                         listOf(
                             ArtResource.AlbumMediaStore(id),
                             ArtResource.AlbumFolder(realPath)
@@ -316,6 +316,9 @@ object ArtResolver {
      * Returns `null` if the URI is not one of the custom schemes.
      */
     fun toProviderUri(uri: Uri): Uri? {
+        if (uri.scheme == ContentResolver.SCHEME_CONTENT && uri.authority == PROVIDER_AUTHORITY) {
+            return uri
+        }
         return when (uri.scheme) {
             "gramophoneSongCover" -> buildProviderUri(
                 "song",

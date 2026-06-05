@@ -59,6 +59,8 @@ import androidx.media3.common.Rating
 import androidx.media3.common.Timeline
 import androidx.media3.common.TrackSelectionParameters
 import androidx.media3.common.Tracks
+import coil3.size.Precision
+import org.akanework.gramophone.BuildConfig
 import androidx.media3.common.util.BitmapLoader
 import androidx.media3.common.util.Log
 import androidx.media3.common.util.Util.isBitmapFactorySupportedMimeType
@@ -160,12 +162,50 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
     val endedWorkaroundPlayer
         get() = internalPlayer
 
+    private val pendingArtworkUrls = hashSetOf<String>()
+
     private lateinit var libraryTreeLoader: LibraryTreeLoader
 
     private fun convertMetadata(metadata: MediaMetadata): MediaMetadata {
         val artworkUri = metadata.artworkUri ?: return metadata
         val providerUri = ArtResolver.toProviderUri(artworkUri) ?: return metadata
-        return metadata.buildUpon().setArtworkUri(providerUri).build()
+        val builder = metadata.buildUpon().setArtworkUri(providerUri)
+        if (metadata.artworkData != null) {
+            return builder.build()
+        }
+        val cacheKey = artworkUri.toString()
+        synchronized(pendingArtworkUrls) {
+            if (pendingArtworkUrls.add(cacheKey)) {
+                scope.launch {
+                    try {
+                        val bytes = ArtUtils.getResizedArtworkBytes(this@GramophonePlaybackService, artworkUri, 512)
+                        if (bytes != null) {
+                            withContext(Dispatchers.Main) {
+                                val player = endedWorkaroundPlayer
+                                if (player != null) {
+                                    val currentIndex = player.currentMediaItemIndex
+                                    val currentItem = player.getCurrentMediaItem()
+                                    if (currentItem != null && currentItem.mediaMetadata.artworkUri == artworkUri) {
+                                        val newMetadata = currentItem.mediaMetadata.buildUpon()
+                                            .setArtworkData(bytes, MediaMetadata.PICTURE_TYPE_FRONT_COVER)
+                                            .build()
+                                        val newMediaItem = currentItem.buildUpon()
+                                            .setMediaMetadata(newMetadata)
+                                            .build()
+                                        player.replaceMediaItem(currentIndex, newMediaItem)
+                                    }
+                                }
+                            }
+                        }
+                    } finally {
+                        synchronized(pendingArtworkUrls) {
+                            pendingArtworkUrls.remove(cacheKey)
+                        }
+                    }
+                }
+            }
+        }
+        return builder.build()
     }
 
     private fun convertItem(item: MediaItem): MediaItem {
@@ -458,6 +498,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                                     .data(data)
                                     .memoryCacheKey(data.hashCode().toString())
                                     .size(limit, limit)
+                                    .precision(Precision.INEXACT)
                                     .allowHardware(false)
                                     .target(
                                         onStart = { _ ->
@@ -495,6 +536,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                                 ImageRequest.Builder(this@GramophonePlaybackService)
                                     .data(uri)
                                     .size(limit, limit)
+                                    .precision(Precision.INEXACT)
                                     .allowHardware(false)
                                     .target(
                                         onStart = { _ ->
