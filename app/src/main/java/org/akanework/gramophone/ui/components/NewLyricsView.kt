@@ -213,8 +213,8 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
     }
 
     fun updateLyricPositionFromPlaybackPos() {
-        if (instance.getCurrentPosition() != posForRender) // if not playing, might stay same
-            invalidate()
+        if (instance.getCurrentPosition() != posForRender && lyrics is SemanticLyrics.SyncedLyrics)
+            invalidate() // if not playing, might stay same
     }
 
     fun onPrefsChanged(key: String) {
@@ -378,7 +378,7 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
             else it.layout.alignment == Layout.Alignment.ALIGN_NORMAL
             if (((scaleInProgress >= -.1f && scaleInProgress <= 1f) ||
                 (scaleOutProgress >= -.1f && scaleOutProgress <= 1f)) &&
-                timeOffsetForUse > 0f
+                timeOffsetForUse > 0f && it.line != null
             )
                 animating = true
             if (it.line?.isTranslated != true && it.speaker?.isBackground != true) {

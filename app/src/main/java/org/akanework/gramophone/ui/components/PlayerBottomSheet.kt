@@ -85,6 +85,8 @@ class PlayerBottomSheet private constructor(
     private val handler = Handler(Looper.getMainLooper())
     private val instance: MediaController?
         get() = activity.getPlayer()
+    private val fragmentContainer: View by lazy { activity.findViewById(R.id.container)!! }
+    private val lyricsFrame: View by lazy { activity.findViewById(R.id.lyric_framelayout)!! }
     private var lastActuallyVisible: Boolean? = null
     private var lastMeasuredHeight: Int? = null
     var visible = false
@@ -112,8 +114,8 @@ class PlayerBottomSheet private constructor(
 
     init {
         inflate(context, R.layout.bottom_sheet, this)
-        previewPlayer = findViewById(R.id.preview_player)
-        fullPlayer = findViewById(R.id.full_player)
+        previewPlayer = findViewById(R.id.preview_player)!!
+        fullPlayer = findViewById(R.id.full_player)!!
 
         setOnClickListener { open() }
 
@@ -138,31 +140,49 @@ class PlayerBottomSheet private constructor(
         ) {
             when (newState) {
                 BottomSheetBehavior.STATE_COLLAPSED -> {
-                    fullPlayer.visibility = GONE
+                    fullPlayer.visibilityDueToBottomSheet = GONE
                     previewPlayer.visibility = VISIBLE
+                    fragmentContainer.visibility = VISIBLE
                     previewPlayer.alpha = 1f
                     fullPlayer.alpha = 0f
+                    lyricsFrame.alpha = 0f
                     bottomSheetBackCallback!!.isEnabled = false
                 }
 
                 BottomSheetBehavior.STATE_DRAGGING, BottomSheetBehavior.STATE_SETTLING -> {
-                    fullPlayer.visibility = VISIBLE
+                    fullPlayer.visibilityDueToBottomSheet = VISIBLE
                     previewPlayer.visibility = VISIBLE
+                    fragmentContainer.visibility = VISIBLE
+                    lyricsFrame.visibility = VISIBLE
                 }
 
-                BottomSheetBehavior.STATE_EXPANDED, BottomSheetBehavior.STATE_HALF_EXPANDED -> {
+                BottomSheetBehavior.STATE_EXPANDED -> {
                     previewPlayer.visibility = GONE
-                    fullPlayer.visibility = VISIBLE
+                    fullPlayer.visibilityDueToBottomSheet = VISIBLE
+                    fragmentContainer.visibility = INVISIBLE
                     previewPlayer.alpha = 0f
                     fullPlayer.alpha = 1f
+                    lyricsFrame.alpha = 1f
+                    bottomSheetBackCallback!!.isEnabled = true
+                }
+
+                 BottomSheetBehavior.STATE_HALF_EXPANDED -> {
+                    previewPlayer.visibility = GONE
+                    fullPlayer.visibilityDueToBottomSheet = VISIBLE
+                    fragmentContainer.visibility = VISIBLE
+                    previewPlayer.alpha = 0f
+                    fullPlayer.alpha = 1f
+                    lyricsFrame.alpha = 1f
                     bottomSheetBackCallback!!.isEnabled = true
                 }
 
                 BottomSheetBehavior.STATE_HIDDEN -> {
                     previewPlayer.visibility = GONE
-                    fullPlayer.visibility = GONE
+                    fullPlayer.visibilityDueToBottomSheet = GONE
+                    fragmentContainer.visibility = VISIBLE
                     previewPlayer.alpha = 0f
                     fullPlayer.alpha = 0f
+                    lyricsFrame.alpha = 0f
                     bottomSheetBackCallback!!.isEnabled = false
                 }
             }
@@ -177,10 +197,12 @@ class PlayerBottomSheet private constructor(
                 // hidden state
                 previewPlayer.alpha = 1 - (-1 * slideOffset)
                 fullPlayer.alpha = 0f
+                lyricsFrame.alpha = 0f
                 return
             }
             previewPlayer.alpha = 1 - (slideOffset)
             fullPlayer.alpha = slideOffset
+            lyricsFrame.alpha = slideOffset
         }
     }
 
@@ -321,6 +343,8 @@ class PlayerBottomSheet private constructor(
         previewPlayer.setPadding(myInsets.left, 0, myInsets.right, myInsets.bottom)
         // Let fullPlayer handle insets itself (and discard result as it's irrelevant to hierarchy)
         ViewCompat.dispatchApplyWindowInsets(fullPlayer, insets.clone())
+        // Same for lyrics view
+        ViewCompat.dispatchApplyWindowInsets(fullPlayer.bottomSheetFullLyricView, insets.clone())
         // Now make sure BottomSheetBehaviour has the correct View height set.
         if (isLaidOut && !isLayoutRequested) {
             updatePeekHeight()

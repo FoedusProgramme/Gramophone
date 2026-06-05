@@ -450,15 +450,4 @@
             app:tooltipText="@string/current_playlist" />
     </LinearLayout>
 
-    <org.akanework.gramophone.ui.components.LyricsView
-        android:id="@+id/lyric_frame"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="?attr/colorSurface"
-        android:clipChildren="false"
-        android:clipToPadding="false"
-        android:keepScreenOn="true"
-        android:visibility="gone"
-        tools:listitem="@layout/lyrics" />
-
 </merge>

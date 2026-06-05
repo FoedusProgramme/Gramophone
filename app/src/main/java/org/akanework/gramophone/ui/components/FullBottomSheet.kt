@@ -18,6 +18,7 @@ import android.util.AttributeSet
 import android.view.Gravity
 import android.view.KeyEvent
 import android.view.View
+import android.view.ViewGroup
 import android.view.ViewPropertyAnimator
 import android.view.WindowInsets
 import android.widget.AdapterView
@@ -201,6 +202,26 @@ class FullBottomSheet
                 AudioFormatDetector.detectAudioFormat(currentFormat) else null
         )
     }
+    var visibilityDueToLyrics: Int = VISIBLE
+        set(value) {
+            if (field != value) {
+                field = value
+                if (visibilityDueToBottomSheet == VISIBLE) {
+                    visibility = value
+                }
+            }
+        }
+    var visibilityDueToBottomSheet: Int = VISIBLE
+        set(value) {
+            if (field != value) {
+                field = value
+                if (value == VISIBLE) {
+                    visibility = visibilityDueToLyrics
+                } else {
+                    visibility = value
+                }
+            }
+        }
     private val bottomSheetFullCover: TransformableImageView
     private val bottomSheetFullTitle: TextView
     private val bottomSheetFullSubtitle: TextView
@@ -221,7 +242,7 @@ class FullBottomSheet
     private val bottomSheetFullSeekBar: SeekBar
     private val bottomSheetFullSlider: Slider
     private val bottomSheetFullCoverFrame: MaterialCardView
-    val bottomSheetFullLyricView: LyricsView
+    val bottomSheetFullLyricView: LyricsView by lazy { (parent as ViewGroup).findViewById(R.id.lyric_frame)!! }
     private val progressDrawable: SquigglyProgress
     private var lastDisposable: Disposable? = null
     private var pqs: PlaylistQueueSheet? = null
@@ -247,31 +268,7 @@ class FullBottomSheet
         bottomSheetFavoriteButton = findViewById(R.id.favor)
         bottomSheetPlaylistButton = findViewById(R.id.playlist)
         bottomSheetLyricButton = findViewById(R.id.lyrics)
-        bottomSheetFullLyricView = findViewById(R.id.lyric_frame)
         bottomSheetFullQualityDetails = findViewById(R.id.quality_details)
-        ViewCompat.setOnApplyWindowInsetsListener(bottomSheetFullLyricView) { v, insets ->
-            val myInsets = insets.getInsets(
-                WindowInsetsCompat.Type.systemBars()
-                        or WindowInsetsCompat.Type.displayCutout()
-            )
-            v.updateMargin {
-                left = -myInsets.left
-                top = -myInsets.top
-                right = -myInsets.right
-                bottom = -myInsets.bottom
-            }
-            v.setPadding(myInsets.left, myInsets.top, myInsets.right, myInsets.bottom)
-            return@setOnApplyWindowInsetsListener WindowInsetsCompat.Builder(insets)
-                .setInsets(
-                    WindowInsetsCompat.Type.systemBars()
-                            or WindowInsetsCompat.Type.displayCutout(), Insets.NONE
-                )
-                .setInsetsIgnoringVisibility(
-                    WindowInsetsCompat.Type.systemBars()
-                            or WindowInsetsCompat.Type.displayCutout(), Insets.NONE
-                )
-                .build()
-        }
         refreshSettings(null)
         prefs.registerOnSharedPreferenceChangeListener(this)
         activity.controllerViewModel.customCommandListeners.addCallback(activity.lifecycle) { _, command, _ ->
@@ -526,12 +523,6 @@ class FullBottomSheet
             ViewCompat.performHapticFeedback(it, HapticFeedbackConstantsCompat.CONTEXT_CLICK)
         }
 
-        val colorPrimary =
-            MaterialColors.getColor(
-                context,
-                androidx.appcompat.R.attr.colorPrimary,
-                -1
-            )
         val colorSecondaryContainer =
             MaterialColors.getColor(
                 context,
@@ -555,17 +546,6 @@ class FullBottomSheet
         )
         setBackgroundColor(backgroundProcessedColor)
         bottomSheetFullSlider.trackInactiveTintList = ColorStateList.valueOf(colorContrastFainted)
-        bottomSheetFullLyricView.updateTextColor(
-            androidx.core.graphics.ColorUtils.compositeColors(
-                androidx.core.graphics.ColorUtils.setAlphaComponent(colorPrimary, 77),
-                backgroundProcessedColor
-            ),
-            colorPrimary,
-            androidx.core.graphics.ColorUtils.compositeColors(
-                androidx.core.graphics.ColorUtils.setAlphaComponent(colorPrimary, 200),
-                backgroundProcessedColor
-            ),
-        )
 
         activity.controllerViewModel.addRecreationalPlayerListener(activity.lifecycle, this) {
             firstTime = true
@@ -585,6 +565,37 @@ class FullBottomSheet
                 loadCoverForImageView()
             }
         }
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        val colorPrimary =
+            MaterialColors.getColor(
+                context,
+                androidx.appcompat.R.attr.colorPrimary,
+                -1
+            )
+        val colorSurface = MaterialColors.getColor(
+            context,
+            com.google.android.material.R.attr.colorSurface,
+            -1
+        )
+        val backgroundProcessedColor = ColorUtils.getColor(
+            colorSurface,
+            ColorUtils.ColorType.COLOR_BACKGROUND_ELEVATED,
+            context
+        )
+        bottomSheetFullLyricView.updateTextColor(
+            androidx.core.graphics.ColorUtils.compositeColors(
+                androidx.core.graphics.ColorUtils.setAlphaComponent(colorPrimary, 77),
+                backgroundProcessedColor
+            ),
+            colorPrimary,
+            androidx.core.graphics.ColorUtils.compositeColors(
+                androidx.core.graphics.ColorUtils.setAlphaComponent(colorPrimary, 200),
+                backgroundProcessedColor
+            ),
+        )
     }
 
     override fun onSaveInstanceState(): Parcelable {

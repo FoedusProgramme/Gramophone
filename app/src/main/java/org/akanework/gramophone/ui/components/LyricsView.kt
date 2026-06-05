@@ -3,7 +3,11 @@ package org.akanework.gramophone.ui.components
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.AttributeSet
+import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.core.graphics.Insets
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
@@ -17,6 +21,8 @@ import org.akanework.gramophone.logic.utils.SemanticLyrics
 import org.akanework.gramophone.ui.MainActivity
 import org.akanework.gramophone.ui.MediaControllerViewModel
 import kotlin.math.max
+import androidx.core.view.isVisible
+import org.akanework.gramophone.logic.updateMargin
 
 class LyricsView(context: Context, attrs: AttributeSet?) : FrameLayout(context, attrs),
     SharedPreferences.OnSharedPreferenceChangeListener {
@@ -34,8 +40,27 @@ class LyricsView(context: Context, attrs: AttributeSet?) : FrameLayout(context, 
     var highlightTlTextColor = 0
         private set
     private var lyrics: SemanticLyrics? = null
+    private val fullPlayer by lazy { (parent.parent as ViewGroup)
+        .findViewById<FullBottomSheet>(R.id.full_player)!! }
 
     init {
+        ViewCompat.setOnApplyWindowInsetsListener(this) { v, insets ->
+            val myInsets = insets.getInsets(
+                WindowInsetsCompat.Type.systemBars()
+                        or WindowInsetsCompat.Type.displayCutout()
+            )
+            v.setPadding(myInsets.left, myInsets.top, myInsets.right, myInsets.bottom)
+            return@setOnApplyWindowInsetsListener WindowInsetsCompat.Builder(insets)
+                .setInsets(
+                    WindowInsetsCompat.Type.systemBars()
+                            or WindowInsetsCompat.Type.displayCutout(), Insets.NONE
+                )
+                .setInsetsIgnoringVisibility(
+                    WindowInsetsCompat.Type.systemBars()
+                            or WindowInsetsCompat.Type.displayCutout(), Insets.NONE
+                )
+                .build()
+        }
         createView()
     }
 
@@ -128,10 +153,52 @@ class LyricsView(context: Context, attrs: AttributeSet?) : FrameLayout(context, 
         }
     }
 
+    private fun updateFullPlayerVisibility() {
+        fullPlayer.visibilityDueToLyrics = if (isVisible && alpha == 1f && scaleX == 1f &&
+            scaleY == 1f && translationX == 0f && translationY == 0f && !hasTransientState())
+                INVISIBLE else VISIBLE
+    }
+
+    override fun setHasTransientState(hasTransientState: Boolean) {
+        super.setHasTransientState(hasTransientState)
+        updateFullPlayerVisibility()
+    }
+
+    override fun setVisibility(visibility: Int) {
+        super.setVisibility(visibility)
+        updateFullPlayerVisibility()
+    }
+
+    override fun setAlpha(alpha: Float) {
+        super.setAlpha(alpha)
+        updateFullPlayerVisibility()
+    }
+
+    override fun setScaleX(scaleX: Float) {
+        super.setScaleX(scaleX)
+        updateFullPlayerVisibility()
+    }
+
+    override fun setScaleY(scaleY: Float) {
+        super.setScaleY(scaleY)
+        updateFullPlayerVisibility()
+    }
+
+    override fun setTranslationX(translationX: Float) {
+        super.setTranslationX(translationX)
+        updateFullPlayerVisibility()
+    }
+
+    override fun setTranslationY(translationY: Float) {
+        super.setTranslationY(translationY)
+        updateFullPlayerVisibility()
+    }
+
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         prefs.registerOnSharedPreferenceChangeListener(this)
         adapter?.updateLyricStatus()
+        updateFullPlayerVisibility()
     }
 
     override fun onDetachedFromWindow() {
