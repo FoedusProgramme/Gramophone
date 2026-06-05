@@ -5,5 +5,6 @@
 - Pure dark theme
 - Folder whitelist
 - ALAC decoder
+- Playback speed
 - Redesigned queue and sleep timer
 - Fix a lot of crashes and bugs
