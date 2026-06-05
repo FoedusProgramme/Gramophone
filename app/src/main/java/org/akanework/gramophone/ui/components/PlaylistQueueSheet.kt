@@ -202,6 +202,14 @@ class PlaylistQueueSheet(
         }
     }
 
+    override fun show() {
+        super.show()
+        val view = findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+        view!!.post {
+            BottomSheetBehavior.from(view).state = BottomSheetBehavior.STATE_EXPANDED
+        }
+    }
+
     override fun onMediaItemTransition(
         mediaItem: MediaItem?,
         reason: @Player.MediaItemTransitionReason Int
