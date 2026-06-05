@@ -144,7 +144,7 @@
     <string name="album_covers_enhance">增强型专辑封面加载</string>
     <string name="share">分享</string>
     <string name="sort_by_release_date">发布日期</string>
-    <string name="timer_expiry">睡眠定时器将在 %s 时暂停音乐</string>
+    <string name="timer_expiry">睡眠定时器将在 %s 暂停音乐</string>
     <string name="remove">移除</string>
     <string name="more">更多</string>
     <string name="play">播放</string>
@@ -372,8 +372,8 @@
     <plurals name="folders_plural">
         <item quantity="other">%d 个文件夹</item>
     </plurals>
-    <string name="timer_expiry_eos">睡眠计时器将在 %s 后暂停歌曲</string>
-    <string name="timer_expiry_end_of_this_song">睡眠计时器将在歌曲结束后暂停</string>
+    <string name="timer_expiry_eos">睡眠定时器将在 %s 歌曲播放结束后暂停音乐</string>
+    <string name="timer_expiry_end_of_this_song">睡眠定时器将在这首歌曲结束后暂停音乐</string>
     <string name="playback_speed">播放速度</string>
     <string name="tempo">速度</string>
     <string name="lock_tempo_pitch">锁定节奏和音调</string>
