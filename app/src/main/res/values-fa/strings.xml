@@ -56,6 +56,7 @@
     <string name="settings_default_progress_bar">نوار پیشرفت پیش‌گزیده</string>
     <string name="dialog_disc_number">شمارۀ دیسک</string>
     <string name="settings_default_progress_bar_summary">به کار انداختن سبک material برای نوار پیشرفت</string>
+    <string name="playlist_favourite">پسندیده‌ها</string>
     <string name="no_lyric_found">متن‌ترانه یافت نشد</string>
     <string name="now_playing">در حال پخش</string>
     <string name="settings_package_type">گونۀ بسته</string>
