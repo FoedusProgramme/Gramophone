@@ -1,1 +1,0 @@
-Reproductor de música offline sencillo con diseño minimalista

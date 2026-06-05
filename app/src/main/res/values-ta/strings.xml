@@ -86,7 +86,6 @@
     <string name="settings_default_progress_bar_summary">பொருள் பாணியிலான முன்னேற்றப் பட்டியை இயக்கவும்</string>
     <string name="opensource_info">சிபிஎல் -3.0 இன் கீழ் திறந்த மூல\n பதிப்புரிமை %s</string>
     <string name="settings_default_progress_bar">இயல்புநிலை முன்னேற்றப் பட்டி</string>
-    <string name="playlist_favourite">பிடித்த</string>
     <string name="now_playing">இப்போது விளையாடுகிறது</string>
     <string name="settings_content_based_color_summary">ஆல்பம் அடிப்படையிலான வண்ண தலைமுறையை இயக்கவும்</string>
     <string name="settings_content_based_color">உள்ளடக்க அடிப்படையிலான வண்ணங்கள்</string>

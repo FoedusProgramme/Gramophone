@@ -100,7 +100,6 @@
     <string name="dialog_duration">Hossz</string>
     <string name="settings_default_progress_bar_summary">Material stílusú folyamatjelző sáv engedélyezése</string>
     <string name="home_menu_equalizer">Hangszínszabályozó</string>
-    <string name="playlist_favourite">Kedvenc</string>
     <string name="filesystem">Fájlrendszer</string>
     <string name="settings_behavior_summary">Szűrők, indítási viselkedés</string>
     <string name="settings_blacklist_folder_summary">Dalok kiszűrése bizonyos mappákból</string>

@@ -80,7 +80,6 @@
     <string name="settings_player_options_summary">আউটপুট গুণমান, প্লেব্যাক আচরণ</string>
     <string name="settings_lyrics_center">কেন্দ্র প্রান্তিককরণ</string>
     <string name="opensource_info">GPL-3.0-এর অধীনে ওপেন-সোর্স।\nস্বত্ব %s</string>
-    <string name="playlist_favourite">প্রিয়</string>
     <string name="settings_content_based_color_summary">অ্যালবামের উপর ভিত্তি করে রঙ তৈরি সক্ষম করুন</string>
     <string name="settings_package_type">প্যাকেজের ধরন</string>
     <string name="no_lyric_found">কোন লিরিক পাওয়া যায়নি</string>

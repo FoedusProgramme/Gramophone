@@ -61,7 +61,6 @@
         <item quantity="other">%d Skladeb</item>
     </plurals>
     <string name="equalizer_not_found">Nebyl nalezen žádný ekvalizér!</string>
-    <string name="playlist_favourite">Oblíbené</string>
     <string name="filesystem">Souborový systém</string>
     <string name="settings_experimental_settings">Experimentální</string>
     <string name="settings_category_filters">Filtry</string>
