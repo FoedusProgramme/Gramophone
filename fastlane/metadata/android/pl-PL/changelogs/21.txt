@@ -1,0 +1,10 @@
+- Edycja list odtwarzania
+- Ulubione utwory
+- Nowy interfejs tekstów piosenek z synchronizacją słów (+ obsługa tekstów z tagów ID3 SYLT)
+- Obsługa ReplayGain 2.0
+- Ciemny motyw
+- Biała lista folderów
+- Dekoder ALAC
+- Prędkość odtwarzania
+- Przeprojektowana kolejka i wyłącznik czasowy
+- Naprawiono wiele awarii i błędów
