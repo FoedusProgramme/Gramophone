@@ -45,7 +45,6 @@ import org.akanework.gramophone.ui.fragments.compose.QueueRoot
 import org.akanework.gramophone.ui.fragments.compose.rememberMqState
 import java.util.LinkedList
 
-// TODO: support listening to externally caused changes to playlist (ie MCT).
 // TODO: Playing indicator does not update when shuffling
 class PlaylistQueueSheet(
     context: Context, private val activity: MainActivity
@@ -234,7 +233,8 @@ class PlaylistQueueSheet(
         timeline: Timeline,
         reason: @Player.TimelineChangeReason Int
     ) {
-        playlistAdapter.updateList()
+        // TODO: support listening to externally caused changes to playlist (ie MCT).
+        // playlistAdapter.updateList()
     }
 
     /**
