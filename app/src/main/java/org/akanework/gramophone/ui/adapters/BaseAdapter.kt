@@ -366,7 +366,9 @@ abstract class BaseAdapter<T : Any>(
             error(defaultCover)
         }
         holder.itemView.setOnClickListener {
-            onClick(item, holder.bindingAdapterPosition)
+            val pos = holder.bindingAdapterPosition
+            if (pos < getItemCount())
+                onClick(item, pos)
         }
         if (hasMenu) {
             holder.moreButton?.setOnClickListener {

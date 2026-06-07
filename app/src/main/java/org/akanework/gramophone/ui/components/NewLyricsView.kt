@@ -78,7 +78,7 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
     private var stateOverrides = hashMapOf<Int, Float>()
     private var stateTime = 0uL
     private var isCallbackQueued = false
-    private val invalidateCallback = Runnable { isCallbackQueued = false; invalidate() }
+    private val invalidateCallback = Runnable { isCallbackQueued = false; postInvalidateOnAnimation() }
     private var defaultTextColor = 0
     private var highlightTextColor = 0
     private var highlightTlTextColor = 0
@@ -215,7 +215,7 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
 
     fun updateLyricPositionFromPlaybackPos() {
         if (instance.getCurrentPosition() != posForRender && lyrics is SemanticLyrics.SyncedLyrics)
-            invalidate() // if not playing, might stay same
+            postInvalidateOnAnimation() // if not playing, might stay same
     }
 
     fun onPrefsChanged(key: String) {
@@ -602,6 +602,8 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
         }
         //heightSoFar += globalPaddingBottom
         canvas.restore()
+        if (animating)
+            postInvalidateOnAnimation()
         if (isUserInteractingWithScrollView) {
             handler.removeCallbacks(invalidateCallback)
             handler.postDelayed(invalidateCallback, 5000)
@@ -619,6 +621,7 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
                     currentSmoothScroll = (AnimationUtils.currentAnimationTimeMillis().toFloat() to
                             lyricAnimTime) to (scrollY.toFloat() to scrollTarget.toFloat())
                     currentScrollTarget = scrollTarget
+                    postInvalidateOnAnimation()
                     if (scrollY < scrollTarget) {
                         delayedScrollAnimation = if (scrollTargetIndex != null) AnimationUtils
                             .currentAnimationTimeMillis() to (scrollTargetIndex to scrollY)
@@ -627,10 +630,6 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
                 }
             }
         }
-        if (currentSmoothScroll != null)
-            animating = true
-        if (animating)
-            invalidate()
     }
 
     override fun onTouchEventForChild(event: MotionEvent): Boolean {
@@ -887,6 +886,8 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
                 currentSmoothScroll!!.second.second, interpolatedProgress).toInt())
             if (progress >= 1f) {
                 currentSmoothScroll = null
+            } else {
+                postInvalidateOnAnimation()
             }
         }
         super.computeScroll()
