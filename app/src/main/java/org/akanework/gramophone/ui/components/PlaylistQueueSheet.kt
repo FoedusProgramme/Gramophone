@@ -294,10 +294,12 @@ class PlaylistQueueSheet(
                 if (currentMediaItemIndex == null || position != currentMediaItemIndex)
                     return
             }
-            holder.nowPlaying.setImageDrawable(
-                NowPlayingDrawable(holder.itemView.context)
-                    .also { it.level = if (currentIsPlaying == true) 1 else 0 })
-            holder.nowPlaying.visibility = View.VISIBLE
+            if (holder.nowPlaying.visibility != View.VISIBLE) {
+                holder.nowPlaying.setImageDrawable(
+                    NowPlayingDrawable(holder.itemView.context)
+                        .also { it.level = if (currentIsPlaying == true) 1 else 0 })
+                holder.nowPlaying.visibility = View.VISIBLE
+            }
         }
 
         override fun onViewRecycled(holder: ViewHolder) {
@@ -326,7 +328,9 @@ class PlaylistQueueSheet(
             playlist.second.add(to1, movedItem)
             mediaController?.moveMediaItem(from1, to1)
             notifyItemMoved(from, to)
-            updateList() // TODO: this could be more efficient
+            if (currentMediaItemIndex == from)
+                currentMediaItemIndex = to
+            updateTimer() // TODO: this could be more efficient
         }
 
         override fun removeItem(pos: Int) {
@@ -336,12 +340,12 @@ class PlaylistQueueSheet(
             instance?.removeMediaItem(idx)
             playlist.second.removeAt(idx)
             notifyItemRemoved(pos)
-            currentMediaItemIndex?.let {
-                if (pos == it) {
-                    notifyItemChanged(it, true)
-                }
+            if (pos == currentMediaItemIndex) {
+                notifyItemChanged(currentMediaItemIndex!!, true)
+            } else if (pos < (currentMediaItemIndex ?: -1)) {
+                currentMediaItemIndex = currentMediaItemIndex!! - 1
             }
-            updateList() // TODO: this could be more efficient
+            updateTimer() // TODO: this could be more efficient
         }
 
         override fun getItem(pos: Int) = playlist.second[playlist.first[pos]]
