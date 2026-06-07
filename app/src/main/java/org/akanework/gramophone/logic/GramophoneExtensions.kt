@@ -752,17 +752,15 @@ inline fun hasImprovedMediaStore(): Boolean =
     Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
 
 @Suppress("NOTHING_TO_INLINE")
-inline fun hasMarkIsFavouriteStatus(): Boolean =
-    Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA ||
-            (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R &&
-                    SdkExtensions.getExtensionVersion(Build.VERSION_CODES.R) >= 16)
-
-@Suppress("NOTHING_TO_INLINE")
 inline fun hasScopedStorageV2(): Boolean =
     Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
 
 @Suppress("NOTHING_TO_INLINE")
 inline fun hasScopedStorageV1(): Boolean =
+    Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
+
+@Suppress("NOTHING_TO_INLINE")
+inline fun hasRenderNodes(): Boolean =
     Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
 
 @Suppress("NOTHING_TO_INLINE")

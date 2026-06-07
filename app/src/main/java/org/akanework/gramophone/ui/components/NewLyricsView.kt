@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.RenderNode
 import android.graphics.Typeface
 import android.os.Build
 import android.text.Layout
@@ -12,6 +13,7 @@ import android.text.Spanned
 import android.text.StaticLayout
 import android.text.TextPaint
 import android.util.AttributeSet
+import android.util.SparseArray
 import android.util.TypedValue
 import android.view.GestureDetector
 import android.view.MotionEvent
@@ -20,12 +22,14 @@ import android.view.animation.PathInterpolator
 import androidx.core.graphics.ColorUtils
 import androidx.core.graphics.TypefaceCompat
 import androidx.core.text.getSpans
+import androidx.core.util.forEach
 import androidx.media3.common.util.Log
 import androidx.preference.PreferenceManager
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.dpToPx
 import org.akanework.gramophone.logic.getBooleanStrict
 import org.akanework.gramophone.logic.getIntStrict
+import org.akanework.gramophone.logic.hasRenderNodes
 import org.akanework.gramophone.logic.ui.spans.MyForegroundColorSpan
 import org.akanework.gramophone.logic.ui.spans.MyGradientSpan
 import org.akanework.gramophone.logic.ui.spans.StaticLayoutBuilderCompat
@@ -98,6 +102,7 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
     private var wordActiveTlSpan = MyForegroundColorSpan(Color.CYAN)
     private var gradientSpanPool = mutableListOf<MyGradientSpan>()
     private var gradientTlSpanPool = mutableListOf<MyGradientSpan>()
+    private val cachedNodes = if (hasRenderNodes()) SparseArray<RenderNode>() else null
     private fun makeGradientSpan() =
         MyGradientSpan(grdWidth, defaultTextColor, highlightTextColor)
 
@@ -295,6 +300,15 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
             var wordIdx: Int? = null
             var gradientProgress = Float.NEGATIVE_INFINITY
             val firstTs = it.line?.start ?: ULong.MIN_VALUE
+            val node = if (hasRenderNodes()) {
+                val node = cachedNodes!![i]
+                if (node == null) {
+                    val newNode = RenderNode("NewLyricsView_$i")
+                    cachedNodes[i] = newNode
+                    newNode
+                } else node
+            } else null
+            var hasValidCachedNode = if (hasRenderNodes()) node!!.hasDisplayList() else false
             val lastTs = min(it.line?.end ?: Int.MAX_VALUE.toULong(), Int.MAX_VALUE.toULong())
             val timeOffsetForUse = min(
                 scaleInAnimTime, min(
@@ -537,6 +551,7 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
                         colorSpan = null
                     } else if (inColorAnim && colorSpan == wordActiveSpanForLine)
                         colorSpan = null
+                    hasValidCachedNode = false
                 }
                 if (spanEndWithoutGradient != -1) {
                     if (inColorAnim && colorSpan == null)
@@ -548,12 +563,16 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
                         colorSpan, 0, spanEndWithoutGradient,
                         Spanned.SPAN_INCLUSIVE_INCLUSIVE
                     )
+                    hasValidCachedNode = false
                 }
             }
             if (inColorAnim && spanEndWithoutGradient != -1) {
                 if (colorSpan!! == wordActiveSpanForLine)
                     throw IllegalStateException("colorSpan == wordActiveSpan")
-                colorSpan.color = col
+                if (colorSpan.color != col) {
+                    colorSpan.color = col
+                    hasValidCachedNode = false
+                }
             }
             var gradientSpan = it.text.getSpans<MyGradientSpan>().firstOrNull()
             val gradientSpanStart = gradientSpan?.let { j -> it.text.getSpanStart(j) } ?: -1
@@ -568,6 +587,7 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
                             gradientSpanPoolForLine.add(gradientSpan)
                         gradientSpan = null
                     }
+                    hasValidCachedNode = false
                 }
                 if (realGradientStart != -1) {
                     if (gradientSpan == null)
@@ -578,6 +598,7 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
                         gradientSpan, realGradientStart, realGradientEnd,
                         Spanned.SPAN_INCLUSIVE_INCLUSIVE
                     )
+                    hasValidCachedNode = false
                 }
             }
             if (!culled) {
@@ -589,9 +610,24 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
                     // We get called once per run + one additional time per run if run direction isn't
                     // same as paragraph direction.
                     gradientSpan.runToLineMappings = it.rlm!!
-                    gradientSpan.progress = gradientProgress.coerceAtMost(1f)
+                    val newProgress = gradientProgress.coerceAtMost(1f)
+                    if (gradientSpan.progress != newProgress) {
+                        gradientSpan.progress = newProgress
+                        hasValidCachedNode = false
+                    }
                 }
-                it.layout.draw(canvas)
+                if (hasRenderNodes()) {
+                    if (!hasValidCachedNode) {
+                        node!!.setPosition(0, 0, width.toInt(),
+                            it.layout.height)
+                        val canvas = node.beginRecording()
+                        it.layout.draw(canvas)
+                        node.endRecording()
+                    }
+                    canvas.drawRenderNode(node!!)
+                } else {
+                    it.layout.draw(canvas)
+                }
                 if (highlight || !alignmentNormal)
                     canvas.restore()
             }
@@ -652,6 +688,12 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
         )
             spForMeasure = buildSpForMeasure(lyrics, right - left)
         spForRender = spForMeasure!!
+        if (hasRenderNodes()) {
+            cachedNodes!!.forEach { _, it ->
+                it.discardDisplayList()
+            }
+            cachedNodes.clear()
+        }
         invalidate()
     }
 

@@ -158,7 +158,7 @@ class LyricsView(context: Context, attrs: AttributeSet?) : FrameLayout(context, 
     private fun updateFullPlayerVisibility() {
         fullPlayer.visibilityDueToLyrics = if (isVisible && alpha == 1f && scaleX == 1f &&
             scaleY == 1f && translationX == 0f && translationY == 0f && !hasTransientState())
-                INVISIBLE else VISIBLE
+                GONE else VISIBLE
     }
 
     override fun setHasTransientState(hasTransientState: Boolean) {
