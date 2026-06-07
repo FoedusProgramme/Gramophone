@@ -20,7 +20,6 @@ package org.akanework.gramophone.ui.fragments
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.transition.MaterialSharedAxis
 import org.akanework.gramophone.ui.MainActivity
@@ -54,9 +53,7 @@ abstract class BaseFragment(val wantsPlayer: Boolean? = null) : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // Overlap colors.
-        if (view is RecyclerView) {
-            view.setBackgroundColor(MaterialColors.getColor(view, android.R.attr.colorBackground))
-        }
+        view.setBackgroundColor(MaterialColors.getColor(view, android.R.attr.colorBackground))
     }
 
     override fun onHiddenChanged(hidden: Boolean) {
