@@ -865,7 +865,6 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
     }
 
     fun handleSeek(from: ULong, to: ULong) {
-        // Don't clear stateOverrides, let it stack, it's ok
         spForRender?.second?.forEachIndexed { i, it ->
             val firstTs = it.line?.start ?: ULong.MIN_VALUE
             val lastTs = min(it.line?.end ?: Int.MAX_VALUE.toULong(), Int.MAX_VALUE.toULong())
@@ -886,7 +885,8 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
             val fadeOutEnd = if (it.line?.endIsImplicit == false)
                 lastTs + (timeOffsetForUse * 2).toULong()
             else lastTs + timeOffsetForUse.toULong()
-            val overridePos = stateOverrides[i]?.let {
+            val override = stateOverrides[i]
+            val overridePos = override?.let {
                 // if there's an old override we'll continue there
                 if (it >= 0f)
                     it.toULong() + from - stateTime
@@ -920,6 +920,8 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
                         else -> lerp(fadeInStart.toFloat(), fadeInEnd.toFloat(),
                             animPosNow)
                     }
+            else if (override != null)
+                stateOverrides.remove(i)
         }
         stateTime = to
     }
