@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:alpha="0"
-        android:visibility="invisible"
+        android:visibility="gone"
         tools:alpha="1"
         tools:visibility="visible" />
 
@@ -21,13 +21,13 @@
         android:alpha="0"
         android:clipChildren="false"
         android:clipToPadding="false"
-        android:visibility="invisible" />
+        android:visibility="gone" />
 
     <FrameLayout
         android:id="@+id/lyric_framelayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="invisible">
+        android:visibility="gone">
 
         <org.akanework.gramophone.ui.components.LyricsView
             android:id="@+id/lyric_frame"

@@ -218,7 +218,7 @@ fun TextView.setTextAnimation(
 
 fun View.fadOutAnimation(
     duration: Long = 300,
-    visibility: Int = View.INVISIBLE,
+    visibility: Int = View.GONE,
     completion: (() -> Unit)? = null
 ) {
     if (this.visibility != View.VISIBLE) {

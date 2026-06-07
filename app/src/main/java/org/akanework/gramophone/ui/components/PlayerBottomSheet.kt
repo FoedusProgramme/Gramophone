@@ -138,7 +138,7 @@ class PlayerBottomSheet private constructor(
         ) {
             when (newState) {
                 BottomSheetBehavior.STATE_COLLAPSED -> {
-                    fullPlayer.visibilityDueToBottomSheet = INVISIBLE
+                    fullPlayer.visibilityDueToBottomSheet = GONE
                     previewPlayer.visibility = VISIBLE
                     fragmentContainer.visibility = VISIBLE
                     previewPlayer.alpha = 1f
@@ -155,9 +155,9 @@ class PlayerBottomSheet private constructor(
                 }
 
                 BottomSheetBehavior.STATE_EXPANDED -> {
-                    previewPlayer.visibility = INVISIBLE
+                    previewPlayer.visibility = GONE
                     fullPlayer.visibilityDueToBottomSheet = VISIBLE
-                    fragmentContainer.visibility = INVISIBLE
+                    fragmentContainer.visibility = GONE
                     previewPlayer.alpha = 0f
                     fullPlayer.alpha = 1f
                     lyricsFrame.alpha = 1f
@@ -165,7 +165,7 @@ class PlayerBottomSheet private constructor(
                 }
 
                  BottomSheetBehavior.STATE_HALF_EXPANDED -> {
-                    previewPlayer.visibility = INVISIBLE
+                    previewPlayer.visibility = GONE
                     fullPlayer.visibilityDueToBottomSheet = VISIBLE
                     fragmentContainer.visibility = VISIBLE
                     previewPlayer.alpha = 0f
@@ -175,8 +175,8 @@ class PlayerBottomSheet private constructor(
                 }
 
                 BottomSheetBehavior.STATE_HIDDEN -> {
-                    previewPlayer.visibility = INVISIBLE
-                    fullPlayer.visibilityDueToBottomSheet = INVISIBLE
+                    previewPlayer.visibility = GONE
+                    fullPlayer.visibilityDueToBottomSheet = GONE
                     fragmentContainer.visibility = VISIBLE
                     previewPlayer.alpha = 0f
                     fullPlayer.alpha = 0f
