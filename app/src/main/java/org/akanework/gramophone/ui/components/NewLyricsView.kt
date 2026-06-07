@@ -300,15 +300,6 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
             var wordIdx: Int? = null
             var gradientProgress = Float.NEGATIVE_INFINITY
             val firstTs = it.line?.start ?: ULong.MIN_VALUE
-            val node = if (hasRenderNodes()) {
-                val node = cachedNodes!![i]
-                if (node == null) {
-                    val newNode = RenderNode("NewLyricsView_$i")
-                    cachedNodes[i] = newNode
-                    newNode
-                } else node
-            } else null
-            var hasValidCachedNode = if (hasRenderNodes()) node!!.hasDisplayList() else false
             val lastTs = min(it.line?.end ?: Int.MAX_VALUE.toULong(), Int.MAX_VALUE.toULong())
             val timeOffsetForUse = min(
                 scaleInAnimTime, min(
@@ -389,6 +380,15 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
                     smallSizeFactor
                 else 1f
             }
+            val node = if (hasRenderNodes()) {
+                val node = cachedNodes!![i]
+                if (node == null) {
+                    val newNode = RenderNode("NewLyricsView_$i")
+                    cachedNodes[i] = newNode
+                    newNode
+                } else node
+            } else null
+            var hasValidCachedNode = if (hasRenderNodes()) node!!.hasDisplayList() else false
             val isRtl = it.layout.getParagraphDirection(0) == Layout.DIR_RIGHT_TO_LEFT
             val alignmentNormal = if (isRtl) it.layout.alignment == Layout.Alignment.ALIGN_OPPOSITE
             else it.layout.alignment == Layout.Alignment.ALIGN_NORMAL
@@ -866,7 +866,6 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
 
     fun handleSeek(from: ULong, to: ULong) {
         // Don't clear stateOverrides, let it stack, it's ok
-        stateTime = to
         spForRender?.second?.forEachIndexed { i, it ->
             val firstTs = it.line?.start ?: ULong.MIN_VALUE
             val lastTs = min(it.line?.end ?: Int.MAX_VALUE.toULong(), Int.MAX_VALUE.toULong())
@@ -887,12 +886,18 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
             val fadeOutEnd = if (it.line?.endIsImplicit == false)
                 lastTs + (timeOffsetForUse * 2).toULong()
             else lastTs + timeOffsetForUse.toULong()
-            val highlight = from in fadeInStart..fadeOutEnd
-            val animPosNow = if (!highlight) 0f else if (from >= fadeInEnd)
+            val overridePos = stateOverrides[i]?.let {
+                // if there's an old override we'll continue there
+                if (it >= 0f)
+                    it.toULong() + from - stateTime
+                else (-it).toULong() // negative signals freeze
+            } ?: from
+            val highlight = overridePos in fadeInStart..fadeOutEnd
+            val animPosNow = if (!highlight) 0f else if (overridePos >= fadeInEnd)
                 min(1f, 1f - lerpInv(fadeOutStart.toFloat(),
-                    fadeOutEnd.toFloat(), from.toFloat()))
+                    fadeOutEnd.toFloat(), overridePos.toFloat()))
             else lerpInv(fadeInStart.toFloat(),
-                fadeInEnd.toFloat(), from.toFloat())
+                fadeInEnd.toFloat(), overridePos.toFloat())
             val highlightAfterSeek = to in fadeInStart..fadeOutEnd
             val animPosAfterSeek = if (!highlightAfterSeek) 0f else if (to >=
                 fadeInEnd) min(1f, 1f - lerpInv(fadeOutStart.toFloat(),
@@ -910,11 +915,13 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
                                 1f - animPosNow)
                         // If we're fading in at target and are already fully faded in here,
                         // stay fully faded in and wait for target to finish fading in too.
-                        from >= fadeInEnd -> -from.toFloat() // negative signals freeze
+                        overridePos in fadeInEnd..<fadeOutStart ->
+                            -overridePos.toFloat() // negative signals freeze
                         else -> lerp(fadeInStart.toFloat(), fadeInEnd.toFloat(),
                             animPosNow)
                     }
         }
+        stateTime = to
     }
 
     override fun computeScroll() {
