@@ -1,0 +1,10 @@
+- Esitusloendi muutmine
+- Lemmiklood
+- Sõnahaaval sünkroonitud laulusõnade uus kasutajaliides (+ ID3 SYLT-sildis leiduvate laulusõnade lugemine)
+- Esitusvaljuse tundlikkuse versiooni 2.0 tugi
+- Süsimust kujundus
+- Lubatud kaustade loend
+- ALAC-i dekooder
+- Taasesituse kiirus
+- Esitusloendi ja unetaimeri uus lahendus
+- Paljude kokkujooksmiste ja vigade parandused

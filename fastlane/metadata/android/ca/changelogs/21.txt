@@ -1,0 +1,10 @@
+- Edició de llistes de reproducció
+- Cançons preferides
+- IU nova de lletres amb sincronització de paraules (+ analitza les lletres ID3 SYLT)
+- Implementació de ReplayGain 2.0
+- Tema fosc pur
+- Llista blanca de carpetes
+- Descodificador ALAC
+- Velocitat de reproducció
+- S'ha redissenyat la cua i el temporitzador de son
+- Corregeix moltes fallades i errors
