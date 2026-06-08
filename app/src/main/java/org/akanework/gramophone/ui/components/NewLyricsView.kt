@@ -304,8 +304,8 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
             var lastTs = min(it.line?.end ?: Int.MAX_VALUE.toULong(), Int.MAX_VALUE.toULong())
             var endIsImplicit = it.line?.endIsImplicit != false
             if (Flags.IGNORE_SMALL_ENDTIME_GAPS && it.line?.words == null) {
-                val nextStartTime = min(spForRender!!.second.getOrNull(i + 1)?.line?.end
-                    ?: Int.MAX_VALUE.toULong(), Int.MAX_VALUE.toULong())
+                val nextStartTime = min(spForRender!!.second.getOrNull(i + 1)?.line
+                    ?.start ?: Int.MAX_VALUE.toULong(), Int.MAX_VALUE.toULong())
                 if (nextStartTime < lastTs + lyricAnimTime.toULong()) {
                     lastTs = nextStartTime
                     endIsImplicit = true
@@ -884,8 +884,8 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
             var lastTs = min(it.line?.end ?: Int.MAX_VALUE.toULong(), Int.MAX_VALUE.toULong())
             var endIsImplicit = it.line?.endIsImplicit != false
             if (Flags.IGNORE_SMALL_ENDTIME_GAPS && it.line?.words == null) {
-                val nextStartTime = min(spForRender!!.second.getOrNull(i + 1)?.line?.end
-                    ?: Int.MAX_VALUE.toULong(), Int.MAX_VALUE.toULong())
+                val nextStartTime = min(spForRender!!.second.getOrNull(i + 1)?.line
+                    ?.start ?: Int.MAX_VALUE.toULong(), Int.MAX_VALUE.toULong())
                 if (nextStartTime < lastTs + lyricAnimTime.toULong()) {
                     lastTs = nextStartTime
                     endIsImplicit = true
