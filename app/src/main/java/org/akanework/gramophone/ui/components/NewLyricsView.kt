@@ -883,7 +883,7 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
             val firstTs = it.line?.start ?: ULong.MIN_VALUE
             var lastTs = min(it.line?.end ?: Int.MAX_VALUE.toULong(), Int.MAX_VALUE.toULong())
             var endIsImplicit = it.line?.endIsImplicit != false
-            if (Flags.IGNORE_SMALL_ENDTIME_GAPS) {
+            if (Flags.IGNORE_SMALL_ENDTIME_GAPS && it.line?.words == null) {
                 val nextStartTime = min(spForRender!!.second.getOrNull(i + 1)?.line?.end
                     ?: Int.MAX_VALUE.toULong(), Int.MAX_VALUE.toULong())
                 if (nextStartTime < lastTs + lyricAnimTime.toULong()) {
