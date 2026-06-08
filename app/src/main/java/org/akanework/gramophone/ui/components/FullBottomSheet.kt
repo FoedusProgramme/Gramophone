@@ -15,6 +15,7 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.text.format.DateFormat
 import android.util.AttributeSet
+import android.view.AbsSavedState
 import android.view.Gravity
 import android.view.KeyEvent
 import android.view.View
@@ -211,7 +212,7 @@ class FullBottomSheet
                 }
             }
         }
-    var visibilityDueToBottomSheet: Int = VISIBLE
+    var visibilityDueToBottomSheet: Int = GONE
         set(value) {
             if (field != value) {
                 field = value
@@ -609,7 +610,7 @@ class FullBottomSheet
         state as Bundle?
         if (state != null) {
             bottomSheetFullLyricView.isVisible = state.getBoolean("Lyrics")
-            super.onRestoreInstanceState(BundleCompat.getParcelable(state, "Super", BaseSavedState::class.java))
+            super.onRestoreInstanceState(BundleCompat.getParcelable(state, "Super", AbsSavedState::class.java))
         } else {
             super.onRestoreInstanceState(null)
         }

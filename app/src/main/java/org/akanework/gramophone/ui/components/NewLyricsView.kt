@@ -160,7 +160,7 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
                 it.text.getSpans<MyGradientSpan>()
                     .forEach { s -> it.text.removeSpan(s) }
             }
-            invalidate()
+            invalidateDeeply()
         }
     }
 
@@ -178,7 +178,7 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
                 it.text.getSpans<MyGradientSpan>()
                     .forEach { s -> it.text.removeSpan(s) }
             }
-            invalidate()
+            invalidateDeeply()
         }
     }
 
@@ -192,7 +192,7 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
                 it.text.getSpans<MyGradientSpan>()
                     .forEach { s -> it.text.removeSpan(s) }
             }
-            invalidate()
+            invalidateDeeply()
         }
     }
 
@@ -206,7 +206,7 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
                 it.text.getSpans<MyGradientSpan>()
                     .forEach { s -> it.text.removeSpan(s) }
             }
-            invalidate()
+            invalidateDeeply()
         }
     }
 
@@ -688,6 +688,10 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
         )
             spForMeasure = buildSpForMeasure(lyrics, right - left)
         spForRender = spForMeasure!!
+        invalidateDeeply()
+    }
+
+    private fun invalidateDeeply() {
         if (hasRenderNodes()) {
             cachedNodes!!.forEach { _, it ->
                 it.discardDisplayList()
