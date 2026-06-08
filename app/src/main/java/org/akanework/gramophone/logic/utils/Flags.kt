@@ -4,6 +4,7 @@ object Flags {
     const val TEST_RG_OFFLOAD = false // test only
     const val TTML_AGENT_SMART_SIDES = true
     const val HIDE_SAME_TRANSLATIONS = true
+    const val IGNORE_SMALL_ENDTIME_GAPS = true
 
     // Before turning it on in prod we need i18n.
     const val FORMAT_INFO_DIALOG = false

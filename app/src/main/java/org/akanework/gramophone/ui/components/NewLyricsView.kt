@@ -35,6 +35,7 @@ import org.akanework.gramophone.logic.ui.spans.MyGradientSpan
 import org.akanework.gramophone.logic.ui.spans.StaticLayoutBuilderCompat
 import org.akanework.gramophone.logic.utils.CalculationUtils.lerp
 import org.akanework.gramophone.logic.utils.CalculationUtils.lerpInv
+import org.akanework.gramophone.logic.utils.Flags
 import org.akanework.gramophone.logic.utils.SemanticLyrics
 import org.akanework.gramophone.logic.utils.SpeakerEntity
 import org.akanework.gramophone.logic.utils.findBidirectionalBarriers
@@ -300,7 +301,16 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
             var wordIdx: Int? = null
             var gradientProgress = Float.NEGATIVE_INFINITY
             val firstTs = it.line?.start ?: ULong.MIN_VALUE
-            val lastTs = min(it.line?.end ?: Int.MAX_VALUE.toULong(), Int.MAX_VALUE.toULong())
+            var lastTs = min(it.line?.end ?: Int.MAX_VALUE.toULong(), Int.MAX_VALUE.toULong())
+            var endIsImplicit = it.line?.endIsImplicit != false
+            if (Flags.IGNORE_SMALL_ENDTIME_GAPS) {
+                val nextStartTime = min(spForRender!!.second.getOrNull(i + 1)?.line?.end
+                    ?: Int.MAX_VALUE.toULong(), Int.MAX_VALUE.toULong())
+                if (nextStartTime < lastTs + lyricAnimTime.toULong()) {
+                    lastTs = nextStartTime
+                    endIsImplicit = true
+                }
+            }
             val timeOffsetForUse = min(
                 scaleInAnimTime, min(
                     lerp(
@@ -313,9 +323,9 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
             val fadeInStart = max(firstTs.toLong() - timeOffsetForUse.toLong(), 0L).toULong()
             val fadeInEnd = firstTs + timeOffsetForUse.toULong()
             // If end is implicit, it's the start point of next line, so animate smoothly.
-            val fadeOutStart = if (it.line?.endIsImplicit == false) lastTs
+            val fadeOutStart = if (endIsImplicit) lastTs
             else lastTs - timeOffsetForUse.toULong()
-            val fadeOutEnd = if (it.line?.endIsImplicit == false)
+            val fadeOutEnd = if (endIsImplicit)
                 lastTs + (timeOffsetForUse * 2).toULong()
             else lastTs + timeOffsetForUse.toULong()
             val highlightReal = posForRender in fadeInStart..fadeOutEnd
@@ -871,7 +881,16 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
     fun handleSeek(from: ULong, to: ULong) {
         spForRender?.second?.forEachIndexed { i, it ->
             val firstTs = it.line?.start ?: ULong.MIN_VALUE
-            val lastTs = min(it.line?.end ?: Int.MAX_VALUE.toULong(), Int.MAX_VALUE.toULong())
+            var lastTs = min(it.line?.end ?: Int.MAX_VALUE.toULong(), Int.MAX_VALUE.toULong())
+            var endIsImplicit = it.line?.endIsImplicit != false
+            if (Flags.IGNORE_SMALL_ENDTIME_GAPS) {
+                val nextStartTime = min(spForRender!!.second.getOrNull(i + 1)?.line?.end
+                    ?: Int.MAX_VALUE.toULong(), Int.MAX_VALUE.toULong())
+                if (nextStartTime < lastTs + lyricAnimTime.toULong()) {
+                    lastTs = nextStartTime
+                    endIsImplicit = true
+                }
+            }
             val timeOffsetForUse = min(
                 scaleInAnimTime, min(
                     lerp(
@@ -884,9 +903,9 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
             val fadeInStart = max(firstTs.toLong() - timeOffsetForUse.toLong(), 0L).toULong()
             val fadeInEnd = firstTs + timeOffsetForUse.toULong()
             // If end is implicit, it's the start point of next line, so animate smoothly.
-            val fadeOutStart = if (it.line?.endIsImplicit == false) lastTs
+            val fadeOutStart = if (endIsImplicit) lastTs
             else lastTs - timeOffsetForUse.toULong()
-            val fadeOutEnd = if (it.line?.endIsImplicit == false)
+            val fadeOutEnd = if (endIsImplicit)
                 lastTs + (timeOffsetForUse * 2).toULong()
             else lastTs + timeOffsetForUse.toULong()
             val override = stateOverrides[i]
