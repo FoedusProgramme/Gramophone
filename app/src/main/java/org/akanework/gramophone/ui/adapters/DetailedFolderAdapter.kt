@@ -18,6 +18,7 @@
 package org.akanework.gramophone.ui.adapters
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
@@ -63,6 +64,10 @@ class DetailedFolderAdapter(
     val isDetailed: Boolean,
     savedInstanceState: Bundle?
 ) : AdapterFragment.BaseInterface<RecyclerView.ViewHolder>() {
+    companion object {
+        private const val TAG = "DetailedFolderAdapter"
+    }
+
     private val mainActivity = fragment.requireActivity() as MainActivity
     override val context
         get() = mainActivity
@@ -99,7 +104,13 @@ class DetailedFolderAdapter(
     )
     private var fileNodePath = MutableStateFlow<List<String>?>(savedInstanceState
         ?.getStringArrayList("Path"))
-    val qTitle = fileNodePath.map { it?.lastOrNull() ?: "MISSING TITLE (DetailedFolderAdapter)" }
+    val qTitle = fileNodePath.map {
+        val derivedQueueTitle = it?.lastOrNull()
+        if (derivedQueueTitle == null) {
+            Log.w(TAG, "Derived queue title is null")
+        }
+        derivedQueueTitle
+    }
     private val liveData = if (isDetailed) mainActivity.reader.folderStructureFlow
     else mainActivity.reader.shallowFolderFlow
     private val dataFlow = liveData.combineTransform(fileNodePath) { root, path ->

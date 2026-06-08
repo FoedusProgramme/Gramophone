@@ -70,7 +70,7 @@ class PlaylistEditFragment : BaseFragment(false) {
     private var doneEditing = false
     private var entries = MutableStateFlow(0 to PlaylistSerializer.Playlist.create())
     private var renderedEntries = mapOf<PlaylistSerializer.Entry, MediaItem>()
-    private lateinit var qTitle: Flow<String>
+    private lateinit var qTitle: Flow<String?>
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -82,7 +82,13 @@ class PlaylistEditFragment : BaseFragment(false) {
                 onRequest(it.resultCode)
             }
         theItem = MutableSharedFlow(replay = 1)
-        qTitle = theItem.map { it?.title ?: "MISSING TITLE (PlaylistEditFragment)" }
+        qTitle = theItem.map {
+            val derivedQueueTitle = it?.title
+            if (derivedQueueTitle == null) {
+                Log.w(TAG, "Derived queue title is null")
+            }
+            derivedQueueTitle
+        }
 
         val rootView = inflater.inflate(R.layout.fragment_edit_playlist, container, false)
         topAppBar = rootView.findViewById(R.id.topAppBar)

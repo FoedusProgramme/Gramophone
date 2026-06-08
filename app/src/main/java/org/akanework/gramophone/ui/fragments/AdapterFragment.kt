@@ -20,6 +20,7 @@ package org.akanework.gramophone.ui.fragments
 import android.content.Context
 import android.content.IntentSender
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -55,6 +56,10 @@ import org.akanework.gramophone.ui.adapters.Sorter
  * @author nift4
  */
 class AdapterFragment : BaseFragment(null) {
+    companion object {
+        private const val TAG = "AdapterFragment"
+    }
+
     private lateinit var adapter: BaseInterface<*>
     private lateinit var recyclerView: MyRecyclerView
     private var pendingRequest: Bundle? = null
@@ -130,7 +135,7 @@ class AdapterFragment : BaseFragment(null) {
         }
     }
 
-    fun getQueueTitle(): Flow<String> {
+    fun getQueueTitle(): Flow<String?> {
         val stringId = when (arguments?.getInt("ID", -1)) {
             R.id.songs -> R.string.category_songs
             R.id.albums -> R.string.category_albums
@@ -142,7 +147,10 @@ class AdapterFragment : BaseFragment(null) {
             R.id.playlists -> R.string.category_playlists
             else -> null
         }
-        if (stringId == null) return flowOf("MISSING TITLE (AdapterFragment)")
+        if (stringId == null) {
+            Log.w(TAG, "Derived queue title is null")
+            return flowOf(null)
+        }
         return flowOf(requireContext().getString( stringId))
     }
 

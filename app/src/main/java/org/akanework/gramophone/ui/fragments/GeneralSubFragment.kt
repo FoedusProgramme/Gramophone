@@ -18,6 +18,7 @@
 package org.akanework.gramophone.ui.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -53,6 +54,10 @@ import uk.akane.libphonograph.items.Playlist
  * @author AkaneTan, nift4
  */
 class GeneralSubFragment : BaseFragment(true) {
+    companion object {
+        private const val TAG = "GeneralSubFragment"
+    }
+
     lateinit var qTitle: Flow<String>
 
     override fun onCreateView(
@@ -81,7 +86,14 @@ class GeneralSubFragment : BaseFragment(true) {
         when (itemType) {
             R.id.album -> {
                 val item = mainActivity.reader.albumListFlow.map { it.find { it.id == id } }
-                title = item.map { it?.title ?: requireContext().getString(R.string.unknown_album) }
+                title = item.map {
+                    val derivedQueueTitle =
+                        it?.title ?: requireContext().getString(R.string.unknown_album)
+                    if (derivedQueueTitle == null) {
+                        Log.w(TAG, "Derived queue title is null")
+                    }
+                    derivedQueueTitle
+                }
                 qTitle = title
                 itemList = item.map { it?.songList }
                 rawOrderExposed = Sorter.Type.ByAlbumTitleAscending

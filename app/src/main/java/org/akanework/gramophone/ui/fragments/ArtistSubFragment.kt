@@ -18,6 +18,7 @@
 package org.akanework.gramophone.ui.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -50,6 +51,10 @@ import org.akanework.gramophone.ui.adapters.SongAdapter
  * @see GeneralSubFragment
  */
 class ArtistSubFragment : BaseFragment(true), PopupTextProvider {
+    companion object {
+        private const val TAG = "ArtistSubFragment"
+    }
+
     private lateinit var albumAdapter: AlbumAdapter
     private lateinit var songAdapter: SongAdapter
     private var recyclerView: MyRecyclerView? = null
@@ -72,7 +77,13 @@ class ArtistSubFragment : BaseFragment(true), PopupTextProvider {
             if (itemType == R.id.album_artist)
                 it.albumArtistListFlow else it.artistListFlow
         }.map { it.find { it.id == id } }
-        val qTitle = item.map { it?.title ?: "MISSING TITLE (ArtistSubFragment)" }
+        val qTitle = item.map {
+            val derivedQueueTitle = it?.title
+            if (derivedQueueTitle == null) {
+                Log.w(TAG, "Derived queue title is null")
+            }
+            derivedQueueTitle
+        }
         albumAdapter = AlbumAdapter(
             this, qTitle, item.map { it?.albumList },
             isSubFragment = itemType

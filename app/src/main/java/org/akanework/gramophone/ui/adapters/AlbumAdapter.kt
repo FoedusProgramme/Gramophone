@@ -38,7 +38,7 @@ import java.util.GregorianCalendar
 
 class AlbumAdapter(
     fragment: Fragment,
-    val queueTitle: Flow<String>,
+    val queueTitle: Flow<String?>,
     liveData: Flow<List<Album>?> = (fragment.requireActivity() as MainActivity).reader.albumListFlow,
     isSubFragment: Int? = null
 ) : BaseAdapter<Album>

@@ -70,7 +70,7 @@ import java.util.GregorianCalendar
  */
 class SongAdapter(
     fragment: Fragment?,
-    val queueTitle: Flow<String>,
+    val queueTitle: Flow<String?>,
     songList: Flow<List<MediaItem>?> = (fragment?.requireContext() ?: fallbackContext!!)
         .gramophoneApplication.reader.songListFlow,
     helper: Sorter.NaturalOrderHelper<MediaItem>? = null,
