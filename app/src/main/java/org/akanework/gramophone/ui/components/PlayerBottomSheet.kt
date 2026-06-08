@@ -158,7 +158,7 @@ class PlayerBottomSheet private constructor(
                 BottomSheetBehavior.STATE_EXPANDED -> {
                     previewPlayer.visibility = GONE
                     fullPlayer.visibilityDueToBottomSheet = VISIBLE
-                    fragmentContainer.visibility = INVISIBLE
+                    // TODO: uncomment fragmentContainer.visibility = INVISIBLE
                     lyricsFrame.visibility = VISIBLE
                     previewPlayer.alpha = 0f
                     fullPlayer.alpha = 1f
