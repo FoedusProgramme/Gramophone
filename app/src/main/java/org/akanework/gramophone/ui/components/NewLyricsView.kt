@@ -323,9 +323,9 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
             val fadeInStart = max(firstTs.toLong() - timeOffsetForUse.toLong(), 0L).toULong()
             val fadeInEnd = firstTs + timeOffsetForUse.toULong()
             // If end is implicit, it's the start point of next line, so animate smoothly.
-            val fadeOutStart = if (endIsImplicit) lastTs
+            val fadeOutStart = if (!endIsImplicit) lastTs
             else lastTs - timeOffsetForUse.toULong()
-            val fadeOutEnd = if (endIsImplicit)
+            val fadeOutEnd = if (!endIsImplicit)
                 lastTs + (timeOffsetForUse * 2).toULong()
             else lastTs + timeOffsetForUse.toULong()
             val highlightReal = posForRender in fadeInStart..fadeOutEnd
