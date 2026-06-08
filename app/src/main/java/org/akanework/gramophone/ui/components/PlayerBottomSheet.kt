@@ -141,6 +141,7 @@ class PlayerBottomSheet private constructor(
                     fullPlayer.visibilityDueToBottomSheet = GONE
                     previewPlayer.visibility = VISIBLE
                     fragmentContainer.visibility = VISIBLE
+                    lyricsFrame.visibility = GONE
                     previewPlayer.alpha = 1f
                     fullPlayer.alpha = 0f
                     lyricsFrame.alpha = 0f
@@ -158,6 +159,7 @@ class PlayerBottomSheet private constructor(
                     previewPlayer.visibility = GONE
                     fullPlayer.visibilityDueToBottomSheet = VISIBLE
                     fragmentContainer.visibility = INVISIBLE
+                    lyricsFrame.visibility = VISIBLE
                     previewPlayer.alpha = 0f
                     fullPlayer.alpha = 1f
                     lyricsFrame.alpha = 1f
@@ -168,6 +170,7 @@ class PlayerBottomSheet private constructor(
                     previewPlayer.visibility = GONE
                     fullPlayer.visibilityDueToBottomSheet = VISIBLE
                     fragmentContainer.visibility = VISIBLE
+                    lyricsFrame.visibility = VISIBLE
                     previewPlayer.alpha = 0f
                     fullPlayer.alpha = 1f
                     lyricsFrame.alpha = 1f
@@ -178,6 +181,7 @@ class PlayerBottomSheet private constructor(
                     previewPlayer.visibility = GONE
                     fullPlayer.visibilityDueToBottomSheet = GONE
                     fragmentContainer.visibility = VISIBLE
+                    lyricsFrame.visibility = GONE
                     previewPlayer.alpha = 0f
                     fullPlayer.alpha = 0f
                     lyricsFrame.alpha = 0f
