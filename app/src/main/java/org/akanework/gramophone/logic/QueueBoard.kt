@@ -4,13 +4,17 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Parcelable
 import android.util.Log
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.util.fastFirstOrNull
 import androidx.compose.ui.util.fastSumBy
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.Player.REPEAT_MODE_OFF
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flowOf
 import org.akanework.gramophone.logic.utils.CircularShuffleOrder
+import kotlin.math.exp
 import kotlin.random.Random
 
 private const val QUEUE_EXPIRY_MS = 10 * 36000000 // 10 hrs
@@ -92,11 +96,22 @@ class QueueBoard(
     }
 
     fun pinQueue(index: Int) {
-        masterQueues[index].expiry = null
+        if (masterQueues.isEmpty()) return
+        if (index == -1) {
+            masterQueues[masterQueues.lastIndex].expiry.value = null
+            return
+        }
+        masterQueues[index].expiry.value = null
     }
 
     fun unpinQueue(index: Int) {
-        masterQueues[index].expiry = System.currentTimeMillis() + QUEUE_EXPIRY_MS
+        if (masterQueues.isEmpty()) return
+        if (index == -1) {
+            masterQueues[masterQueues.lastIndex].expiry.value =
+                System.currentTimeMillis() + QUEUE_EXPIRY_MS
+            return
+        }
+        masterQueues[index].expiry.value = System.currentTimeMillis() + QUEUE_EXPIRY_MS
     }
 
     /**
@@ -105,7 +120,7 @@ class QueueBoard(
     fun trimQB() {
         val currentTimeMillis = System.currentTimeMillis()
         val newQueueList = masterQueues.filter {
-            it.expiry == null || it.expiry!! > currentTimeMillis
+            it.expiry.value == null || it.expiry.value!! > currentTimeMillis
         }
         masterQueues.clear()
         masterQueues.addAll(newQueueList)
@@ -205,7 +220,7 @@ class QueueBoard(
                 id = Random.nextLong(),
                 index = -1,
                 title = title,
-                expiry = if (!shouldPin) System.currentTimeMillis() + QUEUE_EXPIRY_MS else null,
+                expiry = MutableStateFlow(if (!shouldPin) System.currentTimeMillis() + QUEUE_EXPIRY_MS else null),
                 queue = ArrayList(mediaList),
                 startIndex = mediaItemIndex,
                 startPositionMs = startPositionMs ?: C.TIME_UNSET,
@@ -491,6 +506,17 @@ class QueueBoard(
         mq.clearFakeStats()
     }
 
+    /**
+     * Debug uses
+     */
+    fun age() {
+        masterQueues.forEach {
+            if (it.expiry.value != null) {
+                it.expiry.value = it.expiry.value!! + 2L * 36000000L
+            }
+        }
+    }
+
     val context
         get() = player as Context
 
@@ -523,7 +549,7 @@ data class MultiQueueObject(
     val id: Long, // queue uid
     var index: Int, // order of queue
     var title: String,
-    var expiry: Long?,
+    var expiry: MutableStateFlow<Long?>,
     /**
      * The order of songs are dynamic. This should not be accessed from outside QueueBoard.
      */
@@ -541,7 +567,7 @@ data class MultiQueueObject(
     private var fakeQueueLength: Long? = null
 ) {
     override fun toString() =
-        "$title ($id) startIndex=$startIndex, startPositionMs=$startPositionMs, repeatMode=$repeatMode, shuffleModeEnabled=$shuffleModeEnabled, ended=$ended, mediaItems_size=${queue.size}"
+        "$title ($id) startIndex=$startIndex, startPositionMs=$startPositionMs, repeatMode=$repeatMode, shuffleModeEnabled=$shuffleModeEnabled, ended=$ended, mediaItems_size=${queue.size}, expiry=${expiry.value}"
 
     val shuffleModeEnabled
         get() = shuffleOrder != null
@@ -593,7 +619,7 @@ data class MultiQueueObject(
             putLong("id", id)
             putInt("index", index)
             putString("title", title)
-            putString("expiry", expiry?.toString())
+            putString("expiry", expiry.value?.toString())
 
 //            putBinder("queue", binder)
             putParcelableArrayList("queue", ArrayList<Parcelable>(queue.map { it.toBundle() }))
@@ -623,7 +649,7 @@ data class MultiQueueObject(
                 id = bundle.getLong("id"),
                 index = bundle.getInt("index"),
                 title = bundle.getString("title") ?: "",
-                expiry = bundle.getString("expiry")?.toLongOrNull(),
+                expiry = MutableStateFlow(bundle.getString("expiry")?.toLongOrNull()),
 //                queue = queue,
                 queue = (bundle.getParcelableArrayList<Bundle>("queue")
                     ?: emptyList()).map { MediaItem.fromBundle(it) }.toMutableList(),

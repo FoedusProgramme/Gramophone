@@ -68,6 +68,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.media3.common.Player
 import androidx.media3.common.Player.REPEAT_MODE_ALL
@@ -77,18 +78,26 @@ import androidx.media3.session.MediaBrowser
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.MultiQueueObject
+import org.akanework.gramophone.logic.age
 import org.akanework.gramophone.logic.deleteQueue
 import org.akanework.gramophone.logic.getInactiveQueues
 import org.akanework.gramophone.logic.getQueue
 import org.akanework.gramophone.logic.loadQueue
+import org.akanework.gramophone.logic.pinQueue
 import org.akanework.gramophone.logic.playOrPause
 import org.akanework.gramophone.logic.supportsWideScreen
+import org.akanework.gramophone.logic.unpinQueue
 import org.akanework.gramophone.logic.utils.Flags
 import org.akanework.gramophone.ui.components.Chronometer
 import org.akanework.gramophone.ui.components.PlaylistQueueSheet
+import org.akanework.gramophone.ui.components.compose.ActionDropdown
+import org.akanework.gramophone.ui.components.compose.DropdownItem
+import kotlin.math.exp
 
 @Composable
 fun MqListItem(
@@ -103,6 +112,9 @@ fun MqListItem(
     onClick: () -> Unit = {},
     onLongClick: () -> Unit = {},
 ) {
+    val expiry by mq.expiry.collectAsState(initial = null)
+    val isPinned = expiry == null
+
     Row( // wrapper
         modifier = modifier
             .padding(horizontal = 16.dp)
@@ -135,23 +147,71 @@ fun MqListItem(
                     .weight(1f, false)
             ) {
                 if (isEditAllowed) {
-                    IconButton(
-                        onClick = {
-                            mqState.removeQueue(index)
-                        },
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_close),
-                            contentDescription = null
-                        )
+                    if (isPinned) {
+                        IconButton(
+                            onClick = {
+                                mqState.togglePin(index)
+                            },
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_keep_off),
+                                contentDescription = null
+                            )
+                        }
+                    } else {
+                        IconButton(
+                            onClick = {
+                                mqState.removeQueue(index)
+                            },
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_close),
+                                contentDescription = null
+                            )
+                        }
                     }
                 }
-                Text(
-                    text = "${index + 1}. ${mq.title}",
-                    maxLines = 1,
-                    overflow = TextOverflow.MiddleEllipsis,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 0.dp)
-                )
+                Column(
+
+                ) {
+                    Text(
+                        text = "${index + 1}. ${mq.title}",
+                        maxLines = 1,
+                        overflow = TextOverflow.MiddleEllipsis,
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 0.dp)
+                    )
+                    if (!isPinned) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .padding(horizontal = 16.dp)
+                        ) {
+                            // TODO: why need div by 10 here
+                            val remainingTimeMs = (expiry!! - System.currentTimeMillis()) / 10
+                            Icon(
+                                painter = painterResource(if (remainingTimeMs < 1800000) R.drawable.ic_warning else R.drawable.ic_keep), //TODO: represent state of pin, or the action of this button
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(12.dp)
+                                    .clickable(onClick = {
+                                        mqState.togglePin(index)
+                                    }),
+                            )
+                            Text(
+                                text = makeTimeString(remainingTimeMs),
+                                color = MaterialTheme.colorScheme.onSurface.copy(0.7f),
+                                fontSize = 10.sp,
+                                maxLines = 1,
+                                overflow = TextOverflow.MiddleEllipsis,
+                                modifier = Modifier
+                                    .padding(horizontal = 4.dp)
+                                    .clickable(onClick = {
+                                        mqState.togglePin(index)
+                                    }),
+                            )
+                        }
+                    }
+                }
             }
 
             if (isEditAllowed) {
@@ -440,16 +500,48 @@ fun ActionBar(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
         ) {
-            IconButton(
-                onClick = {
-                },
-                enabled = false,
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_more_vert_alt),
-                    contentDescription = null,
+            val expiry = mqState.getCurrentQueue()?.expiry?.collectAsState(initial = null)
+            val isPinned = expiry == null
+            ActionDropdown(
+                actions = listOf(
+                    DropdownItem(
+                        title = stringResource(R.string.add_to_queue),
+                        leadingIcon = null,
+                        action = {},
+                    ),
+                    DropdownItem(
+                        title = stringResource(R.string.play_next),
+                        leadingIcon = null,
+                        action = {},
+                    ),
+                    DropdownItem(
+                        title = stringResource(R.string.add_to_playlist),
+                        leadingIcon = null,
+                        action = {},
+                    ),
+                    DropdownItem(
+                        title = stringResource(R.string.rename),
+                        leadingIcon = null,
+                        action = {},
+                    ),
+                    DropdownItem(
+                        title = stringResource(
+                            if (isPinned) R.string.mq_pin_queue else R.string.mq_unpin_queue
+                        ),
+                        leadingIcon = null,
+                        action = {
+                            mqState.togglePin()
+                        },
+                    ),
+                    DropdownItem(
+                        title = "DEBUG: Age 2hrs",
+                        leadingIcon = null,
+                        action = {
+                            mqState.age()
+                        },
+                    ),
                 )
-            }
+            )
             AnimatedVisibility(mqState.isDetached()) {
                 IconButton(
                     onClick = {
@@ -880,6 +972,22 @@ class MqState(
 
     override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
         this.shuffleModeEnabled.value = shuffleModeEnabled
+    }
+
+    fun togglePin(index: Int = inactiveQueues.indexOf(getCurrentQueue())) {
+        if (getCurrentQueue()?.expiry?.value != null) {
+            instance.pinQueue(index)
+        } else {
+            instance.unpinQueue(index)
+        }
+    }
+
+    /**
+     * Get currently visible queue in the ui. Do not assume the media item list is complete.
+     */
+    fun getCurrentQueue() = detachedQueue ?: activeQueue
+    fun age() {
+        instance.age()
     }
 }
 

@@ -77,6 +77,7 @@ import org.akanework.gramophone.BuildConfig
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_GET_AUDIO_FORMAT
 import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_GET_LYRICS
+import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QB_AGE
 import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QB_DEL
 import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QB_GET_INACTIVE_LIST
 import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QB_GET_QUEUE_FOR_UI
@@ -452,7 +453,7 @@ fun MediaController.pinQueue(index: Int) {
 }
 
 
-fun MediaController.unQueue(index: Int) {
+fun MediaController.unpinQueue(index: Int) {
     sendCustomCommand(
         SessionCommand(SERVICE_QB_UNPIN_QUEUE, Bundle.EMPTY).apply {
             customExtras.putInt("index", index)
@@ -483,6 +484,10 @@ fun MediaController.reorderQueue(from: Int, to: Int): Boolean =
             getBoolean("status")
         else throw IllegalArgumentException("expected status to be set")
     }
+
+fun MediaController.age() {
+    sendCustomCommand(SessionCommand(SERVICE_QB_AGE, Bundle.EMPTY), Bundle.EMPTY)
+}
 
 fun Tracks.getFirstSelectedTrackFormatByType(type: @C.TrackType Int): Format? {
     for (i in groups) {

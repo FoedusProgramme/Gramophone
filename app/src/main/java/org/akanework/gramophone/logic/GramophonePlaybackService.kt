@@ -174,6 +174,8 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         const val SERVICE_QB_PIN_QUEUE ="qb_pin_queue"
         const val SERVICE_QB_UNPIN_QUEUE ="qb_unpin_queue"
 
+        const val SERVICE_QB_AGE = "qb_age"
+
         var instanceForWidgetAndLyricsOnly: GramophonePlaybackService? = null
     }
 
@@ -1059,6 +1061,11 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                     SessionResult(SessionResult.RESULT_SUCCESS).also { res ->
                         res.extras.putBoolean("status", false)
                         }
+                }
+
+                SERVICE_QB_AGE -> {
+                    qb.age()
+                    SessionResult(SessionResult.RESULT_SUCCESS)
                 }
 
                 else -> {
