@@ -402,8 +402,8 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
             val isRtl = it.layout.getParagraphDirection(0) == Layout.DIR_RIGHT_TO_LEFT
             val alignmentNormal = if (isRtl) it.layout.alignment == Layout.Alignment.ALIGN_OPPOSITE
             else it.layout.alignment == Layout.Alignment.ALIGN_NORMAL
-            if (((scaleInProgress > 0f && scaleInProgress <= 1f) ||
-                (scaleOutProgress > 0f && scaleOutProgress <= 1f)) &&
+            if (((scaleInProgress >= -.1f && scaleInProgress <= 1f) ||
+                (scaleOutProgress >= -.1f && scaleOutProgress <= 1f)) &&
                 timeOffsetForUse > 0f && it.line != null && isPlaying
             )
                 animating = true
@@ -525,7 +525,7 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
                     else // Layout.Alignment.ALIGN_CENTER
                         canvas.translate(width * ((1 - smallSizeFactor / hlScaleFactor) / 2), 0f)
                 }
-                if (gradientProgress > 0f && gradientProgress <= 1f && isPlaying)
+                if (gradientProgress >= -.1f && gradientProgress <= 1f && isPlaying)
                     animating = true
             }
             val spanEndWithoutGradient = if (realGradientStart == -1) spanEnd else realGradientStart
