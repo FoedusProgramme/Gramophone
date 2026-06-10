@@ -1504,7 +1504,7 @@ public abstract class ScrollingView2 extends View implements NestedScrollingChil
         return false;
     }
 
-    protected Pair<Integer, Float /* velocity */> computeScrollInner() {
+    protected long computeScrollInner() {
         throw new UnsupportedOperationException("computeScrollInner should be overridden");
     }
 
@@ -1516,9 +1516,9 @@ public abstract class ScrollingView2 extends View implements NestedScrollingChil
             if (!shouldComputeScrollInner()) {
                 return;
             }
-            Pair<Integer, Float> scroll = computeScrollInner();
-            y = scroll.getFirst();
-            velocity = scroll.getSecond();
+            long scroll = computeScrollInner();
+            y = (int) scroll;
+            velocity = Float.intBitsToFloat((int) (scroll >> 32));
         } else {
             mScroller.computeScrollOffset();
             y = mScroller.getCurrY();
