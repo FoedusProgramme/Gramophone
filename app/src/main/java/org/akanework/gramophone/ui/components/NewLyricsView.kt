@@ -667,7 +667,7 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
                     currentScrollTarget = scrollTarget
                     currentSmoothScroll = (AnimationUtils.currentAnimationTimeMillis().toFloat() to
                             lyricAnimTime) to (scrollY.toFloat() to scrollTarget.toFloat())
-                    runAnimatedScroll(false, false)
+                    runAnimatedScroll(false)
                     if (scrollY < scrollTarget) {
                         delayedScrollAnimation = if (scrollTargetIndex != null) AnimationUtils
                             .currentAnimationTimeMillis() to (scrollTargetIndex to scrollY)
