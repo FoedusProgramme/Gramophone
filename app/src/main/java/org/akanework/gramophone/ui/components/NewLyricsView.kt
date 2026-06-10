@@ -958,7 +958,7 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
             .second.second, interpolatedProgress).toInt()
     }
 
-    override fun computeScrollInner(): Pair<Int, Float> {
+    override fun computeScrollInner(): Long {
         val cat = AnimationUtils.currentAnimationTimeMillis().toFloat()
         val q = getScrollProgressAt(cat)
         val q1 = getScrollProgressAt(cat - 1000f)
@@ -967,7 +967,7 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
         if (cat >= currentSmoothScroll!!.first.first + currentSmoothScroll!!.first.second) {
             currentSmoothScroll = null
         }
-        return q to velocity
+        return q.toLong() or velocity.toBits().toLong().shl(32)
     }
 
     override fun shouldComputeScrollInner(): Boolean {
