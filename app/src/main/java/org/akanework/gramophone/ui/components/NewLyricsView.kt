@@ -664,10 +664,10 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
                 if (lyricAnimTime == 0f) {
                     scrollTo(0, scrollTarget)
                 } else {
+                    currentScrollTarget = scrollTarget
                     currentSmoothScroll = (AnimationUtils.currentAnimationTimeMillis().toFloat() to
                             lyricAnimTime) to (scrollY.toFloat() to scrollTarget.toFloat())
-                    currentScrollTarget = scrollTarget
-                    postInvalidateOnAnimation()
+                    runAnimatedScroll(false, false)
                     if (scrollY < scrollTarget) {
                         delayedScrollAnimation = if (scrollTargetIndex != null) AnimationUtils
                             .currentAnimationTimeMillis() to (scrollTargetIndex to scrollY)
@@ -949,22 +949,34 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
         stateTime = to
     }
 
-    override fun computeScroll() {
-        if (currentSmoothScroll != null) {
-            val progress = lerpInv(currentSmoothScroll!!.first.first,
-                currentSmoothScroll!!.first.first + currentSmoothScroll!!.first.second,
-                AnimationUtils.currentAnimationTimeMillis().toFloat())
-            val interpolatedProgress = scrollInterpolator.getInterpolation(min(1f,
-                progress))
-            scrollTo(0, lerp(currentSmoothScroll!!.second.first,
-                currentSmoothScroll!!.second.second, interpolatedProgress).toInt())
-            if (progress >= 1f) {
-                currentSmoothScroll = null
-            } else {
-                postInvalidateOnAnimation()
-            }
+    private fun getScrollProgressAt(time: Float): Int {
+        val progress = lerpInv(currentSmoothScroll!!.first.first, currentSmoothScroll!!
+            .first.first + currentSmoothScroll!!.first.second, time)
+        val interpolatedProgress = scrollInterpolator.getInterpolation(min(1f,
+            progress))
+        return lerp(currentSmoothScroll!!.second.first, currentSmoothScroll!!
+            .second.second, interpolatedProgress).toInt()
+    }
+
+    override fun computeScrollInner(): Pair<Int, Float> {
+        val cat = AnimationUtils.currentAnimationTimeMillis().toFloat()
+        val q = getScrollProgressAt(cat)
+        val q1 = getScrollProgressAt(cat - 1000f)
+        val distance = currentSmoothScroll!!.first.second
+        val velocity = 1000f * (q - q1) * distance
+        if (cat >= currentSmoothScroll!!.first.first + currentSmoothScroll!!.first.second) {
+            currentSmoothScroll = null
         }
-        super.computeScroll()
+        return q to velocity
+    }
+
+    override fun shouldComputeScrollInner(): Boolean {
+        return currentSmoothScroll != null
+    }
+
+    override fun abortAnimatedScroll() {
+        currentSmoothScroll = null
+        super.abortAnimatedScroll()
     }
 
     override fun startNestedScroll(axes: Int, type: Int): Boolean {

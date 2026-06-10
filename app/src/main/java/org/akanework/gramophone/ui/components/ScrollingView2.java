@@ -57,6 +57,8 @@ import androidx.core.widget.EdgeEffectCompat;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
+import kotlin.Pair;
+
 /**
  * NestedScrollView variant that is not a ViewGroup.
  */
@@ -1381,14 +1383,13 @@ public abstract class ScrollingView2 extends View implements NestedScrollingChil
      * @param withNestedScrolling whether to include nested scrolling operations.
      */
     private void smoothScrollBy(int dx, int dy, int scrollDurationMs, boolean withNestedScrolling) {
-        mIsUserFlinging = false;
         int childSize = mChildHeight;
         int parentSpace = getHeight() - getPaddingTop() - getPaddingBottom();
         final int scrollY = getScrollY();
         final int maxY = Math.max(0, childSize - parentSpace);
         dy = Math.max(0, Math.min(scrollY + dy, maxY)) - scrollY;
         mScroller.startScroll(getScrollX(), scrollY, 0, dy, scrollDurationMs);
-        runAnimatedScroll(withNestedScrolling);
+        runAnimatedScroll(withNestedScrolling, false);
     }
 
     public boolean isScrolling() {
@@ -1499,14 +1500,30 @@ public abstract class ScrollingView2 extends View implements NestedScrollingChil
                 getDefaultSize(getSuggestedMinimumHeight(), heightMeasureSpec));
     }
 
+    protected boolean shouldComputeScrollInner() {
+        return false;
+    }
+
+    protected Pair<Integer, Float /* velocity */> computeScrollInner() {
+        throw new UnsupportedOperationException("computeScrollInner should be overridden");
+    }
+
     @Override
     public void computeScroll() {
+        final int y;
+        final float velocity;
         if (mScroller.isFinished()) {
-            return;
+            if (!shouldComputeScrollInner()) {
+                return;
+            }
+            Pair<Integer, Float> scroll = computeScrollInner();
+            y = scroll.getFirst();
+            velocity = scroll.getSecond();
+        } else {
+            mScroller.computeScrollOffset();
+            y = mScroller.getCurrY();
+            velocity = mScroller.getCurrVelocity();
         }
-
-        mScroller.computeScrollOffset();
-        final int y = mScroller.getCurrY();
         int unconsumed = consumeFlingInVerticalStretch(y - mLastScrollerY);
         mLastScrollerY = y;
 
@@ -1519,8 +1536,7 @@ public abstract class ScrollingView2 extends View implements NestedScrollingChil
         final int range = getScrollRange();
 
         if (Build.VERSION.SDK_INT >= 35) {
-            Api35Impl.setFrameContentVelocity(ScrollingView2.this,
-                    Math.abs(mScroller.getCurrVelocity()));
+            Api35Impl.setFrameContentVelocity(ScrollingView2.this, Math.abs(velocity));
         }
 
         if (unconsumed != 0) {
@@ -1544,18 +1560,18 @@ public abstract class ScrollingView2 extends View implements NestedScrollingChil
             if (canOverscroll) {
                 if (unconsumed < 0) {
                     if (mEdgeGlowTop.isFinished()) {
-                        mEdgeGlowTop.onAbsorb((int) mScroller.getCurrVelocity());
+                        mEdgeGlowTop.onAbsorb((int) velocity);
                     }
                 } else {
                     if (mEdgeGlowBottom.isFinished()) {
-                        mEdgeGlowBottom.onAbsorb((int) mScroller.getCurrVelocity());
+                        mEdgeGlowBottom.onAbsorb((int) velocity);
                     }
                 }
             }
             abortAnimatedScroll();
         }
 
-        if (!mScroller.isFinished()) {
+        if (!mScroller.isFinished() || shouldComputeScrollInner()) {
             postInvalidateOnAnimation();
         } else {
             stopNestedScroll(ViewCompat.TYPE_NON_TOUCH);
@@ -1600,7 +1616,8 @@ public abstract class ScrollingView2 extends View implements NestedScrollingChil
         return pixelsConsumed;
     }
 
-    private void runAnimatedScroll(boolean participateInNestedScrolling) {
+    private void runAnimatedScroll(boolean participateInNestedScrolling, boolean fling) {
+        mIsUserFlinging = fling;
         if (participateInNestedScrolling) {
             startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL, ViewCompat.TYPE_NON_TOUCH);
         } else {
@@ -1610,7 +1627,11 @@ public abstract class ScrollingView2 extends View implements NestedScrollingChil
         postInvalidateOnAnimation();
     }
 
-    private void abortAnimatedScroll() {
+    protected void runAnimatedScroll(boolean participateInNestedScrolling) {
+        runAnimatedScroll(participateInNestedScrolling, false);
+    }
+
+    protected void abortAnimatedScroll() {
         mScroller.abortAnimation();
         mIsUserFlinging = false;
         stopNestedScroll(ViewCompat.TYPE_NON_TOUCH);
@@ -1765,13 +1786,12 @@ public abstract class ScrollingView2 extends View implements NestedScrollingChil
     }
 
     private void fling(int velocityY, boolean fromUser) {
-        mIsUserFlinging = fromUser;
         mScroller.fling(getScrollX(), getScrollY(), // start
                 0, velocityY, // velocities
                 0, 0, // x
                 Integer.MIN_VALUE, Integer.MAX_VALUE, // y
                 0, 0); // overscroll
-        runAnimatedScroll(true);
+        runAnimatedScroll(true, fromUser);
         if (Build.VERSION.SDK_INT >= 35) {
             Api35Impl.setFrameContentVelocity(ScrollingView2.this,
                     Math.abs(mScroller.getCurrVelocity()));
