@@ -263,7 +263,6 @@
     <string name="mix_port_flag_ultrasound">Siêu âm</string>
     <string name="mix_port_flag_spatializer">Bộ chỉnh âm trường</string>
     <string name="mix_port_flag_incall_music">Nhạc trong cuộc gọi</string>
-    <string name="mix_port_flag_sync"></string>
     <string name="mix_port_flag_hw_av_sync">Đồng bộ phần cứng A/V</string>
     <string name="mix_port_flag_gapless_offload">Offload không ngắt quãng</string>
     <string name="mix_port_flag_non_blocking">Không chặn</string>
