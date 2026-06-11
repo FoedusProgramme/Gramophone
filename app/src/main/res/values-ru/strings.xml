@@ -515,4 +515,19 @@
     <string name="show_file_names">Показывать имена файлов</string>
     <string name="show_file_names_summary">Показывать имена файлов вместо названий песен во вкладках папок и файловой системы</string>
     <string name="another_with_name">Это имя уже используется</string>
+    <string name="search_query">Поиск: %s</string>
+    <string name="settings_font_size">Размер шрифта</string>
+    <string name="set">Готово</string>
+    <string name="timer_eos">Дождаться окончания трека</string>
+    <string name="timer_end_of_this_song">В конце текущего трека</string>
+    <string name="other">Своё время</string>
+    <string name="unset">Сбросить</string>
+    <string name="timer_hint">Остановить через…</string>
+    <string name="settings_mq_enabled">Несколько очередей</string>
+    <plurals name="minutes">
+        <item quantity="one">%d минута</item>
+        <item quantity="few">%d минуты</item>
+        <item quantity="many">%d минут</item>
+        <item quantity="other">%d минут</item>
+    </plurals>
 </resources>
