@@ -303,7 +303,9 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
             val firstTs = it.line?.start ?: ULong.MIN_VALUE
             var lastTs = min(it.line?.end ?: Int.MAX_VALUE.toULong(), Int.MAX_VALUE.toULong())
             var endIsImplicit = it.line?.endIsImplicit != false
-            if (Flags.IGNORE_SMALL_ENDTIME_GAPS && it.line?.words == null && it.line?.start != null) {
+            if (Flags.IGNORE_SMALL_ENDTIME_GAPS && it.line?.start != null && (!it.line.isTranslated
+                        && it.theWords == null || it.line.isTranslated && spForRender!!.second
+                    .subList(0, i).find { l -> l.line?.start == it.line.start }?.theWords == null)) {
                 val j = spForRender!!.second.subList(i, spForRender!!.second.size).find { l ->
                     (l.line?.start ?: Int.MAX_VALUE.toULong()) > it.line.start }?.line?.start
                 val nextStartTime = min(j ?: Int.MAX_VALUE.toULong(), Int.MAX_VALUE.toULong())
@@ -884,7 +886,9 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
             val firstTs = it.line?.start ?: ULong.MIN_VALUE
             var lastTs = min(it.line?.end ?: Int.MAX_VALUE.toULong(), Int.MAX_VALUE.toULong())
             var endIsImplicit = it.line?.endIsImplicit != false
-            if (Flags.IGNORE_SMALL_ENDTIME_GAPS && it.line?.words == null && it.line?.start != null) {
+            if (Flags.IGNORE_SMALL_ENDTIME_GAPS && it.line?.start != null && (!it.line.isTranslated
+                        && it.theWords == null || it.line.isTranslated && spForRender!!.second
+                    .subList(0, i).find { l -> l.line?.start == it.line.start }?.theWords == null)) {
                 val j = spForRender!!.second.subList(i, spForRender!!.second.size).find { l ->
                     (l.line?.start ?: Int.MAX_VALUE.toULong()) > it.line.start }?.line?.start
                 val nextStartTime = min(j ?: Int.MAX_VALUE.toULong(), Int.MAX_VALUE.toULong())
