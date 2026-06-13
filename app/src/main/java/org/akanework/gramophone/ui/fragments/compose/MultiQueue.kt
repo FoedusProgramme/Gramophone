@@ -1,10 +1,10 @@
 package org.akanework.gramophone.ui.fragments.compose
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.spring
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -78,8 +78,6 @@ import androidx.media3.session.MediaBrowser
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.MultiQueueObject
@@ -97,7 +95,6 @@ import org.akanework.gramophone.ui.components.Chronometer
 import org.akanework.gramophone.ui.components.PlaylistQueueSheet
 import org.akanework.gramophone.ui.components.compose.ActionDropdown
 import org.akanework.gramophone.ui.components.compose.DropdownItem
-import kotlin.math.exp
 
 @Composable
 fun MqListItem(
@@ -233,13 +230,6 @@ fun MqContent(
     landscape: Boolean,
     onDismiss: (() -> Unit)? = null,
 ) {
-    val animatedMaxHeight by animateDpAsState(
-        targetValue = if (mqState.expanded) 300.dp else 0.dp,
-        animationSpec = spring(
-            stiffness = Spring.StiffnessMediumLow,
-        ),
-        label = "queueListHeight"
-    )
 
     Column(
         modifier = modifier
@@ -253,12 +243,18 @@ fun MqContent(
         )
 
         val lazyQueuesListState = rememberLazyListState()
-        MqList(
-            mqState = mqState,
-            lazyQueuesListState = lazyQueuesListState,
-            modifier = Modifier
-                .heightIn(Dp.Unspecified, if (!landscape) animatedMaxHeight else Dp.Unspecified)
-        )
+        AnimatedVisibility(
+            visible = mqState.expanded,
+            enter = expandVertically(),
+            exit = shrinkVertically()
+        ) {
+            MqList(
+                mqState = mqState,
+                lazyQueuesListState = lazyQueuesListState,
+                modifier = Modifier
+                    .heightIn(Dp.Unspecified, if (!landscape) 300.dp else Dp.Unspecified)
+            )
+        }
 
         ActionBar(
             mqState = mqState,
@@ -379,6 +375,8 @@ fun MqList(
                 onClick = {
                     mqState.detach(mq)
                 },
+                modifier = Modifier
+                    .animateItem()
             )
         }
         mqState.activeQueue?.let {
@@ -392,6 +390,8 @@ fun MqList(
                     onClick = {
                         mqState.resetHead()
                     },
+                    modifier = Modifier
+                        .animateItem()
                 )
             }
         }
@@ -895,12 +895,6 @@ class MqState(
     fun resetHead() {
         detachedQueue = null
         playlistQueueSheet?.forceUpdate(-1)
-        detachedQueue?.repeatMode?.let {
-            onRepeatModeChanged(it)
-        }
-        detachedQueue?.shuffleModeEnabled?.let {
-            onShuffleModeEnabledChanged(it)
-        }
     }
 
     fun toggleExpand() {
@@ -921,7 +915,8 @@ class MqState(
     }
 
     fun removeQueue(index: Int = getQueueListSize() - 1) {
-        instance.deleteQueue(index)
+        val status = instance.deleteQueue(index)
+        if (!status) return
         coroutineScope.launch {
             init()
         }
@@ -975,10 +970,23 @@ class MqState(
     }
 
     fun togglePin(index: Int = inactiveQueues.indexOf(getCurrentQueue())) {
-        if (getCurrentQueue()?.expiry?.value != null) {
-            instance.pinQueue(index)
+        // in the UI, active queue is appended onto the end of inactives
+        val index = if (index >= inactiveQueues.size) {
+            -1
         } else {
-            instance.unpinQueue(index)
+            index
+        }
+        val queue = (if (index == -1) activeQueue else inactiveQueues[index])!!
+
+        if (queue.expiry.value != null) {
+            if (instance.pinQueue(index)) {
+                queue.expiry.value = null
+            }
+        } else {
+            val expiry = instance.unpinQueue(index)
+            if (expiry != -1L) {
+                queue.expiry.value = expiry
+            }
         }
     }
 

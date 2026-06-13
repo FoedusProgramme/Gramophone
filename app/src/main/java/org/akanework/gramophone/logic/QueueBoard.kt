@@ -95,23 +95,38 @@ class QueueBoard(
         }
     }
 
-    fun pinQueue(index: Int) {
-        if (masterQueues.isEmpty()) return
+    /**
+     * Pin a queue.
+     *
+     * @param index Queue index. If an index of -1 is provided, the active queue is pinned.
+     * @return true if the operation is successful, otherwise false
+     */
+    fun pinQueue(index: Int): Boolean {
+        if (masterQueues.isEmpty()) return false
         if (index == -1) {
             masterQueues[masterQueues.lastIndex].expiry.value = null
-            return
+            return true
         }
         masterQueues[index].expiry.value = null
+        return true
     }
 
-    fun unpinQueue(index: Int) {
-        if (masterQueues.isEmpty()) return
+    /**
+     * Unpin a queue.
+     *
+     * @param index Queue index. If an index of -1 is provided, the active queue is unpinned.
+     * @return true if the operation is successful, otherwise false
+     */
+    fun unpinQueue(index: Int): Long {
+        if (masterQueues.isEmpty()) return -1L
+        val expiry = System.currentTimeMillis() + QUEUE_EXPIRY_MS
         if (index == -1) {
             masterQueues[masterQueues.lastIndex].expiry.value =
                 System.currentTimeMillis() + QUEUE_EXPIRY_MS
-            return
+            return expiry
         }
         masterQueues[index].expiry.value = System.currentTimeMillis() + QUEUE_EXPIRY_MS
+        return expiry
     }
 
     /**
@@ -235,49 +250,37 @@ class QueueBoard(
     }
 
     /**
-     * Deletes a queue
-     *
-     * @param mq
-     */
-    fun deleteQueue(mq: MultiQueueObject): Int {
-        if (QUEUE_DEBUG)
-            Log.d(TAG, "DELETING QUEUE ${mq.title}")
-
-        val match = masterQueues.firstOrNull { it.title == mq.title }
-        if (match != null) {
-            masterQueues.remove(match)
-        } else {
-            Log.w(TAG, "Cannot find queue to delete: ${mq.title}")
-        }
-
-        return masterQueues.size
-    }
-
-    /**
      * Deletes a queue.
      *
      * When deleting the active queue, the last inactive queue is loaded. When the active queue is
      * the only queue, playback is stopped.
      *
      * @param index
+     * @return true if the deletion is successful, otherwise false.
      */
-    fun deleteQueue(index: Int): Int {
+    fun deleteQueue(index: Int): Boolean {
         if (QUEUE_DEBUG)
             Log.d(TAG, "DELETING QUEUE AT INDEX: $index")
-        if (index == masterQueues.lastIndex) {
-            masterQueues.removeAt(index)
-            if (index <= 0) {
-                player.endedWorkaroundPlayer?.removeMediaItems(0, Int.MAX_VALUE)
+
+        try {
+            if (index == masterQueues.lastIndex) {
+                masterQueues.removeAt(index)
+                if (index <= 0) {
+                    player.endedWorkaroundPlayer?.removeMediaItems(0, Int.MAX_VALUE)
+                } else {
+                    commitQueue(index - 1, false)
+                }
+            } else if (index <= masterQueues.lastIndex - 1) {
+                masterQueues.removeAt(index)
             } else {
-                commitQueue(index - 1, false)
+                throw IndexOutOfBoundsException("Index of queue $index to delete OOB of 0-${masterQueues.size - 1}")
             }
-        } else if (index <= masterQueues.lastIndex - 1) {
-            masterQueues.removeAt(index)
-        } else {
-            throw IndexOutOfBoundsException("Index of queue $index to delete OOB of 0-${masterQueues.size - 1}")
+        } catch (e: IndexOutOfBoundsException) {
+            Log.w(TAG, e.message, e)
+            return false
         }
 
-        return masterQueues.size
+        return true
     }
 
     /**

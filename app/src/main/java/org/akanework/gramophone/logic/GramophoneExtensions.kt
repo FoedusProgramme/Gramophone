@@ -444,22 +444,28 @@ fun MediaController.loadQueue(index: Int) {
     )
 }
 
-fun MediaController.pinQueue(index: Int) {
+fun MediaController.pinQueue(index: Int): Boolean =
     sendCustomCommand(
         SessionCommand(SERVICE_QB_PIN_QUEUE, Bundle.EMPTY).apply {
             customExtras.putInt("index", index)
         }, Bundle.EMPTY
-    )
-}
+    ).get().extras.run {
+        if (containsKey("status"))
+            getBoolean("status")
+        else throw IllegalArgumentException("expected status to be set")
+    }
 
 
-fun MediaController.unpinQueue(index: Int) {
+fun MediaController.unpinQueue(index: Int): Long =
     sendCustomCommand(
         SessionCommand(SERVICE_QB_UNPIN_QUEUE, Bundle.EMPTY).apply {
             customExtras.putInt("index", index)
         }, Bundle.EMPTY
-    )
-}
+    ).get().extras.run {
+        if (containsKey("expiry"))
+            getLong("expiry")
+        else throw IllegalArgumentException("expected expiry to be set")
+    }
 
 
 fun MediaController.deleteQueue(index: Int): Boolean =

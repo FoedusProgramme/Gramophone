@@ -1041,25 +1041,25 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
 
                 SERVICE_QB_PIN_QUEUE -> {
                     val index = customCommand.customExtras.getInt("index")
-                    qb.pinQueue(index)
+                    val status = qb.pinQueue(index)
                     SessionResult(SessionResult.RESULT_SUCCESS).also { res ->
-                        res.extras.putBoolean("status", false)
+                        res.extras.putBoolean("status", status)
                     }
                 }
 
                 SERVICE_QB_UNPIN_QUEUE -> {
                     val index = customCommand.customExtras.getInt("index")
-                    qb.unpinQueue(index)
+                    val expiry = qb.unpinQueue(index)
                     SessionResult(SessionResult.RESULT_SUCCESS).also { res ->
-                        res.extras.putBoolean("status", false)
+                        res.extras.putLong("expiry", expiry)
                     }
                 }
 
                 SERVICE_QB_DEL -> {
                     val index = customCommand.customExtras.getInt("index")
-                    qb.deleteQueue(index)
+                    val status = qb.deleteQueue(index)
                     SessionResult(SessionResult.RESULT_SUCCESS).also { res ->
-                        res.extras.putBoolean("status", false)
+                        res.extras.putBoolean("status", status)
                         }
                 }
 
