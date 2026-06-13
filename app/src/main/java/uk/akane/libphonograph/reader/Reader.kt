@@ -23,6 +23,7 @@ import org.akanework.gramophone.logic.hasScopedStorageV1
 import org.akanework.gramophone.logic.hasScopedStorageWithMediaTypes
 import org.nift4.mediastorecompat.MediaStoreCompat
 import org.nift4.mediastorecompat.StorageManagerCompat
+import org.nift4.mediastorecompat.StorageManagerCompat.isVolumeForPath
 import org.nift4.mediastorecompat.StorageVolumeCompat
 import uk.akane.libphonograph.Constants
 import uk.akane.libphonograph.getColumnIndexOrNull
@@ -56,6 +57,7 @@ import java.io.File
 import java.time.Instant
 import java.time.ZoneId
 import java.util.concurrent.atomic.AtomicInteger
+import kotlin.collections.find
 import kotlin.math.min
 
 internal object Reader {
@@ -120,10 +122,9 @@ internal object Reader {
     suspend fun readFromMediaStore(
         context: Context,
         minSongLengthSeconds: Long = 0,
-        blackListSet: Set<String> = setOf(),
-        whiteListSet: Set<String> = setOf(),
+        blackListSetIn: Set<String> = setOf(),
+        whiteListSetIn: Set<String> = setOf(),
         shouldUseEnhancedCoverReading: Boolean? = false, // null means load if permission is granted
-        shouldIncludeExtraFormat: Boolean = true,
         shouldLoadAlbums: Boolean = true, // implies album artists too
         shouldLoadArtists: Boolean = true,
         shouldLoadGenres: Boolean = true,
@@ -140,24 +141,30 @@ internal object Reader {
         if (!context.hasAudioPermission()) {
             throw SecurityException("Audio permission is not granted")
         }
+        val volumes = StorageManagerCompat.getStorageVolumes(context)
+            .filter { it.canonicalDirectory != null }
+        val blackListSet = blackListSetIn.flatMap {
+            if (it.first() == '/')
+                listOf(it)
+            else // relative path = applies to every volume
+                volumes.map { volume ->
+                    volume.requireCanonicalDirectory().resolve(it).absolutePath
+                }
+        }
+        val whiteListSet = whiteListSetIn.flatMap {
+            if (it.first() == '/')
+                listOf(it)
+            else // relative path = applies to every volume
+                volumes.map { volume ->
+                    volume.requireCanonicalDirectory().resolve(it).absolutePath
+                }
+        }
         val useEnhancedCoverReading =
             if (hasScopedStorageWithMediaTypes() && !context.hasImagePermission()) {
                 if (shouldUseEnhancedCoverReading == true)
                     throw SecurityException("Requested enhanced cover reading but permission isn't granted")
                 false
             } else shouldUseEnhancedCoverReading != false
-
-        var selection = "${MediaStore.Audio.Media.IS_MUSIC} != 0"
-        if (shouldIncludeExtraFormat) {
-            selection += listOf(
-                "audio/x-wav",
-                "audio/ogg",
-                "audio/aac",
-                "audio/midi"
-            ).joinToString("") {
-                " or ${MediaStore.Audio.Media.MIME_TYPE} = '$it'"
-            }
-        }
 
         // Initialize list and maps.
         val coverCache = if (shouldLoadAlbums && useEnhancedCoverReading)
@@ -186,7 +193,6 @@ internal object Reader {
             // TODO: convert coroutine cancellation to cancellationSignal
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 val queryArgs = Bundle()
-                queryArgs.putString(ContentResolver.QUERY_ARG_SQL_SELECTION, selection)
                 queryArgs.putString(ContentResolver.QUERY_ARG_SQL_SORT_ORDER, sortOrder)
                 // TODO: maybe we can use QUERY_ARG_INCLUDE_RECENTLY_UNMOUNTED_VOLUMES?
                 context.contentResolver.query(
@@ -199,7 +205,7 @@ internal object Reader {
                 context.contentResolver.query(
                     MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                     projection,
-                    selection,
+                    null,
                     null,
                     sortOrder,
                     null
@@ -269,6 +275,17 @@ internal object Reader {
                     while (f != null) {
                         if (blackListSet.contains(f.absolutePath)) {
                             isBlacklisted = true
+                            if (!blackListSetIn.contains(f.absolutePath)) {
+                                folders!!.add(blackListSetIn.first {
+                                    if (it.first() == '/')
+                                        it == f.absolutePath
+                                    else // relative path = applies to every volume
+                                        volumes.find { volume ->
+                                            volume.requireCanonicalDirectory().resolve(it)
+                                                .absolutePath == f.absolutePath
+                                        } != null
+                                })
+                            }
                             break
                         }
                         f = f.parentFile
@@ -561,8 +578,9 @@ internal object Reader {
                         tmpPath = null // let's not allow to blacklist more than entire volumes
                 }
             }
-            for (blacklistedFolder in blackListSet) {
-                if (!(blacklistedFolder == "/storage/emulated" || blacklistedFolder == "/storage"))
+            for (blacklistedFolder in blackListSetIn) {
+                if (!(blacklistedFolder == "/storage/emulated" ||
+                    blacklistedFolder == "/storage" || blacklistedFolder.first() != '/'))
                     folders.add(blacklistedFolder) // let's not allow to blacklist more than entire volumes
             }
         }

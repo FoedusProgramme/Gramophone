@@ -59,7 +59,6 @@ class FlowReader(
     whiteListSetFlow: SharedFlow<Set<String>>,
     shouldUseEnhancedCoverReadingFlow: SharedFlow<Boolean?>, // null means load if permission is granted
     recentlyAddedFilterSecondFlow: SharedFlow<Long?>, // null means don't generate recently added
-    shouldIncludeExtraFormatFlow: SharedFlow<Boolean>,
     coverStubUri: String? = null
 ) {
     // IMPORTANT: Do not use distinctUntilChanged() or StateFlow here because equals() on thousands
@@ -169,7 +168,6 @@ class FlowReader(
         blackListSet: Set<String>,
         whiteListSet: Set<String>,
         shouldUseEnhancedCoverReading: Boolean?,
-        shouldIncludeExtraFormat: Boolean,
         coverStubUri: String?
     ) =
         // TODO repeatUntilDoneWhenUnpaused makes no sense with non-cancelable
@@ -183,7 +181,6 @@ class FlowReader(
                 blackListSet,
                 whiteListSet,
                 shouldUseEnhancedCoverReading,
-                shouldIncludeExtraFormat,
                 coverStubUri = coverStubUri
             )
         else ReaderResult.emptyReaderResult()
@@ -205,37 +202,33 @@ class FlowReader(
         .provideReplayCacheInvalidationManager(copyDownstream = Invalidation.Optional)
         .sharePauseableIn(scope, WhileSubscribed(20000), WhileSubscribed(2000), replay = 1)
     private val readerFlow: Flow<ReaderResult> =
-        shouldIncludeExtraFormatFlow.distinctUntilChanged()
-            .flatMapLatest { shouldIncludeExtraFormat ->
-                shouldUseEnhancedCoverReadingFlow.distinctUntilChanged()
-                    .flatMapLatest { shouldUseEnhancedCoverReading ->
-                        minSongLengthSecondsFlow.distinctUntilChanged()
-                            .flatMapLatest { minSongLengthSeconds ->
-                                blackListSetFlow.distinctUntilChanged()
-                                    .flatMapLatest { blackListSet ->
-                                        whiteListSetFlow.distinctUntilChanged()
-                                            .flatMapLatest { whiteListSet ->
-                                                mediaVersionFlow
-                                                    .onEach { requireReplayCacheInvalidationManager().invalidate() }
-                                                    .conflateAndBlockWhenPaused()
-                                                    .flatMapLatest {
-                                                        // manual refresh may for whatever reason
-                                                        // run in background, but all others
-                                                        // shouldn't trigger background runs
-                                                        manualRefreshTrigger.mapLatest { _ ->
-                                                            repeatUntilDoneWhenUnpaused {
-                                                                maybeDoRead(
-                                                                    context,
-                                                                    minSongLengthSeconds,
-                                                                    blackListSet,
-                                                                    whiteListSet,
-                                                                    shouldUseEnhancedCoverReading,
-                                                                    shouldIncludeExtraFormat,
-                                                                    coverStubUri
-                                                                )
-                                                            }
-                                                        }
+        shouldUseEnhancedCoverReadingFlow.distinctUntilChanged()
+            .flatMapLatest { shouldUseEnhancedCoverReading ->
+                minSongLengthSecondsFlow.distinctUntilChanged()
+                    .flatMapLatest { minSongLengthSeconds ->
+                        blackListSetFlow.distinctUntilChanged()
+                            .flatMapLatest { blackListSet ->
+                                whiteListSetFlow.distinctUntilChanged()
+                                    .flatMapLatest { whiteListSet ->
+                                        mediaVersionFlow
+                                            .onEach { requireReplayCacheInvalidationManager().invalidate() }
+                                            .conflateAndBlockWhenPaused()
+                                            .flatMapLatest {
+                                                // manual refresh may for whatever reason
+                                                // run in background, but all others
+                                                // shouldn't trigger background runs
+                                                manualRefreshTrigger.mapLatest { _ ->
+                                                    repeatUntilDoneWhenUnpaused {
+                                                        maybeDoRead(
+                                                            context,
+                                                            minSongLengthSeconds,
+                                                            blackListSet,
+                                                            whiteListSet,
+                                                            shouldUseEnhancedCoverReading,
+                                                            coverStubUri
+                                                        )
                                                     }
+                                                }
                                             }
                                     }
                             }

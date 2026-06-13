@@ -14,7 +14,6 @@ object SimpleReader {
         whiteListSet: Set<String> = setOf(),
         shouldUseEnhancedCoverReading: Boolean? = false, // null means load if permission is granted
         recentlyAddedFilterSecond: Long? = 1_209_600, // null means don't generate recently added
-        shouldIncludeExtraFormat: Boolean = true,
         coverStubUri: String? = null
     ): SimpleReaderResult {
         val (playlists, foundPlaylistContent) = Reader.fetchPlaylists(context)
@@ -22,7 +21,7 @@ object SimpleReader {
             withContext(Dispatchers.Default) {
                 Reader.readFromMediaStore(
                     context, minSongLengthSeconds, blackListSet, whiteListSet,
-                    shouldUseEnhancedCoverReading, shouldIncludeExtraFormat,
+                    shouldUseEnhancedCoverReading,
                     shouldLoadIdMap = false,
                     shouldLoadPathMap = foundPlaylistContent, coverStubUri = coverStubUri
                 )

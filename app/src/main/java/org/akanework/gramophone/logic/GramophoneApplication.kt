@@ -26,6 +26,7 @@ import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.os.Build
 import android.os.Debug
+import android.os.Environment
 import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy
 import android.os.StrictMode.VmPolicy
@@ -35,6 +36,7 @@ import android.webkit.MimeTypeMap
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.runtime.Composer
 import androidx.compose.runtime.ExperimentalComposeRuntimeApi
+import androidx.core.content.edit
 import androidx.fragment.app.strictmode.FragmentStrictMode
 import androidx.media3.common.util.Log
 import androidx.media3.session.DefaultMediaNotificationProvider
@@ -114,6 +116,17 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
     val shouldUseEnhancedCoverReadingFlow = if (hasScopedStorageWithMediaTypes()) null else
         MutableSharedFlow<Boolean?>(replay = 1)
     val recentlyAddedFilterSecondFlow = MutableStateFlow(1_209_600L)
+    val extraDisallowedFolders = setOf(
+        Environment.DIRECTORY_RINGTONES,
+        Environment.DIRECTORY_NOTIFICATIONS,
+        Environment.DIRECTORY_ALARMS,
+        Environment.DIRECTORY_PODCASTS,
+        "Android/media",
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+            Environment.DIRECTORY_AUDIOBOOKS else "Audiobooks",
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+            Environment.DIRECTORY_RECORDINGS else "Recordings"
+    )
     lateinit var reader: FlowReader
         private set
     lateinit var uacManager: UacManager
@@ -251,7 +264,7 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
             if (hasScopedStorageWithMediaTypes()) MutableStateFlow(null) else
                 shouldUseEnhancedCoverReadingFlow!!,
             recentlyAddedFilterSecondFlow,
-            MutableStateFlow(true), "gramophoneAlbumCover"
+            "gramophoneAlbumCover"
         )
         // Set application theme when launching.
         when (prefs.getString("theme_mode", "0")) {
@@ -269,6 +282,22 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
         }
         // This is a separate thread to avoid disk read on main thread and improve startup time
         CoroutineScope(Dispatchers.Default).launch {
+            if (prefs.getBoolean("needToAdd_isMusicBlacklist", true)) {
+                prefs.edit(true) {
+                    putBoolean("needToAdd_isMusicBlacklist", false)
+                    if (prefs.contains("folderFilter")) {
+                        putStringSet(
+                            "folderFilter", (prefs.getStringSet(
+                                "folderFilter", setOf()
+                            ) ?: setOf()) + extraDisallowedFolders
+                        )
+                    }
+                    if (prefs.getInt("mediastore_filter", 0) == 60) {
+                        putInt("mediastore_filter",
+                            resources.getInteger(R.integer.filter_default_sec))
+                    }
+                }
+            }
             onSharedPreferenceChanged(prefs, null) // reload all values
             prefs.registerOnSharedPreferenceChangeListener(this@GramophoneApplication)
 
@@ -293,7 +322,8 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
                 )
             }
             if (key == null || key == "folderFilter") {
-                blackListSetFlow.emit(prefs.getStringSet("folderFilter", setOf()) ?: setOf())
+                blackListSetFlow.emit(prefs.getStringSet("folderFilter",
+                    extraDisallowedFolders) ?: extraDisallowedFolders)
             }
             if (key == null || key == "folderAllow") {
                 whiteListSetFlow.emit(prefs.getStringSet("folderAllow", setOf()) ?: setOf())
