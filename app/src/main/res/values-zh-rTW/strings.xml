@@ -250,4 +250,16 @@
     <string name="spk_encoding_pcm_16bit">16-bit PCM</string>
     <string name="spk_encoding_pcm_16bit_big_endian">16-bit PCM (big endian)</string>
     <string name="spk_encoding_pcm_24bit">24-bit PCM</string>
+    <plurals name="folders_plural">
+        <item quantity="other">資料夾</item>
+    </plurals>
+    <string name="playback_speed">播放速度</string>
+    <string name="tempo">速度</string>
+    <string name="pitch">音高</string>
+    <string name="lock_tempo_pitch">鎖定節奏與音高</string>
+    <string name="reset">重置</string>
+    <string name="timer_expiry_eos">睡眠定時器將在 %s 播放的歌曲結束時暫停音樂</string>
+    <string name="timer_expiry_end_of_this_song">睡眠定時器將在目前歌曲結束時暫停音樂</string>
+    <string name="delete_really_artist">確定要刪除所有「%s」的歌曲嗎？此操作無法復原。</string>
+    <string name="spk_encoding_pcm_24bit_big_endian">24-bit PCM（大端序）</string>
 </resources>
