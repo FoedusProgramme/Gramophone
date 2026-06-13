@@ -91,6 +91,10 @@ class AdapterFragment : BaseFragment(null) {
         super.onDestroyView()
     }
 
+    fun onTabReselected() {
+        adapter.onTabReselected()
+    }
+
     fun startRequest(sender: IntentSender, data: Bundle) {
         pendingRequest = data
         intentSender.launch(IntentSenderRequest.Builder(sender).build())
@@ -147,6 +151,7 @@ class AdapterFragment : BaseFragment(null) {
         abstract val concatAdapter: ConcatAdapter
         abstract val itemHeightHelper: ItemHeightHelper?
         var onFullyDrawnListener: (() -> Unit)? = null
+        abstract fun onTabReselected()
         protected fun reportFullyDrawn() {
             onFullyDrawnListener?.invoke()
             onFullyDrawnListener = null

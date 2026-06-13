@@ -159,6 +159,8 @@ class DetailedFolderAdapter(
         SongAdapter(fragment, qTitle, dataFlow.map { it.songList }, folder = true).apply {
             onFullyDrawnListener = { reportFullyDrawn() }
             decorAdapter.jumpUpPos = { 0 }
+            decorAdapter.offsetPos = { this@DetailedFolderAdapter.decorAdapter.itemCount +
+                    folderPopAdapter.itemCount + folderAdapter.itemCount }
         }
     override val concatAdapter: ConcatAdapter =
         ConcatAdapter(
@@ -233,6 +235,10 @@ class DetailedFolderAdapter(
         if (path != null) {
             outState.putStringArrayList("Path", ArrayList(path))
         }
+    }
+
+    override fun onTabReselected() {
+        songAdapter.onTabReselected()
     }
 
     fun enter(path: String?) {

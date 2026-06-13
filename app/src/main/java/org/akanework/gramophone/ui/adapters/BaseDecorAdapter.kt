@@ -37,6 +37,7 @@ import kotlinx.coroutines.runBlocking
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.ui.ItemHeightHelper
 import org.akanework.gramophone.logic.ui.MyRecyclerView
+import org.akanework.gramophone.logic.ui.QuickLinearSmoothScroller
 import org.akanework.gramophone.logic.utils.exoplayer.EndedWorkaroundPlayer.Companion.queueWithTitle
 import org.akanework.gramophone.ui.fragments.AdapterFragment
 import org.akanework.gramophone.ui.getAdapterType
@@ -52,6 +53,7 @@ open class BaseDecorAdapter<T : AdapterFragment.BaseInterface<*>>(
     private var prefs = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
     var jumpUpPos: (() -> Int)? = null
     var jumpDownPos: (() -> Int)? = null
+    var offsetPos: (() -> Int)? = null
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -72,7 +74,7 @@ open class BaseDecorAdapter<T : AdapterFragment.BaseInterface<*>>(
         holder.counter.text = context.resources.getQuantityString(pluralStr, count, count)
         if (adapter is SongAdapter) {
             holder.counter.setOnClickListener {
-                adapter.getPlayingSong()?.let { scrollToViewPosition(it) }
+                goToPlayingSong()
             }
         }
         holder.sortButton.visibility =
@@ -252,6 +254,13 @@ open class BaseDecorAdapter<T : AdapterFragment.BaseInterface<*>>(
         }
     }
 
+    fun goToPlayingSong() {
+        if (adapter is SongAdapter) {
+            adapter.getPlayingSong()?.let { scrollToViewPosition(
+                (offsetPos?.invoke() ?: 0) + itemCount + it) }
+        }
+    }
+
     override fun onViewRecycled(holder: ViewHolder) {
         holder.sortButton.setOnClickListener(null)
         holder.playAll.setOnClickListener(null)
@@ -272,7 +281,7 @@ open class BaseDecorAdapter<T : AdapterFragment.BaseInterface<*>>(
     }
 
     private fun scrollToViewPosition(pos: Int) {
-        val smoothScroller = object : LinearSmoothScroller(context) {
+        val smoothScroller = object : QuickLinearSmoothScroller(context) {
             override fun calculateDtToFit(
                 viewStart: Int,
                 viewEnd: Int,
@@ -286,16 +295,12 @@ open class BaseDecorAdapter<T : AdapterFragment.BaseInterface<*>>(
                     boxStart,
                     boxEnd,
                     snapPreference
-                ))// + context.resources.displayMetrics.heightPixels / 3).coerceAtMost(viewEnd)
+                )) + (viewEnd - viewStart) / 2
             }
 
             override fun getVerticalSnapPreference(): Int {
                 return SNAP_TO_START
             }
-
-            /*override fun calculateTimeForDeceleration(dx: Int): Int {
-                return 500
-            }*/
         }
         smoothScroller.targetPosition = pos
         recyclerView?.startSmoothScrollCompat(smoothScroller)

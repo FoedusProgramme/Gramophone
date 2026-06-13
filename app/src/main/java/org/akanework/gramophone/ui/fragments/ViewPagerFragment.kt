@@ -237,6 +237,21 @@ class ViewPagerFragment : BaseFragment(true) {
                 }
             }
         }.attach()
+        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(p0: TabLayout.Tab?) {
+                // do nothing
+            }
+
+            override fun onTabUnselected(p0: TabLayout.Tab?) {
+                // do nothing
+            }
+
+            override fun onTabReselected(p0: TabLayout.Tab?) {
+                if (p0 != null)
+                    (childFragmentManager.findFragmentByTag("f${adapter.getItemId(p0.position)}")
+                            as AdapterFragment?)?.onTabReselected()
+            }
+        })
 
         if (adapter.itemCount < 2) {
             tabLayout.visibility = View.GONE

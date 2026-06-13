@@ -101,8 +101,17 @@ jobs:
           BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
 
       - name: Upload apk
+        if: github.event_name == 'pull_request'
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.APK_FILE_NAME }}
           path: ${{ env.APK_FILE }}
           compression-level: 9
+
+      - name: Upload apk
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ env.APK_FILE_NAME }}
+          path: ${{ env.APK_FILE }}
+          archive: false

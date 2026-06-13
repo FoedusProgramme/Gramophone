@@ -436,6 +436,10 @@ abstract class BaseAdapter<T : Any>(
         super.onViewRecycled(holder)
     }
 
+    override fun onTabReselected() {
+        decorAdapter.goToPlayingSong()
+    }
+
     private fun toId(item: T): String {
         return sorter.sortingHelper.getId(item)
     }

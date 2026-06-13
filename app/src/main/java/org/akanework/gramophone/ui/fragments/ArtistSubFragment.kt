@@ -85,6 +85,7 @@ class ArtistSubFragment : BaseFragment(true), PopupTextProvider {
             isSubFragment = itemType
         )
         songAdapter.decorAdapter.jumpUpPos = { 0 }
+        songAdapter.decorAdapter.offsetPos = { albumAdapter.concatAdapter.itemCount }
         val ih = DefaultItemHeightHelper.concatItemHeightHelper(
             albumAdapter.itemHeightHelper,
             { albumAdapter.concatAdapter.itemCount }, songAdapter.itemHeightHelper

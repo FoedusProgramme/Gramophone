@@ -113,15 +113,22 @@ open class MyRecyclerView : FixOnItemTouchListenerRecyclerView,
         val isZero = (layoutManager as? LinearLayoutManager)
             ?.findFirstVisibleItemPosition() == 0
         if (isZero && scroller.targetPosition > 0)
-            setAppBarExpanded(false)
+            setAppBarNotExpandedQuickly()
         layoutManager?.startSmoothScroll(scroller)
     }
 
-    @Suppress("UNCHECKED_CAST")
     fun scrollToPositionWithOffsetCompat(position: Int, offset: Int) {
+        if (position > 0 || offset > 0) {
+            setAppBarNotExpandedQuickly()
+        }
+        (layoutManager as LinearLayoutManager?)?.scrollToPositionWithOffset(position, offset)
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun setAppBarNotExpandedQuickly() {
         val apb = (appBarLayout?.layoutParams as CoordinatorLayout.LayoutParams?)?.behavior
         val isExpanded = apb is AppBarLayout.Behavior && apb.topAndBottomOffset == 0
-        if (appBarLayout != null && (position > 0 || offset > 0) && isExpanded) {
+        if (appBarLayout != null && isExpanded) {
             // this is setAppBarExpanded(false) but it works without layout pass
             val behavior: CoordinatorLayout.Behavior<AppBarLayout>? =
                 (appBarLayout!!.layoutParams as CoordinatorLayout.LayoutParams).behavior
@@ -137,7 +144,6 @@ open class MyRecyclerView : FixOnItemTouchListenerRecyclerView,
             // and when the scroll bar goes back up after collapse, the scale is different anyway
             // and we have an ugly jump in the list. I appreciate any idea for improvements.
         }
-        (layoutManager as LinearLayoutManager?)?.scrollToPositionWithOffset(position, offset)
     }
 
     override fun onScrollStateChanged(state: Int) {
