@@ -310,7 +310,7 @@ object PlaylistSerializer {
                         "image" -> {
                             if (image != null)
                                 throw XmlPullParserException("Duplicate <image> element")
-                            image = Uri.parse(parser.nextText())
+                            image = Entry.parseUri(outFile, parser.nextText())
                         }
                         "date" -> {
                             val input = parser.nextText().replace(":60", ":59")
@@ -382,11 +382,11 @@ object PlaylistSerializer {
                             }
                         }
                         "link" -> {
-                            links.add(parser.getAttributeValue(x0,
+                            links.add(parser.getAttributeValue(null,
                                 "rel").toUri() to parser.nextText().toUri())
                         }
                         "meta" -> {
-                            val key = parser.getAttributeValue(x0, "rel").toUri()
+                            val key = parser.getAttributeValue(null, "rel").toUri()
                             val value = parser.nextText()
                             when {
                                 key == XSPF_EXT_GENERATOR -> generator = value
@@ -402,7 +402,7 @@ object PlaylistSerializer {
                             }
                         }
                         "extension" -> {
-                            val application = parser.getAttributeValue(x0,
+                            val application = parser.getAttributeValue(null,
                                 "application")
                             when (application) {
                                 // TODO(ASAP) decide on whether to store them as string...?
@@ -434,7 +434,8 @@ object PlaylistSerializer {
                                     val tag = parser.name
                                     when (tag) {
                                         "location" -> {
-                                            locations.add(parser.nextText().toUri())
+                                            locations.add(Entry.parseUri(outFile,
+                                                parser.nextText()))
                                         }
                                         "identifier" -> {
                                             identifiers.add(parser.nextText().toUri())
@@ -467,7 +468,7 @@ object PlaylistSerializer {
                                             if (image != null)
                                                 throw XmlPullParserException("Duplicate <image>" +
                                                         " element")
-                                            image = Uri.parse(parser.nextText())
+                                            image = Entry.parseUri(outFile, parser.nextText())
                                         }
                                         "album" -> {
                                             if (album != null)
@@ -488,11 +489,11 @@ object PlaylistSerializer {
                                             durationMs = parser.nextText().toUInt()
                                         }
                                         "link" -> {
-                                            links.add(parser.getAttributeValue(x0,
+                                            links.add(parser.getAttributeValue(null,
                                                 "rel").toUri() to parser.nextText().toUri())
                                         }
                                         "meta" -> {
-                                            val key = parser.getAttributeValue(x0,
+                                            val key = parser.getAttributeValue(null,
                                                 "rel").toUri()
                                             val value = parser.nextText()
                                             // TODO(ASAP) decide on whether to store m3u extra
@@ -553,7 +554,8 @@ object PlaylistSerializer {
         when (format) {
             PlaylistFormat.M3u -> {
                 val out = StringBuilder("#EXTM3U\n")
-                out.append("#PLAYLIST:${playlist.title ?: outFile.nameWithoutExtension}\n\n")
+                if (playlist.title != null)
+                    out.append("#PLAYLIST:${playlist.title}\n\n")
                 songs.filter { it.locations.isNotEmpty() }.forEach {
                     it.associatedComments?.forEach { comment -> out.append("$comment\n") }
                     if (it.album != null) {
@@ -589,9 +591,11 @@ object PlaylistSerializer {
                 doc.startTag(null, "smil")
                 doc.startTag(null, "head")
 
-                doc.startTag(null, "title")
-                doc.text(playlist.title ?: outFile.nameWithoutExtension)
-                doc.endTag(null, "title")
+                if (playlist.title != null) {
+                    doc.startTag(null, "title")
+                    doc.text(playlist.title)
+                    doc.endTag(null, "title")
+                }
 
                 doc.startTag(null, "meta")
                 doc.attribute(null, "name", "Generator")
@@ -681,14 +685,18 @@ object PlaylistSerializer {
             PlaylistFormat.Xspf -> {
                 val x0 = "http://xspf.org/ns/0/"
                 val doc = Xml.newSerializer()
+                doc.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true)
                 doc.setOutput(os, StandardCharsets.UTF_8.name())
                 doc.startDocument("utf-8", true)
+                doc.setPrefix("", x0)
                 doc.startTag(x0, "playlist")
-                doc.attribute(x0, "version", "1")
+                doc.attribute(null, "version", "1")
 
-                doc.startTag(x0, "title")
-                doc.text(playlist.title ?: outFile.nameWithoutExtension)
-                doc.endTag(x0, "title")
+                if (playlist.title != null) {
+                    doc.startTag(x0, "title")
+                    doc.text(playlist.title)
+                    doc.endTag(x0, "title")
+                }
                 if (playlist.author != null) {
                     doc.startTag(x0, "creator")
                     doc.text(playlist.author)
@@ -717,8 +725,8 @@ object PlaylistSerializer {
                 if (playlist.image != null) {
                     doc.startTag(x0, "image")
                     if (playlist.image.scheme == "file") {
-                        doc.text(Uri.encode(playlist.image.toFile()
-                            .toRelativeString(parent)))
+                        doc.text(Uri.Builder().path(playlist.image.toFile()
+                            .toRelativeString(parent)).build().toString())
                     } else {
                         doc.text(playlist.image.toString())
                     }
@@ -763,7 +771,7 @@ object PlaylistSerializer {
                 if (playlist.links != null) {
                     for (link in playlist.links) {
                         doc.startTag(x0, "link")
-                        doc.attribute(x0, "rel", link.first.toString())
+                        doc.attribute(null, "rel", link.first.toString())
                         doc.text(link.second.toString())
                         doc.endTag(x0, "link")
                     }
@@ -771,7 +779,7 @@ object PlaylistSerializer {
                 if (playlist.metas != null) {
                     for (meta in playlist.metas) {
                         doc.startTag(x0, "meta")
-                        doc.attribute(x0, "rel", meta.first.toString())
+                        doc.attribute(null, "rel", meta.first.toString())
                         doc.text(meta.second)
                         doc.endTag(x0, "meta")
                     }
@@ -779,7 +787,7 @@ object PlaylistSerializer {
                 if (playlist.wplMetaTags != null) {
                     for (meta in playlist.wplMetaTags) {
                         doc.startTag(x0, "meta")
-                        doc.attribute(x0, "rel",
+                        doc.attribute(null, "rel",
                             "$XSPF_EXT_WPL_META/${meta.first}")
                         doc.text(meta.second)
                         doc.endTag(x0, "meta")
@@ -787,24 +795,24 @@ object PlaylistSerializer {
                 }
                 if (playlist.category != null) {
                     doc.startTag(x0, "meta")
-                    doc.attribute(x0, "rel", "$XSPF_EXT_WPL_META/Category")
+                    doc.attribute(null, "rel", "$XSPF_EXT_WPL_META/Category")
                     doc.text(playlist.category)
                     doc.endTag(x0, "meta")
                 }
                 if (playlist.genre != null) {
                     doc.startTag(x0, "meta")
-                    doc.attribute(x0, "rel", "$XSPF_EXT_WPL_META/Genre")
+                    doc.attribute(null, "rel", "$XSPF_EXT_WPL_META/Genre")
                     doc.text(playlist.genre)
                     doc.endTag(x0, "meta")
                 }
                 if (playlist.userName != null) {
                     doc.startTag(x0, "meta")
-                    doc.attribute(x0, "rel", "$XSPF_EXT_WPL_META/UserName")
+                    doc.attribute(null, "rel", "$XSPF_EXT_WPL_META/UserName")
                     doc.text(playlist.userName)
                     doc.endTag(x0, "meta")
                 }
                 doc.startTag(x0, "meta")
-                doc.attribute(x0, "rel", "$XSPF_EXT_GENERATOR")
+                doc.attribute(null, "rel", "$XSPF_EXT_GENERATOR")
                 doc.text("Gramophone ${BuildConfig.MY_VERSION_NAME}/${BuildConfig.RELEASE_TYPE}")
                 doc.endTag(x0, "meta")
                 doc.startTag(x0, "trackList")
@@ -813,8 +821,8 @@ object PlaylistSerializer {
                     for (location in entry.locations) {
                         doc.startTag(x0, "location")
                         if (location.scheme == "file") {
-                            doc.text(Uri.encode(location.toFile()
-                                .toRelativeString(parent)))
+                            doc.text(Uri.Builder().path(location.toFile()
+                                .toRelativeString(parent)).build().toString())
                         } else {
                             doc.text(location.toString())
                         }
@@ -850,7 +858,8 @@ object PlaylistSerializer {
                     if (entry.image != null) {
                         doc.startTag(x0, "image")
                         if (entry.image.scheme == "file") {
-                            doc.text(entry.image.toFile().toRelativeString(parent))
+                            doc.text(Uri.Builder().path(entry.image.toFile()
+                                .toRelativeString(parent)).build().toString())
                         } else {
                             doc.text(entry.image.toString())
                         }
@@ -874,7 +883,7 @@ object PlaylistSerializer {
                     if (entry.links != null) {
                         for (link in entry.links) {
                             doc.startTag(x0, "link")
-                            doc.attribute(x0, "rel", link.first.toString())
+                            doc.attribute(null, "rel", link.first.toString())
                             doc.text(link.second.toString())
                             doc.endTag(x0, "link")
                         }
@@ -882,26 +891,26 @@ object PlaylistSerializer {
                     if (entry.metas != null) {
                         for (meta in entry.metas) {
                             doc.startTag(x0, "meta")
-                            doc.attribute(x0, "rel", meta.first.toString())
+                            doc.attribute(null, "rel", meta.first.toString())
                             doc.text(meta.second)
                             doc.endTag(x0, "meta")
                         }
                     }
                     if (entry.genre != null) {
                         doc.startTag(x0, "meta")
-                        doc.attribute(x0, "rel", "$XSPF_EXT_M3U_GENRE")
+                        doc.attribute(null, "rel", "$XSPF_EXT_M3U_GENRE")
                         doc.text(entry.genre)
                         doc.endTag(x0, "meta")
                     }
                     if (entry.contentId != null) {
                         doc.startTag(x0, "meta")
-                        doc.attribute(x0, "rel", "$XSPF_EXT_WPL_CID")
+                        doc.attribute(null, "rel", "$XSPF_EXT_WPL_CID")
                         doc.text(entry.contentId)
                         doc.endTag(x0, "meta")
                     }
                     if (entry.trackingId != null) {
                         doc.startTag(x0, "meta")
-                        doc.attribute(x0, "rel", "$XSPF_EXT_WPL_TID")
+                        doc.attribute(null, "rel", "$XSPF_EXT_WPL_TID")
                         doc.text(entry.trackingId)
                         doc.endTag(x0, "meta")
                     }
@@ -990,8 +999,8 @@ object PlaylistSerializer {
                     else
                         uri
                 } else
-                    outFile.resolveSibling(line).toOkioPath(normalize = true)
-                        .toFile().toUriCompat()
+                    outFile.resolveSibling(Uri.decode(line))
+                        .toOkioPath(normalize = true).toFile().toUriCompat()
             fun ofAbstract(file: File) = Entry(listOf(file.toUriCompat()))
             fun ofM3u(
                 file: List<Uri>,
@@ -1023,7 +1032,7 @@ object PlaylistSerializer {
         else preferredLocation.toString()
         fun updateFromMediaItem(pathMap: Map<String, MediaItem>?) =
             resolveMediaItem(pathMap)?.let { copyFromMediaItem(it) } ?: this
-        // TODO(ASAP) add basic xspf content resolving
+        // TODO(ASAP) add basic xspf (maybe for extm3u or pls too?) content resolving
         fun resolveMediaItem(pathMap: Map<String, MediaItem>?) =
             locations.filter { it.scheme == "file" }.firstNotNullOfOrNull { link ->
                 pathMap!![link.toFile().absolutePath]

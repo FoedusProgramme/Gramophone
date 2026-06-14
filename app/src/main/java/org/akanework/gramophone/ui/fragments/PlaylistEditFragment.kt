@@ -261,6 +261,7 @@ class PlaylistEditFragment : BaseFragment(false) {
         withContext(Dispatchers.Main) {
             entries.value = 1 to readback
             renderedEntries = renderedFinal
+            requestWriteIfNeeded()
             // Only enable saving after loading the actual content
             topAppBar.setOnMenuItemClickListener {
                 when (it.itemId) {
@@ -473,6 +474,11 @@ class PlaylistEditFragment : BaseFragment(false) {
 
     override fun onResume() {
         super.onResume()
+        if (entries.value.first > 0)
+            requestWriteIfNeeded()
+    }
+
+    fun requestWriteIfNeeded() {
         val context = requireContext().applicationContext
         CoroutineScope(Dispatchers.Default).launch {
             val token = MediaStoreCompat.needRequestBytesWrite(context, uri)
