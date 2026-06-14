@@ -221,7 +221,7 @@ class PlaylistEditFragment : BaseFragment(false) {
         } catch (e: Exception) {
             Log.e(TAG, "failed to read changes", e)
             withContext(Dispatchers.Main) {
-                Toast.makeText(requireContext(), R.string.mount_storage,
+                Toast.makeText(requireContext(), e.toString(),
                     Toast.LENGTH_LONG).show()
                 requireActivity().supportFragmentManager.popBackStack()
             }
@@ -339,7 +339,7 @@ class PlaylistEditFragment : BaseFragment(false) {
                 } catch (e: Exception) {
                     Log.e(TAG, "failed to write changes", e)
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(requireContext(), R.string.mount_storage,
+                        Toast.makeText(requireContext(), e.toString(),
                             Toast.LENGTH_LONG).show()
                         requireActivity().supportFragmentManager.popBackStack()
                     }

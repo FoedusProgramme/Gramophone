@@ -681,7 +681,6 @@ object PlaylistSerializer {
             PlaylistFormat.Xspf -> {
                 val x0 = "http://xspf.org/ns/0/"
                 val doc = Xml.newSerializer()
-                doc.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, true)
                 doc.setOutput(os, StandardCharsets.UTF_8.name())
                 doc.startDocument("utf-8", true)
                 doc.startTag(x0, "playlist")
