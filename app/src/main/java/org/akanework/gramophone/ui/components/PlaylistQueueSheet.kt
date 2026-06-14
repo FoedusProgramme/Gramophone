@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.SystemClock
 import android.view.View
+import android.widget.ImageView
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -14,6 +15,7 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.graphics.Insets
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.children
 import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
@@ -23,6 +25,7 @@ import androidx.media3.session.MediaBrowser
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.channels.awaitClose
@@ -44,8 +47,8 @@ import org.akanework.gramophone.ui.MainActivity
 import org.akanework.gramophone.ui.fragments.compose.QueueRoot
 import org.akanework.gramophone.ui.fragments.compose.rememberMqState
 import java.util.LinkedList
+import kotlin.sequences.forEach
 
-// TODO: Playing indicator does not update when shuffling
 class PlaylistQueueSheet(
     context: Context, private val activity: MainActivity
 ) : BottomSheetDialog(context), Player.Listener {
@@ -54,9 +57,14 @@ class PlaylistQueueSheet(
         get() = activity.getPlayer()
     private val playlistAdapter: PlaylistCardAdapter
     private val touchHelper: ItemTouchHelper
+    private val recyclerView: RecyclerView
     private val durationView: Chronometer
     private val queueHead: ComposeView
     private val mqEnabled: Boolean
+
+    // depending on the queue state, we may need to modify behaviour of certain UI elements outside
+    // the compose queue elements
+    private var detachedHead: Boolean = false
 
     init {
         prefs = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
@@ -68,7 +76,7 @@ class PlaylistQueueSheet(
             behavior.maxWidth = 900.dpToPx(context)
         }
 
-        val recyclerView = findViewById<MyRecyclerView>(R.id.recyclerview)!!
+        recyclerView = findViewById<MyRecyclerView>(R.id.recyclerview)!!
 
         ViewCompat.setOnApplyWindowInsetsListener(recyclerView) { v, ic ->
             val i = ic.getInsets(
@@ -141,39 +149,16 @@ class PlaylistQueueSheet(
                     pureDark = pureDark
                 ) {
                     val mqState =
-                        rememberMqState(coroutineScope, instance!!, this@PlaylistQueueSheet)
+                        rememberMqState(
+                            coroutineScope, instance!!, this@PlaylistQueueSheet,
+                            onDetachHead = { detachedHead = true },
+                            onResetHead = {
+                                detachedHead = false
+                            })
                     val pagerState = rememberPagerState(
                         initialPage = if (Flags.MQ_PREVIEW) 0 else 1,
                         pageCount = { 2 }
                     )
-
-                    LaunchedEffect(mqState.detachedQueue) {
-                        coroutineScope.launch {
-                            if (mqState.isDetached()) {
-                                playlistAdapter.currentMediaItemIndex =
-                                    mqState.detachedQueue?.startIndex
-                                recyclerView.smoothScrollToPosition(
-                                    playlistAdapter.playlist.first.indexOfFirst { i ->
-                                        i == (mqState.detachedQueue?.startIndex ?: 0)
-                                    }.let {
-                                        return@let if (it == -1) 0 else it
-                                    })
-                            } else {
-                                playlistAdapter.currentMediaItemIndex =
-                                    instance?.currentMediaItemIndex.let {
-                                        playlistAdapter.playlist.first.indexOf(
-                                            it
-                                        )
-                                    }
-                                recyclerView.smoothScrollToPosition(
-                                    playlistAdapter.playlist.first.indexOfFirst { i ->
-                                        i == (instance?.currentMediaItemIndex ?: 0)
-                                    }.let {
-                                        return@let if (it == -1) 0 else it
-                                    })
-                            }
-                        }
-                    }
 
                     QueueRoot(
                         mqState = mqState,
@@ -213,6 +198,7 @@ class PlaylistQueueSheet(
         mediaItem: MediaItem?,
         reason: @Player.MediaItemTransitionReason Int
     ) {
+        if (detachedHead) return
         val i = instance?.currentMediaItemIndex
         playlistAdapter.currentMediaItemIndex = i?.let { playlistAdapter.playlist.first.indexOf(i) }
     }
@@ -222,6 +208,7 @@ class PlaylistQueueSheet(
         newPosition: Player.PositionInfo,
         reason: @Player.DiscontinuityReason Int
     ) {
+        if (detachedHead) return
         playlistAdapter.updateTimer()
     }
 
@@ -233,8 +220,21 @@ class PlaylistQueueSheet(
         timeline: Timeline,
         reason: @Player.TimelineChangeReason Int
     ) {
-        // TODO: support listening to externally caused changes to playlist (ie MCT).
-        // playlistAdapter.updateList()
+        // trigger an ui list update if changes are detected
+        if (instance?.mediaItemCount != playlistAdapter.playlist.first.size) {
+            playlistAdapter.updateList()
+            return
+        }
+        val oldPl = playlistAdapter.playlist
+        val pl = playlistAdapter.dumpPlaylist()
+        var i = 0
+        while (i < pl.second.size) {
+            if (pl.first[i] != oldPl.first[i] || pl.second[i].mediaId != oldPl.second[i].mediaId) {
+                playlistAdapter.updateList(newPlaylist = pl)
+                return
+            }
+            i++
+        }
     }
 
     /**
@@ -276,6 +276,8 @@ class PlaylistQueueSheet(
             }
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: List<Any?>) {
+            holder.dragHandle.visibility = if (detachedHead.value) View.GONE else View.VISIBLE
+            holder.closeButton.visibility = if (detachedHead.value) View.GONE else View.VISIBLE
             if (payloads.isNotEmpty()) {
                 if (payloads.none { it is Boolean && it }) {
                     holder.nowPlaying.drawable?.level = if (currentIsPlaying == true) 1 else 0
@@ -306,6 +308,8 @@ class PlaylistQueueSheet(
             (holder.nowPlaying.drawable as? NowPlayingDrawable?)?.level2Done = null
             holder.nowPlaying.setImageDrawable(null)
             holder.nowPlaying.visibility = View.GONE
+            holder.dragHandle.visibility = if (detachedHead.value) View.GONE else View.VISIBLE
+            holder.closeButton.visibility = if (detachedHead.value) View.GONE else View.VISIBLE
             super.onViewRecycled(holder)
         }
 
@@ -353,7 +357,7 @@ class PlaylistQueueSheet(
             touchHelper.startDrag(holder)
         }
 
-        private fun dumpPlaylist(): Pair<MutableList<Int>, MutableList<MediaItem>> {
+        fun dumpPlaylist(): Pair<MutableList<Int>, MutableList<MediaItem>> {
             val items = LinkedList<MediaItem>()
             val instance = activity.getPlayer()!!
             for (i in 0 until instance.mediaItemCount) {
@@ -372,18 +376,36 @@ class PlaylistQueueSheet(
         /**
          * Update playlist and timer
          */
-        fun updateList(mqIndex: Int? = null) {
+        fun updateList(
+            mqIndex: Int? = null,
+            newPlaylist: Pair<MutableList<Int>, MutableList<MediaItem>>? = null
+        ) {
             val mq = mqIndex?.let { instance?.getQueueForUi(mqIndex) }
-            val pl = if (mq != null) Pair(mq.first, mq.second.queue) else dumpPlaylist()
+            val pl = if (mq != null) {
+                Pair(mq.first, mq.second.queue)
+            } else {
+                newPlaylist ?: dumpPlaylist()
+            }
             playlist = pl
             notifyDataSetChanged()
+
+            // update playing indicator, scroll to, drag handle visibility
+            val i = (mq?.second?.startIndex ?: instance?.currentMediaItemIndex).let {
+                if (it == -1) 0 else it
+            }
+            currentMediaItemIndex = i?.let { playlist.first.indexOf(i) }
+            recyclerView.post {
+                recyclerView.smoothScrollToPosition(currentMediaItemIndex ?: 0)
+            }
+
             updateTimer(mq?.second?.startIndex, mq?.second?.startPositionMs)
         }
 
         fun updateTimer(currentMediaItemIndex: Int? = null, currentPosition: Long? = null) {
             if (currentMediaItemIndex == -1) return
             val current = currentMediaItemIndex ?: instance?.currentMediaItemIndex?.let {
-                playlist.first.indexOf(it).takeIf { it != -1 } } ?: 0
+                playlist.first.indexOf(it).takeIf { it != -1 }
+            } ?: 0
             if (current < 0) return
             val elapsedCurrentMs = currentPosition ?: instance?.currentPosition ?: 0
             durationView.format = context.getString(

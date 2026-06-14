@@ -1,6 +1,5 @@
 package org.akanework.gramophone.ui.fragments.compose
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.expandVertically
@@ -373,7 +372,10 @@ fun MqList(
                 isActiveQueue = false,
                 isInactiveActiveQueue = mq == mqState.detachedQueue,
                 onClick = {
-                    mqState.detach(mq)
+                    if (mqState.detachedQueue != mq) {
+                        mqState.detach(mq)
+                        // TODO: scroll to when click
+                    }
                 },
                 modifier = Modifier
                     .animateItem()
@@ -388,7 +390,9 @@ fun MqList(
                     isActiveQueue = true,
                     isInactiveActiveQueue = false,
                     onClick = {
-                        mqState.resetHead()
+                        if (mqState.isDetached()) {
+                            mqState.resetHead()
+                        }
                     },
                     modifier = Modifier
                         .animateItem()
@@ -803,6 +807,8 @@ class MqState(
     private val coroutineScope: CoroutineScope,
     private val instance: MediaBrowser,
     private val playlistQueueSheet: PlaylistQueueSheet?,
+    private val onDetachHead: (() -> Unit)?,
+    private val onResetHead: (() -> Unit)?,
 ) : Player.Listener {
     val isPlaying = MutableStateFlow(instance.isPlaying)
 
@@ -872,29 +878,23 @@ class MqState(
     fun isDetached(): Boolean = detachedQueue != null
 
     fun detach(index: Int) {
+        onDetachHead?.invoke()
         detachedQueue = inactiveQueues.getOrNull(index)
-        detachedQueue?.repeatMode?.let {
-            onRepeatModeChanged(it)
-        }
-        detachedQueue?.shuffleModeEnabled?.let {
-            onShuffleModeEnabledChanged(it)
-        }
+        playlistQueueSheet?.forceUpdate(index)
     }
 
     fun detach(mq: MultiQueueObject) {
+        onDetachHead?.invoke()
         detachedQueue = mq
         playlistQueueSheet?.forceUpdate(inactiveQueues.indexOf(mq))
-        detachedQueue?.repeatMode?.let {
-            onRepeatModeChanged(it)
-        }
-        detachedQueue?.shuffleModeEnabled?.let {
-            onShuffleModeEnabledChanged(it)
-        }
     }
 
-    fun resetHead() {
+    fun resetHead(updateSongList: Boolean = true) {
+        onResetHead?.invoke()
         detachedQueue = null
-        playlistQueueSheet?.forceUpdate(-1)
+        if (updateSongList) {
+            playlistQueueSheet?.forceUpdate(-1)
+        }
     }
 
     fun toggleExpand() {
@@ -931,7 +931,7 @@ class MqState(
     fun loadDetached() {
         instance.loadQueue(inactiveQueues.indexOf(detachedQueue))
         expanded = false
-        resetHead()
+        resetHead(false)
         coroutineScope.launch {
             delay(500)
             init()
@@ -1004,8 +1004,10 @@ fun rememberMqState(
     coroutineScope: CoroutineScope,
     instance: MediaBrowser,
     playlistQueueSheet: PlaylistQueueSheet?,
+    onDetachHead: (() -> Unit)?,
+    onResetHead: (() -> Unit)?,
 ): MqState {
     return remember {
-        MqState(coroutineScope, instance, playlistQueueSheet)
+        MqState(coroutineScope, instance, playlistQueueSheet, onDetachHead, onResetHead)
     } // TODO: rememberSaveable
 }
