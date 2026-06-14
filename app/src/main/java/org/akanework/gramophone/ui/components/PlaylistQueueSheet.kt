@@ -5,8 +5,10 @@ import android.content.SharedPreferences
 import android.os.SystemClock
 import android.view.View
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
@@ -35,6 +37,7 @@ import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.dpToPx
 import org.akanework.gramophone.logic.getBooleanStrict
 import org.akanework.gramophone.logic.getQueueForUi
+import org.akanework.gramophone.logic.loadQueue
 import org.akanework.gramophone.logic.replaceAllSupport
 import org.akanework.gramophone.logic.ui.MyRecyclerView
 import org.akanework.gramophone.logic.utils.Flags
@@ -61,6 +64,7 @@ class PlaylistQueueSheet(
     // depending on the queue state, we may need to modify behaviour of certain UI elements outside
     // the compose queue elements
     private var detachedHead = MutableStateFlow(false)
+    private var detachedQueue: Int? = null
 
     private var veto = false // TODO: i mean it works but its not very elegant
 
@@ -149,13 +153,28 @@ class PlaylistQueueSheet(
                     val mqState =
                         rememberMqState(
                             coroutineScope, instance!!, this@PlaylistQueueSheet,
-                            onDetachHead = { detachedHead.value = true },
-                            onResetHead = { detachedHead.value = false },
+                            onDetachHead = {
+                                detachedHead.value = true
+                                detachedQueue = it
+                            },
+                            onResetHead = {
+                                detachedHead.value = false
+                                // detachedQueue is "consumed" by the LaunchedEffect below
+                            },
                         )
                     val pagerState = rememberPagerState(
                         initialPage = if (Flags.MQ_PREVIEW) 0 else 1,
                         pageCount = { 2 }
                     )
+
+                    val igiveupnamingvariables by detachedHead.collectAsState()
+                    LaunchedEffect(igiveupnamingvariables) {
+                        if (!detachedHead.value && detachedQueue != null) {
+                            mqState.resetHead(false)
+                            mqState.toggleExpand()
+                            detachedQueue = null
+                        }
+                    }
 
                     QueueRoot(
                         mqState = mqState,
@@ -323,7 +342,14 @@ class PlaylistQueueSheet(
         else playlist.first.size
 
         override fun onClick(pos: Int) {
-            instance?.seekToDefaultPosition(playlist.first[pos])
+            if (detachedHead.value) {
+                detachedQueue?.let {
+                    detachedHead.value = false
+                    instance?.loadQueue(it, playlist.first[pos])
+                }
+            } else {
+                instance?.seekToDefaultPosition(playlist.first[pos])
+            }
         }
 
         override fun onRowMoved(from: Int, to: Int) {

@@ -807,7 +807,7 @@ class MqState(
     private val coroutineScope: CoroutineScope,
     private val instance: MediaBrowser,
     private val playlistQueueSheet: PlaylistQueueSheet?,
-    private val onDetachHead: (() -> Unit)?,
+    private val onDetachHead: ((Int) -> Unit)?,
     private val onResetHead: (() -> Unit)?,
 ) : Player.Listener {
     val isPlaying = MutableStateFlow(instance.isPlaying)
@@ -878,13 +878,22 @@ class MqState(
     fun isDetached(): Boolean = detachedQueue != null
 
     fun detach(index: Int) {
-        onDetachHead?.invoke()
-        detachedQueue = inactiveQueues.getOrNull(index)
+        val mq = inactiveQueues.getOrNull(index)
+        if (mq == null) {
+            playlistQueueSheet?.forceUpdate()
+            return
+        }
+        onDetachHead?.invoke(index)
+        detachedQueue = mq
         playlistQueueSheet?.forceUpdate(index)
     }
 
     fun detach(mq: MultiQueueObject) {
-        onDetachHead?.invoke()
+        if (!inactiveQueues.contains(mq)) {
+            playlistQueueSheet?.forceUpdate()
+            return
+        }
+        onDetachHead?.invoke(inactiveQueues.indexOf(mq))
         detachedQueue = mq
         playlistQueueSheet?.forceUpdate(inactiveQueues.indexOf(mq))
     }
@@ -1004,7 +1013,7 @@ fun rememberMqState(
     coroutineScope: CoroutineScope,
     instance: MediaBrowser,
     playlistQueueSheet: PlaylistQueueSheet?,
-    onDetachHead: (() -> Unit)?,
+    onDetachHead: ((Int) -> Unit)?,
     onResetHead: (() -> Unit)?,
 ): MqState {
     return remember {

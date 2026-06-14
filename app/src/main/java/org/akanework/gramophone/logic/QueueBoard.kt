@@ -56,7 +56,11 @@ class QueueBoard(
         setMediaItems: Boolean = true,
         shouldResume: Boolean = true
     ) =
-        commitQueue(masterQueues.indexOf(mq), setMediaItems, shouldResume)
+        commitQueue(
+            index = masterQueues.indexOf(mq),
+            setMediaItems = setMediaItems,
+            shouldResume = shouldResume,
+        )
 
     /**
      * Push this queue to the player, and save the player queue back to QueueBoard. The last queue
@@ -66,6 +70,7 @@ class QueueBoard(
      */
     fun commitQueue(
         index: Int,
+        startIndex: Int = -1,
         setMediaItems: Boolean = true,
         shouldResume: Boolean = true,
         saveLast: Boolean = true
@@ -87,8 +92,11 @@ class QueueBoard(
             }
         }
 
-        val new = masterQueues[index]
+        var new = masterQueues[index]
         masterQueues.remove(new)
+        if (startIndex != -1) {
+            new = new.copy(startIndex = startIndex, startPositionMs = C.TIME_UNSET)
+        }
         masterQueues.add(new)
         if (setMediaItems) {
             setCurrQueue(new, true, shouldResume)
@@ -268,7 +276,7 @@ class QueueBoard(
                 if (index <= 0) {
                     player.endedWorkaroundPlayer?.removeMediaItems(0, Int.MAX_VALUE)
                 } else {
-                    commitQueue(index - 1, false)
+                    commitQueue(index - 1, setMediaItems = false)
                 }
             } else if (index <= masterQueues.lastIndex - 1) {
                 masterQueues.removeAt(index)

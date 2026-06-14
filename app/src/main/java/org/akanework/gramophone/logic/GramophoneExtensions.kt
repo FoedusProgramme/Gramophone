@@ -436,10 +436,11 @@ fun MediaController.getQueueForUi(index: Int = -1): Pair<MutableList<Int>, Multi
     }
 }
 
-fun MediaController.loadQueue(index: Int) {
+fun MediaController.loadQueue(index: Int, startIndex: Int = C.INDEX_UNSET) {
     sendCustomCommand(
         SessionCommand(SERVICE_QB_LOAD_QUEUE, Bundle.EMPTY).apply {
             customExtras.putInt("index", index)
+            customExtras.putInt("startIndex", startIndex)
         }, Bundle.EMPTY
     )
 }

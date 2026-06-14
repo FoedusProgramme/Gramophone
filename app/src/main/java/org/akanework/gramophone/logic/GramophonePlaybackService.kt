@@ -1035,7 +1035,8 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
 
                 SERVICE_QB_LOAD_QUEUE -> {
                     val index = customCommand.customExtras.getInt("index")
-                    qb.commitQueue(index)
+                    val startIndex = customCommand.customExtras.getInt("startIndex")
+                    qb.commitQueue(index, startIndex)
                     SessionResult(SessionResult.RESULT_SUCCESS)
                 }
 
