@@ -34,7 +34,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -69,7 +68,7 @@ class PlaylistEditFragment : BaseFragment(false) {
     private lateinit var adapter: PlaylistEditAdapter
     private lateinit var uri: Uri
     private var doneEditing = false
-    private var entries = MutableStateFlow<Pair<Int, List<PlaylistSerializer.Entry>>>(0 to listOf())
+    private var entries = MutableStateFlow(0 to PlaylistSerializer.Playlist.create())
     private var renderedEntries = mapOf<PlaylistSerializer.Entry, MediaItem>()
     private lateinit var qTitle: Flow<String>
 
@@ -227,10 +226,12 @@ class PlaylistEditFragment : BaseFragment(false) {
                 requireActivity().supportFragmentManager.popBackStack()
             }
             return
-        }.map {
-            it.resolveMediaItem(pathMap)?.let { mi -> it.copyFromMediaItem(mi) } ?: it
+        }.let { playlist ->
+            playlist.copy(entries = playlist.entries.map {
+                it.updateFromMediaItem(pathMap)
+            })
         }
-        if (!restore && readback.isEmpty()) {
+        if (!restore && readback.entries.isEmpty()) {
             withContext(Dispatchers.Main) {
                 MaterialAlertDialogBuilder(requireContext())
                     .setTitle(R.string.playlist_empty)
@@ -246,14 +247,15 @@ class PlaylistEditFragment : BaseFragment(false) {
             return
         }
         val rendered = hashMapOf<PlaylistSerializer.Entry, MediaItem>()
-        readback.forEach {
-            rendered[it] = it.resolveMediaItem(pathMap) ?: MediaItem.Builder()
-                .setMediaId("Missing:${it.file}")
-                .setMediaMetadata(MediaMetadata.Builder()
-                    .setTitle("${it.file.name}")
-                    .setArtist("${it.file.parent}")
-                    .build())
-                .build()
+        readback.entries.forEach {
+            rendered[it] = it.resolveMediaItem(pathMap) ?:
+                    MediaItem.Builder().setMediaId("Missing:${it.locations.firstOrNull()}")
+                        .setUri(it.locations.firstOrNull())
+                        .setMediaMetadata(MediaMetadata.Builder()
+                            .setTitle("${it.locations.firstOrNull()?.lastPathSegment}")
+                            .setArtist("${it.locations.firstOrNull()}")
+                            .build())
+                        .build()
         }
         val renderedFinal = rendered.toMap()
         withContext(Dispatchers.Main) {
@@ -285,31 +287,32 @@ class PlaylistEditFragment : BaseFragment(false) {
                 // Keep using the old readback set because it will be a superset of current
                 // entries, because there's no way to add new songs.
                 val oldRendered = renderedEntries
-                readback.forEach {
+                readback.entries.forEach {
                     rendered[it] = it.resolveMediaItem(pathMap) ?: (if (rendered[it]!!
                             .mediaId.startsWith("Missing:")) rendered[it]!! else
-                        MediaItem.Builder().setMediaId("Missing:${it.file}")
-                            .setUri(it.file.toUriCompat())
+                        MediaItem.Builder().setMediaId("Missing:${it.locations.firstOrNull()}")
+                            .setUri(it.locations.firstOrNull())
                             .setMediaMetadata(MediaMetadata.Builder()
-                                .setTitle("${it.file.name}")
-                                .setArtist("${it.file.parent}")
+                                .setTitle("${it.locations.firstOrNull()?.lastPathSegment}")
+                                .setArtist("${it.locations.firstOrNull()}")
                                 .build())
                             .build())
                 }
                 val renderedFinal = rendered.toMap()
                 while (true) {
                     val entriesTmp = entries.value
-                    val oldGlued = entriesTmp.second.map { oldRendered[it]!! }
-                    val newGlued = entriesTmp.second.map { renderedFinal[it]!! }
+                    val oldGlued = entriesTmp.second.entries.map { oldRendered[it]!! }
+                    val newGlued = entriesTmp.second.entries.map { renderedFinal[it]!! }
                     val diffs = oldGlued.mapIndexedNotNull { i, old ->
                         if (old == newGlued[i])
                             null
                         else i
                     }
                     // keep same generation number as this isn't a user triggered edit
-                    val newEntries = entriesTmp.first to entriesTmp.second.map {
-                        it.resolveMediaItem(pathMap)?.let { mi ->
-                            it.copyFromMediaItem(mi) } ?: it
+                    val newEntries = entriesTmp.first to entriesTmp.second.let { playlist ->
+                        playlist.copy(entries = playlist.entries.map {
+                            it.updateFromMediaItem(pathMap)
+                        })
                     }
                     val doBreak = withContext(Dispatchers.Main) {
                         if (entries.value.first == entriesTmp.first) {
@@ -430,13 +433,13 @@ class PlaylistEditFragment : BaseFragment(false) {
         return playlist.exists()
     }
 
-    private fun readChanges(context: Context): List<PlaylistSerializer.Entry> {
+    private fun readChanges(context: Context): PlaylistSerializer.Playlist {
         val playlistsDir = context.externalCacheDir!!.resolve(FOLDER_NAME)
         val playlist = playlistsDir.resolve(tmpName)
         return PlaylistSerializer.read(playlist)
     }
 
-    private fun writeChanges(context: Context, entries: List<PlaylistSerializer.Entry>) {
+    private fun writeChanges(context: Context, entries: PlaylistSerializer.Playlist) {
         val playlistsDir = context.externalCacheDir!!.resolve(FOLDER_NAME)
         val playlist = playlistsDir.resolve(tmpName)
         PlaylistSerializer.write(context, playlist, playlist.toUriCompat(),
@@ -492,7 +495,7 @@ class PlaylistEditFragment : BaseFragment(false) {
 
     private inner class PlaylistEditAdapter : EditSongAdapter(requireContext(), false) {
         override fun getItemCount(): Int {
-            return entries.value.second.size
+            return entries.value.second.entries.size
         }
 
         override fun startDrag(holder: ViewHolder) {
@@ -504,23 +507,23 @@ class PlaylistEditFragment : BaseFragment(false) {
         }
 
         override fun getItem(pos: Int): MediaItem {
-            return renderedEntries[entries.value.second[pos]]!!
+            return renderedEntries[entries.value.second.entries[pos]]!!
         }
 
         override fun onRowMoved(from: Int, to: Int) {
             entries.update { i ->
-                i.first + 1 to i.second.toMutableList().also {
+                i.first + 1 to i.second.copy(entries = i.second.entries.toMutableList().also {
                     it.add(to, it.removeAt(from))
-                }
+                })
             }
             notifyItemMoved(from, to)
         }
 
         override fun removeItem(pos: Int) {
             entries.update { i ->
-                i.first + 1 to i.second.toMutableList().also {
+                i.first + 1 to i.second.copy(entries = i.second.entries.toMutableList().also {
                     it.removeAt(pos)
-                }
+                })
             }
             notifyItemRemoved(pos)
         }

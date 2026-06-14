@@ -3,9 +3,12 @@ package uk.akane.libphonograph.manipulator
 import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
+import android.os.Build
 import android.os.Parcelable
 import android.util.SparseArray
 import android.util.Xml
+import androidx.core.net.toFile
+import androidx.core.net.toUri
 import androidx.core.util.keyIterator
 import androidx.media3.common.MediaItem
 import kotlinx.coroutines.flow.Flow
@@ -13,21 +16,40 @@ import kotlinx.parcelize.Parcelize
 import okio.Path.Companion.toOkioPath
 import org.akanework.gramophone.BuildConfig
 import org.akanework.gramophone.logic.getFile
+import org.akanework.gramophone.logic.skipToEndOfTag
 import org.akanework.gramophone.logic.utils.flows.IncrementalMap
 import org.akanework.gramophone.logic.utils.flows.forKey
 import org.nift4.mediastorecompat.MediaStoreCompat
 import org.xmlpull.v1.XmlPullParser
+import org.xmlpull.v1.XmlPullParserException
+import uk.akane.libphonograph.toUriCompat
 import java.io.File
 import java.nio.charset.StandardCharsets
+import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Date
+import java.util.Locale
+import java.util.SimpleTimeZone
+import java.util.TimeZone
 import java.util.regex.Pattern
 
-
 object PlaylistSerializer {
+    private val XSPF_EXT_WPL_META = "http://akanework.org/xspf-ext/wpl-roundtrip/meta/".toUri()
+    private val XSPF_EXT_WPL_CID = "http://akanework.org/xspf-ext/wpl-roundtrip/media/cid".toUri()
+    private val XSPF_EXT_WPL_TID = "http://akanework.org/xspf-ext/wpl-roundtrip/media/tid".toUri()
+    private val XSPF_EXT_M3U_GENRE = "http://akanework.org/xspf-ext/m3u-roundtrip/genre".toUri()
+    private val XSPF_EXT_GENERATOR = "http://akanework.org/xspf-ext/generator".toUri()
+
     @Throws(UnsupportedPlaylistFormatException::class)
-    fun write(context: Context, outFile: File, out: Uri, songs: List<Entry>) {
+    fun write(context: Context, outFile: File, out: Uri, songs: Playlist) {
         val format = when (outFile.extension.lowercase()) {
             "m3u", "m3u8" -> PlaylistFormat.M3u
-            // "xspf" -> PlaylistFormat.Xspf
+            "xspf" -> PlaylistFormat.Xspf
             "wpl" -> PlaylistFormat.Wpl
             "pls" -> PlaylistFormat.Pls
             else -> throw UnsupportedPlaylistFormatException(outFile.extension)
@@ -36,10 +58,10 @@ object PlaylistSerializer {
     }
 
     @Throws(UnsupportedPlaylistFormatException::class)
-    fun read(outFile: File): List<Entry> {
+    fun read(outFile: File): Playlist {
         val format = when (outFile.extension.lowercase()) {
             "m3u", "m3u8" -> PlaylistFormat.M3u
-            // "xspf" -> PlaylistFormat.Xspf
+            "xspf" -> PlaylistFormat.Xspf
             "wpl" -> PlaylistFormat.Wpl
             "pls" -> PlaylistFormat.Pls
             else -> throw UnsupportedPlaylistFormatException(outFile.extension)
@@ -47,51 +69,163 @@ object PlaylistSerializer {
         return read(format, outFile)
     }
 
-    private fun read(format: PlaylistFormat, outFile: File): List<Entry> {
+    private fun read(format: PlaylistFormat, outFile: File): Playlist {
         return when (format) {
             PlaylistFormat.M3u -> {
+                val extInfRegex = Regex("#EXTINF:(-?\\d+)(?:\\s+([^,]+))?,(.*)")
+                val tvKeysRegex = Regex("""([\w-]+)="((?:\\.|[^"\\])*)"""")
                 val lines = outFile.readLines()
-                lines.filter { !it.startsWith('#') }.map { Uri.decode(it) }.map {
-                    Entry.ofM3u(outFile.resolveSibling(it)
-                        .toOkioPath(normalize = true).toFile())
+                var title: String? = null
+                var lastEntry = -1
+                var foundEntry = false
+                val entries = lines.mapIndexedNotNull { i, it ->
+                    if (it.isBlank()) {
+                        lastEntry = i
+                        foundEntry = true
+                        null
+                    } else if (!it.startsWith('#')) {
+                        val associatedComments = lines.subList(lastEntry + 1, i).toMutableList()
+                        var extInfMatch: MatchResult? = null
+                        var album: String? = null
+                        var artist: String? = null
+                        var genre: String? = null
+                        associatedComments.removeAll { input ->
+                            if (extInfMatch == null) {
+                                extInfMatch = extInfRegex.matchEntire(input)
+                                if (extInfMatch != null) {
+                                    return@removeAll true
+                                }
+                            }
+                            if (album == null && input.startsWith("#EXTALB:")) {
+                                album = input.substring("#EXTALB:".length)
+                                return@removeAll true
+                            }
+                            if (artist == null && input.startsWith("#EXTART:")) {
+                                artist = input.substring("#EXTART:".length)
+                                return@removeAll true
+                            }
+                            if (genre == null && input.startsWith("#EXTGENRE:")) {
+                                genre = input.substring("#EXTGENRE:".length)
+                                return@removeAll true
+                            }
+                            false
+                        }
+                        val uriLine = Uri.decode(it)
+                        val link = listOf(Entry.parseUri(outFile, uriLine))
+                        val durationSeconds = extInfMatch?.groupValues?.get(1)?.toLong()
+                        val tvKeys = extInfMatch?.groupValues?.get(2)?.let {
+                            tvKeysRegex.findAll(it).associate { match ->
+                                val key = match.groupValues[1]
+                                val value = match.groupValues[2]
+                                    .replace("""\"""", "\"")
+                                    .replace("""\\""", "\\")
+                                key to value
+                            }
+                        }
+                        val title = extInfMatch?.groupValues?.get(3)
+                        lastEntry = i
+                        foundEntry = true
+                        Entry.ofM3u(link, durationSeconds, tvKeys, title, artist, album,
+                            genre, associatedComments)
+                    } else if (!foundEntry) { // might be a header property, or might not
+                        when {
+                            it.startsWith("#PLAYLIST:") -> {
+                                title = it.substring("#PLAYLIST:".length)
+                                lastEntry = i
+                            }
+                            it.trimEnd() == "#EXTM3U" -> lastEntry = i
+                        }
+                        null
+                    } else
+                        null
                 }
+                Playlist(entries, title = title)
             }
+
             PlaylistFormat.Wpl -> {
                 val parser = Xml.newPullParser()
                 parser.setInput(outFile.inputStream(), StandardCharsets.UTF_8.name())
                 val items = mutableListOf<Entry>()
-                var type: Int
-                while (parser.next().also { type = it } != XmlPullParser.END_DOCUMENT) {
-                    if (type != XmlPullParser.START_TAG) continue
+                parser.nextTag()
+                parser.require(XmlPullParser.START_TAG, null, "smil")
+                parser.nextTag()
+                parser.require(XmlPullParser.START_TAG, null, "head")
+                var title: String? = null
+                var author: String? = null
+                var category: String? = null
+                var genre: String? = null
+                var generator: String? = null
+                var userName: String? = null
+                var totalDuration: Long? = null // seconds
+                val metaTags = mutableListOf<Pair<String, String>>()
+                while (parser.nextTag() != XmlPullParser.END_TAG) {
+                    parser.require(XmlPullParser.START_TAG, null, null)
+                    val tag = parser.name
+                    when (tag) {
+                        "title" -> {
+                            title = parser.nextText()
+                        }
+                        "meta" -> {
+                            val key = parser.getAttributeValue(null, "name")
+                            val value = parser.getAttributeValue(null, "content")
+                            when (key) {
+                                "Author" -> author = value
+                                "Category" -> category = value
+                                "Genre" -> genre = value
+                                "Generator" -> generator = value
+                                "UserName", "UserName1" -> userName = value
+                                "TotalDuration" -> totalDuration = value?.toLong()
+                                "ItemCount" -> {}
+                                else -> metaTags.add(key to value)
+                            }
+                        }
+                        else -> throw XmlPullParserException("Unexpected <head> tag <$tag>")
+                    }
+                    parser.nextTag()
+                    parser.require(XmlPullParser.END_TAG, null, tag)
+                }
+                parser.require(XmlPullParser.END_TAG, null, "head")
+                parser.nextTag()
+                parser.require(XmlPullParser.START_TAG, null, "body")
+                parser.nextTag()
+                parser.require(XmlPullParser.START_TAG, null, "seq")
+                while (parser.nextTag() != XmlPullParser.END_TAG) {
                     if ("smartPlaylist" == parser.name)
                         throw UnsupportedPlaylistFormatException("Windows Smart Playlist")
-                    if ("media" == parser.name) {
-                        val src = parser.getAttributeValue(null, "src")
-                        if (src != null) {
-                            val cid = parser.getAttributeValue(null, "cid")
-                            val tid = parser.getAttributeValue(null, "tid")
-                            items.add(Entry.ofWpl(outFile.resolveSibling(src.replace(
-                                '\\', '/')).toOkioPath(normalize = true)
-                                .toFile(), cid, tid))
-                        }
+                    parser.require(XmlPullParser.START_TAG, null, "media")
+                    val src = parser.getAttributeValue(null, "src")
+                    if (src != null) {
+                        val cid = parser.getAttributeValue(null, "cid")
+                        val tid = parser.getAttributeValue(null, "tid")
+                        items.add(Entry.ofWpl(listOf(Entry.parseUri(outFile, src.replace(
+                            '\\', '/'))), cid, tid))
                     }
+                    parser.nextTag()
+                    parser.require(XmlPullParser.END_TAG, null, "media")
                 }
-                items
+                parser.nextTag()
+                parser.require(XmlPullParser.END_TAG, null, "seq")
+                parser.nextTag()
+                parser.require(XmlPullParser.END_TAG, null, "body")
+                parser.nextTag()
+                parser.require(XmlPullParser.END_TAG, null, "smil")
+                Playlist(items, title = title, author = author, category = category,
+                    genre = genre, generator = generator, userName = userName,
+                    totalDuration = totalDuration, wplMetaTags = metaTags)
             }
 
             PlaylistFormat.Pls -> {
                 val filePattern = Pattern.compile("File(\\d+)=(.+)")
                 val titlePattern = Pattern.compile("Title(\\d+)=(.+)")
                 val lengthPattern = Pattern.compile("Length(\\d+)=(.+)")
-                val files = SparseArray<File>()
+                val files = SparseArray<String>()
                 val titles = SparseArray<String>()
                 val lengths = SparseArray<Long>()
                 outFile.readLines().forEach {
                     val fileMatcher = filePattern.matcher(it)
                     if (fileMatcher.matches()) {
-                        files.set(fileMatcher.group(1)!!.toInt(), outFile.resolveSibling(
+                        files.set(fileMatcher.group(1)!!.toInt(),
                             fileMatcher.group(2)!!.replace('\\', '/'))
-                            .toOkioPath(normalize = true).toFile())
                     } else {
                         val titleMatcher = titlePattern.matcher(it)
                         if (titleMatcher.matches()) {
@@ -107,26 +241,345 @@ object PlaylistSerializer {
                 }
                 val entries = mutableListOf<Entry>()
                 files.keyIterator().forEach {
-                    entries.add(Entry.ofPls(files.get(it), titles.get(it), lengths.get(it)))
+                    entries.add(Entry.ofPls(listOf(Entry.parseUri(outFile,
+                        files.get(it))), titles.get(it), lengths.get(it)))
                 }
-                entries
+                Playlist(entries)
             }
 
-            PlaylistFormat.Xspf -> TODO()
+            PlaylistFormat.Xspf -> {
+                val x0 = "http://xspf.org/ns/0/"
+                val parser = Xml.newPullParser()
+                parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, true)
+                parser.setInput(outFile.inputStream(), StandardCharsets.UTF_8.name())
+                val items = mutableListOf<Entry>()
+                parser.nextTag()
+                parser.require(XmlPullParser.START_TAG, x0, "playlist")
+                var title: String? = null
+                var author: String? = null
+                var annotation: String? = null
+                var info: Uri? = null
+                var location: Uri? = null
+                var identifier: Uri? = null
+                var image: Uri? = null
+                var dateCreatedUtc: Long? = null
+                var timezoneOffsetSecs: Int? = null // useful so that we can save in same timezone
+                var license: Uri? = null
+                var attribution: List<Pair<Boolean, String>>? = null
+                var genre: String? = null
+                var category: String? = null
+                var userName: String? = null
+                var generator: String? = null
+                val wplMetaTags = mutableListOf<Pair<String, String>>()
+                val links = mutableListOf<Pair<Uri, Uri>>()
+                val metas = mutableListOf<Pair<Uri, String>>()
+                while (parser.nextTag() != XmlPullParser.END_TAG) {
+                    parser.require(XmlPullParser.START_TAG, x0, null)
+                    val tag = parser.name
+                    when (tag) {
+                        "title" -> {
+                            if (title != null)
+                                throw XmlPullParserException("Duplicate <title> element")
+                            title = parser.nextText()
+                        }
+                        "creator" -> {
+                            if (author != null)
+                                throw XmlPullParserException("Duplicate <creator> element")
+                            author = parser.nextText()
+                        }
+                        "annotation" -> {
+                            if (annotation != null)
+                                throw XmlPullParserException("Duplicate <annotation> element")
+                            annotation = parser.nextText()
+                        }
+                        "info" -> {
+                            if (info != null)
+                                throw XmlPullParserException("Duplicate <info> element")
+                            info = Uri.parse(parser.nextText())
+                        }
+                        "location" -> {
+                            if (location != null)
+                                throw XmlPullParserException("Duplicate <location> element")
+                            location = Uri.parse(parser.nextText())
+                        }
+                        "identifier" -> {
+                            if (identifier != null)
+                                throw XmlPullParserException("Duplicate <identifier> element")
+                            identifier = Uri.parse(parser.nextText())
+                        }
+                        "image" -> {
+                            if (image != null)
+                                throw XmlPullParserException("Duplicate <image> element")
+                            image = Uri.parse(parser.nextText())
+                        }
+                        "date" -> {
+                            val input = parser.nextText().replace(":60", ":59")
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                val time = DateTimeFormatter.ISO_DATE_TIME.parseBest(
+                                    input, ZonedDateTime::from,
+                                    OffsetDateTime::from, LocalDateTime::from)
+                                dateCreatedUtc = when (time) {
+                                    is ZonedDateTime -> time.toEpochSecond()
+                                    is OffsetDateTime -> time.toEpochSecond()
+                                    is LocalDateTime -> time.atZone(ZoneOffset.systemDefault())
+                                        .toEpochSecond()
+                                    else -> throw IllegalStateException()
+                                }
+                                timezoneOffsetSecs = when (time) {
+                                    is ZonedDateTime -> time.offset
+                                    is OffsetDateTime -> time.offset
+                                    is LocalDateTime -> time.atZone(ZoneOffset.systemDefault())
+                                        .offset
+                                    else -> throw IllegalStateException()
+                                }.totalSeconds
+                            } else {
+                                val isoRegex = Regex("^(\\d{4}-\\d{2}-\\d{2}T\\d{2}:" +
+                                        "\\d{2}:\\d{2})(?:\\.\\d{1,12})?(Z|[+-]\\d{2}:?\\d{2})?$")
+                                val match = isoRegex.matchEntire(input)!!
+                                val dateObj = if (match.groupValues[2] == "") {
+                                    val sdf = SimpleDateFormat(
+                                        "yyyy-MM-dd'T'HH:mm:ss", Locale.US)
+                                    sdf.timeZone = TimeZone.getDefault()
+                                    sdf.parse(match.groupValues[1])!!
+                                } else {
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                        val sdf = SimpleDateFormat(
+                                            "yyyy-MM-dd'T'HH:mm:ssX", Locale.US)
+                                        sdf.parse(match.groupValues[1] +
+                                                match.groupValues[2])!!
+                                    } else {
+                                        val tz = match.groupValues[2].let { if (it == "Z") "+0000"
+                                        else if (it.length == 3) "${it}00" else it
+                                            .replace(":", "") }
+                                        val sdf = SimpleDateFormat(
+                                            "yyyy-MM-dd'T'HH:mm:ssZ", Locale.US)
+                                        sdf.parse(match.groupValues[1] + tz)!!
+                                    }
+                                }
+                                dateCreatedUtc = dateObj.time
+                                timezoneOffsetSecs = (@Suppress("deprecation") dateObj
+                                    .timezoneOffset) * 60
+                            }
+                        }
+                        "license" -> {
+                            if (license != null)
+                                throw XmlPullParserException("Duplicate <license> element")
+                            license = Uri.parse(parser.nextText())
+                        }
+                        "attribution" -> {
+                            if (attribution != null)
+                                throw XmlPullParserException("Duplicate <attribution> element")
+                            attribution = mutableListOf()
+                            while (parser.nextTag() != XmlPullParser.END_TAG) {
+                                parser.require(XmlPullParser.START_TAG, x0,
+                                    null)
+                                val tag = parser.name
+                                if (tag != "identifier" && tag != "location")
+                                    throw XmlPullParserException("Bad tag <$tag> in <attribution>")
+                                attribution.add((tag == "location") to parser.nextText())
+                                parser.require(XmlPullParser.END_TAG, x0,
+                                    null)
+                            }
+                        }
+                        "link" -> {
+                            links.add(parser.getAttributeValue(x0,
+                                "rel").toUri() to parser.nextText().toUri())
+                        }
+                        "meta" -> {
+                            val key = parser.getAttributeValue(x0, "rel").toUri()
+                            val value = parser.nextText()
+                            when {
+                                key == XSPF_EXT_GENERATOR -> generator = value
+                                key.toString().startsWith(XSPF_EXT_WPL_META.toString()) -> {
+                                    when (val wplKey = key.lastPathSegment!!) {
+                                        "Category" -> category = value
+                                        "Genre" -> genre = value
+                                        "UserName", "UserName1" -> userName = value
+                                        else -> wplMetaTags.add(wplKey to value)
+                                    }
+                                }
+                                else -> metas.add(key to value)
+                            }
+                        }
+                        "extension" -> {
+                            val application = parser.getAttributeValue(x0,
+                                "application")
+                            when (application) {
+                                // TODO(ASAP) decide on whether to store them as string...?
+                                else -> parser.skipToEndOfTag()
+                            }
+                        }
+                        "trackList" -> {
+                            while (parser.nextTag() != XmlPullParser.END_TAG) {
+                                parser.require(XmlPullParser.START_TAG, x0,
+                                    "track")
+                                val locations = mutableListOf<Uri>()
+                                val identifiers = mutableListOf<Uri>()
+                                var title: String? = null
+                                var author: String? = null
+                                var annotation: String? = null
+                                var info: Uri? = null
+                                var image: Uri? = null
+                                var album: String? = null
+                                var contentId: String? = null
+                                var trackingId: String? = null
+                                var genre: String? = null
+                                var trackNum: UInt? = null
+                                var durationMs: UInt? = null
+                                val links = mutableListOf<Pair<Uri, Uri>>()
+                                val metas = mutableListOf<Pair<Uri, String>>()
+                                while (parser.nextTag() != XmlPullParser.END_TAG) {
+                                    parser.require(XmlPullParser.START_TAG,
+                                        x0, null)
+                                    val tag = parser.name
+                                    when (tag) {
+                                        "location" -> {
+                                            locations.add(parser.nextText().toUri())
+                                        }
+                                        "identifier" -> {
+                                            identifiers.add(parser.nextText().toUri())
+                                        }
+                                        "title" -> {
+                                            if (title != null)
+                                                throw XmlPullParserException("Duplicate <title> " +
+                                                        "element")
+                                            title = parser.nextText()
+                                        }
+                                        "creator" -> {
+                                            if (author != null)
+                                                throw XmlPullParserException("Duplicate <creator> " +
+                                                        "element")
+                                            author = parser.nextText()
+                                        }
+                                        "annotation" -> {
+                                            if (annotation != null)
+                                                throw XmlPullParserException("Duplicate " +
+                                                        "<annotation> element")
+                                            annotation = parser.nextText()
+                                        }
+                                        "info" -> {
+                                            if (info != null)
+                                                throw XmlPullParserException("Duplicate " +
+                                                        "<info> element")
+                                            info = Uri.parse(parser.nextText())
+                                        }
+                                        "image" -> {
+                                            if (image != null)
+                                                throw XmlPullParserException("Duplicate <image>" +
+                                                        " element")
+                                            image = Uri.parse(parser.nextText())
+                                        }
+                                        "album" -> {
+                                            if (album != null)
+                                                throw XmlPullParserException("Duplicate <album> " +
+                                                        "element")
+                                            album = parser.nextText()
+                                        }
+                                        "trackNum" -> {
+                                            if (trackNum != null)
+                                                throw XmlPullParserException("Duplicate" +
+                                                        " <trackNum> element")
+                                            trackNum = parser.nextText().toUInt()
+                                        }
+                                        "duration" -> {
+                                            if (durationMs != null)
+                                                throw XmlPullParserException("Duplicate" +
+                                                        " <duration> element")
+                                            durationMs = parser.nextText().toUInt()
+                                        }
+                                        "link" -> {
+                                            links.add(parser.getAttributeValue(x0,
+                                                "rel").toUri() to parser.nextText().toUri())
+                                        }
+                                        "meta" -> {
+                                            val key = parser.getAttributeValue(x0,
+                                                "rel").toUri()
+                                            val value = parser.nextText()
+                                            // TODO(ASAP) decide on whether to store m3u extra
+                                            //  comments + tv keys as well
+                                            when (key) {
+                                                XSPF_EXT_WPL_CID -> contentId = value
+                                                XSPF_EXT_WPL_TID -> trackingId = value
+                                                XSPF_EXT_M3U_GENRE -> genre = value
+                                                else -> metas.add(key to value)
+                                            }
+                                        }
+                                        "extension" -> {
+                                            val application = parser.getAttributeValue(
+                                                x0, "application")
+                                            when (application) {
+                                                // TODO(ASAP) decide on whether to store them as string...?
+                                                else -> parser.skipToEndOfTag()
+                                            }
+                                            parser.text
+                                        }
+                                        else -> throw XmlPullParserException("Unexpected " +
+                                                "<track> tag <$tag>")
+                                    }
+                                    parser.require(XmlPullParser.END_TAG, x0,
+                                        tag)
+                                }
+                                parser.require(XmlPullParser.END_TAG, x0,
+                                    "track")
+                                items.add(Entry(locations, identifiers = identifiers, genre = genre,
+                                    title = title, artist = author, annotation = annotation,
+                                    info = info, image = image, album = album, trackNum = trackNum,
+                                    durationMs = durationMs?.toULong(), links = links,
+                                    metas = metas, contentId = contentId, trackingId = trackingId))
+                            }
+                        }
+                        else -> throw XmlPullParserException("Unexpected <playlist> tag <$tag>")
+                    }
+                    parser.require(XmlPullParser.END_TAG, x0, tag)
+                }
+                parser.require(XmlPullParser.END_TAG, x0, "playlist")
+                Playlist(items, title = title, author = author, annotation = annotation,
+                    info = info, location = location, identifier = identifier, image = image,
+                    dateCreatedUtc = dateCreatedUtc, timezoneOffsetSecs = timezoneOffsetSecs,
+                    license = license, attribution = attribution, links = links, metas = metas,
+                    wplMetaTags = wplMetaTags, genre = genre, category = category,
+                    userName = userName, generator = generator)
+            }
         }
     }
 
-    private fun write(context: Context, format: PlaylistFormat, outFile: File, uri: Uri, songs: List<Entry>) {
+    private fun write(context: Context, format: PlaylistFormat, outFile: File, uri: Uri, playlist: Playlist) {
         val parent = outFile.parentFile
             ?: throw NullPointerException("parentFile of playlist is null")
         val os = if (uri.scheme == ContentResolver.SCHEME_FILE)
             outFile.outputStream()
         else MediaStoreCompat.openOutputStream(context, uri, "wt")!!
+        val songs = playlist.entries
         when (format) {
             PlaylistFormat.M3u -> {
-                val out = "#EXTM3U\n" + songs.joinToString("\n") {
-                    it.file.relativeTo(parent).toString() }.trim()
-                os.use { it.writer().use { writer -> writer.write(out) } }
+                val out = StringBuilder("#EXTM3U\n")
+                out.append("#PLAYLIST:${playlist.title ?: outFile.nameWithoutExtension}\n\n")
+                songs.filter { it.locations.isNotEmpty() }.forEach {
+                    it.associatedComments?.forEach { comment -> out.append("$comment\n") }
+                    if (it.album != null) {
+                        out.append("#EXTALB:${it.album}\n")
+                    }
+                    if (it.artist != null) {
+                        out.append("#EXTART:${it.artist}\n")
+                    }
+                    if (it.genre != null) {
+                        out.append("#EXTGENRE:${it.genre}\n")
+                    }
+                    if (it.title != null || it.durationMs != null ||
+                        !it.tvKeys.isNullOrEmpty()) {
+                        val tvKeys = if (!it.tvKeys.isNullOrEmpty())
+                            it.tvKeys.entries.joinToString(" ", prefix = " ") { (k, v) ->
+                                """$k="${
+                                    v.replace("\\", "\\\\")
+                                        .replace("\"", "\\\"")
+                                }""""
+                            } else ""
+                        out.append("#EXTINF:${it.durationMs ?: -1}$tvKeys," +
+                                "${it.title ?: it.nameWithoutExtension}\n")
+                    }
+                    out.append("${it.toRelativeString(parent)}\n")
+                }
+                os.use { it.writer().use { writer -> writer.write(out.toString()) } }
             }
 
             PlaylistFormat.Wpl -> {
@@ -137,7 +590,7 @@ object PlaylistSerializer {
                 doc.startTag(null, "head")
 
                 doc.startTag(null, "title")
-                doc.text(outFile.nameWithoutExtension)
+                doc.text(playlist.title ?: outFile.nameWithoutExtension)
                 doc.endTag(null, "title")
 
                 doc.startTag(null, "meta")
@@ -145,19 +598,68 @@ object PlaylistSerializer {
                 doc.attribute(null, "content", "Gramophone " +
                         "${BuildConfig.MY_VERSION_NAME}/${BuildConfig.RELEASE_TYPE}")
                 doc.endTag(null, "meta")
-
+                if (songs.find { it.durationMs == null } == null) {
+                    doc.startTag(null, "meta")
+                    doc.attribute(null, "name", "TotalDuration")
+                    doc.attribute(null, "content", songs
+                        .sumOf { it.durationMs!! }.div(1000u).toString())
+                    doc.endTag(null, "meta")
+                }
+                if (playlist.author != null) {
+                    doc.startTag(null, "meta")
+                    doc.attribute(null, "name", "Author")
+                    doc.attribute(null, "content", playlist.author)
+                    doc.endTag(null, "meta")
+                }
+                if (playlist.category != null) {
+                    doc.startTag(null, "meta")
+                    doc.attribute(null, "name", "Category")
+                    doc.attribute(null, "content", playlist.category)
+                    doc.endTag(null, "meta")
+                }
+                if (playlist.genre != null) {
+                    doc.startTag(null, "meta")
+                    doc.attribute(null, "name", "Genre")
+                    doc.attribute(null, "content", playlist.genre)
+                    doc.endTag(null, "meta")
+                }
+                if (playlist.userName != null) {
+                    doc.startTag(null, "meta")
+                    doc.attribute(null, "name", "UserName")
+                    doc.attribute(null, "content", playlist.userName)
+                    doc.endTag(null, "meta")
+                }
                 doc.startTag(null, "meta")
                 doc.attribute(null, "name", "ItemCount")
                 doc.attribute(null, "content", songs.size.toString())
                 doc.endTag(null, "meta")
+                if (playlist.wplMetaTags != null) {
+                    for (tag in playlist.wplMetaTags) {
+                        doc.startTag(null, "meta")
+                        doc.attribute(null, "name", tag.first)
+                        doc.attribute(null, "content", tag.second)
+                        doc.endTag(null, "meta")
+                    }
+                }
 
                 doc.endTag(null, "head")
                 doc.startTag(null, "body")
                 doc.startTag(null, "seq")
                 for (item in songs) {
-                    doc.startTag(null, "media")
-                    doc.attribute(null, "src", item.file.relativeTo(parent).toString())
-                    doc.endTag(null, "media")
+                    if (item.locations.isNotEmpty()) {
+                        doc.startTag(null, "media")
+                        doc.attribute(
+                            null, "src",
+                            item.toRelativeString(parent)
+                        )
+                        if (item.contentId != null) {
+                            doc.attribute(null, "cid", item.contentId)
+                        }
+                        if (item.trackingId != null) {
+                            doc.attribute(null, "tid", item.trackingId)
+                        }
+                        doc.endTag(null, "media")
+                    }
                 }
                 doc.endTag(null, "seq")
                 doc.endTag(null, "body")
@@ -166,16 +668,251 @@ object PlaylistSerializer {
             }
 
             PlaylistFormat.Pls -> {
-                val out = "[playlist]\n" + songs.mapIndexed { i, it ->
-                    "File${i + 1}=${it.file.toRelativeString(parent)}\n" +
-                            "Title${i + 1}=${it.title ?: it.file.nameWithoutExtension}\n" +
-                            "Length${i + 1}=${it.durationSeconds ?: -1}"
-                }.joinToString("\n").trim() +
+                val out = "[playlist]\n" + songs.filter { it.locations.isNotEmpty() }
+                    .mapIndexed { i, it ->
+                        "File${i + 1}=${it.toRelativeString(parent)}\n" +
+                                "Title${i + 1}=${it.title ?: it.nameWithoutExtension}\n" +
+                                "Length${i + 1}=${it.durationMs ?: -1}"
+                    }.joinToString("\n").trim() +
                         "\nNumberOfEntries=${songs.size}\nVersion=2\n"
                 os.use { it.writer().use { writer -> writer.write(out) } }
             }
 
-            PlaylistFormat.Xspf -> TODO()
+            PlaylistFormat.Xspf -> {
+                val x0 = "http://xspf.org/ns/0/"
+                val doc = Xml.newSerializer()
+                doc.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, true)
+                doc.setOutput(os, StandardCharsets.UTF_8.name())
+                doc.startDocument("utf-8", true)
+                doc.startTag(x0, "playlist")
+                doc.attribute(x0, "version", "1")
+
+                doc.startTag(x0, "title")
+                doc.text(playlist.title ?: outFile.nameWithoutExtension)
+                doc.endTag(x0, "title")
+                if (playlist.author != null) {
+                    doc.startTag(x0, "creator")
+                    doc.text(playlist.author)
+                    doc.endTag(x0, "creator")
+                }
+                if (playlist.annotation != null) {
+                    doc.startTag(x0, "annotation")
+                    doc.text(playlist.annotation)
+                    doc.endTag(x0, "annotation")
+                }
+                if (playlist.info != null) {
+                    doc.startTag(x0, "info")
+                    doc.text(playlist.info.toString())
+                    doc.endTag(x0, "info")
+                }
+                if (playlist.location != null) {
+                    doc.startTag(x0, "location")
+                    doc.text(playlist.location.toString())
+                    doc.endTag(x0, "location")
+                }
+                if (playlist.identifier != null) {
+                    doc.startTag(x0, "identifier")
+                    doc.text(playlist.identifier.toString())
+                    doc.endTag(x0, "identifier")
+                }
+                if (playlist.image != null) {
+                    doc.startTag(x0, "image")
+                    if (playlist.image.scheme == "file") {
+                        doc.text(Uri.encode(playlist.image.toFile()
+                            .toRelativeString(parent)))
+                    } else {
+                        doc.text(playlist.image.toString())
+                    }
+                    doc.endTag(x0, "image")
+                }
+                if (playlist.dateCreatedUtc != null) {
+                    doc.startTag(x0, "date")
+                    if ((playlist.timezoneOffsetSecs ?: 0) == 0) {
+                        val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US)
+                        sdf.timeZone = TimeZone.getTimeZone("UTC")
+                        doc.text(sdf.format(Date(playlist.dateCreatedUtc * 1000)))
+                    } else {
+                        val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US)
+                        sdf.timeZone = SimpleTimeZone(playlist.timezoneOffsetSecs!! *
+                                1000, "")
+                        doc.text(sdf.format(Date(playlist.dateCreatedUtc * 1000)))
+                    }
+                    doc.endTag(x0, "date")
+                }
+                if (playlist.license != null) {
+                    doc.startTag(x0, "license")
+                    doc.text(playlist.license.toString())
+                    doc.endTag(x0, "license")
+                }
+                if (playlist.attribution != null) {
+                    doc.startTag(x0, "attribution")
+                    for (attribution in playlist.attribution) {
+                        if (attribution.first) {
+                            doc.startTag(x0, "location")
+                        } else {
+                            doc.startTag(x0, "identifier")
+                        }
+                        doc.text(attribution.second)
+                        if (attribution.first) {
+                            doc.endTag(x0, "location")
+                        } else {
+                            doc.endTag(x0, "identifier")
+                        }
+                    }
+                    doc.endTag(x0, "attribution")
+                }
+                if (playlist.links != null) {
+                    for (link in playlist.links) {
+                        doc.startTag(x0, "link")
+                        doc.attribute(x0, "rel", link.first.toString())
+                        doc.text(link.second.toString())
+                        doc.endTag(x0, "link")
+                    }
+                }
+                if (playlist.metas != null) {
+                    for (meta in playlist.metas) {
+                        doc.startTag(x0, "meta")
+                        doc.attribute(x0, "rel", meta.first.toString())
+                        doc.text(meta.second)
+                        doc.endTag(x0, "meta")
+                    }
+                }
+                if (playlist.wplMetaTags != null) {
+                    for (meta in playlist.wplMetaTags) {
+                        doc.startTag(x0, "meta")
+                        doc.attribute(x0, "rel",
+                            "$XSPF_EXT_WPL_META/${meta.first}")
+                        doc.text(meta.second)
+                        doc.endTag(x0, "meta")
+                    }
+                }
+                if (playlist.category != null) {
+                    doc.startTag(x0, "meta")
+                    doc.attribute(x0, "rel", "$XSPF_EXT_WPL_META/Category")
+                    doc.text(playlist.category)
+                    doc.endTag(x0, "meta")
+                }
+                if (playlist.genre != null) {
+                    doc.startTag(x0, "meta")
+                    doc.attribute(x0, "rel", "$XSPF_EXT_WPL_META/Genre")
+                    doc.text(playlist.genre)
+                    doc.endTag(x0, "meta")
+                }
+                if (playlist.userName != null) {
+                    doc.startTag(x0, "meta")
+                    doc.attribute(x0, "rel", "$XSPF_EXT_WPL_META/UserName")
+                    doc.text(playlist.userName)
+                    doc.endTag(x0, "meta")
+                }
+                doc.startTag(x0, "meta")
+                doc.attribute(x0, "rel", "$XSPF_EXT_GENERATOR")
+                doc.text("Gramophone ${BuildConfig.MY_VERSION_NAME}/${BuildConfig.RELEASE_TYPE}")
+                doc.endTag(x0, "meta")
+                doc.startTag(x0, "trackList")
+                for (entry in playlist.entries) {
+                    doc.startTag(x0, "track")
+                    for (location in entry.locations) {
+                        doc.startTag(x0, "location")
+                        if (location.scheme == "file") {
+                            doc.text(Uri.encode(location.toFile()
+                                .toRelativeString(parent)))
+                        } else {
+                            doc.text(location.toString())
+                        }
+                        doc.endTag(x0, "location")
+                    }
+                    if (entry.identifiers != null) {
+                        for (identifier in entry.identifiers) {
+                            doc.startTag(x0, "identifier")
+                            doc.text(identifier.toString())
+                            doc.endTag(x0, "identifier")
+                        }
+                    }
+                    if (entry.title != null) {
+                        doc.startTag(x0, "title")
+                        doc.text(entry.title)
+                        doc.endTag(x0, "title")
+                    }
+                    if (entry.artist != null) {
+                        doc.startTag(x0, "creator")
+                        doc.text(entry.artist)
+                        doc.endTag(x0, "creator")
+                    }
+                    if (entry.annotation != null) {
+                        doc.startTag(x0, "annotation")
+                        doc.text(entry.annotation)
+                        doc.endTag(x0, "annotation")
+                    }
+                    if (entry.info != null) {
+                        doc.startTag(x0, "info")
+                        doc.text(entry.info.toString())
+                        doc.endTag(x0, "info")
+                    }
+                    if (entry.image != null) {
+                        doc.startTag(x0, "image")
+                        if (entry.image.scheme == "file") {
+                            doc.text(entry.image.toFile().toRelativeString(parent))
+                        } else {
+                            doc.text(entry.image.toString())
+                        }
+                        doc.endTag(x0, "image")
+                    }
+                    if (entry.album != null) {
+                        doc.startTag(x0, "album")
+                        doc.text(entry.album)
+                        doc.endTag(x0, "album")
+                    }
+                    if (entry.trackNum != null) {
+                        doc.startTag(x0, "trackNum")
+                        doc.text(entry.trackNum.toString())
+                        doc.endTag(x0, "trackNum")
+                    }
+                    if (entry.durationMs != null) {
+                        doc.startTag(x0, "duration")
+                        doc.text(entry.durationMs.toString())
+                        doc.endTag(x0, "duration")
+                    }
+                    if (entry.links != null) {
+                        for (link in entry.links) {
+                            doc.startTag(x0, "link")
+                            doc.attribute(x0, "rel", link.first.toString())
+                            doc.text(link.second.toString())
+                            doc.endTag(x0, "link")
+                        }
+                    }
+                    if (entry.metas != null) {
+                        for (meta in entry.metas) {
+                            doc.startTag(x0, "meta")
+                            doc.attribute(x0, "rel", meta.first.toString())
+                            doc.text(meta.second)
+                            doc.endTag(x0, "meta")
+                        }
+                    }
+                    if (entry.genre != null) {
+                        doc.startTag(x0, "meta")
+                        doc.attribute(x0, "rel", "$XSPF_EXT_M3U_GENRE")
+                        doc.text(entry.genre)
+                        doc.endTag(x0, "meta")
+                    }
+                    if (entry.contentId != null) {
+                        doc.startTag(x0, "meta")
+                        doc.attribute(x0, "rel", "$XSPF_EXT_WPL_CID")
+                        doc.text(entry.contentId)
+                        doc.endTag(x0, "meta")
+                    }
+                    if (entry.trackingId != null) {
+                        doc.startTag(x0, "meta")
+                        doc.attribute(x0, "rel", "$XSPF_EXT_WPL_TID")
+                        doc.text(entry.trackingId)
+                        doc.endTag(x0, "meta")
+                    }
+                    doc.endTag(x0, "track")
+                }
+                doc.endTag(x0, "trackList")
+
+                doc.endTag(x0, "playlist")
+                doc.endDocument()
+            }
         }
     }
 
@@ -186,46 +923,180 @@ object PlaylistSerializer {
         Pls,
     }
 
+    @Parcelize
+    data class Playlist(
+        val entries: List<Entry>,
+        val title: String? = null,
+        val author: String? = null,
+        val category: String? = null,
+        val genre: String? = null,
+        val generator: String? = null,
+        val userName: String? = null,
+        val totalDuration: Long? = null, // seconds
+        val wplMetaTags: List<Pair<String, String>>? = null,
+        val annotation: String? = null,
+        val info: Uri? = null,
+        val location: Uri? = null,
+        val identifier: Uri? = null,
+        val image: Uri? = null,
+        val dateCreatedUtc: Long? = null,
+        val timezoneOffsetSecs: Int? = null, // useful so that we can save in same timezone
+        val license: Uri? = null,
+        val attribution: List<Pair<Boolean, String>>? = null,
+        val links: List<Pair<Uri, Uri>>? = null,
+        val metas: List<Pair<Uri, String>>? = null,
+    ) : Parcelable {
+        companion object {
+            fun create() = Playlist(emptyList(),
+                dateCreatedUtc = System.currentTimeMillis() / 1000L,
+                timezoneOffsetSecs = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                        (Instant.now().atZone(ZoneOffset.systemDefault()).offset.totalSeconds)
+                else (@Suppress("deprecation") Date().timezoneOffset * 60))
+        }
+    }
+
     /**
      * A playlist entry, which is composed of a path to a file and optional additional metadata used
      * to resolve the song if the file path doesn't exist (the song could've been moved).
      */
-    @Parcelize @ConsistentCopyVisibility
-    data class Entry private constructor(
-        val file: File,
-        val title: String? = null, // pls
-        val durationSeconds: Long? = null, // pls
+    @Parcelize
+    data class Entry(
+        // file:// Uris are converted to absolute in memory but should always be relative on disk
+        val locations: List<Uri>,
+        val title: String? = null, // pls, m3u, xspf
+        val tvKeys: Map<String, String>? = null, // m3u
+        val artist: String? = null, // m3u, xspf
+        val album: String? = null, // m3u, xspf
+        val genre: String? = null, // m3u
+        val associatedComments: List<String>? = null, // m3u
         val contentId: String? = null, // wpl
         val trackingId: String? = null, // wpl
+        val identifiers: List<Uri>? = null, // xspf
+        val annotation: String? = null, // xspf
+        val info: Uri? = null, // xspf
+        val image: Uri? = null, // xspf
+        val trackNum: UInt? = null, // xspf
+        val durationMs: ULong? = null, // xspf, pls, m3u
+        val links: List<Pair<Uri, Uri>>? = null, // xspf
+        val metas: List<Pair<Uri, String>>? = null, // xspf
     ) : Parcelable {
         companion object {
-            fun ofAbstract(file: File) = Entry(file)
-            fun ofM3u(file: File) = Entry(file)
-            fun ofPls(file: File, title: String?, length: Long?) =
-                Entry(file, title = title, durationSeconds = length.takeIf { it != -1L })
+            private val uriRegex = Regex("[A-Za-z]{2,}[A-Za-z0-9+.-]*:.+")
+            fun parseUri(outFile: File, line: String) =
+                if (uriRegex.matchEntire(line) != null) {
+                    val uri = line.toUri()
+                    if (uri.scheme == "file")
+                        outFile.resolveSibling(uri.toFile()).toOkioPath(normalize = true)
+                            .toFile().toUriCompat()
+                    else
+                        uri
+                } else
+                    outFile.resolveSibling(line).toOkioPath(normalize = true)
+                        .toFile().toUriCompat()
+            fun ofAbstract(file: File) = Entry(listOf(file.toUriCompat()))
+            fun ofM3u(
+                file: List<Uri>,
+                durationSeconds: Long?,
+                tvKeys: Map<String, String>?,
+                title: String?,
+                artist: String?,
+                album: String?,
+                genre: String?,
+                associatedComments: List<String>?,
+            ) = Entry(file, title = title, durationMs = durationSeconds
+                ?.takeIf { it != -1L }?.times(1000L)?.toULong(), tvKeys = tvKeys,
+                artist = artist, album = album, genre = genre, associatedComments = associatedComments)
+            fun ofPls(file: List<Uri>, title: String?, length: Long?) =
+                Entry(file, title = title, durationMs =
+                    length.takeIf { it != -1L }?.times(1000L)?.toULong())
             // https://learn.microsoft.com/en-us/previous-versions/windows/desktop/wmp/media-element
-            fun ofWpl(file: File, contentId: String?, trackingId: String?) =
+            fun ofWpl(file: List<Uri>, contentId: String?, trackingId: String?) =
                 Entry(file, contentId = contentId, trackingId = trackingId)
-            fun ofMediaItem(song: MediaItem) = song.getFile()?.let { Entry(it) }
-                ?.copyFromMediaItem(song)
+            fun ofMediaItem(song: MediaItem) = song.getFile()?.let {
+                Entry(listOf(it.toUriCompat())) }?.copyFromMediaItem(song)
         }
+        val preferredLocation
+            get() = locations.first()
+        val nameWithoutExtension
+            get() = preferredLocation.lastPathSegment?.substringBeforeLast('.') ?: ""
+        fun toRelativeString(base: File) = if (preferredLocation.scheme == "file")
+            preferredLocation.toFile().toRelativeString(base)
+        else preferredLocation.toString()
+        fun updateFromMediaItem(pathMap: Map<String, MediaItem>?) =
+            resolveMediaItem(pathMap)?.let { copyFromMediaItem(it) } ?: this
+        // TODO(ASAP) add basic xspf content resolving
         fun resolveMediaItem(pathMap: Map<String, MediaItem>?) =
-            pathMap!![file.absolutePath]
+            locations.filter { it.scheme == "file" }.firstNotNullOfOrNull { link ->
+                pathMap!![link.toFile().absolutePath]
+            }
+        // TODO: support multiple location
         fun resolveMediaItem2(pathMapFlow: Flow<IncrementalMap<String, MediaItem>>) =
-            pathMapFlow.forKey(file.absolutePath)
+            locations.find { it.scheme == "file" }?.let { link ->
+                pathMapFlow.forKey(link.toFile().absolutePath)
+            }
         fun copyFromMediaItem(song: MediaItem) = copy(
+            // TODO(ASAP) replace the location as well if it is no longer valid(same), but if there
+            //  are 2 or more locations we should only replace the one that used to work (...but we
+            //  can we even know which one that was? if not, do we add more or replace all of them?)
             title = song.mediaMetadata.title?.toString(),
-            durationSeconds = song.mediaMetadata.durationMs?.div(1000L),
+            durationMs = song.mediaMetadata.durationMs?.toULong(),
+            artist = song.mediaMetadata.artist?.toString(),
+            album = song.mediaMetadata.albumTitle?.toString(),
+            genre = song.mediaMetadata.genre?.toString(),
+            trackNum = song.mediaMetadata.trackNumber?.toUInt()
+            // TODO(ASAP) write album art jpg path (if external instead of embedded) to "image" field
         )
+
+        fun fuzzyEquals(other: Entry): Boolean {
+            return locations.find { other.locations.contains(it) } != null
+        }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
             if (javaClass != other?.javaClass) return false
-            return file == (other as Entry).file
+
+            other as Entry
+
+            if (locations != other.locations) return false
+            if (title != other.title) return false
+            if (tvKeys != other.tvKeys) return false
+            if (artist != other.artist) return false
+            if (album != other.album) return false
+            if (genre != other.genre) return false
+            if (associatedComments != other.associatedComments) return false
+            if (contentId != other.contentId) return false
+            if (trackingId != other.trackingId) return false
+            if (identifiers != other.identifiers) return false
+            if (annotation != other.annotation) return false
+            if (info != other.info) return false
+            if (image != other.image) return false
+            if (trackNum != other.trackNum) return false
+            if (durationMs != other.durationMs) return false
+            if (links != other.links) return false
+            if (metas != other.metas) return false
+
+            return true
         }
 
         override fun hashCode(): Int {
-            return file.hashCode()
+            var result = locations.hashCode()
+            result = 31 * result + (title?.hashCode() ?: 0)
+            result = 31 * result + (tvKeys?.hashCode() ?: 0)
+            result = 31 * result + (artist?.hashCode() ?: 0)
+            result = 31 * result + (album?.hashCode() ?: 0)
+            result = 31 * result + (genre?.hashCode() ?: 0)
+            result = 31 * result + (associatedComments?.hashCode() ?: 0)
+            result = 31 * result + (contentId?.hashCode() ?: 0)
+            result = 31 * result + (trackingId?.hashCode() ?: 0)
+            result = 31 * result + (identifiers?.hashCode() ?: 0)
+            result = 31 * result + (annotation?.hashCode() ?: 0)
+            result = 31 * result + (info?.hashCode() ?: 0)
+            result = 31 * result + (image?.hashCode() ?: 0)
+            result = 31 * result + (trackNum?.hashCode() ?: 0)
+            result = 31 * result + (durationMs?.hashCode() ?: 0)
+            result = 31 * result + (links?.hashCode() ?: 0)
+            result = 31 * result + (metas?.hashCode() ?: 0)
+            return result
         }
     }
     class UnsupportedPlaylistFormatException(extension: String) : Exception(extension)

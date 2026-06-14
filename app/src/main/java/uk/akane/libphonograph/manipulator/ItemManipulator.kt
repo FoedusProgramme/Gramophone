@@ -27,8 +27,8 @@ import org.nift4.mediastorecompat.StorageManagerCompat
 import uk.akane.libphonograph.dynamicitem.Favorite
 import uk.akane.libphonograph.getIntOrNullIfThrow
 import uk.akane.libphonograph.getLongOrNullIfThrow
-import uk.akane.libphonograph.manipulator.PlaylistSerializer.Entry
 import uk.akane.libphonograph.reader.Reader
+import uk.akane.libphonograph.toUriCompat
 import java.io.File
 
 object ItemManipulator {
@@ -40,7 +40,7 @@ object ItemManipulator {
         val faves = context.gramophoneApplication.reader.playlistListFlow.map { it.find { p ->
             p is Favorite } }.first()
         val songsToUnfave = list.filter { faves?.songList?.find { song -> song.getFile() ==
-                it.first } != null }.map { it.first }
+                it.first } != null }.map { it.first.toUriCompat() }
         if (faves?.id != null && songsToUnfave.isNotEmpty()) {
             val uri = ContentUris.withAppendedId(
                     @Suppress("deprecation")
@@ -50,7 +50,8 @@ object ItemManipulator {
             if (token == null) {
                 try {
                     val readback = readbackPlaylist(context, uri)
-                    val newSongs = readback.filter { !songsToUnfave.contains(it.file) }
+                    val newSongs = readback.copy(entries = readback.entries.filter {
+                        it.locations.find { songsToUnfave.contains(it) } == null })
                     setPlaylistContent(context, uri, newSongs, false)
                 } catch (e: Exception) {
                     Log.e(TAG, "failed to set unfavorite $songsToUnfave", e)
@@ -142,7 +143,8 @@ object ItemManipulator {
         if (out.exists())
             throw IllegalArgumentException("tried to create playlist $out that already exists")
         val uri = MediaStoreCompat.create(context, out.absolutePath)!!
-        PlaylistSerializer.write(context.applicationContext, out, uri, listOf())
+        PlaylistSerializer.write(context.applicationContext, out, uri,
+            PlaylistSerializer.Playlist.create())
         return uri
     }
 
@@ -175,14 +177,16 @@ object ItemManipulator {
         return File(parent, "$name.$DEFAULT_FORMAT")
     }
 
-    suspend fun readbackPlaylist(context: Context, uri: Uri): List<Entry> {
+    suspend fun readbackPlaylist(context: Context, uri: Uri): PlaylistSerializer.Playlist {
         val pathMap = context.gramophoneApplication.reader.pathMapFlow.first()
-        return Reader.readPlaylist(context, uri).map {
-            it.resolveMediaItem(pathMap)?.let { song -> it.copyFromMediaItem(song) } ?: it
+        return Reader.readPlaylist(context, uri).let {
+            it.copy(entries = it.entries.map {
+                it.updateFromMediaItem(pathMap)
+            })
         }
     }
 
-    fun setPlaylistContent(context: Context, uri: Uri, songs: List<PlaylistSerializer.Entry>,
+    fun setPlaylistContent(context: Context, uri: Uri, songs: PlaylistSerializer.Playlist,
                            needToFinishCreate: Boolean) {
         var out: File? = null
         var name: String? = null

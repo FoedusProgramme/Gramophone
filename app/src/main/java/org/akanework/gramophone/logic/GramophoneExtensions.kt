@@ -95,6 +95,8 @@ import org.akanework.gramophone.logic.utils.ReplayGainUtil
 import org.akanework.gramophone.logic.utils.SemanticLyrics
 import org.akanework.gramophone.ui.MainActivity
 import org.jetbrains.annotations.Contract
+import org.xmlpull.v1.XmlPullParser
+import org.xmlpull.v1.XmlPullParserException
 import java.io.File
 import java.io.FileInputStream
 import java.util.Locale
@@ -148,6 +150,19 @@ fun MediaItem.getBitrate(): Int? {
     } finally {
         fd?.close()
         retriever.release()
+    }
+}
+
+fun XmlPullParser.skipToEndOfTag() {
+    if (eventType != XmlPullParser.START_TAG)
+        throw XmlPullParserException("expected start tag in skipToEndOfTag()")
+    while (next() != XmlPullParser.END_TAG) {
+        // we have a child tag!
+        if (eventType == XmlPullParser.START_TAG)
+            skipToEndOfTag()
+        else if (eventType != XmlPullParser.TEXT)
+            throw XmlPullParserException("expected start tag or text in skipToEndOfTag()")
+        // else: we have some text, boring
     }
 }
 

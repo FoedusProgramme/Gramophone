@@ -136,6 +136,7 @@ import org.nift4.mediastorecompat.MediaStoreCompat
 import uk.akane.libphonograph.dynamicitem.Favorite
 import uk.akane.libphonograph.items.albumId
 import uk.akane.libphonograph.manipulator.ItemManipulator
+import uk.akane.libphonograph.manipulator.PlaylistSerializer
 import uk.akane.libphonograph.manipulator.PlaylistSerializer.Entry
 import kotlin.collections.plus
 import kotlin.random.Random
@@ -674,14 +675,15 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                         this@GramophonePlaybackService, ItemManipulator
                             .getDefaultPlaylistFile(ItemManipulator.FAVORITES))
                     val readback = if (uriIn != null) ItemManipulator.readbackPlaylist(
-                        this@GramophonePlaybackService, uri) else emptyList()
+                        this@GramophonePlaybackService, uri) else
+                            PlaylistSerializer.Playlist.create()
                     val newSongs = if (rating.isHeart) {
-                        readback + song
+                        readback.entries + song
                     } else {
-                        readback.filter { song != it }
+                        readback.entries.filter { !song.fuzzyEquals(it) }
                     }
                     ItemManipulator.setPlaylistContent(this@GramophonePlaybackService, uri,
-                        newSongs, uriIn == null)
+                        readback.copy(entries = newSongs), uriIn == null)
                 } catch (e: Exception) {
                     Log.e(TAG, "failed to set $rating on $mediaId", e)
                     error = e

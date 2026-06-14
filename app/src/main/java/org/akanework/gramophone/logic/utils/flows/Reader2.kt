@@ -205,7 +205,8 @@ private val playlistSongsFlow: Flow<IncrementalMap<Long, IncrementalList<MediaIt
                             ?: persistentListOf()))
                     }
             } // IList<Entry>
-                .mapIncremental { it.resolveMediaItem2(pathMapFlow) } // IList<Flow<MediaItem?>>
+                .mapIncremental { it.resolveMediaItem2(pathMapFlow) } // IList<Flow<MediaItem?>?>
+                .filterNotNullIncremental()  // IList<Flow<MediaItem?>>
                 .flattenLastestIncremental() // IList<MediaItem?>
                 .filterNotNullIncremental() // IList<MediaItem>
         } // IMap<Long, IList<MediaItem>>

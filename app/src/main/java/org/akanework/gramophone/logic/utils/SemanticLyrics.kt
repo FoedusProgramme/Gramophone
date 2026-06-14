@@ -13,6 +13,7 @@ import kotlinx.parcelize.Parceler
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.WriteWith
 import org.akanework.gramophone.logic.forEachSupport
+import org.akanework.gramophone.logic.skipToEndOfTag
 import org.akanework.gramophone.logic.utils.SemanticLyrics.LyricLine
 import org.akanework.gramophone.logic.utils.SemanticLyrics.SyncedLyrics
 import org.akanework.gramophone.logic.utils.SemanticLyrics.UnsyncedLyrics
@@ -1136,18 +1137,6 @@ private const val ttm = "http://www.w3.org/ns/ttml#metadata"
 private const val ttp = "http://www.w3.org/ns/ttml#parameter"
 private const val itunes = "http://itunes.apple.com/lyric-ttml-extensions"
 private const val itunesInternal = "http://music.apple.com/lyric-ttml-internal"
-private fun XmlPullParser.skipToEndOfTag() {
-    if (eventType != XmlPullParser.START_TAG)
-        throw XmlPullParserException("expected start tag in skipToEndOfTag()")
-    while (next() != XmlPullParser.END_TAG) {
-        // we have a child tag!
-        if (eventType == XmlPullParser.START_TAG)
-            skipToEndOfTag()
-        else if (eventType != XmlPullParser.TEXT)
-            throw XmlPullParserException("expected start tag or text in skipToEndOfTag()")
-        // else: we have some text, boring
-    }
-}
 
 private fun XmlPullParser.nextAndThrowIfNotEnd() {
     if (next() != XmlPullParser.END_TAG)

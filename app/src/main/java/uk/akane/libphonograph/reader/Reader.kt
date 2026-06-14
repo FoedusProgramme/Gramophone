@@ -10,6 +10,7 @@ import android.provider.MediaStore
 import android.system.ErrnoException
 import android.system.Os
 import androidx.core.database.getStringOrNull
+import androidx.core.net.toFile
 import androidx.media3.common.HeartRating
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
@@ -23,7 +24,6 @@ import org.akanework.gramophone.logic.hasScopedStorageV1
 import org.akanework.gramophone.logic.hasScopedStorageWithMediaTypes
 import org.nift4.mediastorecompat.MediaStoreCompat
 import org.nift4.mediastorecompat.StorageManagerCompat
-import org.nift4.mediastorecompat.StorageManagerCompat.isVolumeForPath
 import org.nift4.mediastorecompat.StorageVolumeCompat
 import uk.akane.libphonograph.Constants
 import uk.akane.libphonograph.getColumnIndexOrNull
@@ -624,7 +624,7 @@ internal object Reader {
     }
 
     fun readPlaylist(context: Context, uri: Uri, volumes: List<StorageVolumeCompat>? = null):
-            List<PlaylistSerializer.Entry> {
+            PlaylistSerializer.Playlist {
         val file: File
         val playlistModifiedTime: Long
         context.contentResolver.query(uri,
@@ -667,7 +667,7 @@ internal object Reader {
                     out.add(PlaylistSerializer.Entry.ofAbstract(File(
                         cursor.getString(column))))
                 }
-                out
+                PlaylistSerializer.Playlist(out)
             }
         }
         // on Q+, we are done here. either we should've preferred abstract (or failed to parse), and
@@ -718,8 +718,8 @@ internal object Reader {
         }
         val outResolved = out.map { getPathForId(context, it)
             ?.let { f -> File(f) } to it }
-        val abstract = outResolved.mapNotNull { it.first
-            ?.let { path -> PlaylistSerializer.Entry.ofAbstract(path) } }
+        val abstract = PlaylistSerializer.Playlist(outResolved.mapNotNull { it.first
+            ?.let { path -> PlaylistSerializer.Entry.ofAbstract(path) } })
         if (orders.isNotEmpty() && orders != (0..orders.max()).toList()) {
             // PLAY_ORDER has a gap, duplicates, the wrong order or other inconsistencies which
             // MediaScanner doesn't generate, which means this playlist was edited in the database
@@ -732,15 +732,20 @@ internal object Reader {
         // not reject this case we ignore all paths present in abstract and not in M3U (if it is in
         // M3U then that's definite proof it's not the new name of a file).
         val abstractForHeuristics = outResolved.map { candidate ->
-            if (candidate.first != null && paths.find { it.file == candidate.first } == null)
+            if (candidate.first != null && paths.entries.find { it.locations
+                .find { l -> l == candidate.first?.toUriCompat() } != null } == null)
                 null to candidate.second else candidate
         }
         val volumes = volumes ?: StorageManagerCompat.getStorageVolumes(context)
         val playlistVolume = StorageManagerCompat.getVolumeForPath(volumes, file)
         val canSkipCache = hashMapOf<File, Boolean>()
         val sawVolumeCache = hashMapOf<StorageVolumeCompat, Boolean>()
+        // it.locations.map is semantically wrong, but so is Android's XSPF parser. (Though we
+        // generally shouldn't reach here with it.locations.size != 1 anyway.)
+        val pathFiles = paths.entries.flatMap { it.locations.map { if (it.scheme == "file")
+            it.toFile() else null } }
         if (!greedyWalk(abstractForHeuristics
-            .filter { it.first != null }, paths.map { it.file }, null,
+            .filter { it.first != null }, pathFiles, null,
                 sawVolumeCache, canSkipCache, playlistModifiedTime, playlistVolume, volumes)) {
             Log.i(TAG, "Used abstract playlist because greedy walk said impossible...")
             return abstract
@@ -748,7 +753,7 @@ internal object Reader {
         if (abstractForHeuristics.find { it.first == null } != null) {
             val iterations = AtomicInteger()
             val start = System.currentTimeMillis()
-            if (!bruteForceGreedyWalk(abstractForHeuristics, paths.map { it.file },
+            if (!bruteForceGreedyWalk(abstractForHeuristics, pathFiles,
                     iterations, sawVolumeCache, canSkipCache, playlistModifiedTime, playlistVolume,
                     volumes)) {
                 Log.i(TAG, "Used abstract playlist because BFGW said impossible... " +
@@ -767,7 +772,7 @@ internal object Reader {
     // open to better solutions with the same functionality
     private fun bruteForceGreedyWalk(
         db: List<Pair<File?, Long>>,
-        m3u: List<File>,
+        m3u: List<File?>,
         iterations: AtomicInteger,
         sawVolumeCache: HashMap<StorageVolumeCompat, Boolean>,
         canSkipCache: HashMap<File, Boolean>,
@@ -792,7 +797,7 @@ internal object Reader {
 
     private fun greedyWalk(
         db: List<Pair<File?, Long>>,
-        m3u: List<File>,
+        m3u: List<File?>,
         choices: MutableList<Boolean>?,
         sawVolumeCache: HashMap<StorageVolumeCompat, Boolean>,
         canSkipCache: HashMap<File, Boolean>,
@@ -810,10 +815,10 @@ internal object Reader {
                     choice(choices!!, choiceIndex++)) {
                     m3uIndex++
                 }
-                if (bound.containsValue(m3u[m3uIndex])) {
+                if (m3u[m3uIndex] == null || bound.containsValue(m3u[m3uIndex])) {
                     return false
                 }
-                bound[song.second] = m3u[m3uIndex]
+                bound[song.second] = m3u[m3uIndex]!!
             } else {
                 while (m3uIndex < m3u.size && m3u[m3uIndex] != songFile) {
                     m3uIndex++
@@ -825,6 +830,9 @@ internal object Reader {
             m3uIndex++
         }
         m3u.toSet().forEach { entry ->
+            if (entry == null) {
+                return@forEach
+            }
             val count = db.count { entry == it.first ||
                     entry == bound[it.second] }
             if (count != 0 && count != m3u.count { it == entry }) {
@@ -956,11 +964,11 @@ internal object Reader {
                     Log.w(TAG, "failed to read playlist $playlistPath", e)
                     null
                 }
-                if (!paths.isNullOrEmpty()) foundPlaylistContent = true
+                if (paths != null && paths.entries.isNotEmpty()) foundPlaylistContent = true
                 playlists.add(
                     RawPlaylist(
                         playlistId, playlistName, playlistPath,
-                        playlistDateAdded, playlistDateModified, paths
+                        playlistDateAdded, playlistDateModified, paths?.entries
                     )
                 )
             }

@@ -92,6 +92,7 @@ import org.akanework.gramophone.ui.fragments.ViewPagerFragment
 import org.nift4.mediastorecompat.MediaStoreCompat
 import uk.akane.libphonograph.dynamicitem.Favorite
 import uk.akane.libphonograph.manipulator.ItemManipulator
+import uk.akane.libphonograph.manipulator.PlaylistSerializer
 import uk.akane.libphonograph.manipulator.PlaylistSerializer.Entry
 import java.io.File
 
@@ -379,12 +380,12 @@ class MainActivity : BaseActivity() {
                 val uri = uriIn ?: ItemManipulator.createPlaylist(this,
                     ItemManipulator.getDefaultPlaylistFile(ItemManipulator.FAVORITES))
                 val readback = if (uriIn != null) ItemManipulator.readbackPlaylist(this,
-                    uri) else emptyList()
-                val newSongs = if (favorite) {
-                    readback + songs
+                    uri) else PlaylistSerializer.Playlist.create()
+                val newSongs = readback.copy(entries = if (favorite) {
+                    readback.entries + songs
                 } else {
-                    readback.filter { songs.find { candidate -> candidate == it } == null }
-                }
+                    readback.entries.filter { songs.find { candidate -> candidate.fuzzyEquals(it) } == null }
+                })
                 ItemManipulator.setPlaylistContent(this, uri, newSongs,
                     uriIn == null)
             } catch (e: Exception) {
@@ -421,11 +422,11 @@ class MainActivity : BaseActivity() {
                 Entry::class.java)!!
             try {
                 val readback = if (uriIn != null) ItemManipulator.readbackPlaylist(this,
-                    uriIn) else emptyList()
+                    uriIn) else PlaylistSerializer.Playlist.create()
                 val uri = uriIn ?: ItemManipulator.createPlaylist(this,
                     File(name!!))
-                ItemManipulator.setPlaylistContent(this, uri, readback + songs,
-                    uriIn == null)
+                ItemManipulator.setPlaylistContent(this, uri, readback
+                    .copy(entries = readback.entries + songs), uriIn == null)
             } catch (e: Exception) {
                 Log.e("MainActivity", Log.getThrowableString(e)!!)
                 withContext(Dispatchers.Main) {

@@ -44,10 +44,8 @@ import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.gramophoneApplication
@@ -57,9 +55,9 @@ import org.akanework.gramophone.ui.fragments.GeneralSubFragment
 import org.nift4.mediastorecompat.MediaStoreCompat
 import uk.akane.libphonograph.dynamicitem.Favorite
 import uk.akane.libphonograph.dynamicitem.RecentlyAdded
-import uk.akane.libphonograph.items.Item
 import uk.akane.libphonograph.items.Playlist
 import uk.akane.libphonograph.manipulator.ItemManipulator
+import uk.akane.libphonograph.manipulator.PlaylistSerializer
 import java.io.File
 
 /**
@@ -309,8 +307,8 @@ class PlaylistAdapter(
                     ioScope.launch {
                         try {
                             val uri = ItemManipulator.createPlaylist(context, path)
-                            ItemManipulator.setPlaylistContent(context, uri, emptyList(),
-                                true)
+                            ItemManipulator.setPlaylistContent(context, uri,
+                                PlaylistSerializer.Playlist.create(), true)
                         } catch (e: Exception) {
                             Log.e("PlaylistAdapter", Log.getThrowableString(e)!!)
                             withContext(Dispatchers.Main) {
