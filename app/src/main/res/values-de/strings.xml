@@ -484,4 +484,14 @@
     <string name="favorite_failed_text">Bitte klicke hier, um Änderungen anzuwenden, indem Zugriff auf die Favoriten-Playlistdatei gewährt wird</string>
     <string name="favorite_failed_title">Konnte Favoriten-Status von Titel nicht ändern</string>
     <string name="favorite">Favoritisieren</string>
+    <string name="pitch">Tonhöhe</string>
+    <string name="lock_tempo_pitch">Tempo und Tonhöhe fixieren</string>
+    <string name="delete_really_artist">Willst du wirklich alle Titel von \"%s\" löschen? Diese Aktion kann nicht rückgängig gemacht werden.</string>
+    <string name="refresh_did_you_know">Gramophone fordert bei jedem App-Start eine aktualisierte Songliste an, und während Gramophone läuft, erkennt es auch automatisch neue Medien. Diese \"Aktualisieren\"-Taste aktualisiert die Medien nicht nur in Gramophone, sondern weist das Betriebssystem an, alle Dateien von allen angeschlossenen permanenten Speichergeräten erneut zu scannen (darum braucht es einige Zeit). Somit wirst du diese Funktion niemals verwenden müssen, es sei denn, dein Betriebssystem oder andere Apps sind fehlerhaft.\n\nEs fehlen einige Titel? Überprüfe in Einstellungen &gt; Verhalten die minimale Länge eines Titels sowie die Ordner in der schwarzen Liste und stelle sicher, dass diese Einstellungen auf den erwarteten Wert gesetzt sind. Für weitere möglichen Gründen überprüfe bitte unsere FAQ.</string>
+    <string name="edit_favorites_failed">Bearbeiten der Favoriten fehlgeschlagen: %s</string>
+    <string name="settings_replaygain_preamp">Vorverstärkung</string>
+    <string name="settings_replaygain_no_rg_amp">Dämpfung (kein RG)</string>
+    <string name="scroll_to_playing">Zum aktuellen Titel scrollen</string>
+    <string name="settings_replaygain_no_rg_amp_desc">Lautstärke bei lauten Songs ohne ReplayGain-Tags reduzieren</string>
+    <string name="sort_by_artist_year"><![CDATA[Interpret -&gt; Jahr]]></string>
 </resources>
