@@ -21,6 +21,7 @@ import coil3.load
 import coil3.request.crossfade
 import coil3.request.error
 import com.google.android.material.button.MaterialButton
+import kotlinx.coroutines.flow.MutableStateFlow
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.dpToPx
 import org.akanework.gramophone.logic.ui.MyRecyclerView
@@ -30,7 +31,8 @@ import org.akanework.gramophone.logic.utils.convertDurationToTimeStamp
 // Like SongAdapter, but without layouts, sorting, or flows; instead supporting drag, swipe & remove
 abstract class EditSongAdapter(
     private val context: Context,
-    private val showDuration: Boolean
+    private val showDuration: Boolean,
+    private val disableDrag: MutableStateFlow<Boolean>? = null,
 ) : MyRecyclerView.Adapter<EditSongAdapter.ViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -101,11 +103,11 @@ abstract class EditSongAdapter(
             ItemTouchHelper.START or ItemTouchHelper.END
         ) {
         override fun isLongPressDragEnabled(): Boolean {
-            return true
+            return disableDrag?.value != true
         }
 
         override fun isItemViewSwipeEnabled(): Boolean {
-            return true
+            return disableDrag?.value != true
         }
 
         override fun onMove(

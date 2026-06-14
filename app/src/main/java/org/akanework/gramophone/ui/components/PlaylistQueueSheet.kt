@@ -4,9 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.SystemClock
 import android.view.View
-import android.widget.ImageView
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -15,7 +13,6 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.graphics.Insets
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.children
 import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
@@ -30,10 +27,10 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.dpToPx
 import org.akanework.gramophone.logic.getBooleanStrict
@@ -47,7 +44,6 @@ import org.akanework.gramophone.ui.MainActivity
 import org.akanework.gramophone.ui.fragments.compose.QueueRoot
 import org.akanework.gramophone.ui.fragments.compose.rememberMqState
 import java.util.LinkedList
-import kotlin.sequences.forEach
 
 class PlaylistQueueSheet(
     context: Context, private val activity: MainActivity
@@ -64,7 +60,9 @@ class PlaylistQueueSheet(
 
     // depending on the queue state, we may need to modify behaviour of certain UI elements outside
     // the compose queue elements
-    private var detachedHead: Boolean = false
+    private var detachedHead = MutableStateFlow(false)
+
+    private var veto = false // TODO: i mean it works but its not very elegant
 
     init {
         prefs = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
@@ -151,10 +149,9 @@ class PlaylistQueueSheet(
                     val mqState =
                         rememberMqState(
                             coroutineScope, instance!!, this@PlaylistQueueSheet,
-                            onDetachHead = { detachedHead = true },
-                            onResetHead = {
-                                detachedHead = false
-                            })
+                            onDetachHead = { detachedHead.value = true },
+                            onResetHead = { detachedHead.value = false },
+                        )
                     val pagerState = rememberPagerState(
                         initialPage = if (Flags.MQ_PREVIEW) 0 else 1,
                         pageCount = { 2 }
@@ -198,7 +195,7 @@ class PlaylistQueueSheet(
         mediaItem: MediaItem?,
         reason: @Player.MediaItemTransitionReason Int
     ) {
-        if (detachedHead) return
+        if (detachedHead.value) return
         val i = instance?.currentMediaItemIndex
         playlistAdapter.currentMediaItemIndex = i?.let { playlistAdapter.playlist.first.indexOf(i) }
     }
@@ -208,7 +205,7 @@ class PlaylistQueueSheet(
         newPosition: Player.PositionInfo,
         reason: @Player.DiscontinuityReason Int
     ) {
-        if (detachedHead) return
+        if (detachedHead.value) return
         playlistAdapter.updateTimer()
     }
 
@@ -220,8 +217,15 @@ class PlaylistQueueSheet(
         timeline: Timeline,
         reason: @Player.TimelineChangeReason Int
     ) {
+//        Log.v("PlaylistQueueSheet", "onTimelineChanged " + reason)
+        if (veto) {
+            veto = false
+            return
+        }
+
         // trigger an ui list update if changes are detected
         if (instance?.mediaItemCount != playlistAdapter.playlist.first.size) {
+//            Log.v("PlaylistQueueSheet", "change size doesnt match" )
             playlistAdapter.updateList()
             return
         }
@@ -230,6 +234,7 @@ class PlaylistQueueSheet(
         var i = 0
         while (i < pl.second.size) {
             if (pl.first[i] != oldPl.first[i] || pl.second[i].mediaId != oldPl.second[i].mediaId) {
+//                Log.v("PlaylistQueueSheet", "difference detected" )
                 playlistAdapter.updateList(newPlaylist = pl)
                 return
             }
@@ -246,7 +251,7 @@ class PlaylistQueueSheet(
         playlistAdapter.updateList(mq)
     }
 
-    inner class PlaylistCardAdapter : EditSongAdapter(activity, true) {
+    inner class PlaylistCardAdapter : EditSongAdapter(activity, true, detachedHead) {
         var playlist: Pair<MutableList<Int>, MutableList<MediaItem>> = dumpPlaylist()
         var currentMediaItemIndex: Int? = null
             set(value) {
@@ -322,6 +327,7 @@ class PlaylistQueueSheet(
         }
 
         override fun onRowMoved(from: Int, to: Int) {
+            veto = true
             val mediaController = activity.getPlayer()
             val from1 = playlist.first.removeAt(from)
             playlist.first.replaceAllSupport { if (it > from1) it - 1 else it }
