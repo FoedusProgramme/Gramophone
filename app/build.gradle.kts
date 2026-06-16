@@ -20,9 +20,17 @@ plugins {
 }
 
 android {
-    val releaseType = if (project.hasProperty("releaseType")) project.properties["releaseType"].toString()
-        else readProperties(file("../package.properties")).getProperty("releaseType")
-    val myVersionName = "." + "git rev-parse --short=7 HEAD".runCommand(workingDir = rootDir)
+    val packageProperties = readProperties(file("../package.properties"))
+    fun resolveProperties(property: String): String? {
+        return if (project.hasProperty(property)) project.properties[property].toString()
+        else packageProperties.getOrDefault(property, null) as String?
+    }
+
+    val releaseType = resolveProperties("releaseType")!!
+    val appIdOverride = resolveProperties("appIdOverride")
+    val versionNameSuffixOverride = resolveProperties("versionNameSuffixOverride")
+
+    val myVersionName = "." + (versionNameSuffixOverride ?: "git rev-parse --short=7 HEAD".runCommand(workingDir = rootDir))
     if (releaseType.contains("\"")) {
         throw IllegalArgumentException("releaseType must not contain \"")
     }
@@ -32,19 +40,19 @@ android {
 
     signingConfigs {
         create("release") {
-            if (project.hasProperty("AKANE_RELEASE_KEY_ALIAS")) {
-                storeFile = file(project.properties["AKANE_RELEASE_STORE_FILE"].toString())
-                storePassword = project.properties["AKANE_RELEASE_STORE_PASSWORD"].toString()
-                keyAlias = project.properties["AKANE_RELEASE_KEY_ALIAS"].toString()
-                keyPassword = project.properties["AKANE_RELEASE_KEY_PASSWORD"].toString()
+            if (resolveProperties("AKANE_RELEASE_KEY_ALIAS") != null) {
+                storeFile = file(resolveProperties("AKANE_RELEASE_STORE_FILE")!!)
+                storePassword = resolveProperties("AKANE_RELEASE_STORE_PASSWORD")
+                keyAlias = resolveProperties("AKANE_RELEASE_KEY_ALIAS")
+                keyPassword = resolveProperties("AKANE_RELEASE_KEY_PASSWORD")
             }
         }
         create("release2") {
-            if (project.hasProperty("AKANE2_RELEASE_KEY_ALIAS")) {
-                storeFile = file(project.properties["AKANE2_RELEASE_STORE_FILE"].toString())
-                storePassword = project.properties["AKANE2_RELEASE_STORE_PASSWORD"].toString()
-                keyAlias = project.properties["AKANE2_RELEASE_KEY_ALIAS"].toString()
-                keyPassword = project.properties["AKANE2_RELEASE_KEY_PASSWORD"].toString()
+            if (resolveProperties("AKANE2_RELEASE_KEY_ALIAS")!= null) {
+                storeFile = file(resolveProperties("AKANE2_RELEASE_STORE_FILE")!!)
+                storePassword = resolveProperties("AKANE2_RELEASE_STORE_PASSWORD")
+                keyAlias = resolveProperties("AKANE2_RELEASE_KEY_ALIAS")
+                keyPassword = resolveProperties("AKANE2_RELEASE_KEY_PASSWORD")
             }
         }
     }
@@ -93,7 +101,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "org.akanework.gramophone"
+        applicationId = appIdOverride ?: "org.akanework.gramophone"
         // Reasons to not support KK include me.zhanghai.android.fastscroll, WindowInsets for
         // bottom sheet padding, ExoPlayer requiring multidex, vector drawables and poor SD support
         // That said, supporting Android 5.0 costs tolerable amounts of tech debt, and we plan to
@@ -102,8 +110,10 @@ android {
         targetSdk = 35
         versionCode = 20
         versionName = "1.0.17"
-        if (releaseType != "Release") {
-            versionNameSuffix = myVersionName
+        if (releaseType != "Release" || versionNameSuffixOverride != null) {
+            // by default the git commit hash is appended for non-release builds, however overrides
+            // will apply unconditionally
+            versionNameSuffix = versionNameSuffixOverride ?: myVersionName
         }
         buildConfigField(
             "String",
