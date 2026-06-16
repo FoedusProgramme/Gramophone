@@ -92,7 +92,7 @@
     <string name="settings_default_progress_bar_summary">Fortschrittsbalken im MD3-Stil aktivieren</string>
     <string name="dialog_mime">MIME-Typ</string>
     <string name="now_playing">Aktuelle Wiedergabe</string>
-    <string name="playlist_favourite">Favoriten</string>
+    <string name="playlist_favourite">Lieblingssongs</string>
     <string name="no_lyric_found">Kein Liedtext gefunden</string>
     <string name="settings_player_ui">Abspieloberfläche</string>
     <string name="settings_customization_summary">Anpassungsoptionen verwalten</string>
@@ -491,4 +491,7 @@
     <string name="scroll_to_playing">Zum aktuellen Titel scrollen</string>
     <string name="settings_replaygain_no_rg_amp_desc">Lautstärke bei lauten Songs ohne ReplayGain-Tags reduzieren</string>
     <string name="sort_by_artist_year"><![CDATA[Interpret -&gt; Jahr]]></string>
+    <string name="settings_mq_enabled">Mehrere Warteschlangen</string>
+    <string name="settings_pure_dark">Schwarzes Farbschema</string>
+    <string name="settings_replaygain_drc_desc">Kompressor benutzen, um Übersteuerung zu vermeiden (empfohlen). Ist diese Funktion deaktiviert, wird stattdessen die Lautstärke reduziert, was den Normalisierungseffekt zunichtemacht.</string>
 </resources>

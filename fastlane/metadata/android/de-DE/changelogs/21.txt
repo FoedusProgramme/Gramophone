@@ -1,0 +1,10 @@
+- Bearbeitung von Wiedergabelisten
+- Lieblingssongs
+- Neue Benutzeroberfläche für Songtexte mit wortgenauer Synchronisation (+ Auslesen von ID3-SYLT-Songtexten)
+- Unterstützung für ReplayGain 2.0
+- Schwarzes Farbschema
+- weiße Liste für Ordner
+- ALAC-Decoder
+- Wiedergabegeschwindigkeit
+- Überarbeitete Warteschlange und Einschlaftimer
+- Behebung zahlreicher Abstürze und Fehler
