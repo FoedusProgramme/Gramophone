@@ -66,8 +66,9 @@ class PlaylistQueueSheet(
     private var detachedHead = MutableStateFlow(false)
     private var detachedQueue: Int? = null
 
-    private var veto = false // TODO: i mean it works but its not very elegant
-
+    // this works but is not very elegant. I tried using my brain, tried using AI. I could sink more
+    // time into this, or I could just pray this "efficient" solution stands the test of time
+    private var veto = false
     init {
         prefs = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
         mqEnabled = Flags.MQ_PREVIEW && prefs.getBooleanStrict("mq_preview", false)
@@ -370,6 +371,7 @@ class PlaylistQueueSheet(
         }
 
         override fun removeItem(pos: Int) {
+            veto = true
             val instance = activity.getPlayer()
             val idx = playlist.first.removeAt(pos)
             playlist.first.replaceAllSupport { if (it > idx) it - 1 else it }
