@@ -5,6 +5,7 @@ object Flags {
     const val TTML_AGENT_SMART_SIDES = true
     const val HIDE_SAME_TRANSLATIONS = true
     const val IGNORE_SMALL_ENDTIME_GAPS = true
+    const val NO_ANIM_GRADIENT_LAST_FRAME_MONKEY_FIX = true
 
     // Before turning it on in prod we need i18n.
     const val FORMAT_INFO_DIALOG = true // TODO(ASAP)

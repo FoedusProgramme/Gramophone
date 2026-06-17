@@ -314,6 +314,9 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
                     endIsImplicit = true
                 }
             }
+            if (Flags.NO_ANIM_GRADIENT_LAST_FRAME_MONKEY_FIX && lyricAnimTime == 0f && it.theWords != null) {
+                lastTs += 17.toUInt() // the assumption is that display is at least 60hz
+            }
             val timeOffsetForUse = min(
                 scaleInAnimTime, min(
                     lerp(
@@ -896,6 +899,9 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
                     lastTs = nextStartTime
                     endIsImplicit = true
                 }
+            }
+            if (Flags.NO_ANIM_GRADIENT_LAST_FRAME_MONKEY_FIX && lyricAnimTime == 0f && it.theWords != null) {
+                lastTs += 17.toUInt() // the assumption is that display is at least 60hz
             }
             val timeOffsetForUse = min(
                 scaleInAnimTime, min(
