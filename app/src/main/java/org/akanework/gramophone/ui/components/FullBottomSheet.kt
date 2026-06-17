@@ -3,6 +3,7 @@ package org.akanework.gramophone.ui.components
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.DialogInterface
 import android.content.SharedPreferences
 import android.content.res.ColorStateList
 import android.content.res.Configuration
@@ -48,6 +49,7 @@ import androidx.core.view.isVisible
 import androidx.core.view.postOnAnimationDelayed
 import androidx.core.widget.NestedScrollView
 import androidx.core.widget.TextViewCompat
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModel
 import androidx.media3.common.C
 import androidx.media3.common.HeartRating
@@ -115,6 +117,8 @@ import org.akanework.gramophone.ui.fragments.GeneralSubFragment
 import uk.akane.libphonograph.items.albumId
 import uk.akane.libphonograph.items.artistId
 import uk.akane.libphonograph.manipulator.PlaylistSerializer.Entry
+import java.text.NumberFormat
+import java.text.ParseException
 import kotlin.math.max
 import kotlin.math.min
 
@@ -428,12 +432,27 @@ class FullBottomSheet
                             .setTitle(R.string.timer)
                             .setView(R.layout.dialog_sleep_timer_custom)
                             .setPositiveButton(android.R.string.ok) { _, _ ->
-                                instance?.setTimer(((et.editableText?.toString()?.toFloat()
-                                    ?: 0f) * 60f * 1000f).toInt(), cb.isChecked)
+                                try {
+                                    instance?.setTimer((NumberFormat.getInstance().parse(
+                                        et.editableText.toString())!!.toFloat() * 60f *
+                                            1000f).toInt(), cb.isChecked)
+                                } catch (_: ParseException) {
+                                    // race condition with button enable
+                                }
                             }
                             .setNegativeButton(android.R.string.cancel) { _, _ -> }
                             .show()
+                        val b = dialog2.getButton(DialogInterface.BUTTON_POSITIVE)
+                        b.isEnabled = false
                         et = dialog2.findViewById(R.id.editText)!!
+                        et.addTextChangedListener {
+                            b.isEnabled = try {
+                                NumberFormat.getInstance().parse(it.toString())!!.toFloat()
+                                true
+                            } catch (_: ParseException) {
+                                false
+                            }
+                        }
                         cb = dialog2.findViewById(R.id.checkBox)!!
                         cb.isChecked = checkbox.isChecked
                     } else {
