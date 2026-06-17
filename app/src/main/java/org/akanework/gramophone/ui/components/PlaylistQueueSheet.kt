@@ -395,9 +395,9 @@ class PlaylistQueueSheet(
             } else {
                 durationView.stop()
             }
-            durationView.base = SystemClock.elapsedRealtime() +
-                    playlist.second.subList(current, playlist.second.size)
-                        .sumOf { it.mediaMetadata.durationMs ?: 0L } - elapsedCurrentMs + 1000
+            durationView.base = SystemClock.elapsedRealtime() + playlist.first.subList(current,
+                playlist.first.size).sumOf { playlist.second[it].mediaMetadata.durationMs ?: 0L } -
+                    elapsedCurrentMs + 1000
         }
     }
 }
