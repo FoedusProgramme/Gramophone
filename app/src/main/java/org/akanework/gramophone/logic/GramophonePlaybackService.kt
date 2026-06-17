@@ -1072,6 +1072,10 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
     ) {
         if (reason == Player.PLAY_WHEN_READY_CHANGE_REASON_END_OF_MEDIA_ITEM) {
             this.endedWorkaroundPlayer?.exoPlayer?.pauseAtEndOfMediaItems = false
+            mediaSession!!.broadcastCustomCommand(
+                SessionCommand(SERVICE_TIMER_CHANGED, Bundle.EMPTY),
+                Bundle.EMPTY
+            )
         }
     }
 
