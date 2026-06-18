@@ -16,6 +16,7 @@ import org.akanework.gramophone.logic.QueueBoard
 import org.akanework.gramophone.logic.utils.CircularShuffleOrder
 import org.akanework.gramophone.logic.utils.SemanticLyrics
 import org.json.JSONObject
+import java.util.Objects
 
 
 /**
@@ -99,8 +100,11 @@ class EndedWorkaroundPlayer(
                                 putString("lyricInfo", JSONObject().apply {
                                     put("songName", superState.currentMetadata.title)
                                     put("artist", superState.currentMetadata.artist)
+                                    // Put lyric hash code into songId as well to be able to reset
+                                    // lyrics if they load late or get changed.
                                     put("songId", superState.playlist.getOrNull(
-                                        superState.currentMediaItemIndex)?.mediaItem?.mediaId)
+                                        superState.currentMediaItemIndex)?.mediaItem?.mediaId
+                                        .toString() + Objects.toIdentityString(lyric))
                                     // This can parse some odd Netease-specific JSON list or normal
                                     // LRC without bells and whistles (fwiw, the Netease format is
                                     // not even better than plain LRC), no word sync as of right now
