@@ -14,6 +14,8 @@ import org.akanework.gramophone.BuildConfig
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.QueueBoard
 import org.akanework.gramophone.logic.utils.CircularShuffleOrder
+import org.akanework.gramophone.logic.utils.SemanticLyrics
+import org.json.JSONObject
 
 
 /**
@@ -23,6 +25,7 @@ import org.akanework.gramophone.logic.utils.CircularShuffleOrder
  */
 class EndedWorkaroundPlayer(
     exoPlayer: ExoPlayer,
+    private val getLyric: () -> SemanticLyrics?,
     val queueBoard: QueueBoard
 ) : ForwardingSimpleBasePlayer(exoPlayer),
     Player.Listener {
@@ -76,9 +79,42 @@ class EndedWorkaroundPlayer(
         super.onPositionDiscontinuity(oldPosition, newPosition, reason)
     }
 
+    fun updateLyricNow() {
+        if (BuildConfig.APPLICATION_ID == "com.tencent.qqmusic") {
+            invalidateState()
+        }
+    }
+
     override fun getState(): State {
+        var superState = super.state
+        if (BuildConfig.APPLICATION_ID == "com.tencent.qqmusic") {
+            // Oplus uses package name whitelist for their lockscreen lyric feature
+            val lyric = getLyric()
+            if (lyric != null && lyric is SemanticLyrics.SyncedLyrics) {
+                superState = superState.buildUpon()
+                    .setPlaylist(superState.timeline, superState.currentTracks,
+                        superState.currentMetadata.buildUpon()
+                            .setExtras((superState.currentMetadata.extras?.let { Bundle(it) }
+                                ?: Bundle()).apply {
+                                putString("lyricInfo", JSONObject().apply {
+                                    put("songName", superState.currentMetadata.title)
+                                    put("artist", superState.currentMetadata.artist)
+                                    put("songId", superState.playlist.getOrNull(
+                                        superState.currentMediaItemIndex)?.mediaItem?.mediaId)
+                                    // This can parse some odd Netease-specific JSON list or normal
+                                    // LRC without bells and whistles (fwiw, the Netease format is
+                                    // not even better than plain LRC), no word sync as of right now
+                                    put("lyric", lyric.text.joinToString(
+                                        "\n") {
+                                        val s = it.start.toLong() / 1000
+                                        "[%02d:%02d.%02d]".format(s / 60, s % 60,
+                                            (it.start.toLong() % 1000) / 10) + it.text
+                                    })
+                                }.toString())
+                            }).build()).build()
+            }
+        }
         if (isEnded) {
-            val superState = super.state
             if (superState.playerError != null) {
                 isEnded = false
                 return superState
@@ -86,9 +122,9 @@ class EndedWorkaroundPlayer(
             return superState.buildUpon().setPlaybackState(STATE_ENDED).setIsLoading(false).build()
         }
         if (player.currentTimeline.isEmpty) {
-            return super.state.buildUpon().setDeviceInfo(remoteDeviceInfo).build()
+            return superState.buildUpon().setDeviceInfo(remoteDeviceInfo).build()
         }
-        return super.getState()
+        return superState
     }
 
     fun realSetMediaItems(

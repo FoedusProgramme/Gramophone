@@ -409,6 +409,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                 })
                 .setPlaybackLooper(internalPlaybackThread.looper)
                 .build(),
+            { lyrics },
             queueBoard = qb,
         )
         player.exoPlayer.addAnalyticsListener(EventLogger())
@@ -1572,6 +1573,9 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         handler.removeCallbacks(sendLyrics)
         sendLyricNow(new || !updatedLyricAtLeastOnce)
         updatedLyricAtLeastOnce = true
+        if (new) {
+            endedWorkaroundPlayer?.updateLyricNow()
+        }
         val isStatusBarLyricsEnabled = prefs.getBooleanStrict("status_bar_lyrics", false)
         val hnw = !LyricWidgetProvider.hasWidget(this)
         if (controller?.isPlaying != true || (!isStatusBarLyricsEnabled && hnw)) return
