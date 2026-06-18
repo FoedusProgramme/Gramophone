@@ -1,0 +1,10 @@
+- Chỉnh sửa danh sách phát
+- Bài hát yêu thích
+- Giao diện lời bài hát mới với lời bài hát được đồng bộ theo từ (+ phân tích lời bài hát ID3 SYLT)
+- Hỗ trợ ReplayGain 2.0
+- Chủ đề tối thuần túy
+- Danh sách trắng thư mục
+- Bộ giải mã ALAC
+- Tốc độ phát lại
+- Thiết kế lại hàng đợi và hẹn giờ ngủ
+- Khắc phục nhiều lỗi và sự cố
