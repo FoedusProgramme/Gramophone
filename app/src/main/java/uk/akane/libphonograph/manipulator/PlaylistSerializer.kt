@@ -1214,8 +1214,9 @@ object PlaylistSerializer {
             locations = if (song.getFile()?.toUriCompat()?.let { f -> locations.find { it == f } !=
                     null } == false) run {
                 val keepAlternatives = locations.filter {
-                    it.scheme != "file" // TODO(ASAP) filter windows path or bad prefix for
-                    //  android or sd card that isn't in recent volumes of mediastore
+                    it.scheme != "file" || !it.authority.isNullOrEmpty() /* UNC type 1 */ &&
+                            it.authority != "localhost" /* RFC 8089 */ || /* UNC type 2, DOS path */
+                            it.pathSegments.firstOrNull() != "storage"    /* or FHS path */
                 }
                 listOf(song.getFile()!!.toUriCompat()) + keepAlternatives
             } else locations,
