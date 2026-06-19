@@ -174,7 +174,7 @@ object ItemManipulator {
 
     fun getDefaultPlaylistFile(name: String): File {
         val parent = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
-        return File(parent, "$name.$DEFAULT_FORMAT")
+        return File(parent, Util.escapeFileName("$name.$DEFAULT_FORMAT"))
     }
 
     suspend fun readbackPlaylist(context: Context, uri: Uri): PlaylistSerializer.Playlist {

@@ -166,9 +166,9 @@ object PlaylistSerializer {
                     album = album, genre = genre, tvKeys = tvKeys)
             }
 
-            PlaylistFormat.Wpl -> {
+            PlaylistFormat.Wpl -> outFile.inputStream().use { ist ->
                 val parser = Xml.newPullParser()
-                parser.setInput(outFile.inputStream(), StandardCharsets.UTF_8.name())
+                parser.setInput(ist, StandardCharsets.UTF_8.name())
                 val items = mutableListOf<Entry>()
                 parser.nextTag()
                 parser.require(XmlPullParser.START_TAG, null, "smil")
@@ -271,11 +271,11 @@ object PlaylistSerializer {
                 Playlist(entries)
             }
 
-            PlaylistFormat.Xspf -> {
+            PlaylistFormat.Xspf -> outFile.inputStream().use { ist ->
                 val x0 = "http://xspf.org/ns/0/"
                 val parser = Xml.newPullParser()
                 parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, true)
-                parser.setInput(outFile.inputStream(), StandardCharsets.UTF_8.name())
+                parser.setInput(ist, StandardCharsets.UTF_8.name())
                 val items = mutableListOf<Entry>()
                 parser.nextTag()
                 parser.require(XmlPullParser.START_TAG, x0, "playlist")
@@ -363,7 +363,7 @@ object PlaylistSerializer {
                                 }.totalSeconds
                             } else {
                                 val isoRegex = Regex("^(\\d{4}-\\d{2}-\\d{2}T\\d{2}:" +
-                                        "\\d{2}:\\d{2})(?:\\.\\d{1,12})?(Z|[+-]\\d{2}:?\\d{2})?$")
+                                        "\\d{2}:\\d{2})(?:\\.\\d{1,12})?(Z|[+-]\\d{2}:\\d{2})?$")
                                 val match = isoRegex.matchEntire(input)!!
                                 val dateObj = if (match.groupValues[2] == "") {
                                     val sdf = SimpleDateFormat(
@@ -594,424 +594,453 @@ object PlaylistSerializer {
         val os = if (uri.scheme == ContentResolver.SCHEME_FILE)
             outFile.outputStream()
         else MediaStoreCompat.openOutputStream(context, uri, "wt")!!
-        val songs = playlist.entries
-        when (format) {
-            PlaylistFormat.M3u -> {
-                val out = StringBuilder("#EXTM3U\r\n")
-                if (playlist.title != null)
-                    out.append("#${playlist.titleKey ?: "PLAYLIST"}:${playlist.title}\r\n")
-                if (playlist.album != null)
-                    out.append("#EXTALB:${playlist.album}\r\n")
-                if (playlist.artist != null)
-                    out.append("#EXTART:${playlist.artist}\r\n")
-                if (playlist.genre != null)
-                    out.append("#EXTGENRE:${playlist.genre}\r\n")
-                songs.filter { it.locations.isNotEmpty() }.forEach {
-                    it.associatedComments?.forEach { comment -> out.append("$comment\r\n") }
-                    if (it.title != null || it.durationMs != null ||
-                        !it.tvKeys.isNullOrEmpty()) {
-                        val tvKeys = if (!it.tvKeys.isNullOrEmpty())
-                            it.tvKeys.joinToString(" ", prefix = " ") { (k, v) ->
-                                """$k="${
-                                    v.replace("\\", "\\\\")
-                                        .replace("\"", "\\\"")
-                                }""""
-                            } else ""
-                        out.append("#EXTINF:${it.durationMs ?: -1}$tvKeys," +
-                                "${it.title ?: it.nameWithoutExtension}\r\n")
+        os.use { _ ->
+            val songs = playlist.entries
+            when (format) {
+                PlaylistFormat.M3u -> {
+                    val out = StringBuilder("#EXTM3U\r\n")
+                    if (playlist.title != null)
+                        out.append("#${playlist.titleKey ?: "PLAYLIST"}:${playlist.title}\r\n")
+                    if (playlist.album != null)
+                        out.append("#EXTALB:${playlist.album}\r\n")
+                    if (playlist.artist != null)
+                        out.append("#EXTART:${playlist.artist}\r\n")
+                    if (playlist.genre != null)
+                        out.append("#EXTGENRE:${playlist.genre}\r\n")
+                    songs.filter { it.locations.isNotEmpty() }.forEach {
+                        it.associatedComments?.forEach { comment -> out.append("$comment\r\n") }
+                        if (it.title != null || it.durationMs != null ||
+                            !it.tvKeys.isNullOrEmpty()
+                        ) {
+                            val tvKeys = if (!it.tvKeys.isNullOrEmpty())
+                                it.tvKeys.joinToString(" ", prefix = " ") { (k, v) ->
+                                    """$k="${
+                                        v.replace("\\", "\\\\")
+                                            .replace("\"", "\\\"")
+                                    }""""
+                                } else ""
+                            out.append(
+                                "#EXTINF:${it.durationMs ?: -1}$tvKeys," +
+                                        "${it.title ?: it.nameWithoutExtension}\r\n"
+                            )
+                        }
+                        out.append("${it.toRelativeString(parent)}\r\n")
                     }
-                    out.append("${it.toRelativeString(parent)}\r\n")
-                }
-                os.use { it.writer().use { writer -> writer.write(out.toString()) } }
-            }
-
-            PlaylistFormat.Wpl -> {
-                val doc = Xml.newSerializer()
-                // will output in DOS line endings
-                doc.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true)
-                doc.setOutput(os, StandardCharsets.UTF_8.name())
-                doc.startDocument(null, true)
-                doc.startTag(null, "smil")
-                doc.startTag(null, "head")
-
-                if (playlist.title != null) {
-                    doc.startTag(null, "title")
-                    doc.text(playlist.title)
-                    doc.endTag(null, "title")
+                    os.use { it.writer().use { writer -> writer.write(out.toString()) } }
                 }
 
-                doc.startTag(null, "meta")
-                doc.attribute(null, "name", "Generator")
-                doc.attribute(null, "content", "Gramophone " +
-                        "${BuildConfig.MY_VERSION_NAME}/${BuildConfig.RELEASE_TYPE}")
-                doc.endTag(null, "meta")
-                if (songs.find { it.durationMs == null } == null) {
+                PlaylistFormat.Wpl -> {
+                    val doc = Xml.newSerializer()
+                    // will output in DOS line endings
+                    doc.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true)
+                    doc.setOutput(os, StandardCharsets.UTF_8.name())
+                    doc.startDocument(null, true)
+                    doc.startTag(null, "smil")
+                    doc.startTag(null, "head")
+
+                    if (playlist.title != null) {
+                        doc.startTag(null, "title")
+                        doc.text(playlist.title)
+                        doc.endTag(null, "title")
+                    }
+
                     doc.startTag(null, "meta")
-                    doc.attribute(null, "name", "TotalDuration")
-                    doc.attribute(null, "content", songs
-                        .sumOf { it.durationMs!! }.div(1000u).toString())
+                    doc.attribute(null, "name", "Generator")
+                    doc.attribute(
+                        null, "content", "Gramophone " +
+                                "${BuildConfig.MY_VERSION_NAME}/${BuildConfig.RELEASE_TYPE}"
+                    )
                     doc.endTag(null, "meta")
-                }
-                if (playlist.author != null) {
-                    doc.startTag(null, "meta")
-                    doc.attribute(null, "name", "Author")
-                    doc.attribute(null, "content", playlist.author)
-                    doc.endTag(null, "meta")
-                }
-                if (playlist.category != null) {
-                    doc.startTag(null, "meta")
-                    doc.attribute(null, "name", "Category")
-                    doc.attribute(null, "content", playlist.category)
-                    doc.endTag(null, "meta")
-                }
-                if (playlist.genre != null) {
-                    doc.startTag(null, "meta")
-                    doc.attribute(null, "name", "Genre")
-                    doc.attribute(null, "content", playlist.genre)
-                    doc.endTag(null, "meta")
-                }
-                if (playlist.userName != null) {
-                    doc.startTag(null, "meta")
-                    doc.attribute(null, "name", "UserName")
-                    doc.attribute(null, "content", playlist.userName)
-                    doc.endTag(null, "meta")
-                }
-                doc.startTag(null, "meta")
-                doc.attribute(null, "name", "ItemCount")
-                doc.attribute(null, "content", songs.size.toString())
-                doc.endTag(null, "meta")
-                if (playlist.wplMetaTags != null) {
-                    for (tag in playlist.wplMetaTags) {
+                    if (songs.find { it.durationMs == null } == null) {
                         doc.startTag(null, "meta")
-                        doc.attribute(null, "name", tag.first)
-                        doc.attribute(null, "content", tag.second)
+                        doc.attribute(null, "name", "TotalDuration")
+                        doc.attribute(
+                            null, "content", songs
+                            .sumOf { it.durationMs!! }.div(1000u).toString()
+                        )
                         doc.endTag(null, "meta")
                     }
+                    if (playlist.author != null) {
+                        doc.startTag(null, "meta")
+                        doc.attribute(null, "name", "Author")
+                        doc.attribute(null, "content", playlist.author)
+                        doc.endTag(null, "meta")
+                    }
+                    if (playlist.category != null) {
+                        doc.startTag(null, "meta")
+                        doc.attribute(null, "name", "Category")
+                        doc.attribute(null, "content", playlist.category)
+                        doc.endTag(null, "meta")
+                    }
+                    if (playlist.genre != null) {
+                        doc.startTag(null, "meta")
+                        doc.attribute(null, "name", "Genre")
+                        doc.attribute(null, "content", playlist.genre)
+                        doc.endTag(null, "meta")
+                    }
+                    if (playlist.userName != null) {
+                        doc.startTag(null, "meta")
+                        doc.attribute(null, "name", "UserName")
+                        doc.attribute(null, "content", playlist.userName)
+                        doc.endTag(null, "meta")
+                    }
+                    doc.startTag(null, "meta")
+                    doc.attribute(null, "name", "ItemCount")
+                    doc.attribute(null, "content", songs.size.toString())
+                    doc.endTag(null, "meta")
+                    if (playlist.wplMetaTags != null) {
+                        for (tag in playlist.wplMetaTags) {
+                            doc.startTag(null, "meta")
+                            doc.attribute(null, "name", tag.first)
+                            doc.attribute(null, "content", tag.second)
+                            doc.endTag(null, "meta")
+                        }
+                    }
+
+                    doc.endTag(null, "head")
+                    doc.startTag(null, "body")
+                    doc.startTag(null, "seq")
+                    for (item in songs) {
+                        if (item.locations.isNotEmpty()) {
+                            doc.startTag(null, "media")
+                            doc.attribute(
+                                null, "src",
+                                item.toRelativeString(parent)
+                            )
+                            if (item.contentId != null) {
+                                doc.attribute(null, "cid", item.contentId)
+                            }
+                            if (item.trackingId != null) {
+                                doc.attribute(null, "tid", item.trackingId)
+                            }
+                            doc.endTag(null, "media")
+                        }
+                    }
+                    doc.endTag(null, "seq")
+                    doc.endTag(null, "body")
+                    doc.endTag(null, "smil")
+                    doc.endDocument()
                 }
 
-                doc.endTag(null, "head")
-                doc.startTag(null, "body")
-                doc.startTag(null, "seq")
-                for (item in songs) {
-                    if (item.locations.isNotEmpty()) {
-                        doc.startTag(null, "media")
-                        doc.attribute(
-                            null, "src",
-                            item.toRelativeString(parent)
-                        )
-                        if (item.contentId != null) {
-                            doc.attribute(null, "cid", item.contentId)
-                        }
-                        if (item.trackingId != null) {
-                            doc.attribute(null, "tid", item.trackingId)
-                        }
-                        doc.endTag(null, "media")
-                    }
+                PlaylistFormat.Pls -> {
+                    val songs = songs.filter { it.locations.isNotEmpty() }
+                    val out = "[playlist]\r\n" + songs.mapIndexed { i, it ->
+                        "File${i + 1}=${it.toRelativeString(parent)}\r\n" +
+                                "Title${i + 1}=${it.title ?: it.nameWithoutExtension}\r\n" +
+                                "Length${i + 1}=${it.durationMs ?: -1}"
+                    }.joinToString("\r\n").trim() +
+                            "\r\nNumberOfEntries=${songs.size}\r\nVersion=2\r\n"
+                    os.use { it.writer().use { writer -> writer.write(out) } }
                 }
-                doc.endTag(null, "seq")
-                doc.endTag(null, "body")
-                doc.endTag(null, "smil")
-                doc.endDocument()
-            }
 
-            PlaylistFormat.Pls -> {
-                val songs = songs.filter { it.locations.isNotEmpty() }
-                val out = "[playlist]\r\n" + songs.mapIndexed { i, it ->
-                    "File${i + 1}=${it.toRelativeString(parent)}\r\n" +
-                            "Title${i + 1}=${it.title ?: it.nameWithoutExtension}\r\n" +
-                            "Length${i + 1}=${it.durationMs ?: -1}"
-                }.joinToString("\r\n").trim() +
-                        "\r\nNumberOfEntries=${songs.size}\r\nVersion=2\r\n"
-                os.use { it.writer().use { writer -> writer.write(out) } }
-            }
+                PlaylistFormat.Xspf -> {
+                    val x0 = "http://xspf.org/ns/0/"
+                    val doc = Xml.newSerializer()
+                    doc.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true)
+                    doc.setOutput(os, StandardCharsets.UTF_8.name())
+                    doc.startDocument("utf-8", true)
+                    doc.setPrefix("", x0)
+                    doc.startTag(x0, "playlist")
+                    doc.attribute(null, "version", "1")
 
-            PlaylistFormat.Xspf -> {
-                val x0 = "http://xspf.org/ns/0/"
-                val doc = Xml.newSerializer()
-                doc.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true)
-                doc.setOutput(os, StandardCharsets.UTF_8.name())
-                doc.startDocument("utf-8", true)
-                doc.setPrefix("", x0)
-                doc.startTag(x0, "playlist")
-                doc.attribute(null, "version", "1")
-
-                if (playlist.title != null) {
-                    doc.startTag(x0, "title")
-                    doc.text(playlist.title)
-                    doc.endTag(x0, "title")
-                }
-                if (playlist.author != null) {
-                    doc.startTag(x0, "creator")
-                    doc.text(playlist.author)
-                    doc.endTag(x0, "creator")
-                }
-                if (playlist.annotation != null) {
-                    doc.startTag(x0, "annotation")
-                    doc.text(playlist.annotation)
-                    doc.endTag(x0, "annotation")
-                }
-                if (playlist.info != null) {
-                    doc.startTag(x0, "info")
-                    doc.text(playlist.info.toString())
-                    doc.endTag(x0, "info")
-                }
-                if (playlist.location != null) {
-                    doc.startTag(x0, "location")
-                    doc.text(playlist.location.toString())
-                    doc.endTag(x0, "location")
-                }
-                if (playlist.identifier != null) {
-                    doc.startTag(x0, "identifier")
-                    doc.text(playlist.identifier.toString())
-                    doc.endTag(x0, "identifier")
-                }
-                if (playlist.image != null) {
-                    doc.startTag(x0, "image")
-                    if (playlist.image.scheme == "file") {
-                        doc.text(Uri.Builder().path(playlist.image.toFile()
-                            .toRelativeString(parent)).build().toString())
-                    } else {
-                        doc.text(playlist.image.toString())
-                    }
-                    doc.endTag(x0, "image")
-                }
-                if (playlist.dateCreatedUtc != null) {
-                    doc.startTag(x0, "date")
-                    if ((playlist.timezoneOffsetSecs ?: 0) == 0) {
-                        val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US)
-                        sdf.timeZone = TimeZone.getTimeZone("UTC")
-                        doc.text(sdf.format(Date(playlist.dateCreatedUtc * 1000)))
-                    } else {
-                        val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US)
-                        sdf.timeZone = SimpleTimeZone(playlist.timezoneOffsetSecs!! *
-                                1000, "")
-                        doc.text(sdf.format(Date(playlist.dateCreatedUtc * 1000)))
-                    }
-                    doc.endTag(x0, "date")
-                }
-                if (playlist.license != null) {
-                    doc.startTag(x0, "license")
-                    doc.text(playlist.license.toString())
-                    doc.endTag(x0, "license")
-                }
-                if (playlist.attribution != null) {
-                    doc.startTag(x0, "attribution")
-                    for (attribution in playlist.attribution) {
-                        if (attribution.first) {
-                            doc.startTag(x0, "location")
-                        } else {
-                            doc.startTag(x0, "identifier")
-                        }
-                        doc.text(attribution.second)
-                        if (attribution.first) {
-                            doc.endTag(x0, "location")
-                        } else {
-                            doc.endTag(x0, "identifier")
-                        }
-                    }
-                    doc.endTag(x0, "attribution")
-                }
-                if (playlist.links != null) {
-                    for (link in playlist.links) {
-                        doc.startTag(x0, "link")
-                        doc.attribute(null, "rel", link.first.toString())
-                        doc.text(link.second.toString())
-                        doc.endTag(x0, "link")
-                    }
-                }
-                if (playlist.metas != null) {
-                    for (meta in playlist.metas) {
-                        doc.startTag(x0, "meta")
-                        doc.attribute(null, "rel", meta.first.toString())
-                        doc.text(meta.second)
-                        doc.endTag(x0, "meta")
-                    }
-                }
-                if (playlist.wplMetaTags != null) {
-                    for (meta in playlist.wplMetaTags) {
-                        doc.startTag(x0, "meta")
-                        doc.attribute(null, "rel",
-                            "$XSPF_EXT_WPL_META/${meta.first}")
-                        doc.text(meta.second)
-                        doc.endTag(x0, "meta")
-                    }
-                }
-                if (playlist.category != null) {
-                    doc.startTag(x0, "meta")
-                    doc.attribute(null, "rel", "$XSPF_EXT_WPL_META/Category")
-                    doc.text(playlist.category)
-                    doc.endTag(x0, "meta")
-                }
-                if (playlist.userName != null) {
-                    doc.startTag(x0, "meta")
-                    doc.attribute(null, "rel", "$XSPF_EXT_WPL_META/UserName")
-                    doc.text(playlist.userName)
-                    doc.endTag(x0, "meta")
-                }
-                if (playlist.genre != null) {
-                    doc.startTag(x0, "meta")
-                    doc.attribute(null, "rel", "$XSPF_EXT_M3U_GENRE")
-                    doc.text(playlist.genre)
-                    doc.endTag(x0, "meta")
-                }
-                if (playlist.album != null) {
-                    doc.startTag(x0, "meta")
-                    doc.attribute(null, "rel", "$XSPF_EXT_M3U_ALBUM")
-                    doc.text(playlist.album)
-                    doc.endTag(x0, "meta")
-                }
-                if (playlist.artist != null) {
-                    doc.startTag(x0, "meta")
-                    doc.attribute(null, "rel", "$XSPF_EXT_M3U_ARTIST")
-                    doc.text(playlist.artist)
-                    doc.endTag(x0, "meta")
-                }
-                if (playlist.titleKey != null) {
-                    doc.startTag(x0, "meta")
-                    doc.attribute(null, "rel", "$XSPF_EXT_M3U_TITLE_KEY")
-                    doc.text(playlist.titleKey)
-                    doc.endTag(x0, "meta")
-                }
-                if (playlist.tvKeys != null) {
-                    for (meta in playlist.tvKeys) {
-                        doc.startTag(x0, "meta")
-                        doc.attribute(null, "rel",
-                            "$XSPF_EXT_M3U_TV/${meta.first}")
-                        doc.text(meta.second)
-                        doc.endTag(x0, "meta")
-                    }
-                }
-                doc.startTag(x0, "meta")
-                doc.attribute(null, "rel", "$XSPF_EXT_GENERATOR")
-                doc.text("Gramophone ${BuildConfig.MY_VERSION_NAME}/${BuildConfig.RELEASE_TYPE}")
-                doc.endTag(x0, "meta")
-
-                if (playlist.extensions != null) {
-                    doc.flush()
-                    for (extension in playlist.extensions) {
-                        os.write(extension)
-                    }
-                }
-                doc.startTag(x0, "trackList")
-                for (entry in playlist.entries) {
-                    doc.startTag(x0, "track")
-                    for (location in entry.locations) {
-                        doc.startTag(x0, "location")
-                        if (location.scheme == "file") {
-                            doc.text(Uri.Builder().path(location.toFile()
-                                .toRelativeString(parent)).build().toString())
-                        } else {
-                            doc.text(location.toString())
-                        }
-                        doc.endTag(x0, "location")
-                    }
-                    if (entry.identifiers != null) {
-                        for (identifier in entry.identifiers) {
-                            doc.startTag(x0, "identifier")
-                            doc.text(identifier.toString())
-                            doc.endTag(x0, "identifier")
-                        }
-                    }
-                    if (entry.title != null) {
+                    if (playlist.title != null) {
                         doc.startTag(x0, "title")
-                        doc.text(entry.title)
+                        doc.text(playlist.title)
                         doc.endTag(x0, "title")
                     }
-                    if (entry.artist != null) {
+                    if (playlist.author != null) {
                         doc.startTag(x0, "creator")
-                        doc.text(entry.artist)
+                        doc.text(playlist.author)
                         doc.endTag(x0, "creator")
                     }
-                    if (entry.annotation != null) {
+                    if (playlist.annotation != null) {
                         doc.startTag(x0, "annotation")
-                        doc.text(entry.annotation)
+                        doc.text(playlist.annotation)
                         doc.endTag(x0, "annotation")
                     }
-                    if (entry.info != null) {
+                    if (playlist.info != null) {
                         doc.startTag(x0, "info")
-                        doc.text(entry.info.toString())
+                        doc.text(playlist.info.toString())
                         doc.endTag(x0, "info")
                     }
-                    if (entry.image != null) {
+                    if (playlist.location != null) {
+                        doc.startTag(x0, "location")
+                        doc.text(playlist.location.toString())
+                        doc.endTag(x0, "location")
+                    }
+                    if (playlist.identifier != null) {
+                        doc.startTag(x0, "identifier")
+                        doc.text(playlist.identifier.toString())
+                        doc.endTag(x0, "identifier")
+                    }
+                    if (playlist.image != null) {
                         doc.startTag(x0, "image")
-                        if (entry.image.scheme == "file") {
-                            doc.text(Uri.Builder().path(entry.image.toFile()
-                                .toRelativeString(parent)).build().toString())
+                        if (playlist.image.scheme == "file") {
+                            doc.text(
+                                Uri.Builder().path(
+                                    playlist.image.toFile()
+                                        .toRelativeString(parent)
+                                ).build().toString()
+                            )
                         } else {
-                            doc.text(entry.image.toString())
+                            doc.text(playlist.image.toString())
                         }
                         doc.endTag(x0, "image")
                     }
-                    if (entry.album != null) {
-                        doc.startTag(x0, "album")
-                        doc.text(entry.album)
-                        doc.endTag(x0, "album")
+                    if (playlist.dateCreatedUtc != null) {
+                        doc.startTag(x0, "date")
+                        if ((playlist.timezoneOffsetSecs ?: 0) == 0) {
+                            val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US)
+                            sdf.timeZone = TimeZone.getTimeZone("UTC")
+                            doc.text(sdf.format(Date(playlist.dateCreatedUtc * 1000)))
+                        } else {
+                            val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US)
+                            sdf.timeZone = SimpleTimeZone(
+                                playlist.timezoneOffsetSecs!! * 1000, "")
+                            val t = sdf.format(Date(playlist.dateCreatedUtc * 1000))
+                            doc.text("${t.substring(0, t.length - 2)}:" +
+                                    t.substring(t.length - 2, t.length))
+                        }
+                        doc.endTag(x0, "date")
                     }
-                    if (entry.trackNum != null) {
-                        doc.startTag(x0, "trackNum")
-                        doc.text(entry.trackNum.toString())
-                        doc.endTag(x0, "trackNum")
+                    if (playlist.license != null) {
+                        doc.startTag(x0, "license")
+                        doc.text(playlist.license.toString())
+                        doc.endTag(x0, "license")
                     }
-                    if (entry.durationMs != null) {
-                        doc.startTag(x0, "duration")
-                        doc.text(entry.durationMs.toString())
-                        doc.endTag(x0, "duration")
+                    if (playlist.attribution != null) {
+                        doc.startTag(x0, "attribution")
+                        for (attribution in playlist.attribution) {
+                            if (attribution.first) {
+                                doc.startTag(x0, "location")
+                            } else {
+                                doc.startTag(x0, "identifier")
+                            }
+                            doc.text(attribution.second)
+                            if (attribution.first) {
+                                doc.endTag(x0, "location")
+                            } else {
+                                doc.endTag(x0, "identifier")
+                            }
+                        }
+                        doc.endTag(x0, "attribution")
                     }
-                    if (entry.links != null) {
-                        for (link in entry.links) {
+                    if (playlist.links != null) {
+                        for (link in playlist.links) {
                             doc.startTag(x0, "link")
                             doc.attribute(null, "rel", link.first.toString())
                             doc.text(link.second.toString())
                             doc.endTag(x0, "link")
                         }
                     }
-                    if (entry.metas != null) {
-                        for (meta in entry.metas) {
+                    if (playlist.metas != null) {
+                        for (meta in playlist.metas) {
                             doc.startTag(x0, "meta")
                             doc.attribute(null, "rel", meta.first.toString())
                             doc.text(meta.second)
                             doc.endTag(x0, "meta")
                         }
                     }
-                    if (!entry.associatedComments.isNullOrEmpty()) {
-                        doc.startTag(x0, "meta")
-                        doc.attribute(null, "rel", "$XSPF_EXT_M3U_UNKNOWN")
-                        doc.text(entry.associatedComments.joinToString("\r\n"))
-                        doc.endTag(x0, "meta")
-                    }
-                    if (entry.tvKeys != null) {
-                        for (meta in entry.tvKeys) {
+                    if (playlist.wplMetaTags != null) {
+                        for (meta in playlist.wplMetaTags) {
                             doc.startTag(x0, "meta")
-                            doc.attribute(null, "rel",
-                                "$XSPF_EXT_M3U_TV/${meta.first}")
+                            doc.attribute(
+                                null, "rel",
+                                "$XSPF_EXT_WPL_META/${meta.first}"
+                            )
                             doc.text(meta.second)
                             doc.endTag(x0, "meta")
                         }
                     }
-                    if (entry.contentId != null) {
+                    if (playlist.category != null) {
                         doc.startTag(x0, "meta")
-                        doc.attribute(null, "rel", "$XSPF_EXT_WPL_CID")
-                        doc.text(entry.contentId)
+                        doc.attribute(null, "rel", "$XSPF_EXT_WPL_META/Category")
+                        doc.text(playlist.category)
                         doc.endTag(x0, "meta")
                     }
-                    if (entry.trackingId != null) {
+                    if (playlist.userName != null) {
                         doc.startTag(x0, "meta")
-                        doc.attribute(null, "rel", "$XSPF_EXT_WPL_TID")
-                        doc.text(entry.trackingId)
+                        doc.attribute(null, "rel", "$XSPF_EXT_WPL_META/UserName")
+                        doc.text(playlist.userName)
                         doc.endTag(x0, "meta")
                     }
-                    if (entry.extensions != null) {
+                    if (playlist.genre != null) {
+                        doc.startTag(x0, "meta")
+                        doc.attribute(null, "rel", "$XSPF_EXT_M3U_GENRE")
+                        doc.text(playlist.genre)
+                        doc.endTag(x0, "meta")
+                    }
+                    if (playlist.album != null) {
+                        doc.startTag(x0, "meta")
+                        doc.attribute(null, "rel", "$XSPF_EXT_M3U_ALBUM")
+                        doc.text(playlist.album)
+                        doc.endTag(x0, "meta")
+                    }
+                    if (playlist.artist != null) {
+                        doc.startTag(x0, "meta")
+                        doc.attribute(null, "rel", "$XSPF_EXT_M3U_ARTIST")
+                        doc.text(playlist.artist)
+                        doc.endTag(x0, "meta")
+                    }
+                    if (playlist.titleKey != null) {
+                        doc.startTag(x0, "meta")
+                        doc.attribute(null, "rel", "$XSPF_EXT_M3U_TITLE_KEY")
+                        doc.text(playlist.titleKey)
+                        doc.endTag(x0, "meta")
+                    }
+                    if (playlist.tvKeys != null) {
+                        for (meta in playlist.tvKeys) {
+                            doc.startTag(x0, "meta")
+                            doc.attribute(
+                                null, "rel",
+                                "$XSPF_EXT_M3U_TV/${meta.first}"
+                            )
+                            doc.text(meta.second)
+                            doc.endTag(x0, "meta")
+                        }
+                    }
+                    doc.startTag(x0, "meta")
+                    doc.attribute(null, "rel", "$XSPF_EXT_GENERATOR")
+                    doc.text("Gramophone ${BuildConfig.MY_VERSION_NAME}/${BuildConfig.RELEASE_TYPE}")
+                    doc.endTag(x0, "meta")
+
+                    if (playlist.extensions != null) {
                         doc.flush()
-                        for (extension in entry.extensions) {
+                        for (extension in playlist.extensions) {
                             os.write(extension)
                         }
                     }
-                    doc.endTag(x0, "track")
-                }
-                doc.endTag(x0, "trackList")
+                    doc.startTag(x0, "trackList")
+                    for (entry in playlist.entries) {
+                        doc.startTag(x0, "track")
+                        for (location in entry.locations) {
+                            doc.startTag(x0, "location")
+                            if (location.scheme == "file") {
+                                doc.text(
+                                    Uri.Builder().path(
+                                        location.toFile()
+                                            .toRelativeString(parent)
+                                    ).build().toString()
+                                )
+                            } else {
+                                doc.text(location.toString())
+                            }
+                            doc.endTag(x0, "location")
+                        }
+                        if (entry.identifiers != null) {
+                            for (identifier in entry.identifiers) {
+                                doc.startTag(x0, "identifier")
+                                doc.text(identifier.toString())
+                                doc.endTag(x0, "identifier")
+                            }
+                        }
+                        if (entry.title != null) {
+                            doc.startTag(x0, "title")
+                            doc.text(entry.title)
+                            doc.endTag(x0, "title")
+                        }
+                        if (entry.artist != null) {
+                            doc.startTag(x0, "creator")
+                            doc.text(entry.artist)
+                            doc.endTag(x0, "creator")
+                        }
+                        if (entry.annotation != null) {
+                            doc.startTag(x0, "annotation")
+                            doc.text(entry.annotation)
+                            doc.endTag(x0, "annotation")
+                        }
+                        if (entry.info != null) {
+                            doc.startTag(x0, "info")
+                            doc.text(entry.info.toString())
+                            doc.endTag(x0, "info")
+                        }
+                        if (entry.image != null) {
+                            doc.startTag(x0, "image")
+                            if (entry.image.scheme == "file") {
+                                doc.text(
+                                    Uri.Builder().path(
+                                        entry.image.toFile()
+                                            .toRelativeString(parent)
+                                    ).build().toString()
+                                )
+                            } else {
+                                doc.text(entry.image.toString())
+                            }
+                            doc.endTag(x0, "image")
+                        }
+                        if (entry.album != null) {
+                            doc.startTag(x0, "album")
+                            doc.text(entry.album)
+                            doc.endTag(x0, "album")
+                        }
+                        if (entry.trackNum != null) {
+                            doc.startTag(x0, "trackNum")
+                            doc.text(entry.trackNum.toString())
+                            doc.endTag(x0, "trackNum")
+                        }
+                        if (entry.durationMs != null) {
+                            doc.startTag(x0, "duration")
+                            doc.text(entry.durationMs.toString())
+                            doc.endTag(x0, "duration")
+                        }
+                        if (entry.links != null) {
+                            for (link in entry.links) {
+                                doc.startTag(x0, "link")
+                                doc.attribute(null, "rel", link.first.toString())
+                                doc.text(link.second.toString())
+                                doc.endTag(x0, "link")
+                            }
+                        }
+                        if (entry.metas != null) {
+                            for (meta in entry.metas) {
+                                doc.startTag(x0, "meta")
+                                doc.attribute(null, "rel", meta.first.toString())
+                                doc.text(meta.second)
+                                doc.endTag(x0, "meta")
+                            }
+                        }
+                        if (!entry.associatedComments.isNullOrEmpty()) {
+                            doc.startTag(x0, "meta")
+                            doc.attribute(null, "rel", "$XSPF_EXT_M3U_UNKNOWN")
+                            doc.text(entry.associatedComments.joinToString("\r\n"))
+                            doc.endTag(x0, "meta")
+                        }
+                        if (entry.tvKeys != null) {
+                            for (meta in entry.tvKeys) {
+                                doc.startTag(x0, "meta")
+                                doc.attribute(
+                                    null, "rel",
+                                    "$XSPF_EXT_M3U_TV/${meta.first}"
+                                )
+                                doc.text(meta.second)
+                                doc.endTag(x0, "meta")
+                            }
+                        }
+                        if (entry.contentId != null) {
+                            doc.startTag(x0, "meta")
+                            doc.attribute(null, "rel", "$XSPF_EXT_WPL_CID")
+                            doc.text(entry.contentId)
+                            doc.endTag(x0, "meta")
+                        }
+                        if (entry.trackingId != null) {
+                            doc.startTag(x0, "meta")
+                            doc.attribute(null, "rel", "$XSPF_EXT_WPL_TID")
+                            doc.text(entry.trackingId)
+                            doc.endTag(x0, "meta")
+                        }
+                        if (entry.extensions != null) {
+                            doc.flush()
+                            for (extension in entry.extensions) {
+                                os.write(extension)
+                            }
+                        }
+                        doc.endTag(x0, "track")
+                    }
+                    doc.endTag(x0, "trackList")
 
-                doc.endTag(x0, "playlist")
-                doc.endDocument()
+                    doc.endTag(x0, "playlist")
+                    doc.endDocument()
+                }
             }
         }
     }
