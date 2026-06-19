@@ -1,0 +1,10 @@
+- Edición de listas de reprodución
+- Cancións favoritas
+- Nova interface para as letras con sincronización (+ proceso de letras ID3 SYLT)
+- Compatible con ReplayGain 2.0
+- Decorado escuro real
+- Lista de cartafoles monitorizados
+- Decodificador ALAC
+- Velocidade de reprodución
+- Cola redeseñada e temporizador
+- Múltiples arranxos de incidencias

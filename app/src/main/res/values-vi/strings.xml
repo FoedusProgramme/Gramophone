@@ -498,6 +498,8 @@
     <string name="spk_encoding_mpegh_sub_bl_l4">MPEG-H Baseline Profile L4</string>
     <string name="spk_encoding_mpegh_sub_lc_l3">MPEG-H Low Complexity L3</string>
     <string name="spk_encoding_mpegh_sub_lc_l4">MPEG-H Low Complexity L4</string>
+    <string name="spk_encoding_pcm_16bit_offload">16-bit PCM Offload</string>
+    <string name="spk_encoding_pcm_24bit_offload">24-bit (8.24) PCM offload</string>
     <string name="settings_telegram">Telegram</string>
     <string name="spk_encoding_pcm_20bit">20-bit PCM</string>
     <string name="spk_encoding_pcm_20bit_big_endian">20-bit PCM (big endian)</string>
