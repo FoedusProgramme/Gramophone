@@ -5,7 +5,7 @@ import uk.akane.libphonograph.items.Playlist
 import uk.akane.libphonograph.items.addDate
 
 class RecentlyAdded(minAddDate: Long, songList: List<MediaItem>) :
-    Playlist(null, null, null, null, null) {
+    Playlist(null, null, null, null, null, null) {
     private val rawList: List<MediaItem> = songList.sortedByDescending {
         it.mediaMetadata.addDate ?: -1
     }
