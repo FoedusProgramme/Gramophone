@@ -28,6 +28,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.akanework.gramophone.R
+import org.akanework.gramophone.logic.QueueTitle
 import org.akanework.gramophone.logic.getFile
 import org.akanework.gramophone.logic.requireMediaStoreId
 import org.akanework.gramophone.ui.MainActivity
@@ -38,7 +39,7 @@ import java.util.GregorianCalendar
 
 class AlbumAdapter(
     fragment: Fragment,
-    val queueTitle: Flow<String>,
+    val queueTitle: Flow<QueueTitle>,
     liveData: Flow<List<Album>?> = (fragment.requireActivity() as MainActivity).reader.albumListFlow,
     isSubFragment: Int? = null
 ) : BaseAdapter<Album>

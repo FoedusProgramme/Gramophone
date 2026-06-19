@@ -126,6 +126,7 @@ import org.akanework.gramophone.logic.utils.ReplayGainUtil
 import org.akanework.gramophone.logic.utils.SemanticLyrics
 import org.akanework.gramophone.logic.utils.exoplayer.EndedWorkaroundPlayer
 import org.akanework.gramophone.logic.utils.exoplayer.EndedWorkaroundPlayer.Companion.queueWithTitle
+import org.akanework.gramophone.logic.QueueTitle
 import org.akanework.gramophone.logic.utils.exoplayer.GramophoneExtractorsFactory
 import org.akanework.gramophone.logic.utils.exoplayer.GramophoneMediaSourceFactory
 import org.akanework.gramophone.logic.utils.exoplayer.GramophoneRenderFactory
@@ -566,7 +567,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                     val list = runBlocking { mapMediaItemsForFavorites(items.mediaItems) }
                     try {
                         mediaSession?.player?.setMediaItems(
-                            queueWithTitle(list, "lastPlayedManager"),
+                            queueWithTitle(list, QueueTitle.Custom("lastPlayedManager")),
                             items.startIndex,
                             items.startPositionMs
                         )

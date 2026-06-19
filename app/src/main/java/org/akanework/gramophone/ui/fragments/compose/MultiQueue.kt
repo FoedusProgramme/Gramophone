@@ -79,6 +79,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import org.akanework.gramophone.R
+import org.akanework.gramophone.logic.QueueTitle
 import org.akanework.gramophone.logic.MultiQueueObject
 import org.akanework.gramophone.logic.deleteQueue
 import org.akanework.gramophone.logic.getInactiveQueues
@@ -103,6 +104,7 @@ fun MqListItem(
     onClick: () -> Unit = {},
     onLongClick: () -> Unit = {},
 ) {
+    val context = LocalContext.current
     Row( // wrapper
         modifier = modifier
             .padding(horizontal = 16.dp)
@@ -147,7 +149,7 @@ fun MqListItem(
                     }
                 }
                 Text(
-                    text = "${index + 1}. ${mq.title}",
+                    text = "${index + 1}. ${mq.title.resolve(context)}",
                     maxLines = 1,
                     overflow = TextOverflow.MiddleEllipsis,
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 0.dp)
@@ -246,7 +248,7 @@ fun QueueInfo(
                 }
         ) {
             Text(
-                text = mqState.getQueueTitle() ?: "",
+                text = mqState.getQueueTitle(LocalContext.current) ?: "",
                 style = MaterialTheme.typography.titleMedium,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier
@@ -751,11 +753,11 @@ class MqState(
 
     fun getQueueListSize(): Int = inactiveQueues.size + if (activeQueue == null) 0 else 1
 
-    fun getQueueTitle(): String? {
+    fun getQueueTitle(context: android.content.Context): String? {
         return if (!isDetached()) {
-            activeQueue?.title
+            activeQueue?.title?.resolve(context)
         } else {
-            detachedQueue?.title
+            detachedQueue?.title?.resolve(context)
         }
     }
 

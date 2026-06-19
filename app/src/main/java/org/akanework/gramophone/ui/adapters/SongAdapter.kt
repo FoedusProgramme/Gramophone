@@ -41,6 +41,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.akanework.gramophone.R
+import org.akanework.gramophone.logic.QueueTitle
 import org.akanework.gramophone.logic.getBooleanStrict
 import org.akanework.gramophone.logic.getFile
 import org.akanework.gramophone.logic.gramophoneApplication
@@ -70,7 +71,7 @@ import java.util.GregorianCalendar
  */
 class SongAdapter(
     fragment: Fragment?,
-    val queueTitle: Flow<String>,
+    val queueTitle: Flow<QueueTitle>,
     songList: Flow<List<MediaItem>?> = (fragment?.requireContext() ?: fallbackContext!!)
         .gramophoneApplication.reader.songListFlow,
     helper: Sorter.NaturalOrderHelper<MediaItem>? = null,

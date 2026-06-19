@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Parcelable
 import android.util.Log
+import androidx.annotation.StringRes
 import androidx.compose.ui.util.fastFirstOrNull
 import androidx.compose.ui.util.fastSumBy
 import androidx.media3.common.C
@@ -12,6 +13,53 @@ import androidx.media3.common.Player
 import androidx.media3.common.Player.REPEAT_MODE_OFF
 import org.akanework.gramophone.logic.utils.CircularShuffleOrder
 import kotlin.random.Random
+
+/**
+ * Represents a queue title that may be backed by a string resource (localizable) or a
+ * user-defined custom string (not localizable).
+ *
+ * Use [QueueTitle.Resource] for system-generated titles (e.g. "Songs", "Albums") so they are
+ * resolved from the current locale at display time rather than baked in at play time.
+ * Use [QueueTitle.Custom] for user-defined names such as playlist titles.
+ */
+sealed class QueueTitle {
+    /** A title backed by an Android string resource. Resolved at display time via [resolve]. */
+    data class Resource(@StringRes val resId: Int) : QueueTitle()
+
+    /** A title provided directly as a user-defined string. */
+    data class Custom(val name: String) : QueueTitle()
+
+    /** Resolve this title to a display string using the provided [context]. */
+    fun resolve(context: Context): String = when (this) {
+        is Resource -> context.getString(resId)
+        is Custom -> name
+    }
+
+    fun toBundle(): Bundle = Bundle().apply {
+        when (val t = this@QueueTitle) {
+            is Resource -> {
+                putString("type", "resource")
+                putInt("resId", t.resId)
+            }
+            is Custom -> {
+                putString("type", "custom")
+                putString("name", t.name)
+            }
+        }
+    }
+
+    companion object {
+        fun fromBundle(bundle: Bundle): QueueTitle {
+            return when (bundle.getString("type")) {
+                "resource" -> Resource(bundle.getInt("resId"))
+                else -> Custom(bundle.getString("name") ?: "")
+            }
+        }
+
+        /** Deserialize from the legacy plain-string format used before this change. */
+        fun fromLegacyString(title: String): QueueTitle = Custom(title)
+    }
+}
 
 private const val QUEUE_EXPIRY_MS = 10 * 36000000 // 10 hrs
 
@@ -141,7 +189,7 @@ class QueueBoard(
      *
      */
     fun addQueue(
-        title: String,
+        title: QueueTitle,
         mediaList: List<MediaItem>,
         mediaItemIndex: Int = 0,
         startPositionMs: Long?,
@@ -156,8 +204,9 @@ class QueueBoard(
                         "replace/startIndex = $isOriginal/$mediaItemIndex"
             )
 
-        // look for matching queue. Title is (effectively) uid
-        val match = masterQueues.firstOrNull { it.title.trimEnd() == title }
+        // look for matching queue. Title is (effectively) uid; compare resolved strings
+        val titleKey = title.resolve(context)
+        val match = masterQueues.firstOrNull { it.title.resolve(context).trimEnd() == titleKey }
 
         if (match != null) {
             val containsAll =
@@ -184,8 +233,9 @@ class QueueBoard(
 
                 // Titles ending in "+​" aka \u200B signify a extension queue
                 // Original copies will transion into an extention queue when media items are added
-                if (!match.title.endsWith("(+\u200B)")) {
-                    match.title = match.title + "(+\u200B)"
+                val resolvedName = match.title.resolve(context)
+                if (!resolvedName.endsWith("(+\u200B)")) {
+                    match.title = QueueTitle.Custom(resolvedName + "(+\u200B)")
                 }
             }
 
@@ -228,7 +278,7 @@ class QueueBoard(
         if (QUEUE_DEBUG)
             Log.d(TAG, "DELETING QUEUE ${mq.title}")
 
-        val match = masterQueues.firstOrNull { it.title == mq.title }
+        val match = masterQueues.firstOrNull { it.title == mq.title || it.title.resolve(context) == mq.title.resolve(context) }
         if (match != null) {
             masterQueues.remove(match)
         } else {
@@ -335,7 +385,7 @@ class QueueBoard(
 
 
     fun renameQueue(mq: MultiQueueObject, newName: String): Boolean {
-        if (masterQueues.any { it.title == newName }) {
+        if (masterQueues.any { it.title.resolve(context) == newName }) {
             if (QUEUE_DEBUG)
                 Log.d(TAG, "Failed to rename queue to \"$newName\". Already exists")
             return false
@@ -344,7 +394,7 @@ class QueueBoard(
         if (found) {
             val oldIndex = masterQueues.indexOf(mq)
             val q = masterQueues.removeAt(oldIndex)
-            masterQueues.add(oldIndex, q.copy(title = newName))
+            masterQueues.add(oldIndex, q.copy(title = QueueTitle.Custom(newName)))
 
             if (QUEUE_DEBUG)
                 Log.d(TAG, "Successfully renamed queue from \"${mq.title}\" to \"$newName\"")
@@ -522,7 +572,7 @@ private fun MutableList<MultiQueueObject>.bubbleUp(mq: MultiQueueObject) {
 data class MultiQueueObject(
     val id: Long, // queue uid
     var index: Int, // order of queue
-    var title: String,
+    var title: QueueTitle,
     var expiry: Long?,
     /**
      * The order of songs are dynamic. This should not be accessed from outside QueueBoard.
@@ -592,7 +642,7 @@ data class MultiQueueObject(
 
             putLong("id", id)
             putInt("index", index)
-            putString("title", title)
+            putBundle("title", title.toBundle())
             putString("expiry", expiry?.toString())
 
 //            putBinder("queue", binder)
@@ -622,7 +672,8 @@ data class MultiQueueObject(
             return MultiQueueObject(
                 id = bundle.getLong("id"),
                 index = bundle.getInt("index"),
-                title = bundle.getString("title") ?: "",
+                title = bundle.getBundle("title")?.let { QueueTitle.fromBundle(it) }
+                    ?: QueueTitle.fromLegacyString(bundle.getString("title") ?: ""),
                 expiry = bundle.getString("expiry")?.toLongOrNull(),
 //                queue = queue,
                 queue = (bundle.getParcelableArrayList<Bundle>("queue")

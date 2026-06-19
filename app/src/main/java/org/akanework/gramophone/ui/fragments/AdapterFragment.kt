@@ -34,6 +34,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOf
 import me.zhanghai.android.fastscroll.PopupTextProvider
 import org.akanework.gramophone.R
+import org.akanework.gramophone.logic.QueueTitle
 import org.akanework.gramophone.logic.enableEdgeToEdgePaddingListener
 import org.akanework.gramophone.logic.ui.ItemHeightHelper
 import org.akanework.gramophone.logic.ui.MyRecyclerView
@@ -130,7 +131,7 @@ class AdapterFragment : BaseFragment(null) {
         }
     }
 
-    fun getQueueTitle(): Flow<String> {
+    fun getQueueTitle(): Flow<QueueTitle> {
         val stringId = when (arguments?.getInt("ID", -1)) {
             R.id.songs -> R.string.category_songs
             R.id.albums -> R.string.category_albums
@@ -142,8 +143,8 @@ class AdapterFragment : BaseFragment(null) {
             R.id.playlists -> R.string.category_playlists
             else -> null
         }
-        if (stringId == null) return flowOf("MISSING TITLE (AdapterFragment)")
-        return flowOf(requireContext().getString( stringId))
+        if (stringId == null) return flowOf(QueueTitle.Custom("MISSING TITLE (AdapterFragment)"))
+        return flowOf(QueueTitle.Resource(stringId))
     }
 
     abstract class BaseInterface<T : RecyclerView.ViewHolder>

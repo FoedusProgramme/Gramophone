@@ -48,6 +48,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.akanework.gramophone.R
+import org.akanework.gramophone.logic.QueueTitle
 import org.akanework.gramophone.logic.clone
 import org.akanework.gramophone.logic.enableEdgeToEdgePaddingListener
 import org.akanework.gramophone.logic.needsManualSnackBarInset
@@ -194,7 +195,7 @@ class ViewPagerFragment : BaseFragment(true) {
                         ?.also {
                             controller?.shuffleModeEnabled = true
                             controller?.setMediaItems(
-                                queueWithTitle(it, context?.getString(R.string.category_songs))
+                                queueWithTitle(it, QueueTitle.Resource(R.string.category_songs))
                             )
                             controller?.prepare()
                             controller?.play()

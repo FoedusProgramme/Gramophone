@@ -13,6 +13,7 @@ import com.google.common.util.concurrent.ListenableFuture
 import org.akanework.gramophone.BuildConfig
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.QueueBoard
+import org.akanework.gramophone.logic.QueueTitle
 import org.akanework.gramophone.logic.utils.CircularShuffleOrder
 import org.akanework.gramophone.logic.utils.SemanticLyrics
 import org.json.JSONObject
@@ -34,13 +35,13 @@ class EndedWorkaroundPlayer(
     companion object {
         private const val TAG = "EndedWorkaroundPlayer"
 
-        fun queueWithTitle(mediaItems: List<MediaItem>, mqTitle: String?): List<MediaItem> {
+        fun queueWithTitle(mediaItems: List<MediaItem>, mqTitle: QueueTitle?): List<MediaItem> {
             if (mediaItems.isEmpty() || mqTitle == null) return mediaItems
             val firstMediaItem = mediaItems.first()
             val newFirstMediaItem = firstMediaItem.buildUpon().setMediaMetadata(
                 firstMediaItem.mediaMetadata.buildUpon().setExtras(
                     (firstMediaItem.mediaMetadata.extras?.let { Bundle(it) } ?: Bundle()).apply {
-                        putString("mq_title", mqTitle)
+                        putBundle("mq_title_bundle", mqTitle.toBundle())
                     }
                 ).build()
             ).build()
@@ -142,9 +143,10 @@ class EndedWorkaroundPlayer(
         startIndex: Int,
         startPositionMs: Long
     ): ListenableFuture<*> {
-        val defaultQueueTitle = queueBoard.context.getString(R.string.unknown_playlist)
+        val defaultQueueTitle = QueueTitle.Resource(R.string.unknown_playlist)
         val firstMediaItem = mediaItems.firstOrNull()
-        val mqTitle = firstMediaItem?.mediaMetadata?.extras?.getString("mq_title")
+        val mqTitle = firstMediaItem?.mediaMetadata?.extras?.getBundle("mq_title_bundle")
+            ?.let { QueueTitle.fromBundle(it) }
 
         val mq = queueBoard.addQueue(
             title = mqTitle ?: defaultQueueTitle,

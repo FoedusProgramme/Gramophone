@@ -34,6 +34,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.akanework.gramophone.R
+import org.akanework.gramophone.logic.QueueTitle
 import org.akanework.gramophone.logic.enableEdgeToEdgePaddingListener
 import org.akanework.gramophone.logic.ui.MyRecyclerView
 import org.akanework.gramophone.logic.utils.flows.PauseManagingSharedFlow.Companion.sharePauseableIn
@@ -53,7 +54,7 @@ import uk.akane.libphonograph.items.Playlist
  * @author AkaneTan, nift4
  */
 class GeneralSubFragment : BaseFragment(true) {
-    lateinit var qTitle: Flow<String>
+    lateinit var qTitle: Flow<QueueTitle>
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -82,7 +83,7 @@ class GeneralSubFragment : BaseFragment(true) {
             R.id.album -> {
                 val item = mainActivity.reader.albumListFlow.map { it.find { it.id == id } }
                 title = item.map { it?.title ?: requireContext().getString(R.string.unknown_album) }
-                qTitle = title
+                qTitle = title.map { QueueTitle.Custom(it) }
                 itemList = item.map { it?.songList }
                 rawOrderExposed = Sorter.Type.ByAlbumTitleAscending
             }
@@ -97,7 +98,7 @@ class GeneralSubFragment : BaseFragment(true) {
                 // Genres
                 val item = mainActivity.reader.genreListFlow.map { it.find { it.id == id } }
                 title = item.map { it?.title ?: requireContext().getString(R.string.unknown_genre) }
-                qTitle = title
+                qTitle = title.map { QueueTitle.Custom(it) }
                 itemList = item.map { it?.songList }
             }
 
@@ -105,7 +106,7 @@ class GeneralSubFragment : BaseFragment(true) {
                 // Dates
                 val item = mainActivity.reader.dateListFlow.map { it.find { it.id == id } }
                 title = item.map { it?.title ?: requireContext().getString(R.string.unknown_year) }
-                qTitle = title
+                qTitle = title.map { QueueTitle.Custom(it) }
                 itemList = item.map { it?.songList }
             }
 
@@ -138,7 +139,16 @@ class GeneralSubFragment : BaseFragment(true) {
                                 + if (it != null) " (${it.id} - ${it.path})" else "")
                     }
                 }
-                qTitle = title
+                qTitle = item.map {
+                    when {
+                        it is RecentlyAdded -> QueueTitle.Resource(R.string.recently_added)
+                        it is Favorite -> QueueTitle.Resource(R.string.playlist_favourite)
+                        else -> QueueTitle.Custom(
+                            it?.title ?: (requireContext().getString(R.string.unknown_playlist)
+                                    + if (it != null) " (${it.id} - ${it.path})" else "")
+                        )
+                    }
+                }
                 itemList = item.map { it?.songList }
                 rawOrderExposed = Sorter.Type.NaturalOrder
                 if (clazz == Playlist::class.java.name) {
