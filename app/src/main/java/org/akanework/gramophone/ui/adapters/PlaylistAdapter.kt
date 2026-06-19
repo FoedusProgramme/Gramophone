@@ -58,6 +58,7 @@ import uk.akane.libphonograph.dynamicitem.RecentlyAdded
 import uk.akane.libphonograph.items.Playlist
 import uk.akane.libphonograph.manipulator.ItemManipulator
 import uk.akane.libphonograph.manipulator.PlaylistSerializer
+import uk.akane.libphonograph.toUriCompat
 import java.io.File
 
 /**
@@ -116,7 +117,9 @@ class PlaylistAdapter(
     }
 
     override fun coverOf(item: Playlist): Uri? {
-        return if (item.title != null) super.coverOf(item) else
+        return if (item.title != null) {
+            item.cover?.toUriCompat() ?: super.coverOf(item)
+        } else
             Uri.Builder()
                 .scheme(ContentResolver.SCHEME_ANDROID_RESOURCE)
                 .authority(context.packageName)

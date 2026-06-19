@@ -740,8 +740,8 @@ internal object Reader {
         val playlistVolume = StorageManagerCompat.getVolumeForPath(volumes, file)
         val canSkipCache = hashMapOf<File, Boolean>()
         val sawVolumeCache = hashMapOf<StorageVolumeCompat, Boolean>()
-        // it.locations.map is semantically wrong, but so is Android's XSPF parser. (Though we
-        // generally shouldn't reach here with it.locations.size != 1 anyway.)
+        // it.locations being flattened is semantically wrong, but so is Android 11's XSPF parser.
+        // (Though we generally shouldn't reach here with it.locations.size != 1 anyway.)
         val pathFiles = paths.entries.flatMap { it.locations.map { if (it.scheme == "file")
             it.toFile() else null } }
         if (!greedyWalk(abstractForHeuristics
@@ -968,6 +968,7 @@ internal object Reader {
                 playlists.add(
                     RawPlaylist(
                         playlistId, playlistName, playlistPath,
+                        paths?.image?.takeIf { image -> image.scheme == "file" }?.toFile(),
                         playlistDateAdded, playlistDateModified, paths?.entries
                     )
                 )

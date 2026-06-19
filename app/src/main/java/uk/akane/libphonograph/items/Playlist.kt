@@ -10,15 +10,17 @@ open class Playlist protected constructor(
     override val id: Long?,
     override val title: String?,
     val path: File?,
+    val cover: File?,
     val dateAdded: Long?,
     val dateModified: Long?,
 ) : Item {
     private var _songList: List<MediaItem>? = null
 
     constructor(
-        id: Long?, title: String?, path: File?, dateAdded: Long?, dateModified: Long?,
+        id: Long?, title: String?, path: File?,
+        cover: File?, dateAdded: Long?, dateModified: Long?,
         songList: List<MediaItem>
-    ) : this(id, title, path, dateAdded, dateModified) {
+    ) : this(id, title, path, cover, dateAdded, dateModified) {
         _songList = songList
     }
 
@@ -53,6 +55,7 @@ internal data class RawPlaylist(
     val id: Long,
     val title: String?,
     val path: File?,
+    val cover: File?,
     val dateAdded: Long?,
     val dateModified: Long?,
     val entries: List<PlaylistSerializer.Entry>?,
@@ -65,7 +68,7 @@ internal data class RawPlaylist(
             return Favorite(id, path, dateAdded, dateModified, entries.mapNotNull {
                 it.resolveMediaItem(pathMap)
             })
-        return Playlist(id, title, path, dateAdded, dateModified, entries.mapNotNull {
+        return Playlist(id, title, path, cover, dateAdded, dateModified, entries.mapNotNull {
             it.resolveMediaItem(pathMap)
         })
     }
