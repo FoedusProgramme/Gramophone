@@ -34,6 +34,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.os.StrictMode
 import android.provider.MediaStore
 import android.provider.Settings
 import android.view.Choreographer
@@ -717,11 +718,17 @@ class MainActivity : BaseActivity() {
                 val uri = item?.requestMetadata?.mediaUri
                     ?: item?.localConfiguration?.uri
                 val contentUri = if (uri?.scheme == "file") {
-                    FileProvider.getUriForFile(
-                        this,
-                        "$packageName.fileProvider",
-                        File(uri.path!!)
-                    )
+                    val strict = StrictMode.getThreadPolicy()
+                    try {
+                        StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.LAX)
+                        FileProvider.getUriForFile(
+                            this,
+                            "$packageName.fileProvider",
+                            File(uri.path!!)
+                        )
+                    } finally {
+                        StrictMode.setThreadPolicy(strict)
+                    }
                 } else uri
                 if (contentUri != null) {
                     outContent.clipData = ClipData.newUri(contentResolver,

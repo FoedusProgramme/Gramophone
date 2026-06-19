@@ -337,11 +337,11 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         afFormatTracker.formatChangedCallback = { format, period ->
             if (period != null) {
                 handler.post {
-                    val currentPeriod = controller?.currentPeriodIndex?.takeIf {
-                        it != C.INDEX_UNSET &&
-                                (controller?.currentTimeline?.periodCount ?: 0) > it
-                    }
-                        ?.let { controller!!.currentTimeline.getUidOfPeriod(it) }
+                    val currentPeriod = endedWorkaroundPlayer?.exoPlayer?.currentPeriodIndex
+                        ?.takeIf { it != C.INDEX_UNSET && (endedWorkaroundPlayer?.exoPlayer
+                            ?.currentTimeline?.periodCount ?: 0) > it }?.let {
+                                endedWorkaroundPlayer!!.exoPlayer.currentTimeline
+                                    .getUidOfPeriod(it) }
                     if (currentPeriod != period) {
                         if (format != null) {
                             pendingAfTrackFormats[period] = format
@@ -1260,11 +1260,10 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
             Log.e(TAG, "mediaPeriodId is NULL in onDownstreamFormatChanged()!!")
             return
         }
-        val currentPeriod = controller?.currentPeriodIndex?.takeIf {
+        val currentPeriod = endedWorkaroundPlayer?.exoPlayer?.currentPeriodIndex?.takeIf {
             it != C.INDEX_UNSET &&
-                    (controller?.currentTimeline?.periodCount ?: 0) > it
-        }
-            ?.let { controller!!.currentTimeline.getUidOfPeriod(it) }
+                    (endedWorkaroundPlayer?.exoPlayer?.currentTimeline?.periodCount ?: 0) > it
+        }?.let { endedWorkaroundPlayer!!.exoPlayer.currentTimeline.getUidOfPeriod(it) }
         val item = eventTime.mediaPeriodId!!.periodUid to
                 (mediaLoadData.trackType to mediaLoadData.trackFormat!!)
         if (currentPeriod != item.first) {
@@ -1489,7 +1488,8 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
             if (!computeRgMode(false))
                 throw IllegalStateException("unreachable, mode failed with force=false")
         }
-        try {
+        // if it's a remotable timeline, it's a temporary masking timeline and real one will follow
+        if (timeline !is Timeline.RemotableTimeline) {
             pendingDownstreamFormat.toSet().forEach {
                 if (timeline.getIndexOfPeriod(it.first) == C.INDEX_UNSET) {
                     // This period is going away.
@@ -1502,8 +1502,6 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                     pendingAfTrackFormats.remove(key)
                 }
             }
-        } catch (_: UnsupportedOperationException) {
-            // TODO ???? what (to repro, like a song and let it trigger replaceMediaItem)
         }
     }
 
