@@ -16,13 +16,13 @@ import kotlinx.parcelize.Parcelize
 import okio.Path.Companion.toOkioPath
 import org.akanework.gramophone.BuildConfig
 import org.akanework.gramophone.logic.getFile
-import org.akanework.gramophone.logic.skipToEndOfTag
 import org.akanework.gramophone.logic.utils.flows.IncrementalMap
 import org.akanework.gramophone.logic.utils.flows.forKey
 import org.nift4.mediastorecompat.MediaStoreCompat
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserException
 import uk.akane.libphonograph.toUriCompat
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.nio.charset.StandardCharsets
 import java.text.SimpleDateFormat
@@ -39,10 +39,15 @@ import java.util.TimeZone
 import java.util.regex.Pattern
 
 object PlaylistSerializer {
-    private val XSPF_EXT_WPL_META = "http://akanework.org/xspf-ext/wpl-roundtrip/meta/".toUri()
+    private val XSPF_EXT_WPL_META = "http://akanework.org/xspf-ext/wpl-roundtrip/meta".toUri() //pfx
     private val XSPF_EXT_WPL_CID = "http://akanework.org/xspf-ext/wpl-roundtrip/media/cid".toUri()
     private val XSPF_EXT_WPL_TID = "http://akanework.org/xspf-ext/wpl-roundtrip/media/tid".toUri()
     private val XSPF_EXT_M3U_GENRE = "http://akanework.org/xspf-ext/m3u-roundtrip/genre".toUri()
+    private val XSPF_EXT_M3U_ALBUM = "http://akanework.org/xspf-ext/m3u-roundtrip/album".toUri()
+    private val XSPF_EXT_M3U_ARTIST = "http://akanework.org/xspf-ext/m3u-roundtrip/artist".toUri()
+    private val XSPF_EXT_M3U_TITLE_KEY = "http://akanework.org/xspf-ext/m3u-roundtrip/titleKey".toUri()
+    private val XSPF_EXT_M3U_UNKNOWN = "http://akanework.org/xspf-ext/m3u-roundtrip/unknown".toUri()
+    private val XSPF_EXT_M3U_TV = "http://akanework.org/xspf-ext/m3u-roundtrip/tv".toUri() //pfx
     private val XSPF_EXT_GENERATOR = "http://akanework.org/xspf-ext/generator".toUri()
 
     @Throws(UnsupportedPlaylistFormatException::class)
@@ -76,6 +81,11 @@ object PlaylistSerializer {
                 val tvKeysRegex = Regex("""([\w-]+)="((?:\\.|[^"\\])*)"""")
                 val lines = outFile.readLines()
                 var title: String? = null
+                var titleKey: String? = null
+                var artist: String? = null
+                var album: String? = null
+                var genre: String? = null
+                var tvKeys: List<Pair<String, String>>? = null
                 var lastEntry = -1
                 var foundEntry = false
                 val entries = lines.mapIndexedNotNull { i, it ->
@@ -86,9 +96,6 @@ object PlaylistSerializer {
                     } else if (!it.startsWith('#')) {
                         val associatedComments = lines.subList(lastEntry + 1, i).toMutableList()
                         var extInfMatch: MatchResult? = null
-                        var album: String? = null
-                        var artist: String? = null
-                        var genre: String? = null
                         associatedComments.removeAll { input ->
                             if (extInfMatch == null) {
                                 extInfMatch = extInfRegex.matchEntire(input)
@@ -96,41 +103,57 @@ object PlaylistSerializer {
                                     return@removeAll true
                                 }
                             }
-                            if (album == null && input.startsWith("#EXTALB:")) {
-                                album = input.substring("#EXTALB:".length)
-                                return@removeAll true
-                            }
-                            if (artist == null && input.startsWith("#EXTART:")) {
-                                artist = input.substring("#EXTART:".length)
-                                return@removeAll true
-                            }
-                            if (genre == null && input.startsWith("#EXTGENRE:")) {
-                                genre = input.substring("#EXTGENRE:".length)
-                                return@removeAll true
-                            }
                             false
                         }
                         val uriLine = Uri.decode(it)
                         val link = listOf(Entry.parseUri(outFile, uriLine))
                         val durationSeconds = extInfMatch?.groupValues?.get(1)?.toLong()
                         val tvKeys = extInfMatch?.groupValues?.get(2)?.let {
-                            tvKeysRegex.findAll(it).associate { match ->
+                            tvKeysRegex.findAll(it).map { match ->
                                 val key = match.groupValues[1]
                                 val value = match.groupValues[2]
                                     .replace("""\"""", "\"")
                                     .replace("""\\""", "\\")
                                 key to value
-                            }
+                            }.toList()
                         }
                         val title = extInfMatch?.groupValues?.get(3)
                         lastEntry = i
                         foundEntry = true
-                        Entry.ofM3u(link, durationSeconds, tvKeys, title, artist, album,
-                            genre, associatedComments)
+                        Entry.ofM3u(link, durationSeconds, tvKeys, title, associatedComments)
                     } else if (!foundEntry) { // might be a header property, or might not
                         when {
-                            it.startsWith("#PLAYLIST:") -> {
+                            title == null && it.startsWith("#PLAYLIST:") -> {
                                 title = it.substring("#PLAYLIST:".length)
+                                titleKey = "PLAYLIST"
+                                lastEntry = i
+                            }
+                            title == null && it.startsWith("#EXTNAME:") -> {
+                                title = it.substring("#EXTNAME:".length)
+                                titleKey = "EXTNAME"
+                                lastEntry = i
+                            }
+                            album == null && it.startsWith("#EXTALB:") -> {
+                                album = it.substring("#EXTALB:".length)
+                                lastEntry = i
+                            }
+                            artist == null && it.startsWith("#EXTART:") -> {
+                                artist = it.substring("#EXTART:".length)
+                                lastEntry = i
+                            }
+                            genre == null && it.startsWith("#EXTGENRE:") -> {
+                                genre = it.substring("#EXTGENRE:".length)
+                                lastEntry = i
+                            }
+                            tvKeys == null && it.startsWith("#EXTM3U ") -> {
+                                val str = it.substring("#EXTM3U ".length)
+                                tvKeys = tvKeysRegex.findAll(str).map { match ->
+                                    val key = match.groupValues[1]
+                                    val value = match.groupValues[2]
+                                        .replace("""\"""", "\"")
+                                        .replace("""\\""", "\\")
+                                    key to value
+                                }.toList()
                                 lastEntry = i
                             }
                             it.trimEnd() == "#EXTM3U" -> lastEntry = i
@@ -139,7 +162,8 @@ object PlaylistSerializer {
                     } else
                         null
                 }
-                Playlist(entries, title = title)
+                Playlist(entries, title = title, titleKey = titleKey, artist = artist,
+                    album = album, genre = genre, tvKeys = tvKeys)
             }
 
             PlaylistFormat.Wpl -> {
@@ -267,12 +291,17 @@ object PlaylistSerializer {
                 var license: Uri? = null
                 var attribution: List<Pair<Boolean, String>>? = null
                 var genre: String? = null
+                var album: String? = null
+                var artist: String? = null
                 var category: String? = null
                 var userName: String? = null
                 var generator: String? = null
+                var titleKey: String? = null
+                val tvKeys = mutableListOf<Pair<String, String>>()
                 val wplMetaTags = mutableListOf<Pair<String, String>>()
                 val links = mutableListOf<Pair<Uri, Uri>>()
                 val metas = mutableListOf<Pair<Uri, String>>()
+                val extensions = mutableListOf<ByteArray>()
                 while (parser.nextTag() != XmlPullParser.END_TAG) {
                     parser.require(XmlPullParser.START_TAG, x0, null)
                     val tag = parser.name
@@ -388,12 +417,21 @@ object PlaylistSerializer {
                         "meta" -> {
                             val key = parser.getAttributeValue(null, "rel").toUri()
                             val value = parser.nextText()
-                            when {
-                                key == XSPF_EXT_GENERATOR -> generator = value
-                                key.toString().startsWith(XSPF_EXT_WPL_META.toString()) -> {
+                            when (key) {
+                                XSPF_EXT_GENERATOR -> generator = value
+                                XSPF_EXT_M3U_GENRE -> genre = value
+                                XSPF_EXT_M3U_ALBUM -> album = value
+                                XSPF_EXT_M3U_ARTIST -> artist = value
+                                XSPF_EXT_M3U_TITLE_KEY -> titleKey = value
+                                else if key.toString().startsWith(XSPF_EXT_M3U_TV
+                                    .toString()) -> {
+                                    tvKeys.add(key.toString().substring(XSPF_EXT_M3U_TV
+                                        .toString().length) to value)
+                                }
+                                else if key.toString().startsWith(XSPF_EXT_WPL_META
+                                    .toString()) -> {
                                     when (val wplKey = key.lastPathSegment!!) {
                                         "Category" -> category = value
-                                        "Genre" -> genre = value
                                         "UserName", "UserName1" -> userName = value
                                         else -> wplMetaTags.add(wplKey to value)
                                     }
@@ -403,10 +441,9 @@ object PlaylistSerializer {
                         }
                         "extension" -> {
                             val application = parser.getAttributeValue(null,
-                                "application")
+                                "application").toUri()
                             when (application) {
-                                // TODO(ASAP) decide on whether to store them as string...?
-                                else -> parser.skipToEndOfTag()
+                                else -> extensions += parser.tagDeepToUtf8()
                             }
                         }
                         "trackList" -> {
@@ -423,11 +460,13 @@ object PlaylistSerializer {
                                 var album: String? = null
                                 var contentId: String? = null
                                 var trackingId: String? = null
-                                var genre: String? = null
                                 var trackNum: UInt? = null
                                 var durationMs: UInt? = null
+                                var associatedComments: List<String>? = null
+                                val tvKeys = mutableListOf<Pair<String, String>>()
                                 val links = mutableListOf<Pair<Uri, Uri>>()
                                 val metas = mutableListOf<Pair<Uri, String>>()
+                                val extensions = mutableListOf<ByteArray>()
                                 while (parser.nextTag() != XmlPullParser.END_TAG) {
                                     parser.require(XmlPullParser.START_TAG,
                                         x0, null)
@@ -496,23 +535,25 @@ object PlaylistSerializer {
                                             val key = parser.getAttributeValue(null,
                                                 "rel").toUri()
                                             val value = parser.nextText()
-                                            // TODO(ASAP) decide on whether to store m3u extra
-                                            //  comments + tv keys as well
                                             when (key) {
                                                 XSPF_EXT_WPL_CID -> contentId = value
                                                 XSPF_EXT_WPL_TID -> trackingId = value
-                                                XSPF_EXT_M3U_GENRE -> genre = value
+                                                XSPF_EXT_M3U_UNKNOWN -> associatedComments =
+                                                    value.lines()
+                                                else if key.toString().startsWith(
+                                                    XSPF_EXT_M3U_TV.toString()) -> {
+                                                   tvKeys.add(key.toString().substring(startIndex =
+                                                       XSPF_EXT_M3U_TV.toString().length) to value)
+                                                }
                                                 else -> metas.add(key to value)
                                             }
                                         }
                                         "extension" -> {
                                             val application = parser.getAttributeValue(
-                                                x0, "application")
+                                                null, "application").toUri()
                                             when (application) {
-                                                // TODO(ASAP) decide on whether to store them as string...?
-                                                else -> parser.skipToEndOfTag()
+                                                else -> extensions += parser.tagDeepToUtf8()
                                             }
-                                            parser.text
                                         }
                                         else -> throw XmlPullParserException("Unexpected " +
                                                 "<track> tag <$tag>")
@@ -522,11 +563,13 @@ object PlaylistSerializer {
                                 }
                                 parser.require(XmlPullParser.END_TAG, x0,
                                     "track")
-                                items.add(Entry(locations, identifiers = identifiers, genre = genre,
+                                items.add(Entry(locations, identifiers = identifiers,
                                     title = title, artist = author, annotation = annotation,
                                     info = info, image = image, album = album, trackNum = trackNum,
                                     durationMs = durationMs?.toULong(), links = links,
-                                    metas = metas, contentId = contentId, trackingId = trackingId))
+                                    metas = metas, contentId = contentId, trackingId = trackingId,
+                                    extensions = extensions, tvKeys = tvKeys,
+                                    associatedComments = associatedComments))
                             }
                         }
                         else -> throw XmlPullParserException("Unexpected <playlist> tag <$tag>")
@@ -538,8 +581,9 @@ object PlaylistSerializer {
                     info = info, location = location, identifier = identifier, image = image,
                     dateCreatedUtc = dateCreatedUtc, timezoneOffsetSecs = timezoneOffsetSecs,
                     license = license, attribution = attribution, links = links, metas = metas,
-                    wplMetaTags = wplMetaTags, genre = genre, category = category,
-                    userName = userName, generator = generator)
+                    wplMetaTags = wplMetaTags, genre = genre, category = category, album = album,
+                    userName = userName, generator = generator, extensions = extensions,
+                    artist = artist, titleKey = titleKey, tvKeys = tvKeys)
             }
         }
     }
@@ -553,39 +597,38 @@ object PlaylistSerializer {
         val songs = playlist.entries
         when (format) {
             PlaylistFormat.M3u -> {
-                val out = StringBuilder("#EXTM3U\n")
+                val out = StringBuilder("#EXTM3U\r\n")
                 if (playlist.title != null)
-                    out.append("#PLAYLIST:${playlist.title}\n\n")
+                    out.append("#${playlist.titleKey ?: "PLAYLIST"}:${playlist.title}\r\n")
+                if (playlist.album != null)
+                    out.append("#EXTALB:${playlist.album}\r\n")
+                if (playlist.artist != null)
+                    out.append("#EXTART:${playlist.artist}\r\n")
+                if (playlist.genre != null)
+                    out.append("#EXTGENRE:${playlist.genre}\r\n")
                 songs.filter { it.locations.isNotEmpty() }.forEach {
-                    it.associatedComments?.forEach { comment -> out.append("$comment\n") }
-                    if (it.album != null) {
-                        out.append("#EXTALB:${it.album}\n")
-                    }
-                    if (it.artist != null) {
-                        out.append("#EXTART:${it.artist}\n")
-                    }
-                    if (it.genre != null) {
-                        out.append("#EXTGENRE:${it.genre}\n")
-                    }
+                    it.associatedComments?.forEach { comment -> out.append("$comment\r\n") }
                     if (it.title != null || it.durationMs != null ||
                         !it.tvKeys.isNullOrEmpty()) {
                         val tvKeys = if (!it.tvKeys.isNullOrEmpty())
-                            it.tvKeys.entries.joinToString(" ", prefix = " ") { (k, v) ->
+                            it.tvKeys.joinToString(" ", prefix = " ") { (k, v) ->
                                 """$k="${
                                     v.replace("\\", "\\\\")
                                         .replace("\"", "\\\"")
                                 }""""
                             } else ""
                         out.append("#EXTINF:${it.durationMs ?: -1}$tvKeys," +
-                                "${it.title ?: it.nameWithoutExtension}\n")
+                                "${it.title ?: it.nameWithoutExtension}\r\n")
                     }
-                    out.append("${it.toRelativeString(parent)}\n")
+                    out.append("${it.toRelativeString(parent)}\r\n")
                 }
                 os.use { it.writer().use { writer -> writer.write(out.toString()) } }
             }
 
             PlaylistFormat.Wpl -> {
                 val doc = Xml.newSerializer()
+                // will output in DOS line endings
+                doc.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true)
                 doc.setOutput(os, StandardCharsets.UTF_8.name())
                 doc.startDocument(null, true)
                 doc.startTag(null, "smil")
@@ -672,13 +715,13 @@ object PlaylistSerializer {
             }
 
             PlaylistFormat.Pls -> {
-                val out = "[playlist]\n" + songs.filter { it.locations.isNotEmpty() }
-                    .mapIndexed { i, it ->
-                        "File${i + 1}=${it.toRelativeString(parent)}\n" +
-                                "Title${i + 1}=${it.title ?: it.nameWithoutExtension}\n" +
-                                "Length${i + 1}=${it.durationMs ?: -1}"
-                    }.joinToString("\n").trim() +
-                        "\nNumberOfEntries=${songs.size}\nVersion=2\n"
+                val songs = songs.filter { it.locations.isNotEmpty() }
+                val out = "[playlist]\r\n" + songs.mapIndexed { i, it ->
+                    "File${i + 1}=${it.toRelativeString(parent)}\r\n" +
+                            "Title${i + 1}=${it.title ?: it.nameWithoutExtension}\r\n" +
+                            "Length${i + 1}=${it.durationMs ?: -1}"
+                }.joinToString("\r\n").trim() +
+                        "\r\nNumberOfEntries=${songs.size}\r\nVersion=2\r\n"
                 os.use { it.writer().use { writer -> writer.write(out) } }
             }
 
@@ -799,22 +842,56 @@ object PlaylistSerializer {
                     doc.text(playlist.category)
                     doc.endTag(x0, "meta")
                 }
-                if (playlist.genre != null) {
-                    doc.startTag(x0, "meta")
-                    doc.attribute(null, "rel", "$XSPF_EXT_WPL_META/Genre")
-                    doc.text(playlist.genre)
-                    doc.endTag(x0, "meta")
-                }
                 if (playlist.userName != null) {
                     doc.startTag(x0, "meta")
                     doc.attribute(null, "rel", "$XSPF_EXT_WPL_META/UserName")
                     doc.text(playlist.userName)
                     doc.endTag(x0, "meta")
                 }
+                if (playlist.genre != null) {
+                    doc.startTag(x0, "meta")
+                    doc.attribute(null, "rel", "$XSPF_EXT_M3U_GENRE")
+                    doc.text(playlist.genre)
+                    doc.endTag(x0, "meta")
+                }
+                if (playlist.album != null) {
+                    doc.startTag(x0, "meta")
+                    doc.attribute(null, "rel", "$XSPF_EXT_M3U_ALBUM")
+                    doc.text(playlist.album)
+                    doc.endTag(x0, "meta")
+                }
+                if (playlist.artist != null) {
+                    doc.startTag(x0, "meta")
+                    doc.attribute(null, "rel", "$XSPF_EXT_M3U_ARTIST")
+                    doc.text(playlist.artist)
+                    doc.endTag(x0, "meta")
+                }
+                if (playlist.titleKey != null) {
+                    doc.startTag(x0, "meta")
+                    doc.attribute(null, "rel", "$XSPF_EXT_M3U_TITLE_KEY")
+                    doc.text(playlist.titleKey)
+                    doc.endTag(x0, "meta")
+                }
+                if (playlist.tvKeys != null) {
+                    for (meta in playlist.tvKeys) {
+                        doc.startTag(x0, "meta")
+                        doc.attribute(null, "rel",
+                            "$XSPF_EXT_M3U_TV/${meta.first}")
+                        doc.text(meta.second)
+                        doc.endTag(x0, "meta")
+                    }
+                }
                 doc.startTag(x0, "meta")
                 doc.attribute(null, "rel", "$XSPF_EXT_GENERATOR")
                 doc.text("Gramophone ${BuildConfig.MY_VERSION_NAME}/${BuildConfig.RELEASE_TYPE}")
                 doc.endTag(x0, "meta")
+
+                if (playlist.extensions != null) {
+                    doc.flush()
+                    for (extension in playlist.extensions) {
+                        os.write(extension)
+                    }
+                }
                 doc.startTag(x0, "trackList")
                 for (entry in playlist.entries) {
                     doc.startTag(x0, "track")
@@ -896,11 +973,20 @@ object PlaylistSerializer {
                             doc.endTag(x0, "meta")
                         }
                     }
-                    if (entry.genre != null) {
+                    if (!entry.associatedComments.isNullOrEmpty()) {
                         doc.startTag(x0, "meta")
-                        doc.attribute(null, "rel", "$XSPF_EXT_M3U_GENRE")
-                        doc.text(entry.genre)
+                        doc.attribute(null, "rel", "$XSPF_EXT_M3U_UNKNOWN")
+                        doc.text(entry.associatedComments.joinToString("\r\n"))
                         doc.endTag(x0, "meta")
+                    }
+                    if (entry.tvKeys != null) {
+                        for (meta in entry.tvKeys) {
+                            doc.startTag(x0, "meta")
+                            doc.attribute(null, "rel",
+                                "$XSPF_EXT_M3U_TV/${meta.first}")
+                            doc.text(meta.second)
+                            doc.endTag(x0, "meta")
+                        }
                     }
                     if (entry.contentId != null) {
                         doc.startTag(x0, "meta")
@@ -914,6 +1000,12 @@ object PlaylistSerializer {
                         doc.text(entry.trackingId)
                         doc.endTag(x0, "meta")
                     }
+                    if (entry.extensions != null) {
+                        doc.flush()
+                        for (extension in entry.extensions) {
+                            os.write(extension)
+                        }
+                    }
                     doc.endTag(x0, "track")
                 }
                 doc.endTag(x0, "trackList")
@@ -922,6 +1014,51 @@ object PlaylistSerializer {
                 doc.endDocument()
             }
         }
+    }
+
+    // Serialize the entire current tag to a ByteArray in UTF-8. Current event must be START_TAG,
+    // and when returned the event is END_TAG.
+    private fun XmlPullParser.tagDeepToUtf8(): ByteArray {
+        val scratchOutputStream = ByteArrayOutputStream()
+        val xmlSerializer = Xml.newSerializer()
+        xmlSerializer.setOutput(scratchOutputStream, StandardCharsets.UTF_8.name())
+        val startDepth = depth
+        while (depth >= startDepth) {
+            when (eventType) {
+                XmlPullParser.START_DOCUMENT -> xmlSerializer.startDocument(null, false)
+                XmlPullParser.END_DOCUMENT -> xmlSerializer.endDocument()
+                XmlPullParser.START_TAG -> {
+                    xmlSerializer.startTag(namespace, name)
+                    val nsStart = getNamespaceCount(depth - 1)
+                    val nsEnd = getNamespaceCount(depth)
+                    for (i in nsStart..<nsEnd) {
+                        xmlSerializer.setPrefix(
+                            getNamespacePrefix(i),
+                            getNamespaceUri(i))
+                    }
+                    for (i in 0..<attributeCount) {
+                        xmlSerializer.attribute(
+                            getAttributeNamespace(i),
+                            getAttributeName(i),
+                            getAttributeValue(i)
+                        )
+                    }
+                }
+
+                XmlPullParser.END_TAG -> xmlSerializer.endTag(namespace, name)
+                XmlPullParser.TEXT -> xmlSerializer.text(text)
+                XmlPullParser.CDSECT -> xmlSerializer.cdsect(text)
+                XmlPullParser.ENTITY_REF -> xmlSerializer.entityRef(text)
+                XmlPullParser.IGNORABLE_WHITESPACE -> xmlSerializer.ignorableWhitespace(text)
+                XmlPullParser.PROCESSING_INSTRUCTION -> xmlSerializer.processingInstruction(text)
+                XmlPullParser.COMMENT -> xmlSerializer.comment(text)
+                XmlPullParser.DOCDECL -> xmlSerializer.docdecl(text)
+                else -> {}
+            }
+            nextToken()
+        }
+        xmlSerializer.flush()
+        return scratchOutputStream.toByteArray()
     }
 
     private enum class PlaylistFormat {
@@ -935,8 +1072,10 @@ object PlaylistSerializer {
     data class Playlist(
         val entries: List<Entry>,
         val title: String? = null,
-        val author: String? = null,
+        val author: String? = null, // who made the playlist
+        val artist: String? = null, // if the playlist is album, artist of album
         val category: String? = null,
+        val album: String? = null,
         val genre: String? = null,
         val generator: String? = null,
         val userName: String? = null,
@@ -953,6 +1092,9 @@ object PlaylistSerializer {
         val attribution: List<Pair<Boolean, String>>? = null,
         val links: List<Pair<Uri, Uri>>? = null,
         val metas: List<Pair<Uri, String>>? = null,
+        val extensions: List<ByteArray>? = null,
+        val titleKey: String? = null,
+        val tvKeys: List<Pair<String, String>>? = null,
     ) : Parcelable {
         companion object {
             fun create() = Playlist(emptyList(),
@@ -972,10 +1114,9 @@ object PlaylistSerializer {
         // file:// Uris are converted to absolute in memory but should always be relative on disk
         val locations: List<Uri>,
         val title: String? = null, // pls, m3u, xspf
-        val tvKeys: Map<String, String>? = null, // m3u
-        val artist: String? = null, // m3u, xspf
-        val album: String? = null, // m3u, xspf
-        val genre: String? = null, // m3u
+        val tvKeys: List<Pair<String, String>>? = null, // m3u
+        val artist: String? = null, // xspf
+        val album: String? = null, // xspf
         val associatedComments: List<String>? = null, // m3u
         val contentId: String? = null, // wpl
         val trackingId: String? = null, // wpl
@@ -987,6 +1128,7 @@ object PlaylistSerializer {
         val durationMs: ULong? = null, // xspf, pls, m3u
         val links: List<Pair<Uri, Uri>>? = null, // xspf
         val metas: List<Pair<Uri, String>>? = null, // xspf
+        val extensions: List<ByteArray>? = null, // xspf
     ) : Parcelable {
         companion object {
             private val uriRegex = Regex("[A-Za-z]{2,}[A-Za-z0-9+.-]*:.+")
@@ -1005,15 +1147,12 @@ object PlaylistSerializer {
             fun ofM3u(
                 file: List<Uri>,
                 durationSeconds: Long?,
-                tvKeys: Map<String, String>?,
+                tvKeys: List<Pair<String, String>>?,
                 title: String?,
-                artist: String?,
-                album: String?,
-                genre: String?,
                 associatedComments: List<String>?,
             ) = Entry(file, title = title, durationMs = durationSeconds
                 ?.takeIf { it != -1L }?.times(1000L)?.toULong(), tvKeys = tvKeys,
-                artist = artist, album = album, genre = genre, associatedComments = associatedComments)
+                associatedComments = associatedComments)
             fun ofPls(file: List<Uri>, title: String?, length: Long?) =
                 Entry(file, title = title, durationMs =
                     length.takeIf { it != -1L }?.times(1000L)?.toULong())
@@ -1032,7 +1171,7 @@ object PlaylistSerializer {
         else preferredLocation.toString()
         fun updateFromMediaItem(pathMap: Map<String, MediaItem>?) =
             resolveMediaItem(pathMap)?.let { copyFromMediaItem(it) } ?: this
-        // TODO(ASAP) add basic xspf (maybe for extm3u or pls too?) content resolving
+        // TODO(ASAP): add basic xspf (maybe for extm3u or pls too?) content resolving
         fun resolveMediaItem(pathMap: Map<String, MediaItem>?) =
             locations.filter { it.scheme == "file" }.firstNotNullOfOrNull { link ->
                 pathMap!![link.toFile().absolutePath]
@@ -1043,68 +1182,24 @@ object PlaylistSerializer {
                 pathMapFlow.forKey(link.toFile().absolutePath)
             }
         fun copyFromMediaItem(song: MediaItem) = copy(
-            // TODO(ASAP) replace the location as well if it is no longer valid(same), but if there
-            //  are 2 or more locations we should only replace the one that used to work (...but we
-            //  can we even know which one that was? if not, do we add more or replace all of them?)
+            locations = if (song.getFile()?.toUriCompat()?.let { f -> locations.find { it == f } !=
+                    null } == false) run {
+                val keepAlternatives = locations.filter {
+                    it.scheme != "file" // TODO(ASAP) filter windows path or bad prefix for
+                    //  android or sd card that isn't in recent volumes of mediastore
+                }
+                listOf(song.getFile()!!.toUriCompat()) + keepAlternatives
+            } else locations,
             title = song.mediaMetadata.title?.toString(),
             durationMs = song.mediaMetadata.durationMs?.toULong(),
             artist = song.mediaMetadata.artist?.toString(),
             album = song.mediaMetadata.albumTitle?.toString(),
-            genre = song.mediaMetadata.genre?.toString(),
             trackNum = song.mediaMetadata.trackNumber?.toUInt()
             // TODO(ASAP) write album art jpg path (if external instead of embedded) to "image" field
         )
 
         fun fuzzyEquals(other: Entry): Boolean {
             return locations.find { other.locations.contains(it) } != null
-        }
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) return true
-            if (javaClass != other?.javaClass) return false
-
-            other as Entry
-
-            if (locations != other.locations) return false
-            if (title != other.title) return false
-            if (tvKeys != other.tvKeys) return false
-            if (artist != other.artist) return false
-            if (album != other.album) return false
-            if (genre != other.genre) return false
-            if (associatedComments != other.associatedComments) return false
-            if (contentId != other.contentId) return false
-            if (trackingId != other.trackingId) return false
-            if (identifiers != other.identifiers) return false
-            if (annotation != other.annotation) return false
-            if (info != other.info) return false
-            if (image != other.image) return false
-            if (trackNum != other.trackNum) return false
-            if (durationMs != other.durationMs) return false
-            if (links != other.links) return false
-            if (metas != other.metas) return false
-
-            return true
-        }
-
-        override fun hashCode(): Int {
-            var result = locations.hashCode()
-            result = 31 * result + (title?.hashCode() ?: 0)
-            result = 31 * result + (tvKeys?.hashCode() ?: 0)
-            result = 31 * result + (artist?.hashCode() ?: 0)
-            result = 31 * result + (album?.hashCode() ?: 0)
-            result = 31 * result + (genre?.hashCode() ?: 0)
-            result = 31 * result + (associatedComments?.hashCode() ?: 0)
-            result = 31 * result + (contentId?.hashCode() ?: 0)
-            result = 31 * result + (trackingId?.hashCode() ?: 0)
-            result = 31 * result + (identifiers?.hashCode() ?: 0)
-            result = 31 * result + (annotation?.hashCode() ?: 0)
-            result = 31 * result + (info?.hashCode() ?: 0)
-            result = 31 * result + (image?.hashCode() ?: 0)
-            result = 31 * result + (trackNum?.hashCode() ?: 0)
-            result = 31 * result + (durationMs?.hashCode() ?: 0)
-            result = 31 * result + (links?.hashCode() ?: 0)
-            result = 31 * result + (metas?.hashCode() ?: 0)
-            return result
         }
     }
     class UnsupportedPlaylistFormatException(extension: String) : Exception(extension)
