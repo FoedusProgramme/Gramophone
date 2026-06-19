@@ -157,6 +157,7 @@ android {
                 "DISABLE_MEDIA_STORE_FILTER",
                 "true"
             )
+            signingConfig = signingConfigs.getByName("release")
             matchingFallbacks += "release"
         }
         create("nonMinifiedRelease") {
@@ -171,6 +172,7 @@ android {
                 "DISABLE_MEDIA_STORE_FILTER",
                 "true"
             )
+            signingConfig = signingConfigs.getByName("release")
             matchingFallbacks += "release"
         }
         create("profiling") {
@@ -181,6 +183,7 @@ android {
                 "proguard-rules.pro",
             )
             isProfileable = true
+            signingConfig = signingConfigs.getByName("release")
             matchingFallbacks += "release"
         }
         create("userdebug") {
@@ -188,6 +191,7 @@ android {
             isProfileable = true
             isJniDebuggable = true
             isPseudoLocalesEnabled = true
+            signingConfig = signingConfigs.getByName("release")
             matchingFallbacks += "release"
         }
         debug {
