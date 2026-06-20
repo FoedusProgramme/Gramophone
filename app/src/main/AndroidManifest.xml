@@ -247,6 +247,12 @@
             android:readPermission="android.permission.GLOBAL_SEARCH" />
 
         <provider
+            android:name=".logic.GramophoneAlbumArtProvider"
+            android:authorities="${applicationId}.albumart"
+            android:exported="true"
+            android:grantUriPermissions="true" />
+
+        <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileProvider"
             android:exported="false"

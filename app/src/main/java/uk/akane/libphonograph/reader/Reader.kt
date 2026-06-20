@@ -17,11 +17,13 @@ import androidx.media3.common.MediaMetadata
 import androidx.media3.common.util.Log
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
+import org.akanework.gramophone.logic.GramophoneAlbumArtProvider
 import org.akanework.gramophone.logic.hasAudioPermission
 import org.akanework.gramophone.logic.hasImagePermission
 import org.akanework.gramophone.logic.hasImprovedMediaStore
 import org.akanework.gramophone.logic.hasScopedStorageV1
 import org.akanework.gramophone.logic.hasScopedStorageWithMediaTypes
+import org.akanework.gramophone.logic.utils.ArtResolver
 import org.nift4.mediastorecompat.MediaStoreCompat
 import org.nift4.mediastorecompat.StorageManagerCompat
 import org.nift4.mediastorecompat.StorageVolumeCompat
@@ -132,8 +134,7 @@ internal object Reader {
         shouldLoadFolders: Boolean = true,
         shouldLoadFilesystem: Boolean = true,
         shouldLoadIdMap: Boolean = true,
-        shouldLoadPathMap: Boolean = true,
-        coverStubUri: String? = null
+        shouldLoadPathMap: Boolean = true
     ): ReaderResult {
         if (!shouldLoadFilesystem && shouldUseEnhancedCoverReading != false) {
             throw IllegalArgumentException("Enhanced cover loading requires loading filesystem")
@@ -400,7 +401,7 @@ internal object Reader {
                             .setArtist(artist)
                             .setAlbumTitle(album)
                             .setAlbumArtist(albumArtist)
-                            .setArtworkUri(imgUri)
+                            .setArtworkUri(ArtResolver.toProviderUri(imgUri)) //TODO(ASAP)
                             .setTrackNumber(trackNumber)
                             .setDiscNumber(discNumber)
                             .setGenre(genre)
@@ -447,6 +448,7 @@ internal object Reader {
                     // in enhanced cover loading case, cover uri is created later using coverCache
                     val cover = if (coverCache != null || albumId == null) null else
                         ContentUris.withAppendedId(Constants.baseAlbumCoverUri, albumId)
+                    //TODO(ASAP)
                     MiscUtils.AlbumImpl(
                         albumId,
                         album,
@@ -524,12 +526,10 @@ internal object Reader {
             // coverCache == null if !useEnhancedCoverReading
             coverCache?.get(it.id)?.let { p ->
                 // if this is false, folder contains >1 albums
+                //TODO(ASAP)
                 if (p.second.albumId == it.id) {
-                    if (coverStubUri != null)
-                        it.cover = Uri.Builder().scheme(coverStubUri)
-                            .authority(it.id.toString()).path(p.first.absolutePath).build()
-                    else
-                        findBestCover(p.first)?.let { f -> it.cover = f.toUriCompat() }
+                    it.cover = ArtResolver.toProviderUri(Uri.Builder().scheme("gramophoneAlbumCover")
+                        .authority(it.id.toString()).path(p.first.absolutePath).build())
                 }
             }
         }?.toList<Album>()
