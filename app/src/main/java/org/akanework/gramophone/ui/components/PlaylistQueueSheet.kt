@@ -65,8 +65,6 @@ class PlaylistQueueSheet(
     private var detachedHead = MutableStateFlow(false)
     private var detachedQueue: Int? = null
 
-    private var veto = false // TODO: i mean it works but its not very elegant
-
     init {
         val prefs = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
         mqEnabled = Flags.MQ_PREVIEW && prefs.getBooleanStrict("mq_preview", false)
@@ -237,15 +235,8 @@ class PlaylistQueueSheet(
         timeline: Timeline,
         reason: @Player.TimelineChangeReason Int
     ) {
-//        Log.v("PlaylistQueueSheet", "onTimelineChanged " + reason)
-        if (veto) {
-            veto = false
-            return
-        }
-
         // trigger an ui list update if changes are detected
         if (instance?.mediaItemCount != playlistAdapter.playlist.first.size) {
-//            Log.v("PlaylistQueueSheet", "change size doesnt match" )
             playlistAdapter.updateList()
             return
         }
@@ -254,7 +245,6 @@ class PlaylistQueueSheet(
         var i = 0
         while (i < pl.second.size) {
             if (pl.first[i] != oldPl.first[i] || pl.second[i].mediaId != oldPl.second[i].mediaId) {
-//                Log.v("PlaylistQueueSheet", "difference detected" )
                 playlistAdapter.updateList(newPlaylist = pl)
                 return
             }
@@ -271,7 +261,7 @@ class PlaylistQueueSheet(
         playlistAdapter.updateList(mq)
     }
 
-    inner class PlaylistCardAdapter : EditSongAdapter(activity, true, detachedHead) {
+    inner class PlaylistCardAdapter : EditSongAdapter(activity, true) {
         var playlist: Pair<MutableList<Int>, MutableList<MediaItem>> = dumpPlaylist()
         var currentMediaItemIndex: Int? = null
             set(value) {
@@ -354,7 +344,6 @@ class PlaylistQueueSheet(
         }
 
         override fun onRowMoved(from: Int, to: Int) {
-            veto = true
             val mediaController = activity.getPlayer()
             val from1 = playlist.first.removeAt(from)
             playlist.first.replaceAllSupport { if (it > from1) it - 1 else it }
