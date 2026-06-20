@@ -341,8 +341,15 @@ class PlaylistQueueSheet(
             playlist.second.add(to1, movedItem)
             mediaController?.moveMediaItem(from1, to1)
             notifyItemMoved(from, to)
-            if (currentMediaItemIndex == from)
-                currentMediaItemIndex = to
+            val currentIndex = currentMediaItemIndex
+            if (currentIndex != null) {
+                if (currentIndex == from)
+                    currentMediaItemIndex = to
+                else if (from < to && from < currentIndex && currentIndex <= to)
+                    currentMediaItemIndex = currentIndex - 1
+                else if (from > to && to <= currentIndex && currentIndex < from)
+                    currentMediaItemIndex = currentIndex + 1
+            }
             updateTimer() // TODO: this could be more efficient
         }
 
