@@ -521,4 +521,7 @@
     <string name="set">Assigna</string>
     <string name="search_query">Cerca: %s</string>
     <string name="settings_mq_enabled">Cues múltiples</string>
+    <string name="mq_unpin_queue">Treu la fixació de la cua</string>
+    <string name="mq_pin_queue">Fixa la cua</string>
+    <string name="shuffled">%s (barrejat)</string>
 </resources>
