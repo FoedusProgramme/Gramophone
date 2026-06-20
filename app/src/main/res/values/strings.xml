@@ -1283,4 +1283,8 @@ supporting local search. This string is displayed in the search bar when using G
     <!-- Settings toggle in experimental to enable advanced workflow across the app, allowing to
     have multiple queues -->
     <string name="settings_mq_enabled">Multiple queues</string>
+    <!-- Unpin this queue and allow it to be removed after some period of time -->
+    <string name="mq_unpin_queue">Unpin queue</string>
+    <!-- Pin this queue so it does not get automatically removed after some period of time -->
+    <string name="mq_pin_queue">Pin queue</string>
 </resources>
