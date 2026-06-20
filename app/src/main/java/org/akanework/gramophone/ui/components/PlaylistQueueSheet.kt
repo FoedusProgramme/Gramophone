@@ -235,21 +235,8 @@ class PlaylistQueueSheet(
         timeline: Timeline,
         reason: @Player.TimelineChangeReason Int
     ) {
-        // trigger an ui list update if changes are detected
-        if (instance?.mediaItemCount != playlistAdapter.playlist.first.size) {
-            playlistAdapter.updateList()
-            return
-        }
-        val oldPl = playlistAdapter.playlist
-        val pl = playlistAdapter.dumpPlaylist()
-        var i = 0
-        while (i < pl.second.size) {
-            if (pl.first[i] != oldPl.first[i] || pl.second[i].mediaId != oldPl.second[i].mediaId) {
-                playlistAdapter.updateList(newPlaylist = pl)
-                return
-            }
-            i++
-        }
+        // TODO: support listening to externally caused changes to playlist (ie MCT).
+        // playlistAdapter.updateList()
     }
 
     /**
