@@ -33,6 +33,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import coil3.SingletonImageLoader
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.color.MaterialColors
@@ -125,6 +126,11 @@ class ViewPagerFragment : BaseFragment(true) {
                 }
 
                 R.id.quick_refresh -> {
+                    val imageLoader = SingletonImageLoader.get(requireContext())
+                    imageLoader.memoryCache?.clear()
+                    CoroutineScope(Dispatchers.Default).launch {
+                        imageLoader.diskCache?.clear()
+                    }
                     val playerLayout = activity.playerBottomSheet
                     activity.updateLibrary {
                         showRefreshDoneSnackBar(
@@ -135,6 +141,11 @@ class ViewPagerFragment : BaseFragment(true) {
 
                 R.id.refresh -> {
                     val context = requireContext()
+                    val imageLoader = SingletonImageLoader.get(context)
+                    imageLoader.memoryCache?.clear()
+                    CoroutineScope(Dispatchers.Default).launch {
+                        imageLoader.diskCache?.clear()
+                    }
                     val playerLayout = activity.playerBottomSheet
                     MaterialAlertDialogBuilder(context)
                         .setIcon(R.drawable.ic_refresh)

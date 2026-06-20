@@ -59,7 +59,6 @@ class FlowReader(
     whiteListSetFlow: SharedFlow<Set<String>>,
     shouldUseEnhancedCoverReadingFlow: SharedFlow<Boolean?>, // null means load if permission is granted
     recentlyAddedFilterSecondFlow: SharedFlow<Long?>, // null means don't generate recently added
-    coverStubUri: String? = null
 ) {
     // IMPORTANT: Do not use distinctUntilChanged() or StateFlow here because equals() on thousands
     // of MediaItems is very, very expensive!
@@ -167,8 +166,7 @@ class FlowReader(
         minSongLengthSeconds: Long,
         blackListSet: Set<String>,
         whiteListSet: Set<String>,
-        shouldUseEnhancedCoverReading: Boolean?,
-        coverStubUri: String?
+        shouldUseEnhancedCoverReading: Boolean?
     ) =
         // TODO repeatUntilDoneWhenUnpaused makes no sense with non-cancelable
         //  function, make it cancelable
@@ -180,8 +178,7 @@ class FlowReader(
                 minSongLengthSeconds,
                 blackListSet,
                 whiteListSet,
-                shouldUseEnhancedCoverReading,
-                coverStubUri = coverStubUri
+                shouldUseEnhancedCoverReading
             )
         else ReaderResult.emptyReaderResult()
 
@@ -224,8 +221,7 @@ class FlowReader(
                                                             minSongLengthSeconds,
                                                             blackListSet,
                                                             whiteListSet,
-                                                            shouldUseEnhancedCoverReading,
-                                                            coverStubUri
+                                                            shouldUseEnhancedCoverReading
                                                         )
                                                     }
                                                 }
