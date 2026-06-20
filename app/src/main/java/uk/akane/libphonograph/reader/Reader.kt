@@ -23,11 +23,10 @@ import org.akanework.gramophone.logic.hasImagePermission
 import org.akanework.gramophone.logic.hasImprovedMediaStore
 import org.akanework.gramophone.logic.hasScopedStorageV1
 import org.akanework.gramophone.logic.hasScopedStorageWithMediaTypes
-import org.akanework.gramophone.logic.utils.ArtResolver
+import org.akanework.gramophone.logic.requireMediaStoreId
 import org.nift4.mediastorecompat.MediaStoreCompat
 import org.nift4.mediastorecompat.StorageManagerCompat
 import org.nift4.mediastorecompat.StorageVolumeCompat
-import uk.akane.libphonograph.Constants
 import uk.akane.libphonograph.getColumnIndexOrNull
 import uk.akane.libphonograph.getIntOrNullIfThrow
 import uk.akane.libphonograph.getLongOrNullIfThrow
@@ -52,7 +51,6 @@ import uk.akane.libphonograph.putIfAbsentSupport
 import uk.akane.libphonograph.toUriCompat
 import uk.akane.libphonograph.utils.MiscUtils
 import uk.akane.libphonograph.utils.MiscUtils.findBestAlbumArtist
-import uk.akane.libphonograph.utils.MiscUtils.findBestCover
 import uk.akane.libphonograph.utils.MiscUtils.handleMediaFolder
 import uk.akane.libphonograph.utils.MiscUtils.handleShallowMediaItem
 import java.io.File
@@ -253,16 +251,16 @@ internal object Reader {
             val modifiedDateColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media.DATE_MODIFIED)
 
             while (it.moveToNext()) {
-                val path = it.getStringOrNullIfThrow(pathColumn)
+                val path = it.getString(pathColumn)!!
                 val duration =
                     it.getLongOrNullIfThrow(durationColumn)?.let { if (it >= 0) it else null }
-                val pathFile = path?.let { it1 -> File(it1) }
-                val parent = pathFile?.parentFile?.takeIf { it.absolutePath != "/" }
+                val pathFile = File(path)
+                val parent = pathFile.parentFile?.takeIf { it.absolutePath != "/" }
                 val fldPath = parent?.absolutePath
                 var isBlacklisted = false
                 if (whiteListSet.isNotEmpty()) {
                     isBlacklisted = true
-                    var f = pathFile
+                    var f: File? = pathFile
                     while (f != null) {
                         if (whiteListSet.contains(f.absolutePath)) {
                             isBlacklisted = false
@@ -272,7 +270,7 @@ internal object Reader {
                     }
                 }
                 if (!isBlacklisted && blackListSet.isNotEmpty()) {
-                    var f = pathFile
+                    var f: File? = pathFile
                     while (f != null) {
                         if (blackListSet.contains(f.absolutePath)) {
                             isBlacklisted = true
@@ -304,8 +302,7 @@ internal object Reader {
                     }
                 }
                 val skip = (duration != null && duration != 0L &&
-                        duration < minSongLengthSeconds * 1000) || (fldPath == null
-                        || isBlacklisted)
+                        duration < minSongLengthSeconds * 1000) || fldPath == null || isBlacklisted
                 // We need to add blacklisted songs to idMap as they can be referenced by playlist
                 if (skip && idMap == null && pathMap == null) continue
                 val id = it.getLong(idColumn)
@@ -348,8 +345,7 @@ internal object Reader {
                 val dateTakenDay = if (hasImprovedMediaStore()) {
                     dateTakenParsed?.dayOfMonth
                 } else null
-                val imgUri = Uri.Builder().scheme("gramophoneSongCover")
-                    .authority(id.toString()).path(path).build()
+                val imgUri = GramophoneAlbumArtProvider.buildSongUri(id)
                 if (cdTrackNumber != null && trackNumber == null) {
                     cdTrackNumber.toIntOrNull()?.let {
                         trackNumber = it
@@ -363,7 +359,7 @@ internal object Reader {
                 //   extension)
                 // - there is valid track metadata, and the title doesn't begin with that number
                 // we can assume this is referring to the track number.
-                if (trackNumber == null && pathFile != null) {
+                if (trackNumber == null) {
                     val match = trackNumberRegex.matchEntire(pathFile.name)
                     if (match != null && match.groups.size > 1
                         && (hasNoMetadata || !title.startsWith(match.groups[1]!!.value))
@@ -401,7 +397,7 @@ internal object Reader {
                             .setArtist(artist)
                             .setAlbumTitle(album)
                             .setAlbumArtist(albumArtist)
-                            .setArtworkUri(ArtResolver.toProviderUri(imgUri)) //TODO(ASAP)
+                            .setArtworkUri(imgUri)
                             .setTrackNumber(trackNumber)
                             .setDiscNumber(discNumber)
                             .setGenre(genre)
@@ -435,8 +431,7 @@ internal object Reader {
                     ).build()
                 // Build our metadata maps/lists.
                 idMap?.put(id, song)
-                if (path != null)
-                    pathMap?.put(path, song)
+                pathMap?.put(path, song)
                 // Now that the song can be found by playlists, do NOT register other metadata.
                 if (skip) continue
                 songs.add(song)
@@ -445,16 +440,13 @@ internal object Reader {
                 }?.songList as MutableList?)?.add(song)
                 artistCacheMap?.putIfAbsentSupport(artist, artistId)
                 albumMap?.getOrPut(albumId) {
-                    // in enhanced cover loading case, cover uri is created later using coverCache
-                    val cover = if (coverCache != null || albumId == null) null else
-                        ContentUris.withAppendedId(Constants.baseAlbumCoverUri, albumId)
-                    //TODO(ASAP)
+                    // in enhanced cover loading case, cover uri is changed later using coverCache
                     MiscUtils.AlbumImpl(
                         albumId,
                         album,
                         null,
                         null,
-                        cover,
+                        imgUri, // default to first song cover
                         null,
                         null,
                         null,
@@ -526,10 +518,12 @@ internal object Reader {
             // coverCache == null if !useEnhancedCoverReading
             coverCache?.get(it.id)?.let { p ->
                 // if this is false, folder contains >1 albums
-                //TODO(ASAP)
                 if (p.second.albumId == it.id) {
-                    it.cover = ArtResolver.toProviderUri(Uri.Builder().scheme("gramophoneAlbumCover")
-                        .authority(it.id.toString()).path(p.first.absolutePath).build())
+                    val bestCover = MiscUtils.findBestCover(p.first)
+                    if (bestCover != null) {
+                        it.cover = GramophoneAlbumArtProvider.buildAlbumUri(p.second
+                            .songList.first().requireMediaStoreId(), bestCover.name)
+                    }
                 }
             }
         }?.toList<Album>()
