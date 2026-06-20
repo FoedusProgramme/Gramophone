@@ -358,7 +358,7 @@
     <string name="spk_encoding_wma_pro">WMA Pro</string>
     <string name="spk_encoding_mp2">MPEG-2</string>
     <string name="spk_encoding_qcelp">QCELP</string>
-    <string name="app_name">留声机</string>
+    <string name="app_name">Gramophone</string>
     <string name="mix_port_flag_primary">主要输出</string>
     <string name="mix_port_flag_direct">直通</string>
     <string name="mix_port_flag_fast">低延迟</string>
@@ -509,4 +509,6 @@
     </plurals>
     <string name="search_query">搜索：%s</string>
     <string name="settings_mq_enabled">多个队列</string>
+    <string name="mq_unpin_queue">取消固定队列</string>
+    <string name="mq_pin_queue">固定队列</string>
 </resources>
