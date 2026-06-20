@@ -516,4 +516,6 @@
     </plurals>
     <string name="search_query">Otsing: %s</string>
     <string name="settings_mq_enabled">Mitu esitusjärjekorda</string>
+    <string name="mq_unpin_queue">Lõpeta esitusjärjekorra esiletõstmine</string>
+    <string name="mq_pin_queue">Tõsta esitusjärjekord esile</string>
 </resources>
