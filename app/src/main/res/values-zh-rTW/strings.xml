@@ -262,4 +262,25 @@
     <string name="timer_expiry_end_of_this_song">睡眠定時器將在目前歌曲結束時暫停音樂</string>
     <string name="delete_really_artist">確定要刪除所有「%s」的歌曲嗎？此操作無法復原。</string>
     <string name="spk_encoding_pcm_24bit_big_endian">24-bit PCM（大端序）</string>
+    <string name="search_query">搜尋：%s</string>
+    <string name="spk_encoding_pcm_32bit_big_endian">32-bit (整數) PCM (大端序)</string>
+    <string name="spk_encoding_aac_xhe">xHE-AAC</string>
+    <string name="spk_encoding_aac_eld">AAC-ELD</string>
+    <string name="spk_encoding_aac_er_bsac">AAC ER BSAC</string>
+    <string name="spk_encoding_ac3">AC-3</string>
+    <string name="spk_encoding_e_ac3">E-AC-3</string>
+    <string name="spk_encoding_e_ac3_joc">E-AC-3-JOC</string>
+    <string name="spk_encoding_ac4">AC-4</string>
+    <string name="spk_encoding_dts">DTS</string>
+    <string name="spk_encoding_dts_hd">DTS-HD</string>
+    <string name="spk_encoding_dolby_truehd">Dolby TrueHD</string>
+    <string name="spk_encoding_opus">Opus</string>
+    <string name="spk_encoding_dts_uhd_p2">DTS-X</string>
+    <string name="device_type_bluetooth_a2dp">藍牙 A2DP</string>
+    <string name="device_type_hdmi">HDMI</string>
+    <string name="device_type_dock">擴充基座</string>
+    <string name="device_type_hdmi_arc">HDMI 音訊回傳通道</string>
+    <string name="device_type_hdmi_earc">HDMI 增強型音訊回傳通道</string>
+    <string name="device_type_dock_digital">數位擴充基座</string>
+    <string name="device_type_dock_analog">類比擴充基座</string>
 </resources>
