@@ -104,13 +104,7 @@ class DetailedFolderAdapter(
     )
     private var fileNodePath = MutableStateFlow<List<String>?>(savedInstanceState
         ?.getStringArrayList("Path"))
-    val qTitle = fileNodePath.map {
-        val derivedQueueTitle = it?.lastOrNull()
-        if (derivedQueueTitle == null) {
-            Log.w(TAG, "Derived queue title is null")
-        }
-        derivedQueueTitle
-    }
+    val qTitle = fileNodePath.map { it?.lastOrNull() ?: "/" }
     private val liveData = if (isDetailed) mainActivity.reader.folderStructureFlow
     else mainActivity.reader.shallowFolderFlow
     private val dataFlow = liveData.combineTransform(fileNodePath) { root, path ->

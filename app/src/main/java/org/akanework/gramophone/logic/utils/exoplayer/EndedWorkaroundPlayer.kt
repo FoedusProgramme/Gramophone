@@ -8,7 +8,6 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.util.Log
 import androidx.media3.exoplayer.ExoPlayer
-import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import org.akanework.gramophone.BuildConfig
 import org.akanework.gramophone.R
@@ -34,18 +33,6 @@ class EndedWorkaroundPlayer(
     companion object {
         private const val TAG = "EndedWorkaroundPlayer"
 
-        fun queueWithTitle(mediaItems: List<MediaItem>, mqTitle: String?): List<MediaItem> {
-            if (mediaItems.isEmpty() || mqTitle == null) return mediaItems
-            val firstMediaItem = mediaItems.first()
-            val newFirstMediaItem = firstMediaItem.buildUpon().setMediaMetadata(
-                firstMediaItem.mediaMetadata.buildUpon().setExtras(
-                    (firstMediaItem.mediaMetadata.extras?.let { Bundle(it) } ?: Bundle()).apply {
-                        putString("mq_title", mqTitle)
-                    }
-                ).build()
-            ).build()
-            return listOf(newFirstMediaItem) + mediaItems.drop(1)
-        }
     }
 
     private val remoteDeviceInfo = DeviceInfo.Builder(DeviceInfo.PLAYBACK_TYPE_REMOTE).build()
@@ -61,6 +48,10 @@ class EndedWorkaroundPlayer(
     var nextShuffleOrder:
             ((firstIndex: Int, mediaItemCount: Int, EndedWorkaroundPlayer) -> CircularShuffleOrder)? =
         null
+    var nextTitle: String? = null
+    var currentTitle: String? = null
+    var currentIsPinned = false
+    var currentIsOriginal = false
     var isEnded = false
         set(value) {
             if (BuildConfig.DEBUG) {
@@ -131,28 +122,80 @@ class EndedWorkaroundPlayer(
         return superState
     }
 
-    fun realSetMediaItems(
+    fun setMediaItems(
         mediaItems: List<MediaItem>,
         startIndex: Int,
-        startPositionMs: Long
-    ) = super.handleSetMediaItems(mediaItems, startIndex, startPositionMs)
+        startPositionMs: Long,
+        title: String,
+        pinned: Boolean,
+        original: Boolean
+    ) {
+        cloneQueue(title, pinned, original)
+        super.handleSetMediaItems(mediaItems, startIndex, startPositionMs)
+    }
+
+    override fun handleAddMediaItems(index: Int, mediaItems: List<MediaItem>): ListenableFuture<*> {
+        currentIsOriginal = false
+        return super.handleAddMediaItems(index, mediaItems)
+    }
+
+    override fun handleMoveMediaItems(
+        fromIndex: Int,
+        toIndex: Int,
+        newIndex: Int
+    ): ListenableFuture<*> {
+        currentIsOriginal = false
+        return super.handleMoveMediaItems(fromIndex, toIndex, newIndex)
+    }
+
+    override fun handleReplaceMediaItems(
+        fromIndex: Int,
+        toIndex: Int,
+        mediaItems: List<MediaItem>
+    ): ListenableFuture<*> {
+        currentIsOriginal = false
+        return super.handleReplaceMediaItems(fromIndex, toIndex, mediaItems)
+    }
+
+    override fun handleRemoveMediaItems(fromIndex: Int, toIndex: Int): ListenableFuture<*> {
+        currentIsOriginal = false
+        return super.handleRemoveMediaItems(fromIndex, toIndex)
+    }
+
+    fun cloneQueue(newTitle: String, newIsPinned: Boolean, original: Boolean) {
+        if (currentTitle == null && !exoPlayer.currentTimeline.isEmpty)
+            throw IllegalArgumentException("have media items but current title is null, logic bug")
+        else if (currentTitle != null) {
+            queueBoard.addQueue(
+                currentTitle!!,
+                ArrayList<MediaItem>(exoPlayer.mediaItemCount).apply {
+                    for (i in 0..<exoPlayer.mediaItemCount) {
+                        add(exoPlayer.getMediaItemAt(i))
+                    }
+                },
+                exoPlayer.currentMediaItemIndex,
+                exoPlayer.currentPosition,
+                currentIsPinned,
+                currentIsOriginal,
+                CircularShuffleOrder.Persistent(exoPlayer.shuffleOrder as
+                        CircularShuffleOrder),
+                exoPlayer.playbackState == STATE_ENDED,
+            )
+        }
+        currentTitle = newTitle
+        currentIsPinned = newIsPinned
+        currentIsOriginal = original
+    }
 
     override fun handleSetMediaItems(
         mediaItems: List<MediaItem>,
         startIndex: Int,
         startPositionMs: Long
     ): ListenableFuture<*> {
-        val defaultQueueTitle = queueBoard.context.getString(R.string.unknown_playlist)
-        val firstMediaItem = mediaItems.firstOrNull()
-        val mqTitle = firstMediaItem?.mediaMetadata?.extras?.getString("mq_title")
-
-        val mq = queueBoard.addQueue(
-            title = mqTitle ?: defaultQueueTitle,
-            mediaList = ArrayList(),
-            mediaItemIndex = C.INDEX_UNSET,
-            startPositionMs = C.TIME_UNSET,
-        )
-        queueBoard.commitQueue(mq, setMediaItems = false)
+        if (nextTitle == null)
+            throw IllegalArgumentException("setMediaItems called but nextTitle is null, logic bug")
+        cloneQueue(nextTitle!!, newIsPinned = false, original = true)
+        nextTitle = null
         return super.handleSetMediaItems(mediaItems, startIndex, startPositionMs)
     }
 }

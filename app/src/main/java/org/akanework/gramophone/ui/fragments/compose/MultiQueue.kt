@@ -171,7 +171,7 @@ fun MqListItem(
 
                 ) {
                     Text(
-                        text = "${index + 1}. ${mq.title}",
+                        text = "${index + 1}. ${mq.getTitleForUi()}",
                         maxLines = 1,
                         overflow = TextOverflow.MiddleEllipsis,
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 0.dp)
@@ -851,10 +851,10 @@ class MqState(
 
     fun getQueueTitle(): String? {
         return if (!isDetached()) {
-            activeQueue?.title
+            activeQueue
         } else {
-            detachedQueue?.title
-        }
+            detachedQueue
+        }?.getTitleForUi()
     }
 
     fun getQueueLength(): Long {

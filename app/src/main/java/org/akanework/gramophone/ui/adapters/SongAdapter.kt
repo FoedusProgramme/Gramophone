@@ -31,7 +31,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
-import androidx.preference.PreferenceManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -45,15 +44,13 @@ import org.akanework.gramophone.logic.getBooleanStrict
 import org.akanework.gramophone.logic.getFile
 import org.akanework.gramophone.logic.gramophoneApplication
 import org.akanework.gramophone.logic.requireMediaStoreId
-import org.akanework.gramophone.logic.utils.Flags
-import org.akanework.gramophone.logic.utils.exoplayer.EndedWorkaroundPlayer.Companion.queueWithTitle
-import org.akanework.gramophone.ui.MainActivity
+import org.akanework.gramophone.logic.queueWithTitle
+import org.akanework.gramophone.logic.setMediaItemsSeamlessly
 import org.akanework.gramophone.logic.ui.MyRecyclerView
 import org.akanework.gramophone.ui.MediaControllerViewModel
 import org.akanework.gramophone.ui.SongPickerActivity
 import org.akanework.gramophone.ui.components.NowPlayingDrawable
 import org.akanework.gramophone.ui.fragments.ArtistSubFragment
-import org.akanework.gramophone.ui.fragments.BaseFragment
 import org.akanework.gramophone.ui.fragments.DetailDialogFragment
 import org.akanework.gramophone.ui.fragments.GeneralSubFragment
 import uk.akane.libphonograph.items.addDate
@@ -70,7 +67,7 @@ import java.util.GregorianCalendar
  */
 class SongAdapter(
     fragment: Fragment?,
-    val queueTitle: Flow<String?>,
+    val queueTitle: Flow<String>?,
     songList: Flow<List<MediaItem>?> = (fragment?.requireContext() ?: fallbackContext!!)
         .gramophoneApplication.reader.songListFlow,
     helper: Sorter.NaturalOrderHelper<MediaItem>? = null,
@@ -225,7 +222,7 @@ class SongAdapter(
             return
         }
         val mediaController = mainActivity.getPlayer()
-        val title = runBlocking { queueTitle.first() } // TODO: will nick kill me for this
+        val title = runBlocking { queueTitle!!.first() }
         mediaController?.apply {
             val songList = getSongList()
             // If the currently playing song is also the clicked song, then we continue playing the
@@ -233,25 +230,7 @@ class SongAdapter(
             // UX of Chinese players that open full player when clicking song, and we don't want
             // this UX to break if list is different for some reason.
             val currentItem = currentMediaItem
-            if (currentItem?.mediaId == songList[position].mediaId) {
-                val index = currentMediaItemIndex
-                val isLast = mediaItemCount - index == 1
-                if (index == 0)
-                    addMediaItems(0, songList.subList(0, position))
-                else
-                    replaceMediaItems(0, index,
-                        songList.subList(0, position))
-                replaceMediaItem(position, songList[position])
-                if (isLast)
-                    addMediaItems(if (songList.size > position + 1) songList.subList(position + 1,
-                        songList.size) else emptyList())
-                else
-                    replaceMediaItems(position + 1, Int.MAX_VALUE,
-                        if (songList.size > position + 1) songList.subList(position + 1,
-                            songList.size) else emptyList())
-            } else {
-                setMediaItems(queueWithTitle(songList, title), position, C.TIME_UNSET)
-            }
+            setMediaItemsSeamlessly(songList, position, title)
             prepare()
             play()
             if (currentItem?.mediaId == songList[position].mediaId) {

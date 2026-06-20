@@ -51,7 +51,6 @@ import java.util.LinkedList
 class PlaylistQueueSheet(
     context: Context, private val activity: MainActivity
 ) : BottomSheetDialog(context), Player.Listener {
-    private var prefs: SharedPreferences
     private val instance: MediaBrowser?
         get() = activity.getPlayer()
     private val playlistAdapter: PlaylistCardAdapter
@@ -70,7 +69,7 @@ class PlaylistQueueSheet(
     // time into this, or I could just pray this "efficient" solution stands the test of time
     private var veto = false
     init {
-        prefs = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
+        val prefs = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
         mqEnabled = Flags.MQ_PREVIEW && prefs.getBooleanStrict("mq_preview", false)
 
         setContentView(R.layout.playlist_bottom_sheet)
@@ -112,12 +111,14 @@ class PlaylistQueueSheet(
         touchHelper.attachToRecyclerView(recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = playlistAdapter
-        recyclerView.scrollToPositionWithOffsetCompat(
-            playlistAdapter.playlist.first.indexOfFirst { i ->
-                i == (instance?.currentMediaItemIndex ?: 0)
-            }, // quick UX hack to show there's more songs above (well, if there is).
-            (context.resources.getDimensionPixelOffset(R.dimen.list_height) * 0.5f).toInt()
-        )
+        playlistAdapter.playlist.first.indexOfFirst { i ->
+            i == (instance?.currentMediaItemIndex ?: 0)
+        }.let { scrollPos ->
+            recyclerView.scrollToPositionWithOffsetCompat(scrollPos,
+                // quick UX hack to show there's more songs above (well, if there is).
+                if (scrollPos >= playlistAdapter.playlist.first.size - 2) 0 else (context
+                    .resources.getDimensionPixelOffset(R.dimen.list_height) * 0.5f).toInt())
+        }
         recyclerView.fastScroll(null, null)
 
         durationView = Chronometer(context)

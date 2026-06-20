@@ -1,8 +1,10 @@
 package org.akanework.gramophone.logic.utils
 
+import android.os.Parcelable
 import androidx.media3.common.C
 import androidx.media3.common.util.Log
 import androidx.media3.exoplayer.source.ShuffleOrder
+import kotlinx.parcelize.Parcelize
 import org.akanework.gramophone.logic.utils.exoplayer.EndedWorkaroundPlayer
 import kotlin.random.Random
 
@@ -181,7 +183,8 @@ class CircularShuffleOrder private constructor(
         return cloneAndRemove(0, shuffled.size)
     }
 
-    class Persistent private constructor(private val seed: Long, private val data: IntArray?) {
+    @Parcelize
+    class Persistent private constructor(val seed: Long, val data: IntArray?) : Parcelable {
         constructor(order: CircularShuffleOrder) : this(order.random.nextLong(), order.shuffled)
 
         companion object {

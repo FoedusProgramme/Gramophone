@@ -135,7 +135,7 @@ class AdapterFragment : BaseFragment(null) {
         }
     }
 
-    fun getQueueTitle(): Flow<String?> {
+    fun getQueueTitle(): Flow<String> {
         val stringId = when (arguments?.getInt("ID", -1)) {
             R.id.songs -> R.string.category_songs
             R.id.albums -> R.string.category_albums
@@ -145,11 +145,8 @@ class AdapterFragment : BaseFragment(null) {
             R.id.folders -> R.string.folders
             R.id.detailed_folders -> R.string.folders
             R.id.playlists -> R.string.category_playlists
-            else -> null
-        }
-        if (stringId == null) {
-            Log.w(TAG, "Derived queue title is null")
-            return flowOf(null)
+            -1, null -> throw IllegalArgumentException("unset ID value")
+            else -> throw IllegalArgumentException("invalid ID value")
         }
         return flowOf(requireContext().getString( stringId))
     }

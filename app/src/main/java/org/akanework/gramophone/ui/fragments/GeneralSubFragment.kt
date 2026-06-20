@@ -58,8 +58,6 @@ class GeneralSubFragment : BaseFragment(true) {
         private const val TAG = "GeneralSubFragment"
     }
 
-    lateinit var qTitle: Flow<String>
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -86,15 +84,7 @@ class GeneralSubFragment : BaseFragment(true) {
         when (itemType) {
             R.id.album -> {
                 val item = mainActivity.reader.albumListFlow.map { it.find { it.id == id } }
-                title = item.map {
-                    val derivedQueueTitle =
-                        it?.title ?: requireContext().getString(R.string.unknown_album)
-                    if (derivedQueueTitle == null) {
-                        Log.w(TAG, "Derived queue title is null")
-                    }
-                    derivedQueueTitle
-                }
-                qTitle = title
+                title = item.map { it?.title ?: requireContext().getString(R.string.unknown_album) }
                 itemList = item.map { it?.songList }
                 rawOrderExposed = Sorter.Type.ByAlbumTitleAscending
             }
@@ -109,7 +99,6 @@ class GeneralSubFragment : BaseFragment(true) {
                 // Genres
                 val item = mainActivity.reader.genreListFlow.map { it.find { it.id == id } }
                 title = item.map { it?.title ?: requireContext().getString(R.string.unknown_genre) }
-                qTitle = title
                 itemList = item.map { it?.songList }
             }
 
@@ -117,7 +106,6 @@ class GeneralSubFragment : BaseFragment(true) {
                 // Dates
                 val item = mainActivity.reader.dateListFlow.map { it.find { it.id == id } }
                 title = item.map { it?.title ?: requireContext().getString(R.string.unknown_year) }
-                qTitle = title
                 itemList = item.map { it?.songList }
             }
 
@@ -150,7 +138,6 @@ class GeneralSubFragment : BaseFragment(true) {
                                 + if (it != null) " (${it.id} - ${it.path})" else "")
                     }
                 }
-                qTitle = title
                 itemList = item.map { it?.songList }
                 rawOrderExposed = Sorter.Type.NaturalOrder
                 if (clazz == Playlist::class.java.name) {
@@ -185,7 +172,7 @@ class GeneralSubFragment : BaseFragment(true) {
         val songAdapter =
             SongAdapter(
                 this,
-                qTitle,
+                title,
                 itemList,
                 rawOrderExposed = rawOrderExposed,
                 isSubFragment = itemType

@@ -14,7 +14,7 @@ class SongPickerActivity : PickerActivity<MediaItem>() {
     override fun makeAdapter() =
         SongAdapter(
             null,
-            flowOf("MISSING TITLE: (SongPickerActivity)"),
+            null,
             rawOrderExposed = Sorter.Type.ByTitleAscending,
             isSubFragment = R.id.songs,
             fallbackContext = this
