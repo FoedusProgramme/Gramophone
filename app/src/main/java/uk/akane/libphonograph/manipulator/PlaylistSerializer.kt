@@ -1200,12 +1200,12 @@ object PlaylistSerializer {
         else preferredLocation.toString()
         fun updateFromMediaItem(pathMap: Map<String, MediaItem>?) =
             resolveMediaItem(pathMap)?.let { copyFromMediaItem(it) } ?: this
-        // TODO(ASAP): add basic xspf (maybe for extm3u or pls too?) content resolving
+        // TODO: add basic xspf (maybe for extm3u or pls too?) content resolving
         fun resolveMediaItem(pathMap: Map<String, MediaItem>?) =
             locations.filter { it.scheme == "file" }.firstNotNullOfOrNull { link ->
                 pathMap!![link.toFile().absolutePath]
             }
-        // TODO: support multiple location
+        // TODO: support multiple location before shipping Reader2
         fun resolveMediaItem2(pathMapFlow: Flow<IncrementalMap<String, MediaItem>>) =
             locations.find { it.scheme == "file" }?.let { link ->
                 pathMapFlow.forKey(link.toFile().absolutePath)
@@ -1225,7 +1225,7 @@ object PlaylistSerializer {
             artist = song.mediaMetadata.artist?.toString(),
             album = song.mediaMetadata.albumTitle?.toString(),
             trackNum = song.mediaMetadata.trackNumber?.toUInt()
-            // TODO(ASAP) write album art jpg path (if external instead of embedded) to "image" field
+            // TODO: write album art jpg path (if external instead of embedded) to "image" field
         )
 
         fun fuzzyEquals(other: Entry): Boolean {
