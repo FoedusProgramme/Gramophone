@@ -485,4 +485,13 @@
     <string name="favorite_failed_text">Pritisni ovdje za primjenu promjena, davajući dozvole favoritnoj datoteci playliste</string>
     <string name="error_in_bg">Događaju se greške u pozadini</string>
     <string name="settings_whitelist">Bijela lista</string>
+    <string name="search_query">Pretraga: %s</string>
+    <string name="discard_changes_title">Odbaciti promjene?</string>
+    <string name="save">Spremi</string>
+    <string name="discard">Odbaci</string>
+    <string name="apply">Primijeni</string>
+    <string name="failed_to_restore">Neuspjelo obnavljanje promjena: %s</string>
+    <string name="playlist_empty">Playlista je prazna</string>
+    <string name="playlist_empty_msg">Dodaj neke pjesme klikom na „Dodaj u playlistu” u izborniku s tri točke pjesme.</string>
+    <string name="playlist_picker_activity">Odaberi playlistu</string>
 </resources>
