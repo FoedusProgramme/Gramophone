@@ -81,22 +81,23 @@ class GramophoneAlbumArtProvider : ContentProvider() {
         selection: String?,
         selectionArgs: Array<out String>?,
         sortOrder: String?
-    ): Cursor? = null
+    ): Cursor? = null // TODO(ASAP) support OpenableColumns
 
     override fun getType(uri: Uri): String = "image/jpeg"
 
-    override fun insert(uri: Uri, values: ContentValues?): Uri? = null
+    override fun insert(uri: Uri, values: ContentValues?): Uri =
+        throw UnsupportedOperationException()
 
     override fun delete(
         uri: Uri,
         selection: String?,
         selectionArgs: Array<out String>?
-    ): Int = 0
+    ): Int = throw UnsupportedOperationException()
 
     override fun update(
         uri: Uri,
         values: ContentValues?,
         selection: String?,
         selectionArgs: Array<out String>?
-    ): Int = 0
+    ): Int = throw UnsupportedOperationException()
 }

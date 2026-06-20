@@ -24,6 +24,10 @@ import java.io.IOException
 
 object CoilArtPipeline {
 
+    // TODO(ASAP): implement disk cache - see https://github.com/coil-kt/coil/issues/1959 and
+    //  NetworkFetcher source code (the Fetcher is responsible for both read and write to disk
+    //  cache in normal coil model)
+
     private const val TAG = "CoilArtPipeline"
 
     fun Options.getArtworkBucketSize(): Int {

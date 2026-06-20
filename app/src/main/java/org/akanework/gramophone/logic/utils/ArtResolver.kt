@@ -210,7 +210,8 @@ object ArtResolver {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                         runWithCancellationSignal { signal ->
                             val uri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, songId)
-                            val bmp = context.contentResolver.loadThumbnail(uri, android.util.Size(size, size), signal)
+                            val bmp = context.contentResolver.loadThumbnail(uri,
+                                Size(size, size), signal)
                             val stream = java.io.ByteArrayOutputStream()
                             bmp.compress(Bitmap.CompressFormat.JPEG, 85, stream)
                             bmp.recycle()
@@ -341,11 +342,11 @@ object ArtResolver {
      * `albumart.jpg` file or similar, via [ThumbnailUtilsCompat].
      *
      * @param file   the audio file
-     * @param width  desired thumbnail width (use 0 for default)
-     * @param height desired thumbnail height (use 0 for default)
+     * @param width  desired thumbnail width
+     * @param height desired thumbnail height
      * @return the extracted bitmap, or `null` if extraction failed or is unavailable
      */
-    suspend fun extractSongThumbnail(file: File, width: Int = 512, height: Int = 512): Bitmap? {
+    suspend fun extractSongThumbnail(file: File, width: Int, height: Int): Bitmap? {
         return try {
             runWithCancellationSignal { signal ->
                 ThumbnailUtilsCompat.createAudioThumbnail(file, Size(width, height), signal)
