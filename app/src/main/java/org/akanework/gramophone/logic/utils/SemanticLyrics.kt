@@ -1385,7 +1385,11 @@ fun parseTtml(audioMimeType: String?, lyricText: String): SemanticLyrics? {
     var hasItunesNamespace = timing != null
     if (!hasItunesNamespace) {
         for (i in 0..<parser.getNamespaceCount(parser.depth)) {
-            if (parser.getNamespaceUri(i) == itunes || parser.getNamespaceUri(i) == itunesInternal) {
+            if (parser.getNamespaceUri(i) == itunes ||
+                parser.getNamespaceUri(i) == itunesInternal ||
+                // this namespace originates from a slop lyric generator where AI hallucinated the
+                // namespace. why do i even support parsing this :sob:
+                parser.getNamespaceUri(i) == "http://music.apple.com/lyrics") {
                 hasItunesNamespace = true
                 break
             }
