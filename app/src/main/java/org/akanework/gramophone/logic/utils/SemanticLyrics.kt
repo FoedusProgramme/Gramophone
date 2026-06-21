@@ -1393,6 +1393,7 @@ fun parseTtml(audioMimeType: String?, lyricText: String): SemanticLyrics? {
     }
     val peopleToType = hashMapOf<String, String>()
     val people = hashMapOf<String, MutableList<String>>()
+    val itunesTransliterations = hashMapOf<String, HashMap<String, out List<Pair<String?, String>>>>()
     val itunesTranslations = hashMapOf<String, HashMap<String, out List<Pair<String?, String>>>>()
     val timer = TtmlTimeTracker(parser, hasItunesNamespace)
     parser.nextTag()
@@ -1477,12 +1478,14 @@ fun parseTtml(audioMimeType: String?, lyricText: String): SemanticLyrics? {
                                     parser.nextAndThrowIfNotEnd()
                                 }
 
-                                "translations" -> {
+                                "translations", "transliterations" -> {
                                     while (parser.nextTag() != XmlPullParser.END_TAG) {
-                                        if (parser.name == "translation") {
-                                            val type = parser.getAttributeValue(null, "type")
-                                            if (type != "subtitle") {
-                                                throw XmlPullParserException("unsupported translation type $type")
+                                        if (parser.name == "translation" || parser.name == "transliteration") {
+                                            if (parser.name == "translation") {
+                                                val type = parser.getAttributeValue(null, "type")
+                                                if (type != "subtitle") {
+                                                    throw XmlPullParserException("unsupported translation type $type")
+                                                }
                                             }
                                             val lang = parser.getAttributeValue(
                                                 "http://www.w3.org/XML/1998/namespace",
@@ -1538,7 +1541,12 @@ fun parseTtml(audioMimeType: String?, lyricText: String): SemanticLyrics? {
                                                     )
                                                 }
                                             }
-                                            itunesTranslations[lang] = out
+                                            if (parser.name == "translation") {
+                                                itunesTranslations[lang] = out
+                                            } else if (parser.name == "transliteration") {
+                                                itunesTransliterations[lang] = out
+                                            } else
+                                                throw IllegalStateException()
                                         } else {
                                             throw XmlPullParserException(
                                                 "expected <translation>, got " +
@@ -1615,7 +1623,7 @@ fun parseTtml(audioMimeType: String?, lyricText: String): SemanticLyrics? {
         } while (cur != -1)
         out
     }.toMutableList()
-    itunesTranslations.forEach { lang ->
+    (itunesTransliterations.entries.toList() + itunesTranslations.entries.toList()).forEach { lang ->
         lang.value.forEach { line ->
             val indices = paragraphs.flatMapIndexed { i, it -> if (it.key == line.key)
                 listOf(i) else emptyList() }
