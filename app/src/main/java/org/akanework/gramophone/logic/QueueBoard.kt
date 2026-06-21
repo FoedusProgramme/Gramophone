@@ -47,7 +47,7 @@ class QueueBoard(
     val masterQueues: MutableList<MultiQueueObject> = mutableListOf(),
     queues: MutableList<MultiQueueObject> = ArrayList(),
 ) {
-    private val QUEUE_DEBUG = true
+    private val QUEUE_DEBUG = true // TODO: disable when done
     private val TAG = QueueBoard::class.simpleName.toString()
 
     init {
@@ -215,6 +215,35 @@ class QueueBoard(
     }
 
     /**
+     * Deletes a queue.
+     *
+     * When deleting the active queue, the last inactive queue is loaded. When the active queue is
+     * the only queue, playback is stopped.
+     *
+     * @param index
+     * @return true if the deletion is successful, otherwise false.
+     */
+    fun deleteQueue(title: String): Boolean {
+        val mq = masterQueues.find { it.title == title }
+        val index = mq?.let {
+            masterQueues.indexOf(it)
+        }
+        if (QUEUE_DEBUG)
+            Log.d(TAG, "DELETING QUEUE AT INDEX: $index")
+
+        if (index == null) return false
+
+        try {
+            masterQueues.removeAt(index)
+        } catch (e: IndexOutOfBoundsException) {
+            Log.w(TAG, e.message, e)
+            return false
+        }
+
+        return true
+    }
+
+    /**
      * Move a queue in masterQueues
      *
      * @param fromIndex
@@ -340,6 +369,15 @@ data class MultiQueueObject(
     val id: Long, // queue uid
     var index: Int, // order of queue
     var title: String,
+    /**
+     * Expiry denotes when this queue is eligible for auto removal; these events happen when
+     * triggered by the user, or automatically on QueueBoard initialization, or when the user switches any queue.
+     *
+     * Active queues will never be automatically removed, however, the pin state does not
+     * automatically change. When a pinned queue becomes an active queue, it will remain pinned when
+     * it becomes inactive. If said queue is unpinned, then it will renew its expiry time when it
+     * becomes inactive.
+     */
     var expiry: MutableStateFlow<Long?>,
     /**
      * The order of songs are dynamic. This should not be accessed from outside QueueBoard.

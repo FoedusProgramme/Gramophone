@@ -107,6 +107,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -144,6 +145,7 @@ import uk.akane.libphonograph.manipulator.PlaylistSerializer
 import uk.akane.libphonograph.manipulator.PlaylistSerializer.Entry
 import java.util.concurrent.Executor
 import java.util.concurrent.TimeUnit
+import kotlin.collections.emptyList
 import kotlin.random.Random
 
 
@@ -1057,7 +1059,26 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                 SERVICE_QB_GET_QUEUE_FOR_UI -> {
                     SessionResult(SessionResult.RESULT_SUCCESS).also { res ->
                         val index = customCommand.customExtras.getInt("index")
-                        val queueList: List<MultiQueueObject> = qb.getQueue(index)
+                        val queueList: List<MultiQueueObject> = if (index != -1) {
+                            qb.getQueue(index)
+                        } else {
+                            val plr = endedWorkaroundPlayer!!
+                            listOf(
+                                MultiQueueObject(
+                                    id = -1,
+                                    index = 0,
+                                    title = plr.currentTitle ?: getString(R.string.unknown_playlist),
+                                    expiry = MutableStateFlow(0),
+                                    queue = ArrayList(),
+                                    startIndex = plr.currentMediaItemIndex,
+                                    startPositionMs = C.TIME_UNSET,
+                                    repeatMode = plr.repeatMode,
+                                    shuffleOrder = null,
+                                    ended = plr.isEnded,
+                                    isOriginal = plr.currentIsOriginal,
+                                )
+                            )
+                        }
                         val binder = MultiQueueList(queueList)
                         res.extras.putBinder("allQueues", binder)
                     }
@@ -1083,7 +1104,12 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
 
                 SERVICE_QB_UNPIN_QUEUE -> {
                     val index = customCommand.customExtras.getInt("index")
-                    val expiry = qb.unpinQueue(index)
+                    val expiry: Long = if (index != -1) {
+                        qb.unpinQueue(index)
+                    } else {
+                        endedWorkaroundPlayer!!.currentIsPinned = false
+                        0L // fake value, not (and shouldn't) be used in UI
+                    }
                     SessionResult(SessionResult.RESULT_SUCCESS).also { res ->
                         res.extras.putLong("expiry", expiry)
                     }
@@ -1091,10 +1117,27 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
 
                 SERVICE_QB_DEL -> {
                     val index = customCommand.customExtras.getInt("index")
-                    val status = qb.deleteQueue(index)
+                    val status: Boolean = if (index != -1) {
+                        qb.deleteQueue(index)
+                    } else {
+                        try {
+                            val nextQueue = qb.getInactiveQueues().size - 1
+                            if (nextQueue < 0) {
+                                endedWorkaroundPlayer!!.clearMediaItems()
+                                true
+                            } else {
+                                qb.commitQueue(nextQueue)
+                                true
+                            }
+                        } catch (e: Exception) {
+                            android.util.Log.w(TAG, e.message, e)
+                            false
+                        }
+                    }
+
                     SessionResult(SessionResult.RESULT_SUCCESS).also { res ->
                         res.extras.putBoolean("status", status)
-                        }
+                    }
                 }
 
                 SERVICE_QB_AGE -> {

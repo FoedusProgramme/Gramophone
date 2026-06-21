@@ -9,6 +9,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -38,6 +39,7 @@ import androidx.compose.material.icons.rounded.ExpandLess
 import androidx.compose.material.icons.rounded.ExpandMore
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
@@ -113,12 +115,9 @@ fun MqListItem(
 
     Row( // wrapper
         modifier = modifier
-            .padding(horizontal = 16.dp)
             .clip(RoundedCornerShape(8.dp))
             .background(
-                if (isActiveQueue) {
-                    MaterialTheme.colorScheme.tertiary.copy(0.3f)
-                } else if (isInactiveActiveQueue) {
+                if (isInactiveActiveQueue) {
                     MaterialTheme.colorScheme.tertiary.copy(0.1f)
                 } else {
                     Color.Transparent
@@ -134,7 +133,6 @@ fun MqListItem(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .padding(8.dp)
                 .fillMaxWidth()
         ) {
             Row(
@@ -170,8 +168,14 @@ fun MqListItem(
                 Column(
 
                 ) {
+                    val titleText = if (isActiveQueue) {
+                        "0. ${mq.getTitleForUi()}"
+                    } else {
+                        "${index + 1}. ${mq.getTitleForUi()}"
+                    }
+
                     Text(
-                        text = "${index + 1}. ${mq.getTitleForUi()}",
+                        text = titleText,
                         maxLines = 1,
                         overflow = TextOverflow.MiddleEllipsis,
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 0.dp)
@@ -210,7 +214,7 @@ fun MqListItem(
                 }
             }
 
-            if (isEditAllowed) {
+            if (isEditAllowed && !isActiveQueue) {
                 Icon(
                     imageVector = Icons.Rounded.DragHandle,
                     contentDescription = null,
@@ -300,14 +304,22 @@ fun QueueInfo(
                     haptic.performHapticFeedback(HapticFeedbackType.ContextClick)
                 }
         ) {
-            Text(
-                text = mqState.getQueueTitle() ?: "",
-                style = MaterialTheme.typography.titleMedium,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = 8.dp)
-            )
+            mqState.activeQueue?.let {
+                MqListItem(
+                    mqState = mqState,
+                    index = -1,
+                    mq = it,
+                    isActiveQueue = true,
+                    isInactiveActiveQueue = false,
+                    onClick = {
+                        if (mqState.isDetached()) {
+                            mqState.resetHead()
+                        }
+                    },
+                    modifier = Modifier
+                        .weight(1f)
+                )
+            }
             IconButton(
                 enabled = mqEnabled && !landscape,
                 onClick = {
@@ -379,25 +391,8 @@ fun MqList(
                 },
                 modifier = Modifier
                     .animateItem()
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
             )
-        }
-        mqState.activeQueue?.let {
-            item {
-                MqListItem(
-                    mqState = mqState,
-                    index = mqState.getQueueListSize() - 1,
-                    mq = it,
-                    isActiveQueue = true,
-                    isInactiveActiveQueue = false,
-                    onClick = {
-                        if (mqState.isDetached()) {
-                            mqState.resetHead()
-                        }
-                    },
-                    modifier = Modifier
-                        .animateItem()
-                )
-            }
         }
     }
 }
