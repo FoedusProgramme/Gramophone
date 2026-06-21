@@ -13,6 +13,7 @@ import org.akanework.gramophone.BuildConfig
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.QueueBoard
 import org.akanework.gramophone.logic.utils.CircularShuffleOrder
+import org.akanework.gramophone.logic.utils.Flags
 import org.akanework.gramophone.logic.utils.SemanticLyrics
 import org.json.JSONObject
 import java.util.Objects
@@ -165,7 +166,7 @@ class EndedWorkaroundPlayer(
     fun cloneQueue(newTitle: String, newIsPinned: Boolean, original: Boolean) {
         if (currentTitle == null && !exoPlayer.currentTimeline.isEmpty)
             throw IllegalArgumentException("have media items but current title is null, logic bug")
-        else if (currentTitle != null) {
+        else if (currentTitle != null && Flags.MQ_PREVIEW) {
             queueBoard.addQueue(
                 currentTitle!!,
                 ArrayList<MediaItem>(exoPlayer.mediaItemCount).apply {
