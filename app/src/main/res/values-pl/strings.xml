@@ -528,4 +528,7 @@
     </plurals>
     <string name="search_query">Szukaj: %s</string>
     <string name="settings_mq_enabled">Wiele kolejek</string>
+    <string name="mq_unpin_queue">Odpiąć kolejkę</string>
+    <string name="mq_pin_queue">Przypiąć kolejkę</string>
+    <string name="shuffled">%s (przetasowano)</string>
 </resources>
