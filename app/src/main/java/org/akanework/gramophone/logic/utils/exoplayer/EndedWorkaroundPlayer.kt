@@ -160,6 +160,9 @@ class EndedWorkaroundPlayer(
 
     override fun handleRemoveMediaItems(fromIndex: Int, toIndex: Int): ListenableFuture<*> {
         currentIsOriginal = false
+        if (fromIndex == 0 && toIndex == Int.MAX_VALUE) { // clearMediaItems() -> delete queue
+            currentTitle = null
+        }
         return super.handleRemoveMediaItems(fromIndex, toIndex)
     }
 
