@@ -60,6 +60,7 @@ jobs:
           echo "AKANE_RELEASE_STORE_PASSWORD=${{ secrets.KEYSTORE_PWD }}" >> ~/.gradle/gradle.properties
           echo "AKANE_RELEASE_KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> ~/.gradle/gradle.properties
           echo "AKANE_RELEASE_KEY_PASSWORD=${{ secrets.KEY_PWD }}" >> ~/.gradle/gradle.properties
+          echo "versionNameSuffixOverride=-multiqueue_test" >> ~/.gradle/gradle.properties
 
       - name: Build with Gradle
         if: github.event_name != 'pull_request'
