@@ -530,4 +530,7 @@
         <item quantity="many">%d минут</item>
         <item quantity="other">%d минут</item>
     </plurals>
+    <string name="mq_unpin_queue">Открепить очередь</string>
+    <string name="mq_pin_queue">Закрепить очередь</string>
+    <string name="shuffled">%s (вперемешку)</string>
 </resources>
