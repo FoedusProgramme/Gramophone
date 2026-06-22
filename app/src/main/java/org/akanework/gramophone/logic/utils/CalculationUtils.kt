@@ -88,6 +88,22 @@ object CalculationUtils {
         return if (a != b) (value - a) / (b - a) else 0.0f
     }
 
+    @Suppress("NOTHING_TO_INLINE")
+    inline fun lerp(start: Double, stop: Double, amount: Double): Double {
+        return start + (stop - start) * amount
+    }
+
+    /**
+     * Returns the interpolation scalar (s) that satisfies the equation: `value = `[ ][.lerp]`(a, b, s)`
+     *
+     *
+     * If `a == b`, then this function will return 0.
+     */
+    @Suppress("NOTHING_TO_INLINE")
+    inline fun lerpInv(a: Double, b: Double, value: Double): Double {
+        return if (a != b) (value - a) / (b - a) else 0.0
+    }
+
     /** Returns the single argument constrained between [0.0, 1.0].  */
     private fun saturate(value: Float): Float {
         return value.coerceAtLeast(0f).coerceAtMost(1f)

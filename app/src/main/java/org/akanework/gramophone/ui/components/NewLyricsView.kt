@@ -43,6 +43,7 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
 import kotlin.properties.Delegates
+import kotlin.time.toDuration
 
 private const val TAG = "NewLyricsView"
 
@@ -78,7 +79,7 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
     lateinit var instance: Callbacks
     private val gestureDetector = GestureDetector(context, this)
     private var currentScrollTarget: Int? = null
-    private var currentSmoothScroll: Pair<Pair<Float, Float>, Pair<Float, Float>>? = null
+    private var currentSmoothScroll: Pair<Pair<Double, Double>, Pair<Float, Float>>? = null
     private var delayedScrollAnimation: Pair<Long, Pair<Int, Int>>? = null
     private var stateOverrides = hashMapOf<Int, Float>()
     private var stateTime = 0uL
@@ -292,7 +293,7 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
         canvas.save()
         canvas.translate(globalPaddingHorizontal, globalPaddingTop.toFloat())
         val width = width - globalPaddingHorizontal * 2
-        val cat = AnimationUtils.currentAnimationTimeMillis().toFloat()
+        val cat = AnimationUtils.currentAnimationTimeMillis().toDouble()
         spForRender!!.second.forEachIndexed { i, it ->
             var spanEnd = -1
             var spanStartGradient = -1
@@ -441,20 +442,20 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
                     .second.first + 1, i + 1).find { it.line?.isTranslated != true } != null) {
                 val ii = spForRender!!.second.subList(delayedScrollAnimation!!.second.first + 1,
                     i + 1).sumOf { if (it.line?.isTranslated == true) 0 else 1 }
-                val duration = (lyricAnimTime * 0.278).toLong()
-                val durationReturn = (lyricAnimTime * 0.722).toLong()
-                val durationStep = (lyricAnimTime * 0.1).toLong()
-                val start = delayedScrollAnimation!!.first.toFloat()
+                val duration = lyricAnimTime * 0.278
+                val durationReturn = lyricAnimTime * 0.722
+                val durationStep = lyricAnimTime * 0.1
+                val start = delayedScrollAnimation!!.first.toDouble()
                 val end = start + duration + durationReturn + ii * durationStep
                 if (end > cat) { // animation is still ongoing
                     if (!culledDown) {
                         val middle = start + duration
                         delayedScrollOffset += if (middle <= cat) {
-                            val progress = lerpInv(middle, end, cat)
+                            val progress = lerpInv(middle, end, cat).toFloat()
                             val p = delayedOutInterpolator.getInterpolation(progress)
                             lerp(depth, 0f, p)
                         } else {
-                            val progress = lerpInv(start, middle, cat)
+                            val progress = lerpInv(start, middle, cat).toFloat()
                             val p = delayedInInterpolator.getInterpolation(progress)
                             lerp(0f, depth, p)
                         }.toInt()
@@ -671,8 +672,8 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
                     scrollTo(0, scrollTarget)
                 } else {
                     currentScrollTarget = scrollTarget
-                    currentSmoothScroll = (AnimationUtils.currentAnimationTimeMillis().toFloat() to
-                            lyricAnimTime) to (scrollY.toFloat() to scrollTarget.toFloat())
+                    currentSmoothScroll = (AnimationUtils.currentAnimationTimeMillis().toDouble() to
+                            lyricAnimTime.toDouble()) to (scrollY.toFloat() to scrollTarget.toFloat())
                     runAnimatedScroll(false)
                     if (scrollY < scrollTarget) {
                         delayedScrollAnimation = if (scrollTargetIndex != null) AnimationUtils
@@ -961,9 +962,9 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
         stateTime = to
     }
 
-    private fun getScrollProgressAt(time: Float): Int {
+    private fun getScrollProgressAt(time: Double): Int {
         val progress = lerpInv(currentSmoothScroll!!.first.first, currentSmoothScroll!!
-            .first.first + currentSmoothScroll!!.first.second, time)
+            .first.first + currentSmoothScroll!!.first.second, time).toFloat()
         val interpolatedProgress = scrollInterpolator.getInterpolation(min(1f,
             progress))
         return lerp(currentSmoothScroll!!.second.first, currentSmoothScroll!!
@@ -971,7 +972,7 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
     }
 
     override fun computeScrollInner(): Long {
-        val cat = AnimationUtils.currentAnimationTimeMillis().toFloat()
+        val cat = AnimationUtils.currentAnimationTimeMillis().toDouble()
         val q = getScrollProgressAt(cat)
         val q1 = getScrollProgressAt(cat - 1000f)
         val distance = currentSmoothScroll!!.first.second
