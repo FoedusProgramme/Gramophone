@@ -25,7 +25,6 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
@@ -65,6 +64,9 @@ import org.akanework.gramophone.ui.fragments.compose.QueueRoot
 import org.akanework.gramophone.ui.fragments.compose.rememberMqState
 import java.util.LinkedList
 
+// TODO:
+//  shuffle now no longer updates media list
+//
 class PlaylistQueueSheet(
     context: Context, private val activity: MainActivity
 ) : BottomSheetDialog(context), Player.Listener {
@@ -175,7 +177,10 @@ class PlaylistQueueSheet(
                             },
                             onResetHead = {
                                 detachedHead.value = false
+                                detachedQueue = null
                                 // detachedQueue is "consumed" by the LaunchedEffect below
+
+                                forceRefresh()
                             },
                         )
                     val pagerState = rememberPagerState(
@@ -183,11 +188,11 @@ class PlaylistQueueSheet(
                         pageCount = { 2 }
                     )
 
-                    val igiveupnamingvariables by detachedHead.collectAsState()
-                    LaunchedEffect(igiveupnamingvariables) {
+                    val detachedHeadState by detachedHead.collectAsState()
+                    LaunchedEffect(detachedHeadState) {
                         if (!detachedHead.value && detachedQueue != null) {
                             mqState.resetHead(false)
-                            mqState.toggleExpand()
+                            mqState.init()
                             detachedQueue = null
                         }
                     }
@@ -265,7 +270,14 @@ class PlaylistQueueSheet(
         playlistAdapter.updateList(mq)
     }
 
-    inner class PlaylistCardAdapter : EditSongAdapter(activity, true) {
+    fun forceRefresh() {
+        // TODO: ask google, AI, or nick how to do recycler view stuff
+        //  1. how to not need to update entire list and just refresh the visible ones than need to be updated
+        //  2. can we update the list in a different efficient manner?
+        playlistAdapter.notifyItemRangeChanged(0, playlistAdapter.playlist.first.size)
+    }
+
+    inner class PlaylistCardAdapter : EditSongAdapter(activity, true, detachedHead) {
         var playlist: Pair<MutableList<Int>, MutableList<MediaItem>> = dumpPlaylist()
         var currentMediaItemIndex: Int? = null
             set(value) {
@@ -422,7 +434,7 @@ class PlaylistQueueSheet(
             playlist = pl
             notifyDataSetChanged()
 
-            // update playing indicator, scroll to, drag handle visibility
+            // update playing indicator, scroll to
             val i = (mq?.second?.startIndex ?: instance?.currentMediaItemIndex).let {
                 if (it == -1) 0 else it
             }

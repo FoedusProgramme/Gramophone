@@ -31,6 +31,8 @@ class QueueRecyclerView : MyRecyclerView {
 
     private var lastYPos = 0f
 
+    // todo: spam when trying to reorder when recycler is at top:   Ignoring pointerId=0 because ACTION_DOWN was not received for this pointer before ACTION_MOVE.
+    //  It likely happened because  ViewDragHelper did not receive all the events in the event stream.
     override fun onInterceptTouchEvent(e: MotionEvent): Boolean {
         // tell the parents to piss off *unless* we are at the top of the list AND this is a scroll
         // up gesture (a.k.a user wants to dismiss the bottom sheet)

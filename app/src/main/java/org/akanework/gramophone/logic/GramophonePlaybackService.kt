@@ -1074,7 +1074,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                                     startPositionMs = C.TIME_UNSET,
                                     repeatMode = plr.repeatMode,
                                     shuffleOrder = null,
-                                    ended = plr.isEnded,
+                                    ended = plr.playbackState == Player.STATE_ENDED,
                                     isOriginal = plr.currentIsOriginal,
                                 )
                             )
@@ -1121,16 +1121,22 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                         qb.deleteQueue(index)
                     } else {
                         try {
-                            val nextQueue = qb.getInactiveQueues().size - 1
-                            if (nextQueue < 0) {
+                            val nextQueueIndex = qb.getInactiveQueues().size - 1
+                            if (nextQueueIndex < 0) {
                                 endedWorkaroundPlayer!!.clearMediaItems()
                                 true
                             } else {
-                                qb.commitQueue(nextQueue)
+                                val currentTitle = endedWorkaroundPlayer!!.currentTitle
+                                val nextQueue = qb.getQueue(nextQueueIndex).first()
+                                qb.commitQueue(nextQueueIndex, nextQueue.startIndex)
+                                currentTitle?.let {
+                                    // TODO: nick plz do delete active queue if this is too cursed
+                                    qb.deleteQueue(it)
+                                }
                                 true
                             }
                         } catch (e: Exception) {
-                            android.util.Log.w(TAG, e.message, e)
+                            Log.w(TAG, e.message.toString(), e)
                             false
                         }
                     }

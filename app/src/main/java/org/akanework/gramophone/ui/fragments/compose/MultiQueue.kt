@@ -9,7 +9,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -39,7 +38,6 @@ import androidx.compose.material.icons.rounded.ExpandLess
 import androidx.compose.material.icons.rounded.ExpandMore
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
@@ -71,13 +69,14 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.media3.common.C
+import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.Player.REPEAT_MODE_ALL
 import androidx.media3.common.Player.REPEAT_MODE_OFF
 import androidx.media3.common.Player.REPEAT_MODE_ONE
 import androidx.media3.session.MediaBrowser
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import org.akanework.gramophone.R
@@ -96,6 +95,7 @@ import org.akanework.gramophone.ui.components.Chronometer
 import org.akanework.gramophone.ui.components.PlaylistQueueSheet
 import org.akanework.gramophone.ui.components.compose.ActionDropdown
 import org.akanework.gramophone.ui.components.compose.DropdownItem
+import java.util.LinkedList
 
 @Composable
 fun MqListItem(
@@ -189,7 +189,7 @@ fun MqListItem(
                             // TODO: why need div by 10 here
                             val remainingTimeMs = (expiry!! - System.currentTimeMillis()) / 10
                             Icon(
-                                painter = painterResource(if (remainingTimeMs < 1800000) R.drawable.ic_warning else R.drawable.ic_keep), //TODO: represent state of pin, or the action of this button
+                                painter = painterResource(if (!isActiveQueue && remainingTimeMs < 1800000) R.drawable.ic_warning else R.drawable.ic_keep),
                                 contentDescription = null,
                                 modifier = Modifier
                                     .size(12.dp)
@@ -198,7 +198,7 @@ fun MqListItem(
                                     }),
                             )
                             Text(
-                                text = makeTimeString(remainingTimeMs),
+                                text = if (isActiveQueue) "∞" else makeTimeString(remainingTimeMs),
                                 color = MaterialTheme.colorScheme.onSurface.copy(0.7f),
                                 fontSize = 10.sp,
                                 maxLines = 1,
@@ -218,7 +218,9 @@ fun MqListItem(
                 Icon(
                     imageVector = Icons.Rounded.DragHandle,
                     contentDescription = null,
-//                        modifier = Modifier.draggableHandle()
+                    modifier = Modifier
+                        .padding(8.dp)
+//                            .draggableHandle()
                 )
             }
         }
@@ -275,6 +277,10 @@ fun QueueInfo(
 ) {
     val haptic = LocalHapticFeedback.current
 
+    val currentMediaItemIndex by mqState.currentMediaItemIndex.collectAsState()
+    val mediaItemCount by mqState.mediaItemCount.collectAsState()
+    val durationMs by mqState.durationMs.collectAsState()
+
     // clean up later
     val MediumCornerRadius = 12.dp
     // clean up later
@@ -321,7 +327,7 @@ fun QueueInfo(
                 )
             }
             IconButton(
-                enabled = mqEnabled && !landscape,
+                enabled = mqEnabled && !mqState.inactiveQueues.isEmpty() && !landscape,
                 onClick = {
                     mqState.toggleExpand()
                     haptic.performHapticFeedback(HapticFeedbackType.ContextClick)
@@ -341,11 +347,11 @@ fun QueueInfo(
             modifier = Modifier.padding(horizontal = 8.dp)
         ) {
             Text(
-                text = mqState.getQueuePositionStr(),
+                text = "${currentMediaItemIndex + 1} / $mediaItemCount",
                 style = MaterialTheme.typography.bodyMedium
             )
             Text(
-                text = makeTimeString(mqState.getQueueLength()),
+                text = makeTimeString(durationMs),
                 style = MaterialTheme.typography.bodyMedium
             )
         }
@@ -364,7 +370,7 @@ fun MqList(
             .fillMaxWidth()
             .nestedScroll(rememberNestedScrollInteropConnection())
     ) {
-        if (mqState.getQueueListSize() == 0) {
+        if (mqState.inactiveQueues.isEmpty()) {
             item {
                 EmptyPlaceholder(
                     icon = Icons.AutoMirrored.Rounded.List,
@@ -574,6 +580,7 @@ fun BottomSheetActions(
         Row(
             horizontalArrangement = Arrangement.SpaceAround
         ) {
+            // TODO: no longer needed?
             Button(
                 colors = ButtonDefaults.textButtonColors(),
                 onClick = {
@@ -810,12 +817,18 @@ class MqState(
     // shuffle and repeat modes do not need to be manually set for queue loads, they will be set automatically
     val shuffleModeEnabled = MutableStateFlow(instance.shuffleModeEnabled)
     val repeatMode = MutableStateFlow(instance.repeatMode)
+
+    val mediaItemCount = MutableStateFlow(instance.mediaItemCount)
+    val currentMediaItemIndex = MutableStateFlow(getShuffledIndex())
+    val durationMs = MutableStateFlow(getDurationMs())
+
     var expanded by mutableStateOf(false)
         private set
 
     var detachedQueue: MultiQueueObject? by mutableStateOf(null)
         private set
 
+    // TODO: Used for queue pinning at the moment. remove if migrate that
     var activeQueue: MultiQueueObject? by mutableStateOf(null)
         private set
 
@@ -827,7 +840,7 @@ class MqState(
         init()
     }
 
-    private fun init() {
+    fun init() {
         coroutineScope.launch {
             activeQueue = null
             detachedQueue = null
@@ -842,34 +855,6 @@ class MqState(
         }
     }
 
-    fun getQueueListSize(): Int = inactiveQueues.size + if (activeQueue == null) 0 else 1
-
-    fun getQueueTitle(): String? {
-        return if (!isDetached()) {
-            activeQueue
-        } else {
-            detachedQueue
-        }?.getTitleForUi()
-    }
-
-    fun getQueueLength(): Long {
-        return if (!isDetached()) {
-            activeQueue?.getDuration() ?: 0L
-        } else detachedQueue?.getDuration() ?: 0L
-    }
-
-    fun getQueuePositionStr(): String {
-        return if (!isDetached()) {
-            activeQueue?.let {
-                "${(instance.currentMediaItemIndex) + 1} / ${it.getSize()}"
-            }
-        } else {
-            detachedQueue?.let {
-                "${it.startIndex + 1} / ${it.getSize()}"
-            }
-        } ?: "–/–"
-    }
-
     fun isDetached(): Boolean = detachedQueue != null
 
     fun detach(index: Int) {
@@ -880,6 +865,9 @@ class MqState(
         }
         onDetachHead?.invoke(index)
         detachedQueue = mq
+        this.mediaItemCount.value = mq.getSize()
+        this.currentMediaItemIndex.value = getShuffledIndex(mq)
+        this.durationMs.value = getDurationMs(mq)
         playlistQueueSheet?.forceUpdate(index)
     }
 
@@ -890,12 +878,18 @@ class MqState(
         }
         onDetachHead?.invoke(inactiveQueues.indexOf(mq))
         detachedQueue = mq
+        this.mediaItemCount.value = mq.getSize()
+        this.currentMediaItemIndex.value = getShuffledIndex(mq)
+        this.durationMs.value = getDurationMs(mq)
         playlistQueueSheet?.forceUpdate(inactiveQueues.indexOf(mq))
     }
 
     fun resetHead(updateSongList: Boolean = true) {
         onResetHead?.invoke()
         detachedQueue = null
+        this.mediaItemCount.value = instance.mediaItemCount
+        this.currentMediaItemIndex.value = getShuffledIndex()
+        this.durationMs.value = getDurationMs()
         if (updateSongList) {
             playlistQueueSheet?.forceUpdate(-1)
         }
@@ -918,12 +912,10 @@ class MqState(
         resetHead()
     }
 
-    fun removeQueue(index: Int = getQueueListSize() - 1) {
+    fun removeQueue(index: Int = inactiveQueues.size - 1) {
         val status = instance.deleteQueue(index)
         if (!status) return
-        coroutineScope.launch {
-            init()
-        }
+        init()
         detachedQueue?.repeatMode?.let {
             onRepeatModeChanged(it)
         }
@@ -934,12 +926,8 @@ class MqState(
 
     fun loadDetached() {
         instance.loadQueue(inactiveQueues.indexOf(detachedQueue))
-        expanded = false
         resetHead(false)
-        coroutineScope.launch {
-            delay(500)
-            init()
-        }
+        init()
     }
 
 
@@ -973,6 +961,16 @@ class MqState(
         this.shuffleModeEnabled.value = shuffleModeEnabled
     }
 
+
+    override fun onMediaItemTransition(
+        mediaItem: MediaItem?,
+        reason: @Player.MediaItemTransitionReason Int
+    ) {
+        if (isDetached()) return
+        this.mediaItemCount.value = instance.mediaItemCount
+        this.currentMediaItemIndex.value = getShuffledIndex()
+    }
+
     fun togglePin(index: Int = inactiveQueues.indexOf(getCurrentQueue())) {
         // in the UI, active queue is appended onto the end of inactives
         val index = if (index >= inactiveQueues.size) {
@@ -998,6 +996,40 @@ class MqState(
      * Get currently visible queue in the ui. Do not assume the media item list is complete.
      */
     fun getCurrentQueue() = detachedQueue ?: activeQueue
+
+    private fun getShuffledIndex(mq: MultiQueueObject? = null): Int {
+        if (mq != null) {
+            if (mq.shuffleOrder == null) {
+                return mq.startIndex
+            }
+
+            val indexes = mq.shuffleOrder!!.data!!.toMutableList()
+            return indexes.indexOf(mq.startIndex)
+        }
+
+        val indexes = LinkedList<Int>()
+        val s = instance.shuffleModeEnabled
+        var i = instance.currentTimeline.getFirstWindowIndex(s)
+        while (i != C.INDEX_UNSET) {
+            indexes.add(i)
+            i = instance.currentTimeline.getNextWindowIndex(i, Player.REPEAT_MODE_OFF, s)
+        }
+
+        return indexes.indexOf(instance.currentMediaItemIndex)
+    }
+
+    private fun getDurationMs(mq: MultiQueueObject? = null): Long {
+        if (mq != null) {
+            return mq.getDuration()
+        }
+        var duration = 0L
+        for (i in 0 until instance.mediaItemCount) {
+            duration += instance.getMediaItemAt(i).mediaMetadata.durationMs ?: 0L
+        }
+        return duration
+
+    }
+
     fun age() {
         instance.age()
     }
