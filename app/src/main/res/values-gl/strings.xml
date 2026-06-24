@@ -517,4 +517,5 @@
     <string name="settings_mq_enabled">Varias colas</string>
     <string name="mq_unpin_queue">Non fixar a cola</string>
     <string name="mq_pin_queue">Fixar a cola</string>
+    <string name="shuffled">%s (barallado)</string>
 </resources>
