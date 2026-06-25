@@ -27,7 +27,7 @@ Note: Gramophone supports the "enhanced album covers" feature. This feature need
 <br>
 Note: Not all audio file formats will work on all devices. For more information, please refer to <a href="https://developer.android.com/media/media3/exoplayer/supported-formats#progressive-container">https://developer.android.com/media/media3/exoplayer/supported-formats#progressive-container</a> and <a href="https://developer.android.com/media/platform/supported-formats#audio-formats">https://developer.android.com/media/platform/supported-formats#audio-formats</a><br>
 <br>
-Note: Gramophone is completely offline, this it does not support downloading or streaming music. It will only play music files on your device. Gramophone cannot bypass any copy protections.<br>
+Note: Gramophone is completely offline, thus it does not support downloading or streaming music. It will only play music files on your device. Gramophone cannot bypass any copy protections.<br>
 <br>
 Note: Our privacy policy is available at <a href="https://foedusprogramme.github.io/org/privacy.html">https://foedusprogramme.github.io/org/privacy.html</a>
 </p>
