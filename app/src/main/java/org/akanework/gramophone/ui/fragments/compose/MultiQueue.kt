@@ -14,8 +14,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -104,6 +106,8 @@ fun MqListItem(
     index: Int,
     mq: MultiQueueObject,
     modifier: Modifier = Modifier,
+    horizontalPadding: Dp = 16.dp,
+    verticalPadding: Dp = 4.dp,
     isActiveQueue: Boolean = false,
     isInactiveActiveQueue: Boolean = false,
     isEditAllowed: Boolean = true,
@@ -114,6 +118,7 @@ fun MqListItem(
     val isPinned = expiry == null
 
     Row( // wrapper
+        verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .clip(RoundedCornerShape(8.dp))
             .background(
@@ -134,6 +139,7 @@ fun MqListItem(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(horizontal = horizontalPadding, vertical = verticalPadding)
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -305,6 +311,7 @@ fun QueueInfo(
                 )
                 .padding(2.dp)
                 .weight(1f)
+                .height(IntrinsicSize.Min)
                 .clickable(enabled = mqEnabled && !landscape) {
                     mqState.toggleExpand()
                     haptic.performHapticFeedback(HapticFeedbackType.ContextClick)
@@ -315,6 +322,8 @@ fun QueueInfo(
                     mqState = mqState,
                     index = -1,
                     mq = it,
+                    horizontalPadding = 0.dp,
+                    verticalPadding = 0.dp,
                     isActiveQueue = true,
                     isInactiveActiveQueue = false,
                     onClick = {
@@ -323,6 +332,7 @@ fun QueueInfo(
                         }
                     },
                     modifier = Modifier
+                        .fillMaxHeight()
                         .weight(1f)
                 )
             }
@@ -397,7 +407,6 @@ fun MqList(
                 },
                 modifier = Modifier
                     .animateItem()
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
             )
         }
     }
