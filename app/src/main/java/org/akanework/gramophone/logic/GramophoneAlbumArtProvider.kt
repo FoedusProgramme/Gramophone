@@ -30,6 +30,9 @@ import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import okio.buffer
@@ -56,17 +59,29 @@ class GramophoneAlbumArtProvider : ContentProvider() {
         /**
          * Builds a `content://` URI pointing to [GramophoneAlbumArtProvider].
          *
-         * @param album whether it is album (true) or song (false)
-         * @param id   the song or album ID
-         * @param path the file/folder path (will be URI-encoded)
+         * @param id        the ID of any song (!!! not album ID)
+         * @param imageName the image file's name
          */
-        fun buildProviderUri(album: Boolean, id: Long, path: String): Uri =
+        fun buildAlbumUri(id: Long, imageName: String): Uri =
             Uri.Builder()
                 .scheme(ContentResolver.SCHEME_CONTENT)
                 .authority(PROVIDER_AUTHORITY)
-                .appendPath(if (album) "album" else "song")
+                .appendPath("album")
                 .appendPath(id.toString())
-                .appendPath(path)
+                .appendPath(imageName)
+                .build()
+
+        /**
+         * Builds a `content://` URI pointing to [GramophoneAlbumArtProvider].
+         *
+         * @param id the song ID
+         */
+        fun buildSongUri(id: Long): Uri =
+            Uri.Builder()
+                .scheme(ContentResolver.SCHEME_CONTENT)
+                .authority(PROVIDER_AUTHORITY)
+                .appendPath("song")
+                .appendPath(id.toString())
                 .build()
     }
 
@@ -75,18 +90,27 @@ class GramophoneAlbumArtProvider : ContentProvider() {
     private suspend fun CoroutineScope.openFileCommon(uri: Uri, size: Point?,
                                        allowPartial: Boolean): AssetFileDescriptor? {
         val context = context!!
-        val cfd = CompletableDeferred<Any?>()
+        val cfd = CompletableDeferred<AssetFileDescriptor?>()
         launch(Dispatchers.IO) {
             context.imageLoader.execute(
                 ImageRequest.Builder(context)
                 .data(uri)
                 .let {
-                    // size will be used to decide if underlying file is small or full size, and if we
-                    // can't use the dummy decoder, we will also get the data resized by Coil.
+                    // size will be used to decide if underlying file is small or full size, and if
+                    // we can't use the dummy decoder, we will also get the data resized by Coil.
                     if (size != null)
                         it.size(size.x, size.y)
-                    // TODO(ASAP) not setting size here might cause falling back to slow path too often?
-                    else it
+                    // If the caller didn't request a specific size, assume it'll fine to use the
+                    // thumbnail, because it's a major performance improvement. Calls to this
+                    // provider only happen from other apps, of which there are a few (Android Auto,
+                    // Bluetooth AVRCP, Media Controller Tester, scrobblers, lyric apps), but those
+                    // never display large covers for queue/library media items. Only the active
+                    // media item seems to ever be displayed in large format, but that's provided as
+                    // ashmem Bitmap to other processes directly, so it doesn't go through here.
+                    // TODO(ASAP) potentially regressing notification cover quality...? legacy is
+                    //  optimally not fed uri - or HD URI - for MediaMetadata due to precedence
+                    // TODO(ASAP) unhardcode small size
+                    else it.size(320, 320)
                 }
                 // Memory cache stores Bitmap, not compressed data, so we shouldn't read from
                 // it (otherwise our dummy decoder wouldn't get any data ever, and we would
@@ -173,29 +197,24 @@ class GramophoneAlbumArtProvider : ContentProvider() {
                                 || result.throwable.message == "No thumbnails in top-level directories"))
                         cfd.complete(null)
                     else
-                        cfd.complete(result.throwable)
+                        cfd.completeExceptionally(result.throwable)
                 })
                 .build())
         }
-        val ret = cfd.await()
-        if (ret is Throwable)
-            throw ret
-        return ret as AssetFileDescriptor?
+        return cfd.await()
     }
 
     private fun openFileCommon(uri: Uri, size: Point?, signal: CancellationSignal?,
                                allowPartial: Boolean): AssetFileDescriptor? {
-        if (uri.pathSegments.size < 3)
+        if (uri.pathSegments.size < 2)
             throw IllegalArgumentException("Invalid uri: $uri")
         return runBlocking {
             signal?.throwIfCanceled()
-            val j = async(Dispatchers.IO) {
-                openFileCommon(uri, size, allowPartial)
-            }
+            val job = currentCoroutineContext().job
             signal?.setOnCancelListener {
-                j.cancel()
+                job.cancel()
             }
-            j.await()
+            openFileCommon(uri, size, allowPartial)
         }
     }
 

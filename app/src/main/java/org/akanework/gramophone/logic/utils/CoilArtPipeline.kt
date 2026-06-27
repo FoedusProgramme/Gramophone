@@ -2,12 +2,15 @@ package org.akanework.gramophone.logic.utils
 
 import android.content.ContentResolver
 import android.content.ContentUris
+import android.content.Context
 import android.content.res.AssetFileDescriptor
 import android.graphics.Point
 import android.media.MediaMetadataRetriever
 import android.os.Build
 import android.os.Bundle
+import android.os.CancellationSignal
 import android.os.Environment
+import android.os.OperationCanceledException
 import android.provider.MediaStore
 import android.webkit.MimeTypeMap
 import coil3.ImageLoader
@@ -15,6 +18,7 @@ import coil3.Uri
 import coil3.decode.ContentMetadata
 import coil3.decode.DataSource
 import coil3.decode.ImageSource
+import coil3.fetch.FetchResult
 import coil3.fetch.Fetcher
 import coil3.fetch.SourceFetchResult
 import coil3.key.Keyer
@@ -23,6 +27,11 @@ import coil3.pathSegments
 import coil3.request.Options
 import coil3.size.Dimension
 import coil3.toCoilUri
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.job
 import okio.Buffer
 import okio.Path.Companion.toOkioPath
 import okio.buffer
@@ -35,6 +44,67 @@ import java.util.Locale
 
 object CoilArtPipeline {
 
+    data class AlbumThumbnailData(val songUri: android.net.Uri, val imageFileName: String)
+
+    class AlbumThumbnailMapper : Mapper<Uri, AlbumThumbnailData> {
+        override fun map(data: Uri, options: Options): AlbumThumbnailData? {
+            return if (data.scheme == ContentResolver.SCHEME_CONTENT &&
+                data.authority == GramophoneAlbumArtProvider.PROVIDER_AUTHORITY) {
+                if (data.pathSegments.first() != "album")
+                    throw IllegalArgumentException("Invalid uri: $data")
+                AlbumThumbnailData(ContentUris.withAppendedId(
+                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                    data.pathSegments[1].toLong()), data.pathSegments[2])
+            } else null
+        }
+    }
+
+    class AlbumThumbnailKeyer : Keyer<AlbumThumbnailData> {
+        override fun key(data: AlbumThumbnailData, options: Options): String {
+            return data.toString()
+        }
+    }
+
+    class AlbumThumbnailFetcherFactory : Fetcher.Factory<AlbumThumbnailData> {
+        override fun create(
+            data: AlbumThumbnailData,
+            options: Options,
+            imageLoader: ImageLoader
+        ): Fetcher {
+            return Fetcher {
+                val songFile = getFileFor(options.context, data.songUri)
+                val imgFile = songFile.resolveSibling(data.imageFileName)
+                if (imgFile.name != data.imageFileName) // if imageFileName contains ../other/path/
+                    throw IllegalArgumentException("Bad data $data")
+                val imgUri = MediaStoreCompat.getMediaUriForFile(options.context,
+                    imgFile.absolutePath)
+                // TODO(ASAP) unhardcode small threshold
+                val data = if (options.size.width.let { it is Dimension.Pixels && it.px <= 320 } &&
+                        options.size.height.let { it is Dimension.Pixels && it.px <= 320 })
+                    LoadThumbnailData(imgUri)
+                else
+                    imgUri
+                val fetchResult: FetchResult
+                var searchIndex = 0
+                while (true) {
+                    val pair = imageLoader.components.newFetcher(data, options, imageLoader,
+                        searchIndex)
+                    checkNotNull(pair) { "Unable to create a fetcher that supports: $data" }
+                    val fetcher = pair.first
+                    searchIndex = pair.second + 1
+
+                    val result = fetcher.fetch()
+
+                    if (result != null) {
+                        fetchResult = result
+                        break
+                    }
+                }
+                return@Fetcher fetchResult
+            }
+        }
+    }
+
     data class LoadThumbnailData(val uri: android.net.Uri)
 
     class ThumbnailMapper : Mapper<Uri, LoadThumbnailData> {
@@ -43,28 +113,18 @@ object CoilArtPipeline {
             return if (options.size.width.let { it is Dimension.Pixels && it.px <= 320 } &&
                 options.size.height.let { it is Dimension.Pixels && it.px <= 320 } &&
                 data.scheme == ContentResolver.SCHEME_CONTENT &&
-                data.authority == GramophoneAlbumArtProvider.PROVIDER_AUTHORITY) {
-                when (data.pathSegments.first()) {
-                    "song" -> {
-                        LoadThumbnailData(ContentUris.withAppendedId(
-                            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                            data.pathSegments[1].toLong()))
-                    }
-                    "album" -> {
-                        // TODO(ASAP) make this secure
-                        LoadThumbnailData(ContentUris.withAppendedId(
-                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                            data.pathSegments[1].toLong()))
-                    }
-                    else -> throw IllegalArgumentException("Invalid uri: $data")
-                }
+                data.authority == GramophoneAlbumArtProvider.PROVIDER_AUTHORITY &&
+                data.pathSegments.first() == "song") {
+                LoadThumbnailData(ContentUris.withAppendedId(
+                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                    data.pathSegments[1].toLong()))
             } else null
         }
     }
 
     class ThumbnailKeyer : Keyer<LoadThumbnailData> {
         override fun key(data: LoadThumbnailData, options: Options): String {
-            return data.uri.toString()
+            return data.toString()
         }
     }
 
@@ -103,20 +163,7 @@ object CoilArtPipeline {
         }
     }
 
-    class AlbumCoverMapper : Mapper<Uri, Uri> {
-        override fun map(data: Uri, options: Options): Uri? {
-            return if (data.scheme == ContentResolver.SCHEME_CONTENT &&
-                data.authority == GramophoneAlbumArtProvider.PROVIDER_AUTHORITY &&
-                data.pathSegments.first() == "album") {
-                // TODO(ASAP) make this secure
-                ContentUris.withAppendedId(
-                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                    data.pathSegments[1].toLong()).toCoilUri()
-            } else null
-        }
-    }
-
-    data class LoadAudioCoverData(val id: Long, val file: File)
+    data class LoadAudioCoverData(val id: Long)
 
     class AudioCoverKeyer : Keyer<LoadAudioCoverData> {
         override fun key(data: LoadAudioCoverData, options: Options): String {
@@ -130,8 +177,7 @@ object CoilArtPipeline {
                 data.authority == GramophoneAlbumArtProvider.PROVIDER_AUTHORITY) {
                 if (data.pathSegments.first() != "song")
                     throw IllegalArgumentException("Invalid uri: $data")
-                LoadAudioCoverData(data.pathSegments[1].toLong(),
-                    File(android.net.Uri.decode(data.pathSegments[2])))
+                LoadAudioCoverData(data.pathSegments[1].toLong())
             } else null
         }
     }
@@ -143,9 +189,10 @@ object CoilArtPipeline {
             imageLoader: ImageLoader
         ): Fetcher {
             return Fetcher {
+                val uri = ContentUris.withAppendedId(MediaStore.Audio.Media
+                    .EXTERNAL_CONTENT_URI, data.id)
                 val afd = MediaStoreCompat.openAssetFileDescriptor(options.context,
-                    ContentUris.withAppendedId(MediaStore.Audio.Media
-                        .EXTERNAL_CONTENT_URI, data.id), "r")!!
+                    uri, "r")!!
                 val retriever = MediaMetadataRetriever()
                 try {
                     if (afd.declaredLength == AssetFileDescriptor.UNKNOWN_LENGTH &&
@@ -172,14 +219,17 @@ object CoilArtPipeline {
                         retriever.close()
                     } catch (_: Exception) {}
                 }
+                // We shouldn't trust the uri wrt path of song, otherwise this provider could be
+                // misused to get image files from any folder. So do a query here
+                val file = getFileFor(options.context, uri)
                 // Only poke around for files on external storage
                 if (Environment.MEDIA_UNKNOWN ==
-                    Environment.getExternalStorageState(data.file)) {
+                    Environment.getExternalStorageState(file)) {
                     throw NoAlbumArtException("No embedded album art found")
                 }
 
                 // Ignore "Downloads" or top-level directories
-                val parent = data.file.parentFile
+                val parent = file.parentFile
                 val grandParent = parent?.parentFile
                 if (parent != null && parent.getName() == Environment.DIRECTORY_DOWNLOADS) {
                     throw NoAlbumArtException("No thumbnails in Downloads directories")
@@ -220,4 +270,39 @@ object CoilArtPipeline {
     }
 
     class NoAlbumArtException(message: String) : IOException(message)
+
+    private suspend inline fun getFileFor(context: Context, mediaUri: android.net.Uri): File {
+        return runWithCancellationSignal { signal ->
+            context.contentResolver.query(mediaUri, arrayOf(
+                MediaStore.MediaColumns.DATA), null, null,
+                null, signal)
+        }.use {
+            if (it == null || !it.moveToFirst())
+                throw IOException("Can't find file $mediaUri")
+            File(it.getString(it.getColumnIndexOrThrow(
+                MediaStore.MediaColumns.DATA)))
+        }
+    }
+
+    @OptIn(InternalCoroutinesApi::class) // TODO(ASAP)
+    private suspend inline fun <T> runWithCancellationSignal(block: (CancellationSignal) -> T): T {
+        val signal = CancellationSignal()
+        val job = currentCoroutineContext().job
+        val listener = job.invokeOnCompletion(onCancelling = true) { e ->
+            if (e is CancellationException) signal.cancel()
+        }
+        try {
+            return block(signal)
+        } catch (e: OperationCanceledException) {
+            try {
+                job.ensureActive()
+            } catch (e2: CancellationException) {
+                e2.addSuppressed(e)
+                throw e2
+            }
+            throw IllegalStateException("Canceled but job still active, seems to be a bug?", e)
+        } finally {
+            listener.dispose()
+        }
+    }
 }

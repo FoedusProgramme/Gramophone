@@ -23,6 +23,7 @@ import org.akanework.gramophone.logic.hasImagePermission
 import org.akanework.gramophone.logic.hasImprovedMediaStore
 import org.akanework.gramophone.logic.hasScopedStorageV1
 import org.akanework.gramophone.logic.hasScopedStorageWithMediaTypes
+import org.akanework.gramophone.logic.requireMediaStoreId
 import org.nift4.mediastorecompat.MediaStoreCompat
 import org.nift4.mediastorecompat.StorageManagerCompat
 import org.nift4.mediastorecompat.StorageVolumeCompat
@@ -344,7 +345,7 @@ internal object Reader {
                 val dateTakenDay = if (hasImprovedMediaStore()) {
                     dateTakenParsed?.dayOfMonth
                 } else null
-                val imgUri = GramophoneAlbumArtProvider.buildProviderUri(false, id, path)
+                val imgUri = GramophoneAlbumArtProvider.buildSongUri(id)
                 if (cdTrackNumber != null && trackNumber == null) {
                     cdTrackNumber.toIntOrNull()?.let {
                         trackNumber = it
@@ -520,9 +521,8 @@ internal object Reader {
                 if (p.second.albumId == it.id) {
                     val bestCover = MiscUtils.findBestCover(p.first)
                     if (bestCover != null) {
-                        it.cover = GramophoneAlbumArtProvider.buildProviderUri(true,
-                            ContentUris.parseId(MediaStoreCompat.getMediaUriForFile(
-                                context, bestCover.absolutePath)), p.first.absolutePath)
+                        it.cover = GramophoneAlbumArtProvider.buildAlbumUri(p.second
+                            .songList.first().requireMediaStoreId(), bestCover.name)
                     }
                 }
             }

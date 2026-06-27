@@ -319,12 +319,14 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
             .diskCache(null)
             .components {
                 add(CoilArtPipeline.ThumbnailKeyer())
+                add(CoilArtPipeline.AlbumThumbnailKeyer())
                 add(CoilArtPipeline.AudioCoverKeyer())
                 add(AndroidUriMapper())
                 add(CoilArtPipeline.ThumbnailMapper())
-                add(CoilArtPipeline.AlbumCoverMapper())
+                add(CoilArtPipeline.AlbumThumbnailMapper())
                 add(CoilArtPipeline.AudioCoverMapper())
                 add(CoilArtPipeline.ThumbnailFetcherFactory())
+                add(CoilArtPipeline.AlbumThumbnailFetcherFactory())
                 add(CoilArtPipeline.SongCoverFetcherFactory())
             }
             .run {
