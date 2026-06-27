@@ -494,4 +494,22 @@
     <string name="playlist_empty">Playlista je prazna</string>
     <string name="playlist_empty_msg">Dodaj neke pjesme klikom na „Dodaj u playlistu” u izborniku s tri točke pjesme.</string>
     <string name="playlist_picker_activity">Odaberi playlistu</string>
+    <string name="delete_really_artist">Stvarno želiš izbrisati sve pjesme od izvođača „%s”? Ovo je nepovratna radnja.</string>
+    <string name="restore_edits">Obnoviti promjene?</string>
+    <string name="discard_changes_msg">Stvarno želiš odbaciti tvoje promjene u playlisti „%s”?</string>
+    <string name="restore_edits_msg">Postoje nespremljene promjene u playlisti „%s”. Želiš li obnoviti te promjene ili ih odbaciti i započeti ispočetka s novom verzijom playliste?</string>
+    <string name="mount_storage">Za korištenje ove funkcije umetni SD karticu</string>
+    <string name="restore">Obnovi</string>
+    <string name="search_desc">Izvođači, albumi i pjesme</string>
+    <string name="search_hint">Traži pjesme i izvođače</string>
+    <string name="picker_activity">Odaberi pjesmu</string>
+    <string name="settings_preference_category_folders_filesystem"><![CDATA[Kartice mapa i datotečnog sustava]]></string>
+    <string name="show_file_names">Prikaži imena datoteka</string>
+    <string name="show_file_names_summary">Prikaži imena datoteka umjesto imena pjesama u karticama mapa i datotečnog sustava</string>
+    <string name="another_with_name">Ime se već koristi</string>
+    <string name="settings_font_size">Veličina fonta</string>
+    <string name="set">Postavi</string>
+    <string name="timer_eos">Pričekaj da pjesma završi</string>
+    <string name="timer_end_of_this_song">Kraj ove pjesme</string>
+    <string name="other">Prilagođeno</string>
 </resources>
