@@ -148,10 +148,12 @@ object CoilArtPipeline {
                         .EXTERNAL_CONTENT_URI, data.id), "r")!!
                 val retriever = MediaMetadataRetriever()
                 try {
-                    val length = afd.length
-                    if (length == AssetFileDescriptor.UNKNOWN_LENGTH)
-                        throw IOException("failed to get actual length of $afd (${data.id})")
-                    retriever.setDataSource(afd.fileDescriptor, afd.startOffset, length)
+                    if (afd.declaredLength == AssetFileDescriptor.UNKNOWN_LENGTH &&
+                        afd.startOffset == 0L)
+                        retriever.setDataSource(afd.fileDescriptor)
+                    else
+                        retriever.setDataSource(afd.fileDescriptor, afd.startOffset,
+                            afd.length)
                     retriever.embeddedPicture?.let { raw ->
                         return@Fetcher SourceFetchResult(
                             source = ImageSource(
