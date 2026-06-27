@@ -20,6 +20,7 @@ package org.akanework.gramophone.logic
 import android.annotation.SuppressLint
 import android.app.Application
 import android.app.NotificationManager
+import android.content.ContentResolver
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Build
@@ -39,7 +40,10 @@ import androidx.preference.PreferenceManager
 import coil3.ImageLoader
 import coil3.PlatformContext
 import coil3.SingletonImageLoader
+import coil3.Uri
 import coil3.disk.DiskCache
+import coil3.map.AndroidUriMapper
+import coil3.map.Mapper
 import coil3.request.NullRequestDataException
 import coil3.util.Logger
 import kotlinx.coroutines.CoroutineScope
@@ -312,16 +316,16 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
 
     override fun newImageLoader(context: PlatformContext): ImageLoader {
         return ImageLoader.Builder(context)
-            .diskCache {
-                DiskCache.Builder()
-                    .directory(context.cacheDir.resolve("image_cache").toOkioPath())
-                    .maxSizeBytes(50L * 1024 * 1024) // 50MB
-                    .build()
-            }
+            .diskCache(null)
             .components {
-                add(CoilArtPipeline.ResolutionInterceptor())
-                add(CoilArtPipeline.ArtResourceKeyer())
-                add(CoilArtPipeline.ArtResourceFetcher.Factory())
+                add(CoilArtPipeline.ThumbnailKeyer())
+                add(CoilArtPipeline.AudioCoverKeyer())
+                add(AndroidUriMapper())
+                add(CoilArtPipeline.ThumbnailMapper())
+                add(CoilArtPipeline.AlbumCoverMapper())
+                add(CoilArtPipeline.AudioCoverMapper())
+                add(CoilArtPipeline.ThumbnailFetcherFactory())
+                add(CoilArtPipeline.SongCoverFetcherFactory())
             }
             .run {
                 if (!BuildConfig.DEBUG) this else
@@ -348,8 +352,11 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
                             }
                             // Let's keep the log readable and ignore normal events' stack traces.
                             if (throwable != null && throwable !is NullRequestDataException
+                                && throwable !is CoilArtPipeline.NoAlbumArtException
                                 && (throwable !is IOException
                                         || throwable.message != "No album art found"
+                                        && throwable.message != "No embedded album art found"
+                                        && throwable.message != "No thumbnails in Downloads directories"
                                         && throwable.message != "No thumbnails in top-level directories")
                             ) {
                                 println(Log.getThrowableString(throwable)!!)

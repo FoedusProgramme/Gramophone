@@ -151,7 +151,7 @@ class AlbumAdapter(
         }
 
         override fun getCover(item: Album): Uri? {
-            return item.cover ?: super.getCover(item)
+            return item.cover
         }
 
         override fun getReleaseDate(item: Album): Long {
