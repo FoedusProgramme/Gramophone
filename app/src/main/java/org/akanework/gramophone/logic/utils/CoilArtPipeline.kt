@@ -48,17 +48,22 @@ import kotlin.math.min
 
 object CoilArtPipeline {
 
-    private fun isSmallSize(context: Context, size: Size): Boolean {
-        if (size.width !is Dimension.Pixels || size.height !is Dimension.Pixels) return false
-        val w = (size.width as Dimension.Pixels).px
-        val h = (size.height as Dimension.Pixels).px
+    private fun getSmallSize(context: Context): Point {
         if (hasScopedStorageV1()) {
             // refer to mThumbSize in MediaProvider.java
             val metrics = context.applicationContext.resources.displayMetrics
             val thumbSize = min(metrics.widthPixels, metrics.heightPixels) / 2
-            return w <= thumbSize && h <= thumbSize
+            return Point(thumbSize, thumbSize)
         }
-        return w <= 512 && h <= 320
+        return Point(512, 320)
+    }
+
+    private fun isSmallSize(context: Context, size: Size): Boolean {
+        if (size.width !is Dimension.Pixels || size.height !is Dimension.Pixels) return false
+        val w = (size.width as Dimension.Pixels).px
+        val h = (size.height as Dimension.Pixels).px
+        val smallSize = getSmallSize(context)
+        return w <= smallSize.x && h <= smallSize.y
     }
 
     data class AlbumThumbnailData(val songUri: android.net.Uri, val imageFileName: String)
@@ -95,7 +100,7 @@ object CoilArtPipeline {
                     throw IllegalArgumentException("Bad data $data")
                 val imgUri = MediaStoreCompat.getMediaUriForFile(options.context,
                     imgFile.absolutePath)
-                val data = if (isSmallSize(options.context, options.size))
+                val data = if (isSmallSize(options.context, options.size) && false) // TODO(ASAP)
                     LoadThumbnailData(imgUri)
                 else
                     imgUri
@@ -131,7 +136,7 @@ object CoilArtPipeline {
         override fun map(data: Uri, options: Options): LoadThumbnailData? {
             return if (data.scheme == ContentResolver.SCHEME_CONTENT &&
                 data.authority == GramophoneAlbumArtProvider.PROVIDER_AUTHORITY &&
-                data.pathSegments.first() == "song" &&
+                data.pathSegments.first() == "song" && false && // TODO(ASAP)
                 isSmallSize(options.context, options.size)) {
                 LoadThumbnailData(ContentUris.withAppendedId(
                     MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
@@ -161,8 +166,11 @@ object CoilArtPipeline {
                         val width = options.size.width.let {
                             if (it is Dimension.Pixels) it.px else null
                         }
+                        // Size is REQUIRED to get an image!
                         if (height != null && width != null)
                             putParcelable(ContentResolver.EXTRA_SIZE, Point(width, height))
+                        else
+                            putParcelable(ContentResolver.EXTRA_SIZE, getSmallSize(options.context))
                     })
                 checkNotNull(afd) { "Unable to open '${data.uri}' as thumbnail." }
 
@@ -192,9 +200,8 @@ object CoilArtPipeline {
     class AudioCoverMapper : Mapper<Uri, LoadAudioCoverData> {
         override fun map(data: Uri, options: Options): LoadAudioCoverData? {
             return if (data.scheme == ContentResolver.SCHEME_CONTENT &&
-                data.authority == GramophoneAlbumArtProvider.PROVIDER_AUTHORITY) {
-                if (data.pathSegments.first() != "song")
-                    throw IllegalArgumentException("Invalid uri: $data")
+                data.authority == GramophoneAlbumArtProvider.PROVIDER_AUTHORITY &&
+                data.pathSegments.first() == "song") {
                 LoadAudioCoverData(data.pathSegments[1].toLong())
             } else null
         }
@@ -209,33 +216,38 @@ object CoilArtPipeline {
             return Fetcher {
                 val uri = ContentUris.withAppendedId(MediaStore.Audio.Media
                     .EXTERNAL_CONTENT_URI, data.id)
-                val afd = MediaStoreCompat.openAssetFileDescriptor(options.context,
-                    uri, "r")!!
-                val retriever = MediaMetadataRetriever()
-                try {
-                    if (afd.declaredLength == AssetFileDescriptor.UNKNOWN_LENGTH &&
-                        afd.startOffset == 0L)
-                        retriever.setDataSource(afd.fileDescriptor)
-                    else
-                        retriever.setDataSource(afd.fileDescriptor, afd.startOffset,
-                            afd.length)
-                    retriever.embeddedPicture?.let { raw ->
-                        return@Fetcher SourceFetchResult(
-                            source = ImageSource(
-                                Buffer().write(raw),
-                                options.fileSystem,
-                                metadata = null,
-                            ),
-                            mimeType = null,
-                            dataSource = DataSource.DISK,
-                        )
-                    }
-                } catch (e: RuntimeException) {
-                    throw IOException("Failed to create thumbnail", e)
-                } finally {
+                MediaStoreCompat.openAssetFileDescriptor(options.context,
+                    uri, "r")!!.use { afd ->
+                    val retriever = MediaMetadataRetriever()
                     try {
-                        retriever.close()
-                    } catch (_: Exception) {}
+                        if (afd.declaredLength == AssetFileDescriptor.UNKNOWN_LENGTH &&
+                            afd.startOffset == 0L
+                        )
+                            retriever.setDataSource(afd.fileDescriptor)
+                        else
+                            retriever.setDataSource(
+                                afd.fileDescriptor, afd.startOffset,
+                                afd.length
+                            )
+                        retriever.embeddedPicture?.let { raw ->
+                            return@Fetcher SourceFetchResult(
+                                source = ImageSource(
+                                    Buffer().write(raw),
+                                    options.fileSystem,
+                                    metadata = null,
+                                ),
+                                mimeType = null,
+                                dataSource = DataSource.DISK,
+                            )
+                        }
+                    } catch (e: RuntimeException) {
+                        throw IOException("Failed to create thumbnail", e)
+                    } finally {
+                        try {
+                            retriever.close()
+                        } catch (_: Exception) {
+                        }
+                    }
                 }
                 if (hasScopedStorageWithMediaTypes() && !options.context.hasImagePermission()) {
                     return@Fetcher continueFetchingOrFail(LoadThumbnailData(uri),

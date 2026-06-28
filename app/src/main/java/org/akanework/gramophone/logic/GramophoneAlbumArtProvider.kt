@@ -10,11 +10,17 @@ import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.Point
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.CancellationSignal
+import android.os.Handler
+import android.os.HandlerThread
 import android.os.OperationCanceledException
 import android.os.ParcelFileDescriptor
+import android.os.ProxyFileDescriptorCallback
+import android.os.storage.StorageManager
 import android.util.Log
+import androidx.core.content.getSystemService
 import androidx.core.os.BundleCompat
 import coil3.ColorImage
 import coil3.decode.ContentMetadata
@@ -28,19 +34,27 @@ import coil3.toBitmap
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeout
 import okio.buffer
 import okio.sink
 import org.akanework.gramophone.BuildConfig
 import org.akanework.gramophone.logic.utils.CoilArtPipeline
-import java.io.FileOutputStream
+import java.io.ByteArrayOutputStream
 import java.io.IOException
+import java.io.OutputStream
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * ContentProvider that serves album artwork to external processes (e.g. Android Auto).
@@ -87,11 +101,22 @@ class GramophoneAlbumArtProvider : ContentProvider() {
 
     override fun onCreate() = true
 
-    private suspend fun CoroutineScope.openFileCommon(uri: Uri, size: Point?,
-                                       allowPartial: Boolean): AssetFileDescriptor? {
+    @OptIn(InternalCoroutinesApi::class)
+    private suspend fun openFileCommon(uri: Uri, size: Point?, allowPartial: Boolean): AssetFileDescriptor? {
         val context = context!!
         val cfd = CompletableDeferred<AssetFileDescriptor?>()
-        launch(Dispatchers.IO) {
+        val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        currentCoroutineContext().job.invokeOnCompletion {
+            if (it is CancellationException) scope.cancel(it)
+            else if (it != null) scope.cancel("Error in parent block", it)
+        }
+        scope.launch {
+            currentCoroutineContext().job.invokeOnCompletion {
+                if (!cfd.isCompleted) {
+                    cfd.completeExceptionally(it
+                        ?: IllegalStateException("Completed job without setting file descriptor"))
+                }
+            }
             context.imageLoader.execute(
                 ImageRequest.Builder(context)
                 .data(uri)
@@ -110,15 +135,15 @@ class GramophoneAlbumArtProvider : ContentProvider() {
                 // we can write it there for benefit of UI code somewhere else.
                 .memoryCachePolicy(CachePolicy.WRITE_ONLY)
                 .allowHardware(false)
-                .decoderFactory { result, _, _ ->
+                .decoderFactory { result, options, _ ->
                     val src = result.source.source()
                     src.peek().let { peekSrc ->
                         if (peekSrc.readByte() != 0xff.toByte() ||
                             peekSrc.readByte() != 0xd8.toByte() ||
                             peekSrc.readByte() != 0xff.toByte() ||
                             run {
-                                val peek = peekSrc.readByte().toInt()
-                                peek != 0xdb && peek !in 0xe0..0xef
+                                val peek = peekSrc.readByte()
+                                peek != 0xdb.toByte() && peek !in 0xe0.toByte()..0xef.toByte()
                             }
                         ) {
                             // Not JPEG. We'll have to re-encode to JPEG (here done in target)
@@ -140,18 +165,11 @@ class GramophoneAlbumArtProvider : ContentProvider() {
                                     .parcelFileDescriptor.dup(), it.startOffset, it.declaredLength))
                             }
                         } else {
-                            val pipe = ParcelFileDescriptor.createPipe()
-                            cfd.complete(
-                                AssetFileDescriptor(
-                                    pipe[0], 0,
-                                    AssetFileDescriptor.UNKNOWN_LENGTH
-                                )
-                            )
-                            try {
-                                FileOutputStream(pipe[1].fileDescriptor).sink()
-                                    .buffer().writeAll(src)
-                            } finally {
-                                pipe[1].close()
+                            writeDataCommon(cfd, scope, options.context) {
+                                if (it != null) {
+                                    it.sink().buffer().writeAll(src); null
+                                } else
+                                    src.readByteArray()
                             }
                         }
                         // shareable is false to avoid writing dummy to memory cache
@@ -161,18 +179,18 @@ class GramophoneAlbumArtProvider : ContentProvider() {
                         )
                     }
                 }
-                .target(onSuccess = {
+                .target(onSuccess = { image ->
                     if (!cfd.isCompleted) {
-                        val pipe = ParcelFileDescriptor.createPipe()
-                        cfd.complete(AssetFileDescriptor(
-                            pipe[0], 0, AssetFileDescriptor.UNKNOWN_LENGTH))
-                        try {
-                            FileOutputStream(pipe[1].fileDescriptor).use { os ->
-                                it.toBitmap().compress(
-                                    Bitmap.CompressFormat.JPEG, 95, os)
+                        launch(start = CoroutineStart.ATOMIC) {
+                            writeDataCommon(cfd, scope, context) {
+                                val os = it ?: ByteArrayOutputStream()
+                                image.toBitmap().compress(Bitmap.CompressFormat.JPEG,
+                                    95, os)
+                                if (it != null)
+                                    null
+                                else
+                                    (os as ByteArrayOutputStream).toByteArray()
                             }
-                        } finally {
-                            pipe[1].close()
                         }
                     }
                 })
@@ -194,6 +212,90 @@ class GramophoneAlbumArtProvider : ContentProvider() {
                 .build())
         }
         return cfd.await()
+    }
+
+    @OptIn(InternalCoroutinesApi::class)
+    private suspend fun writeDataCommon(cfd: CompletableDeferred<AssetFileDescriptor?>,
+                                        scope: CoroutineScope, context: Context,
+                                        callback: (OutputStream?) -> ByteArray?) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            currentCoroutineContext().job.ensureActive()
+            val bytes = callback(null)!!
+            currentCoroutineContext().job.ensureActive()
+            val ht = HandlerThread("pfd_${System.currentTimeMillis()}")
+            ht.start()
+            // Specifically ImageDecoder on Android P or later needs a seekable file descriptor
+            val pfd = context.getSystemService<StorageManager>()!!.openProxyFileDescriptor(
+                ParcelFileDescriptor.MODE_READ_ONLY,
+                object : ProxyFileDescriptorCallback() {
+                    override fun onGetSize(): Long {
+                        return bytes.size.toLong()
+                    }
+
+                    override fun onRead(offset: Long, size: Int, data: ByteArray): Int {
+                        val offset = offset.toInt()
+                        var size = size
+                        if (offset + size > bytes.size) {
+                            size = bytes.size - offset
+                        }
+                        System.arraycopy(bytes, offset, data, 0,
+                            size)
+                        return size
+                    }
+
+                    override fun onRelease() {
+                        ht.quitSafely()
+                    }
+                }, Handler(ht.looper)
+            )
+            cfd.complete(
+                AssetFileDescriptor(
+                    pfd, 0, AssetFileDescriptor.UNKNOWN_LENGTH
+                )
+            )
+            return
+        }
+        val pipe = ParcelFileDescriptor.createPipe()
+        cfd.complete(
+            AssetFileDescriptor(
+                pipe[0], 0, AssetFileDescriptor.UNKNOWN_LENGTH
+            )
+        )
+        val disposable = scope.coroutineContext[Job]!!.invokeOnCompletion(
+            onCancelling = true) {
+            if (it is CancellationException) {
+                // this will interrupt write to ensure we don't block forever
+                pipe[1].close()
+            }
+        }
+        try {
+            withTimeout((30 * 1000).milliseconds) {
+                launch(Dispatchers.IO, start = CoroutineStart.ATOMIC) {
+                    ParcelFileDescriptor.AutoCloseOutputStream(pipe[1])
+                        .use { os ->
+                            // only check for cancel here to ensure close
+                            ensureActive()
+                            try {
+                                callback(os)
+                            } catch (e: Exception) {
+                                try {
+                                    ensureActive()
+                                } catch (e2: CancellationException) {
+                                    Log.w(TAG, "eating exception due" +
+                                            " to cancel()", e)
+                                    e2.addSuppressed(e)
+                                    throw e2
+                                }
+                                throw e
+                            }
+                        }
+                    disposable.dispose()
+                }.join()
+            }
+        } catch (_: TimeoutCancellationException) {
+            // If the other side ain't done reading after 30s, give up
+            scope.cancel()
+        }
     }
 
     private fun openFileCommon(uri: Uri, size: Point?, signal: CancellationSignal?,
