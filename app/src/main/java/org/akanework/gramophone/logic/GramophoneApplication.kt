@@ -20,7 +20,6 @@ package org.akanework.gramophone.logic
 import android.annotation.SuppressLint
 import android.app.Application
 import android.app.NotificationManager
-import android.content.ContentResolver
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Build
@@ -40,10 +39,7 @@ import androidx.preference.PreferenceManager
 import coil3.ImageLoader
 import coil3.PlatformContext
 import coil3.SingletonImageLoader
-import coil3.Uri
-import coil3.disk.DiskCache
 import coil3.map.AndroidUriMapper
-import coil3.map.Mapper
 import coil3.request.NullRequestDataException
 import coil3.util.Logger
 import kotlinx.coroutines.CoroutineScope
@@ -52,7 +48,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import okio.Path.Companion.toOkioPath
 import org.akanework.gramophone.BuildConfig
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.ui.BugHandlerActivity

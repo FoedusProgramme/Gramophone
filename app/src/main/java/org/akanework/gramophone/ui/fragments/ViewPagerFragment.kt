@@ -128,9 +128,6 @@ class ViewPagerFragment : BaseFragment(true) {
                 R.id.quick_refresh -> {
                     val imageLoader = SingletonImageLoader.get(requireContext())
                     imageLoader.memoryCache?.clear()
-                    CoroutineScope(Dispatchers.Default).launch {
-                        imageLoader.diskCache?.clear()
-                    }
                     val playerLayout = activity.playerBottomSheet
                     activity.updateLibrary {
                         showRefreshDoneSnackBar(
@@ -143,9 +140,6 @@ class ViewPagerFragment : BaseFragment(true) {
                     val context = requireContext()
                     val imageLoader = SingletonImageLoader.get(context)
                     imageLoader.memoryCache?.clear()
-                    CoroutineScope(Dispatchers.Default).launch {
-                        imageLoader.diskCache?.clear()
-                    }
                     val playerLayout = activity.playerBottomSheet
                     MaterialAlertDialogBuilder(context)
                         .setIcon(R.drawable.ic_refresh)
