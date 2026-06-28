@@ -12,6 +12,7 @@ import android.os.CancellationSignal
 import android.os.Environment
 import android.os.OperationCanceledException
 import android.provider.MediaStore
+import androidx.media3.common.util.Log
 import coil3.ImageLoader
 import coil3.Uri
 import coil3.decode.ContentMetadata
@@ -100,7 +101,7 @@ object CoilArtPipeline {
                     throw IllegalArgumentException("Bad data $data")
                 val imgUri = MediaStoreCompat.getMediaUriForFile(options.context,
                     imgFile.absolutePath)
-                val data = if (isSmallSize(options.context, options.size) && false) // TODO(ASAP)
+                val data = if (isSmallSize(options.context, options.size))
                     LoadThumbnailData(imgUri)
                 else
                     imgUri
@@ -136,7 +137,7 @@ object CoilArtPipeline {
         override fun map(data: Uri, options: Options): LoadThumbnailData? {
             return if (data.scheme == ContentResolver.SCHEME_CONTENT &&
                 data.authority == GramophoneAlbumArtProvider.PROVIDER_AUTHORITY &&
-                data.pathSegments.first() == "song" && false && // TODO(ASAP)
+                data.pathSegments.first() == "song" &&
                 isSmallSize(options.context, options.size)) {
                 LoadThumbnailData(ContentUris.withAppendedId(
                     MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,

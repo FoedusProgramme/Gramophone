@@ -19,6 +19,9 @@ import android.os.OperationCanceledException
 import android.os.ParcelFileDescriptor
 import android.os.ProxyFileDescriptorCallback
 import android.os.storage.StorageManager
+import android.system.ErrnoException
+import android.system.Os
+import android.system.OsConstants.SEEK_SET
 import android.util.Log
 import androidx.core.content.getSystemService
 import androidx.core.os.BundleCompat
@@ -161,10 +164,19 @@ class GramophoneAlbumArtProvider : ContentProvider() {
                                         })
                         ) {
                             (result.source.metadata as ContentMetadata).assetFileDescriptor.let {
-                                cfd.complete(AssetFileDescriptor(it
-                                    .parcelFileDescriptor.dup(), it.startOffset, it.declaredLength))
+                                val newFd = it.parcelFileDescriptor.dup()
+                                try {
+                                    // It's only safe to give the unmodified fd to reader if it is
+                                    // seekable, because otherwise (pipe?) no matter when we dup, we
+                                    // would eat some data when checking for JPEG header.
+                                    Os.lseek(newFd.fileDescriptor, it.startOffset,
+                                        SEEK_SET)
+                                    cfd.complete(AssetFileDescriptor(newFd, it.startOffset,
+                                        it.declaredLength))
+                                } catch (_: ErrnoException) {}
                             }
-                        } else {
+                        }
+                        if (!cfd.isCompleted) {
                             writeDataCommon(cfd, scope, options.context) {
                                 if (it != null) {
                                     it.sink().buffer().writeAll(src); null
