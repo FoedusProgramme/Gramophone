@@ -288,6 +288,11 @@ class QueueBoard(
         )
     }
 
+    fun renameQueue(index: Int, newName: String): Boolean {
+        if (index >= masterQueues.size) return false
+        return renameQueue(masterQueues[index], newName)
+    }
+
     fun renameQueue(mq: MultiQueueObject, newName: String): Boolean {
         if (masterQueues.any { it.title == newName }) {
             if (QUEUE_DEBUG)

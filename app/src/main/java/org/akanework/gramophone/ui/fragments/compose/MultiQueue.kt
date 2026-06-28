@@ -1,5 +1,6 @@
 package org.akanework.gramophone.ui.fragments.compose
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.expandVertically
@@ -87,9 +88,11 @@ import org.akanework.gramophone.logic.age
 import org.akanework.gramophone.logic.deleteQueue
 import org.akanework.gramophone.logic.getInactiveQueues
 import org.akanework.gramophone.logic.getQueue
+import org.akanework.gramophone.logic.getQueueForUi
 import org.akanework.gramophone.logic.loadQueue
 import org.akanework.gramophone.logic.pinQueue
 import org.akanework.gramophone.logic.playOrPause
+import org.akanework.gramophone.logic.renameQueue
 import org.akanework.gramophone.logic.supportsWideScreen
 import org.akanework.gramophone.logic.unpinQueue
 import org.akanework.gramophone.logic.utils.Flags
@@ -109,8 +112,8 @@ fun MqListItem(
     horizontalPadding: Dp = 16.dp,
     verticalPadding: Dp = 4.dp,
     isActiveQueue: Boolean = false,
-    isInactiveActiveQueue: Boolean = false,
-    isEditAllowed: Boolean = true,
+    isHighlightedQueue: Boolean = false,
+    isEditAllowed: Boolean = false,
     onClick: () -> Unit = {},
     onLongClick: () -> Unit = {},
 ) {
@@ -122,7 +125,7 @@ fun MqListItem(
         modifier = modifier
             .clip(RoundedCornerShape(8.dp))
             .background(
-                if (isInactiveActiveQueue) {
+                if (isHighlightedQueue) {
                     MaterialTheme.colorScheme.tertiary.copy(0.1f)
                 } else {
                     Color.Transparent
@@ -220,6 +223,59 @@ fun MqListItem(
                 }
             }
 
+            if (!isActiveQueue) {
+                val isPinned = expiry == null
+                ActionDropdown(
+                    actions = listOf(
+                        DropdownItem(
+                            title = stringResource(R.string.add_to_queue),
+                            leadingIcon = null,
+                            action = {
+                                mqState.addToQueue(index)
+                            },
+                        ),
+                        DropdownItem(
+                            title = stringResource(R.string.play_next),
+                            leadingIcon = null,
+                            action = {
+                                mqState.playNext(index)
+                            },
+                        ),
+                        DropdownItem(
+                            title = stringResource(R.string.add_to_playlist),
+                            leadingIcon = null,
+                            action = {
+                                mqState.addToPlaylist(index)
+                            },
+                        ),
+//                    DropdownItem(
+//                        title = stringResource(R.string.rename),
+//                        leadingIcon = null,
+//                        action = {
+//                            // TODO: how to dialog in a sane way
+//                            // mqState.renameQueue()
+//                        },
+//                    ),
+                        DropdownItem(
+                            title = stringResource(
+                                if (isPinned) R.string.mq_pin_queue else R.string.mq_unpin_queue
+                            ),
+                            leadingIcon = null,
+                            action = {
+                                mqState.togglePin()
+                            },
+                        ),
+                        DropdownItem(
+                            title = "DEBUG: Age 2hrs",
+                            leadingIcon = null,
+                            action = {
+                                mqState.age()
+                            },
+                        ),
+                    )
+                )
+            }
+
             if (isEditAllowed && !isActiveQueue) {
                 Icon(
                     imageVector = Icons.Rounded.DragHandle,
@@ -241,6 +297,13 @@ fun MqContent(
     landscape: Boolean,
     onDismiss: (() -> Unit)? = null,
 ) {
+    BackHandler(mqState.expanded || mqState.isDetached()) {
+        if (mqState.isDetached()) {
+            mqState.resetHead()
+        } else if (mqState.expanded) {
+            mqState.toggleExpand()
+        }
+    }
 
     Column(
         modifier = modifier
@@ -325,7 +388,7 @@ fun QueueInfo(
                     horizontalPadding = 0.dp,
                     verticalPadding = 0.dp,
                     isActiveQueue = true,
-                    isInactiveActiveQueue = false,
+                    isHighlightedQueue = mqState.expanded && !mqState.isDetached(),
                     onClick = {
                         if (mqState.isDetached()) {
                             mqState.resetHead()
@@ -398,7 +461,8 @@ fun MqList(
                 index = index,
                 mq = mq,
                 isActiveQueue = false,
-                isInactiveActiveQueue = mq == mqState.detachedQueue,
+                isHighlightedQueue = mq == mqState.detachedQueue,
+                isEditAllowed = mqState.isEditAllowed,
                 onClick = {
                     if (mqState.detachedQueue != mq) {
                         mqState.detach(mq)
@@ -420,6 +484,10 @@ fun ActionBar(
     val isPlaying by mqState.isPlaying.collectAsState()
     val repeatMode by mqState.repeatMode.collectAsState()
     val shuffleModeEnabled by mqState.shuffleModeEnabled.collectAsState()
+
+    BackHandler(mqState.isEditAllowed) {
+        mqState.isEditAllowed = false
+    }
 
     FlowRow(
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -514,30 +582,42 @@ fun ActionBar(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
         ) {
-            val expiry = mqState.getCurrentQueue()?.expiry?.collectAsState(initial = null)
+            val index = -1
+            val mq = mqState.activeQueue
+            val expiry = mq?.expiry?.collectAsState(initial = null)
             val isPinned = expiry == null
             ActionDropdown(
+                enabled = !mqState.isDetached(),
                 actions = listOf(
                     DropdownItem(
                         title = stringResource(R.string.add_to_queue),
                         leadingIcon = null,
-                        action = {},
+                        action = {
+                            mqState.addToQueue(index)
+                        },
                     ),
                     DropdownItem(
                         title = stringResource(R.string.play_next),
                         leadingIcon = null,
-                        action = {},
+                        action = {
+                            mqState.playNext(index)
+                        },
                     ),
                     DropdownItem(
                         title = stringResource(R.string.add_to_playlist),
                         leadingIcon = null,
-                        action = {},
+                        action = {
+                            mqState.addToPlaylist(index)
+                        },
                     ),
-                    DropdownItem(
-                        title = stringResource(R.string.rename),
-                        leadingIcon = null,
-                        action = {},
-                    ),
+//                    DropdownItem(
+//                        title = stringResource(R.string.rename),
+//                        leadingIcon = null,
+//                        action = {
+//                            // TODO: how to dialog in a sane way
+//                            // mqState.renameQueue()
+//                        },
+//                    ),
                     DropdownItem(
                         title = stringResource(
                             if (isPinned) R.string.mq_pin_queue else R.string.mq_unpin_queue
@@ -545,6 +625,13 @@ fun ActionBar(
                         leadingIcon = null,
                         action = {
                             mqState.togglePin()
+                        },
+                    ),
+                    DropdownItem(
+                        title = stringResource(R.string.reorder),
+                        leadingIcon = null,
+                        action = {
+                            mqState.isEditAllowed = true
                         },
                     ),
                     DropdownItem(
@@ -844,6 +931,8 @@ class MqState(
     var inactiveQueues = mutableStateListOf<MultiQueueObject>()
         private set
 
+    var isEditAllowed by mutableStateOf(false)
+
     init {
         instance.addListener(this)
         init()
@@ -955,6 +1044,39 @@ class MqState(
 
     fun toggleShuffleMode() {
         instance.shuffleModeEnabled = !instance.shuffleModeEnabled
+        playlistQueueSheet?.forceUpdate()
+    }
+
+    fun playNext(mqIndex: Int) {
+        instance.getQueueForUi(mqIndex)?.let { mq ->
+            instance.addMediaItems(
+                instance.currentMediaItemIndex + 1,
+                mq.first.zip(mq.second.queue).sortedBy { it.first }.map { it.second },
+            )
+        }
+        if (!isDetached()) {
+            playlistQueueSheet?.forceUpdate()
+        }
+    }
+
+    fun addToQueue(mqIndex: Int) {
+        instance.getQueueForUi(mqIndex)?.let { mq ->
+            instance.addMediaItems(
+                mq.first.zip(mq.second.queue).sortedBy { it.first }.map { it.second },
+            )
+        }
+        if (!isDetached()) {
+            playlistQueueSheet?.forceUpdate()
+        }
+    }
+
+    fun addToPlaylist(mqIndex: Int) {
+//        mainActivity.addToPlaylistDialog(item)
+    }
+
+    fun renameQueue(index: Int, title: String) {
+        instance.renameQueue(index, title)
+        init() // can be more efficient
     }
 
 

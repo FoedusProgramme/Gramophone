@@ -15,6 +15,7 @@ import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.surfaceColorAtElevation
@@ -33,6 +34,7 @@ import androidx.compose.ui.unit.sp
 fun ActionDropdown(
     actions: List<DropdownItem>,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     onDismiss: () -> Unit = {},
     extraContent: @Composable (() -> Unit)? = null,
 ) {
@@ -42,6 +44,7 @@ fun ActionDropdown(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .clickable(
+                enabled = enabled,
                 onClick = {
                     menuExpanded = true
                 }
@@ -52,6 +55,7 @@ fun ActionDropdown(
             Icon(
                 imageVector = Icons.Rounded.MoreVert,
                 contentDescription = null,
+                tint = LocalContentColor.current.copy(if (enabled) 1f else 0.5f),
                 modifier = modifier
                     .padding(4.dp),
             )

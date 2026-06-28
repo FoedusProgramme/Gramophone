@@ -68,7 +68,6 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.Tracks
 import androidx.media3.common.util.Log
-import androidx.media3.exoplayer.source.ShuffleOrder
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionCommand
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
@@ -377,6 +376,7 @@ fun MediaController.getInactiveQueues(): List<MultiQueueObject> =
         MultiQueueList.getList(binder)
     }
 
+// TODO: call without media list
 fun MediaController.getQueue(index: Int = C.INDEX_UNSET): MultiQueueObject? =
     sendCustomCommand(
         SessionCommand(SERVICE_QB_GET_QUEUE_FOR_UI, Bundle.EMPTY).apply {
@@ -387,7 +387,7 @@ fun MediaController.getQueue(index: Int = C.INDEX_UNSET): MultiQueueObject? =
         MultiQueueList.getList(binder).firstOrNull()
     }
 
-fun MediaController.getQueueForUi(index: Int = -1): Pair<MutableList<Int>, MultiQueueObject>? {
+fun MediaController.getQueueForUi(index: Int = C.INDEX_UNSET): Pair<MutableList<Int>, MultiQueueObject>? {
     if (index == -1) {
         return null
     }
@@ -458,6 +458,18 @@ fun MediaController.reorderQueue(from: Int, to: Int): Boolean =
         SessionCommand(SERVICE_QB_REORDER, Bundle.EMPTY).apply {
             customExtras.putInt("from", from)
             customExtras.putInt("to", to)
+        }, Bundle.EMPTY
+    ).get().extras.run {
+        if (containsKey("status"))
+            getBoolean("status")
+        else throw IllegalArgumentException("expected status to be set")
+    }
+
+fun MediaController.renameQueue(index: Int, title: String): Boolean =
+    sendCustomCommand(
+        SessionCommand(SERVICE_QB_DEL, Bundle.EMPTY).apply {
+            customExtras.putInt("index", index)
+            customExtras.putString("title", title)
         }, Bundle.EMPTY
     ).get().extras.run {
         if (containsKey("status"))

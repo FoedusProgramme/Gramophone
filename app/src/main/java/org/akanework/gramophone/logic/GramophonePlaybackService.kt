@@ -181,6 +181,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         const val SERVICE_QB_REORDER = "qb_reorder"
         const val SERVICE_QB_PIN_QUEUE ="qb_pin_queue"
         const val SERVICE_QB_UNPIN_QUEUE ="qb_unpin_queue"
+        const val SERVICE_QB_RENAME_QUEUE ="qb_rename"
 
         const val SERVICE_QB_AGE = "qb_age"
 
@@ -811,6 +812,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         availableSessionCommands.add(SessionCommand(SERVICE_QB_REORDER, Bundle.EMPTY))
         availableSessionCommands.add(SessionCommand(SERVICE_QB_PIN_QUEUE, Bundle.EMPTY))
         availableSessionCommands.add(SessionCommand(SERVICE_QB_UNPIN_QUEUE, Bundle.EMPTY))
+        availableSessionCommands.add(SessionCommand(SERVICE_QB_RENAME_QUEUE, Bundle.EMPTY))
         return builder.setAvailableSessionCommands(availableSessionCommands.build()).build()
     }
 
@@ -1141,6 +1143,27 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                         }
                     }
 
+                    SessionResult(SessionResult.RESULT_SUCCESS).also { res ->
+                        res.extras.putBoolean("status", status)
+                    }
+                }
+
+                SERVICE_QB_RENAME_QUEUE -> {
+                    val index = customCommand.customExtras.getInt("index")
+                    val title = customCommand.customExtras.getString("title")
+
+                    val status = if (title.isNullOrBlank()) {
+                        false
+                    } else if (index == -1) {
+                        if (qb.masterQueues.any { it.title == title }) {
+                            false
+                        } else {
+                            endedWorkaroundPlayer!!.currentTitle = title
+                            true
+                        }
+                    } else  {
+                        qb.renameQueue(index, title)
+                    }
                     SessionResult(SessionResult.RESULT_SUCCESS).also { res ->
                         res.extras.putBoolean("status", status)
                     }

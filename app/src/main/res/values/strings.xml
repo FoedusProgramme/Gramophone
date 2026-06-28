@@ -1288,4 +1288,6 @@ supporting local search. This string is displayed in the search bar when using G
     <!-- Pin this queue so it does not get automatically removed after some period of time -->
     <string name="mq_pin_queue">Pin queue</string>
     <string name="shuffled">%s (shuffled)</string>
+    <!-- Option to enable reordering mode for items in a list -->
+    <string name="reorder">Reorder</string>
 </resources>
