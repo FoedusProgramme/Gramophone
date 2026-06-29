@@ -130,6 +130,9 @@ class GramophoneAlbumArtProvider : ContentProvider() {
                         it.size(size.x, size.y)
                     // The URI is explicitly designed as the place to get high-quality artwork in
                     // MediaMetadata.METADATA_KEY_ALBUM_ART javadoc, so don't default to thumbnail.
+                    // TODO(ASAP): nvm this makes m3ct super laggy, we should split queue and cur
+                    //  metadata by making cur metadata append a query param which we use to fall
+                    //  back to small version here
                     else it
                 }
                 // Memory cache stores Bitmap, not compressed data, so we shouldn't read from

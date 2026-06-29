@@ -1480,6 +1480,8 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                 val items = MediaItemsWithStartPosition(list, startIndex, startPositionMs)
                 val settableFuture = SettableFuture.create<MediaItemsWithStartPosition>()
                 CoroutineScope(Dispatchers.Main).launch {
+                    if (endedWorkaroundPlayer?.nextTitle != null)
+                        throw IllegalStateException("title was found orphaned")
                     endedWorkaroundPlayer?.nextTitle = qt
                     settableFuture.set(items)
                     if (endedWorkaroundPlayer?.nextTitle != null)

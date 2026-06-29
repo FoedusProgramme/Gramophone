@@ -168,7 +168,9 @@ class EndedWorkaroundPlayer(
 
     fun cloneQueue(newTitle: String, newIsPinned: Boolean, original: Boolean) {
         if (currentTitle == null && !exoPlayer.currentTimeline.isEmpty)
-            throw IllegalArgumentException("have media items but current title is null, logic bug")
+            throw IllegalStateException("have media items but current title is null, logic bug")
+        if (nextTitle != null)
+            throw IllegalStateException("title leaked in cloneQueue")
         else if (currentTitle != null && Flags.MQ_PREVIEW) {
             queueBoard.addQueue(
                 currentTitle!!,
@@ -198,8 +200,9 @@ class EndedWorkaroundPlayer(
     ): ListenableFuture<*> {
         if (nextTitle == null)
             throw IllegalArgumentException("setMediaItems called but nextTitle is null, logic bug")
-        cloneQueue(nextTitle!!, newIsPinned = false, original = true)
+        val title = nextTitle!!
         nextTitle = null
+        cloneQueue(title, newIsPinned = false, original = true)
         return super.handleSetMediaItems(mediaItems, startIndex, startPositionMs)
     }
 }
