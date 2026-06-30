@@ -355,6 +355,8 @@ class AudioPreviewActivity : BaseActivity(), View.OnClickListener {
                             val lp = Uri.decode(uri.lastPathSegment)
                             if (lp?.toUri()?.scheme == "file") { // Let's try our luck! Material Files supports this
                                 fileUri = lp.toUri()
+                                if (!fileUri.toFile().canRead())
+                                    fileUri = null // probably .nomedia?
                             } else { // ¯\_(ツ)_/¯
                                 val pfd = try {
                                     contentResolver.openFileDescriptor(uri, "r")
