@@ -75,6 +75,10 @@ object PlaylistSerializer {
     }
 
     private fun read(format: PlaylistFormat, outFile: File): Playlist {
+        outFile.length().let {
+            if (it >= 5L * 1024L * 1024L)
+                throw IllegalArgumentException("The playlist file is too big: ${it / (1024L * 1024L)}MB")
+        }
         return when (format) {
             PlaylistFormat.M3u -> {
                 val extInfRegex = Regex("#EXTINF:(-?\\d+)(?:\\s+([^,]+))?,(.*)")
