@@ -1,0 +1,10 @@
+- Edición de listas de reproducción
+- Canciones favoritas
+- Nueva interfaz de letras con sincronización de palabras (+ análisis de letras SYLT en ID3)
+- Compatibilidad con ReplayGain 2.0
+- Tema oscuro puro
+- Lista blanca de carpetas
+- Decodificador ALAC
+- Velocidad de reproducción
+- Cola y temporizador de apagado rediseñados
+- Se han corregido numerosos fallos y errores

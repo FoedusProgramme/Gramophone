@@ -1,4 +1,4 @@
 - Rediseño del reproductor de archivos
 - Mantener la pantalla encendida al ver las letras
-- Soporte para tarjetas SD en la pestaña Sistema de archivos
-- Corrección de errores
+- Soporte para tarjetas SD en la pestaña del Sistema de archivos
+- Corrección de fallos

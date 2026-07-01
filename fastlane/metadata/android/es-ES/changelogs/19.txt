@@ -1,7 +1,6 @@
-Hotfix. Permite desactivar la información del formato de audio.
-Últimos cambios:
+Hotfix. Permite desactivar la info del formato de audio. Últimos cambios:
 - Mostrar el bitrate en el diálogo de detalles
-- Experimental: nuevo analizador de letras para LRC sincronizado por palabras, TTML y SRT (interfaz próximamente)
+- Experimental: nuevo analizador de letras para LRC sincronizado por palabras, TTML y SRT (IU pronto)
 - Información del formato de audio en la pantalla "Reproduciendo ahora"
 - Actualización automática de la biblioteca
 - Opción "Abrir en Gramophone" desde el reproductor de archivos
