@@ -522,4 +522,7 @@
     <string name="spk_encoding_pcm_24bit_offload">24‐bit (8.24) PCM offload</string>
     <string name="spk_encoding_pcm_20bit">20-bit PCM</string>
     <string name="spk_encoding_pcm_20bit_big_endian">20-bit PCM (big endian)</string>
+    <string name="spk_encoding_dts_hd_ma">DTS-HD Master Audio</string>
+    <string name="settings_replaygain_boost">Boost</string>
+    <string name="d_db">%d dB</string>
 </resources>
