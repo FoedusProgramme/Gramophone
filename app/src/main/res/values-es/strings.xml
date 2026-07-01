@@ -445,4 +445,5 @@
     <string name="clear_queue">Vaciar cola</string>
     <string name="sort_by_artist_year"><![CDATA[Artista -&gt; año]]></string>
     <string name="actions_query_shuffle_everything">mezclar todo</string>
+    <string name="spk_encoding_aptx_adaptive_r4">aptX Adaptive R4</string>
 </resources>
