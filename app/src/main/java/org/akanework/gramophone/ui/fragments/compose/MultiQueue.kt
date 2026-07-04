@@ -225,7 +225,7 @@ fun MqListItem(
             Row(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                if (!isActiveQueue) {
+                if (isEditAllowed || !isActiveQueue) {
                     QueueDropdownMenu(
                         mqState = mqState,
                         mq = mq,
@@ -346,11 +346,15 @@ fun QueueInfo(
                     horizontalPadding = 0.dp,
                     verticalPadding = 0.dp,
                     isActiveQueue = true,
+                    isEditAllowed = mqState.isEditAllowed,
                     isHighlightedQueue = mqState.expanded && !mqState.isDetached(),
                     onClick = {
                         if (mqState.isDetached()) {
                             mqState.resetHead()
                         }
+                    },
+                    onLongClick = {
+                        mqState.isEditAllowed = !mqState.isEditAllowed
                     },
                     modifier = Modifier
                         .fillMaxHeight()
@@ -426,6 +430,9 @@ fun MqList(
                         mqState.detach(mq)
                         // TODO: scroll to when click
                     }
+                },
+                onLongClick = {
+                    mqState.isEditAllowed = !mqState.isEditAllowed
                 },
                 modifier = Modifier
                     .animateItem()
@@ -548,7 +555,7 @@ fun ActionBar(
                     mqState = mqState,
                     mq = mq,
                     isPinned = expiry == null,
-                    enabled = !mqState.isDetached(),
+                    enabled = !mqState.isDetached() && !mqState.isEditAllowed,
                 )
             }
             AnimatedVisibility(mqState.isDetached()) {

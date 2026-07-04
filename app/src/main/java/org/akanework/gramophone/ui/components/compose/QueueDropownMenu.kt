@@ -135,7 +135,7 @@ fun QueueDropdownMenu(
                 },
             ),
             DropdownItem(
-                title = stringResource(R.string.reorder),
+                title = stringResource(R.string.edit_mode),
                 leadingIcon = null,
                 action = {
                     mqState.isEditAllowed = !mqState.isEditAllowed
