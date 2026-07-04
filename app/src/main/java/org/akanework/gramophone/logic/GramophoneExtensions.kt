@@ -84,6 +84,7 @@ import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVIC
 import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QB_GET_QUEUE_FOR_UI
 import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QB_LOAD_QUEUE
 import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QB_PIN_QUEUE
+import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QB_RENAME_QUEUE
 import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QB_REORDER
 import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QB_UNPIN_QUEUE
 import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QUERY_TIMER
@@ -465,11 +466,12 @@ fun MediaController.reorderQueue(from: Int, to: Int): Boolean =
         else throw IllegalArgumentException("expected status to be set")
     }
 
-fun MediaController.renameQueue(index: Int, title: String): Boolean =
+fun MediaController.renameQueue(index: Int, title: String, dryRun: Boolean): Boolean =
     sendCustomCommand(
-        SessionCommand(SERVICE_QB_DEL, Bundle.EMPTY).apply {
+        SessionCommand(SERVICE_QB_RENAME_QUEUE, Bundle.EMPTY).apply {
             customExtras.putInt("index", index)
             customExtras.putString("title", title)
+            customExtras.putBoolean("dryRun", dryRun)
         }, Bundle.EMPTY
     ).get().extras.run {
         if (containsKey("status"))

@@ -1151,6 +1151,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                 SERVICE_QB_RENAME_QUEUE -> {
                     val index = customCommand.customExtras.getInt("index")
                     val title = customCommand.customExtras.getString("title")
+                    val dryRun = customCommand.customExtras.getBoolean("dryRun")
 
                     val status = if (title.isNullOrBlank()) {
                         false
@@ -1158,11 +1159,13 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                         if (qb.masterQueues.any { it.title == title }) {
                             false
                         } else {
-                            endedWorkaroundPlayer!!.currentTitle = title
+                            if (!dryRun) {
+                                endedWorkaroundPlayer!!.currentTitle = title
+                            }
                             true
                         }
                     } else  {
-                        qb.renameQueue(index, title)
+                        qb.renameQueue(index, title, dryRun)
                     }
                     SessionResult(SessionResult.RESULT_SUCCESS).also { res ->
                         res.extras.putBoolean("status", status)

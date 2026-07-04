@@ -288,13 +288,16 @@ class QueueBoard(
         )
     }
 
-    fun renameQueue(index: Int, newName: String): Boolean {
+    fun renameQueue(index: Int, newName: String, dryRun: Boolean): Boolean {
         if (index >= masterQueues.size) return false
-        return renameQueue(masterQueues[index], newName)
+        return renameQueue(masterQueues[index], newName, dryRun)
     }
 
-    fun renameQueue(mq: MultiQueueObject, newName: String): Boolean {
-        if (masterQueues.any { it.title == newName }) {
+    fun renameQueue(mq: MultiQueueObject, newName: String, dryRun: Boolean): Boolean {
+        // TODO(MQ) how to handle isOriginal and i18n bs.
+        // If you rename a queue to "Folder1 (+)" and have a non-original queue named "Folder 1", then you will have 2 queues the same name
+        val plr = player.endedWorkaroundPlayer!!
+        if (plr.currentTitle == newName || masterQueues.any { it.title == newName }) {
             if (QUEUE_DEBUG)
                 Log.d(TAG, "Failed to rename queue to \"$newName\". Already exists")
             return false
@@ -302,12 +305,11 @@ class QueueBoard(
         val found = masterQueues.any { it == mq }
         if (found) {
             val oldIndex = masterQueues.indexOf(mq)
-            masterQueues[oldIndex] = masterQueues[oldIndex].copy(title = newName)
+            if (!dryRun) {
+                masterQueues[oldIndex] = masterQueues[oldIndex].copy(title = newName, isOriginal = true)
+            }
             if (QUEUE_DEBUG)
                 Log.d(TAG, "Successfully renamed queue from \"${mq.title}\" to \"$newName\"")
-            return true
-        } else if (player.endedWorkaroundPlayer?.currentTitle == mq.title) {
-            player.endedWorkaroundPlayer!!.currentTitle = mq.title
             return true
         } else {
             if (QUEUE_DEBUG)
