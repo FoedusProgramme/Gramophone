@@ -165,6 +165,7 @@ class QueueBoard(
                 TAG, "Adding to queue \"$title\". medialist size = ${mediaList.size}. " +
                         "replace/startIndex = $mediaItemIndex"
             )
+        if (mediaList.isEmpty()) throw IllegalArgumentException("Media list cannot be empty")
 
         // Title is (effectively) uid
         masterQueues.removeAll { it.title.trimEnd() == title }

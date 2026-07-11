@@ -50,8 +50,10 @@ import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.stateIn
 import org.akanework.gramophone.R
+import org.akanework.gramophone.logic.deleteQueue
 import org.akanework.gramophone.logic.dpToPx
 import org.akanework.gramophone.logic.getBooleanStrict
+import org.akanework.gramophone.logic.getInactiveQueues
 import org.akanework.gramophone.logic.getQueueForUi
 import org.akanework.gramophone.logic.loadQueue
 import org.akanework.gramophone.logic.replaceAllSupport
@@ -391,6 +393,20 @@ class PlaylistQueueSheet(
             playlist.first.replaceAllSupport { if (it > idx) it - 1 else it }
             instance?.removeMediaItem(idx)
             playlist.second.removeAt(idx)
+
+            // remove queue if empty, dismiss if no queues left
+            if (playlist.first.isEmpty()) {
+                val status = instance?.deleteQueue(-1)
+                if (status != true) throw IllegalStateException("Failed to clear queue")
+                detachedHead.value = true
+                detachedQueue = -1
+
+                val inactiveQueues = instance.getInactiveQueues()
+                if (inactiveQueues.isEmpty()) {
+                    dismiss()
+                }
+            }
+
             notifyItemRemoved(pos)
             if (pos == currentMediaItemIndex) {
                 notifyItemChanged(currentMediaItemIndex!!, true)

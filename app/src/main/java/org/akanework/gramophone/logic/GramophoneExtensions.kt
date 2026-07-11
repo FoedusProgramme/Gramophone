@@ -305,13 +305,17 @@ fun MediaController.setTimer(value: Int, waitUntilSongEnd: Boolean) {
 }
 
 fun MediaController.setMediaItemsSeamlessly(items: List<MediaItem>, position: Int, title: String) {
-    sendCustomCommand(
-        SessionCommand(SERVICE_SET_MEDIA_ITEMS_SEAMLESSLY, Bundle.EMPTY).apply {
-            customExtras.putBinder("items", MediaItemList(items))
-            customExtras.putInt("position", position)
-            customExtras.putString("title", title)
-        }, Bundle.EMPTY
-    )
+    if (currentMediaItem == null) {
+        setMediaItems(items.toMutableList(), position, C.TIME_UNSET)
+    } else {
+        sendCustomCommand(
+            SessionCommand(SERVICE_SET_MEDIA_ITEMS_SEAMLESSLY, Bundle.EMPTY).apply {
+                customExtras.putBinder("items", MediaItemList(items))
+                customExtras.putInt("position", position)
+                customExtras.putString("title", title)
+            }, Bundle.EMPTY
+        )
+    }
 }
 
 inline fun <reified T> MutableList<T>.forEachSupport(skipFirst: Int = 0, operator: (T) -> Unit) {
