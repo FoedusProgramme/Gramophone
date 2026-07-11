@@ -65,8 +65,11 @@ import org.akanework.gramophone.ui.fragments.compose.rememberMqState
 import java.util.LinkedList
 
 // TODO:
-//  shuffle now no longer updates media list
-//
+//  queue menu flickers when queue sheet isnt full height
+//  swipe to remove last song in queue kills queue instead of loading inactive. Does not dismiss sheet when player die
+//  remove last inactive queue shows oh no! and cant collapse list anymore
+//  clear queue button no work as intended
+//  unique(title, isOriginal) for queue title checks. separate (+) indicator. show id for queue
 class PlaylistQueueSheet(
     context: Context, private val activity: MainActivity
 ) : BottomSheetDialog(context), Player.Listener {
