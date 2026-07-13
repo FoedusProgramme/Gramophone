@@ -103,8 +103,8 @@
     <string name="settings_title_bold">粗体标题</string>
     <string name="settings_title_bold_summary">在播放器的标题上使用粗体</string>
     <string name="settings_experimental_settings">实验性</string>
-    <string name="settings_color_accuracy">精确颜色</string>
-    <string name="settings_color_accuracy_summary">提高颜色生成的精确度</string>
+    <string name="settings_color_accuracy">颜色准确度</string>
+    <string name="settings_color_accuracy_summary">提高颜色生成的准确度</string>
     <string name="settings_experimental_settings_summary">测试功能、其他</string>
     <string name="sort_by_add_date">添加日期</string>
     <string name="sort_by_modified_date">修改日期</string>
