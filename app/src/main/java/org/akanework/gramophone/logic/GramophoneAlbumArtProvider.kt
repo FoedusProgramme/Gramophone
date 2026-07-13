@@ -32,6 +32,7 @@ import android.os.Bundle
 import android.os.CancellationSignal
 import android.os.Handler
 import android.os.HandlerThread
+import android.os.MemoryFile
 import android.os.OperationCanceledException
 import android.os.ParcelFileDescriptor
 import android.os.ProxyFileDescriptorCallback
@@ -72,8 +73,10 @@ import okio.buffer
 import okio.sink
 import org.akanework.gramophone.BuildConfig
 import org.akanework.gramophone.logic.utils.CoilArtPipeline
+import org.nift4.mediastorecompat.MediaStoreCompat
 import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.FileDescriptor
 import java.io.IOException
 import java.io.OutputStream
 import kotlin.time.Duration.Companion.milliseconds
@@ -209,10 +212,7 @@ class GramophoneAlbumArtProvider : ContentProvider() {
                         }
                         if (!cfd.isCompleted) {
                             writeDataCommon(cfd, scope, options.context) {
-                                if (it != null) {
-                                    it.sink().buffer().writeAll(src); null
-                                } else
-                                    src.readByteArray()
+                                src.readByteArray()
                             }
                         }
                         // shareable is false to avoid writing dummy to memory cache
@@ -226,13 +226,11 @@ class GramophoneAlbumArtProvider : ContentProvider() {
                     if (!cfd.isCompleted) {
                         launch(start = CoroutineStart.ATOMIC) {
                             writeDataCommon(cfd, scope, context) {
-                                val os = it ?: ByteArrayOutputStream()
+                                val os = ByteArrayOutputStream()
                                 image.toBitmap().compress(Bitmap.CompressFormat.JPEG,
                                     95, os)
-                                if (it != null)
-                                    null
-                                else
-                                    (os as ByteArrayOutputStream).toByteArray()
+                                // Don't recycle as image is in memory cache
+                                os.toByteArray()
                             }
                         }
                     }
@@ -260,43 +258,73 @@ class GramophoneAlbumArtProvider : ContentProvider() {
     @OptIn(InternalCoroutinesApi::class)
     private suspend fun writeDataCommon(cfd: CompletableDeferred<AssetFileDescriptor?>,
                                         scope: CoroutineScope, context: Context,
-                                        callback: (OutputStream?) -> ByteArray?) {
+                                        callback: () -> ByteArray) {
+        currentCoroutineContext().job.ensureActive()
+        val bytes = callback()
+        currentCoroutineContext().job.ensureActive()
+        try {
+            val memoryFile = MemoryFile("${context.packageName}.albumart",
+                bytes.size)
+            val pfd = try {
+                val fd = memoryFile.javaClass.getMethod("getFileDescriptor")
+                    .invoke(memoryFile) as FileDescriptor
+                memoryFile.writeBytes(bytes, 0, 0,
+                    bytes.size)
+                ParcelFileDescriptor.dup(fd)
+            } finally {
+                memoryFile.close() // will close the fd we just dup'ed and un-mmap it
+            }
+            cfd.complete(AssetFileDescriptor(pfd, 0,
+                AssetFileDescriptor.UNKNOWN_LENGTH /* for backward compatibility */))
+            return
+        } catch (e: Exception) {
+            Log.e(TAG, "failed to create ashmem file", e)
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            currentCoroutineContext().job.ensureActive()
-            val bytes = callback(null)!!
-            currentCoroutineContext().job.ensureActive()
             val ht = HandlerThread("pfd_${System.currentTimeMillis()}")
             ht.start()
-            // Specifically ImageDecoder on Android P or later needs a seekable file descriptor
-            val pfd = context.getSystemService<StorageManager>()!!.openProxyFileDescriptor(
-                ParcelFileDescriptor.MODE_READ_ONLY,
-                object : ProxyFileDescriptorCallback() {
-                    override fun onGetSize(): Long {
-                        return bytes.size.toLong()
-                    }
-
-                    override fun onRead(offset: Long, size: Int, data: ByteArray): Int {
-                        val offset = offset.toInt()
-                        var size = size
-                        if (offset + size > bytes.size) {
-                            size = bytes.size - offset
+            val pfd = try {
+                // Specifically ImageDecoder on Android P or later needs a seekable file descriptor
+                context.getSystemService<StorageManager>()!!.openProxyFileDescriptor(
+                    ParcelFileDescriptor.MODE_READ_ONLY,
+                    object : ProxyFileDescriptorCallback() {
+                        override fun onGetSize(): Long {
+                            return bytes.size.toLong()
                         }
-                        System.arraycopy(bytes, offset, data, 0,
-                            size)
-                        return size
-                    }
 
-                    override fun onRelease() {
-                        ht.quitSafely()
-                    }
-                }, Handler(ht.looper)
-            )
-            cfd.complete(
-                AssetFileDescriptor(
-                    pfd, 0, AssetFileDescriptor.UNKNOWN_LENGTH
+                        override fun onRead(offset: Long, size: Int, data: ByteArray): Int {
+                            val offset = offset.toInt()
+                            var size = size
+                            if (offset + size > bytes.size) {
+                                size = bytes.size - offset
+                            }
+                            System.arraycopy(
+                                bytes, offset, data, 0,
+                                size
+                            )
+                            return size
+                        }
+
+                        override fun onRelease() {
+                            ht.quitSafely()
+                        }
+                    }, Handler(ht.looper)
                 )
-            )
-            return
+            } catch (e: Exception) {
+                Log.e(TAG, "failed to create fuse mount", e)
+                null
+            }
+            if (pfd != null) {
+                cfd.complete(
+                    AssetFileDescriptor(
+                        pfd, 0, AssetFileDescriptor.UNKNOWN_LENGTH
+                    )
+                )
+                return
+            } else {
+                ht.quitSafely()
+            }
+            // It would be pretty weird for both ashmem and FUSE to fail, but let's try pipes.
         }
         val pipe = ParcelFileDescriptor.createPipe()
         cfd.complete(
@@ -319,7 +347,7 @@ class GramophoneAlbumArtProvider : ContentProvider() {
                             // only check for cancel here to ensure close
                             ensureActive()
                             try {
-                                callback(os)
+                                os.write(bytes)
                             } catch (e: Exception) {
                                 try {
                                     ensureActive()
