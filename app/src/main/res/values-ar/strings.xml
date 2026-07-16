@@ -254,16 +254,8 @@
     <string name="playlist_picker_activity">اختر قائمة تشغيل</string>
     <string name="discard_changes_msg">هل تريد حقاً أن تتجاهل تغيراتك لقائمة التشغيل \"%s\"؟</string>
     <string name="home_menu_quick_refresh">إعادة تحميل سريعة</string>
-    <string name="tempo_pitch_value"></string>
     <string name="spk_channel_out_quad">Quad</string>
-    <string name="spk_channel_invalid"></string>
-    <string name="spk_encoding_mp3"></string>
-    <string name="spk_encoding_aac_lc"></string>
-    <string name="spk_encoding_aac_he_v1"></string>
-    <string name="spk_encoding_aac_he_v2"></string>
-    <string name="spk_encoding_opus"></string>
     <string name="device_type_usb_device">جهاز USB</string>
-    <string name="device_type_hdmi"></string>
     <string name="open_in_gramophone">فتح في چراموفون</string>
     <string name="cannot_find_file">لا يمكن العثور على هذا الملف</string>
     <string name="enter_msg_for_dev_here">أرسل رسالة إلى المطور هنا</string>
