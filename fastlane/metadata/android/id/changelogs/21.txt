@@ -1,0 +1,10 @@
+- Edit playlist
+- Lagu favorit
+- UI lirik baru dengan lirik yang disinkronisasikan (+ mengurai lirik ID3 SYLT)
+- Support ReplayGain 2.0
+- Tema hitam pekat
+- Daftar putih folder
+- Dekoder ALAC
+- Kecepatan pemutaran
+- Antrian dan pengatur waktu tidur yang didesain ulang
+- Memperbaiki banyak crash dan bug
