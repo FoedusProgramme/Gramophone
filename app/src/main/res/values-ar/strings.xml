@@ -174,7 +174,7 @@
     <string name="remove">أزِل</string>
     <string name="sort_by_file_path">مسار الملف</string>
     <string name="no">لا</string>
-    <string name="sort_by_album_artist">فنّان الألبوم -&gt; العنوان</string>
+    <string name="sort_by_album_artist">فنّان الألبوم -> العنوان</string>
     <string name="tab_order">عدّل ترتيب التبوِيبات</string>
     <string name="skip_previous">تخطَّ للفائت</string>
     <string name="settings_preference_category_home">الرئيسية</string>
