@@ -512,4 +512,5 @@
     <string name="mq_unpin_queue">取消固定队列</string>
     <string name="mq_pin_queue">固定队列</string>
     <string name="shuffled">%s（随机）</string>
+    <string name="loading_playlists">正在加载播放列表…</string>
 </resources>
