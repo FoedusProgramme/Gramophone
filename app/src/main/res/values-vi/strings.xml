@@ -509,4 +509,18 @@
     <string name="settings_replaygain_no_rg_amp">Attenuation (no RG)</string>
     <string name="settings_replaygain_boost">Boost</string>
     <string name="d_db">%d dB</string>
+    <string name="mq_pin_queue"></string>
+    <string name="crash_phone_model" translatable="false"></string>
+    <string name="upper_folder" translatable="false"></string>
+    <string name="crash_time" translatable="false"></string>
+    <string name="crash_sdk_level" translatable="false"></string>
+    <string name="crash_gramophone_version" translatable="false"></string>
+    <string name="shuffled"></string>
+    <string name="mq_unpin_queue"></string>
+    <string name="default_time" translatable="false"></string>
+    <string name="loading_playlists"></string>
+    <string name="artist_time" translatable="false"></string>
+    <string name="crash_thread" translatable="false"></string>
+    <string name="crash_phone_brand" translatable="false"></string>
+    <string name="crash_rtype" translatable="false"></string>
 </resources>
