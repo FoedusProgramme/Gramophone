@@ -544,4 +544,13 @@
     <string name="spk_channel_out_5point1"></string>
     <string name="spk_channel_out_5point1point2"></string>
     <string name="spk_channel_out_top_center"></string>
+    <string name="spk_encoding_aac_he_v2"></string>
+    <string name="spk_channel_invalid"></string>
+    <string name="device_type_hdmi"></string>
+    <string name="spk_encoding_mp3"></string>
+    <string name="spk_encoding_opus"></string>
+    <string name="tempo_pitch_value"></string>
+    <string name="spk_channel_out_quad"></string>
+    <string name="spk_encoding_aac_he_v1"></string>
+    <string name="spk_encoding_aac_lc"></string>
 </resources>
