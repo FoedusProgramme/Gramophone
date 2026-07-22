@@ -45,8 +45,7 @@
     <string name="dialog_mime">MIME-тип</string>
     <string name="dialog_year">Рік</string>
     <string name="dialog_artist">Виконавець</string>
-    <string name="opensource_info">З відкритим кодом під ліцензією GPL-3.0
-\nАвторські права %s</string>
+    <string name="opensource_info">З відкритим кодом під ліцензією GPL-3.0 \nАвторські права %s</string>
     <string name="playlist_favourite">Вибране</string>
     <string name="home_menu_settings">Налаштування</string>
     <string name="home_menu_refresh">Пересканувати</string>
@@ -485,4 +484,5 @@
     <string name="actions_query_start_random_music">увімкнути випадкову музику</string>
     <string name="actions_query_start_random_songs">запускати випадкові пісні</string>
     <string name="actions_query_shuffle_specific">перетасувати $item_name</string>
+    <string name="gramophone_crashed" translatable="false"></string>
 </resources>
