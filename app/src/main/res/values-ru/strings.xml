@@ -87,8 +87,7 @@
     <string name="settings_default_progress_bar">Полоса прогресса по умолчанию</string>
     <string name="check_for_updates">Следите за обновлениями в нашем канале!</string>
     <string name="settings_content_based_color_summary">Включает генерацию цветов на основе обложки альбома</string>
-    <string name="opensource_info">С открытым исходным кодом под лицензией GPL-3.0
-\nАвторские права %s</string>
+    <string name="opensource_info">С открытым исходным кодом под лицензией GPL-3.0 \nАвторские права %s</string>
     <string name="playlist_favourite">Избранные</string>
     <string name="now_playing">Сейчас играет</string>
     <string name="settings_default_progress_bar_summary">Включает полосу прогресса в стиле Material</string>
