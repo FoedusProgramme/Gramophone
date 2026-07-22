@@ -444,7 +444,7 @@
     <string name="settings_stop_on_dismiss_summary">ஆப்ச் டாச்க் சமீபத்தியவற்றிலிருந்து நிராகரிக்கப்படும்போது பிளேபேக்கை நிறுத்தவும்</string>
     <string name="compact_grid">கட்டம் (கச்சிதமான)</string>
     <string name="sort_by_album_year">ஆல்பம் ஆண்டு</string>
-    <string name="sort_by_album_artist_year"><![CDATA[ஆல்பம் கலைஞர் -> ஆண்டு]]></string>
+    <string name="sort_by_album_artist_year"><![CDATA[ஆல்பம் கலைஞர் -&gt; ஆண்டு]]></string>
     <string name="forbidden_symbol_error">பெயரில் தவறான எழுத்து</string>
     <string name="translators">மொழிபெயர்ப்பாளர்கள்</string>
     <string name="settings_replaygain">மீண்டும் விளையாடு</string>
@@ -464,7 +464,7 @@
     <string name="settings_replaygain_no_rg_amp_desc">ReplayGain குறிச்சொற்கள் இல்லாத உரத்த பாடல்களுக்கு ஒலியளவைக் குறைக்கவும்</string>
     <string name="settings_replaygain_preamp_desc">ReplayGain குறிச்சொற்கள் மூலம் பாடல்களின் அளவை அதிகரிக்கவும் அல்லது குறைக்கவும். கிளிப்பிங் தடுப்பு காரணமாக அதிக மதிப்புகள் இயக்கவியல் இழப்பை ஏற்படுத்தலாம்.</string>
     <string name="settings_replaygain_mode_desc">\"அறிவுள்ள\" ஒரு ஆல்பத்தில் இருந்து தொடர்ச்சியாக பாடல்களை இயக்கும் போது மட்டுமே ஆல்பத்தின் இயக்கவியலை தானாகவே பாதுகாக்கிறது.</string>
-    <string name="sort_by_artist_year"><![CDATA[கலைஞர் -> ஆண்டு]]></string>
+    <string name="sort_by_artist_year"><![CDATA[கலைஞர் -&gt; ஆண்டு]]></string>
     <string name="clear_queue">தெளிவான வரிசை</string>
     <string name="actions_query_shuffle_all_songs">அனைத்து பாடல்களையும் கலக்கவும்</string>
     <string name="actions_query_shuffle_everything">எல்லாவற்றையும் கலக்கவும்</string>
