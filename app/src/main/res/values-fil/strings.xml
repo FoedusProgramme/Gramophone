@@ -525,4 +525,5 @@
     <string name="spk_channel_out_top_center"></string>
     <string name="play_all"></string>
     <string name="dialog_lyrics"></string>
+    <string name="app_name"></string>
 </resources>
