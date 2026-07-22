@@ -518,4 +518,5 @@
     <string name="mq_unpin_queue">Lõpeta esitusjärjekorra esiletõstmine</string>
     <string name="mq_pin_queue">Tõsta esitusjärjekord esile</string>
     <string name="shuffled">%s (segatud järjestus)</string>
+    <string name="loading_playlists">Laadin esitusloendeid...</string>
 </resources>
