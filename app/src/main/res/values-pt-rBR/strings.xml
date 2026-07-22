@@ -54,8 +54,7 @@
     <string name="dialog_mime">Tipo de mídia digital (MIME type)</string>
     <string name="dialog_year">Ano</string>
     <string name="dialog_artist">Artista</string>
-    <string name="opensource_info">Open-sourced under GPL-3.0
-\nCopyright %s</string>
+    <string name="opensource_info">Open-sourced under GPL-3.0 \nCopyright %s</string>
     <string name="playlist_favourite">Favorito</string>
     <string name="settings_player_options">Áudio</string>
     <string name="home_menu_settings">Configurações</string>
@@ -533,4 +532,5 @@
     <string name="edit_favorites_failed"></string>
     <string name="restore_edits"></string>
     <string name="settings_replaygain_drc_desc"></string>
+    <string name="gramophone_crashed" translatable="false"></string>
 </resources>
