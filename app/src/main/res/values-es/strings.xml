@@ -40,8 +40,7 @@
     <string name="unknown_playlist">Lista de reproducción desconocida</string>
     <string name="dialog_year">Año</string>
     <string name="dialog_artist">Artista</string>
-    <string name="opensource_info">Bajo licencia GPL-3.0
-\nCopyright %s</string>
+    <string name="opensource_info">Bajo licencia GPL-3.0 \nCopyright %s</string>
     <string name="playlist_favourite">Favoritos</string>
     <string name="home_menu_settings">Ajustes</string>
     <string name="home_menu_refresh">Refrescar</string>
@@ -140,8 +139,8 @@
     <string name="settings_category_filters">Filtros</string>
     <string name="settings_category_misc">Varias</string>
     <string name="settings_category_full_player">Pantalla de reproducción</string>
-    <string name="deny_images"><![CDATA[Por favor, quite el permiso a "Fotos y vídeos"]]></string>
-    <string name="grant_images"><![CDATA[Conceda permiso para "Fotos y vídeos"]]></string>
+    <string name="deny_images"><![CDATA[Por favor, quite el permiso a Fotos y vídeos]]></string>
+    <string name="grant_images"><![CDATA[Conceda permiso para Fotos y vídeos]]></string>
     <string name="settings_trim_lyrics">Eliminar los espacios alrededor de las letras</string>
     <string name="crash_clipboard">Registro de fallos copiado al portapapeles</string>
     <string name="timer">Temporizador</string>
@@ -154,7 +153,7 @@
     <string name="album_covers_enhance_desc">Mostrar portadas de canciones de alta calidad y permite que la portada del álbum y la canción sean diferentes (requiere acceso a las fotos)</string>
     <string name="sort_by_release_date">Fecha de lanzamiento</string>
     <string name="timer_expiry">El temporizador de apagado pausará la música en %s</string>
-    <string name="grant_audio"><![CDATA[Por favor, permite los permisos "Música y audio"]]></string>
+    <string name="grant_audio"><![CDATA[Por favor, permite los permisos Música y audio]]></string>
     <string name="seekbar">Barra de búsqueda</string>
     <string name="divider">Divisor</string>
     <string name="back">Atrás</string>
