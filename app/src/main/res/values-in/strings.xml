@@ -513,4 +513,15 @@
     <string name="shuffled">%s (diacak)</string>
     <string name="mq_unpin_queue">Lepaskan penandaan antrian ini dan izinkan agar antrian tersebut dihapus setelah jangka waktu tertentu</string>
     <string name="gramophone_crashed" translatable="false"></string>
+    <string name="crash_phone_model" translatable="false"></string>
+    <string name="upper_folder" translatable="false"></string>
+    <string name="crash_time" translatable="false"></string>
+    <string name="crash_sdk_level" translatable="false"></string>
+    <string name="crash_gramophone_version" translatable="false"></string>
+    <string name="default_time" translatable="false"></string>
+    <string name="loading_playlists"></string>
+    <string name="artist_time" translatable="false"></string>
+    <string name="crash_thread" translatable="false"></string>
+    <string name="crash_phone_brand" translatable="false"></string>
+    <string name="crash_rtype" translatable="false"></string>
 </resources>
