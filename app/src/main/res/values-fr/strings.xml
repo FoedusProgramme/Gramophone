@@ -284,7 +284,7 @@
     <string name="send_email">Envoyer un email</string>
     <string name="send_email_manually">Veuillez envoyer le journal à nift4dev@gmail.com - impossible de trouver une application d\'email</string>
     <string name="mix_port_flag_none">Aucun</string>
-    <string name="audio_not_initialized">Le système de lecture audio n\'a pas été initialisé. Essaye de jouer quelque chose !</string>
+    <string name="audio_not_initialized">Le système de lecture audio n\'a pas été initialisé. Essaye de jouer quelque chose !</string>
     <string name="mix_port_flag_spatializer">Son spatial</string>
     <string name="mix_port_flag_ultrasound">Ultrason</string>
     <string name="gramophone_crashed_explainer2">Gramophone a crashé :(\n\nMerci de m\'envoyer un rapport de bug pour que les problèmes comme celui qui a conduit à ce crash puissent être résolu !\n\nChaque situation est aussi unique que la musique, sans votre aide il est probable que ce bug ne sera <b>PAS</b> résolu !</string>
