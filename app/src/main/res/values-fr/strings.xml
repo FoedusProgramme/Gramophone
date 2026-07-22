@@ -201,7 +201,7 @@
     <string name="spk_encoding_ac4">AC-4</string>
     <string name="spk_encoding_dts">DTS</string>
     <string name="open_in_gramophone">Ouvrir dans Gramophone</string>
-    <string name="delete_really">Voulez-vous réellement supprimer \"%s\" ? Cette action est irréversible.</string>
+    <string name="delete_really">Voulez-vous réellement supprimer \"%s\" ? Cette action est irréversible.</string>
     <string name="spk_channel_out_mono">Mono</string>
     <string name="spk_channel_out_stereo">Stéréo</string>
     <string name="spk_channel_out_quad">Quadriphonique</string>
@@ -281,7 +281,7 @@
     <string name="bitrate_format">%1$d kbps</string>
     <string name="bitrate_unknown">Bitrate inconnu</string>
     <string name="settings_open_source_licenses">Licenses open source</string>
-    <string name="oh_no">Oh non !</string>
+    <string name="oh_no">Oh non !</string>
     <string name="send_email">Envoyer un email</string>
     <string name="send_email_manually">Veuillez envoyer le journal à nift4dev@gmail.com - impossible de trouver une application d\'email</string>
     <string name="mix_port_flag_none">Aucun</string>
