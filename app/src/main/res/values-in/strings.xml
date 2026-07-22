@@ -512,4 +512,5 @@
     <string name="mq_pin_queue">Sematkan antrian ini agar tidak dihapus secara otomatis setelah beberapa waktu</string>
     <string name="shuffled">%s (diacak)</string>
     <string name="mq_unpin_queue">Lepaskan penandaan antrian ini dan izinkan agar antrian tersebut dihapus setelah jangka waktu tertentu</string>
+    <string name="gramophone_crashed" translatable="false"></string>
 </resources>
