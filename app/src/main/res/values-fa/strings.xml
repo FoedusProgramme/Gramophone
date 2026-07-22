@@ -518,16 +518,4 @@
     <string name="mq_pin_queue">سنجاق کردن صف</string>
     <string name="shuffled">%s (به‌هم ریخته)</string>
     <string name="whitelist_and_blacklist">اگر هیچ پوشه‌ای در فهرست سفید انتخاب نشده بود، همه پوشه‌ها مجاز خواهند بود.\n\nفهرست سفید و فهرست سیاه با هم اعمال می‌شوند و فهرست سیاه اولویت دارد. برای نمونه می‌توانید پوشه‌ای را در فهرست سفید مجاز کنید و یکی از زیرپوشه‌های آن را در فهرست سیاه رد کنید.</string>
-    <string name="crash_phone_model" translatable="false"></string>
-    <string name="upper_folder" translatable="false"></string>
-    <string name="crash_time" translatable="false"></string>
-    <string name="crash_sdk_level" translatable="false"></string>
-    <string name="crash_gramophone_version" translatable="false"></string>
-    <string name="gramophone_crashed" translatable="false"></string>
-    <string name="default_time" translatable="false"></string>
-    <string name="loading_playlists"></string>
-    <string name="artist_time" translatable="false"></string>
-    <string name="crash_thread" translatable="false"></string>
-    <string name="crash_phone_brand" translatable="false"></string>
-    <string name="crash_rtype" translatable="false"></string>
 </resources>

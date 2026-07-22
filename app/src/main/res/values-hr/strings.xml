@@ -512,25 +512,4 @@
     <string name="timer_eos">Pričekaj da pjesma završi</string>
     <string name="timer_end_of_this_song">Kraj ove pjesme</string>
     <string name="other">Prilagođeno</string>
-    <string name="mq_pin_queue"></string>
-    <string name="crash_phone_model" translatable="false"></string>
-    <string name="upper_folder" translatable="false"></string>
-    <string name="crash_time" translatable="false"></string>
-    <string name="crash_sdk_level" translatable="false"></string>
-    <string name="crash_gramophone_version" translatable="false"></string>
-    <string name="gramophone_crashed" translatable="false"></string>
-    <string name="unset"></string>
-    <string name="shuffled"></string>
-    <string name="mq_unpin_queue"></string>
-    <string name="settings_mq_enabled"></string>
-    <string name="default_time" translatable="false"></string>
-    <plurals name="minutes">
-    </plurals>
-    <string name="timer_hint"></string>
-    <string name="loading_playlists"></string>
-    <string name="artist_time" translatable="false"></string>
-    <string name="crash_thread" translatable="false"></string>
-    <string name="crash_phone_brand" translatable="false"></string>
-    <string name="crash_rtype" translatable="false"></string>
-    <string name="whitelist_and_blacklist"></string>
 </resources>

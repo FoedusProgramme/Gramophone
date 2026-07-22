@@ -513,15 +513,4 @@
     <string name="mq_pin_queue">固定队列</string>
     <string name="shuffled">%s（随机）</string>
     <string name="loading_playlists">正在加载播放列表…</string>
-    <string name="crash_phone_model" translatable="false"></string>
-    <string name="upper_folder" translatable="false"></string>
-    <string name="crash_time" translatable="false"></string>
-    <string name="crash_sdk_level" translatable="false"></string>
-    <string name="crash_gramophone_version" translatable="false"></string>
-    <string name="gramophone_crashed" translatable="false"></string>
-    <string name="default_time" translatable="false"></string>
-    <string name="artist_time" translatable="false"></string>
-    <string name="crash_thread" translatable="false"></string>
-    <string name="crash_phone_brand" translatable="false"></string>
-    <string name="crash_rtype" translatable="false"></string>
 </resources>

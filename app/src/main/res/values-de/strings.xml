@@ -497,38 +497,4 @@
     <string name="settings_mq_enabled">Mehrere Warteschlangen</string>
     <string name="settings_pure_dark">Schwarzes Farbschema</string>
     <string name="settings_replaygain_drc_desc">Kompressor benutzen, um Übersteuerung zu vermeiden (empfohlen). Ist diese Funktion deaktiviert, wird stattdessen die Lautstärke reduziert, was den Normalisierungseffekt zunichtemacht.</string>
-    <string name="settings_stop_on_dismiss"></string>
-    <string name="actions_query_shuffle_all_songs"></string>
-    <string name="mq_pin_queue"></string>
-    <string name="crash_phone_model" translatable="false"></string>
-    <string name="settings_stop_on_dismiss_summary"></string>
-    <string name="upper_folder" translatable="false"></string>
-    <string name="crash_time" translatable="false"></string>
-    <string name="crash_sdk_level" translatable="false"></string>
-    <string name="settings_replaygain_mode_desc"></string>
-    <string name="settings_replaygain_preamp_desc"></string>
-    <string name="actions_query_play_randomly"></string>
-    <string name="crash_gramophone_version" translatable="false"></string>
-    <string name="album_gain"></string>
-    <string name="actions_query_play_random_songs"></string>
-    <string name="gramophone_crashed" translatable="false"></string>
-    <string name="search_query"></string>
-    <string name="settings_pure_dark_summary"></string>
-    <string name="shuffled"></string>
-    <string name="mq_unpin_queue"></string>
-    <string name="actions_query_shuffle_specific"></string>
-    <string name="actions_query_start_random_music"></string>
-    <string name="default_time" translatable="false"></string>
-    <string name="smart"></string>
-    <string name="loading_playlists"></string>
-    <string name="track_gain"></string>
-    <string name="actions_query_play_random_stuff"></string>
-    <string name="settings_replaygain_boost"></string>
-    <string name="artist_time" translatable="false"></string>
-    <string name="actions_query_start_random_songs"></string>
-    <string name="settings_replaygain_boost_desc" formatted="false"></string>
-    <string name="crash_thread" translatable="false"></string>
-    <string name="crash_phone_brand" translatable="false"></string>
-    <string name="crash_rtype" translatable="false"></string>
-    <string name="actions_query_shuffle_everything"></string>
 </resources>
