@@ -286,7 +286,7 @@
     <string name="spk_encoding_ac4">AC-4</string>
     <string name="spk_channel_out_front_center">Frontal Central</string>
     <string name="spk_channel_out_front_left_of_center">Frontal izquierdo del centro</string>
-    <string name="spk_encoding_wma_pro">WMA Pro</string>
+    <string name="spk_encoding_wma_pro">WMA Pro</string>
     <string name="spk_encoding_flac">FLAC</string>
     <string name="spk_encoding_wma">WMA</string>
     <string name="spk_encoding_aac_adts">AAC en ADTS</string>
@@ -312,11 +312,11 @@
     <string name="mix_port_flag_voip_rx">VoIP RX</string>
     <string name="spk_encoding_iec61937">IEC 61937</string>
     <string name="spk_encoding_evrc">EVRC</string>
-    <string name="spk_encoding_evrcwb">EVRC WB</string>
+    <string name="spk_encoding_evrcwb">EVRC WB</string>
     <string name="spk_encoding_evrcb">EVRC-B</string>
-    <string name="spk_encoding_evrcnw">EVRC NW</string>
+    <string name="spk_encoding_evrcnw">EVRC NW</string>
     <string name="spk_encoding_aac_adif">AAC ADIF</string>
-    <string name="spk_encoding_aptx_hd">aptX HD</string>
+    <string name="spk_encoding_aptx_hd">aptX HD</string>
     <string name="spk_encoding_mat">Dolby MAT</string>
     <string name="spk_encoding_aac_latm">AAC en LATM</string>
     <string name="spk_encoding_celt">CELT</string>
@@ -337,9 +337,9 @@
     <string name="spk_encoding_aac_adts_eld">AAC-ELD en ADTS</string>
     <string name="spk_encoding_aac_latm_he_v1">HE-AAC v1 en LATM</string>
     <string name="spk_encoding_aac_latm_he_v2">HE-AAC v2 en LATM</string>
-    <string name="spk_encoding_mat_1_0">Dolby MAT 1.0</string>
-    <string name="spk_encoding_mat_2_0">Dolby MAT 2.0</string>
-    <string name="spk_encoding_mat_2_1">Dolby MAT 2.1</string>
+    <string name="spk_encoding_mat_1_0">Dolby MAT 1.0</string>
+    <string name="spk_encoding_mat_2_0">Dolby MAT 2.0</string>
+    <string name="spk_encoding_mat_2_1">Dolby MAT 2.1</string>
     <string name="spk_encoding_unknown">Formato desconocido %s</string>
     <string name="spk_encoding_unknown_d">Formato desconocido %d</string>
     <string name="email_clipboard">Dirección de correo y texto copiado al portapapeles</string>
