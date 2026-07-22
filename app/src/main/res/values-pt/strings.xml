@@ -95,8 +95,7 @@
     <string name="list">Lista</string>
     <string name="layout">Exibição</string>
     <string name="settings_default_progress_bar">Barra de progresso padrão</string>
-    <string name="opensource_info">Open-sourced under GPL-3.0
-\nCopyright %s</string>
+    <string name="opensource_info">Open-sourced under GPL-3.0 \nCopyright %s</string>
     <string name="playlist_favourite">Favoritos</string>
     <string name="dialog_mime">Tipo de média digital (MIME type)</string>
     <string name="dialog_duration">Duração</string>
@@ -455,4 +454,5 @@
     <string name="clear_queue">Limpar fila</string>
     <string name="favorite">Favorito</string>
     <string name="settings_whitelist">Lista branca</string>
+    <string name="gramophone_crashed" translatable="false"></string>
 </resources>
