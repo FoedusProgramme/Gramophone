@@ -524,4 +524,5 @@
     <string name="mq_unpin_queue">Treu la fixació de la cua</string>
     <string name="mq_pin_queue">Fixa la cua</string>
     <string name="shuffled">%s (barrejat)</string>
+    <string name="loading_playlists">S\'estan carregant les llistes de reproducció...</string>
 </resources>
