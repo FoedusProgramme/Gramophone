@@ -435,7 +435,7 @@
     <string name="settings_stop_on_dismiss">توقف در هنگام رد کردن</string>
     <string name="settings_stop_on_dismiss_summary">توقف پخش وقتی که برنامه از موارد اخیر برداشته می‌شود</string>
     <string name="spk_encoding_pcm_20bit_big_endian">PCM ‫۲۰-بیت ‬(big endian)</string>
-    <string name="sort_by_album_artist_year"><![CDATA[هنرمند آلبوم -> سال]]></string>
+    <string name="sort_by_album_artist_year"><![CDATA[هنرمند آلبوم -&gt; سال]]></string>
     <string name="compact_grid">شبکه‌ای (جمع و جور)</string>
     <string name="sort_by_album_year">سال آلبوم</string>
     <string name="forbidden_symbol_error">کاراکتر نامعتبر در نام</string>
