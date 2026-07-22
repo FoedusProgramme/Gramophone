@@ -525,4 +525,5 @@
     <string name="sort_by_modified_date"></string>
     <string name="settings_lyrics_ui"></string>
     <string name="settings_customization_summary"></string>
+    <string name="app_name"></string>
 </resources>
