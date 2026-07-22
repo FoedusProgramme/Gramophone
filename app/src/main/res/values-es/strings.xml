@@ -525,4 +525,5 @@
     <string name="spk_encoding_dts_hd_ma">DTS-HD Master Audio</string>
     <string name="settings_replaygain_boost">Boost</string>
     <string name="d_db">%d dB</string>
+    <string name="gramophone_crashed" translatable="false"></string>
 </resources>
