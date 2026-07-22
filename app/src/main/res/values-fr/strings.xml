@@ -13,7 +13,7 @@
     <string name="settings_app_theme">Thème de l’appli</string>
     <string name="compact_list">Liste (compacte)</string>
     <string name="dialog_album_artist">Artiste de l’album</string>
-    <string name="equalizer_not_found">Égaliseur introuvable !</string>
+    <string name="equalizer_not_found">Égaliseur introuvable !</string>
     <plurals name="items">
         <item quantity="one">%d élément</item>
         <item quantity="many">%d éléments</item>
@@ -78,8 +78,7 @@
     <string name="unknown_year">Année inconnue</string>
     <string name="unknown_version">Version inconnue</string>
     <string name="unknown_artist">Artiste inconnu</string>
-    <string name="opensource_info">Code source ouvert sous la licence GPL-3.0
-\nCopyright %s</string>
+    <string name="opensource_info">Code source ouvert sous la licence GPL-3.0 \nCopyright %s</string>
     <string name="playlist_favourite">Favori</string>
     <string name="settings_default_progress_bar">Barre de progression par défaut</string>
     <string name="now_playing">Lecture en cours</string>
@@ -139,7 +138,7 @@
     <string name="settings_category_filters">Filtres</string>
     <string name="settings_category_misc">Autres</string>
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
-    <string name="deny_images"><![CDATA[Veuillez refuser l\'autorisation \"Photos and videos\" ]]></string>
+    <string name="deny_images"><![CDATA[Veuillez refuser l\'autorisation \"Photos and videos\"]]></string>
     <string name="grant_images"><![CDATA[Veuillez accorder l\'autorisation \"Photos and videos\"]]></string>
     <string name="crash_clipboard">Journal de plantage copié</string>
     <string name="settings_category_full_player">Lecteur complet</string>
@@ -529,4 +528,5 @@
     <string name="restore_edits"></string>
     <string name="settings_replaygain_drc_desc"></string>
     <string name="sort_by_album_artist_year"><![CDATA[]]></string>
+    <string name="gramophone_crashed" translatable="false"></string>
 </resources>
