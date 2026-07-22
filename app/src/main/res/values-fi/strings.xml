@@ -525,4 +525,5 @@
     <string name="settings_replaygain_drc_desc"></string>
     <string name="sort_by_album_artist_year"><![CDATA[]]></string>
     <string name="spk_channel_out_5point1point2"></string>
+    <string name="app_name"></string>
 </resources>
