@@ -71,8 +71,7 @@
     <string name="compact_list">リスト (コンパクト)</string>
     <string name="check_for_updates">アップデートはチャンネルをチェックしてください！</string>
     <string name="settings_default_progress_bar">プログレスバー</string>
-    <string name="opensource_info">Open-sourced under GPL-3.0
-\nCopyright %s</string>
+    <string name="opensource_info">Open-sourced under GPL-3.0 \nCopyright %s</string>
     <string name="settings_default_progress_bar_summary">マテリアルスタイルのプログレスバーを有効化します</string>
     <string name="now_playing">再生中</string>
     <string name="settings_content_based_color">コンテンツベースのカラー生成</string>
@@ -433,7 +432,7 @@
     <string name="settings_stop_on_dismiss_summary">最近使ったアプリからアプリタスクが消去されたときに再生を停止します</string>
     <string name="compact_grid">グリッド (コンパクト)</string>
     <string name="sort_by_album_year">アルバムの年</string>
-    <string name="sort_by_album_artist_year"><![CDATA[アルバムアーティスト -> 年]]></string>
+    <string name="sort_by_album_artist_year"><![CDATA[アルバムアーティスト -&gt; 年]]></string>
     <string name="forbidden_symbol_error">名前に無効な文字が含まれています</string>
     <string name="translators">翻訳者</string>
     <string name="settings_replaygain">リプレイゲイン</string>
@@ -458,7 +457,7 @@
     <string name="d_db">%d dB</string>
     <string name="settings_replaygain_no_rg_amp_desc">リプレイゲインタグのない大音量な曲の音量を下げます</string>
     <string name="settings_replaygain_mode_desc">「スマート」は、アルバムの曲を連続して再生する場合にのみ、アルバムのダイナミクスを自動的に維持します。</string>
-    <string name="sort_by_artist_year"><![CDATA[アーティスト -> 年]]></string>
+    <string name="sort_by_artist_year"><![CDATA[アーティスト -&gt; 年]]></string>
     <string name="clear_queue">キューを消去</string>
     <string name="settings_replaygain_preamp_desc">リプレイゲインタグ付きの曲の音量を上下できます。値を大きくすると、クリッピング防止のためダイナミクスが失われる可能性があります。</string>
     <string name="settings_replaygain_boost_desc">"「ブースト」は、リプレイゲインとその他の音楽の両方をデバイスで設定されている音量よりも高い音量で出力します (デバイスの音量が 100% に近い場合、ブーストは音量を上げません) 。ブーストを使用すると、ゲームなどの他のアプリと同程度の音量で音楽をお楽しみいただけます。この機能は試験的なものであり、外部のイコライザーアプリと干渉する可能性がありますのでご注意ください。ブーストは Bluetooth ヘッドホンでは動作しません。音量に関する問題が発生した場合は、ブーストを 0dB に設定して無効にしてください。 "</string>
@@ -470,4 +469,5 @@
     <string name="actions_query_start_random_music">音楽をランダムで開始</string>
     <string name="actions_query_start_random_songs">曲をランダムで開始</string>
     <string name="actions_query_shuffle_specific">$item_name をシャッフル</string>
+    <string name="gramophone_crashed" translatable="false"></string>
 </resources>
