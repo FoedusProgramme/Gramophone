@@ -521,4 +521,8 @@
     <string name="sort_by_album_artist_year"><![CDATA[]]></string>
     <string name="spk_channel_out_5point1point2"></string>
     <string name="spk_channel_out_top_center"></string>
+    <string name="settings_library_summary"></string>
+    <string name="sort_by_modified_date"></string>
+    <string name="settings_lyrics_ui"></string>
+    <string name="settings_customization_summary"></string>
 </resources>
