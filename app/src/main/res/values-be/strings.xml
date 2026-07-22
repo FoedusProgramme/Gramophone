@@ -45,8 +45,7 @@
     <string name="dialog_mime">Тып MIME</string>
     <string name="dialog_year">Год</string>
     <string name="dialog_artist">Выканаўца</string>
-    <string name="opensource_info">З адкрытым зыходным кодам пад ліцэнзіяй GPL-3.0
-\nАўтарскае права %s</string>
+    <string name="opensource_info">З адкрытым зыходным кодам пад ліцэнзіяй GPL-3.0 \nАўтарскае права %s</string>
     <string name="playlist_favourite">Абраны</string>
     <string name="home_menu_settings">Налады</string>
     <string name="home_menu_refresh">Абнавіць</string>
@@ -533,4 +532,5 @@
     <string name="sort_by_album_artist_year"><![CDATA[]]></string>
     <string name="spk_channel_out_5point1point2"></string>
     <string name="spk_channel_out_top_center"></string>
+    <string name="gramophone_crashed" translatable="false"></string>
 </resources>
