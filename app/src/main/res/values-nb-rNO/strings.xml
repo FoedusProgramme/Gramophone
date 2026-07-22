@@ -524,4 +524,5 @@
     <string name="play_all"></string>
     <string name="dialog_lyrics"></string>
     <string name="gramophone_crashed" translatable="false"></string>
+    <string name="dialog_mime"></string>
 </resources>
