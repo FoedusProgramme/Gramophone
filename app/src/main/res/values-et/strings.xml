@@ -79,8 +79,7 @@
     <string name="dialog_genre">Žanr</string>
     <string name="natural_order">Loomulik järjekord</string>
     <string name="equalizer_not_found">Evalaiserit ei leidu!</string>
-    <string name="opensource_info">Avatud lähtekoodiga tarkvara, avaldatud GPL-3.0 litsentsi alusel
-\nAutoriõigused %s</string>
+    <string name="opensource_info">Avatud lähtekoodiga tarkvara, avaldatud GPL-3.0 litsentsi alusel \nAutoriõigused %s</string>
     <string name="now_playing">Hetkel esitamisel</string>
     <string name="settings_package_type">Tarkvarapaketi tüüp</string>
     <string name="unknown_title">Teadmata pealkiri</string>
@@ -438,7 +437,7 @@
     <string name="settings_stop_on_dismiss_summary">Lõpeta meediaesitus rakenduse sugemisel Androidi viimatikasutatud rakenduste loendist</string>
     <string name="compact_grid">Ruudustik (kompaktne)</string>
     <string name="sort_by_album_year">Albumi aasta</string>
-    <string name="sort_by_album_artist_year"><![CDATA[Albumi esitaja -> aasta]]></string>
+    <string name="sort_by_album_artist_year"><![CDATA[Albumi esitaja -&gt; aasta]]></string>
     <string name="forbidden_symbol_error">Nimes on mittelubatud tähemärk</string>
     <string name="translators">Tõlkijad</string>
     <string name="settings_replaygain">Esitusvaljuse tundlikkus</string>
@@ -464,7 +463,7 @@
     <string name="settings_replaygain_no_rg_amp_desc">Vähenda valjute lugude heli, kuid seal pole esitusvaljuse tundlikkuse silte</string>
     <string name="settings_replaygain_preamp_desc">Suurenda või vähenda valjute lugude heli esitusvaljuse tundlikkuse siltide alusel. Ülevõimenduse kaitse sekkumise tõttu võivad suured väärtused tekitada kadu helide dünaamikas.</string>
     <string name="settings_replaygain_mode_desc">Valik „Nutikas“ säilitab automaatselt albumi dünaamikat, kuid ühe albumi lood on järjest esitamisel.</string>
-    <string name="sort_by_artist_year"><![CDATA[Esitaja -> aasta]]></string>
+    <string name="sort_by_artist_year"><![CDATA[Esitaja -&gt; aasta]]></string>
     <string name="clear_queue">Tühjenda esitusjärjekord</string>
     <string name="contributors_saladnoober">Kvaliteeditagamine</string>
     <string name="actions_query_shuffle_all_songs">sega kõik lood</string>
