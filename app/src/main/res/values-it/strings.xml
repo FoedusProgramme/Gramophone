@@ -252,7 +252,6 @@
     <plurals name="folders_plural">
         <item quantity="one">% Cartella</item>
         <item quantity="many">% Cartelle</item>
-        <item quantity="other"/>
     </plurals>
     <string name="playback_speed">Velocità riproduzione</string>
     <string name="spk_encoding_aac_xhe"></string>
