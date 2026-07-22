@@ -433,7 +433,7 @@
     <string name="settings_cookie_info">Keksförmige Albumcover</string>
     <string name="compact_grid">Raster (kompakt)</string>
     <string name="sort_by_album_year">Albumjahr</string>
-    <string name="sort_by_album_artist_year"><![CDATA[Albuminterpret -> Jahr]]></string>
+    <string name="sort_by_album_artist_year"><![CDATA[Albuminterpret -&gt; Jahr]]></string>
     <string name="d_db">%d dB</string>
     <string name="playback_speed">Wiedergabegeschwindigkeit</string>
     <string name="tempo">Tempo</string>
