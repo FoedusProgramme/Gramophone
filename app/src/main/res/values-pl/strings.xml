@@ -65,8 +65,7 @@
     <string name="dialog_mime">Typ MIME</string>
     <string name="dialog_year">Rok</string>
     <string name="dialog_artist">Wykonawca</string>
-    <string name="opensource_info">Otwarte oprogramowanie na licencji GPL-3.0
-\nCopyright %s</string>
+    <string name="opensource_info">Otwarte oprogramowanie na licencji GPL-3.0 \nCopyright %s</string>
     <string name="playlist_favourite">Ulubione</string>
     <string name="settings_player_options">Dźwięk</string>
     <string name="settings_lyric">Tekst utworu</string>
@@ -532,4 +531,5 @@
     <string name="mq_pin_queue">Przypiąć kolejkę</string>
     <string name="shuffled">%s (przetasowano)</string>
     <string name="loading_playlists">Wczytywanie playlisty...</string>
+    <string name="gramophone_crashed" translatable="false"></string>
 </resources>
