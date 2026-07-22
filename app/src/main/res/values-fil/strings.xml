@@ -48,8 +48,7 @@
     <string name="compact_list">Listahan (naka-siksik)</string>
     <string name="check_for_updates">Tingnan ng channel namin para sa updates!</string>
     <string name="settings_default_progress_bar">Default na progress bar</string>
-    <string name="opensource_info">Naka open-source ilalim ng GPL-3.0
-\nCopyright %s</string>
+    <string name="opensource_info">Naka open-source ilalim ng GPL-3.0 \nCopyright %s</string>
     <string name="playlist_favourite">Paborito</string>
     <string name="settings_content_based_color_summary">I-enable ng pagbuo ng kulay base sa album</string>
     <string name="settings_content_based_color">Kulay batay sa contento</string>
