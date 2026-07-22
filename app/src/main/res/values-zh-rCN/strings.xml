@@ -441,7 +441,7 @@
     <string name="settings_stop_on_dismiss_summary">从最近任务中关闭应用时停止播放</string>
     <string name="compact_grid">网格（紧凑）</string>
     <string name="sort_by_album_year">专辑年份</string>
-    <string name="sort_by_album_artist_year"><![CDATA[专辑音乐人 -> 年份]]></string>
+    <string name="sort_by_album_artist_year"><![CDATA[专辑音乐人 -&gt; 年份]]></string>
     <string name="forbidden_symbol_error">名称中包含无效字符</string>
     <string name="settings_replaygain">回放增益</string>
     <string name="settings_replaygain_mode">模式</string>
@@ -458,7 +458,7 @@
     <string name="settings_replaygain_no_rg_amp_desc">对无回放增益标签的过响歌曲自动降低音量</string>
     <string name="settings_replaygain_preamp_desc">带有回放增益标签的歌曲自动增大或减小音量。较高的值可能会因削波预防而导致动态范围损失。</string>
     <string name="settings_replaygain_mode_desc">“智能”仅在连续播放同一专辑中的歌曲时才会自动保留专辑动态范围。</string>
-    <string name="sort_by_artist_year"><![CDATA[音乐人 -> 年份]]></string>
+    <string name="sort_by_artist_year"><![CDATA[音乐人 -&gt; 年份]]></string>
     <string name="clear_queue">清除队列</string>
     <string name="contributors_saladnoober">质量保证</string>
     <string name="actions_query_shuffle_all_songs">随机播放所有歌曲</string>
