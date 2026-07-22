@@ -463,7 +463,7 @@
     <string name="settings_replaygain_no_rg_amp_desc">Reducir o volume para cancións que soan moi alto e que non teñen etiquetas ReplayGain</string>
     <string name="settings_replaygain_preamp_desc">Aumentar ou diminuír o volume das cancións con etiquetas ReplayGain. Os valores máis altos poderían causar perdas no rango dináminco para evitar solapamentos.</string>
     <string name="settings_replaygain_mode_desc">«Intelixente» conserva automáticamente a dinámica do álbum so cando se reproducen cancións de xeito consecutivo dun álbum.</string>
-    <string name="sort_by_artist_year"><![CDATA[Artist -> ano]]></string>
+    <string name="sort_by_artist_year"><![CDATA[Artist -&gt; ano]]></string>
     <string name="clear_queue">Limpar cola</string>
     <string name="contributors_saladnoober">Control da calidade</string>
     <string name="actions_query_shuffle_all_songs">barallar todas as cancións</string>
