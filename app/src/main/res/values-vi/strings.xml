@@ -17,8 +17,7 @@
     <string name="unknown_playlist">Danh sách phát chưa biết</string>
     <string name="dialog_year">Năm</string>
     <string name="dialog_artist">Nghệ sĩ</string>
-    <string name="opensource_info">Mã nguồn mở GPL-3.0
-\nBản quyền %s</string>
+    <string name="opensource_info">Mã nguồn mở GPL-3.0 \nBản quyền %s</string>
     <string name="playlist_favourite">Yêu thích</string>
     <string name="home_menu_settings">Cài đặt</string>
     <string name="home_menu_refresh">Làm mới</string>
