@@ -516,7 +516,7 @@
     <string name="another_with_name">Это имя уже используется</string>
     <string name="search_query">Поиск: %s</string>
     <string name="settings_font_size">Размер шрифта</string>
-    <string name="set">Готово</string>
+    <string name="set">Поставить</string>
     <string name="timer_eos">Дождаться окончания трека</string>
     <string name="timer_end_of_this_song">В конце текущего трека</string>
     <string name="other">Своё время</string>
@@ -532,4 +532,5 @@
     <string name="mq_unpin_queue">Открепить очередь</string>
     <string name="mq_pin_queue">Закрепить очередь</string>
     <string name="shuffled">%s (вперемешку)</string>
+    <string name="loading_playlists">Загрузка плейлистов…</string>
 </resources>
