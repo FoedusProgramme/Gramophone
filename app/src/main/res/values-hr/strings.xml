@@ -478,7 +478,7 @@
     <string name="actions_query_play_randomly">reproduciraj nasumice</string>
     <string name="actions_query_start_random_music">pokreni nasumičnu glazbu</string>
     <string name="actions_query_start_random_songs">pokreni nasumične glazbe</string>
-    <string name="actions_query_shuffle_specific">primiješaj $item_name</string>
+    <string name="actions_query_shuffle_specific">promiješaj $item_name</string>
     <string name="edit_favorites_failed">Uređivanje favorita neuspjelo: %s</string>
     <string name="favorite">Favorit</string>
     <string name="favorite_failed_title">Nije bilo moguće promijenit stanje pjesme</string>
@@ -512,4 +512,16 @@
     <string name="timer_eos">Pričekaj da pjesma završi</string>
     <string name="timer_end_of_this_song">Kraj ove pjesme</string>
     <string name="other">Prilagođeno</string>
+    <string name="unset">Deaktiviraj</string>
+    <string name="timer_hint">Minute do pauziranja glazbe …</string>
+    <plurals name="minutes">
+        <item quantity="one">%d minuta</item>
+        <item quantity="few">%d minute</item>
+        <item quantity="other">%d minuta</item>
+    </plurals>
+    <string name="settings_mq_enabled">Više redova čekanja</string>
+    <string name="mq_unpin_queue">Otkvači red čekanja</string>
+    <string name="mq_pin_queue">Prikvači red čekanja</string>
+    <string name="shuffled">%s (promiješano)</string>
+    <string name="loading_playlists">Učitavanje playlista …</string>
 </resources>
