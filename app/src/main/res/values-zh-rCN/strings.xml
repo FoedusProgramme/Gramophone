@@ -435,7 +435,7 @@
     <string name="translators">译者</string>
     <string name="settings_cookie_summary">将专辑封面设为饼干形状</string>
     <string name="settings_cookie_info">饼干样式封面</string>
-    <string name="settings_pure_dark">纯黑主题</string>
+    <string name="settings_pure_dark">深色主题下的纯黑主题</string>
     <string name="settings_pure_dark_summary">应用内所有界面均为纯黑色的主题（可能会导致 OLED 屏幕出现黑色失真）</string>
     <string name="settings_stop_on_dismiss">关闭时停止</string>
     <string name="settings_stop_on_dismiss_summary">从最近任务中关闭应用时停止播放</string>
