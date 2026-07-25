@@ -1108,7 +1108,7 @@
     <!-- Player UI toggle to enable animated shape similar to a cookie for album cover. Title -->
     <string name="settings_cookie_info">Cookie cover</string>
     <!-- Appearance toggle to replace gray color with black in app UI. Title -->
-    <string name="settings_pure_dark">Pure dark theme</string>
+    <string name="settings_pure_dark">Pure black in dark theme</string>
     <!-- Appearance toggle to replace gray color with black in app UI. Subtext -->
     <string name="settings_pure_dark_summary">A theme where all surfaces in the app are pure black (may cause black crush on OLED displays)</string>
     <!-- Behavior toggle to stop playing music when closing the app in "Recent apps" of Android system. Title -->
