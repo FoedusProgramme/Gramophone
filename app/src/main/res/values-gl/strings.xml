@@ -431,7 +431,7 @@
     </plurals>
     <string name="settings_cookie_summary">Mostrar a portada do álbum con forma de galleta</string>
     <string name="settings_cookie_info">Portada como galleta</string>
-    <string name="settings_pure_dark">Decorado escuro puro</string>
+    <string name="settings_pure_dark">Negro puro en decorado escuro</string>
     <string name="settings_pure_dark_summary">Un decorado onde todas as partes da app son de negro puro (pode estragar o negro en pantallas OLED)</string>
     <string name="settings_stop_on_dismiss">Deter ao desbotar</string>
     <string name="settings_stop_on_dismiss_summary">Detén a reprodución cando a tarefa da app se desbota das recentes</string>
