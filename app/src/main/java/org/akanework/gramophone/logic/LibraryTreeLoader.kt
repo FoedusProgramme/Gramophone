@@ -344,13 +344,18 @@ class LibraryTreeLoader(
                     if (expanded.isNotEmpty()) {
                         resultList.addAll(expanded)
                     } else if (item.mediaId != MediaItem.DEFAULT_MEDIA_ID) {
-                        val fullSongList = app.reader.songListFlow.first()
-                        val sortedFull = sortList(fullSongList, LibraryAdapterTypes.SONG, Sorter(SongAdapter.MediaItemHelper, null))
-                        val idx = sortedFull.indexOfFirst { it.mediaId == item.mediaId }
-                        if (idx >= 0 && startingIndex == null) {
-                            startingIndex = resultList.size + idx
+                        if (item.requestMetadata != MediaItem.RequestMetadata.EMPTY) {
+                            val fullSongList = app.reader.songListFlow.first()
+                            val sortedFull = sortList(fullSongList, LibraryAdapterTypes.SONG, Sorter(SongAdapter.MediaItemHelper, null))
+                            val idx = sortedFull.indexOfFirst { it.mediaId == item.mediaId }
+                            if (idx >= 0 && startingIndex == null) {
+                                startingIndex = resultList.size + idx
+                            }
+                            resultList.addAll(sortedFull)
+                        } else {
+                            val singleSong = app.reader.songListFlow.first().filter { m -> m.mediaId == item.mediaId }
+                            resultList.addAll(singleSong)
                         }
-                        resultList.addAll(sortedFull)
                     } else if (item.requestMetadata.searchQuery != null) {
                         resultList.addAll(searchForMediaItem(item))
                     } else {

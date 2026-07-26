@@ -1192,8 +1192,10 @@
     <string name="actions_query_start_random_songs">start random songs</string>
     <!-- Google Assistant / voice assistant phrase with song name placeholder -->
     <string name="actions_query_shuffle_specific">shuffle $item_name</string>
-    <!-- Tooltip for heart button -->
+    <!-- Tooltip for heart button, meaning to add a song to the favorites list -->
     <string name="favorite">Favorite</string>
+    <!-- Tooltip for heart button, meaning to remove a song from the favorites list -->
+    <string name="unfavorite">Unfavorite</string>
     <!-- Error notification when user tries to change favourite status of song while the app is in
     background but we must ask for permission to write the special playlist file. Title -->
     <string name="favorite_failed_title">Failed to change favourite state of song</string>

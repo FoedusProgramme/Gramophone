@@ -251,6 +251,15 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         else
             customCommands[0]
 
+    private fun getFavoriteCommand(): CommandButton {
+        val isFavorite = (controller?.currentMediaItem?.mediaMetadata?.userRating as? HeartRating)?.isHeart == true
+        return if (isFavorite) {
+            customCommands[6]
+        } else {
+            customCommands[5]
+        }
+    }
+
     private val timer: Runnable = Runnable {
         if (timerPauseOnEnd) {
             endedWorkaroundPlayer!!.exoPlayer.pauseAtEndOfMediaItems = true
@@ -351,6 +360,14 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                 CommandButton.Builder(CommandButton.ICON_REPEAT_ONE) // repeat one currently enabled, click will disable
                     .setDisplayName(getString(R.string.repeat_mode))
                     .setPlayerCommand(Player.COMMAND_SET_REPEAT_MODE, Player.REPEAT_MODE_OFF)
+                    .build(),
+                CommandButton.Builder(CommandButton.ICON_HEART_UNFILLED) // not favorite, click will favorite
+                    .setDisplayName(getString(R.string.favorite))
+                    .setSessionCommand(SessionCommand(SessionCommand.COMMAND_CODE_SESSION_SET_RATING))
+                    .build(),
+                CommandButton.Builder(CommandButton.ICON_HEART_FILLED) // favorite, click will unfavorite
+                    .setDisplayName(getString(R.string.unfavorite))
+                    .setSessionCommand(SessionCommand(SessionCommand.COMMAND_CODE_SESSION_SET_RATING))
                     .build(),
             )
         afFormatTracker = AfFormatTracker(this, playbackHandler, handler)
@@ -829,7 +846,8 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                 builder.setMediaButtonPreferences(
                     ImmutableList.of(
                         getRepeatCommand(),
-                        getShufflingCommand()
+                        getShufflingCommand(),
+                        getFavoriteCommand()
                     )
                 )
             }
@@ -1406,6 +1424,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
             //lyrics = null
             //scheduleSendingLyrics(true)
         }
+        refreshMediaButtonCustomLayout()
 
         // reshuffle queue when shuffle AND repeat all are enabled
         val player = endedWorkaroundPlayer
@@ -1525,7 +1544,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
             ) {
                 mediaSession!!.setMediaButtonPreferences(
                     it, if (isEmpty) emptyList() else
-                        ImmutableList.of(getRepeatCommand(), getShufflingCommand())
+                        ImmutableList.of(getRepeatCommand(), getShufflingCommand(), getFavoriteCommand())
                 )
             }
         }
