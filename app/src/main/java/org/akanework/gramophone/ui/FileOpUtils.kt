@@ -13,77 +13,77 @@ import org.akanework.gramophone.ui.fragments.AdapterFragment
 fun getAdapterType(adapter: AdapterFragment.BaseInterface<*>) =
     when {
         adapter is AlbumAdapter && adapter.isSubFragment == null -> {
-            0
+            LibraryAdapterTypes.ALBUM
         }
 
         adapter is ArtistAdapter -> {
-            1
+            LibraryAdapterTypes.ARTIST
         }
 
         adapter is DateAdapter -> {
-            2
+            LibraryAdapterTypes.DATE
         }
 
         adapter is GenreAdapter -> {
-            3
+            LibraryAdapterTypes.GENRE
         }
 
         adapter is PlaylistAdapter -> {
-            4
+            LibraryAdapterTypes.PLAYLIST
         }
 
         adapter is SongAdapter && !adapter.folder && adapter.isSubFragment == null -> {
-            5
+            LibraryAdapterTypes.SONG
         }
 
         adapter is SongAdapter && adapter.folder -> {
-            6
+            LibraryAdapterTypes.FOLDER
         }
 
         adapter is SongAdapter && adapter.isSubFragment == R.id.search -> {
-            7
+            LibraryAdapterTypes.SEARCH
         }
 
         adapter is SongAdapter && adapter.isSubFragment == R.id.playlist -> {
-            8
+            LibraryAdapterTypes.PLAYLIST_DYNAMIC
         }
 
         adapter is SongAdapter && adapter.isSubFragment == R.id.genre -> {
-            9
+            LibraryAdapterTypes.GENRE_SONGS
         }
 
         adapter is SongAdapter && adapter.isSubFragment == R.id.date -> {
-            10
+            LibraryAdapterTypes.DATE_SONGS
         }
 
         adapter is SongAdapter && (adapter.isSubFragment == R.id.artist
                 || adapter.isSubFragment == R.id.album_artist) -> {
-            11
+            LibraryAdapterTypes.ARTIST_SONGS
         }
 
         adapter is SongAdapter && adapter.isSubFragment == R.id.album -> {
-            12
+            LibraryAdapterTypes.ALBUM_SONGS
         }
 
         adapter is AlbumAdapter && (adapter.isSubFragment == R.id.artist
                 || adapter.isSubFragment == R.id.album_artist) -> {
-            13
+            LibraryAdapterTypes.ARTIST_ALBUMS
         }
 
         adapter is DetailedFolderAdapter && !adapter.isDetailed -> {
-            14
+            LibraryAdapterTypes.FOLDERS_SHALLOW
         }
 
         adapter is DetailedFolderAdapter && adapter.isDetailed -> {
-            15
+            LibraryAdapterTypes.FOLDERS_DETAILED
         }
 
         adapter is SongAdapter && adapter.isSubFragment == R.id.edit -> {
-            16
+            LibraryAdapterTypes.EDIT
         }
 
         adapter is SongAdapter && adapter.isSubFragment == R.id.songs -> {
-            17
+            LibraryAdapterTypes.CURRENT_QUEUE
         }
 
         else -> {

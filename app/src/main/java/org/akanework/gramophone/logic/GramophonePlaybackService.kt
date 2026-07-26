@@ -200,24 +200,6 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
 
     private lateinit var libraryTreeLoader: LibraryTreeLoader
 
-    private fun convertMetadata(metadata: MediaMetadata, albumIdFallback: Long? = null): MediaMetadata {
-        val artworkUri = metadata.artworkUri ?: return metadata
-        val scheme = artworkUri.scheme
-        if (scheme == "gramophoneSongCover" || scheme == "gramophoneAlbumCover") {
-            val albumId = metadata.extras?.getLong(uk.akane.libphonograph.items.EXTRA_ALBUM_ID)
-                ?: albumIdFallback
-                ?: (if (scheme == "gramophoneAlbumCover") artworkUri.authority?.toLongOrNull() else null)
-            if (albumId != null) {
-                val uri = android.content.ContentUris.withAppendedId(uk.akane.libphonograph.Constants.baseAlbumCoverUri, albumId)
-                return metadata.buildUpon().setArtworkUri(uri).build()
-            }
-        }
-        return metadata
-    }
-
-    private fun convertItem(item: MediaItem): MediaItem {
-        return item.buildUpon().setMediaMetadata(convertMetadata(item.mediaMetadata)).build()
-    }
     private var controller: MediaBrowser? = null
     lateinit var qb: QueueBoard
     private val sendLyrics = Runnable { scheduleSendingLyrics(false) }
@@ -439,7 +421,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                                 .apply {
                                     val config =
                                         prefs.getStringStrict("offload", "0")?.toIntOrNull()
-                                    if (config != null && config > 0) {
+                                    if (config != null && config > 0 && Flags.OFFLOAD) {
                                         rgAp.setOffloadEnabled(true)
                                         setAudioOffloadMode(TrackSelectionParameters.AudioOffloadPreferences.AUDIO_OFFLOAD_MODE_ENABLED)
                                         setIsGaplessSupportRequired(config == 2)
@@ -460,39 +442,15 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         lastPlayedManager.allowSavingState = false
         internalPlayer = player
 
-        val sessionPlayer = object : androidx.media3.common.ForwardingPlayer(player) {
-
-            override fun getCurrentMediaItem(): MediaItem? {
-                return super.getCurrentMediaItem()?.let { convertItem(it) }
-            }
-            override fun getMediaItemAt(index: Int): MediaItem {
-                return convertItem(super.getMediaItemAt(index))
-            }
-            override fun getMediaMetadata(): MediaMetadata {
-                return convertMetadata(super.getMediaMetadata())
-            }
-            override fun getCurrentTimeline(): Timeline {
-                val original = super.getCurrentTimeline()
-                return object : androidx.media3.exoplayer.source.ForwardingTimeline(original) {
-                    override fun getWindow(windowIndex: Int, window: Window, defaultPositionProjectionUs: Long): Window {
-                        super.getWindow(windowIndex, window, defaultPositionProjectionUs)
-                        window.mediaItem = convertItem(window.mediaItem)
-                        return window
-                    }
-                }
-            }
-        }
-
         libraryTreeLoader = LibraryTreeLoader(
             this,
             gramophoneApplication,
-            lifecycleScope,
-            ::convertItem
+            lifecycleScope
         )
 
         mediaSession =
             MediaLibrarySession
-                .Builder(this, sessionPlayer, this)
+                .Builder(this, player, this)
                 // CacheBitmapLoader is required for MeiZuLyricsMediaNotificationProvider
                 .setBitmapLoader(CacheBitmapLoader(object : BitmapLoader {
                     // Coil-based bitmap loader to reuse Coil's caching and to make sure we use
@@ -1485,14 +1443,6 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
 
     override fun onEvents(player: Player, events: Player.Events) {
         super<Player.Listener>.onEvents(player, events)
-        if (events.containsAny(
-                Player.EVENT_REPEAT_MODE_CHANGED,
-                Player.EVENT_SHUFFLE_MODE_ENABLED_CHANGED,
-                Player.EVENT_TIMELINE_CHANGED
-            )
-        ) {
-            refreshMediaButtonCustomLayout()
-        }
         // if timeline changed, shuffle order is handled elsewhere instead (cloneAndInsert called by
         // ExoPlayer for common case and nextShuffleOrder for resumption case)
         if (events.contains(Player.EVENT_SHUFFLE_MODE_ENABLED_CHANGED)
@@ -1802,24 +1752,39 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                 lifecycleScope.launch(Dispatchers.Default) {
                     try {
                         val expanded = future.get()
-                        val mapped = mapMediaItemsForFavorites(expanded.mediaItems).map { convertItem(it)!! }
+                        val mapped = mapMediaItemsForFavorites(expanded.mediaItems)
                         completer.set(mapped)
-                        val startIdx = expanded.startIndex
-                        if (startIdx != null && mapped.isNotEmpty()) {
-                            handler.post {
-                                mediaSession.player.setMediaItems(
-                                    mapped,
-                                    startIdx,
-                                    C.TIME_UNSET
-                                )
-                            }
-                        }
                     } catch (e: Exception) {
                         completer.setException(e)
                     }
                 }
             }, ContextCompat.getMainExecutor(this))
             "addMediaItems callback"
+        }
+        return completion
+    }
+
+    override fun onSetMediaItems(
+        mediaSession: MediaSession,
+        controller: MediaSession.ControllerInfo,
+        mediaItems: List<MediaItem>,
+        startIndex: Int,
+        startPositionMs: Long
+    ): ListenableFuture<MediaSession.MediaItemsWithStartPosition> {
+        val future = libraryTreeLoader.addMediaItems(mediaItems)
+        val completion = CallbackToFutureAdapter.getFuture<MediaSession.MediaItemsWithStartPosition> { completer ->
+            future.addListener({
+                lifecycleScope.launch(Dispatchers.Default) {
+                    try {
+                        val expanded = future.get()
+                        val mapped = mapMediaItemsForFavorites(expanded.mediaItems)
+                        completer.set(MediaSession.MediaItemsWithStartPosition(mapped, expanded.startIndex ?: startIndex, startPositionMs))
+                    } catch (e: Exception) {
+                        completer.setException(e)
+                    }
+                }
+            }, ContextCompat.getMainExecutor(this))
+            "setMediaItems callback"
         }
         return completion
     }

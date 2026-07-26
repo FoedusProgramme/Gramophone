@@ -26,6 +26,7 @@ import org.akanework.gramophone.ui.adapters.DateAdapter
 import org.akanework.gramophone.ui.adapters.GenreAdapter
 import org.akanework.gramophone.ui.adapters.PlaylistAdapter
 import org.akanework.gramophone.ui.adapters.SongAdapter
+import org.akanework.gramophone.ui.LibraryAdapterTypes
 import org.akanework.gramophone.ui.adapters.Sorter
 import org.akanework.gramophone.ui.adapters.ViewPager2Adapter
 import uk.akane.libphonograph.items.*
@@ -37,8 +38,7 @@ import uk.akane.libphonograph.items.*
 class LibraryTreeLoader(
     private val context: Context,
     private val app: GramophoneApplication,
-    private val scope: CoroutineScope,
-    private val convertItem: (MediaItem) -> MediaItem,
+    private val scope: CoroutineScope
 ) {
 
     private val tag = "LibraryTreeLoader"
@@ -130,23 +130,23 @@ class LibraryTreeLoader(
         val (songs, adapterType, naturalOrder) = when {
             parentId.startsWith("album_") -> {
                 val id = parentId.removePrefix("album_").toLongOrNull()
-                Triple(app.reader.songListFlow.first().filter { it.mediaMetadata.albumId == id }, 12, false)
+                Triple(app.reader.songListFlow.first().filter { it.mediaMetadata.albumId == id }, LibraryAdapterTypes.ALBUM_SONGS, false)
             }
             parentId.startsWith("artist_") -> {
                 val name = parentId.removePrefix("artist_")
-                Triple(app.reader.songListFlow.first().filter { it.mediaMetadata.artist?.toString() == name }, 11, false)
+                Triple(app.reader.songListFlow.first().filter { it.mediaMetadata.artist?.toString() == name }, LibraryAdapterTypes.ARTIST_SONGS, false)
             }
             parentId.startsWith("genre_") -> {
                 val id = parentId.removePrefix("genre_").toLongOrNull()
-                Triple(app.reader.genreListFlow.first().find { it.id == id }?.songList ?: emptyList(), 9, false)
+                Triple(app.reader.genreListFlow.first().find { it.id == id }?.songList ?: emptyList(), LibraryAdapterTypes.GENRE_SONGS, false)
             }
             parentId.startsWith("date_") -> {
                 val id = parentId.removePrefix("date_").toLongOrNull()
-                Triple(app.reader.dateListFlow.first().find { it.id == id }?.songList ?: emptyList(), 10, false)
+                Triple(app.reader.dateListFlow.first().find { it.id == id }?.songList ?: emptyList(), LibraryAdapterTypes.DATE_SONGS, false)
             }
             parentId.startsWith("folder_") -> {
                 val name = parentId.removePrefix("folder_")
-                Triple(app.reader.shallowFolderFlow.first().folderList[name]?.songList ?: emptyList(), 6, false)
+                Triple(app.reader.shallowFolderFlow.first().folderList[name]?.songList ?: emptyList(), LibraryAdapterTypes.FOLDER, false)
             }
             parentId.startsWith("playlist_") -> {
                 val idStr = parentId.removePrefix("playlist_")
@@ -157,7 +157,7 @@ class LibraryTreeLoader(
                         else -> it.id?.toString() == idStr
                     }
                 }
-                Triple(playlist?.songList ?: emptyList(), 8, true)
+                Triple(playlist?.songList ?: emptyList(), LibraryAdapterTypes.PLAYLIST_DYNAMIC, true)
             }
             else -> Triple(emptyList(), -1, false)
         }
@@ -204,12 +204,12 @@ class LibraryTreeLoader(
                         else tabs.take(3).map { getCategoryItem(mapTabToMediaId(it))!! } + getCategoryItem("more")!!
                     }
                     "more" -> getEnabledTabs().drop(3).map { getCategoryItem(mapTabToMediaId(it))!! }
-                    "albums" -> sortList(app.reader.albumListFlow.first(), 0, Sorter(AlbumAdapter.StoreAlbumHelper, null)).map { mapDomainItemToMediaItem(it)!! }
-                    "artists" -> sortList(app.reader.artistListFlow.first(), 1, Sorter(ArtistAdapter.StoreArtistHelper, null)).map { mapDomainItemToMediaItem(it)!! }
-                    "songs" -> sortList(app.reader.songListFlow.first(), 5, Sorter(SongAdapter.MediaItemHelper, null))
-                    "playlists" -> sortList(app.reader.playlistListFlow.first(), 4, Sorter(PlaylistAdapter.StorePlaylistHelper, null)).map { mapDomainItemToMediaItem(it)!! }
-                    "genres" -> sortList(app.reader.genreListFlow.first(), 3, Sorter(GenreAdapter.StoreGenreHelper, null)).map { mapDomainItemToMediaItem(it)!! }
-                    "dates" -> sortList(app.reader.dateListFlow.first(), 2, Sorter(DateAdapter.StoreDateHelper, null)).map { mapDomainItemToMediaItem(it)!! }
+                    "albums" -> sortList(app.reader.albumListFlow.first(), LibraryAdapterTypes.ALBUM, Sorter(AlbumAdapter.StoreAlbumHelper, null)).map { mapDomainItemToMediaItem(it)!! }
+                    "artists" -> sortList(app.reader.artistListFlow.first(), LibraryAdapterTypes.ARTIST, Sorter(ArtistAdapter.StoreArtistHelper, null)).map { mapDomainItemToMediaItem(it)!! }
+                    "songs" -> sortList(app.reader.songListFlow.first(), LibraryAdapterTypes.SONG, Sorter(SongAdapter.MediaItemHelper, null))
+                    "playlists" -> sortList(app.reader.playlistListFlow.first(), LibraryAdapterTypes.PLAYLIST, Sorter(PlaylistAdapter.StorePlaylistHelper, null)).map { mapDomainItemToMediaItem(it)!! }
+                    "genres" -> sortList(app.reader.genreListFlow.first(), LibraryAdapterTypes.GENRE, Sorter(GenreAdapter.StoreGenreHelper, null)).map { mapDomainItemToMediaItem(it)!! }
+                    "dates" -> sortList(app.reader.dateListFlow.first(), LibraryAdapterTypes.DATE, Sorter(DateAdapter.StoreDateHelper, null)).map { mapDomainItemToMediaItem(it)!! }
                     "folders" -> {
                         val folders = app.reader.shallowFolderFlow.first().folderList.values.toList()
                         folders.sortedWith(SupportComparator.createAlphanumericComparator(cnv = { it.folderName })).map { mapDomainItemToMediaItem(it)!! }
@@ -218,7 +218,7 @@ class LibraryTreeLoader(
                 }
 
                 val finalPageSize = pageSize.coerceAtMost(200)
-                val pagedList = list.asSequence().drop(page * finalPageSize).take(finalPageSize).map { convertItem(it) }.toList()
+                val pagedList = list.asSequence().drop(page * finalPageSize).take(finalPageSize).toList()
                 completion.set(LibraryResult.ofItemList(ImmutableList.copyOf(pagedList), params))
             } catch (e: Exception) {
                 Log.w(tag, "getChildren failed for $parentId", e)
@@ -277,7 +277,7 @@ class LibraryTreeLoader(
                     else -> app.reader.songListFlow.first().find { it.mediaId == mediaId }
                 }
 
-                if (item != null) completion.set(LibraryResult.ofItem(convertItem(item), null))
+                if (item != null) completion.set(LibraryResult.ofItem(item, null))
                 else completion.set(LibraryResult.ofError(androidx.media3.session.SessionError.ERROR_BAD_VALUE))
             } catch (e: Exception) {
                 Log.w(tag, "getItem failed for $mediaId", e)
@@ -308,7 +308,7 @@ class LibraryTreeLoader(
             try {
                 val list = searchForMediaItemSync(query)
                 val finalPageSize = pageSize.coerceAtMost(200)
-                val pagedList = list.asSequence().drop(page * finalPageSize).take(finalPageSize).map { convertItem(it) }.toList()
+                val pagedList = list.asSequence().drop(page * finalPageSize).take(finalPageSize).toList()
                 completion.set(LibraryResult.ofItemList(ImmutableList.copyOf(pagedList), params))
             } catch (e: Exception) {
                 Log.w(tag, "getSearchResult failed for $query", e)
@@ -321,12 +321,8 @@ class LibraryTreeLoader(
     private suspend fun searchForMediaItemSync(query: String): List<MediaItem> {
         val text = query.trim()
         val list = app.reader.songListFlow.first()
-        val sortedList = sortList(list, 7, Sorter(SongAdapter.MediaItemHelper, null))
-        return if (text == "") sortedList else sortedList.filter {
-            it.mediaMetadata.title?.contains(text, true) == true ||
-            it.mediaMetadata.albumTitle?.contains(text, true) == true ||
-            it.mediaMetadata.artist?.contains(text, true) == true
-        }
+        // TODO support focus and sub queries (see MainActivity)
+        return if (text == "") sortList(list, LibraryAdapterTypes.SEARCH, Sorter(SongAdapter.MediaItemHelper, null)) else searchMediaItems(text, list)
     }
 
     fun addMediaItems(
@@ -349,7 +345,7 @@ class LibraryTreeLoader(
                         resultList.addAll(expanded)
                     } else if (item.mediaId != MediaItem.DEFAULT_MEDIA_ID) {
                         val fullSongList = app.reader.songListFlow.first()
-                        val sortedFull = sortList(fullSongList, 5, Sorter(SongAdapter.MediaItemHelper, null))
+                        val sortedFull = sortList(fullSongList, LibraryAdapterTypes.SONG, Sorter(SongAdapter.MediaItemHelper, null))
                         val idx = sortedFull.indexOfFirst { it.mediaId == item.mediaId }
                         if (idx >= 0 && startingIndex == null) {
                             startingIndex = resultList.size + idx
@@ -362,8 +358,7 @@ class LibraryTreeLoader(
                     }
                 }
 
-                val convertedResult = resultList.map { convertItem(it) }
-                completion.set(ExpandedMediaItems(convertedResult, startingIndex))
+                completion.set(ExpandedMediaItems(resultList, startingIndex))
             } catch (e: Exception) { completion.setException(e) }
         }
         return completion
@@ -372,11 +367,20 @@ class LibraryTreeLoader(
     private suspend fun searchForMediaItem(item: MediaItem): List<MediaItem> {
         val text = item.requestMetadata.searchQuery?.trim() ?: ""
         val list = app.reader.songListFlow.first()
-        val sortedList = sortList(list, 7, Sorter(SongAdapter.MediaItemHelper, null))
-        return if (text == "") sortedList else sortedList.filter {
-            it.mediaMetadata.title?.contains(text, true) == true ||
-            it.mediaMetadata.albumTitle?.contains(text, true) == true ||
-            it.mediaMetadata.artist?.contains(text, true) == true
+        // TODO support focus and sub queries (see MainActivity)
+        return if (text == "") sortList(list, LibraryAdapterTypes.SEARCH, Sorter(SongAdapter.MediaItemHelper, null)) else searchMediaItems(text, list)
+    }
+
+    private fun searchMediaItems(text: String, list: List<MediaItem>): List<MediaItem> {
+        val sortedList = sortList(list, LibraryAdapterTypes.SEARCH, Sorter(SongAdapter.MediaItemHelper, null))
+        return sortedList.filter {
+            // TODO sort results by match quality? (using raw=natural order)
+            // TODO this is copied directly from SearchFragment, which should probably call into
+            //  here for its search needs instead in the future
+            val isMatchingTitle = it.mediaMetadata.title?.contains(text, true) == true
+            val isMatchingAlbum = it.mediaMetadata.albumTitle?.contains(text, true) == true
+            val isMatchingArtist = it.mediaMetadata.artist?.contains(text, true) == true
+            isMatchingTitle || isMatchingAlbum || isMatchingArtist
         }
     }
 }
