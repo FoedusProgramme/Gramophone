@@ -249,7 +249,7 @@
     <string name="bitrate_unknown">未知比特率</string>
     <string name="oh_no">哦不！</string>
     <string name="send_email">发送邮件</string>
-    <string name="send_email_manually">找不到邮件软件，请将日志发送到 nift4dev@gmail.com</string>
+    <string name="send_email_manually">找不到邮件应用，请将日志发送到 nift4@posteo.net</string>
     <string name="did_you_know">您知道吗…</string>
     <string name="create_failed_playlist">无法创建播放列表：%s</string>
     <string name="rename_failed_playlist">无法重命名播放列表：%s</string>
