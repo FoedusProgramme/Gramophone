@@ -365,11 +365,11 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                     .build(),
                 CommandButton.Builder(CommandButton.ICON_HEART_UNFILLED) // not favorite, click will favorite
                     .setDisplayName(getString(R.string.favorite))
-                    .setSessionCommand(SessionCommand(SessionCommand.COMMAND_CODE_SESSION_SET_RATING))
+                    .setSessionCommand(SessionCommand(SessionCommand.COMMAND_CODE_SESSION_SET_RATING), HeartRating(true))
                     .build(),
                 CommandButton.Builder(CommandButton.ICON_HEART_FILLED) // favorite, click will unfavorite
                     .setDisplayName(getString(R.string.unfavorite))
-                    .setSessionCommand(SessionCommand(SessionCommand.COMMAND_CODE_SESSION_SET_RATING))
+                    .setSessionCommand(SessionCommand(SessionCommand.COMMAND_CODE_SESSION_SET_RATING), HeartRating(false))
                     .build(),
             )
         afFormatTracker = AfFormatTracker(this, playbackHandler, handler)
@@ -859,6 +859,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         ) {
             handler.post { this.controller?.prepare() }
         }
+        availableSessionCommands.add(SessionCommand.COMMAND_CODE_SESSION_SET_RATING)
         availableSessionCommands.add(SessionCommand(SERVICE_SET_TIMER, Bundle.EMPTY))
         availableSessionCommands.add(SessionCommand(SERVICE_QUERY_TIMER, Bundle.EMPTY))
         availableSessionCommands.add(SessionCommand(SERVICE_GET_LYRICS, Bundle.EMPTY))
