@@ -718,7 +718,7 @@
     <!-- Positive action button in crash report screen -->
     <string name="send_email">Send email</string>
     <!-- Error message if sending crash report failed -->
-    <string name="send_email_manually">Please send log to nift4dev@gmail.com - can\'t find mail app</string>
+    <string name="send_email_manually">Please send log to nift4@posteo.net - can\'t find mail app</string>
     <!-- Error message if lyrics were found but are corrupted or in unsupported format -->
     <string name="failed_to_parse_lyric">Failed to parse lyrics</string>
     <!-- Title of dialog which shows playback path (formats, sample rates, devices, changes in those). -->
