@@ -306,7 +306,7 @@ class LibraryTreeLoader(
         val completion = SettableFuture.create<LibraryResult<ImmutableList<MediaItem>>>()
         scope.launch(Dispatchers.Default) {
             try {
-                val list = searchForMediaItemSync(query)
+                val list = searchForMediaItem(query)
                 val finalPageSize = pageSize.coerceAtMost(200)
                 val pagedList = list.asSequence().drop(page * finalPageSize).take(finalPageSize).toList()
                 completion.set(LibraryResult.ofItemList(ImmutableList.copyOf(pagedList), params))
@@ -318,11 +318,21 @@ class LibraryTreeLoader(
         return completion
     }
 
-    private suspend fun searchForMediaItemSync(query: String): List<MediaItem> {
+    private suspend fun searchForMediaItem(query: String): List<MediaItem> {
         val text = query.trim()
         val list = app.reader.songListFlow.first()
+        val sortedList = sortList(list, LibraryAdapterTypes.SEARCH, Sorter(SongAdapter.MediaItemHelper, null))
         // TODO support focus and sub queries (see MainActivity)
-        return if (text == "") sortList(list, LibraryAdapterTypes.SEARCH, Sorter(SongAdapter.MediaItemHelper, null)) else searchMediaItems(text, list)
+        if (text == "") return sortedList
+        return sortedList.filter {
+            // TODO sort results by match quality? (using raw=natural order)
+            // TODO this is copied directly from SearchFragment, which should probably call into
+            //  here for its search needs instead in the future
+            val isMatchingTitle = it.mediaMetadata.title?.contains(text, true) == true
+            val isMatchingAlbum = it.mediaMetadata.albumTitle?.contains(text, true) == true
+            val isMatchingArtist = it.mediaMetadata.artist?.contains(text, true) == true
+            isMatchingTitle || isMatchingAlbum || isMatchingArtist
+        }
     }
 
     fun addMediaItems(
@@ -357,7 +367,7 @@ class LibraryTreeLoader(
                             resultList.addAll(singleSong)
                         }
                     } else if (item.requestMetadata.searchQuery != null) {
-                        resultList.addAll(searchForMediaItem(item))
+                        resultList.addAll(searchForMediaItem(item.requestMetadata.searchQuery?.trim() ?: ""))
                     } else {
                         throw UnsupportedOperationException("can't do anything with $item")
                     }
@@ -369,23 +379,5 @@ class LibraryTreeLoader(
         return completion
     }
 
-    private suspend fun searchForMediaItem(item: MediaItem): List<MediaItem> {
-        val text = item.requestMetadata.searchQuery?.trim() ?: ""
-        val list = app.reader.songListFlow.first()
-        // TODO support focus and sub queries (see MainActivity)
-        return if (text == "") sortList(list, LibraryAdapterTypes.SEARCH, Sorter(SongAdapter.MediaItemHelper, null)) else searchMediaItems(text, list)
-    }
 
-    private fun searchMediaItems(text: String, list: List<MediaItem>): List<MediaItem> {
-        val sortedList = sortList(list, LibraryAdapterTypes.SEARCH, Sorter(SongAdapter.MediaItemHelper, null))
-        return sortedList.filter {
-            // TODO sort results by match quality? (using raw=natural order)
-            // TODO this is copied directly from SearchFragment, which should probably call into
-            //  here for its search needs instead in the future
-            val isMatchingTitle = it.mediaMetadata.title?.contains(text, true) == true
-            val isMatchingAlbum = it.mediaMetadata.albumTitle?.contains(text, true) == true
-            val isMatchingArtist = it.mediaMetadata.artist?.contains(text, true) == true
-            isMatchingTitle || isMatchingAlbum || isMatchingArtist
-        }
-    }
 }
