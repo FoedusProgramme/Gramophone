@@ -1080,6 +1080,8 @@
     <string name="contributors_yuyuko1024">Squiggly progress bar</string>
     <!-- Shown below a contributor's nickname in about screen. This is the feature they worked on -->
     <string name="contributors_ghhccghk">Status Bar lyrics &amp; other improvements</string>
+    <!-- Shown below a contributor's nickname in about screen. This is the feature they worked on -->
+    <string name="contributors_banksio">Android Auto</string>
     <!-- Shown below a contributor's nickname in about screen -->
     <string name="contributors_saladnoober">Quality Assurance</string>
     <!-- Home menu item to refresh song list quickly -->
