@@ -372,7 +372,7 @@
     <string name="settings_trim_lyrics_summary">Иногда пробелы в начале или в конце строки — это художественный приём автора. Но если вам это не нравится, просто включите эту опцию, и лишние пробелы будут удаляться автоматически.</string>
     <string name="settings_lyrics_no_animation">Отключить анимации</string>
     <string name="gramophone_crashed_explainer2">В работе Gramophone произошёл сбой :(\n\nПожалуйста, отправьте отчёт об ошибке, чтобы неполадки, подобные тем, что привели к этому сбою, можно было исправить!\n\nКаждая ситуация уникальна, словно музыка, и без вашей помощи, весьма вероятно, эта ошибка <b>НЕ</b> будет устранена!</string>
-    <string name="send_email_manually">Пожалуйста отправьте лог файл по адресу nift4dev@gmail.com - не могу найти почтовую программу</string>
+    <string name="send_email_manually">Пожалуйста отправьте лог файл по адресу nift4@posteo.net - не могу найти почтовую программу</string>
     <string name="spk_encoding_iec61937">IEC 61937</string>
     <string name="spk_encoding_aptx">aptX</string>
     <string name="mix_port_flag_deep_buffer">Глубокий буффер</string>
