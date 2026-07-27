@@ -332,6 +332,7 @@ dependencies {
     implementation("androidx.media3:media3-exoplayer:$media3Version")
     implementation("androidx.media3:media3-exoplayer-midi:$media3Version")
     implementation("androidx.media3:media3-session:$media3Version")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.11.0")
     //implementation("androidx.paging:paging-runtime-ktx:3.2.1") TODO paged, partial, flow based library loading
     //implementation("androidx.paging:paging-guava:3.2.1") TODO do we have guava? do we need this?
     implementation("androidx.preference:preference-ktx:1.2.1")

@@ -1,6 +1,7 @@
 package org.akanework.gramophone.logic
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.core.net.toUri
 import androidx.media3.common.MediaItem
@@ -9,15 +10,13 @@ import androidx.media3.common.util.Log
 import androidx.media3.session.LibraryResult
 import androidx.media3.session.MediaLibraryService.LibraryParams
 import androidx.media3.session.MediaConstants
-import androidx.preference.PreferenceManager
 import com.google.common.collect.ImmutableList
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
-import com.google.common.util.concurrent.SettableFuture
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.guava.future
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.comparators.SupportComparator
 import org.akanework.gramophone.ui.adapters.AlbumAdapter
@@ -38,7 +37,8 @@ import uk.akane.libphonograph.items.*
 class LibraryTreeLoader(
     private val context: Context,
     private val app: GramophoneApplication,
-    private val scope: CoroutineScope
+    private val scope: CoroutineScope,
+    private val prefs: SharedPreferences
 ) {
 
     private val tag = "LibraryTreeLoader"
@@ -51,7 +51,6 @@ class LibraryTreeLoader(
     // --- Helpers ---
 
     private fun getEnabledTabs(): List<ViewPager2Adapter.Companion.Tab> {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
         val tabs = ViewPager2Adapter.mapSettingToTabList(prefs.getString("tabs", "")!!)
         return tabs.takeWhile { it != null }
             .filterNotNull()
@@ -80,12 +79,12 @@ class LibraryTreeLoader(
     private fun mapDomainItemToMediaItem(item: Any): MediaItem? {
         return when (item) {
             is Album -> createFolderItem(
-                "album_${item.id}", item.title ?: "", MediaMetadata.MEDIA_TYPE_FOLDER_MIXED,
+                "album_${item.id}", item.title ?: "", MediaMetadata.MEDIA_TYPE_ALBUM,
                 subtitle = item.albumArtist ?: item.songList.firstOrNull()?.mediaMetadata?.artist?.toString(),
                 artworkUri = item.cover, isPlayable = item.songList.isNotEmpty(), isBrowsable = false
             )
             is Artist -> createFolderItem(
-                "artist_${item.title}", item.title ?: "", MediaMetadata.MEDIA_TYPE_FOLDER_MIXED,
+                "artist_${item.title}", item.title ?: "", MediaMetadata.MEDIA_TYPE_ARTIST,
                 subtitle = context.resources.getQuantityString(R.plurals.songs, item.songList.size, item.songList.size),
                 artworkUri = item.albumList.firstOrNull()?.cover, isPlayable = item.songList.isNotEmpty(), isBrowsable = false
             )
@@ -98,22 +97,22 @@ class LibraryTreeLoader(
                 val icon = when (item) {
                     is uk.akane.libphonograph.dynamicitem.RecentlyAdded -> "android.resource://${context.packageName}/${R.drawable.ic_default_cover_playlist_recently}".toUri()
                     is uk.akane.libphonograph.dynamicitem.Favorite -> "android.resource://${context.packageName}/${R.drawable.ic_default_cover_playlist_favorite}".toUri()
-                    else -> null
+                    else -> item.songList.firstOrNull()?.mediaMetadata?.artworkUri
                 }
                 val id = when (item) {
                     is uk.akane.libphonograph.dynamicitem.RecentlyAdded -> "playlist_recently_added"
                     is uk.akane.libphonograph.dynamicitem.Favorite -> "playlist_favorite"
                     else -> "playlist_${item.id}"
                 }
-                createFolderItem(id, title, MediaMetadata.MEDIA_TYPE_FOLDER_MIXED, artworkUri = icon, isPlayable = item.songList.isNotEmpty(), isBrowsable = false)
+                createFolderItem(id, title, MediaMetadata.MEDIA_TYPE_PLAYLIST, artworkUri = icon, isPlayable = item.songList.isNotEmpty(), isBrowsable = false)
             }
             is Genre -> createFolderItem(
-                "genre_${item.id}", item.title ?: context.getString(R.string.unknown_genre), MediaMetadata.MEDIA_TYPE_FOLDER_MIXED,
+                "genre_${item.id}", item.title ?: context.getString(R.string.unknown_genre), MediaMetadata.MEDIA_TYPE_GENRE,
                 subtitle = context.resources.getQuantityString(R.plurals.songs, item.songList.size, item.songList.size),
                 isPlayable = item.songList.isNotEmpty(), isBrowsable = false, artworkUri = null
             )
             is Date -> createFolderItem(
-                "date_${item.id}", item.title ?: context.getString(R.string.unknown_year), MediaMetadata.MEDIA_TYPE_FOLDER_MIXED,
+                "date_${item.id}", item.title ?: context.getString(R.string.unknown_year), MediaMetadata.MEDIA_TYPE_YEAR,
                 subtitle = context.resources.getQuantityString(R.plurals.songs, item.songList.size, item.songList.size),
                 isPlayable = item.songList.isNotEmpty(), isBrowsable = false, artworkUri = null
             )
@@ -167,7 +166,6 @@ class LibraryTreeLoader(
     }
 
     private fun <T> sortList(list: List<T>, adapterType: Int, sorter: Sorter<T>): List<T> {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
         val sortTypeStr = prefs.getString("S$adapterType", null)
         val sortType = sortTypeStr?.let {
             try { Sorter.Type.valueOf(it) } catch (_: Exception) { null }
@@ -193,11 +191,9 @@ class LibraryTreeLoader(
         page: Int,
         pageSize: Int,
         params: LibraryParams?
-    ): ListenableFuture<LibraryResult<ImmutableList<MediaItem>>> {
-        val completion = SettableFuture.create<LibraryResult<ImmutableList<MediaItem>>>()
-        scope.launch(Dispatchers.Default) {
-            try {
-                val list: List<MediaItem> = when (parentId) {
+    ): ListenableFuture<LibraryResult<ImmutableList<MediaItem>>> = scope.future(Dispatchers.Default) {
+        try {
+            val list: List<MediaItem> = when (parentId) {
                     "root" -> {
                         val tabs = getEnabledTabs()
                         if (tabs.size <= 4) tabs.map { getCategoryItem(mapTabToMediaId(it))!! }
@@ -219,13 +215,11 @@ class LibraryTreeLoader(
 
                 val finalPageSize = pageSize.coerceAtMost(200)
                 val pagedList = list.asSequence().drop(page * finalPageSize).take(finalPageSize).toList()
-                completion.set(LibraryResult.ofItemList(ImmutableList.copyOf(pagedList), params))
+                LibraryResult.ofItemList(ImmutableList.copyOf(pagedList), params)
             } catch (e: Exception) {
                 Log.w(tag, "getChildren failed for $parentId", e)
-                completion.set(LibraryResult.ofError(androidx.media3.session.SessionError.ERROR_UNKNOWN))
+                LibraryResult.ofError(androidx.media3.session.SessionError.ERROR_UNKNOWN)
             }
-        }
-        return completion
     }
 
     private fun mapTabToMediaId(tab: ViewPager2Adapter.Companion.Tab) = when (tab) {
@@ -239,11 +233,9 @@ class LibraryTreeLoader(
         ViewPager2Adapter.Companion.Tab.FileSystem -> "detailed_folders"
     }
 
-    fun getItem(mediaId: String): ListenableFuture<LibraryResult<MediaItem>> {
-        val completion = SettableFuture.create<LibraryResult<MediaItem>>()
-        scope.launch(Dispatchers.Default) {
-            try {
-                val item = getCategoryItem(mediaId) ?: when {
+    fun getItem(mediaId: String): ListenableFuture<LibraryResult<MediaItem>> = scope.future(Dispatchers.Default) {
+        try {
+            val item = getCategoryItem(mediaId) ?: when {
                     mediaId.startsWith("album_") -> {
                         val id = mediaId.removePrefix("album_").toLongOrNull()
                         app.reader.albumListFlow.first().find { it.id == id }?.let { mapDomainItemToMediaItem(it) }
@@ -277,14 +269,15 @@ class LibraryTreeLoader(
                     else -> app.reader.songListFlow.first().find { it.mediaId == mediaId }
                 }
 
-                if (item != null) completion.set(LibraryResult.ofItem(item, null))
-                else completion.set(LibraryResult.ofError(androidx.media3.session.SessionError.ERROR_BAD_VALUE))
+                if (item != null) {
+                    LibraryResult.ofItem(item, null)
+                } else {
+                    LibraryResult.ofError(androidx.media3.session.SessionError.ERROR_BAD_VALUE)
+                }
             } catch (e: Exception) {
                 Log.w(tag, "getItem failed for $mediaId", e)
-                completion.set(LibraryResult.ofError(androidx.media3.session.SessionError.ERROR_UNKNOWN))
+                LibraryResult.ofError(androidx.media3.session.SessionError.ERROR_UNKNOWN)
             }
-        }
-        return completion
     }
 
     private fun createFolderItem(
@@ -302,20 +295,16 @@ class LibraryTreeLoader(
 
     fun getSearchResult(
         query: String, page: Int, pageSize: Int, params: LibraryParams?
-    ): ListenableFuture<LibraryResult<ImmutableList<MediaItem>>> {
-        val completion = SettableFuture.create<LibraryResult<ImmutableList<MediaItem>>>()
-        scope.launch(Dispatchers.Default) {
-            try {
-                val list = searchForMediaItem(query)
-                val finalPageSize = pageSize.coerceAtMost(200)
-                val pagedList = list.asSequence().drop(page * finalPageSize).take(finalPageSize).toList()
-                completion.set(LibraryResult.ofItemList(ImmutableList.copyOf(pagedList), params))
-            } catch (e: Exception) {
-                Log.w(tag, "getSearchResult failed for $query", e)
-                completion.set(LibraryResult.ofError(androidx.media3.session.SessionError.ERROR_UNKNOWN))
-            }
+    ): ListenableFuture<LibraryResult<ImmutableList<MediaItem>>> = scope.future(Dispatchers.Default) {
+        try {
+            val list = searchForMediaItem(query)
+            val finalPageSize = pageSize.coerceAtMost(200)
+            val pagedList = list.asSequence().drop(page * finalPageSize).take(finalPageSize).toList()
+            LibraryResult.ofItemList(ImmutableList.copyOf(pagedList), params)
+        } catch (e: Exception) {
+            Log.w(tag, "getSearchResult failed for $query", e)
+            LibraryResult.ofError(androidx.media3.session.SessionError.ERROR_UNKNOWN)
         }
-        return completion
     }
 
     private suspend fun searchForMediaItem(query: String): List<MediaItem> {
@@ -337,46 +326,40 @@ class LibraryTreeLoader(
 
     fun addMediaItems(
         mediaItems: List<MediaItem>
-    ): ListenableFuture<ExpandedMediaItems> {
-        val completion = SettableFuture.create<ExpandedMediaItems>()
-        scope.launch(Dispatchers.Default) {
-            try {
-                var startingIndex: Int? = null
-                val resultList = mutableListOf<MediaItem>()
+    ): ListenableFuture<ExpandedMediaItems> = scope.future(Dispatchers.Default) {
+        var startingIndex: Int? = null
+        val resultList = mutableListOf<MediaItem>()
 
-                for (item in mediaItems) {
-                    if (item.localConfiguration != null) {
-                        resultList.add(item)
-                        continue
-                    }
+        for (item in mediaItems) {
+            if (item.localConfiguration != null) {
+                resultList.add(item)
+                continue
+            }
 
-                    val expanded = getSongsInParent(item.mediaId)
-                    if (expanded.isNotEmpty()) {
-                        resultList.addAll(expanded)
-                    } else if (item.mediaId != MediaItem.DEFAULT_MEDIA_ID) {
-                        if (item.requestMetadata != MediaItem.RequestMetadata.EMPTY) {
-                            val fullSongList = app.reader.songListFlow.first()
-                            val sortedFull = sortList(fullSongList, LibraryAdapterTypes.SONG, Sorter(SongAdapter.MediaItemHelper, null))
-                            val idx = sortedFull.indexOfFirst { it.mediaId == item.mediaId }
-                            if (idx >= 0 && startingIndex == null) {
-                                startingIndex = resultList.size + idx
-                            }
-                            resultList.addAll(sortedFull)
-                        } else {
-                            val singleSong = app.reader.songListFlow.first().filter { m -> m.mediaId == item.mediaId }
-                            resultList.addAll(singleSong)
-                        }
-                    } else if (item.requestMetadata.searchQuery != null) {
-                        resultList.addAll(searchForMediaItem(item.requestMetadata.searchQuery?.trim() ?: ""))
-                    } else {
-                        throw UnsupportedOperationException("can't do anything with $item")
+            val expanded = getSongsInParent(item.mediaId)
+            if (expanded.isNotEmpty()) {
+                resultList.addAll(expanded)
+            } else if (item.mediaId != MediaItem.DEFAULT_MEDIA_ID) {
+                if (item.requestMetadata != MediaItem.RequestMetadata.EMPTY) {
+                    val fullSongList = app.reader.songListFlow.first()
+                    val sortedFull = sortList(fullSongList, LibraryAdapterTypes.SONG, Sorter(SongAdapter.MediaItemHelper, null))
+                    val idx = sortedFull.indexOfFirst { it.mediaId == item.mediaId }
+                    if (idx >= 0 && startingIndex == null) {
+                        startingIndex = resultList.size + idx
                     }
+                    resultList.addAll(sortedFull)
+                } else {
+                    val singleSong = app.reader.songListFlow.first().filter { m -> m.mediaId == item.mediaId }
+                    resultList.addAll(singleSong)
                 }
-
-                completion.set(ExpandedMediaItems(resultList, startingIndex))
-            } catch (e: Exception) { completion.setException(e) }
+            } else if (item.requestMetadata.searchQuery != null) {
+                resultList.addAll(searchForMediaItem(item.requestMetadata.searchQuery?.trim() ?: ""))
+            } else {
+                throw UnsupportedOperationException("can't do anything with $item")
+            }
         }
-        return completion
+
+        ExpandedMediaItems(resultList, startingIndex)
     }
 
 

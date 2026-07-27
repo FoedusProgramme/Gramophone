@@ -115,6 +115,9 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.asExecutor
+import kotlinx.coroutines.guava.future
+import kotlinx.coroutines.guava.await
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.ui.MeiZuLyricsMediaNotificationProvider
 import org.akanework.gramophone.logic.ui.isManualNotificationUpdate
@@ -194,9 +197,8 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
     private val internalPlaybackThread =
         HandlerThread("ExoPlayer:Playback", Process.THREAD_PRIORITY_AUDIO)
     private var mediaSession: MediaLibrarySession? = null
-    private var internalPlayer: EndedWorkaroundPlayer? = null
     val endedWorkaroundPlayer
-        get() = internalPlayer
+        get() = mediaSession?.player as? EndedWorkaroundPlayer
 
     private lateinit var libraryTreeLoader: LibraryTreeLoader
 
@@ -457,12 +459,11 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         player.exoPlayer.setShuffleOrder(CircularShuffleOrder(player, 0, 0, Random.nextLong()))
         lastPlayedManager = LastPlayedManager(this, player)
         lastPlayedManager.allowSavingState = false
-        internalPlayer = player
-
         libraryTreeLoader = LibraryTreeLoader(
             this,
             gramophoneApplication,
-            lifecycleScope
+            lifecycleScope,
+            androidx.preference.PreferenceManager.getDefaultSharedPreferences(this)
         )
 
         mediaSession =
@@ -565,6 +566,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                     )
                 )
                 .setSystemUiPlaybackResumptionOptIn(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+                // Workaround for AA bug where content cannot be scrolled (androidx/media#2192)
                 .setPeriodicPositionUpdateEnabled(false)
                 .build()
         addSession(mediaSession!!)
@@ -1764,23 +1766,9 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         mediaSession: MediaSession,
         controller: MediaSession.ControllerInfo,
         mediaItems: List<MediaItem>
-    ): ListenableFuture<List<MediaItem>> {
-        val future = libraryTreeLoader.addMediaItems(mediaItems)
-        val completion = CallbackToFutureAdapter.getFuture<List<MediaItem>> { completer ->
-            future.addListener({
-                lifecycleScope.launch(Dispatchers.Default) {
-                    try {
-                        val expanded = future.get()
-                        val mapped = mapMediaItemsForFavorites(expanded.mediaItems)
-                        completer.set(mapped)
-                    } catch (e: Exception) {
-                        completer.setException(e)
-                    }
-                }
-            }, ContextCompat.getMainExecutor(this))
-            "addMediaItems callback"
-        }
-        return completion
+    ): ListenableFuture<List<MediaItem>> = lifecycleScope.future(Dispatchers.Default) {
+        val expanded = libraryTreeLoader.addMediaItems(mediaItems).await()
+        mapMediaItemsForFavorites(expanded.mediaItems)
     }
 
     override fun onSetMediaItems(
@@ -1789,22 +1777,9 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         mediaItems: List<MediaItem>,
         startIndex: Int,
         startPositionMs: Long
-    ): ListenableFuture<MediaSession.MediaItemsWithStartPosition> {
-        val future = libraryTreeLoader.addMediaItems(mediaItems)
-        val completion = CallbackToFutureAdapter.getFuture<MediaSession.MediaItemsWithStartPosition> { completer ->
-            future.addListener({
-                lifecycleScope.launch(Dispatchers.Default) {
-                    try {
-                        val expanded = future.get()
-                        val mapped = mapMediaItemsForFavorites(expanded.mediaItems)
-                        completer.set(MediaSession.MediaItemsWithStartPosition(mapped, expanded.startIndex ?: startIndex, startPositionMs))
-                    } catch (e: Exception) {
-                        completer.setException(e)
-                    }
-                }
-            }, ContextCompat.getMainExecutor(this))
-            "setMediaItems callback"
-        }
-        return completion
+    ): ListenableFuture<MediaSession.MediaItemsWithStartPosition> = lifecycleScope.future(Dispatchers.Default) {
+        val expanded = libraryTreeLoader.addMediaItems(mediaItems).await()
+        val mapped = mapMediaItemsForFavorites(expanded.mediaItems)
+        MediaSession.MediaItemsWithStartPosition(mapped, expanded.startIndex ?: startIndex, startPositionMs)
     }
 }
