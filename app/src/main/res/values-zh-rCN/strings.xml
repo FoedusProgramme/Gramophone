@@ -513,4 +513,6 @@
     <string name="mq_pin_queue">固定队列</string>
     <string name="shuffled">%s（随机）</string>
     <string name="loading_playlists">正在加载播放列表…</string>
+    <string name="contributors_banksio">Android Auto</string>
+    <string name="unfavorite">取消收藏</string>
 </resources>
