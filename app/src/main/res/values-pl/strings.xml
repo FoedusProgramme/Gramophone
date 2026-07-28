@@ -531,4 +531,6 @@
     <string name="mq_pin_queue">Przypiąć kolejkę</string>
     <string name="shuffled">%s (przetasowano)</string>
     <string name="loading_playlists">Wczytywanie playlisty...</string>
+    <string name="contributors_banksio">Android Auto</string>
+    <string name="unfavorite">Usuń z ulubionych</string>
 </resources>
