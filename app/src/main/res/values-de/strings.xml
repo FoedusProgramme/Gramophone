@@ -497,4 +497,6 @@
     <string name="settings_mq_enabled">Mehrere Warteschlangen</string>
     <string name="settings_pure_dark">Schwarzes Farbschema</string>
     <string name="settings_replaygain_drc_desc">Kompressor benutzen, um Übersteuerung zu vermeiden (empfohlen). Ist diese Funktion deaktiviert, wird stattdessen die Lautstärke reduziert, was den Normalisierungseffekt zunichtemacht.</string>
+    <string name="contributors_banksio">Android Auto</string>
+    <string name="search_query">Suchen: %s</string>
 </resources>
