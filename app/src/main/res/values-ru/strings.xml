@@ -533,4 +533,6 @@
     <string name="mq_pin_queue">Закрепить очередь</string>
     <string name="shuffled">%s (вперемешку)</string>
     <string name="loading_playlists">Загрузка плейлистов…</string>
+    <string name="contributors_banksio">Android Auto</string>
+    <string name="unfavorite">Удалить из избранного</string>
 </resources>
