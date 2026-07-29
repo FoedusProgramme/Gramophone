@@ -279,7 +279,7 @@
     <string name="settings_open_source_licenses">Avatud lähtekoodiga tarkvara litsentsid</string>
     <string name="oh_no">Oh appikene!</string>
     <string name="send_email">Saada e-kiri</string>
-    <string name="send_email_manually">E-posti rakendust ei õnnestu tuvastada - seega lihtsalt saada e-kiri nift4dev@gmail.com aadressile</string>
+    <string name="send_email_manually">E-posti rakendust ei õnnestu tuvastada - seega lihtsalt saada e-kiri nift4@posteo.net aadressile</string>
     <string name="failed_to_parse_lyric">Laulusõnade liigendamine ei õnnestunud</string>
     <string name="audio_signal_chain">Helisignaali ahel</string>
     <string name="audio_not_initialized">Heli taasesituse süsteem pole algolekusse viidud. Proovi midagi kuulata!</string>
@@ -519,4 +519,6 @@
     <string name="mq_pin_queue">Tõsta esitusjärjekord esile</string>
     <string name="shuffled">%s (segatud järjestus)</string>
     <string name="loading_playlists">Laadin esitusloendeid...</string>
+    <string name="contributors_banksio">Android Auto</string>
+    <string name="unfavorite">Eemalda lemmikute seast</string>
 </resources>
