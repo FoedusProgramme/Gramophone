@@ -430,4 +430,5 @@
     <string name="settings_cookie_info">غلاف بسكويت</string>
     <string name="settings_pure_dark_summary">سمة تكون فيها جميع الأسطح في التطبيق سوداء نقية (قد يتسبب ذلك في ظهور تطبيع أسود على شاشات OLED)</string>
     <string name="settings_pure_dark">سمة سوداء نقية</string>
+    <string name="settings_replaygain_preamp_desc">زيادة أو خفض مستوى صوت الأغاني باستخدام علامات ReplayGain. قد تتسبب القيم الأعلى في فقدان الديناميكيات بسبب منع الـclipping.</string>
 </resources>
