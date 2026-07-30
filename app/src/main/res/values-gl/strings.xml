@@ -372,7 +372,7 @@
     <string name="spk_encoding_mpegh_sub_lc_l4">MPEG-H Low Complexity L4</string>
     <string name="spk_encoding_unknown">Unknown format %s</string>
     <string name="spk_encoding_unknown_d">Formato descoñecido %d</string>
-    <string name="send_email_manually">Envíame o informe a nift4dev@gmail.com - non atopo a app de correo</string>
+    <string name="send_email_manually">Envíame o informe a nift4@posteo.net - non atopo a app de correo</string>
     <string name="email_clipboard">Copiáronse o enderezo de correo e texto ao portapapeis</string>
     <string name="settings_export_logs">Exportar rexistro da app</string>
     <string name="crash_report">Informe do fallo</string>
@@ -519,4 +519,6 @@
     <string name="mq_pin_queue">Fixar a cola</string>
     <string name="shuffled">%s (barallado)</string>
     <string name="loading_playlists">Cargando as listas…</string>
+    <string name="contributors_banksio">Android Auto</string>
+    <string name="unfavorite">Retirar favorita</string>
 </resources>
