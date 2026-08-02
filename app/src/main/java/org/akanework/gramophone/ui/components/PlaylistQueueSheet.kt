@@ -50,7 +50,6 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.stateIn
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.MultiQueueObject
-import org.akanework.gramophone.logic.deleteQueue
 import org.akanework.gramophone.logic.dpToPx
 import org.akanework.gramophone.logic.getBooleanStrict
 import org.akanework.gramophone.logic.getQueueForUi
@@ -67,7 +66,7 @@ import java.util.LinkedList
 
 // TODO:
 //  queue menu flickers when queue sheet isnt full height
-//  unique(title, isOriginal) for queue title checks. separate (+) indicator. show id for queue
+//  isOriginal indictor not updated when action happens in player
 class PlaylistQueueSheet(
     context: Context, private val activity: MainActivity
 ) : BottomSheetDialog(context), Player.Listener {

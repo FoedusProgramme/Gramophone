@@ -975,7 +975,7 @@ class MqState(
         }
     }
 
-    fun handleRefresh(
+    private fun handleRefresh(
         level: MqRefresh,
         activeQueue: Pair<MutableList<Int>, MultiQueueObject>?,
         inactiveQueues: List<MultiQueueObject>,
@@ -1072,13 +1072,13 @@ class MqState(
         resetHead()
     }
 
-    fun removeQueue(index: Long = -1) {
+    fun removeQueue(queueId: Long = -1) {
         if (!Flags.MQ_PREVIEW) {
             instance.clearMediaItems()
             return
         }
 
-        instance.deleteQueue(index)
+        instance.deleteQueue(queueId)
 
         detachedQueue?.repeatMode?.let {
             onRepeatModeChanged(it)
@@ -1119,8 +1119,8 @@ class MqState(
         playlistQueueSheet?.forceUpdate()
     }
 
-    fun playNext(mqIndex: Long) {
-        instance.getQueueForUi(mqIndex)?.let { mq ->
+    fun playNext(queueId: Long) {
+        instance.getQueueForUi(queueId)?.let { mq ->
             instance.addMediaItems(
                 instance.currentMediaItemIndex + 1,
                 mq.first.zip(mq.second.queue).sortedBy { it.first }.map { it.second },
@@ -1131,8 +1131,8 @@ class MqState(
         }
     }
 
-    fun addToQueue(mqIndex: Long) {
-        instance.getQueueForUi(mqIndex)?.let { mq ->
+    fun addToQueue(queueId: Long) {
+        instance.getQueueForUi(queueId)?.let { mq ->
             instance.addMediaItems(
                 mq.first.zip(mq.second.queue).sortedBy { it.first }.map { it.second },
             )
@@ -1142,12 +1142,12 @@ class MqState(
         }
     }
 
-    fun addToPlaylist(mqIndex: Int) {
-//        mainActivity.addToPlaylistDialog(item)
+    fun addToPlaylist(queueId: Int) {
+//        activity.addToPlaylistDialog(item)
     }
 
-    fun renameQueue(index: Long, title: String, dryRun: Boolean): Boolean {
-        val ret = instance.renameQueue(index, title, dryRun)
+    fun renameQueue(queueId: Long, title: String, dryRun: Boolean): Boolean {
+        val ret = instance.renameQueue(queueId, title, dryRun)
         if (!dryRun && ret) {
             init() // can be more efficient
         }
@@ -1178,14 +1178,14 @@ class MqState(
     }
 
 
-    fun togglePin(index: Long? = -1) {
-        if (index == null) return
-        val queue = (if (index == -1L) activeQueue else inactiveQueues.find { it.id == index })!!
+    fun togglePin(queueId: Long? = -1) {
+        if (queueId == null) return
+        val queue = (if (queueId == -1L) activeQueue else inactiveQueues.find { it.id == queueId })!!
 
         if (queue.expiry != null) {
-            instance.pinQueue(index)
+            instance.pinQueue(queueId)
         } else {
-            instance.unpinQueue(index)
+            instance.unpinQueue(queueId)
         }
     }
 

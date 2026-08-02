@@ -108,7 +108,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -1151,7 +1150,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
 
                 SERVICE_QB_GET_QUEUE_FOR_UI -> {
                     SessionResult(SessionResult.RESULT_SUCCESS).also { res ->
-                        val queueid = customCommand.customExtras.getLong("index")
+                        val queueid = customCommand.customExtras.getLong("queueId")
                         val queueList: List<MultiQueueObject> = if (queueid != -1L) {
                             val index = qb.masterQueues.indexOfFirst { it.id == queueid }.let {
                                 if (it == -1) {
@@ -1170,10 +1169,10 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                 }
 
                 SERVICE_QB_LOAD_QUEUE -> {
-                    val queueid = customCommand.customExtras.getLong("index")
+                    val queueId = customCommand.customExtras.getLong("queueId")
                     val startIndex = customCommand.customExtras.getInt("startIndex")
 
-                    val index = qb.masterQueues.indexOfFirst { it.id == queueid }.let {
+                    val index = qb.masterQueues.indexOfFirst { it.id == queueId }.let {
                         if (it == -1) {
                             throw IllegalStateException("tragic logic bug. this queue no exist in player")
                         } else {
@@ -1190,12 +1189,12 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                 }
 
                 SERVICE_QB_PIN_QUEUE -> {
-                    val index = customCommand.customExtras.getLong("index")
-                    val status = if (index == -1L) {
+                    val queueId = customCommand.customExtras.getLong("queueId")
+                    val status = if (queueId == -1L) {
                         endedWorkaroundPlayer?.currentIsPinned = true
                         true
                     } else {
-                        val index = qb.masterQueues.indexOfFirst { it.id == index }
+                        val index = qb.masterQueues.indexOfFirst { it.id == queueId }
                         if (index == -1) {
                             false
                         } else {
@@ -1204,7 +1203,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                     }
                     if (status) {
                         for (controller in mediaSession!!.connectedControllers) {
-                            val customCommand = buildCustomCommand(CLIENT_QB_REFRESH_ITEM, index)
+                            val customCommand = buildCustomCommand(CLIENT_QB_REFRESH_ITEM, queueId)
                             mediaSession!!.sendCustomCommand(controller, customCommand, Bundle.EMPTY)
                         }
                     }
@@ -1212,12 +1211,12 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                 }
 
                 SERVICE_QB_UNPIN_QUEUE -> {
-                    val index = customCommand.customExtras.getLong("index")
-                    val status = if (index == -1L) {
+                    val queueId = customCommand.customExtras.getLong("queueId")
+                    val status = if (queueId == -1L) {
                         endedWorkaroundPlayer!!.currentIsPinned = false
                         true
                     } else {
-                        val index = qb.masterQueues.indexOfFirst { it.id == index }
+                        val index = qb.masterQueues.indexOfFirst { it.id == queueId }
                         if (index == -1) {
                             false
                         } else {
@@ -1226,7 +1225,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                     }
                     if (status) {
                         for (controller in mediaSession!!.connectedControllers) {
-                            val customCommand = buildCustomCommand(CLIENT_QB_REFRESH_ITEM, index)
+                            val customCommand = buildCustomCommand(CLIENT_QB_REFRESH_ITEM, queueId)
                             mediaSession!!.sendCustomCommand(controller, customCommand, Bundle.EMPTY)
                         }
                     }
@@ -1234,7 +1233,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                 }
 
                 SERVICE_QB_DEL -> {
-                    val queueId = customCommand.customExtras.getLong("index")
+                    val queueId = customCommand.customExtras.getLong("queueId")
                     var refreshLevel = CLIENT_QB_REFRESH_ALL
 
                     val status: Boolean = if (queueId == -1L) {
@@ -1278,7 +1277,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                 }
 
                 SERVICE_QB_RENAME_QUEUE -> {
-                    val queueId = customCommand.customExtras.getLong("index")
+                    val queueId = customCommand.customExtras.getLong("queueId")
                     val title = customCommand.customExtras.getString("title")
                     val dryRun = customCommand.customExtras.getBoolean("dryRun")
 

@@ -393,23 +393,23 @@ fun MediaController.getInactiveQueues(): List<MultiQueueObject> =
     }
 
 // TODO: call without media list
-fun MediaController.getQueue(index: Long = -1L): MultiQueueObject? =
+fun MediaController.getQueue(queueId: Long = -1L): MultiQueueObject? =
     sendCustomCommand(
         SessionCommand(SERVICE_QB_GET_QUEUE_FOR_UI, Bundle.EMPTY).apply {
-            customExtras.putLong("index", index)
+            customExtras.putLong("queueId", queueId)
         }, Bundle.EMPTY
     ).get().extras.run {
         val binder = getBinder("allQueues")!!
         MultiQueueList.getList(binder).firstOrNull()
     }
 
-fun MediaController.getQueueForUi(index: Long = -1L): Pair<MutableList<Int>, MultiQueueObject>? {
-    if (index == -1L) {
+fun MediaController.getQueueForUi(queueId: Long = -1L): Pair<MutableList<Int>, MultiQueueObject>? {
+    if (queueId == -1L) {
         return null
     }
     return sendCustomCommand(
         SessionCommand(SERVICE_QB_GET_QUEUE_FOR_UI, Bundle.EMPTY).apply {
-            customExtras.putLong("index", index)
+            customExtras.putLong("queueId", queueId)
         }, Bundle.EMPTY
     ).get().extras.run {
         val binder = getBinder("allQueues")!!
@@ -425,35 +425,35 @@ fun MediaController.getQueueForUi(index: Long = -1L): Pair<MutableList<Int>, Mul
     }
 }
 
-fun MediaController.loadQueue(index: Long, startIndex: Int = C.INDEX_UNSET) {
+fun MediaController.loadQueue(queueId: Long, startIndex: Int = C.INDEX_UNSET) {
     sendCustomCommand(
         SessionCommand(SERVICE_QB_LOAD_QUEUE, Bundle.EMPTY).apply {
-            customExtras.putLong("index", index)
+            customExtras.putLong("queueId", queueId)
             customExtras.putInt("startIndex", startIndex)
         }, Bundle.EMPTY
     )
 }
 
-fun MediaController.pinQueue(index: Long) =
+fun MediaController.pinQueue(queueId: Long) =
     sendCustomCommand(
         SessionCommand(SERVICE_QB_PIN_QUEUE, Bundle.EMPTY).apply {
-            customExtras.putLong("index", index)
+            customExtras.putLong("queueId", queueId)
         }, Bundle.EMPTY
     )
 
 
-fun MediaController.unpinQueue(index: Long) =
+fun MediaController.unpinQueue(queueId: Long) =
     sendCustomCommand(
         SessionCommand(SERVICE_QB_UNPIN_QUEUE, Bundle.EMPTY).apply {
-            customExtras.putLong("index", index)
+            customExtras.putLong("queueId", queueId)
         }, Bundle.EMPTY
     )
 
 
-fun MediaController.deleteQueue(index: Long) =
+fun MediaController.deleteQueue(queueId: Long) =
     sendCustomCommand(
         SessionCommand(SERVICE_QB_DEL, Bundle.EMPTY).apply {
-            customExtras.putLong("index", index)
+            customExtras.putLong("queueId", queueId)
         }, Bundle.EMPTY
     )
 
@@ -465,10 +465,10 @@ fun MediaController.reorderQueue(from: Int, to: Int) =
         }, Bundle.EMPTY
     )
 
-fun MediaController.renameQueue(index: Long, title: String, dryRun: Boolean): Boolean =
+fun MediaController.renameQueue(queueId: Long, title: String, dryRun: Boolean): Boolean =
     sendCustomCommand(
         SessionCommand(SERVICE_QB_RENAME_QUEUE, Bundle.EMPTY).apply {
-            customExtras.putLong("index", index)
+            customExtras.putLong("queueId", queueId)
             customExtras.putString("title", title)
             customExtras.putBoolean("dryRun", dryRun)
         }, Bundle.EMPTY
