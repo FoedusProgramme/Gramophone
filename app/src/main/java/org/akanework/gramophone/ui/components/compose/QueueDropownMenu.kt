@@ -33,7 +33,7 @@ fun QueueDropdownMenu(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
 ) {
-    val index = mqState.getQueueIndex(mq)
+    val id = mq.id
     var showDialog by remember { mutableStateOf(false) }
 
     var textValue by remember { mutableStateOf(mq.title) }
@@ -43,7 +43,7 @@ fun QueueDropdownMenu(
         LaunchedEffect(Unit) {
             snapshotFlow { textValue }.debounce { 300L }.collectLatest {
                 if (textValue == mq.title) return@collectLatest
-                if (!mqState.renameQueue(index, textValue, true)) {
+                if (!mqState.renameQueue(id, textValue, true)) {
                     error = true
                 }
             }
@@ -71,7 +71,7 @@ fun QueueDropdownMenu(
             confirmButton = {
                 TextButton(
                     onClick = {
-                        if (textValue == mq.title || mqState.renameQueue(index, textValue, false)) {
+                        if (textValue == mq.title || mqState.renameQueue(id, textValue, false)) {
                             showDialog = false
                         } else {
                             error = true
@@ -101,14 +101,14 @@ fun QueueDropdownMenu(
                 title = stringResource(R.string.add_to_queue),
                 leadingIcon = null,
                 action = {
-                    mqState.addToQueue(index)
+                    mqState.addToQueue(id)
                 },
             ),
             DropdownItem(
                 title = stringResource(R.string.play_next),
                 leadingIcon = null,
                 action = {
-                    mqState.playNext(index)
+                    mqState.playNext(id)
                 },
             ),
 //            DropdownItem(

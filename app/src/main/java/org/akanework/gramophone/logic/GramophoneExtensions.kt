@@ -80,7 +80,6 @@ import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVIC
 import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QB_AGE
 import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QB_DEL
 import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QB_GET_INACTIVE_LIST
-import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QB_GET_NUM_QUEUES
 import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QB_GET_QUEUE_FOR_UI
 import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QB_LOAD_QUEUE
 import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QB_PIN_QUEUE
@@ -383,14 +382,7 @@ fun MediaController.getAudioFormat(): AudioFormatDetector.AudioFormats =
         )
     }
 
-fun MediaController.getNumQueues(): Int =
-    sendCustomCommand(
-        SessionCommand(SERVICE_QB_GET_NUM_QUEUES, Bundle.EMPTY),
-        Bundle.EMPTY
-    ).get().extras.run {
-        getInt("num_queues")
-    }
-
+// TODO we do not really need binder for this anymore
 fun MediaController.getInactiveQueues(): List<MultiQueueObject> =
     sendCustomCommand(
         SessionCommand(SERVICE_QB_GET_INACTIVE_LIST, Bundle.EMPTY),
@@ -401,23 +393,23 @@ fun MediaController.getInactiveQueues(): List<MultiQueueObject> =
     }
 
 // TODO: call without media list
-fun MediaController.getQueue(index: Int = C.INDEX_UNSET): MultiQueueObject? =
+fun MediaController.getQueue(index: Long = -1L): MultiQueueObject? =
     sendCustomCommand(
         SessionCommand(SERVICE_QB_GET_QUEUE_FOR_UI, Bundle.EMPTY).apply {
-            customExtras.putInt("index", index)
+            customExtras.putLong("index", index)
         }, Bundle.EMPTY
     ).get().extras.run {
         val binder = getBinder("allQueues")!!
         MultiQueueList.getList(binder).firstOrNull()
     }
 
-fun MediaController.getQueueForUi(index: Int = C.INDEX_UNSET): Pair<MutableList<Int>, MultiQueueObject>? {
-    if (index == -1) {
+fun MediaController.getQueueForUi(index: Long = -1L): Pair<MutableList<Int>, MultiQueueObject>? {
+    if (index == -1L) {
         return null
     }
     return sendCustomCommand(
         SessionCommand(SERVICE_QB_GET_QUEUE_FOR_UI, Bundle.EMPTY).apply {
-            customExtras.putInt("index", index)
+            customExtras.putLong("index", index)
         }, Bundle.EMPTY
     ).get().extras.run {
         val binder = getBinder("allQueues")!!
@@ -433,66 +425,50 @@ fun MediaController.getQueueForUi(index: Int = C.INDEX_UNSET): Pair<MutableList<
     }
 }
 
-fun MediaController.loadQueue(index: Int, startIndex: Int = C.INDEX_UNSET) {
+fun MediaController.loadQueue(index: Long, startIndex: Int = C.INDEX_UNSET) {
     sendCustomCommand(
         SessionCommand(SERVICE_QB_LOAD_QUEUE, Bundle.EMPTY).apply {
-            customExtras.putInt("index", index)
+            customExtras.putLong("index", index)
             customExtras.putInt("startIndex", startIndex)
         }, Bundle.EMPTY
     )
 }
 
-fun MediaController.pinQueue(index: Int): Boolean =
+fun MediaController.pinQueue(index: Long) =
     sendCustomCommand(
         SessionCommand(SERVICE_QB_PIN_QUEUE, Bundle.EMPTY).apply {
-            customExtras.putInt("index", index)
+            customExtras.putLong("index", index)
         }, Bundle.EMPTY
-    ).get().extras.run {
-        if (containsKey("status"))
-            getBoolean("status")
-        else throw IllegalArgumentException("expected status to be set")
-    }
+    )
 
 
-fun MediaController.unpinQueue(index: Int): Long =
+fun MediaController.unpinQueue(index: Long) =
     sendCustomCommand(
         SessionCommand(SERVICE_QB_UNPIN_QUEUE, Bundle.EMPTY).apply {
-            customExtras.putInt("index", index)
+            customExtras.putLong("index", index)
         }, Bundle.EMPTY
-    ).get().extras.run {
-        if (containsKey("expiry"))
-            getLong("expiry")
-        else throw IllegalArgumentException("expected expiry to be set")
-    }
+    )
 
 
-fun MediaController.deleteQueue(index: Int): Boolean =
+fun MediaController.deleteQueue(index: Long) =
     sendCustomCommand(
         SessionCommand(SERVICE_QB_DEL, Bundle.EMPTY).apply {
-            customExtras.putInt("index", index)
+            customExtras.putLong("index", index)
         }, Bundle.EMPTY
-    ).get().extras.run {
-        if (containsKey("status"))
-            getBoolean("status")
-        else throw IllegalArgumentException("expected status to be set")
-    }
+    )
 
-fun MediaController.reorderQueue(from: Int, to: Int): Boolean =
+fun MediaController.reorderQueue(from: Int, to: Int) =
     sendCustomCommand(
         SessionCommand(SERVICE_QB_REORDER, Bundle.EMPTY).apply {
             customExtras.putInt("from", from)
             customExtras.putInt("to", to)
         }, Bundle.EMPTY
-    ).get().extras.run {
-        if (containsKey("status"))
-            getBoolean("status")
-        else throw IllegalArgumentException("expected status to be set")
-    }
+    )
 
-fun MediaController.renameQueue(index: Int, title: String, dryRun: Boolean): Boolean =
+fun MediaController.renameQueue(index: Long, title: String, dryRun: Boolean): Boolean =
     sendCustomCommand(
         SessionCommand(SERVICE_QB_RENAME_QUEUE, Bundle.EMPTY).apply {
-            customExtras.putInt("index", index)
+            customExtras.putLong("index", index)
             customExtras.putString("title", title)
             customExtras.putBoolean("dryRun", dryRun)
         }, Bundle.EMPTY

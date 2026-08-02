@@ -22,7 +22,6 @@ import android.content.SharedPreferences
 import android.os.SystemClock
 import android.view.View
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -31,7 +30,6 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.graphics.Insets
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.size
 import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
@@ -46,20 +44,16 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.runBlocking
 import org.akanework.gramophone.R
+import org.akanework.gramophone.logic.MultiQueueObject
 import org.akanework.gramophone.logic.deleteQueue
 import org.akanework.gramophone.logic.dpToPx
 import org.akanework.gramophone.logic.getBooleanStrict
-import org.akanework.gramophone.logic.getInactiveQueues
-import org.akanework.gramophone.logic.getNumQueues
 import org.akanework.gramophone.logic.getQueueForUi
-import org.akanework.gramophone.logic.loadQueue
 import org.akanework.gramophone.logic.replaceAllSupport
 import org.akanework.gramophone.logic.ui.MyRecyclerView
 import org.akanework.gramophone.logic.utils.Flags
@@ -85,13 +79,8 @@ class PlaylistQueueSheet(
     private val durationView: Chronometer
     private val queueHead: ComposeView
     private val mqEnabled: Boolean
-
-    // TODO: we can probably nuke this workaround
-    // depending on the queue state, we may need to modify behaviour of certain UI elements outside
-    // the compose queue elements
-    private var detachedHead = MutableStateFlow(false)
-    private var detachedQueue: Int? = null
-    private lateinit var mqState: MqState
+    private var mqState: MqState? = null
+    private var lockEdit = MutableStateFlow(false)
 
     init {
         val prefs = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
@@ -139,10 +128,12 @@ class PlaylistQueueSheet(
         playlistAdapter.playlist.first.indexOfFirst { i ->
             i == (instance?.currentMediaItemIndex ?: 0)
         }.let { scrollPos ->
-            recyclerView.scrollToPositionWithOffsetCompat(scrollPos,
+            recyclerView.scrollToPositionWithOffsetCompat(
+                scrollPos,
                 // quick UX hack to show there's more songs above (well, if there is).
                 if (scrollPos >= playlistAdapter.playlist.first.size - 2) 0 else (context
-                    .resources.getDimensionPixelOffset(R.dimen.list_height) * 0.5f).toInt())
+                    .resources.getDimensionPixelOffset(R.dimen.list_height) * 0.5f).toInt()
+            )
         }
         recyclerView.fastScroll(null, null)
 
@@ -179,33 +170,13 @@ class PlaylistQueueSheet(
                 ) {
                     val mqState =
                         rememberMqState(
-                            coroutineScope, instance!!, this@PlaylistQueueSheet,
-                            onDetachHead = {
-                                detachedHead.value = true
-                                detachedQueue = it
-                            },
-                            onResetHead = {
-                                detachedHead.value = false
-                                detachedQueue = null
-                                // detachedQueue is "consumed" by the LaunchedEffect below
-
-                                forceRefresh()
-                            },
+                            coroutineScope, activity, this@PlaylistQueueSheet,
                         )
                     this@PlaylistQueueSheet.mqState = mqState
                     val pagerState = rememberPagerState(
                         initialPage = if (Flags.MQ_PREVIEW) 0 else 1,
                         pageCount = { 2 }
                     )
-
-                    val detachedHeadState by detachedHead.collectAsState()
-                    LaunchedEffect(detachedHeadState) {
-                        if (!detachedHead.value && detachedQueue != null) {
-                            mqState.resetHead(false)
-                            mqState.init()
-                            detachedQueue = null
-                        }
-                    }
 
                     QueueRoot(
                         mqState = mqState,
@@ -245,7 +216,7 @@ class PlaylistQueueSheet(
         mediaItem: MediaItem?,
         reason: @Player.MediaItemTransitionReason Int
     ) {
-        if (detachedHead.value) return
+        if (mqState?.isDetached() == true) return
         val i = instance?.currentMediaItemIndex
         playlistAdapter.currentMediaItemIndex = i?.let { playlistAdapter.playlist.first.indexOf(i) }
     }
@@ -255,7 +226,7 @@ class PlaylistQueueSheet(
         newPosition: Player.PositionInfo,
         reason: @Player.DiscontinuityReason Int
     ) {
-        if (detachedHead.value) return
+        if (mqState?.isDetached() == true) return
         playlistAdapter.updateTimer()
     }
 
@@ -276,8 +247,21 @@ class PlaylistQueueSheet(
      *
      * @param mq Inactive queue index. Set to -1 to load the active queue
      */
-    fun forceUpdate(mq: Int = -1) {
+    fun forceUpdate(mq: Long = -1) {
         playlistAdapter.updateList(mq)
+    }
+
+    /**
+     * Force a full update of playlist and timer
+     *
+     * @param mq Inactive queue index. Set to -1 to load the active queue
+     */
+    fun forceUpdate(mq: Pair<MutableList<Int>, MultiQueueObject>?) {
+        playlistAdapter.updateList(mq = mq)
+    }
+
+    fun lockQueue(lock: Boolean) {
+        lockEdit.value = lock
     }
 
     fun forceRefresh() {
@@ -287,7 +271,7 @@ class PlaylistQueueSheet(
         playlistAdapter.notifyItemRangeChanged(0, playlistAdapter.playlist.first.size)
     }
 
-    inner class PlaylistCardAdapter : EditSongAdapter(activity, true, detachedHead) {
+    inner class PlaylistCardAdapter : EditSongAdapter(activity, true, lockEdit) {
         var playlist: Pair<MutableList<Int>, MutableList<MediaItem>> = dumpPlaylist()
         var currentMediaItemIndex: Int? = null
             set(value) {
@@ -317,8 +301,8 @@ class PlaylistQueueSheet(
             }
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: List<Any?>) {
-            holder.dragHandle.visibility = if (detachedHead.value) View.GONE else View.VISIBLE
-            holder.closeButton.visibility = if (detachedHead.value) View.GONE else View.VISIBLE
+            holder.dragHandle.visibility = if (mqState!!.isDetached()) View.GONE else View.VISIBLE
+            holder.closeButton.visibility = if (mqState!!.isDetached()) View.GONE else View.VISIBLE
             if (payloads.isNotEmpty()) {
                 if (payloads.none { it is Boolean && it }) {
                     holder.nowPlaying.drawable?.level = if (currentIsPlaying == true) 1 else 0
@@ -349,8 +333,8 @@ class PlaylistQueueSheet(
             (holder.nowPlaying.drawable as? NowPlayingDrawable?)?.level2Done = null
             holder.nowPlaying.setImageDrawable(null)
             holder.nowPlaying.visibility = View.GONE
-            holder.dragHandle.visibility = if (detachedHead.value) View.GONE else View.VISIBLE
-            holder.closeButton.visibility = if (detachedHead.value) View.GONE else View.VISIBLE
+            holder.dragHandle.visibility = if (mqState!!.isDetached()) View.GONE else View.VISIBLE
+            holder.closeButton.visibility = if (mqState!!.isDetached()) View.GONE else View.VISIBLE
             super.onViewRecycled(holder)
         }
 
@@ -359,10 +343,9 @@ class PlaylistQueueSheet(
         else playlist.first.size
 
         override fun onClick(pos: Int) {
-            if (detachedHead.value) {
-                detachedQueue?.let {
-                    detachedHead.value = false
-                    instance?.loadQueue(it, playlist.first[pos])
+            if (mqState!!.isDetached()) {
+                mqState!!.detachedQueue?.let {
+                    mqState!!.loadDetached(playlist.first[pos])
                 }
             } else {
                 instance?.seekToDefaultPosition(playlist.first[pos])
@@ -389,7 +372,6 @@ class PlaylistQueueSheet(
                 else if (from > to && to <= currentIndex && currentIndex < from)
                     currentMediaItemIndex = currentIndex + 1
             }
-            mqState.activeQueue?.setIsOriginal?.value = false
             updateTimer() // TODO: this could be more efficient
         }
 
@@ -398,14 +380,7 @@ class PlaylistQueueSheet(
 
             // remove queue if this is the last item, dismiss if no queues left
             if (playlist.first.size <= 1) {
-                val status = instance?.deleteQueue(-1)
-                if (status != true) throw IllegalStateException("Failed to clear queue")
-
-                if (instance.getNumQueues() == 0) {
-                    dismiss()
-                } else {
-                    mqState.removeQueue()
-                }
+                mqState!!.removeQueue()
                 return
             }
 
@@ -420,7 +395,6 @@ class PlaylistQueueSheet(
             } else if (pos < (currentMediaItemIndex ?: -1)) {
                 currentMediaItemIndex = currentMediaItemIndex!! - 1
             }
-            mqState.activeQueue?.setIsOriginal?.value = false
             updateTimer() // TODO: this could be more efficient
         }
 
@@ -449,10 +423,11 @@ class PlaylistQueueSheet(
          * Update playlist and timer
          */
         fun updateList(
-            mqIndex: Int? = null,
+            mqIndex: Long? = null,
+            mq: Pair<MutableList<Int>, MultiQueueObject>? = null,
             newPlaylist: Pair<MutableList<Int>, MutableList<MediaItem>>? = null
         ) {
-            val mq = mqIndex?.let { instance?.getQueueForUi(mqIndex) }
+            val mq = mq ?: mqIndex?.let { instance?.getQueueForUi(mqIndex) }
             val pl = if (mq != null) {
                 Pair(mq.first, mq.second.queue)
             } else {
@@ -490,8 +465,10 @@ class PlaylistQueueSheet(
             } else {
                 durationView.stop()
             }
-            durationView.base = SystemClock.elapsedRealtime() + playlist.first.subList(current,
-                playlist.first.size).sumOf { playlist.second[it].mediaMetadata.durationMs ?: 0L } -
+            durationView.base = SystemClock.elapsedRealtime() + playlist.first.subList(
+                current,
+                playlist.first.size
+            ).sumOf { playlist.second[it].mediaMetadata.durationMs ?: 0L } -
                     elapsedCurrentMs + 1000
         }
     }

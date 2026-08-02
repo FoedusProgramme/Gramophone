@@ -94,7 +94,7 @@ class QueueBoard(
         plr.setMediaItems(
             new.queue, new.startIndex,
             new.startPositionMs,
-            new.title, new.expiry.value == null, new.isOriginal, new.shuffleOrder, new.ended,
+            new.title, new.expiry == null, new.isOriginal, new.shuffleOrder, new.ended,
             new.repeatMode, new.shuffleModeEnabled, null
         )
     }
@@ -105,7 +105,7 @@ class QueueBoard(
      * @param index Queue index.
      */
     fun pinQueue(index: Int): Boolean {
-        masterQueues[index].expiry.value = null
+        masterQueues[index].expiry = null
         return true
     }
 
@@ -115,11 +115,10 @@ class QueueBoard(
      * @param index Queue index.
      * @return true if the operation is successful, otherwise false
      */
-    fun unpinQueue(index: Int): Long {
-        if (masterQueues.isEmpty()) return -1L
-        val expiry = System.currentTimeMillis() + QUEUE_EXPIRY_MS
-        masterQueues[index].expiry.value = System.currentTimeMillis() + QUEUE_EXPIRY_MS
-        return expiry
+    fun unpinQueue(index: Int): Boolean {
+        if (masterQueues.isEmpty()) return false
+        masterQueues[index].expiry = System.currentTimeMillis() + QUEUE_EXPIRY_MS
+        return true
     }
 
     /**
@@ -128,7 +127,7 @@ class QueueBoard(
     fun trimQB() {
         val currentTimeMillis = System.currentTimeMillis()
         val newQueueList = masterQueues.filter {
-            it.expiry.value == null || it.expiry.value!! > currentTimeMillis
+            it.expiry == null || it.expiry!! > currentTimeMillis
         }
         masterQueues.clear()
         masterQueues.addAll(newQueueList)
@@ -170,7 +169,7 @@ class QueueBoard(
         repeatMode: (@Player.RepeatMode Int)?,
         shuffleOrder: CircularShuffleOrder.Persistent?,
         ended: Boolean,
-    ): MultiQueueObject {
+    ) {
         if (QUEUE_DEBUG)
             Log.d(TAG, "Queue data: $masterQueues")
         if (QUEUE_DEBUG)
@@ -178,7 +177,7 @@ class QueueBoard(
                 TAG, "Adding to queue \"$title\". medialist size = ${mediaList.size}. " +
                         "replace/startIndex = $mediaItemIndex"
             )
-        if (mediaList.isEmpty()) throw IllegalArgumentException("Media list cannot be empty")
+        if (mediaList.isEmpty()) return //throw IllegalArgumentException("Media list cannot be empty")
 
         masterQueues.removeAll { it.isOriginal && it.title.trimEnd() == title }
 
@@ -190,18 +189,17 @@ class QueueBoard(
             id = queueId,
             index = -1,
             title = title,
-            expiry = MutableStateFlow(if (!shouldPin) System.currentTimeMillis() + QUEUE_EXPIRY_MS else null),
+            expiry = if (!shouldPin) System.currentTimeMillis() + QUEUE_EXPIRY_MS else null,
             queue = ArrayList(mediaList),
             startIndex = mediaItemIndex,
             startPositionMs = startPositionMs ?: C.TIME_UNSET,
             repeatMode = repeatMode ?: 0,
             shuffleOrder = shuffleOrder,
             ended = ended,
-            setIsOriginal = MutableStateFlow(isOriginal),
+            isOriginal = isOriginal,
         )
 
         masterQueues.bubbleUp(newQueue)
-        return newQueue
     }
 
     /**
@@ -321,7 +319,7 @@ class QueueBoard(
             if (!dryRun) {
                 masterQueues[oldIndex] = masterQueues[oldIndex].copy(
                     title = newName,
-                    setIsOriginal = MutableStateFlow(true)
+                    isOriginal = true
                 )
             }
             if (QUEUE_DEBUG)
@@ -339,8 +337,8 @@ class QueueBoard(
      */
     fun age() {
         masterQueues.forEach {
-            if (it.expiry.value != null) {
-                it.expiry.value = it.expiry.value!! + 2L * 36000000L
+            if (it.expiry != null) {
+                it.expiry = it.expiry!! + 2L * 36000000L
             }
         }
     }
@@ -379,7 +377,7 @@ data class MultiQueueObject(
      * it becomes inactive. If said queue is unpinned, then it will renew its expiry time when it
      * becomes inactive.
      */
-    var expiry: MutableStateFlow<Long?>,
+    var expiry: Long?,
     /**
      * The order of songs are dynamic. This should not be accessed from outside QueueBoard.
      */
@@ -391,19 +389,16 @@ data class MultiQueueObject(
 
     var shuffleOrder: CircularShuffleOrder.Persistent? = null,
     var ended: Boolean = false,
-    var setIsOriginal: MutableStateFlow<Boolean> = MutableStateFlow(true),
+    val isOriginal: Boolean = true,
 
     private var fakeQueueSize: Int? = null,
     private var fakeQueueLength: Long? = null
 ) {
     override fun toString() =
-        "$title ($id) startIndex=$startIndex, startPositionMs=$startPositionMs, repeatMode=$repeatMode, shuffleModeEnabled=$shuffleModeEnabled, ended=$ended, mediaItems_size=${queue.size}, expiry=${expiry.value}"
+        "$title ($id) startIndex=$startIndex, startPositionMs=$startPositionMs, repeatMode=$repeatMode, shuffleModeEnabled=$shuffleModeEnabled, ended=$ended, mediaItems_size=${queue.size}, expiry=$expiry"
 
     val shuffleModeEnabled
         get() = shuffleOrder != null
-
-    val isOriginal
-        get() = setIsOriginal.value
 
     /**
      * Retrieve the song at current position in the queue
@@ -452,7 +447,7 @@ data class MultiQueueObject(
             putLong("id", id)
             putInt("index", index)
             putString("title", title)
-            putString("expiry", expiry.value?.toString())
+            putString("expiry", expiry.toString())
 
             putBinder("queue", binder)
 
@@ -481,16 +476,18 @@ data class MultiQueueObject(
                 id = bundle.getLong("id"),
                 index = bundle.getInt("index"),
                 title = bundle.getString("title") ?: "",
-                expiry = MutableStateFlow(bundle.getString("expiry")?.toLongOrNull()),
+                expiry = bundle.getString("expiry")?.toLongOrNull(),
                 queue = queue,
 
                 startIndex = bundle.getInt("startIndex", C.INDEX_UNSET),
                 startPositionMs = bundle.getLong("startPositionMs", C.TIME_UNSET),
                 repeatMode = bundle.getInt("repeatMode", REPEAT_MODE_OFF),
                 ended = bundle.getBoolean("ended"),
-                setIsOriginal = MutableStateFlow(bundle.getBoolean("isOriginal")),
-                shuffleOrder = BundleCompat.getParcelable(bundle, "shuffleOrder",
-                    CircularShuffleOrder.Persistent::class.java),
+                isOriginal = bundle.getBoolean("isOriginal"),
+                shuffleOrder = BundleCompat.getParcelable(
+                    bundle, "shuffleOrder",
+                    CircularShuffleOrder.Persistent::class.java
+                ),
 
                 fakeQueueSize = bundle.getInt("fakeQueueSize", C.INDEX_UNSET)
                     .let { if (it == C.INDEX_UNSET) null else it },
@@ -511,7 +508,8 @@ class MultiQueueList(val list: List<MultiQueueObject>) : Binder() {
     }
 
     companion object {
-        fun getList(binder: IBinder): List<MultiQueueObject> {
+        fun getList(binder: IBinder?): List<MultiQueueObject> {
+            if (binder == null) return emptyList()
             if (binder is MultiQueueList) {
                 return binder.list
             }

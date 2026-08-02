@@ -31,6 +31,7 @@ import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import org.akanework.gramophone.BuildConfig
 import org.akanework.gramophone.R
+import org.akanework.gramophone.logic.MultiQueueObject
 import org.akanework.gramophone.logic.QueueBoard
 import org.akanework.gramophone.logic.parseQueueTitle
 import org.akanework.gramophone.logic.utils.CircularShuffleOrder
@@ -339,5 +340,21 @@ class EndedWorkaroundPlayer(
 
     fun generateQueueId(): Long {
         return (queueBoard.masterQueues.map { it.id } + (currentQueueId ?: 0)).max() + 1
+    }
+
+    fun getActiveQueue(): MultiQueueObject {
+        return MultiQueueObject(
+            id = currentQueueId!!,
+            index = 0,
+            title = currentTitle ?: context.getString(R.string.unknown_playlist),
+            expiry = if (currentIsPinned) null else 0L,
+            queue = ArrayList(),
+            startIndex = currentMediaItemIndex,
+            startPositionMs = C.TIME_UNSET,
+            repeatMode = repeatMode,
+            shuffleOrder = null,
+            ended = playbackState == STATE_ENDED,
+            isOriginal = currentIsOriginal,
+        )
     }
 }
