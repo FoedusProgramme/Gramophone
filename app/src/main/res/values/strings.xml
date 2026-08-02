@@ -1293,4 +1293,6 @@ supporting local search. This string is displayed in the search bar when using G
     <string name="mq_pin_queue">Pin queue</string>
     <string name="shuffled">%s (shuffled)</string>
     <string name="loading_playlists">Loading playlists...</string>
+    <!-- Option to enable reordering mode for items in a list -->
+    <string name="edit_mode">Enter edit mode</string>
 </resources>
