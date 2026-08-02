@@ -533,4 +533,5 @@
     <string name="loading_playlists">Wczytywanie playlisty...</string>
     <string name="contributors_banksio">Android Auto</string>
     <string name="unfavorite">Usuń z ulubionych</string>
+    <string name="edit_mode">Wejdź w tryb edycji</string>
 </resources>
