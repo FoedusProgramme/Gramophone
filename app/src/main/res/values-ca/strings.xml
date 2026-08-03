@@ -527,4 +527,5 @@
     <string name="loading_playlists">S\'estan carregant les llistes de reproducció...</string>
     <string name="contributors_banksio">Android Auto</string>
     <string name="unfavorite">Elimina de les preferides</string>
+    <string name="edit_mode">Entra en el mode d\'edició</string>
 </resources>
