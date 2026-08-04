@@ -535,4 +535,5 @@
     <string name="loading_playlists">Загрузка плейлистов…</string>
     <string name="contributors_banksio">Android Auto</string>
     <string name="unfavorite">Удалить из избранного</string>
+    <string name="edit_mode">Изменить порядок</string>
 </resources>
