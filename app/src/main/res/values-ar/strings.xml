@@ -228,7 +228,7 @@
     <string name="settings_lyrics_no_animation_summary">تعطيل جميع الرُّسوم المُتحرّكة لانتقال نَص الكلمات</string>
     <string name="oh_no">أوه لا!</string>
     <string name="send_email">إرسال بريد إلكتروني</string>
-    <string name="send_email_manually">يرجى إرسال السجل إلى nift4dev@gmail.com - لا يمكن العثور على تطبيق البريد</string>
+    <string name="send_email_manually">يرجى إرسال السجل إلى nift4@posteo.net - لا يمكن العثور على تطبيق البريد</string>
     <string name="settings_open_source_licenses">تراخيص مفتوحة المصدر</string>
     <string name="mix_port_flag_unknown">غير معروف</string>
     <string name="refreshing_wait">جارٍ التحميل، يُرجى الانتظار…</string>
@@ -308,7 +308,7 @@
     <string name="whitelist_and_blacklist">إذا لم يتم تحديد أي مجلدات في القائمة البيضاء، فسيتم السماح لجميع المجلدات.\n\nيتم تطبيق القائمة البيضاء والقائمة السوداء معًا، مع إعطاء الأولوية للقائمة السوداء. على سبيل المثال، يمكنك السماح بوجود مجلد في القائمة البيضاء مع استبعاد أحد مجلداته الفرعية في القائمة السوداء.</string>
     <string name="settings_replaygain_boost">التعزيز</string>
     <string name="sort_by_album_year">سنة الألبوم</string>
-    <string name="settings_replaygain_boost_desc" formatted="false">"سيؤدي \"التعزيز\" إلى إخراج كل من ReplayGain والموسيقى الأخرى بمستوى صوت أعلى مما هو محدد في جهازك. (إذا تم ضبط مستوى صوت جهازك بالقرب من 100 ٪، فلن يؤدي تعزيز الصوت إلى زيادة مستوى الصوت). مع التعزيز، يمكنك الاستمتاع بالموسيقى التي تتمتع بصوت عالٍ مماثل للتطبيقات الأخرى، مثل الألعاب. يرجى ملاحظة أن هذه الميزة تجريبية وقد تتداخل مع تطبيقات المعادل الخارجية. لا يعمل التعزيز مع سماعات الرأس التي تعمل بالبلوتوث. في حالة وجود أي مشاكل متعلقة بالحجم، يرجى تعطيل ميزة \"زيادة الدخل\" عن طريق تعيينها إلى 0 dB. "</string>
+    <string name="settings_replaygain_boost_desc" formatted="false">"سيؤدي \"التعزيز\" إلى إخراج كل من ReplayGain والموسيقى الأخرى بمستوى صوت أعلى مما هو محدد في جهازك. (إذا تم ضبط مستوى صوت جهازك بالقرب من 100 ٪، فلن يؤدي تعزيز الصوت إلى زيادة مستوى الصوت). مع التعزيز، يمكنك الاستمتاع بالموسيقى التي تتمتع بصوت عالٍ مماثل للتطبيقات الأخرى، مثل الألعاب. يرجى ملاحظة أن هذه الميزة تجريبية وقد تتداخل مع تطبيقات المعادل الخارجية. لا يعمل التعزيز مع سماعات الرأس التي تعمل بالبلوتوث. في حالة وجود أي مشاكل متعلقة بالحجم، يرجى تعطيل ميزة التعزيز عن طريق تعيينها إلى 0 dB. "</string>
     <string name="scroll_to_playing">اسحب لتشغيل أغنية</string>
     <string name="settings_telegram">تيليجرام</string>
     <string name="disabled">معطل</string>
@@ -429,6 +429,39 @@
     <string name="settings_cookie_summary">جعل غلاف الألبوم على شكل بسكويت</string>
     <string name="settings_cookie_info">غلاف بسكويت</string>
     <string name="settings_pure_dark_summary">سمة تكون فيها جميع الأسطح في التطبيق سوداء نقية (قد يتسبب ذلك في ظهور تطبيع أسود على شاشات OLED)</string>
-    <string name="settings_pure_dark">سمة سوداء نقية</string>
+    <string name="settings_pure_dark">أسود نقي في السمة الداكنة</string>
     <string name="settings_replaygain_preamp_desc">زيادة أو خفض مستوى صوت الأغاني باستخدام علامات ReplayGain. قد تتسبب القيم الأعلى في فقدان الديناميكيات بسبب منع الـclipping.</string>
+    <string name="unfavorite">إلغاء المفضلة</string>
+    <string name="edit_mode">الدخول إلى وضع التعديل</string>
+    <string name="spk_channel_out_5point1">٥.١</string>
+    <string name="spk_channel_out_6point1">٦.١</string>
+    <string name="spk_channel_out_5point1point2">٥.١.٢</string>
+    <string name="spk_channel_out_5point1point4">٥.١.٤</string>
+    <string name="spk_channel_out_7point1point2">٧.١.٢</string>
+    <string name="spk_channel_out_7point1point4">٧.١.٤</string>
+    <string name="spk_channel_out_9point1point4">٩.١.٤</string>
+    <string name="spk_channel_out_9point1point6">٩.١.٦</string>
+    <string name="spk_channel_out_quad">رباعي (Quad)</string>
+    <string name="spk_channel_invalid">غير صالح</string>
+    <string name="mix_port_flag_voip_rx">VoIP RX</string>
+    <string name="spk_encoding_invalid">غير صالح</string>
+    <string name="spk_encoding_mat_1_0">Dolby MAT 1.0</string>
+    <string name="spk_encoding_mat_2_1">Dolby MAT 2.1</string>
+    <string name="device_type_hearing_aid">جهاز السمع</string>
+    <string name="device_type_line_analog">خط تناظري</string>
+    <string name="device_type_line_digital">خط رقمي</string>
+    <string name="device_type_aux_line">خط AUX</string>
+    <string name="mix_port_flag_none">لا يوجد</string>
+    <string name="dialog_bitrate">معدل البت</string>
+    <string name="bitrate_unknown">معدل بت غير معروف</string>
+    <string name="mix_port_flag_direct_pcm">PCM مباشر</string>
+    <string name="mix_port_flag_raw">خام</string>
+    <string name="spk_encoding_amr_wb">AMR-WB</string>
+    <string name="spk_encoding_ape">Monkey\'s Audio</string>
+    <string name="spk_encoding_amr_nb">AMR-NB</string>
+    <string name="spk_encoding_aac_adts_lc">AAC-LC في ADTS</string>
+    <string name="spk_encoding_mat_2_0">Dolby MAT 2.0</string>
+    <string name="spk_encoding_unknown_d">تنسيق غير معروف %d</string>
+    <string name="spk_encoding_unknown">تنسيق غير معروف %s</string>
+    <string name="offload_enabled_if_gapless">ممكّن إذا كان التشغيل بدون فواصل ممكنًا</string>
 </resources>
