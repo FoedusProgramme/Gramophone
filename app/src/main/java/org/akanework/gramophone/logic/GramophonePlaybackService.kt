@@ -1149,10 +1149,10 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                 }
 
                 SERVICE_QB_GET_QUEUE_FOR_UI -> {
-                    SessionResult(SessionResult.RESULT_SUCCESS).also { res ->
-                        val queueid = customCommand.customExtras.getLong("queueId")
-                        val queueList: List<MultiQueueObject> = if (queueid != -1L) {
-                            val index = qb.masterQueues.indexOfFirst { it.id == queueid }.let {
+                    try {
+                        val queueId = customCommand.customExtras.getLong("queueId")
+                        val queueList: List<MultiQueueObject> = if (queueId != -1L) {
+                            val index = qb.masterQueues.indexOfFirst { it.id == queueId }.let {
                                 if (it == -1) {
                                     throw IllegalStateException("tragic logic bug. this queue no exist in player")
                                 } else {
@@ -1163,8 +1163,12 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                         } else {
                             listOf(endedWorkaroundPlayer!!.getActiveQueue())
                         }
-                        val binder = MultiQueueList(queueList)
-                        res.extras.putBinder("allQueues", binder)
+                        SessionResult(SessionResult.RESULT_SUCCESS).also { res ->
+                            val binder = MultiQueueList(queueList)
+                            res.extras.putBinder("allQueues", binder)
+                        }
+                    } catch (e: IllegalStateException) {
+                        SessionResult(SessionResult.RESULT_ERROR_BAD_VALUE)
                     }
                 }
 
@@ -1172,20 +1176,23 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                     val queueId = customCommand.customExtras.getLong("queueId")
                     val startIndex = customCommand.customExtras.getInt("startIndex")
 
-                    val index = qb.masterQueues.indexOfFirst { it.id == queueId }.let {
-                        if (it == -1) {
-                            throw IllegalStateException("tragic logic bug. this queue no exist in player")
-                        } else {
-                            it
-                        }
-                    }
-                    qb.commitQueue(index, startIndex)
+                    val index = qb.masterQueues.indexOfFirst { it.id == queueId }
 
-                    for (controller in mediaSession!!.connectedControllers) {
-                        val customCommand = buildCustomCommand(CLIENT_QB_REFRESH_ALL, null)
-                        mediaSession!!.sendCustomCommand(controller, customCommand, Bundle.EMPTY)
+                    if (index != -1) {
+                        qb.commitQueue(index, startIndex)
+
+                        for (controller in mediaSession!!.connectedControllers) {
+                            val customCommand = buildCustomCommand(CLIENT_QB_REFRESH_ALL, null)
+                            mediaSession!!.sendCustomCommand(
+                                controller,
+                                customCommand,
+                                Bundle.EMPTY
+                            )
+                        }
+                        SessionResult(SessionResult.RESULT_SUCCESS)
+                    } else {
+                        SessionResult(SessionResult.RESULT_ERROR_BAD_VALUE)
                     }
-                    SessionResult(SessionResult.RESULT_SUCCESS)
                 }
 
                 SERVICE_QB_PIN_QUEUE -> {

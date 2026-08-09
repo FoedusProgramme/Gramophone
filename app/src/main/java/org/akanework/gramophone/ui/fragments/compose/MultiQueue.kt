@@ -858,7 +858,7 @@ class MqState(
     private val coroutineScope: CoroutineScope,
     private val activity: MainActivity,
     private val playlistQueueSheet: PlaylistQueueSheet?,
-) : Player.Listener {
+) {
 
     companion object {
         const val CLIENT_QB_REFRESH_ALL = "qb_refresh_all"
@@ -902,12 +902,38 @@ class MqState(
 
     var isEditAllowed by mutableStateOf(false)
 
-    val numQueues
-        get() = inactiveQueues.size + if (activeQueue != null) 1 else 0
+
+    val playerListener = object : Player.Listener {
+        override fun onIsPlayingChanged(isPlaying: Boolean) {
+            this@MqState.isPlaying.value = isPlaying
+        }
+
+        override fun onRepeatModeChanged(repeatMode: @Player.RepeatMode Int) {
+            this@MqState.repeatMode.value = repeatMode
+        }
+
+        override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
+            this@MqState.shuffleModeEnabled.value = shuffleModeEnabled
+        }
+
+        override fun onMediaItemTransition(
+            mediaItem: MediaItem?,
+            reason: @Player.MediaItemTransitionReason Int
+        ) {
+            if (isDetached()) return
+            this@MqState.mediaItemCount.value = instance.mediaItemCount
+            this@MqState.currentMediaItemIndex.value = getShuffledIndex()
+        }
+    }
 
     init {
-        instance.addListener(this)
-        activity.controllerViewModel.customCommandListeners.addCallback(activity.lifecycle) { _, command, _ ->
+        activity.controllerViewModel.addRecreationalPlayerListener(
+            playlistQueueSheet!!.lifecycle,
+            playerListener
+        ) {
+        }
+
+        activity.controllerViewModel.customCommandListeners.addCallback(playlistQueueSheet.lifecycle) { _, command, _ ->
             when (command.customAction) {
                 CLIENT_QB_REFRESH_ALL, CLIENT_QB_REFRESH_QUEUES, CLIENT_QB_REFRESH_ITEM, CLIENT_QB_REFRESH_LIST, CLIENT_QB_REFRESH_CLEAR -> {
                     SessionResult(SessionResult.RESULT_SUCCESS).also { res ->
@@ -1081,10 +1107,10 @@ class MqState(
         instance.deleteQueue(queueId)
 
         detachedQueue?.repeatMode?.let {
-            onRepeatModeChanged(it)
+            playerListener.onRepeatModeChanged(it)
         }
         detachedQueue?.shuffleModeEnabled?.let {
-            onShuffleModeEnabledChanged(it)
+            playerListener.onShuffleModeEnabledChanged(it)
         }
     }
 
@@ -1153,30 +1179,6 @@ class MqState(
         }
         return ret
     }
-
-
-    override fun onIsPlayingChanged(isPlaying: Boolean) {
-        this.isPlaying.value = isPlaying
-    }
-
-    override fun onRepeatModeChanged(repeatMode: @Player.RepeatMode Int) {
-        this.repeatMode.value = repeatMode
-    }
-
-    override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
-        this.shuffleModeEnabled.value = shuffleModeEnabled
-    }
-
-
-    override fun onMediaItemTransition(
-        mediaItem: MediaItem?,
-        reason: @Player.MediaItemTransitionReason Int
-    ) {
-        if (isDetached()) return
-        this.mediaItemCount.value = instance.mediaItemCount
-        this.currentMediaItemIndex.value = getShuffledIndex()
-    }
-
 
     fun togglePin(queueId: Long? = -1) {
         if (queueId == null) return
