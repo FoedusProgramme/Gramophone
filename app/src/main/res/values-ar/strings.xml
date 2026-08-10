@@ -276,7 +276,7 @@
     <string name="timer_hint">دقائق لإيقاف الموسيقى في…</string>
     <string name="shuffled">%s (مختلط)</string>
     <string name="settings_font_size">حجم الخط</string>
-    <string name="another_with_name">الاسم موجود بالفعل</string>
+    <string name="another_with_name">الاسم مستخدم بالفعل</string>
     <string name="show_file_names_summary">عرض أسماء الملفات في مكان أسماء الأغاني في علامات تبويب المجلد ونظام الملفات</string>
     <string name="show_file_names">عرض أسماء الملفات</string>
     <string name="settings_preference_category_folders_filesystem"><![CDATA[علامات تبويب المجلد ونظام الملفات]]></string>
@@ -308,7 +308,7 @@
     <string name="whitelist_and_blacklist">إذا لم يتم تحديد أي مجلدات في القائمة البيضاء، فسيتم السماح لجميع المجلدات.\n\nيتم تطبيق القائمة البيضاء والقائمة السوداء معًا، مع إعطاء الأولوية للقائمة السوداء. على سبيل المثال، يمكنك السماح بوجود مجلد في القائمة البيضاء مع استبعاد أحد مجلداته الفرعية في القائمة السوداء.</string>
     <string name="settings_replaygain_boost">التعزيز</string>
     <string name="sort_by_album_year">سنة الألبوم</string>
-    <string name="settings_replaygain_boost_desc" formatted="false">"سيؤدي \"التعزيز\" إلى إخراج كل من ReplayGain والموسيقى الأخرى بمستوى صوت أعلى مما هو محدد في جهازك. (إذا تم ضبط مستوى صوت جهازك بالقرب من 100 ٪، فلن يؤدي تعزيز الصوت إلى زيادة مستوى الصوت). مع التعزيز، يمكنك الاستمتاع بالموسيقى التي تتمتع بصوت عالٍ مماثل للتطبيقات الأخرى، مثل الألعاب. يرجى ملاحظة أن هذه الميزة تجريبية وقد تتداخل مع تطبيقات المعادل الخارجية. لا يعمل التعزيز مع سماعات الرأس التي تعمل بالبلوتوث. في حالة وجود أي مشاكل متعلقة بالحجم، يرجى تعطيل ميزة التعزيز عن طريق تعيينها إلى 0 dB. "</string>
+    <string name="settings_replaygain_boost_desc" formatted="false">"سيؤدي \"التعزيز\" إلى إخراج كل من ReplayGain والموسيقى الأخرى بمستوى صوت أعلى مما هو محدد في جهازك. (إذا تم ضبط مستوى صوت جهازك بالقرب من ١٠٠٪، فلن يؤدي تعزيز الصوت إلى زيادة مستوى الصوت). مع التعزيز، يمكنك الاستمتاع بالموسيقى التي تتمتع بصوت عالٍ مماثل للتطبيقات الأخرى، مثل الألعاب. يرجى ملاحظة أن هذه الميزة تجريبية وقد تتداخل مع تطبيقات المعادل الخارجية. لا يعمل التعزيز مع سماعات الرأس التي تعمل بالبلوتوث. في حالة وجود أي مشاكل متعلقة بحجم الصوت، يرجى تعطيل التعزيز عن طريق تعيينها إلى ٠ dB. "</string>
     <string name="scroll_to_playing">اسحب لتشغيل أغنية</string>
     <string name="settings_telegram">تيليجرام</string>
     <string name="disabled">معطل</string>
@@ -464,4 +464,8 @@
     <string name="spk_encoding_unknown_d">تنسيق غير معروف %d</string>
     <string name="spk_encoding_unknown">تنسيق غير معروف %s</string>
     <string name="offload_enabled_if_gapless">ممكّن إذا كان التشغيل بدون فواصل ممكنًا</string>
+    <string name="contributors_banksio">Android Auto</string>
+    <string name="album_gain">الحفاظ على ديناميكيات الألبوم</string>
+    <string name="mix_port_flag_mmap_noirq">MMAP (بدون irq)</string>
+    <string name="tempo_pitch_value">%s: %.2fx</string>
 </resources>
