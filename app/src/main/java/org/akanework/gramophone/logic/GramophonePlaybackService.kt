@@ -1539,6 +1539,10 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         }
     }
 
+    override fun onMediaMetadataChanged(mediaMetadata: MediaMetadata) {
+        refreshMediaButtonCustomLayout()
+    }
+
     override fun onIsPlayingChanged(isPlaying: Boolean) {
         scheduleSendingLyrics(false)
         lastPlayedManager.save()
