@@ -1,3 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">গ্ৰামোফোন</string>
+    <plurals name="artists">
+        <item quantity="one">শিল্পী</item>
+        <item quantity="other">%d শিল্পী</item>
+    </plurals>
 </resources>
