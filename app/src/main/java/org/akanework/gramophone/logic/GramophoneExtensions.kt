@@ -393,7 +393,7 @@ fun MediaController.getInactiveQueues(): List<MultiQueueObject> =
     }
 
 // TODO: call without media list
-fun MediaController.getQueue(queueId: Long = -1L): MultiQueueObject? =
+fun MediaController.getInactiveQueue(queueId: Long = -1L): MultiQueueObject? =
     sendCustomCommand(
         SessionCommand(SERVICE_QB_GET_QUEUE_FOR_UI, Bundle.EMPTY).apply {
             customExtras.putLong("queueId", queueId)

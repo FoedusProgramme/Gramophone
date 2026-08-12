@@ -171,6 +171,19 @@ class EndedWorkaroundPlayer(
         return superState
     }
 
+
+    /**
+     * =================
+     * Multiqueue Support
+     * =================
+     */
+
+
+    /**
+     * Multiqueue aware variant of [Player.setMediaItems]
+     *
+     * This function can be used to in place of [Player.setMediaItems]
+     */
     fun setMediaItems(
         mediaItems: List<MediaItem>,
         startIndex: Int,
@@ -197,6 +210,11 @@ class EndedWorkaroundPlayer(
         isEnded = ended
     }
 
+    /**
+     * Variant [setMediaItems]. Load media items into the player without interrupting playback, if possible.
+     *
+     * This function can be used to in place of [Player.setMediaItems]
+     */
     fun setMediaItemsSeamlessly(
         mediaItems: List<MediaItem>,
         startIndex: Int,
@@ -251,6 +269,45 @@ class EndedWorkaroundPlayer(
         }
     }
 
+    /**
+     * Saves the active queue to QueueBoard, and updates the next queue's metadata in [EndedWorkaroundPlayer].
+     *
+     * Saving queues will be refused when either: Queue is empty, or the next queue is the same active queue.
+     */
+    fun cloneQueue(nextQueueId: Long, nextTitle: String, nextIsPinned: Boolean, nextIsOriginal: Boolean) {
+        if (nextTitle == currentTitle && (currentIsOriginal && nextIsOriginal)) return // active queue update, not for queueboard
+        if (currentQueueId == null && !exoPlayer.currentTimeline.isEmpty)
+            throw IllegalStateException("have media items but current title is null, logic bug")
+        else if (currentQueueId != null && Flags.MQ_PREVIEW) {
+            queueBoard.addQueue(
+                currentQueueId!!,
+                currentTitle!!,
+                ArrayList<MediaItem>(exoPlayer.mediaItemCount).apply {
+                    for (i in 0..<exoPlayer.mediaItemCount) {
+                        add(exoPlayer.getMediaItemAt(i))
+                    }
+                },
+                exoPlayer.currentMediaItemIndex,
+                exoPlayer.currentPosition,
+                currentIsPinned,
+                currentIsOriginal,
+                repeatMode,
+                if (shuffleModeEnabled) {
+                    CircularShuffleOrder.Persistent(
+                        exoPlayer.shuffleOrder as CircularShuffleOrder
+                    )
+                } else {
+                    null
+                },
+                exoPlayer.playbackState == STATE_ENDED,
+            )
+        }
+        currentQueueId = nextQueueId
+        currentTitle = nextTitle
+        currentIsPinned = nextIsPinned
+        currentIsOriginal = nextIsOriginal
+    }
+
     override fun handleAddMediaItems(index: Int, mediaItems: List<MediaItem>): ListenableFuture<*> {
         currentIsOriginal = false
         return super.handleAddMediaItems(index, mediaItems)
@@ -283,40 +340,6 @@ class EndedWorkaroundPlayer(
         return super.handleRemoveMediaItems(fromIndex, toIndex)
     }
 
-    fun cloneQueue(newQueueId: Long, newTitle: String, newIsPinned: Boolean, original: Boolean) {
-        if (newTitle == currentTitle && (currentIsOriginal && original)) return // active queue update, not for queueboard
-        if (currentQueueId == null && !exoPlayer.currentTimeline.isEmpty)
-            throw IllegalStateException("have media items but current title is null, logic bug")
-        else if (currentQueueId != null && Flags.MQ_PREVIEW) {
-            queueBoard.addQueue(
-                currentQueueId!!,
-                currentTitle!!,
-                ArrayList<MediaItem>(exoPlayer.mediaItemCount).apply {
-                    for (i in 0..<exoPlayer.mediaItemCount) {
-                        add(exoPlayer.getMediaItemAt(i))
-                    }
-                },
-                exoPlayer.currentMediaItemIndex,
-                exoPlayer.currentPosition,
-                currentIsPinned,
-                currentIsOriginal,
-                repeatMode,
-                if (shuffleModeEnabled) {
-                    CircularShuffleOrder.Persistent(
-                        exoPlayer.shuffleOrder as CircularShuffleOrder
-                    )
-                } else {
-                    null
-                },
-                exoPlayer.playbackState == STATE_ENDED,
-            )
-        }
-        currentQueueId = newQueueId
-        currentTitle = newTitle
-        currentIsPinned = newIsPinned
-        currentIsOriginal = original
-    }
-
     override fun handleSetMediaItems(
         mediaItems: List<MediaItem>,
         startIndex: Int,
@@ -338,10 +361,23 @@ class EndedWorkaroundPlayer(
         return Futures.immediateVoidFuture()
     }
 
+
+    /**
+     * =================
+     * Helpers
+     * =================
+     */
+
+    /**
+     * Get the next available queue ID
+     */
     fun generateQueueId(): Long {
         return (queueBoard.masterQueues.map { it.id } + (currentQueueId ?: 0)).max() + 1
     }
 
+    /**
+     * Retrieve a snapshot of the active queue in the player.
+     */
     fun getActiveQueue(): MultiQueueObject {
         return MultiQueueObject(
             id = currentQueueId!!,

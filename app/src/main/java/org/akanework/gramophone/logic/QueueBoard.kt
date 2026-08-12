@@ -31,24 +31,34 @@ import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.Player.REPEAT_MODE_OFF
-import kotlinx.coroutines.flow.MutableStateFlow
 import org.akanework.gramophone.logic.utils.CircularShuffleOrder
 import org.akanework.gramophone.logic.utils.MediaItemList
 
 private const val QUEUE_EXPIRY_MS = 10 * 36000000 // 10 hrs
 
 /**
- * Multiple queues manager.
+ * Multiple queues manager for inactive queues.
  *
- * Queues are ordered most recent modification,
+ * Queue pinning:
+ *  See [MultiQueueObject.expiry] for more details.
+ *
+ *  The active queue is managed by [org.akanework.gramophone.logic.utils.exoplayer.EndedWorkaroundPlayer].
+ *  When an active queue is unpinned, it will not be eligible for deletion. The expiry will be renewed
+ *  once it becomes an inactive queue.
+ *
+ * Queue originality status:
+ *  An original queue is media list is untouched from a source (ex. folder, playlist, etc.).
+ *
+ *  A non-original queue is any queue the user has intentionally created or modified. These queues will not be automatically replaced.
  */
 class QueueBoard(
     private val player: GramophonePlaybackService,
-    val masterQueues: MutableList<MultiQueueObject> = mutableListOf(),
     queues: MutableList<MultiQueueObject> = ArrayList(),
 ) {
     private val QUEUE_DEBUG = true // TODO: disable when done
     private val TAG = QueueBoard::class.simpleName.toString()
+
+    val masterQueues: MutableList<MultiQueueObject> = mutableListOf()
 
     init {
         masterQueues.clear()
@@ -64,9 +74,10 @@ class QueueBoard(
      */
 
     /**
-     * Push this queue to the player, and save the player queue back to QueueBoard.
+     * Load this queue to the player, and save the player's queue back to QueueBoard.
      *
-     * @param index
+     * @param index Index of the queue in [masterQueues]
+     * @param startIndex Optional start position override for the queue loaded into the player
      */
     fun commitQueue(
         index: Int,
@@ -100,7 +111,7 @@ class QueueBoard(
     }
 
     /**
-     * Pin a queue.
+     * Pin a queue to the QueueBoard. This queue will no longer be eligible for automatic removal.
      *
      * @param index Queue index.
      */
@@ -110,7 +121,8 @@ class QueueBoard(
     }
 
     /**
-     * Unpin a queue.
+     * Unpin a queue from the QueueBoard. This queue will be eligible for automatic removal after
+     * the expiry threshold.
      *
      * @param index Queue index.
      * @return true if the operation is successful, otherwise false
@@ -135,27 +147,21 @@ class QueueBoard(
 
 
     /**
-     * Add a new queue to the QueueBoard, or add to a queue if it exists.
+     * Add a new queue to the QueueBoard, or replace an existing queue if it already exists. Queues
+     * are determined to be equivalent if [MultiQueueObject.title] is the same and [MultiQueueObject.isOriginal]
+     * is false.
      *
-     * Depending on the state of the QueueBoard and player, this result in differing behaviour:
-     *
-     * Queue already exists:
-     * 1. Contents (by songID) are a perfect match: Update metadata (currentMediaItemIndex, shuffle
-     *      order).
-     * 2. Contents are different and given "isOriginal" flag: Update metadata, replace all existing
-     *      queue content with new content.
-     * 3. Contents are different: Update metadata, add all new content to the end of the old content.
-     *      Queue title gets a "+" suffix if not already present.
-     *
-     * Queue does not exist:
-     * 4. Queue is added as a new queue.
-     *
-     *
-     * @param title Title (effective uid) of the queue.
+     * @param queueId
+     * @param title Title of the queue.
      * @param mediaList Media items to add to the queue.
-     * @param player
-     * @param shuffled media3 isShuffleEnabled
-     * @param mediaItemIndex media3 startIndex
+     * @param mediaItemIndex Start index.
+     * @param startPositionMs Start position.
+     * @param shouldPin Specify a timestamp to indicate when the queue is expires, otherwise null
+     *  for a queue that never expires.
+     * @param isOriginal false if the user has modified the queue, and this queue is not replaceable.
+     * @param repeatMode
+     * @param shuffleOrder A shuffle order will enable shuffling of the queue, otherwise null disables it.
+     * @param ended
      *
      */
     fun addQueue(
@@ -199,39 +205,27 @@ class QueueBoard(
             isOriginal = isOriginal,
         )
 
-        masterQueues.bubbleUp(newQueue)
+        addQueue(newQueue)
     }
 
-    /**
-     * Deletes a queue.
-     *
-     * When deleting the active queue, the last inactive queue is loaded. When the active queue is
-     * the only queue, playback is stopped.
-     *
-     * @param index
-     * @return true if the deletion is successful, otherwise false.
-     */
-    fun deleteQueue(index: Int): Boolean {
-        if (QUEUE_DEBUG)
-            Log.d(TAG, "DELETING QUEUE AT INDEX: $index")
+    fun addQueue(mq: MultiQueueObject) {
 
-        try {
-            masterQueues.removeAt(index)
-        } catch (e: IndexOutOfBoundsException) {
-            Log.w(TAG, e.message.toString(), e)
-            return false
+        if (QUEUE_DEBUG) {
+            Log.d(
+                TAG, "Adding to queue \"${mq.title}\". medialist size = ${mq.queue.size}. " +
+                        "replace/startIndex = ${mq.startIndex}"
+            )
         }
+        if (mq.queue.isEmpty()) return //throw IllegalArgumentException("Media list cannot be empty")
 
-        return true
+        masterQueues.removeAll { it.isOriginal && it.title.trimEnd() == mq.title }
+        masterQueues.bubbleUp(mq)
     }
 
     /**
      * Deletes a queue.
      *
-     * When deleting the active queue, the last inactive queue is loaded. When the active queue is
-     * the only queue, playback is stopped.
-     *
-     * @param id
+     * @param id queueId.
      * @return true if the deletion is successful, otherwise false.
      */
     fun deleteQueue(id: Long): Boolean {
@@ -255,7 +249,7 @@ class QueueBoard(
     }
 
     /**
-     * Move a queue in masterQueues
+     * Reorder a queue.
      *
      * @param fromIndex
      * @param toIndex
@@ -285,27 +279,53 @@ class QueueBoard(
         )
     }
 
+
     /**
-     * Get a single queue (or several queues in the future)
+     * Get a single queue given a queue id.
      */
-    fun getQueue(index: Int): List<MultiQueueObject> {
-        return listOfNotNull(
-            masterQueues.getOrNull(index)?.let {
-                it.copy(
-                    fakeQueueSize = it.getSize(),
-                    fakeQueueLength = it.getDuration()
-                )
-            }
-        )
+    fun getInactiveQueue(id: Long): MultiQueueObject? {
+        return masterQueues.firstOrNull { it.id == id }?.let {
+            it.copy(
+                fakeQueueSize = it.getSize(),
+                fakeQueueLength = it.getDuration()
+            )
+        }
     }
 
+    /**
+     * Get a single queue given an index.
+     */
+    fun getInactiveQueue(index: Int): MultiQueueObject? {
+        return masterQueues.getOrNull(index)?.let {
+            it.copy(
+                fakeQueueSize = it.getSize(),
+                fakeQueueLength = it.getDuration()
+            )
+        }
+    }
+
+    /**
+     *
+     */
     fun renameQueue(index: Int, newName: String, dryRun: Boolean): Boolean {
         if (index >= masterQueues.size) return false
         return renameQueue(masterQueues[index], newName, dryRun)
     }
 
+    /**
+     * Rename a queue, if possible.
+     *
+     * Renaming a queue will set [MultiQueueObject.isOriginal] to false.
+     *
+     * @param mq
+     * @param newName
+     * @param dryRun Call this function with dryRun = true to test for if this rename action is
+     *  allowed, then call with dryRun = false to preceding with it. This prevents ui desync.
+     *
+     * For the time being, queues cannot have the same title, even if its allowed in the underlying
+     * codes. TODO(mq): re-evaluate later
+     */
     fun renameQueue(mq: MultiQueueObject, newName: String, dryRun: Boolean): Boolean {
-        // TODO(MQ) how to handle isOriginal and i18n bs.
         // If you rename a queue to "Folder1 (+)" and have a non-original queue named "Folder 1", then you will have 2 queues the same name
         val plr = player.endedWorkaroundPlayer!!
         if (plr.currentTitle == newName || masterQueues.any { it.title == newName }) {
@@ -319,7 +339,7 @@ class QueueBoard(
             if (!dryRun) {
                 masterQueues[oldIndex] = masterQueues[oldIndex].copy(
                     title = newName,
-                    isOriginal = true
+                    isOriginal = false
                 )
             }
             if (QUEUE_DEBUG)
@@ -333,7 +353,7 @@ class QueueBoard(
     }
 
     /**
-     * Debug uses
+     * Debug uses. Simulate 2 hours of time passing.
      */
     fun age() {
         masterQueues.forEach {
@@ -349,7 +369,7 @@ class QueueBoard(
 }
 
 /**
- * Insert (or move) this queue to the last spot.
+ * Insert (or move) this queue to the last spot in the QueueBoard
  */
 private fun MutableList<MultiQueueObject>.bubbleUp(mq: MultiQueueObject) {
     remove(mq)
@@ -361,6 +381,9 @@ private fun MutableList<MultiQueueObject>.bubbleUp(mq: MultiQueueObject) {
 
 
 /**
+ * A representation of a queue
+ *
+ * @param
  * @param title Queue title (and UID)
  * @param queue List of media items
  */
@@ -370,7 +393,7 @@ data class MultiQueueObject(
     var title: String,
     /**
      * Expiry denotes when this queue is eligible for auto removal; these events happen when
-     * triggered by the user, or automatically on QueueBoard initialization, or when the user switches any queue.
+     * triggered by the user, or automatically on QueueBoard initialization, or when the user switches any queue. //TODO: not implemented
      *
      * Active queues will never be automatically removed, however, the pin state does not
      * automatically change. When a pinned queue becomes an active queue, it will remain pinned when

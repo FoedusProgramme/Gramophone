@@ -89,7 +89,7 @@ import org.akanework.gramophone.logic.MultiQueueObject
 import org.akanework.gramophone.logic.age
 import org.akanework.gramophone.logic.deleteQueue
 import org.akanework.gramophone.logic.getInactiveQueues
-import org.akanework.gramophone.logic.getQueue
+import org.akanework.gramophone.logic.getInactiveQueue
 import org.akanework.gramophone.logic.getQueueForUi
 import org.akanework.gramophone.logic.loadQueue
 import org.akanework.gramophone.logic.pinQueue
@@ -806,7 +806,7 @@ fun QueueRoot(
 }
 
 
-// clean up later
+// TODO: clean up later
 fun makeTimeString(duration: Long?): String {
     if (duration == null || duration < 0) return ""
     var sec = duration / 1000
@@ -851,9 +851,11 @@ fun EmptyPlaceholder(
     }
 }
 
-// clean up later
+// end clean up later
 
-
+/**
+ * State object for Multiqueue.
+ */
 class MqState(
     private val coroutineScope: CoroutineScope,
     private val activity: MainActivity,
@@ -867,8 +869,24 @@ class MqState(
         const val CLIENT_QB_REFRESH_LIST = "qb_refresh_songs"
         const val CLIENT_QB_REFRESH_CLEAR = "qb_refresh_clear"
 
-        enum class MqRefresh {
-            ALL, QUEUES, ITEM, SONGS, CLEAR
+        /**
+         * Representation of the depth of ui refresh required.
+         */
+        enum class RefreshLevel {
+            // Everything
+            ALL,
+
+            // Refresh all queues, media item list will not be refreshed.
+            QUEUES,
+
+            // Refresh single queue, media item list will not be refreshed.
+            ITEM,
+
+            // Refresh media item list only
+            SONGS,
+
+            // Signal to clear the queue, no refresh is done
+            CLEAR
         }
     }
 
@@ -938,11 +956,11 @@ class MqState(
                 CLIENT_QB_REFRESH_ALL, CLIENT_QB_REFRESH_QUEUES, CLIENT_QB_REFRESH_ITEM, CLIENT_QB_REFRESH_LIST, CLIENT_QB_REFRESH_CLEAR -> {
                     SessionResult(SessionResult.RESULT_SUCCESS).also { res ->
                         val level = when (command.customAction) {
-                            CLIENT_QB_REFRESH_ALL -> MqRefresh.ALL
-                            CLIENT_QB_REFRESH_QUEUES -> MqRefresh.QUEUES
-                            CLIENT_QB_REFRESH_ITEM -> MqRefresh.ITEM
-                            CLIENT_QB_REFRESH_LIST -> MqRefresh.SONGS
-                            CLIENT_QB_REFRESH_CLEAR -> MqRefresh.CLEAR
+                            CLIENT_QB_REFRESH_ALL -> RefreshLevel.ALL
+                            CLIENT_QB_REFRESH_QUEUES -> RefreshLevel.QUEUES
+                            CLIENT_QB_REFRESH_ITEM -> RefreshLevel.ITEM
+                            CLIENT_QB_REFRESH_LIST -> RefreshLevel.SONGS
+                            CLIENT_QB_REFRESH_CLEAR -> RefreshLevel.CLEAR
                             else -> throw IllegalArgumentException("Unsupported level")
                         }
                         val queueId = command.customExtras.getLong("queueId").let {
@@ -983,6 +1001,9 @@ class MqState(
         init()
     }
 
+    /**
+     * (Re)initialize multiqueue data.
+     */
     private fun init(
         onFinish: (() -> Unit)? = null,
     ) {
@@ -991,7 +1012,7 @@ class MqState(
             detachedQueue = null
             inactiveQueues.clear()
 
-            instance.getQueue()?.let {
+            instance.getInactiveQueue()?.let {
                 activeQueue = it
             }
             instance.getInactiveQueues().toMutableList().let {
@@ -1001,51 +1022,25 @@ class MqState(
         }
     }
 
-    private fun handleRefresh(
-        level: MqRefresh,
-        activeQueue: Pair<MutableList<Int>, MultiQueueObject>?,
-        inactiveQueues: List<MultiQueueObject>,
-        queueId: Long? = null,
-    ) {
-        when (level) {
-            MqRefresh.ALL -> {
-                this.activeQueue = activeQueue?.second
-                detachedQueue = null
-                this.inactiveQueues.clear()
-                this.inactiveQueues.addAll(inactiveQueues)
 
-                playlistQueueSheet?.forceUpdate(activeQueue)
-            }
+    /**
+     * =================
+     * UI Interface Functions
+     * =================
+     */
 
-            MqRefresh.QUEUES, MqRefresh.ITEM -> {
-                this.activeQueue = activeQueue?.second
-                detachedQueue = null
-                this.inactiveQueues.clear()
-                this.inactiveQueues.addAll(inactiveQueues)
-            }
 
-            MqRefresh.SONGS -> {
-                if (queueId != null) {
-                    // update detached queue
-                    val queues = inactiveQueues.toMutableList()
-                    activeQueue?.second?.let {
-                        queues.add(it)
-                    }
-                    playlistQueueSheet?.forceUpdate(queues.find { it.id == queueId }!!.id)
-                } else {
-                    // update active queue
-                    playlistQueueSheet?.forceUpdate(activeQueue)
-                }
-            }
-
-            MqRefresh.CLEAR -> {
-                playlistQueueSheet?.dismiss()
-            }
-        }
-    }
-
+    /**
+     * Whether the queue is in a detached state.
+     */
     fun isDetached(): Boolean = detachedQueue != null
 
+    /**
+     * Enter a detached state with the given queue index. The inactive queue's metadata and content
+     * is loaded.
+     *
+     * Use [resetHead] to revert to the active queue.
+     */
     fun detach(index: Int) {
         val mq = inactiveQueues.getOrNull(index)
         if (mq == null) {
@@ -1055,6 +1050,10 @@ class MqState(
         detach(mq)
     }
 
+    /**
+     * Enter a detached state with the given queue. The inactive queue's metadata and content
+     * is loaded.
+     */
     fun detach(mq: MultiQueueObject) {
         if (!inactiveQueues.contains(mq)) {
             playlistQueueSheet?.forceUpdate()
@@ -1069,6 +1068,9 @@ class MqState(
         playlistQueueSheet?.forceUpdate(mq.id)
     }
 
+    /**
+     * Exit the detached state. The active queue's metadata and content is restored.
+     */
     fun resetHead(updateSongList: Boolean = true) {
         detachedQueue = null
         this.repeatMode.value = instance.repeatMode
@@ -1087,15 +1089,6 @@ class MqState(
         } else {
             collapse()
         }
-    }
-
-    private fun expand() {
-        expanded = true
-    }
-
-    private fun collapse() {
-        expanded = false
-        resetHead()
     }
 
     fun removeQueue(queueId: Long = -1) {
@@ -1182,7 +1175,8 @@ class MqState(
 
     fun togglePin(queueId: Long? = -1) {
         if (queueId == null) return
-        val queue = (if (queueId == -1L) activeQueue else inactiveQueues.find { it.id == queueId })!!
+        val queue =
+            (if (queueId == -1L) activeQueue else inactiveQueues.find { it.id == queueId })!!
 
         if (queue.expiry != null) {
             instance.pinQueue(queueId)
@@ -1191,20 +1185,21 @@ class MqState(
         }
     }
 
-    /**
-     * Get currently visible queue in the ui. Do not assume the media item list is complete.
-     */
-    fun getCurrentQueue() = detachedQueue ?: activeQueue
 
-    fun getQueueIndex(mq: MultiQueueObject): Int {
-        val queue = inactiveQueues.indexOf(mq)
-        return if (queue >= 0) {
-            queue
-        } else if (mq == activeQueue) {
-            -1
-        } else {
-            throw IllegalStateException("Queue does not exist. ${mq.title}")
-        }
+    /**
+     * =================
+     * Helper Functions
+     * =================
+     */
+
+
+    private fun expand() {
+        expanded = true
+    }
+
+    private fun collapse() {
+        expanded = false
+        resetHead()
     }
 
     private fun getShuffledIndex(mq: MultiQueueObject? = null): Int {
@@ -1238,6 +1233,55 @@ class MqState(
         }
         return duration
 
+    }
+
+    /**
+     * Refresh the ui based on what the service tells us to do.
+     *
+     * We send action requests from the UI (delete, rename, etc.), however it is the service's
+     * responsibility to tell us what to refresh.
+     */
+    private fun handleRefresh(
+        level: RefreshLevel,
+        activeQueue: Pair<MutableList<Int>, MultiQueueObject>?,
+        inactiveQueues: List<MultiQueueObject>,
+        queueId: Long? = null,
+    ) {
+        when (level) {
+            RefreshLevel.ALL -> {
+                this.activeQueue = activeQueue?.second
+                detachedQueue = null
+                this.inactiveQueues.clear()
+                this.inactiveQueues.addAll(inactiveQueues)
+
+                playlistQueueSheet?.forceUpdate(activeQueue)
+            }
+            // TODO(mq): it should be possible to refresh single items
+            RefreshLevel.QUEUES, RefreshLevel.ITEM -> {
+                this.activeQueue = activeQueue?.second
+                detachedQueue = null
+                this.inactiveQueues.clear()
+                this.inactiveQueues.addAll(inactiveQueues)
+            }
+
+            RefreshLevel.SONGS -> {
+                if (queueId != null) {
+                    // update detached queue
+                    val queues = inactiveQueues.toMutableList()
+                    activeQueue?.second?.let {
+                        queues.add(it)
+                    }
+                    playlistQueueSheet?.forceUpdate(queues.find { it.id == queueId }!!.id)
+                } else {
+                    // update active queue with one provided by the service. Avoid dumpPlaylist() race condition
+                    playlistQueueSheet?.forceUpdate(activeQueue)
+                }
+            }
+
+            RefreshLevel.CLEAR -> {
+                playlistQueueSheet?.dismiss()
+            }
+        }
     }
 
     fun age() {

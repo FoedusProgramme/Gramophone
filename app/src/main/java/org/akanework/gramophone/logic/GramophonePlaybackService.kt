@@ -1151,20 +1151,13 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                 SERVICE_QB_GET_QUEUE_FOR_UI -> {
                     try {
                         val queueId = customCommand.customExtras.getLong("queueId")
-                        val queueList: List<MultiQueueObject> = if (queueId != -1L) {
-                            val index = qb.masterQueues.indexOfFirst { it.id == queueId }.let {
-                                if (it == -1) {
-                                    throw IllegalStateException("tragic logic bug. this queue no exist in player")
-                                } else {
-                                    it
-                                }
-                            }
-                            qb.getQueue(index)
+                        val queue: MultiQueueObject = if (queueId != -1L) {
+                            qb.getInactiveQueue(queueId)
                         } else {
-                            listOf(endedWorkaroundPlayer!!.getActiveQueue())
-                        }
+                            endedWorkaroundPlayer!!.getActiveQueue()!!
+                        }!!
                         SessionResult(SessionResult.RESULT_SUCCESS).also { res ->
-                            val binder = MultiQueueList(queueList)
+                            val binder = MultiQueueList(listOf(queue))
                             res.extras.putBinder("allQueues", binder)
                         }
                     } catch (e: IllegalStateException) {
@@ -1253,7 +1246,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                                 true
                             } else {
                                 val currentQueueId = endedWorkaroundPlayer!!.currentQueueId
-                                val nextQueue = qb.getQueue(nextQueueIndex).first()
+                                val nextQueue = qb.getInactiveQueue(nextQueueIndex)!!
                                 qb.commitQueue(nextQueueIndex, nextQueue.startIndex)
                                 currentQueueId?.let {
                                     // TODO: nick plz do delete active queue if this is too cursed
@@ -1270,8 +1263,8 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                     } else {
                         // inactive queues
                         refreshLevel = CLIENT_QB_REFRESH_QUEUES
-                        val index = qb.masterQueues.indexOfFirst { it.id == queueId }
-                        qb.deleteQueue(index)
+                        val ret = qb.deleteQueue(queueId)
+                        ret
                     }
 
                     if (status) {
