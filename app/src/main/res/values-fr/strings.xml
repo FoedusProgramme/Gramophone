@@ -79,7 +79,7 @@
     <string name="unknown_version">Version inconnue</string>
     <string name="unknown_artist">Artiste inconnu</string>
     <string name="opensource_info">Code source ouvert sous la licence GPL-3.0 \nCopyright %s</string>
-    <string name="playlist_favourite">Favori</string>
+    <string name="playlist_favourite">Favoris</string>
     <string name="settings_default_progress_bar">Barre de progression par défaut</string>
     <string name="now_playing">Lecture en cours</string>
     <string name="settings_default_progress_bar_summary">Activer la barre de progression Material design</string>
@@ -128,7 +128,7 @@
     <string name="settings_blacklist">Liste d\'exclusion</string>
     <string name="settings_blacklist_folder">Exclure des dossiers</string>
     <string name="settings_blacklist_folder_summary">Filtre les morceaux de certains dossiers</string>
-    <string name="delete_failed">Échec de la suppression</string>
+    <string name="delete_failed">Échec de la suppression du morceau : %s</string>
     <string name="settings_crash_application">Faire planter l\'application</string>
     <string name="album_cover">Pochette d\'album</string>
     <string name="dialog_edit_metadata">Modifier</string>
@@ -147,7 +147,7 @@
     <string name="timer_expiry">Le minuteur de sommeil arrêtera la musique à %s</string>
     <string name="album_covers_enhance">Chargement amélioré des couvertures d\'albums</string>
     <string name="share">Partager</string>
-    <string name="album_covers_enhance_desc">Permet d\'utiliser des couvertures de chanson de haute qualité et d\'avoir des couvertures d\'albums et de chansons différentes (nécessite la permission d\'accès aux photos)</string>
+    <string name="album_covers_enhance_desc">Afficher les pochettes des morceaux en haute qualité et permettre aux pochettes d’album et de morceau d’être différentes (nécessite l’accès aux photos)</string>
     <string name="fgs_failed_title">Échec de la reprise de la lecture</string>
     <string name="timer">Minuteur de sommeil</string>
     <string name="current_playlist">Playlist actuelle</string>
@@ -188,7 +188,7 @@
     <string name="spk_channel_out_top_front_left">Haut avant gauche</string>
     <string name="spk_channel_out_front_wide_left">Avant extrême gauche</string>
     <string name="spk_channel_out_low_frequency_2">Basse fréquence 2</string>
-    <string name="spk_encoding_pcm_16bit_big_endian">PCM 16-bit (grand boutiste)</string>
+    <string name="spk_encoding_pcm_16bit_big_endian">PCM 16 bits (gros-boutiste)</string>
     <string name="spk_encoding_pcm_24bit">PCM 24-bit</string>
     <string name="spk_encoding_pcm_16bit">PCM 16-bit</string>
     <string name="spk_encoding_pcm_24bit_big_endian">PCM 24-bit (grand boutiste)</string>
@@ -235,7 +235,7 @@
     <string name="settings_lyrics_no_animation">Désactiver les animations</string>
     <string name="package_type_explainer">Les APKs de Gramophone peuvent être créés par tout le monde, car Gramophone est open source. Pour vous aider à vous souvenir d\'où provient un APK, Gramophone indique le type de paquet.\n\nLe type le plus courant est Release, qui est obtenu depuis F-Droid, Google Play, GitHub ou IzzyOnDroid.\nLe type de paquet CI fait référence aux builds automatisés effectués pour chaque commit sur GitHub.Ces builds peuvent être instables.\nPour les autres types de paquets, le nom devrait donner une indication raisonnable de la provenance de l\'APK.</string>
     <string name="spk_encoding_aac_xhe">xHE-AAC</string>
-    <string name="settings_trim_lyrics_summary">Les espaces avant ou après les premières lettres dans des paroles peuvent avoir une valeur artistique. Si vous n\'êtes pas d\'accord, vous pouvez activer ce bouton pour supprimer ces espaces automatiquement.</string>
+    <string name="settings_trim_lyrics_summary">Les espaces avant la première lettre ou après la fin d’une ligne de paroles peuvent avoir une valeur artistique. Si vous n’êtes pas de cet avis, activez cette option pour les supprimer automatiquement.</string>
     <string name="device_type_dock">Station d\'accueil</string>
     <string name="settings_contributors_click">%S (cliquez pour en savoir plus!)</string>
     <string name="dialog_bitrate">Bitrate</string>
@@ -247,7 +247,7 @@
     <string name="device_type_hdmi_arc">Canal de retour audio HDMI</string>
     <string name="device_type_ble_speaker">Haut-parleur Bluetooth LE</string>
     <string name="device_type_ble_broadcast">Diffusion Bluetooth LE</string>
-    <string name="sort_by_album_artist">Artiste de l\'album</string>
+    <string name="sort_by_album_artist">Artiste de l’album → titre</string>
     <string name="sort_by_file_path">Chemin d\'accès au fichiers</string>
     <string name="failed_to_parse_lyric">Impossible d\'analyser les paroles</string>
     <string name="spk_channel_out_5point1">5.1</string>
@@ -282,7 +282,7 @@
     <string name="settings_open_source_licenses">Licenses open source</string>
     <string name="oh_no">Oh non !</string>
     <string name="send_email">Envoyer un email</string>
-    <string name="send_email_manually">Veuillez envoyer le journal à nift4dev@gmail.com - impossible de trouver une application d\'email</string>
+    <string name="send_email_manually">Veuillez envoyer le journal à nift4@posteo.net : aucune application de messagerie n’a été trouvée.</string>
     <string name="mix_port_flag_none">Aucun</string>
     <string name="audio_not_initialized">Le système de lecture audio n\'a pas été initialisé. Essaye de jouer quelque chose !</string>
     <string name="mix_port_flag_spatializer">Son spatial</string>
@@ -290,8 +290,8 @@
     <string name="gramophone_crashed_explainer2">Gramophone a crashé :(\n\nMerci de m\'envoyer un rapport de bug pour que les problèmes comme celui qui a conduit à ce crash puissent être résolu !\n\nChaque situation est aussi unique que la musique, sans votre aide il est probable que ce bug ne sera <b>PAS</b> résolu !</string>
     <string name="spk_encoding_opus">Opus</string>
     <string name="audio_signal_chain">Chaîne son spatial</string>
-    <string name="settings_lyrics_no_animation_summary">Désactive la transition de toutes les lignes dans l\'animation des paroles</string>
-    <string name="delete_failed_playlist">Suppression de la liste de lecture échouée</string>
+    <string name="settings_lyrics_no_animation_summary">Désactiver toutes les animations de transition entre les lignes de paroles</string>
+    <string name="delete_failed_playlist">Échec de la suppression de la liste de lecture : %s</string>
     <string name="mix_port_flag_unknown">Inconnu</string>
     <string name="spk_encoding_pcm_8_24bit">24-bit (8,24) PCM</string>
     <string name="spk_encoding_amr_wb">AMR-WB</string>
@@ -302,4 +302,20 @@
     <string name="spk_encoding_amr_nb">AMR-NB</string>
     <string name="spk_encoding_evrc">EVRC</string>
     <string name="spk_encoding_evrcb">EVRC-B</string>
+    <string name="app_name">Gramophone</string>
+    <plurals name="folders_plural">
+        <item quantity="one">%d dossier</item>
+        <item quantity="many">%d dossiers</item>
+        <item quantity="other">%d dossiers</item>
+    </plurals>
+    <string name="search_query">Recherche : %s</string>
+    <string name="playback_speed">Vitesse de lecture</string>
+    <string name="tempo">Tempo</string>
+    <string name="pitch">Hauteur</string>
+    <string name="tempo_pitch_value">%s : %.2fx</string>
+    <string name="lock_tempo_pitch">Lier le tempo et la hauteur</string>
+    <string name="reset">Réinitialiser</string>
+    <string name="timer_expiry_eos">Le minuteur de mise en veille mettra la musique en pause à la fin du morceau en cours à %s</string>
+    <string name="timer_expiry_end_of_this_song">Le minuteur de mise en veille mettra la musique en pause à la fin de ce morceau</string>
+    <string name="delete_really_artist">Voulez-vous vraiment supprimer tous les morceaux de « %s » ? Cette action est irréversible.</string>
 </resources>
