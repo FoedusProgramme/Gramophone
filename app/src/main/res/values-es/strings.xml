@@ -302,9 +302,9 @@
     <string name="spk_encoding_aac_adts_ltp">AAC-LTP en ADTS</string>
     <string name="spk_encoding_aac_adts_he_v1">HE-AAC v1 en ADTS</string>
     <string name="spk_encoding_aac_latm_lc">AAC-LC en LATM</string>
-    <string name="rename_failed_playlist">Falló al renombrar playlist: %s</string>
+    <string name="rename_failed_playlist">Error al renombrar lista de reproducción: %s</string>
     <string name="playlist_name">Nombre de la lista de reproducción</string>
-    <string name="create_failed_playlist">Incorrecto al crear lista de reproducción: %s</string>
+    <string name="create_failed_playlist">Error al crear lista de reproducción: %s</string>
     <string name="rename_playlist">Renombrar lista de reproducción</string>
     <string name="add_to_playlist">Añadir a la lista de reproducción</string>
     <string name="mix_port_flag_incall_music">Música durante llamadas</string>
@@ -419,7 +419,7 @@
     <string name="audio_signal_chain">Cadena de audio</string>
     <string name="settings_replaygain">ReplayGain</string>
     <string name="duration_queue">%s restante, %s total</string>
-    <string name="edit_playlist_failed">Fallo al editar la playlist: %s</string>
+    <string name="edit_playlist_failed">Error al editar la lista de reproducción: %s</string>
     <string name="refresh_did_you_know">Gramophone solicita una lista de canciones actualizada cada vez que se inicia la aplicación y, mientras está en ejecución, también detectará automáticamente el nuevo contenido multimedia. Este botón de \"Actualizar\" no recarga los archivos dentro de Gramophone; en su lugar, solicita al sistema que vuelva a escanear todos los archivos de todos los dispositivos de almacenamiento permanente conectados (por eso tarda un poco). Esto significa que, a menos que el sistema u otras aplicaciones fallen, nunca necesitarás usar esta función.\n\n¿Faltan algunas canciones? Asegúrate de revisar Ajustes &gt; Comportamiento para verificar el filtro de duración mínima y la lista negra de carpetas, y confirma que estos parámetros tengan los valores esperados. Para conocer otros motivos posibles, consulta nuestras Preguntas Frecuentes (FAQ).</string>
     <string name="settings_replaygain_mode_desc">El modo \"Inteligente\" preserva automáticamente la dinámica del álbum solo cuando las canciones se reproducen de forma consecutiva.</string>
     <string name="settings_replaygain_boost_desc">"\"Boost\" emitirá tanto el contenido con ReplayGain como el resto de la música a un volumen superior al configurado en tu dispositivo. (Si el volumen del dispositivo está cerca del 100%, Boost no aumentará el sonido). Con Boost, puedes disfrutar de la música con una intensidad similar a la de otras aplicaciones, como los juegos. Ten en cuenta que esta función es experimental y podría interferir con ecualizadores externos. Boost no funciona con auriculares Bluetooth. En caso de presentar problemas con el volumen, desactiva Boost configurándolo en 0dB. "</string>
@@ -511,7 +511,7 @@
     <string name="actions_query_play_randomly">reproduce aleatoriamente</string>
     <string name="actions_query_shuffle_specific">baraja $item_name</string>
     <string name="favorite">Favorito</string>
-    <string name="favorite_failed_title">Incorrecto al cambiar estado favorito de canción</string>
+    <string name="favorite_failed_title">No se pudo cambiar el estado favorito de la canción</string>
     <string name="spk_encoding_aptx_adaptive_qlea">aptX Adaptativo sobre Sonido LE</string>
     <string name="spk_encoding_mpegh_sub_bl_l3">MPEG-H Baseline Profile L3</string>
     <string name="spk_encoding_mpegh_sub_bl_l4">MPEG-H Baseline Profile L4</string>
@@ -524,4 +524,7 @@
     <string name="spk_encoding_dts_hd_ma">DTS-HD Master Audio</string>
     <string name="settings_replaygain_boost">Boost</string>
     <string name="d_db">%d dB</string>
+    <string name="contributors_banksio">Android Auto</string>
+    <string name="loading_playlists">Cargando listas de reproducción...</string>
+    <string name="edit_mode">Entrar en modo de edición</string>
 </resources>
