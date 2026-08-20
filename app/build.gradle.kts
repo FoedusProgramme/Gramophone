@@ -108,8 +108,8 @@ android {
         // keep support for it for a while.
         minSdk = 21
         targetSdk = 37
-        versionCode = 23
-        versionName = "1.1.1"
+        versionCode = 24
+        versionName = "1.1.2"
         if (releaseType != "Release" || vnos != null) {
             // by default the git commit hash is appended for non-release builds, however overrides
             // will apply unconditionally

@@ -367,7 +367,7 @@ abstract class BaseAdapter<T : Any>(
         }
         holder.itemView.setOnClickListener {
             val pos = holder.bindingAdapterPosition
-            if (pos < getItemCount())
+            if (pos != RecyclerView.NO_POSITION && pos < getItemCount())
                 onClick(item, pos)
         }
         if (hasMenu) {

@@ -328,6 +328,9 @@ class LastPlayedManager(
                                 "shuffle $shuffleModeEnabled, ended $ended)..."
                     )
                 }
+                if (seed.data != null && seed.data.size != data.mediaItems.size)
+                    throw IllegalStateException("Bad shuffle order size ${seed.data.size} for" +
+                            " ${data.mediaItems.size} items")
                 callback(RestoredPlaylist(data, "LastPlayedManager" /* TODO(MQ) */,
                     seed, ended, repeatMode, shuffleModeEnabled, playbackParameters))
                 return@withContext

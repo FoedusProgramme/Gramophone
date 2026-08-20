@@ -14,7 +14,7 @@ default_platform(:android)
 
 platform :android do
   def ensure_git_ok()
-    ensure_git_branch(branch: "beta")
+    # ensure_git_branch(branch: "beta")
     ensure_git_status_clean
   end
   def gradle_reproducible(options)

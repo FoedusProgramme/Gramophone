@@ -1326,19 +1326,21 @@ class FullBottomSheet
                 loopTransition.start()
                 shuffleTransition.start()
                 favoriteTransition.start()
-            }
 
-            surfaceTransition.awaitEnd()
-            primaryTransition.awaitEnd()
-            secondaryContainerTransition.awaitEnd()
-            onSecondaryContainerTransition.awaitEnd()
-            colorContrastFaintedTransition.awaitEnd()
-            colorOnSurfaceTransition.awaitEnd()
-            lyricTextColorTransition.awaitEnd()
-            lyricHighlightTlColorTransition.awaitEnd()
-            loopTransition.awaitEnd()
-            shuffleTransition.awaitEnd()
-            favoriteTransition.awaitEnd()
+                // Note: Animator.addListener isn't thread-safe on all Android versions, ensure we
+                // stay on the main thread to avoid crashes.
+                surfaceTransition.awaitEnd()
+                primaryTransition.awaitEnd()
+                secondaryContainerTransition.awaitEnd()
+                onSecondaryContainerTransition.awaitEnd()
+                colorContrastFaintedTransition.awaitEnd()
+                colorOnSurfaceTransition.awaitEnd()
+                lyricTextColorTransition.awaitEnd()
+                lyricHighlightTlColorTransition.awaitEnd()
+                loopTransition.awaitEnd()
+                shuffleTransition.awaitEnd()
+                favoriteTransition.awaitEnd()
+            }
         }
 
         currentJob = null

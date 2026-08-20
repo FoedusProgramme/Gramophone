@@ -19,6 +19,7 @@ package org.akanework.gramophone.logic.utils
 
 import android.os.Parcelable
 import androidx.media3.common.C
+import androidx.media3.common.util.BackgroundExecutor
 import androidx.media3.common.util.Log
 import androidx.media3.exoplayer.source.ShuffleOrder
 import kotlinx.parcelize.Parcelize
@@ -121,13 +122,17 @@ class CircularShuffleOrder private constructor(
         listener.nextShuffleOrder?.let { factory ->
             listener.nextShuffleOrder = null
             val nextShuffleOrder = factory(insertionIndex, shuffled.size + insertionCount, listener)
-            if (nextShuffleOrder.length != shuffled.size + insertionCount)
+            if (nextShuffleOrder.length == shuffled.size + insertionCount)
+                return nextShuffleOrder
+            // We can't throw here as it would permanently break the ExoPlayer and cause app crash
+            // with a weird stacktrace that isn't obviously related. But this _is_ a fatal error:
+            // crash another thread. We shouldn't ever get here with wrong data.
+            BackgroundExecutor.get().execute {
                 throw IllegalStateException(
                     "next shuffle order size ${nextShuffleOrder.length} " +
                             "does not match requested ${shuffled.size + insertionCount}"
                 )
-                    .also { Log.e(TAG, Log.getThrowableString(it)!!) }
-            return nextShuffleOrder
+            }
         }
         // the original list: [0, 1, 2] shuffled: [2, 0, 1] indexInShuffled: [1, 2, 0]
         // insertionIndex for adding after 1 would be 2, 2 is at index 0 in shuffled list, after 0
