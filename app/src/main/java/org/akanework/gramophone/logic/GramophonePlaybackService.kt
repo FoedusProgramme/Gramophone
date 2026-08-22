@@ -137,6 +137,7 @@ import org.akanework.gramophone.logic.utils.exoplayer.GramophoneExtractorsFactor
 import org.akanework.gramophone.logic.utils.exoplayer.GramophoneMediaSourceFactory
 import org.akanework.gramophone.logic.utils.exoplayer.GramophoneRenderFactory
 import org.akanework.gramophone.ui.AudioPreviewActivity
+import org.akanework.gramophone.ui.CardWidgetProvider
 import org.akanework.gramophone.ui.LyricWidgetProvider
 import org.akanework.gramophone.ui.MainActivity
 import org.akanework.gramophone.ui.fragments.compose.MqState.Companion.CLIENT_QB_REFRESH_ALL
@@ -808,6 +809,55 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         return onSetRating(session, controller, mediaItemId, rating)
     }
 
+    fun toggleCurrentItemFavorite() {
+        val item = endedWorkaroundPlayer?.currentMediaItem ?: return
+        val currentIsHeart = (item.mediaMetadata.userRating as? HeartRating)?.isHeart == true
+        val newIsHeart = !currentIsHeart
+        lifecycleScope.launch(Dispatchers.Default) {
+            val song = Entry.ofMediaItem(item) ?: return@launch
+            val uriIn = gramophoneApplication.reader.playlistListFlow.map { it.find { p ->
+                p is Favorite } }.first()?.id?.let {
+                ContentUris.withAppendedId(@Suppress("deprecation")
+                MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, it)
+            }
+            val token = if (uriIn != null) {
+                MediaStoreCompat.needRequestBytesWrite(this@GramophonePlaybackService, uriIn)
+            } else {
+                MediaStoreCompat.needRequestCreate(this@GramophonePlaybackService,
+                    ItemManipulator.getDefaultPlaylistFile(ItemManipulator.FAVORITES).path)
+            }
+            if (token == null) {
+                try {
+                    val uri = uriIn ?: ItemManipulator.createPlaylist(
+                        this@GramophonePlaybackService, ItemManipulator
+                            .getDefaultPlaylistFile(ItemManipulator.FAVORITES))
+                    val readback = if (uriIn != null) ItemManipulator.readbackPlaylist(
+                        this@GramophonePlaybackService, uri) else
+                            PlaylistSerializer.Playlist.create()
+                    val newSongs = if (newIsHeart) {
+                        readback.entries + song
+                    } else {
+                        readback.entries.filter { !song.fuzzyEquals(it) }
+                    }
+                    ItemManipulator.setPlaylistContent(this@GramophonePlaybackService, uri,
+                        readback.copy(entries = newSongs), uriIn == null)
+                } catch (e: Exception) {
+                    Log.e(TAG, "failed to toggle favorite on ${item.mediaId}", e)
+                }
+            }
+            withContext(Dispatchers.Main) {
+                val updatedItem = item.buildUpon().setMediaMetadata(
+                    item.mediaMetadata.buildUpon()
+                        .setUserRating(HeartRating(newIsHeart))
+                        .build()
+                ).build()
+                val currentIndex = endedWorkaroundPlayer?.currentMediaItemIndex ?: 0
+                endedWorkaroundPlayer?.replaceMediaItem(currentIndex, updatedItem)
+                CardWidgetProvider.update(this@GramophonePlaybackService)
+            }
+        }
+    }
+
     // When destroying, we should release server side player
     // alongside with the mediaSession.
     override fun onDestroy() {
@@ -833,6 +883,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         mediaSession = null
         broadcastAudioSessionClose()
         LyricWidgetProvider.update(this)
+        CardWidgetProvider.update(this)
         internalPlaybackThread.quitSafely()
         super.onDestroy()
         Log.i(TAG, "-onDestroy()")
@@ -1818,10 +1869,13 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
     }
 
     private fun sendLyricNow(new: Boolean) {
-        if (new)
+        if (new) {
             LyricWidgetProvider.update(this)
-        else
+            CardWidgetProvider.update(this)
+        } else {
             LyricWidgetProvider.adapterUpdate(this)
+            CardWidgetProvider.update(this)
+        }
         val isStatusBarLyricsEnabled = prefs.getBooleanStrict("status_bar_lyrics", false)
         val highlightedLyric = if (isStatusBarLyricsEnabled && controller?.playWhenReady == true)
             getCurrentLyricIndex(false)?.let {
