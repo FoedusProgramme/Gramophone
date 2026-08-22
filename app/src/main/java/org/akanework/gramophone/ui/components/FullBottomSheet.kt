@@ -34,16 +34,20 @@ import android.os.Parcelable
 import android.text.format.DateFormat
 import android.util.AttributeSet
 import android.view.AbsSavedState
+import android.view.GestureDetector
 import android.view.Gravity
 import android.view.KeyEvent
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewPropertyAnimator
 import android.view.WindowInsets
+import android.view.animation.LinearInterpolator
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.SeekBar
@@ -57,6 +61,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.animation.addListener
 import androidx.core.animation.doOnEnd
 import androidx.core.content.edit
+import kotlin.math.abs
 import androidx.core.graphics.Insets
 import androidx.core.graphics.TypefaceCompat
 import androidx.core.os.BundleCompat
@@ -167,6 +172,8 @@ class FullBottomSheet
     private var runnableRunning = false
     private var firstTime = false
     private var enableQualityInfo = false
+    private var rotateCookieButton = false
+    private var buttonRotationAnimator: ValueAnimator? = null
 
     private val prefs = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
     private var currentFormat: AudioFormatDetector.AudioFormats? = null
@@ -252,6 +259,7 @@ class FullBottomSheet
     private val bottomSheetFullTitle: TextView
     private val bottomSheetFullSubtitle: TextView
     private val bottomSheetFullControllerButton: MaterialButton
+    private val bottomSheetFullControllerButtonBg: ImageView
     private val bottomSheetFullNextButton: MaterialButton
     private val bottomSheetFullPreviousButton: MaterialButton
     private val bottomSheetFullDuration: TextView
@@ -272,14 +280,56 @@ class FullBottomSheet
     private val progressDrawable: SquigglyProgress
     private var pqs: PlaylistQueueSheet? = null
 
+    private var coverTouchStartX = 0f
+    private var coverTouchStartY = 0f
+    private var coverIsHorizontalSwipe = false
+
     init {
         inflate(context, R.layout.full_player, this)
         bottomSheetFullCoverFrame = findViewById(R.id.album_cover_frame)
         bottomSheetFullCover = findViewById(R.id.full_sheet_cover)
+        bottomSheetFullCover.setOnTouchListener { v, event ->
+            val enabled = prefs.getBoolean("swipe_to_switch_track", true)
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    coverTouchStartX = event.rawX
+                    coverTouchStartY = event.rawY
+                    coverIsHorizontalSwipe = false
+                    parent?.requestDisallowInterceptTouchEvent(true)
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    val dx = abs(event.rawX - coverTouchStartX)
+                    val dy = abs(event.rawY - coverTouchStartY)
+                    if (dx > 20.dpToPx(context) && dx > dy) {
+                        coverIsHorizontalSwipe = true
+                        parent?.requestDisallowInterceptTouchEvent(true)
+                    }
+                }
+                MotionEvent.ACTION_UP -> {
+                    val dx = event.rawX - coverTouchStartX
+                    val dy = event.rawY - coverTouchStartY
+                    if (enabled && abs(dx) > abs(dy) && abs(dx) > 50.dpToPx(context)) {
+                        if (dx > 0) {
+                            instance?.seekToPrevious()
+                        } else {
+                            instance?.seekToNext()
+                        }
+                        return@setOnTouchListener true
+                    } else if (!coverIsHorizontalSwipe) {
+                        v.performClick()
+                    }
+                }
+                MotionEvent.ACTION_CANCEL -> {
+                    coverIsHorizontalSwipe = false
+                }
+            }
+            true
+        }
         bottomSheetFullTitle = findViewById(R.id.full_song_name)
         bottomSheetFullSubtitle = findViewById(R.id.full_song_artist)
         bottomSheetFullPreviousButton = findViewById(R.id.sheet_previous_song)
         bottomSheetFullControllerButton = findViewById(R.id.sheet_mid_button)
+        bottomSheetFullControllerButtonBg = findViewById(R.id.sheet_mid_button_bg)
         bottomSheetFullNextButton = findViewById(R.id.sheet_next_song)
         bottomSheetFullPosition = findViewById(R.id.position)
         bottomSheetFullDuration = findViewById(R.id.duration)
@@ -625,6 +675,11 @@ class FullBottomSheet
         bottomSheetFullSeekBar.progressTintList = ColorStateList.valueOf(colorPrimary)
     }
 
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        stopButtonRotation(false)
+    }
+
     override fun onSaveInstanceState(): Parcelable {
         return Bundle().apply {
             putParcelable("Super", super.onSaveInstanceState())
@@ -710,6 +765,42 @@ class FullBottomSheet
         }
         if (key == null || key == "cookie_cover") {
             bottomSheetFullCover.setClip(prefs.getBooleanStrict("cookie_cover", false))
+        }
+        if (key == null || key == "rotate_cookie_button") {
+            rotateCookieButton = prefs.getBooleanStrict("rotate_cookie_button", false)
+            if (!rotateCookieButton) {
+                stopButtonRotation(true)
+            } else if (instance?.isPlaying == true) {
+                startButtonRotation()
+            }
+        }
+    }
+
+    private fun startButtonRotation() {
+        if (!rotateCookieButton || instance?.isPlaying != true) return
+        if (buttonRotationAnimator == null) {
+            buttonRotationAnimator = ValueAnimator.ofFloat(
+                bottomSheetFullControllerButtonBg.rotation,
+                bottomSheetFullControllerButtonBg.rotation + 360f
+            ).apply {
+                duration = 36000L
+                repeatCount = ValueAnimator.INFINITE
+                interpolator = LinearInterpolator()
+                addUpdateListener { animator ->
+                    bottomSheetFullControllerButtonBg.rotation = animator.animatedValue as Float
+                }
+                start()
+            }
+        } else if (buttonRotationAnimator?.isRunning != true) {
+            buttonRotationAnimator?.start()
+        }
+    }
+
+    private fun stopButtonRotation(reset: Boolean = false) {
+        buttonRotationAnimator?.cancel()
+        buttonRotationAnimator = null
+        if (reset) {
+            bottomSheetFullControllerButtonBg.rotation = 0f
         }
     }
 
@@ -1139,7 +1230,12 @@ class FullBottomSheet
             )
 
             val secondaryContainerTransition = ValueAnimator.ofArgb(
-                bottomSheetFullControllerButton.backgroundTintList!!.defaultColor,
+                bottomSheetFullControllerButtonBg.imageTintList?.defaultColor
+                    ?: MaterialColors.getColor(
+                        ctx,
+                        com.google.android.material.R.attr.colorSecondaryContainer,
+                        -1
+                    ),
                 colorSecondaryContainer
             )
 
@@ -1226,7 +1322,7 @@ class FullBottomSheet
             secondaryContainerTransition.apply {
                 addUpdateListener { animation ->
                     val progressColor = animation.animatedValue as Int
-                    bottomSheetFullControllerButton.backgroundTintList =
+                    bottomSheetFullControllerButtonBg.imageTintList =
                         ColorStateList.valueOf(progressColor)
                 }
                 duration = BACKGROUND_COLOR_TRANSITION_SEC
@@ -1350,7 +1446,7 @@ class FullBottomSheet
             bottomSheetFullSubtitle.setTextColor(
                 colorSecondary
             )
-            bottomSheetFullControllerButton.backgroundTintList =
+            bottomSheetFullControllerButtonBg.imageTintList =
                 ColorStateList.valueOf(colorSecondaryContainer)
             bottomSheetFullControllerButton.iconTint =
                 ColorStateList.valueOf(colorOnSecondaryContainer)
@@ -1537,10 +1633,11 @@ class FullBottomSheet
                         wrappedContext ?: context,
                         R.drawable.play_anim
                     )
-                bottomSheetFullControllerButton.background =
+                bottomSheetFullControllerButtonBg.setImageDrawable(
                     AppCompatResources.getDrawable(context, R.drawable.bg_play_anim)
+                )
                 bottomSheetFullControllerButton.icon.startAnimation()
-                bottomSheetFullControllerButton.background.startAnimation()
+                bottomSheetFullControllerButtonBg.drawable.startAnimation()
                 bottomSheetFullControllerButton.setTag(R.id.play_next, 1)
             }
             if (!isUserTracking) {
@@ -1551,6 +1648,9 @@ class FullBottomSheet
                 handler.postDelayed(positionRunnable, SLIDER_UPDATE_INTERVAL)
             }
             bottomSheetFullCover.startRotation()
+            if (rotateCookieButton) {
+                startButtonRotation()
+            }
         } else if (playbackState != Player.STATE_BUFFERING) {
             if (bottomSheetFullControllerButton.getTag(R.id.play_next) as Int? != 2) {
                 bottomSheetFullControllerButton.icon =
@@ -1558,12 +1658,14 @@ class FullBottomSheet
                         wrappedContext ?: context,
                         R.drawable.pause_anim
                     )
-                bottomSheetFullControllerButton.background =
+                bottomSheetFullControllerButtonBg.setImageDrawable(
                     AppCompatResources.getDrawable(context, R.drawable.bg_pause_anim)
+                )
                 bottomSheetFullControllerButton.icon.startAnimation()
-                bottomSheetFullControllerButton.background.startAnimation()
+                bottomSheetFullControllerButtonBg.drawable.startAnimation()
                 bottomSheetFullControllerButton.setTag(R.id.play_next, 2)
                 bottomSheetFullCover.stopRotation()
+                stopButtonRotation()
             }
             if (!isUserTracking) {
                 progressDrawable.animate = false
