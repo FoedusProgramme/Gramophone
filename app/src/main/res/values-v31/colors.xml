@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="widget_background">@android:color/system_neutral1_100</color>
+    <color name="widget_cover_background">@android:color/system_neutral2_100</color>
+    <color name="widget_control_background">@android:color/system_neutral2_200</color>
+    <color name="widget_primary">@android:color/system_accent1_600</color>
+    <color name="widget_on_primary">@android:color/system_accent1_0</color>
+    <color name="widget_on_surface">@android:color/system_neutral1_900</color>
+    <color name="widget_on_surface_variant">@android:color/system_neutral2_700</color>
+    <color name="widget_track">@android:color/system_neutral2_200</color>
+</resources>
