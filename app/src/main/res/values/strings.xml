@@ -392,6 +392,10 @@
     <string name="settings_status_bar_lyrics_title">Status bar lyrics</string>
     <!-- Settings toggle to enable showing lyrics in status bar (requires meizu phone). Subtext -->
     <string name="settings_status_bar_lyrics_summary">Enable MeiZu method of displaying lyrics in status bar (only available on some devices)</string>
+    <!-- Settings toggle to enable showing lyrics in media notification. Title -->
+    <string name="settings_notification_lyrics_title">Notification lyrics</string>
+    <!-- Settings toggle to enable showing lyrics in media notification. Subtext -->
+    <string name="settings_notification_lyrics_summary">Display lyrics as the notification title and artist - title as subtitle</string>
     <!-- Description shown about lyric widget in Android launcher / home screen's widget selector on Android 12+ -->
     <string name="lyric_widget_description">Widget that shows lyrics of currently playing media</string>
     <!-- Context menu item to delete song/album/playlist -->

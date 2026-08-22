@@ -52,7 +52,8 @@ class EndedWorkaroundPlayer(
     val context: Context,
     exoPlayer: ExoPlayer,
     private val getLyric: () -> SemanticLyrics?,
-    val queueBoard: QueueBoard
+    val queueBoard: QueueBoard,
+    private val getNotificationLyric: () -> CharSequence? = { null }
 ) : ForwardingSimpleBasePlayer(exoPlayer),
     Player.Listener {
 
@@ -97,9 +98,11 @@ class EndedWorkaroundPlayer(
     }
 
     fun updateLyricNow() {
-        if (context.packageName == "com.tencent.qqmusic") {
-            invalidateState()
-        }
+        invalidateState()
+    }
+
+    fun invalidatePlayerState() {
+        invalidateState()
     }
 
     override fun getState(): State {
@@ -116,6 +119,29 @@ class EndedWorkaroundPlayer(
                             remove(EXTRA_HD_ARTWORK_URI)
                         })
                         .build()
+                )
+                .build()
+        }
+        val notifLyric = getNotificationLyric()
+        if (!notifLyric.isNullOrBlank()) {
+            val origTitle = superState.currentMetadata.title?.toString() ?: ""
+            val origArtist = superState.currentMetadata.artist?.toString() ?: ""
+            val subtitle = if (origArtist.isNotBlank() && origTitle.isNotBlank()) {
+                "$origArtist - $origTitle"
+            } else {
+                origArtist.ifBlank { origTitle }
+            }
+            val metadataWithLyric = superState.currentMetadata.buildUpon()
+                .setTitle(notifLyric)
+                .setArtist(subtitle)
+                .setDisplayTitle(notifLyric)
+                .setSubtitle(subtitle)
+                .build()
+            superState = superState.buildUpon()
+                .setPlaylist(
+                    superState.timeline,
+                    superState.currentTracks,
+                    metadataWithLyric
                 )
                 .build()
         }
