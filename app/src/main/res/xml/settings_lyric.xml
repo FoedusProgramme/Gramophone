@@ -56,6 +56,15 @@
         app:iconSpaceReserved="false" />
 
     <SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="notification_lyrics"
+        android:layout="@layout/preference_switch"
+        android:summary="@string/settings_notification_lyrics_summary"
+        android:title="@string/settings_notification_lyrics_title"
+        android:widgetLayout="@layout/preference_switch_widget"
+        app:iconSpaceReserved="false" />
+
+    <SwitchPreferenceCompat
         android:defaultValue="true"
         android:key="trim_lyrics"
         android:layout="@layout/preference_switch"
