@@ -276,6 +276,20 @@
                 android:resource="@xml/lyric_widget" />
         </receiver>
 
+        <receiver android:name=".ui.CardWidgetProvider"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="org.akanework.gramophone.ACTION_CARD_WIDGET_PREVIOUS" />
+                <action android:name="org.akanework.gramophone.ACTION_CARD_WIDGET_PLAY_PAUSE" />
+                <action android:name="org.akanework.gramophone.ACTION_CARD_WIDGET_NEXT" />
+                <action android:name="org.akanework.gramophone.ACTION_CARD_WIDGET_SHUFFLE" />
+                <action android:name="org.akanework.gramophone.ACTION_CARD_WIDGET_FAVORITE" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/card_widget" />
+        </receiver>
+
         <service android:name=".ui.LyricWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
 

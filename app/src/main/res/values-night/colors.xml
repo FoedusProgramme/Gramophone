@@ -46,4 +46,12 @@
     <color name="md_theme_surfaceContainerHigh">#272A2F</color>
     <color name="md_theme_surfaceContainerHighest">#32353A</color>
     <color name="splash_foreground_color">@color/md_theme_onSurfaceVariant</color>
+    <color name="widget_background">@color/md_theme_surfaceContainer</color>
+    <color name="widget_cover_background">@color/md_theme_surfaceContainerHigh</color>
+    <color name="widget_control_background">@color/md_theme_surfaceContainerHighest</color>
+    <color name="widget_primary">@color/md_theme_primary</color>
+    <color name="widget_on_primary">@color/md_theme_onPrimary</color>
+    <color name="widget_on_surface">@color/md_theme_onSurface</color>
+    <color name="widget_on_surface_variant">@color/md_theme_onSurfaceVariant</color>
+    <color name="widget_track">@color/md_theme_surfaceContainerHighest</color>
 </resources>
