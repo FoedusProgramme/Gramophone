@@ -231,8 +231,10 @@
     <string name="settings_player_options_summary">Output quality, playback behavior</string>
     <!-- Settings category about customizing UI (currently disabled). Title -->
     <string name="settings_customization">Customization</string>
-    <!-- Settings category about customizing UI (currently disabled). Subtext -->
+    <!-- Settings category in behavior settings about customization options. Subtext -->
     <string name="settings_customization_summary">Manage customization options</string>
+    <string name="settings_always_skip_previous">Always skip to previous track</string>
+    <string name="settings_always_skip_previous_summary">Directly switch to previous track when pressing previous button instead of seeking to start</string>
     <!-- Pixel slider in behavior settings to specify how round album cover's corner should be. -->
     <string name="settings_album_round_corner">Album round corner</string>
     <!-- Toggle in player UI settings to make song name bold. Title -->
