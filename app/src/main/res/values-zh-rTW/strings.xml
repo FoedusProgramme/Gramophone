@@ -282,4 +282,11 @@
     <string name="device_type_hdmi_earc">HDMI 增強型音訊回傳通道</string>
     <string name="device_type_dock_digital">數位擴充基座</string>
     <string name="device_type_dock_analog">類比擴充基座</string>
+    <string name="tempo_pitch_value">%s：%.2fx</string>
+    <string name="spk_encoding_pcm_32bit">32-bit (int) PCM</string>
+    <string name="spk_encoding_pcm_float">32-bit (float) PCM</string>
+    <string name="spk_encoding_mp3">MP3</string>
+    <string name="spk_encoding_aac_lc">AAC-LC</string>
+    <string name="spk_encoding_aac_he_v1">HE-AAC v1</string>
+    <string name="spk_encoding_aac_he_v2">HE-AAC v2</string>
 </resources>
