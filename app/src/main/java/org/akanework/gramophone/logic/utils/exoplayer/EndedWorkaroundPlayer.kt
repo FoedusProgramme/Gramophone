@@ -99,10 +99,18 @@ class EndedWorkaroundPlayer(
     }
 
     fun updateLyricNow() {
+<<<<<<< HEAD
         val isNotificationLyricsEnabled = prefs.getBooleanStrict("notification_lyrics", false)
         if (context.packageName == "com.tencent.qqmusic" || isNotificationLyricsEnabled) {
             invalidateState()
         }
+=======
+        invalidateState()
+    }
+
+    fun invalidatePlayerState() {
+        invalidateState()
+>>>>>>> b427b13e (feat(behavior): add preference to always skip to previous track)
     }
 
     override fun getState(): State {
@@ -122,6 +130,7 @@ class EndedWorkaroundPlayer(
                 )
                 .build()
         }
+<<<<<<< HEAD
         if (superState.playWhenReady && superState.playbackState != STATE_ENDED && superState.playbackState != STATE_IDLE) {
             val notifLyric = getNotificationLyric()
             if (!notifLyric.isNullOrBlank()) {
@@ -146,6 +155,30 @@ class EndedWorkaroundPlayer(
                     )
                     .build()
             }
+=======
+        val notifLyric = getNotificationLyric()
+        if (!notifLyric.isNullOrBlank()) {
+            val origTitle = superState.currentMetadata.title?.toString() ?: ""
+            val origArtist = superState.currentMetadata.artist?.toString() ?: ""
+            val subtitle = if (origArtist.isNotBlank() && origTitle.isNotBlank()) {
+                "$origArtist - $origTitle"
+            } else {
+                origArtist.ifBlank { origTitle }
+            }
+            val metadataWithLyric = superState.currentMetadata.buildUpon()
+                .setTitle(notifLyric)
+                .setArtist(subtitle)
+                .setDisplayTitle(notifLyric)
+                .setSubtitle(subtitle)
+                .build()
+            superState = superState.buildUpon()
+                .setPlaylist(
+                    superState.timeline,
+                    superState.currentTracks,
+                    metadataWithLyric
+                )
+                .build()
+>>>>>>> b427b13e (feat(behavior): add preference to always skip to previous track)
         }
         if (context.packageName == "com.tencent.qqmusic") {
             // Oplus uses package name whitelist for their lockscreen lyric feature
@@ -402,6 +435,20 @@ class EndedWorkaroundPlayer(
         )
         return Futures.immediateVoidFuture()
     }
+
+    override fun handleSeek(
+        mediaItemIndex: Int,
+        positionMs: Long,
+        seekCommand: Int
+    ): ListenableFuture<*> {
+        val alwaysSkipPrevious = prefs.getBooleanStrict("always_skip_previous", false)
+        if (seekCommand == Player.COMMAND_SEEK_TO_PREVIOUS && alwaysSkipPrevious) {
+            player.seekToPreviousMediaItem()
+            return Futures.immediateVoidFuture()
+        }
+        return super.handleSeek(mediaItemIndex, positionMs, seekCommand)
+    }
+
 
 
     /**
