@@ -200,7 +200,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="28dp"
-            app:layout_constraintBottom_toTopOf="@id/sheet_mid_button"
+            app:layout_constraintBottom_toTopOf="@id/sheet_mid_button_frame"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/slider"
@@ -253,29 +253,43 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/sheet_mid_button"
+        <FrameLayout
+            android:id="@+id/sheet_mid_button_frame"
             android:layout_width="90dp"
             android:layout_height="90dp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="18dp"
-            android:background="@drawable/bg_play_anim"
-            android:contentDescription="@string/play"
-            android:insetLeft="0dp"
-            android:insetTop="0dp"
-            android:insetRight="0dp"
-            android:insetBottom="0dp"
-            app:backgroundTint="?attr/colorSecondaryContainer"
-            app:icon="@drawable/play_anim"
-            app:iconGravity="textStart"
-            app:iconPadding="0dp"
-            app:iconSize="42dp"
-            app:iconTint="?attr/colorOnSecondaryContainer"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/duration_frame"
-            app:tooltipText="@string/play" />
+            app:layout_constraintTop_toBottomOf="@id/duration_frame">
+
+            <ImageView
+                android:id="@+id/sheet_mid_button_bg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/bg_play_anim"
+                app:tint="?attr/colorSecondaryContainer" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/sheet_mid_button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                app:backgroundTint="@android:color/transparent"
+                android:contentDescription="@string/play"
+                android:insetLeft="0dp"
+                android:insetTop="0dp"
+                android:insetRight="0dp"
+                android:insetBottom="0dp"
+                app:icon="@drawable/play_anim"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp"
+                app:iconSize="42dp"
+                app:iconTint="?attr/colorOnSecondaryContainer"
+                app:rippleColor="?attr/colorControlHighlight"
+                app:tooltipText="@string/play" />
+        </FrameLayout>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/sheet_previous_song"
@@ -283,7 +297,7 @@
             android:layout_height="90dp"
             android:layout_gravity="center"
             android:layout_marginEnd="8dp"
-            android:layout_toStartOf="@id/sheet_mid_button"
+            android:layout_toStartOf="@id/sheet_mid_button_frame"
             android:background="@drawable/rp_buttons_dynamic"
             android:contentDescription="@string/skip_previous"
             android:insetLeft="0dp"
@@ -295,11 +309,11 @@
             app:iconPadding="0dp"
             app:iconSize="38sp"
             app:iconTint="?attr/colorOnSurface"
-            app:layout_constraintBottom_toBottomOf="@id/sheet_mid_button"
-            app:layout_constraintEnd_toStartOf="@id/sheet_mid_button"
+            app:layout_constraintBottom_toBottomOf="@id/sheet_mid_button_frame"
+            app:layout_constraintEnd_toStartOf="@id/sheet_mid_button_frame"
             app:layout_constraintHorizontal_bias="0.80"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/sheet_mid_button"
+            app:layout_constraintTop_toTopOf="@id/sheet_mid_button_frame"
             app:tooltipText="@string/skip_previous" />
 
         <com.google.android.material.button.MaterialButton
@@ -308,7 +322,7 @@
             android:layout_height="90dp"
             android:layout_gravity="center"
             android:layout_marginStart="8dp"
-            android:layout_toEndOf="@id/sheet_mid_button"
+            android:layout_toEndOf="@id/sheet_mid_button_frame"
             android:background="@drawable/rp_buttons_dynamic"
             android:contentDescription="@string/skip_next"
             android:insetLeft="0dp"
@@ -320,11 +334,11 @@
             app:iconPadding="0dp"
             app:iconSize="38sp"
             app:iconTint="?attr/colorOnSurface"
-            app:layout_constraintBottom_toBottomOf="@id/sheet_mid_button"
+            app:layout_constraintBottom_toBottomOf="@id/sheet_mid_button_frame"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.20"
-            app:layout_constraintStart_toEndOf="@id/sheet_mid_button"
-            app:layout_constraintTop_toTopOf="@id/sheet_mid_button"
+            app:layout_constraintStart_toEndOf="@id/sheet_mid_button_frame"
+            app:layout_constraintTop_toTopOf="@id/sheet_mid_button_frame"
             app:tooltipText="@string/skip_next" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
