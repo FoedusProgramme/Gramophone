@@ -116,9 +116,6 @@ class CardWidgetProvider : AppWidgetProvider() {
         val service = GramophonePlaybackService.instanceForWidgetAndLyricsOnly
         val player = service?.endedWorkaroundPlayer
         val mediaItem = player?.currentMediaItem
-        val duration = player?.duration ?: 0L
-        val position = player?.currentPosition ?: 0L
-        val progress = if (duration > 0L) (position.toFloat() / duration.toFloat()).coerceIn(0f, 1f) else 0f
         val artworkUri = mediaItem?.mediaMetadata?.artworkUri
         val cachedBitmap = if (artworkUri != null && artworkUri == cachedArtworkUri) cachedArtworkBitmap else null
 
@@ -128,7 +125,6 @@ class CardWidgetProvider : AppWidgetProvider() {
             isPlaying = player?.isPlaying == true,
             isFavorite = (mediaItem?.mediaMetadata?.userRating as? HeartRating)?.isHeart == true,
             isShuffle = player?.shuffleModeEnabled == true,
-            progress = progress,
             artworkUri = artworkUri,
             artworkBitmap = cachedBitmap
         )
