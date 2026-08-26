@@ -27,6 +27,7 @@ import androidx.media3.common.PlaybackParameters
 import androidx.media3.common.Player
 import androidx.media3.common.util.Log
 import androidx.media3.exoplayer.ExoPlayer
+import android.content.SharedPreferences
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import org.akanework.gramophone.BuildConfig
@@ -38,7 +39,6 @@ import org.akanework.gramophone.logic.utils.CircularShuffleOrder
 import org.akanework.gramophone.logic.utils.Flags
 import org.akanework.gramophone.logic.utils.SemanticLyrics
 import org.json.JSONObject
-import androidx.preference.PreferenceManager
 import org.akanework.gramophone.logic.getBooleanStrict
 import uk.akane.libphonograph.items.EXTRA_HD_ARTWORK_URI
 import uk.akane.libphonograph.items.hdArtworkUri
@@ -52,6 +52,7 @@ import java.util.Objects
  */
 class EndedWorkaroundPlayer(
     val context: Context,
+    private val prefs: SharedPreferences,
     exoPlayer: ExoPlayer,
     private val getLyric: () -> SemanticLyrics?,
     val queueBoard: QueueBoard,
@@ -100,8 +101,7 @@ class EndedWorkaroundPlayer(
     }
 
     fun updateLyricNow() {
-        val isNotificationLyricsEnabled = PreferenceManager.getDefaultSharedPreferences(context)
-            .getBooleanStrict("notification_lyrics", false)
+        val isNotificationLyricsEnabled = prefs.getBooleanStrict("notification_lyrics", false)
         if (context.packageName == "com.tencent.qqmusic" || isNotificationLyricsEnabled) {
             invalidateState()
         }

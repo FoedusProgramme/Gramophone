@@ -406,6 +406,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         onSharedPreferenceChanged(prefs, null) // read initial values
         val player = EndedWorkaroundPlayer(
             this,
+            prefs,
             exoPlayer = ExoPlayer.Builder(
                 this,
                 GramophoneRenderFactory(
