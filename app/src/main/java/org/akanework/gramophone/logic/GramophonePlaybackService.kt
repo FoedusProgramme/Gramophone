@@ -815,49 +815,256 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         val newIsHeart = !currentIsHeart
         lifecycleScope.launch(Dispatchers.Default) {
             val song = Entry.ofMediaItem(item) ?: return@launch
-            val uriIn = gramophoneApplication.reader.playlistListFlow.map { it.find { p ->
-                p is Favorite } }.first()?.id?.let {
-                ContentUris.withAppendedId(@Suppress("deprecation")
-                MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, it)
-            }
-            val token = if (uriIn != null) {
-                MediaStoreCompat.needRequestBytesWrite(this@GramophonePlaybackService, uriIn)
+            updateFavoritePlaylist(song, newIsHeart)
+        }
+    }
+
+    private suspend fun updateFavoritePlaylist(song: Entry, isHeart: Boolean): Boolean {
+        val uriIn = gramophoneApplication.reader.playlistListFlow.map { it.find { p -> p is Favorite } }.first()?.id?.let {
+            ContentUris.withAppendedId(@Suppress("deprecation") MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, it)
+        }
+        val token = if (uriIn != null) {
+            MediaStoreCompat.needRequestBytesWrite(this@GramophonePlaybackService, uriIn)
+        } else {
+            MediaStoreCompat.needRequestCreate(
+                this@GramophonePlaybackService,
+                ItemManipulator.getDefaultPlaylistFile(ItemManipulator.FAVORITES).path
+            )
+        }
+        if (token != null) {
+            notifyFavoriteError(song, isHeart)
+            return false
+        }
+        return try {
+            val uri = uriIn ?: ItemManipulator.createPlaylist(
+                this@GramophonePlaybackService,
+                ItemManipulator.getDefaultPlaylistFile(ItemManipulator.FAVORITES)
+            )
+            val readback = if (uriIn != null) {
+                ItemManipulator.readbackPlaylist(this@GramophonePlaybackService, uri)
             } else {
-                MediaStoreCompat.needRequestCreate(this@GramophonePlaybackService,
-                    ItemManipulator.getDefaultPlaylistFile(ItemManipulator.FAVORITES).path)
+                PlaylistSerializer.Playlist.create()
             }
-            if (token == null) {
-                try {
-                    val uri = uriIn ?: ItemManipulator.createPlaylist(
-                        this@GramophonePlaybackService, ItemManipulator
-                            .getDefaultPlaylistFile(ItemManipulator.FAVORITES))
-                    val readback = if (uriIn != null) ItemManipulator.readbackPlaylist(
-                        this@GramophonePlaybackService, uri) else
-                            PlaylistSerializer.Playlist.create()
-                    val newSongs = if (newIsHeart) {
-                        readback.entries + song
-                    } else {
-                        readback.entries.filter { !song.fuzzyEquals(it) }
+            val newSongs = if (isHeart) {
+                readback.entries + song
+            } else {
+                readback.entries.filter { !song.fuzzyEquals(it) }
+            }
+            ItemManipulator.setPlaylistContent(this@GramophonePlaybackService, uri, readback.copy(entries = newSongs), uriIn == null)
+            true
+        } catch (e: Exception) {
+            Log.e(TAG, "failed to update favorite for ${song.title}", e)
+            notifyFavoriteError(song, isHeart)
+            false
+        }
+    }
+
+    private fun notifyFavoriteError(song: Entry, isHeart: Boolean) {
+        if (!supportsNotificationPermission() || hasNotificationPermission()) {
+            @SuppressLint("MissingPermission")
+            nm.notify(
+                FAVE_ID,
+                NotificationCompat.Builder(this, NOTIFY_CHANNEL_ID).apply {
+                    setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                    setAutoCancel(true)
+                    setCategory(NotificationCompat.CATEGORY_ERROR)
+                    setSmallIcon(R.drawable.ic_error)
+                    setContentTitle(getString(R.string.favorite_failed_title))
+                    setContentText(getString(R.string.favorite_failed_text))
+                    setContentIntent(
+                        PendingIntent.getActivity(
+                            this@GramophonePlaybackService,
+                            PENDING_INTENT_FAVE_ID,
+                            Intent(this@GramophonePlaybackService, MainActivity::class.java)
+                                .putExtra(MainActivity.FAVORITE_ENTRY, song)
+                                .putExtra(MainActivity.FAVORITE_STATE, isHeart),
+                            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+                        )
+                    )
+                    setVibrate(longArrayOf(0L, 200L))
+                    setLights(0, 0, 0)
+                    setBadgeIconType(NotificationCompat.BADGE_ICON_NONE)
+                    setSound(null)
+                }.build()
+            )
+        }
+    }
+
+    private fun createErrorNotificationChannel() {
+        nm.createNotificationChannel(
+            NotificationChannelCompat.Builder(
+                NOTIFY_CHANNEL_ID, NotificationManagerCompat.IMPORTANCE_HIGH
+            ).apply {
+                setName(getString(R.string.error_in_bg))
+                setVibrationEnabled(true)
+                setVibrationPattern(longArrayOf(0L, 200L))
+                setLightsEnabled(false)
+                setShowBadge(false)
+                setSound(null, null)
+            }.build()
+        )
+    }
+
+    private fun initCustomCommands(): List<CommandButton> = listOf(
+        CommandButton.Builder(CommandButton.ICON_SHUFFLE_OFF)
+            .setDisplayName(getString(R.string.shuffle))
+            .setPlayerCommand(Player.COMMAND_SET_SHUFFLE_MODE, true)
+            .build(),
+        CommandButton.Builder(CommandButton.ICON_SHUFFLE_ON)
+            .setDisplayName(getString(R.string.shuffle))
+            .setPlayerCommand(Player.COMMAND_SET_SHUFFLE_MODE, false)
+            .build(),
+        CommandButton.Builder(CommandButton.ICON_REPEAT_OFF)
+            .setDisplayName(getString(R.string.repeat_mode))
+            .setPlayerCommand(Player.COMMAND_SET_REPEAT_MODE, Player.REPEAT_MODE_ALL)
+            .build(),
+        CommandButton.Builder(CommandButton.ICON_REPEAT_ALL)
+            .setDisplayName(getString(R.string.repeat_mode))
+            .setPlayerCommand(Player.COMMAND_SET_REPEAT_MODE, Player.REPEAT_MODE_ONE)
+            .build(),
+        CommandButton.Builder(CommandButton.ICON_REPEAT_ONE)
+            .setDisplayName(getString(R.string.repeat_mode))
+            .setPlayerCommand(Player.COMMAND_SET_REPEAT_MODE, Player.REPEAT_MODE_OFF)
+            .build(),
+        CommandButton.Builder(CommandButton.ICON_HEART_UNFILLED)
+            .setDisplayName(getString(R.string.favorite))
+            .setSessionCommand(SessionCommand(SessionCommand.COMMAND_CODE_SESSION_SET_RATING), HeartRating(true))
+            .build(),
+        CommandButton.Builder(CommandButton.ICON_HEART_FILLED)
+            .setDisplayName(getString(R.string.unfavorite))
+            .setSessionCommand(SessionCommand(SessionCommand.COMMAND_CODE_SESSION_SET_RATING), HeartRating(false))
+            .build(),
+    )
+
+    private fun initAfFormatTracker(): AfFormatTracker {
+        return AfFormatTracker(this, playbackHandler, handler).apply {
+            formatChangedCallback = { format, period ->
+                if (period != null) {
+                    handler.post {
+                        val currentPeriod = endedWorkaroundPlayer?.exoPlayer?.currentPeriodIndex
+                            ?.takeIf { it != C.INDEX_UNSET && (endedWorkaroundPlayer?.exoPlayer?.currentTimeline?.periodCount ?: 0) > it }
+                            ?.let { endedWorkaroundPlayer!!.exoPlayer.currentTimeline.getUidOfPeriod(it) }
+                        if (currentPeriod != period) {
+                            if (format != null) pendingAfTrackFormats[period] = format
+                            else pendingAfTrackFormats.remove(period)
+                        } else {
+                            afTrackFormat = format?.let { period to it }
+                            mediaSession?.broadcastCustomCommand(
+                                SessionCommand(SERVICE_GET_AUDIO_FORMAT, Bundle.EMPTY),
+                                Bundle.EMPTY
+                            )
+                        }
                     }
-                    ItemManipulator.setPlaylistContent(this@GramophonePlaybackService, uri,
-                        readback.copy(entries = newSongs), uriIn == null)
-                } catch (e: Exception) {
-                    Log.e(TAG, "failed to toggle favorite on ${item.mediaId}", e)
+                } else {
+                    Log.e(TAG, "mediaPeriodId is NULL in formatChangedCallback!!")
                 }
-            }
-            withContext(Dispatchers.Main) {
-                val updatedItem = item.buildUpon().setMediaMetadata(
-                    item.mediaMetadata.buildUpon()
-                        .setUserRating(HeartRating(newIsHeart))
-                        .build()
-                ).build()
-                val currentIndex = endedWorkaroundPlayer?.currentMediaItemIndex ?: 0
-                endedWorkaroundPlayer?.replaceMediaItem(currentIndex, updatedItem)
-                CardWidgetProvider.update(this@GramophonePlaybackService)
             }
         }
     }
 
+    private fun buildEndedWorkaroundPlayer(): EndedWorkaroundPlayer {
+        val player = EndedWorkaroundPlayer(
+            this,
+            exoPlayer = ExoPlayer.Builder(
+                this,
+                GramophoneRenderFactory(
+                    this, rgAp, this::onAudioSinkInputFormatChanged,
+                    afFormatTracker::setAudioSink
+                )
+                    .setEnableHighResolutionPcmOutput(true)
+                    .setEnableDecoderFallback(true)
+                    .setEnableAudioOutputPlaybackParameters(true)
+                    .setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON),
+                GramophoneMediaSourceFactory(
+                    DefaultDataSource.Factory(this),
+                    GramophoneExtractorsFactory().also {
+                        it.setConstantBitrateSeekingEnabled(true)
+                        it.setMp3ExtractorFlags(Mp3Extractor.FLAG_ENABLE_INDEX_SEEKING)
+                    })
+            )
+                .setWakeMode(C.WAKE_MODE_LOCAL)
+                .setAudioAttributes(
+                    AudioAttributes.Builder()
+                        .setUsage(C.USAGE_MEDIA)
+                        .setContentType(C.AUDIO_CONTENT_TYPE_MUSIC)
+                        .build(), true
+                )
+                .setHandleAudioBecomingNoisy(true)
+                .setTrackSelector(DefaultTrackSelector(this).apply {
+                    setParameters(
+                        buildUponParameters()
+                            .setAllowInvalidateSelectionsOnRendererCapabilitiesChange(true)
+                            .setAudioOffloadPreferences(
+                                TrackSelectionParameters.AudioOffloadPreferences.Builder()
+                                    .apply {
+                                        val config = prefs.getStringStrict("offload", "0")?.toIntOrNull()
+                                        if (config != null && config > 0 && Flags.OFFLOAD) {
+                                            rgAp.setOffloadEnabled(true)
+                                            setAudioOffloadMode(TrackSelectionParameters.AudioOffloadPreferences.AUDIO_OFFLOAD_MODE_ENABLED)
+                                            setIsGaplessSupportRequired(config == 2)
+                                        }
+                                    }
+                                    .build()))
+                })
+                .setPlaybackLooper(internalPlaybackThread.looper)
+                .build(),
+            { lyrics },
+            queueBoard = qb
+        )
+        player.exoPlayer.addAnalyticsListener(EventLogger())
+        player.exoPlayer.addAnalyticsListener(afFormatTracker)
+        player.exoPlayer.addAnalyticsListener(this)
+        player.exoPlayer.setShuffleOrder(CircularShuffleOrder(player, 0, 0, Random.nextLong()))
+        return player
+    }
+
+    private fun createMediaSessionBitmapLoader(): CacheBitmapLoader {
+        return CacheBitmapLoader(object : BitmapLoader {
+            private val limit by lazy { MediaSession.getBitmapDimensionLimit(this@GramophonePlaybackService) }
+
+            @Suppress("KotlinArrayHashCode")
+            override fun decodeBitmap(data: ByteArray): ListenableFuture<Bitmap> {
+                return CallbackToFutureAdapter.getFuture { completer ->
+                    imageLoader.enqueue(
+                        ImageRequest.Builder(this@GramophonePlaybackService)
+                            .data(data)
+                            .memoryCacheKey(data.hashCode().toString())
+                            .size(limit, limit)
+                            .allowHardware(false)
+                            .target(
+                                onStart = {},
+                                onSuccess = { result -> completer.set((result as BitmapImage).bitmap) },
+                                onError = { completer.setException(Exception("coil onError called for byte array")) }
+                            )
+                            .build())
+                        .also { completer.addCancellationListener({ it.dispose() }, mainExecutor) }
+                    "coil load for ${data.hashCode()}"
+                }
+            }
+
+            override fun loadBitmap(uri: Uri): ListenableFuture<Bitmap> {
+                return CallbackToFutureAdapter.getFuture { completer ->
+                    imageLoader.enqueue(
+                        ImageRequest.Builder(this@GramophonePlaybackService)
+                            .data(uri)
+                            .size(limit, limit)
+                            .allowHardware(false)
+                            .target(
+                                onStart = {},
+                                onSuccess = { result -> completer.set((result as BitmapImage).bitmap) },
+                                onError = { completer.setException(Exception("coil onError called (normal if no album art exists)")) }
+                            )
+                            .build())
+                        .also { completer.addCancellationListener({ it.dispose() }, mainExecutor) }
+                    "coil load for $uri"
+                }
+            }
+
+            override fun supportsMimeType(mimeType: String): Boolean = isBitmapFactorySupportedMimeType(mimeType)
+            override fun loadBitmapFromMetadata(metadata: MediaMetadata): ListenableFuture<Bitmap>? =
+                metadata.artworkUri?.let { loadBitmap(it) }
+        })
+    }
     // When destroying, we should release server side player
     // alongside with the mediaSession.
     override fun onDestroy() {
@@ -1668,6 +1875,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
             }
         }
 
+        CardWidgetProvider.update(this)
         lastPlayedManager.save()
     }
 
@@ -1683,10 +1891,12 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
 
     override fun onMediaMetadataChanged(mediaMetadata: MediaMetadata) {
         refreshMediaButtonCustomLayout()
+        CardWidgetProvider.update(this)
     }
 
     override fun onIsPlayingChanged(isPlaying: Boolean) {
         scheduleSendingLyrics(false)
+        CardWidgetProvider.update(this)
         lastPlayedManager.save()
     }
 
@@ -1728,6 +1938,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
     }
     override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
         refreshMediaButtonCustomLayout()
+        CardWidgetProvider.update(this)
         if (needsMissingOnDestroyCallWorkarounds()) {
             handler.post { lastPlayedManager.save() }
         }
@@ -1735,6 +1946,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
 
     override fun onRepeatModeChanged(repeatMode: Int) {
         refreshMediaButtonCustomLayout()
+        CardWidgetProvider.update(this)
         if (needsMissingOnDestroyCallWorkarounds()) {
             handler.post { lastPlayedManager.save() }
         }
@@ -1869,13 +2081,10 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
     }
 
     private fun sendLyricNow(new: Boolean) {
-        if (new) {
+        if (new)
             LyricWidgetProvider.update(this)
-            CardWidgetProvider.update(this)
-        } else {
+        else
             LyricWidgetProvider.adapterUpdate(this)
-            CardWidgetProvider.update(this)
-        }
         val isStatusBarLyricsEnabled = prefs.getBooleanStrict("status_bar_lyrics", false)
         val highlightedLyric = if (isStatusBarLyricsEnabled && controller?.playWhenReady == true)
             getCurrentLyricIndex(false)?.let {

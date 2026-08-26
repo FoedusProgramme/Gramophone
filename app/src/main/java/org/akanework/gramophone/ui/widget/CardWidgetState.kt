@@ -27,7 +27,6 @@ data class CardWidgetPlaybackState(
     val isPlaying: Boolean = false,
     val isFavorite: Boolean = false,
     val isShuffle: Boolean = false,
-    val progress: Float = 0f,
     val artworkUri: Uri? = null,
     val artworkBitmap: Bitmap? = null
 )

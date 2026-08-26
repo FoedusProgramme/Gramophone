@@ -20,11 +20,6 @@
             android:scaleType="centerCrop"
             android:src="@drawable/ic_default_cover" />
 
-        <ImageView
-            android:id="@+id/widget_progress"
-            android:layout_width="128dp"
-            android:layout_height="128dp"
-            android:layout_centerInParent="true" />
 
         <FrameLayout
             android:id="@+id/widget_play_pause_frame"
