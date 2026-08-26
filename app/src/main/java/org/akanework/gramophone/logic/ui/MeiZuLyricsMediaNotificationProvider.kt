@@ -35,8 +35,7 @@ private const val FLAG_ONLY_UPDATE_TICKER = 0x02000000
 
 private class InnerMeiZuLyricsMediaNotificationProvider(
     context: Context,
-    private val tickerProvider: () -> CharSequence?,
-    private val notificationLyricProvider: () -> CharSequence?
+    private val tickerProvider: () -> CharSequence?
 ) : DefaultMediaNotificationProvider(context) {
     override fun addNotificationActions(
         mediaSession: MediaSession,
@@ -45,7 +44,6 @@ private class InnerMeiZuLyricsMediaNotificationProvider(
         actionFactory: MediaNotification.ActionFactory
     ): IntArray {
         val ticker = tickerProvider()
-        val notifLyric = notificationLyricProvider()
         val title = mediaSession.player.mediaMetadata.title?.toString() ?: ""
         val artist = mediaSession.player.mediaMetadata.artist?.toString() ?: ""
 
@@ -64,22 +62,15 @@ private class InnerMeiZuLyricsMediaNotificationProvider(
                 putBoolean("ticker_icon_switch", false)
             })
         }
-        if (!notifLyric.isNullOrBlank()) {
-            val subtitle = if (artist.isNotBlank() && title.isNotBlank()) "$artist - $title" else artist.ifBlank { title }
-            builder.setContentTitle(notifLyric)
-            builder.setContentText(subtitle)
-            builder.setSubText(subtitle)
-        }
         return super.addNotificationActions(mediaSession, mediaButtons, builder, actionFactory)
     }
 }
 
 class MeiZuLyricsMediaNotificationProvider(
     context: MediaSessionService,
-    private val tickerProvider: () -> CharSequence?,
-    private val notificationLyricProvider: () -> CharSequence? = { null },
+    private val tickerProvider: () -> CharSequence?
 ) : MediaNotification.Provider {
-    private val inner = InnerMeiZuLyricsMediaNotificationProvider(context, tickerProvider, notificationLyricProvider).apply {
+    private val inner = InnerMeiZuLyricsMediaNotificationProvider(context, tickerProvider).apply {
         setSmallIcon(R.drawable.ic_gramophone_monochrome)
     }
 
@@ -90,7 +81,6 @@ class MeiZuLyricsMediaNotificationProvider(
         onNotificationChangedCallback: MediaNotification.Provider.Callback
     ): MediaNotification {
         val ticker = tickerProvider()
-        val notifLyric = notificationLyricProvider()
         return inner.createNotification(
             mediaSession, customLayout, actionFactory
         ) {
@@ -99,9 +89,8 @@ class MeiZuLyricsMediaNotificationProvider(
                     it.applyNotificationFlags(true, false)
             })
         }.also {
-            val updateTickerOnly = isManualNotificationUpdate && notifLyric == null
             if (ticker != null || isManualNotificationUpdate)
-                it.applyNotificationFlags(ticker != null, updateTickerOnly)
+                it.applyNotificationFlags(ticker != null, isManualNotificationUpdate)
         }
     }
 

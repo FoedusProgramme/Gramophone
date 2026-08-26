@@ -219,11 +219,6 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
     private lateinit var prefs: SharedPreferences
     private var lastSentHighlightedLyric: String? = null
     private var lastSentNotificationLyric: String? = null
-    private var isPausedFallback = false
-    private val pauseFallbackRunnable = Runnable {
-        isPausedFallback = true
-        sendLyricNow(false)
-    }
     private lateinit var afFormatTracker: AfFormatTracker
     private lateinit var rgAp: ReplayGainAudioProcessor
     private var rgMode = 0 // 0 = disabled, 1 = track, 2 = album, 3 = smart
@@ -331,11 +326,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         qb = QueueBoard(this)
         setListener(this)
         setMediaNotificationProvider(
-            MeiZuLyricsMediaNotificationProvider(
-                this,
-                tickerProvider = { lastSentHighlightedLyric },
-                notificationLyricProvider = { lastSentNotificationLyric }
-            )
+            MeiZuLyricsMediaNotificationProvider(this) { lastSentHighlightedLyric }
         )
         setForegroundServiceTimeoutMs(120000)
         setShowNotificationForEmptyPlayer(SHOW_NOTIFICATION_FOR_EMPTY_PLAYER_AFTER_STOP_OR_ERROR)
@@ -828,7 +819,6 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         scope.cancel()
         endedWorkaroundPlayer!!.stop()
         handler.removeCallbacks(timer)
-        handler.removeCallbacks(pauseFallbackRunnable)
         handler.removeCallbacks(sendLyrics)
         mediaSession!!.setOptOutOfMediaButtonPlaybackResumption(controller!!.currentTimeline.isEmpty)
         proxy?.let {
@@ -917,7 +907,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         var restart = false
         if (key == null || key == "notification_lyrics" || key == "status_bar_lyrics") {
             scheduleSendingLyrics(false)
-            endedWorkaroundPlayer?.invalidatePlayerState()
+            endedWorkaroundPlayer?.updateLyricNow()
         }
         if (key == null || key == "rg_mode") {
             rgMode = prefs.getStringStrict("rg_mode", "0")!!.toInt()
@@ -1535,11 +1525,6 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
     }
 
     override fun onPlaybackStateChanged(state: Int) {
-        if (state == Player.STATE_ENDED || state == Player.STATE_IDLE) {
-            isPausedFallback = true
-            handler.removeCallbacks(pauseFallbackRunnable)
-            sendLyricNow(false)
-        }
         if (state == Player.STATE_IDLE) {
             var changed = false
             if (afTrackFormat != null) {
@@ -1604,8 +1589,6 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
             //lyrics = null
             //scheduleSendingLyrics(true)
         }
-        isPausedFallback = false
-        handler.removeCallbacks(pauseFallbackRunnable)
         lastSentNotificationLyric = null
         lastSentHighlightedLyric = null
 
@@ -1643,13 +1626,6 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
     }
 
     override fun onIsPlayingChanged(isPlaying: Boolean) {
-        if (!isPlaying) {
-            handler.removeCallbacks(pauseFallbackRunnable)
-            handler.postDelayed(pauseFallbackRunnable, 3000L)
-        } else {
-            handler.removeCallbacks(pauseFallbackRunnable)
-            isPausedFallback = false
-        }
         scheduleSendingLyrics(false)
         lastPlayedManager.save()
     }
@@ -1795,7 +1771,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
 
     private fun getActiveNotificationLyric(): String? {
         val isNotificationLyricsEnabled = prefs.getBooleanStrict("notification_lyrics", false)
-        if (!isNotificationLyricsEnabled || isPausedFallback) return null
+        if (!isNotificationLyricsEnabled) return null
         if (controller?.playbackState == Player.STATE_ENDED || controller?.playbackState == Player.STATE_IDLE) return null
 
         val cPos = (controller?.contentPosition ?: 0).toULong()
@@ -1851,7 +1827,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
             handler.post {
                 endedWorkaroundPlayer?.let {
                     if (notifLyricChanged) {
-                        it.invalidatePlayerState()
+                        it.updateLyricNow()
                     }
                     // This will access the media notification controller's getters. But because
                     // controller callback ordering is undefined and in practice our service
