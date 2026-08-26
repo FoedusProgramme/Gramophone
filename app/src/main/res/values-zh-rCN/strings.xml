@@ -153,12 +153,12 @@
     <string name="settings_preference_category_home">主屏幕</string>
     <string name="tab_order">配置标签页顺序</string>
     <string name="tab_order_summary">应用将在启动时显示第一个标签页。分隔线后的标签页将被隐藏。</string>
-    <string name="settings_always_skip_previous">总是跳至上一曲</string>
-    <string name="settings_always_skip_previous_summary">点按上一曲按钮时直接跳至上一首曲目，而非跳回开头</string>
     <string name="settings_status_bar_lyrics_title">状态栏歌词</string>
     <string name="settings_status_bar_lyrics_summary">启用魅族状态栏歌词（仅适用于部分设备）</string>
     <string name="settings_lyrics_ui">启用新歌词界面</string>
     <string name="lyric_widget_description">显示当前播放媒体歌词的小部件</string>
+    <string name="settings_always_skip_previous">总是跳至上一曲</string>
+    <string name="settings_always_skip_previous_summary">点按上一曲按钮时直接跳至上一首曲目，而非跳回开头</string>
     <string name="scroll_to_albums">滚动到专辑</string>
     <string name="scroll_to_songs">滚动到歌曲</string>
     <string name="expand_less">关闭</string>

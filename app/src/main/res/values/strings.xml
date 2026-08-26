@@ -233,10 +233,6 @@
     <string name="settings_customization">Customization</string>
     <!-- Settings category about customizing UI (currently disabled). Subtext -->
     <string name="settings_customization_summary">Manage customization options</string>
-    <!-- Settings toggle in behavior settings to always skip to previous track on previous button press. Title -->
-    <string name="settings_always_skip_previous">Always skip to previous track</string>
-    <!-- Settings toggle in behavior settings to always skip to previous track on previous button press. Subtext -->
-    <string name="settings_always_skip_previous_summary">Directly switch to previous track when pressing previous button instead of seeking to start</string>
     <!-- Pixel slider in behavior settings to specify how round album cover's corner should be. -->
     <string name="settings_album_round_corner">Album round corner</string>
     <!-- Toggle in player UI settings to make song name bold. Title -->
@@ -402,6 +398,10 @@
     <string name="settings_notification_lyrics_summary">Display lyrics as the notification title and artist - title as subtitle</string>
     <!-- Description shown about lyric widget in Android launcher / home screen's widget selector on Android 12+ -->
     <string name="lyric_widget_description">Widget that shows lyrics of currently playing media</string>
+    <!-- Settings toggle in behavior settings to always skip to previous track on previous button press. Title -->
+    <string name="settings_always_skip_previous">Always skip to previous track</string>
+    <!-- Settings toggle in behavior settings to always skip to previous track on previous button press. Subtext -->
+    <string name="settings_always_skip_previous_summary">Directly switch to previous track when pressing previous button instead of seeking to start</string>
     <!-- Context menu item to delete song/album/playlist -->
     <string name="delete">Delete</string>
     <!-- Dialog text to confirm user wants to delete a specific song or playlist with user defined name -->
