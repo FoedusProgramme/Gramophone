@@ -239,10 +239,6 @@
     <string name="settings_title_bold">Bold title</string>
     <!-- Toggle in player UI settings to make song name bold. Subtext -->
     <string name="settings_title_bold_summary">Use bold title for full player</string>
-    <string name="settings_rotate_cookie_button">Rotate play button</string>
-    <string name="settings_rotate_cookie_button_summary">Subtly rotate the cookie-style play/pause button while playing</string>
-    <string name="settings_swipe_to_switch_track">Swipe to switch track</string>
-    <string name="settings_swipe_to_switch_track_summary">Swipe left or right on the album cover to switch tracks</string>
     <!-- Settings category about experimental features. Title -->
     <string name="settings_experimental_settings">Experimental</string>
     <!-- Settings category about experimental features. Subtext -->
@@ -406,6 +402,10 @@
     <string name="settings_always_skip_previous">Always skip to previous track</string>
     <!-- Settings toggle in behavior settings to always skip to previous track on previous button press. Subtext -->
     <string name="settings_always_skip_previous_summary">Directly switch to previous track when pressing previous button instead of seeking to start</string>
+    <string name="settings_rotate_cookie_button">Rotate play button</string>
+    <string name="settings_rotate_cookie_button_summary">Subtly rotate the cookie-style play/pause button while playing</string>
+    <string name="settings_swipe_to_switch_track">Swipe to switch track</string>
+    <string name="settings_swipe_to_switch_track_summary">Swipe left or right on the album cover to switch tracks</string>
     <!-- Context menu item to delete song/album/playlist -->
     <string name="delete">Delete</string>
     <!-- Dialog text to confirm user wants to delete a specific song or playlist with user defined name -->
