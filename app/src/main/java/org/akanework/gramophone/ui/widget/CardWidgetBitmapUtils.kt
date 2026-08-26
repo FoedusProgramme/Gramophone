@@ -17,15 +17,12 @@
 
 package org.akanework.gramophone.ui.widget
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
 import android.graphics.RectF
-import androidx.core.content.ContextCompat
-import org.akanework.gramophone.R
 
 object CardWidgetBitmapUtils {
 
@@ -62,34 +59,5 @@ object CardWidgetBitmapUtils {
         } catch (_: Throwable) {
             src
         }
-    }
-
-    fun generateCircularProgressBar(
-        context: Context,
-        size: Int,
-        progress: Float,
-        strokeWidth: Float
-    ): Bitmap {
-        val safeSize = size.coerceAtLeast(1)
-        val bitmap = Bitmap.createBitmap(safeSize, safeSize, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bitmap)
-        val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            style = Paint.Style.STROKE
-            this.strokeWidth = strokeWidth
-            strokeCap = Paint.Cap.ROUND
-        }
-
-        val strokeHalf = strokeWidth / 2f
-        val arcRect = RectF(strokeHalf, strokeHalf, safeSize - strokeHalf, safeSize - strokeHalf)
-
-        paint.color = ContextCompat.getColor(context, R.color.widget_track)
-        canvas.drawArc(arcRect, 0f, 360f, false, paint)
-
-        if (progress > 0f) {
-            paint.color = ContextCompat.getColor(context, R.color.widget_primary)
-            canvas.drawArc(arcRect, -90f, 360f * progress.coerceIn(0f, 1f), false, paint)
-        }
-
-        return bitmap
     }
 }

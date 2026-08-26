@@ -130,14 +130,6 @@ object CardWidgetViewsBuilder {
             setOnClickPendingIntent(R.id.widget_card_root, actions.openAppPi)
             setOnClickPendingIntent(R.id.widget_cover, actions.openAppPi)
             applyArtwork(this, state.artworkBitmap, R.id.widget_cover, isCircular = true)
-
-            val progressBitmap = CardWidgetBitmapUtils.generateCircularProgressBar(
-                context,
-                128.dpToPx(context),
-                state.progress,
-                4.dpToPx(context).toFloat()
-            )
-            setImageViewBitmap(R.id.widget_progress, progressBitmap)
         }
     }
 
