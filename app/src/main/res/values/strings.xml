@@ -392,6 +392,10 @@
     <string name="settings_status_bar_lyrics_title">Status bar lyrics</string>
     <!-- Settings toggle to enable showing lyrics in status bar (requires meizu phone). Subtext -->
     <string name="settings_status_bar_lyrics_summary">Enable MeiZu method of displaying lyrics in status bar (only available on some devices)</string>
+    <!-- Settings toggle to enable vivo smart car projected lyrics. Title -->
+    <string name="settings_car_lyrics_title">Car lyrics (vivo)</string>
+    <!-- Settings toggle to enable vivo smart car projected lyrics. Subtext -->
+    <string name="settings_car_lyrics_summary">Project lyrics to the car screen when connected to a vivo smart car (JoviInCar)</string>
     <!-- Description shown about lyric widget in Android launcher / home screen's widget selector on Android 12+ -->
     <string name="lyric_widget_description">Widget that shows lyrics of currently playing media</string>
     <!-- Context menu item to delete song/album/playlist -->

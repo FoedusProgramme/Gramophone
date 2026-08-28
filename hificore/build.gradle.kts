@@ -8,6 +8,7 @@ plugins {
 android {
     namespace = "org.nift4.gramophone.hificore"
     compileSdk = 37
+    ndkVersion = "27.2.12479018"
 
     defaultConfig {
         minSdk = 23

@@ -52,7 +52,8 @@ class EndedWorkaroundPlayer(
     val context: Context,
     exoPlayer: ExoPlayer,
     private val getLyric: () -> SemanticLyrics?,
-    val queueBoard: QueueBoard
+    val queueBoard: QueueBoard,
+    private val getCarLyricsExtras: () -> Bundle = { Bundle() },
 ) : ForwardingSimpleBasePlayer(exoPlayer),
     Player.Listener {
 
@@ -102,6 +103,15 @@ class EndedWorkaroundPlayer(
         }
     }
 
+    /**
+     * Invalidates the player state so the vivo smart car lyrics metadata injected in [getState]
+     * is re-read and propagated to connected controllers. Must be called whenever the car lyrics
+     * values change (and only then, to avoid needless state broadcasts).
+     */
+    fun updateCarLyrics() {
+        invalidateState()
+    }
+
     override fun getState(): State {
         var superState = super.state
         if (superState.currentMetadata.artworkUri != null &&
@@ -114,6 +124,24 @@ class EndedWorkaroundPlayer(
                         .setArtworkUri(superState.currentMetadata.hdArtworkUri)
                         .setExtras(Bundle(superState.currentMetadata.extras!!).apply {
                             remove(EXTRA_HD_ARTWORK_URI)
+                        })
+                        .build()
+                )
+                .build()
+        }
+        // vivo smart car lyrics: inject the ucar.media.metadata.* keys on-the-fly without mutating
+        // the timeline. Mutating the timeline (e.g. via MediaController.replaceMediaItem) fired
+        // onPositionDiscontinuity, which triggered another lyric update, which replaced the item
+        // again, producing an infinite feedback loop that froze the main thread and crashed the
+        // app. getCarLyricsExtras() returns an empty bundle when disabled, so the keys disappear.
+        val carLyricsExtras = getCarLyricsExtras()
+        if (!carLyricsExtras.isEmpty && superState.currentMetadata != null) {
+            superState = superState.buildUpon()
+                .setPlaylist(
+                    superState.timeline, superState.currentTracks,
+                    superState.currentMetadata.buildUpon()
+                        .setExtras(Bundle(superState.currentMetadata.extras ?: Bundle()).apply {
+                            putAll(carLyricsExtras)
                         })
                         .build()
                 )
