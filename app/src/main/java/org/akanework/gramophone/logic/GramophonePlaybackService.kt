@@ -1018,53 +1018,6 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         return player
     }
 
-    private fun createMediaSessionBitmapLoader(): CacheBitmapLoader {
-        return CacheBitmapLoader(object : BitmapLoader {
-            private val limit by lazy { MediaSession.getBitmapDimensionLimit(this@GramophonePlaybackService) }
-
-            @Suppress("KotlinArrayHashCode")
-            override fun decodeBitmap(data: ByteArray): ListenableFuture<Bitmap> {
-                return CallbackToFutureAdapter.getFuture { completer ->
-                    imageLoader.enqueue(
-                        ImageRequest.Builder(this@GramophonePlaybackService)
-                            .data(data)
-                            .memoryCacheKey(data.hashCode().toString())
-                            .size(limit, limit)
-                            .allowHardware(false)
-                            .target(
-                                onStart = {},
-                                onSuccess = { result -> completer.set((result as BitmapImage).bitmap) },
-                                onError = { completer.setException(Exception("coil onError called for byte array")) }
-                            )
-                            .build())
-                        .also { completer.addCancellationListener({ it.dispose() }, mainExecutor) }
-                    "coil load for ${data.hashCode()}"
-                }
-            }
-
-            override fun loadBitmap(uri: Uri): ListenableFuture<Bitmap> {
-                return CallbackToFutureAdapter.getFuture { completer ->
-                    imageLoader.enqueue(
-                        ImageRequest.Builder(this@GramophonePlaybackService)
-                            .data(uri)
-                            .size(limit, limit)
-                            .allowHardware(false)
-                            .target(
-                                onStart = {},
-                                onSuccess = { result -> completer.set((result as BitmapImage).bitmap) },
-                                onError = { completer.setException(Exception("coil onError called (normal if no album art exists)")) }
-                            )
-                            .build())
-                        .also { completer.addCancellationListener({ it.dispose() }, mainExecutor) }
-                    "coil load for $uri"
-                }
-            }
-
-            override fun supportsMimeType(mimeType: String): Boolean = isBitmapFactorySupportedMimeType(mimeType)
-            override fun loadBitmapFromMetadata(metadata: MediaMetadata): ListenableFuture<Bitmap>? =
-                metadata.artworkUri?.let { loadBitmap(it) }
-        })
-    }
     // When destroying, we should release server side player
     // alongside with the mediaSession.
     override fun onDestroy() {
