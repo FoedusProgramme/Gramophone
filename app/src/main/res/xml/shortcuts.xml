@@ -6,7 +6,7 @@
     <capability android:name="actions.intent.GET_THING">
         <intent
             android:action="android.intent.action.SEARCH"
-            android:targetPackage="${applicationId}"
+            android:targetPackage="com.luna.music.car"
             android:targetClass="org.akanework.gramophone.ui.MainActivity">
             <parameter android:name="thing.name" android:key="query" android:required="true"/>
         </intent>
@@ -16,7 +16,7 @@
         app:queryPatterns="@array/shuffle_all_queries">
         <intent
             android:action="org.akanework.gramophone.action.SHUFFLE"
-            android:targetPackage="${applicationId}"
+            android:targetPackage="com.luna.music.car"
             android:targetClass="org.akanework.gramophone.ui.MainActivity">
         <parameter
             android:name="item_name"
@@ -32,7 +32,7 @@
         android:shortcutLongLabel="@string/shuffle_all">
         <intent
             android:action="org.akanework.gramophone.action.SHUFFLE"
-            android:targetPackage="${applicationId}"
+            android:targetPackage="com.luna.music.car"
             android:targetClass="org.akanework.gramophone.ui.MainActivity" />
         <capability-binding android:key="org.akanework.gramophone.actions.intent.SHUFFLE" />
     </shortcut>

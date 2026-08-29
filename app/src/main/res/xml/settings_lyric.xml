@@ -29,6 +29,15 @@
 
     <SwitchPreferenceCompat
         android:defaultValue="false"
+        android:key="car_lyrics_enabled"
+        android:layout="@layout/preference_switch"
+        android:summary="@string/settings_car_lyrics_summary"
+        android:title="@string/settings_car_lyrics_title"
+        android:widgetLayout="@layout/preference_switch_widget"
+        app:iconSpaceReserved="false" />
+
+    <SwitchPreferenceCompat
+        android:defaultValue="false"
         android:key="lyric_center"
         android:layout="@layout/preference_switch"
         android:summary="@string/settings_lyrics_center_summary"

@@ -155,6 +155,8 @@
     <string name="tab_order_summary">应用将在启动时显示第一个标签页。分隔线后的标签页将被隐藏。</string>
     <string name="settings_status_bar_lyrics_title">状态栏歌词</string>
     <string name="settings_status_bar_lyrics_summary">启用魅族状态栏歌词（仅适用于部分设备）</string>
+    <string name="settings_car_lyrics_title">车载歌词（vivo）</string>
+    <string name="settings_car_lyrics_summary">连接 vivo 智能车载（JoviInCar）时，将歌词投送到车机屏幕显示</string>
     <string name="settings_lyrics_ui">启用新歌词界面</string>
     <string name="lyric_widget_description">显示当前播放媒体歌词的小部件</string>
     <string name="scroll_to_albums">滚动到专辑</string>

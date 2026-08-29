@@ -16,7 +16,6 @@ plugins {
     kotlin("plugin.compose")
     id("com.mikepenz.aboutlibraries.plugin")
     id("com.mikepenz.aboutlibraries.plugin.android")
-    id("pt.jcosta.resourceplaceholders")
 }
 
 android {
@@ -257,10 +256,6 @@ android {
     testOptions.unitTests.isIncludeAndroidResources = true
 }
 
-resourcePlaceholders {
-    files.set(listOf("xml/shortcuts.xml"))
-}
-
 kotlin {
     compilerOptions {
         jvmTarget = JvmTarget.JVM_21
@@ -287,7 +282,7 @@ tasks.withType<PackageAndroidArtifact> {
 }
 
 aboutLibraries {
-    offlineMode = true
+    offlineMode = false
     collect {
         configPath = file("config")
         filterVariants.add("release")

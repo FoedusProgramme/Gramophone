@@ -115,6 +115,8 @@ import kotlinx.coroutines.withContext
 import kotlinx.coroutines.guava.future
 import kotlinx.coroutines.guava.await
 import org.akanework.gramophone.R
+import org.akanework.gramophone.logic.car.CarLyricsConstants
+import org.akanework.gramophone.logic.car.CarLyricsManager
 import org.akanework.gramophone.logic.ui.MeiZuLyricsMediaNotificationProvider
 import org.akanework.gramophone.logic.ui.isManualNotificationUpdate
 import org.akanework.gramophone.logic.utils.AfFormatInfo
@@ -218,6 +220,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
     private lateinit var lastPlayedManager: LastPlayedManager
     private lateinit var prefs: SharedPreferences
     private var lastSentHighlightedLyric: String? = null
+    private var carLyricsManager: CarLyricsManager? = null
     private lateinit var afFormatTracker: AfFormatTracker
     private lateinit var rgAp: ReplayGainAudioProcessor
     private var rgMode = 0 // 0 = disabled, 1 = track, 2 = album, 3 = smart
@@ -452,6 +455,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                 .build(),
             { lyrics },
             queueBoard = qb,
+            getCarLyricsExtras = { carLyricsManager?.buildMetadataExtras() ?: Bundle() },
         )
         player.exoPlayer.addAnalyticsListener(EventLogger())
         player.exoPlayer.addAnalyticsListener(afFormatTracker)
@@ -571,6 +575,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                 .build()
         addSession(mediaSession!!)
         controller = MediaBrowser.Builder(this, mediaSession!!.token).buildAsync().get()
+        carLyricsManager = CarLyricsManager(mediaSession!!)
         controller!!.addListener(this)
         if (controller!!.audioSessionId != C.AUDIO_SESSION_ID_UNSET) {
             onAudioSessionIdChanged(controller!!.audioSessionId)
@@ -921,6 +926,10 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         if (key == null || key == "rg_boost_gain") {
             val boostGain = prefs.getIntStrict("rg_boost_gain", 0)
             restart = !rgAp.setBoostGain(boostGain) || restart
+        }
+        if (key == null || key == CarLyricsConstants.PREF_CAR_LYRICS_ENABLED) {
+            // vivo smart car lyrics switch toggled: (re)push both channels immediately.
+            pushCarLyrics()
         }
         if (restart) {
             controller?.stop()
@@ -1417,6 +1426,11 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         }
 
         val mediaItem = controller?.currentMediaItem
+        // Push the "loading" state to the car display while the lyrics for the new song are being
+        // loaded, so the head unit shows a loading indicator instead of "-1".
+        if (carLyricsManager?.setLoading() == true) {
+            endedWorkaroundPlayer?.updateCarLyrics()
+        }
         lyricsFetcher.launch {
             val trim = prefs.getBoolean("trim_lyrics", true)
             val options = LrcParserOptions(
@@ -1789,6 +1803,8 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
             LyricWidgetProvider.update(this)
         else
             LyricWidgetProvider.adapterUpdate(this)
+        // vivo smart car projected lyrics: push both channels on every lyric update.
+        pushCarLyrics()
         val isStatusBarLyricsEnabled = prefs.getBooleanStrict("status_bar_lyrics", false)
         val highlightedLyric = if (isStatusBarLyricsEnabled && controller?.playWhenReady == true)
             getCurrentLyricIndex(false)?.let {
@@ -1811,6 +1827,29 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                     isManualNotificationUpdate = false
                 }
             }
+        }
+    }
+
+    /**
+     * Pushes the vivo smart car projected lyrics through both MediaSession channels.
+     * Reads the master switch each time so that toggling it in settings takes effect promptly.
+     */
+    private fun pushCarLyrics() {
+        val manager = carLyricsManager ?: return
+        val enabled = prefs.getBooleanStrict(CarLyricsConstants.PREF_CAR_LYRICS_ENABLED, false)
+        manager.enabled = enabled
+        val changed = if (!enabled) {
+            manager.push()
+        } else {
+            val currentLine = getCurrentLyricIndex(false)?.let {
+                syncedLyrics?.text?.get(it)?.text
+            }
+            manager.updateLyric(currentLine, lyrics)
+        }
+        // Refresh the metadata channel injected in EndedWorkaroundPlayer.getState() only when the
+        // pushed values actually changed, to avoid needless state broadcasts.
+        if (changed) {
+            endedWorkaroundPlayer?.updateCarLyrics()
         }
     }
 
