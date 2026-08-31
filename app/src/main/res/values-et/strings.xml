@@ -522,4 +522,6 @@
     <string name="contributors_banksio">Android Auto</string>
     <string name="unfavorite">Eemalda lemmikute seast</string>
     <string name="edit_mode">Kasuta muutmisvaadet</string>
+    <string name="settings_notification_lyrics_title">Laulusõnad teavitusena</string>
+    <string name="settings_notification_lyrics_summary">Näita laulu sõnu teavituse pealkirjana ja „esitaja nime – pealkirja“ alapealkirjana</string>
 </resources>
