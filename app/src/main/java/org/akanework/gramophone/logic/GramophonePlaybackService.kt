@@ -965,6 +965,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
     private fun buildEndedWorkaroundPlayer(): EndedWorkaroundPlayer {
         val player = EndedWorkaroundPlayer(
             this,
+            prefs,
             exoPlayer = ExoPlayer.Builder(
                 this,
                 GramophoneRenderFactory(
@@ -1009,7 +1010,8 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                 .setPlaybackLooper(internalPlaybackThread.looper)
                 .build(),
             { lyrics },
-            queueBoard = qb
+            queueBoard = qb,
+            getNotificationLyric = { lastSentNotificationLyric }
         )
         player.exoPlayer.addAnalyticsListener(EventLogger())
         player.exoPlayer.addAnalyticsListener(afFormatTracker)
