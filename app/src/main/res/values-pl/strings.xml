@@ -534,4 +534,6 @@
     <string name="contributors_banksio">Android Auto</string>
     <string name="unfavorite">Usuń z ulubionych</string>
     <string name="edit_mode">Wejdź w tryb edycji</string>
+    <string name="settings_notification_lyrics_title">Powiadomienie jako tekst piosenki</string>
+    <string name="settings_notification_lyrics_summary">Wyświetlaj tekst piosenki jako tytuł powiadomienia i artystę – tytuł jako tekst</string>
 </resources>
