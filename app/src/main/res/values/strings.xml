@@ -153,6 +153,8 @@
     <string name="folders">Folders</string>
     <!-- Color theme in appearance settings: light/dark/follow system -->
     <string name="settings_app_theme">App theme</string>
+    <!-- Switch that reverses the order of the selected sort mode -->
+    <string name="reverse_order">Reverse order</string>
     <!-- The sort mode if something has inherent proper order (playlist order for playlist, CD order
     for album, etc) -->
     <string name="natural_order">Natural order</string>

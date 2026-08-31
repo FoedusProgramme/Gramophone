@@ -32,7 +32,7 @@ interface FileNode {
             if (it == Long.MAX_VALUE) null else it
         }
     val modifiedDate: Long?
-        get() = min(songList.maxOfOrNull { it.mediaMetadata.modifiedDate ?: Long.MIN_VALUE }
+        get() = maxOf(songList.maxOfOrNull { it.mediaMetadata.modifiedDate ?: Long.MIN_VALUE }
             ?: Long.MIN_VALUE,
             folderList.maxOfOrNull { it.value.modifiedDate ?: Long.MIN_VALUE }
                 ?: Long.MIN_VALUE).let {

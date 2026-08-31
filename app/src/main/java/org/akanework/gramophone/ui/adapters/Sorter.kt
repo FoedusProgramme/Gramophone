@@ -100,11 +100,11 @@ class Sorter<T>(
         ByAlbumYearDescending, ByAlbumYearAscending,
         BySizeDescending, BySizeAscending,
         ByAlbumSizeDescending, ByAlbumSizeAscending,
-        NaturalOrder, ByAddDateDescending, ByAddDateAscending,
+        NaturalOrder, NaturalOrderDescending, ByAddDateDescending, ByAddDateAscending,
         ByReleaseDateDescending, ByReleaseDateAscending,
         ByModifiedDateDescending, ByModifiedDateAscending,
         ByFilePathDescending, ByFilePathAscending,
-        ByDiscAndTrack,
+        ByDiscAndTrack, ByDiscAndTrackDescending,
         None;
 
         companion object {
@@ -127,7 +127,8 @@ class Sorter<T>(
                 BySizeAscending -> BySizeDescending
                 ByAlbumSizeDescending -> ByAlbumSizeAscending
                 ByAlbumSizeAscending -> ByAlbumSizeDescending
-                NaturalOrder -> null
+                NaturalOrder -> NaturalOrderDescending
+                NaturalOrderDescending -> NaturalOrder
                 ByAddDateDescending -> ByAddDateAscending
                 ByAddDateAscending -> ByAddDateDescending
                 ByReleaseDateDescending -> ByReleaseDateAscending
@@ -136,7 +137,8 @@ class Sorter<T>(
                 ByModifiedDateAscending -> ByModifiedDateDescending
                 ByFilePathDescending -> ByFilePathAscending
                 ByFilePathAscending -> ByFilePathDescending
-                ByDiscAndTrack -> null
+                ByDiscAndTrack -> ByDiscAndTrackDescending
+                ByDiscAndTrackDescending -> ByDiscAndTrack
                 None -> null
             }
         }
@@ -144,9 +146,19 @@ class Sorter<T>(
 
     fun getSupportedTypes(): Set<Type> {
         return sortingHelper.typesSupported.let { types ->
+            var res = types
             if (naturalOrderHelper != null || rawOrderExposed == Type.NaturalOrder)
-                types + Type.NaturalOrder
-            else types
+                res = res + Type.NaturalOrder + Type.NaturalOrderDescending
+            if (res.contains(Type.ByDiscAndTrack))
+                res = res + Type.ByDiscAndTrackDescending
+            
+            // Automatically add inverse for everything supported
+            val allWithInverses = mutableSetOf<Type>()
+            res.forEach { 
+                allWithInverses.add(it)
+                Type.inverse(it)?.let { inv -> allWithInverses.add(inv) }
+            }
+            allWithInverses
         }
     }
 
@@ -343,9 +355,21 @@ class Sorter<T>(
                 compareBy { sortingHelper.getDiscAndTrack(it) }
             }
 
+            Type.ByDiscAndTrackDescending -> {
+                SupportComparator.createInversionComparator(
+                    compareBy { sortingHelper.getDiscAndTrack(it) }, true
+                )
+            }
+
             Type.NaturalOrder -> {
                 SupportComparator.createInversionComparator(
                     compareBy { naturalOrderHelper!!.lookup(it) }, false
+                )
+            }
+
+            Type.NaturalOrderDescending -> {
+                SupportComparator.createInversionComparator(
+                    compareBy { naturalOrderHelper!!.lookup(it) }, true
                 )
             }
 
@@ -396,7 +420,7 @@ class Sorter<T>(
                 sortingHelper.getAlbumSize(item).toString()
             }
 
-            Type.ByDiscAndTrack -> {
+            Type.ByDiscAndTrack, Type.ByDiscAndTrackDescending -> {
                 sortingHelper.getDiscAndTrack(item).toString()
             }
 
@@ -409,11 +433,11 @@ class Sorter<T>(
             }
 
             Type.ByModifiedDateDescending, Type.ByModifiedDateAscending -> {
-                CalculationUtils.convertUnixTimestampToMonthDay(sortingHelper.getAddDate(item))
+                CalculationUtils.convertUnixTimestampToMonthDay(sortingHelper.getModifiedDate(item))
             }
 
-            Type.NaturalOrder -> {
-                (if (rawOrderExposed == sortType) {
+            Type.NaturalOrder, Type.NaturalOrderDescending -> {
+                (if (rawOrderExposed == sortType || (rawOrderExposed != null && Type.inverse(rawOrderExposed) == sortType)) {
                     pos
                 } else {
                     naturalOrderHelper!!.lookup(item)

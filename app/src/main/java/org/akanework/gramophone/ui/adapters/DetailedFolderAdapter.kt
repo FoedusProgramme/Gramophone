@@ -93,7 +93,9 @@ class DetailedFolderAdapter(
     }
     override val sortTypes = setOf(
         Sorter.Type.ByFilePathAscending, Sorter.Type.BySizeDescending,
-        Sorter.Type.ByAddDateDescending, Sorter.Type.ByModifiedDateDescending
+        Sorter.Type.ByAddDateDescending, Sorter.Type.ByModifiedDateDescending,
+        Sorter.Type.ByFilePathDescending, Sorter.Type.BySizeAscending,
+        Sorter.Type.ByAddDateAscending, Sorter.Type.ByModifiedDateAscending
     )
     override val sortType = MutableStateFlow(
         if (prefSortType != Sorter.Type.None && sortTypes.contains(prefSortType))
@@ -138,13 +140,31 @@ class DetailedFolderAdapter(
                 it.folderList.size + it.songList.size
             }
 
+            Sorter.Type.BySizeAscending -> item.folderList.values.sortedBy {
+                it.folderList.size + it.songList.size
+            }
+
             Sorter.Type.ByAddDateDescending -> item.folderList.values.sortedByDescending {
+                it.addDate ?: Long.MIN_VALUE
+            }
+
+            Sorter.Type.ByAddDateAscending -> item.folderList.values.sortedBy {
                 it.addDate ?: Long.MIN_VALUE
             }
 
             Sorter.Type.ByModifiedDateDescending -> item.folderList.values.sortedByDescending {
                 it.modifiedDate ?: Long.MIN_VALUE
             }
+
+            Sorter.Type.ByModifiedDateAscending -> item.folderList.values.sortedBy {
+                it.modifiedDate ?: Long.MIN_VALUE
+            }
+
+            Sorter.Type.ByFilePathDescending -> item.folderList.values.sortedWith(
+                SupportComparator.createAlphanumericComparator(inverted = true, cnv = {
+                    it.folderName
+                })
+            )
 
             else -> item.folderList.values.sortedWith(
                 SupportComparator.createAlphanumericComparator(cnv = {
@@ -261,6 +281,7 @@ class DetailedFolderAdapter(
 
     override fun sort(type: Sorter.Type) {
         sortType.value = type
+        songAdapter.sort(type)
     }
 
     private class DiffCallback(
