@@ -1,3 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">Γραμμόφωνο</string>
+    <string name="home_menu_search">Αναζήτηση</string>
+    <string name="home_menu_settings">Ρυθμήσεις</string>
+    <string name="category_albums">Άλμπουμ</string>
+    <string name="category_artists">Καλλιτέχνες</string>
+    <string name="category_genres">Είδη</string>
+    <string name="unknown_artist">Άγνωστος καλλιτέχνης</string>
+    <string name="light">Ανοιχτόχρωμο</string>
+    <string name="dark">Σκουρόχρωμο</string>
+    <string name="sort_by_name">Ονομασία</string>
+    <string name="sort_by_artist">Καλλιτέχνης</string>
+    <string name="sort_by_album">Άλμπουμ</string>
+    <string name="dismiss">Παράβλεψη</string>
+    <string name="refreshed_songs">Ανανεώθηκαν %1$d τραγούδια</string>
+    <string name="search">Αναζήτηση</string>
+    <string name="details">Λεπτομέρειες</string>
+    <string name="settings_category_appearance">Εμφάνιση</string>
+    <string name="settings_version">Έκδοση</string>
+    <string name="dialog_title">Τίτλος</string>
+    <string name="dialog_artist">Καλλιτέχνης</string>
+    <string name="dialog_album">Άλμπουμ</string>
+    <string name="dialog_genre">Είδος</string>
+    <string name="recently_added">Πρόσφατα προστέθηκε</string>
+    <string name="settings_app_theme">Θέμα εφαρμογής</string>
+    <string name="natural_order">Κανονική σειρά</string>
+    <string name="opensource_info">Ανοικτού κώδικα υπό GPL-3.0\nΠνευματική ιδιοκτησία (copyright) %s</string>
+    <string name="playlist_favourite">Αγαπημένα</string>
 </resources>
