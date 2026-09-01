@@ -30,5 +30,4 @@
     <dimen name="lyric_widget_tl">15sp</dimen>
     <dimen name="lyric_widget_tb">12sp</dimen>
     <dimen name="folder_card_height">75dp</dimen>
-    <dimen name="sort_popup_width">250dp</dimen>
 </resources>
