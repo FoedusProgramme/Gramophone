@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
     <item
         android:id="@+id/reverse_order"
+        android:checkable="true"
         android:orderInCategory="-10"
         android:title="@string/reverse_order"
-        app:actionLayout="@layout/switch_item"
         app:showAsAction="never" />
     <group android:checkableBehavior="single">
         <item

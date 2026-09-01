@@ -18,6 +18,7 @@
 package org.akanework.gramophone.ui.adapters
 
 import android.content.SharedPreferences
+import android.view.MenuItem
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.edit
 import androidx.core.view.iterator
@@ -156,20 +157,31 @@ class ArtistAdapter(
         artistAdapter: ArtistAdapter
     ) : BaseDecorAdapter<ArtistAdapter>(artistAdapter, R.plurals.artists) {
 
-        override fun onSortPopupPopulating(items: MutableList<PopupItem>) {
-            items.add(PopupItem.Switch(
-                R.id.album_artist_checkbox,
-                context.getString(R.string.album_artist),
-                adapter.isAlbumArtist
-            ) { isChecked ->
-                adapter.isAlbumArtist = isChecked
-                adapter.prefs.edit {
-                    putBoolean("isDisplayingAlbumArtist", isChecked)
+        override fun onSortButtonPressed(popupMenu: PopupMenu) {
+            popupMenu.menu.findItem(R.id.album_artist_checkbox).isVisible = true
+            popupMenu.menu.findItem(R.id.album_artist_checkbox).isChecked = adapter.isAlbumArtist
+        }
+
+        override fun onExtraMenuButtonPressed(menuItem: MenuItem): Boolean {
+            return when (menuItem.itemId) {
+                R.id.album_artist_checkbox -> {
+                    menuItem.isChecked = !menuItem.isChecked
+                    adapter.isAlbumArtist = menuItem.isChecked
+
+                    adapter.prefs.edit {
+                        putBoolean(
+                            "isDisplayingAlbumArtist",
+                            adapter.isAlbumArtist
+                        )
+                    }
+                    adapter.liveDataAgent.value =
+                        if (adapter.isAlbumArtist) adapter.mainActivity.reader.albumArtistListFlow else
+                            adapter.mainActivity.reader.artistListFlow
+                    true
                 }
-                adapter.liveDataAgent.value =
-                    if (isChecked) adapter.mainActivity.reader.albumArtistListFlow else
-                        adapter.mainActivity.reader.artistListFlow
-            })
+
+                else -> false
+            }
         }
     }
 

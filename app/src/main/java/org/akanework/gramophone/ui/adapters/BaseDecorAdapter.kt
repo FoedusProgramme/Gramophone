@@ -18,21 +18,17 @@
 package org.akanework.gramophone.ui.adapters
 
 import android.content.Context
-import android.view.Gravity
-import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.RadioButton
 import android.widget.TextView
-import androidx.appcompat.widget.ListPopupWindow
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.edit
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.media3.common.Player.REPEAT_MODE_OFF
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.materialswitch.MaterialSwitch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.akanework.gramophone.R
@@ -81,12 +77,8 @@ open class BaseDecorAdapter<T : AdapterFragment.BaseInterface<*>>(
         holder.sortButton.visibility =
             if (adapter.sortType.value != Sorter.Type.None || adapter.canChangeLayout) View.VISIBLE else View.GONE
         holder.sortButton.setOnClickListener { view ->
-            val listPopupWindow = ListPopupWindow(context)
-            listPopupWindow.anchorView = view
-            listPopupWindow.setDropDownGravity(Gravity.END)
-            listPopupWindow.isModal = true
-            listPopupWindow.width = context.resources.getDimensionPixelSize(R.dimen.sort_popup_width)
-
+            val popupMenu = PopupMenu(context, view)
+            popupMenu.inflate(R.menu.sort_menu)
             val buttonMap = mapOf(
                 Pair(R.id.natural, Sorter.Type.NaturalOrder),
                 Pair(R.id.name, Sorter.Type.ByTitleAscending),
@@ -102,111 +94,105 @@ open class BaseDecorAdapter<T : AdapterFragment.BaseInterface<*>>(
                 Pair(R.id.mod_date, Sorter.Type.ByModifiedDateDescending),
                 Pair(R.id.file_path, Sorter.Type.ByFilePathAscending)
             )
-
             val layoutMap = mapOf(
                 Pair(R.id.list, BaseAdapter.LayoutType.LIST),
                 Pair(R.id.compact_list, BaseAdapter.LayoutType.COMPACT_LIST),
                 Pair(R.id.grid, BaseAdapter.LayoutType.GRID),
                 Pair(R.id.compact_grid, BaseAdapter.LayoutType.COMPACT_GRID)
             )
+            buttonMap.forEach {
+                popupMenu.menu.findItem(it.key).isVisible = adapter.sortTypes.contains(it.value)
+            }
+            layoutMap.forEach {
+                popupMenu.menu.findItem(it.key).isVisible = adapter.canChangeLayout
+            }
+            popupMenu.menu.findItem(R.id.display).isVisible = adapter.canChangeLayout
 
-            val items = mutableListOf<PopupItem>()
-            
-            // 1. Reverse Toggle
-            val inverse = Sorter.Type.inverse(adapter.sortType.value)
-            if (inverse != null) {
-                val currentSort = adapter.sortType.value
-                val activeEntry = buttonMap.entries.find { it.value == currentSort || Sorter.Type.inverse(it.value) == currentSort }
-                val defaultSort = activeEntry?.value ?: Sorter.Type.None
-                
-                items.add(PopupItem.Switch(
-                    R.id.reverse_order,
-                    context.getString(R.string.reverse_order),
-                    currentSort != defaultSort && currentSort != Sorter.Type.None
-                ) { isChecked ->
-                    val activeId = buttonMap.entries.find { 
-                        it.value == adapter.sortType.value || Sorter.Type.inverse(it.value) == adapter.sortType.value 
-                    }?.key ?: -1
-                    val baseType = buttonMap[activeId]
-                    if (baseType != null) {
-                        val targetType = if (isChecked) Sorter.Type.inverse(baseType) ?: baseType else baseType
-                        if (adapter.sortType.value != targetType) {
-                            adapter.sort(targetType)
-                            prefs.edit { putString("S" + getAdapterType(adapter).toString(), targetType.toString()) }
-                        }
-                    }
-                })
-                items.add(PopupItem.Divider)
+            val currentSort = adapter.sortType.value
+            val activeEntry = buttonMap.entries.find { it.value == currentSort || Sorter.Type.inverse(it.value) == currentSort }
+            val defaultSort = activeEntry?.value ?: Sorter.Type.None
+
+            if (activeEntry != null) {
+                popupMenu.menu.findItem(activeEntry.key).isChecked = true
             }
 
-            // 2. Extra items (Album Artist etc)
-            val extraItems = mutableListOf<PopupItem>()
-            onSortPopupPopulating(extraItems)
-            if (extraItems.isNotEmpty()) {
-                items.addAll(extraItems)
-                items.add(PopupItem.Divider)
-            }
-
-            // 3. Sort Modes
-            buttonMap.forEach { (resId, type) ->
-                if (adapter.sortTypes.contains(type)) {
-                    val currentSort = adapter.sortType.value
-                    val isSelected = currentSort == type || Sorter.Type.inverse(type) == currentSort
-                    items.add(PopupItem.Radio(
-                        resId,
-                        context.getString(when (resId) {
-                            R.id.natural -> R.string.natural_order
-                            R.id.name -> R.string.sort_by_name
-                            R.id.artist -> R.string.sort_by_artist
-                            R.id.artist_year -> R.string.sort_by_artist_year
-                            R.id.album -> R.string.sort_by_album
-                            R.id.album_artist -> R.string.sort_by_album_artist
-                            R.id.album_artist_year -> R.string.sort_by_album_artist_year
-                            R.id.album_year -> R.string.sort_by_album_year
-                            R.id.size -> R.string.sort_by_size
-                            R.id.add_date -> R.string.sort_by_add_date
-                            R.id.release_date -> R.string.sort_by_release_date
-                            R.id.mod_date -> R.string.sort_by_modified_date
-                            R.id.file_path -> R.string.sort_by_file_path
-                            else -> 0
-                        }),
-                        isSelected
-                    ) {
-                        val isReversed = (items.find { it is PopupItem.Switch && it.id == R.id.reverse_order } as? PopupItem.Switch)?.isChecked == true
-                        val targetType = if (isReversed) Sorter.Type.inverse(type) ?: type else type
-                        adapter.sort(targetType)
-                        prefs.edit { putString("S" + getAdapterType(adapter).toString(), targetType.toString()) }
-                        listPopupWindow.dismiss()
-                    })
-                }
-            }
-
-            // 4. Layout Modes
             if (adapter.canChangeLayout) {
-                items.add(PopupItem.Divider)
-                items.add(PopupItem.Header(context.getString(R.string.layout)))
-                layoutMap.forEach { (resId, type) ->
-                    items.add(PopupItem.Radio(
-                        resId,
-                        context.getString(when (resId) {
-                            R.id.list -> R.string.list
-                            R.id.compact_list -> R.string.compact_list
-                            R.id.grid -> R.string.grid
-                            R.id.compact_grid -> R.string.compact_grid
-                            else -> 0
-                        }),
-                        adapter.layoutType == type
-                    ) {
-                        adapter.layoutType = type
-                        prefs.edit { putString("L" + getAdapterType(adapter).toString(), type.toString()) }
-                        listPopupWindow.dismiss()
-                    })
+                when (adapter.layoutType) {
+                    in layoutMap.values -> {
+                        popupMenu.menu.findItem(
+                            layoutMap.entries
+                                .first { it.value == adapter.layoutType }.key
+                        ).isChecked = true
+                    }
+
+                    else -> throw IllegalStateException("Invalid layoutType ${adapter.layoutType?.name}")
                 }
             }
 
-            val adapter2 = SortPopupAdapter(context, items)
-            listPopupWindow.setAdapter(adapter2)
-            listPopupWindow.show()
+            val reverseItem = popupMenu.menu.findItem(R.id.reverse_order)
+            val inverse = Sorter.Type.inverse(adapter.sortType.value)
+            if (inverse == null) {
+                reverseItem.isVisible = false
+            } else {
+                reverseItem.isChecked = currentSort != defaultSort && currentSort != Sorter.Type.None
+            }
+
+            popupMenu.setOnMenuItemClickListener { menuItem ->
+                when (menuItem.itemId) {
+                    in buttonMap.keys -> {
+                        if (!menuItem.isChecked) {
+                            val baseType = buttonMap[menuItem.itemId]!!
+                            val targetType = if (reverseItem.isChecked) Sorter.Type.inverse(baseType) ?: baseType else baseType
+                            adapter.sort(targetType)
+                            menuItem.isChecked = true
+                            prefs.edit {
+                                putString(
+                                    "S" + getAdapterType(adapter).toString(),
+                                    targetType.toString()
+                                )
+                            }
+                        }
+                        true
+                    }
+
+                    in layoutMap.keys -> {
+                        if (!menuItem.isChecked) {
+                            adapter.layoutType = layoutMap[menuItem.itemId]!!
+                            menuItem.isChecked = true
+                            prefs.edit {
+                                putString(
+                                    "L" + getAdapterType(adapter).toString(),
+                                    layoutMap[menuItem.itemId].toString()
+                                )
+                            }
+                        }
+                        true
+                    }
+
+                    R.id.reverse_order -> {
+                        menuItem.isChecked = !menuItem.isChecked
+                        val activeId = buttonMap.entries.find { 
+                            it.value == adapter.sortType.value || Sorter.Type.inverse(it.value) == adapter.sortType.value 
+                        }?.key ?: -1
+                        val baseType = buttonMap[activeId]
+                        if (baseType != null) {
+                            val targetType = if (menuItem.isChecked) Sorter.Type.inverse(baseType) ?: baseType else baseType
+                            adapter.sort(targetType)
+                            prefs.edit {
+                                putString(
+                                    "S" + getAdapterType(adapter).toString(),
+                                    targetType.toString()
+                                )
+                            }
+                        }
+                        true
+                    }
+
+                    else -> onExtraMenuButtonPressed(menuItem)
+                }
+            }
+            onSortButtonPressed(popupMenu)
+            popupMenu.show()
         }
         holder.playAll.setOnClickListener {
             if (adapter is SongAdapter) {
@@ -337,7 +323,8 @@ open class BaseDecorAdapter<T : AdapterFragment.BaseInterface<*>>(
         recyclerView?.startSmoothScrollCompat(smoothScroller)
     }
 
-    protected open fun onSortPopupPopulating(items: MutableList<PopupItem>) {}
+    protected open fun onSortButtonPressed(popupMenu: PopupMenu) {}
+    protected open fun onExtraMenuButtonPressed(menuItem: MenuItem): Boolean = false
 
     override fun getItemCount(): Int = 1
     override fun getItemViewType(position: Int): Int = R.layout.general_decor
@@ -360,70 +347,5 @@ open class BaseDecorAdapter<T : AdapterFragment.BaseInterface<*>>(
 
     override fun getItemHeightFromZeroTo(to: Int): Int {
         return if (to > 0) dpHeight else 0
-    }
-
-    sealed class PopupItem {
-        object Divider : PopupItem()
-        data class Header(val title: String) : PopupItem()
-        data class Radio(val id: Int, val title: String, val isSelected: Boolean, val onClick: () -> Unit) : PopupItem()
-        data class Switch(val id: Int, val title: String, var isChecked: Boolean, val onToggle: (Boolean) -> Unit) : PopupItem()
-    }
-
-    private class SortPopupAdapter(
-        private val context: Context,
-        private val items: List<PopupItem>
-    ) : android.widget.BaseAdapter() {
-        override fun getCount(): Int = items.size
-        override fun getItem(position: Int): Any = items[position]
-        override fun getItemId(position: Int): Long = position.toLong()
-
-        override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-            val item = items[position]
-            return when (item) {
-                is PopupItem.Divider -> {
-                    LayoutInflater.from(context).inflate(R.layout.item_popup_divider, parent, false)
-                }
-                is PopupItem.Header -> {
-                    TextView(context).apply {
-                        text = item.title
-                        val px8 = (8 * context.resources.displayMetrics.density).toInt()
-                        val px16 = (16 * context.resources.displayMetrics.density).toInt()
-                        setPadding(px16, px8, px16, px8 / 2)
-                        setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_LabelLarge)
-                        setTextColor(context.getColor(R.color.md_theme_primary))
-                    }
-                }
-                is PopupItem.Radio -> {
-                    val view = convertView?.takeIf { it.id == R.id.sort_radio_item_root }
-                        ?: LayoutInflater.from(context).inflate(R.layout.item_sort_radio, parent, false)
-                    
-                    val title = view.findViewById<TextView>(R.id.title)
-                    val radio = view.findViewById<RadioButton>(R.id.radio)
-                    
-                    title.text = item.title
-                    radio.isChecked = item.isSelected
-                    
-                    view.setOnClickListener { item.onClick() }
-                    view
-                }
-                is PopupItem.Switch -> {
-                    val view = convertView?.takeIf { it.id == R.id.sort_switch_item_root }
-                        ?: LayoutInflater.from(context).inflate(R.layout.switch_item, parent, false)
-                    
-                    val title = view.findViewById<TextView>(R.id.title)
-                    val switch = view.findViewById<MaterialSwitch>(R.id.switch_view)
-                    
-                    title.text = item.title
-                    switch.isChecked = item.isChecked
-                    
-                    view.setOnClickListener {
-                        item.isChecked = !item.isChecked
-                        switch.isChecked = item.isChecked
-                        item.onToggle(item.isChecked)
-                    }
-                    view
-                }
-            }
-        }
     }
 }
