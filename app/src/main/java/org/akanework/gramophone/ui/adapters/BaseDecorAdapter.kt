@@ -115,6 +115,9 @@ open class BaseDecorAdapter<T : AdapterFragment.BaseInterface<*>>(
             if (activeEntry != null) {
                 popupMenu.menu.findItem(activeEntry.key).isChecked = true
             }
+            else {
+                throw IllegalStateException("Invalid sortType ${adapter.sortType.value.name}")
+            }
 
             if (adapter.canChangeLayout) {
                 when (adapter.layoutType) {
