@@ -92,10 +92,10 @@ class DetailedFolderAdapter(
         Sorter.Type.None
     }
     override val sortTypes = setOf(
-        Sorter.Type.ByFilePathAscending, Sorter.Type.BySizeDescending,
-        Sorter.Type.ByAddDateDescending, Sorter.Type.ByModifiedDateDescending,
-        Sorter.Type.ByFilePathDescending, Sorter.Type.BySizeAscending,
-        Sorter.Type.ByAddDateAscending, Sorter.Type.ByModifiedDateAscending
+        Sorter.Type.ByFilePathAscending, Sorter.Type.ByFilePathDescending,
+        Sorter.Type.BySizeDescending, Sorter.Type.BySizeAscending,
+        Sorter.Type.ByAddDateDescending, Sorter.Type.ByAddDateAscending,
+        Sorter.Type.ByModifiedDateDescending, Sorter.Type.ByModifiedDateAscending
     )
     override val sortType = MutableStateFlow(
         if (prefSortType != Sorter.Type.None && sortTypes.contains(prefSortType))
