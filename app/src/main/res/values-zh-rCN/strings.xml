@@ -516,4 +516,6 @@
     <string name="contributors_banksio">Android Auto</string>
     <string name="unfavorite">取消收藏</string>
     <string name="edit_mode">进入编辑模式</string>
+    <string name="settings_notification_lyrics_title">通知歌词</string>
+    <string name="settings_notification_lyrics_summary">将歌词显示为通知标题，并将“音乐人 - 标题”显示为副标题</string>
 </resources>
