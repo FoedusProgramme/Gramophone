@@ -536,4 +536,6 @@
     <string name="contributors_banksio">Android Auto</string>
     <string name="unfavorite">Удалить из избранного</string>
     <string name="edit_mode">Изменить порядок</string>
+    <string name="settings_notification_lyrics_title">Текст песни в уведомлении</string>
+    <string name="settings_notification_lyrics_summary">Отображать текст песни в заголовке уведомления, а «Исполнитель - Название» в подзаголовке</string>
 </resources>
