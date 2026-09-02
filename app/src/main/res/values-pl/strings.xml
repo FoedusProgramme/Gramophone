@@ -536,4 +536,6 @@
     <string name="edit_mode">Wejdź w tryb edycji</string>
     <string name="settings_notification_lyrics_title">Powiadomienie jako tekst piosenki</string>
     <string name="settings_notification_lyrics_summary">Wyświetlaj tekst piosenki jako tytuł powiadomienia i artystę – tytuł jako tekst</string>
+    <string name="settings_always_skip_previous">Zawsze przechodź do poprzedniego utworu</string>
+    <string name="settings_always_skip_previous_summary">Po naciśnięciu przycisku poprzedni utwór przechodź bezpośrednio do poprzedniego utworu, zamiast przewijać do początku</string>
 </resources>
