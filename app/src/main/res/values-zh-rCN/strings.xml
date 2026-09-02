@@ -518,4 +518,6 @@
     <string name="edit_mode">进入编辑模式</string>
     <string name="settings_notification_lyrics_title">通知歌词</string>
     <string name="settings_notification_lyrics_summary">将歌词显示为通知标题，并将“音乐人 - 标题”显示为副标题</string>
+    <string name="settings_always_skip_previous">总是跳至上一曲</string>
+    <string name="settings_always_skip_previous_summary">点按上一曲按钮时直接跳至上一首曲目，而非跳回开头</string>
 </resources>
