@@ -538,4 +538,6 @@
     <string name="edit_mode">Изменить порядок</string>
     <string name="settings_notification_lyrics_title">Текст песни в уведомлении</string>
     <string name="settings_notification_lyrics_summary">Отображать текст песни в заголовке уведомления, а «Исполнитель - Название» в подзаголовке</string>
+    <string name="settings_always_skip_previous">Всегда переключать на предыдущий трек</string>
+    <string name="settings_always_skip_previous_summary">Мгновенное переключение на предыдущий трек вместо перемотки в начало при нажатии кнопки «Назад»</string>
 </resources>
