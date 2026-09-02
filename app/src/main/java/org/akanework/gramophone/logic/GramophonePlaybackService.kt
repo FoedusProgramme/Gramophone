@@ -810,84 +810,9 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
     }
 
     fun toggleCurrentItemFavorite() {
-        val item = endedWorkaroundPlayer?.currentMediaItem ?: return
-        val currentIsHeart = (item.mediaMetadata.userRating as? HeartRating)?.isHeart == true
-        val newIsHeart = !currentIsHeart
-        lifecycleScope.launch(Dispatchers.Default) {
-            val song = Entry.ofMediaItem(item) ?: return@launch
-            updateFavoritePlaylist(song, newIsHeart)
-        }
-    }
-
-    private suspend fun updateFavoritePlaylist(song: Entry, isHeart: Boolean): Boolean {
-        val uriIn = gramophoneApplication.reader.playlistListFlow.map { it.find { p -> p is Favorite } }.first()?.id?.let {
-            ContentUris.withAppendedId(@Suppress("deprecation") MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, it)
-        }
-        val token = if (uriIn != null) {
-            MediaStoreCompat.needRequestBytesWrite(this@GramophonePlaybackService, uriIn)
-        } else {
-            MediaStoreCompat.needRequestCreate(
-                this@GramophonePlaybackService,
-                ItemManipulator.getDefaultPlaylistFile(ItemManipulator.FAVORITES).path
-            )
-        }
-        if (token != null) {
-            notifyFavoriteError(song, isHeart)
-            return false
-        }
-        return try {
-            val uri = uriIn ?: ItemManipulator.createPlaylist(
-                this@GramophonePlaybackService,
-                ItemManipulator.getDefaultPlaylistFile(ItemManipulator.FAVORITES)
-            )
-            val readback = if (uriIn != null) {
-                ItemManipulator.readbackPlaylist(this@GramophonePlaybackService, uri)
-            } else {
-                PlaylistSerializer.Playlist.create()
-            }
-            val newSongs = if (isHeart) {
-                readback.entries + song
-            } else {
-                readback.entries.filter { !song.fuzzyEquals(it) }
-            }
-            ItemManipulator.setPlaylistContent(this@GramophonePlaybackService, uri, readback.copy(entries = newSongs), uriIn == null)
-            true
-        } catch (e: Exception) {
-            Log.e(TAG, "failed to update favorite for ${song.title}", e)
-            notifyFavoriteError(song, isHeart)
-            false
-        }
-    }
-
-    private fun notifyFavoriteError(song: Entry, isHeart: Boolean) {
-        if (!supportsNotificationPermission() || hasNotificationPermission()) {
-            @SuppressLint("MissingPermission")
-            nm.notify(
-                FAVE_ID,
-                NotificationCompat.Builder(this, NOTIFY_CHANNEL_ID).apply {
-                    setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                    setAutoCancel(true)
-                    setCategory(NotificationCompat.CATEGORY_ERROR)
-                    setSmallIcon(R.drawable.ic_error)
-                    setContentTitle(getString(R.string.favorite_failed_title))
-                    setContentText(getString(R.string.favorite_failed_text))
-                    setContentIntent(
-                        PendingIntent.getActivity(
-                            this@GramophonePlaybackService,
-                            PENDING_INTENT_FAVE_ID,
-                            Intent(this@GramophonePlaybackService, MainActivity::class.java)
-                                .putExtra(MainActivity.FAVORITE_ENTRY, song)
-                                .putExtra(MainActivity.FAVORITE_STATE, isHeart),
-                            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-                        )
-                    )
-                    setVibrate(longArrayOf(0L, 200L))
-                    setLights(0, 0, 0)
-                    setBadgeIconType(NotificationCompat.BADGE_ICON_NONE)
-                    setSound(null)
-                }.build()
-            )
-        }
+        val currentMediaItem = controller?.currentMediaItem ?: return
+        val isHeart = (currentMediaItem.mediaMetadata.userRating as? HeartRating)?.isHeart == true
+        controller?.setRating(HeartRating(!isHeart))
     }
 
     // When destroying, we should release server side player
