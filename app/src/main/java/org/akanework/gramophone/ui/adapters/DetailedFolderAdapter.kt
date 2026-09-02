@@ -281,7 +281,6 @@ class DetailedFolderAdapter(
 
     override fun sort(type: Sorter.Type) {
         sortType.value = type
-        songAdapter.sort(type)
     }
 
     private class DiffCallback(

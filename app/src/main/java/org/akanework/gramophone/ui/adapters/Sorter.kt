@@ -148,9 +148,7 @@ class Sorter<T>(
         return sortingHelper.typesSupported.let { types ->
             var res = types
             if (naturalOrderHelper != null || rawOrderExposed == Type.NaturalOrder)
-                res = res + Type.NaturalOrder + Type.NaturalOrderDescending
-            if (res.contains(Type.ByDiscAndTrack))
-                res = res + Type.ByDiscAndTrackDescending
+                res = res + Type.NaturalOrder
             
             // Automatically add inverse for everything supported
             val allWithInverses = mutableSetOf<Type>()

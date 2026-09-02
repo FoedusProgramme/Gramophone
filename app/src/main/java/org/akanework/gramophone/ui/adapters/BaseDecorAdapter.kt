@@ -110,14 +110,12 @@ open class BaseDecorAdapter<T : AdapterFragment.BaseInterface<*>>(
 
             val currentSort = adapter.sortType.value
             val activeEntry = buttonMap.entries.find { it.value == currentSort || Sorter.Type.inverse(it.value) == currentSort }
-            val defaultSort = activeEntry?.value ?: Sorter.Type.None
 
-            if (activeEntry != null) {
-                popupMenu.menu.findItem(activeEntry.key).isChecked = true
-            }
-            else {
+            if (activeEntry == null) {
                 throw IllegalStateException("Invalid sortType ${adapter.sortType.value.name}")
             }
+
+            popupMenu.menu.findItem(activeEntry.key).isChecked = true
 
             if (adapter.canChangeLayout) {
                 when (adapter.layoutType) {
@@ -137,15 +135,17 @@ open class BaseDecorAdapter<T : AdapterFragment.BaseInterface<*>>(
             if (inverse == null) {
                 reverseItem.isVisible = false
             } else {
-                reverseItem.isChecked = currentSort != defaultSort && currentSort != Sorter.Type.None
+                reverseItem.isChecked = currentSort != activeEntry.value && currentSort != Sorter.Type.None
             }
 
             popupMenu.setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
                     in buttonMap.keys -> {
                         if (!menuItem.isChecked) {
-                            val baseType = buttonMap[menuItem.itemId]!!
-                            val targetType = if (reverseItem.isChecked) Sorter.Type.inverse(baseType) ?: baseType else baseType
+                            // always use default direction for this sort mode if sort mode is changed,
+                            // and reset the reverseOrder checkbox
+                            val targetType = buttonMap[menuItem.itemId]!!
+                            reverseItem.isChecked = false
                             adapter.sort(targetType)
                             menuItem.isChecked = true
                             prefs.edit {
