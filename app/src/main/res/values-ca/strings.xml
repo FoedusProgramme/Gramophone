@@ -532,4 +532,5 @@
     <string name="settings_notification_lyrics_summary">Mostra la lletra com a títol de notificació i artista - títol com a subtítol</string>
     <string name="settings_always_skip_previous">Salta sempre a la pista anterior</string>
     <string name="settings_always_skip_previous_summary">Canvia directament a la pista anterior en prémer el botó anterior en lloc d\'anar a l\'inici</string>
+    <string name="reverse_order">Ordre invers</string>
 </resources>
