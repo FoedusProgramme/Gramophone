@@ -526,4 +526,5 @@
     <string name="settings_notification_lyrics_summary">Näita laulu sõnu teavituse pealkirjana ja „esitaja nime – pealkirja“ alapealkirjana</string>
     <string name="settings_always_skip_previous">Tagasikerimisel alati hüppa eelmise loo juurde</string>
     <string name="settings_always_skip_previous_summary">Tagasikerimise lalati hüppa otse eelmise loo juurde, mitte esitamisel oleva loo algusesse</string>
+    <string name="reverse_order">Tagurpidi järjestus</string>
 </resources>
