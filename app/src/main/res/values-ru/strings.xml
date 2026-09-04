@@ -540,4 +540,5 @@
     <string name="settings_notification_lyrics_summary">Отображать текст песни в заголовке уведомления, а «Исполнитель - Название» в подзаголовке</string>
     <string name="settings_always_skip_previous">Всегда переключать на предыдущий трек</string>
     <string name="settings_always_skip_previous_summary">Мгновенное переключение на предыдущий трек вместо перемотки в начало при нажатии кнопки «Назад»</string>
+    <string name="reverse_order">Инвертировать порядок</string>
 </resources>
