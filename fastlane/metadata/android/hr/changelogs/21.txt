@@ -1,0 +1,10 @@
+- Uređivanje playliste
+- Omiljene pjesme
+- Novo korisničko sučelje tekstova sa sinkroniziranim tekstovima (+ obrada ID3 SYLT tekstova)
+- Podrška za ReplayGain 2.0
+- Čista tamna tema
+- Mapa s bijelom listom
+- ALAC dekoder
+- Brzina reprodukcije
+- Preoblikovani red čekanja i tajmer za spavanje
+- Ispravljeno mnogo prekida rada aplikacije i grešaka
