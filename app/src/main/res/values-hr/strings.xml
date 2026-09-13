@@ -133,11 +133,11 @@
     <string name="settings_lyrics_bold_summary">Koristi deblji font za tekstove pjesama</string>
     <string name="settings_lyrics_center">Centrirano poravnanje</string>
     <string name="settings_lyrics_center_summary">Koristi centrirano poravnanje za tekstove pjesama</string>
-    <string name="settings_play_on_launch">Reproduciraj nakon pokretanja aplikacje</string>
-    <string name="settings_play_on_launch_summary">Reproduciraj glazbu nakon pokretanja aplikacje</string>
-    <string name="settings_blacklist">Popis nepoželjnih</string>
+    <string name="settings_play_on_launch">Reproduciraj nakon pokretanja aplikacije</string>
+    <string name="settings_play_on_launch_summary">Reproduciraj glazbu nakon pokretanja aplikacije</string>
+    <string name="settings_blacklist">Crna lista</string>
     <string name="settings_blacklist_folder_summary">Filtriraj pjesme iz određenih mapa</string>
-    <string name="settings_blacklist_folder">Mape nepoželjnih</string>
+    <string name="settings_blacklist_folder">Mape Crnih lista</string>
     <string name="settings_category_basic_info">Osnovne informacije</string>
     <string name="settings_category_misc">Razno</string>
     <string name="settings_category_filters">Filtri</string>
@@ -286,7 +286,7 @@
     <string name="device_type_ble_speaker">Bluetooth LE zvučnik</string>
     <string name="device_type_ble_broadcast">Bluetooth LE emitiranje</string>
     <string name="open_in_gramophone">Otvori u aplikaciji Gramophone</string>
-    <string name="settings_trim_lyrics_summary">Razmaci prije prvog slova ili nakon kraja teksta pjesme mogu imati umjetničku vrijednost. Ako se ne slažeš, uključi ovu opciju za automatsko uklonjanje tih razmaka.</string>
+    <string name="settings_trim_lyrics_summary">Razmaci prije prvog slova ili nakon kraja teksta pjesme mogu imati umjetničku vrijednost. Ako se ne slažeš, uključi ovu opciju za automatsko uklanjanje tih razmaka.</string>
     <string name="cannot_play_file">Ova se datoteka ne može raproducirati</string>
     <string name="settings_lyrics_no_animation">Isključi animacije</string>
     <string name="settings_lyrics_no_animation_summary">Isključi sve animacije prijelaza redaka tekstova pjesama</string>
@@ -296,7 +296,7 @@
     <string name="package_type_explainer">Gramophone APK-ove može stvarati bilo tko, jer je Gramophone otvorenog koda. Kako bi se lakše zapamtilo odakle je APK došao, Gramophone navodi vrstu paketa.\n\nNajčešća vrsta je Release, koja je dostupna na stranicama F-Droid, Google Play, GitHub ili IzzyOnDroid.\nVrsta CI paketa se odnosi na automatizirane izgradnje napravljene za svaki commit na GitHubu. Te izgranje mogu biti nestabilne.\nZa druge vrste paketa bi ime trebalo dati razuman nagovještaj odakle APK dolazi.</string>
     <string name="settings_open_source_licenses">Licence otvorenog koda</string>
     <string name="oh_no">Oh ne!</string>
-    <string name="gramophone_crashed_explainer2">Gramophone je prekinuo raditi :(\n\nPošalji mi prijavu greške kako bi se problemi poput onih koji su doveli do ove greške mogli popraviti!\n\nSvaka je situacija jedinstvena poput glazbe – bez tvoje pomoći se ova greška vjerojatno <b>NEĆE</b> popraviti!</string>
+    <string name="gramophone_crashed_explainer2">Gramophone je prekinuo raditi :(\n\nPošalji mi izvještaj o grešci kako bi se problemi poput onih koji su doveli do ove greške mogli popraviti!\n\nSvaka je situacija jedinstvena poput glazbe – bez tvoje pomoći se ova greška vjerojatno <b>NEĆE</b> popraviti!</string>
     <string name="send_email">Pošalji e-mail</string>
     <string name="send_email_manually">Pošalji zapis na nift4@posteo.net – ne može se pronaći e-mail aplikacija</string>
     <string name="failed_to_parse_lyric">Neuspjela obrada tekstova pjesama</string>
@@ -409,7 +409,7 @@
     <string name="refreshing_wait">Osvježavajnje i tijeku, pričekaj …</string>
     <string name="still_refreshing">Osvježavanje, korak %1$d/%2$d: %3$s</string>
     <string name="did_you_know">Je li znaš …</string>
-    <string name="refresh_did_you_know">Gramophone traži aktualiziran popis pjesama pri svakom pokretanju aplikacije, a dok Gramophone radi, automatski prepoznaje nove medije. Ovaj gumb „Osvježi“ neće ponovo učitati medij u Gramophone, već će tražiti od tvog sustava da ponovo pretraži sve datoteke sa svih priključenih uređaja za trajno spremanje (zbog toga to ponešto traje). To znači da, osim ako tvoj sustav ili druge aplikacije ne rade ispravno, nikada nećeš morati koristiti ovu funkciju.\n\nNedostaju ti neke pjesme? Provjeri Postavke &gt; Ponašanje za filtar minimalne duljine i mapu nepoželjnih i potvrdi da su te postavke postavljene na očekivanu vrijednost. Pronađi još mogućih razloga na našoj ČPP stranici.</string>
+    <string name="refresh_did_you_know">Gramophone traži aktualiziran popis pjesama pri svakom pokretanju aplikacije, a dok Gramophone radi, automatski prepoznaje nove medije. Ovaj gumb „Osvježi“ neće ponovo učitati medij u Gramophone, već će tražiti od tvog sustava da ponovo pretraži sve datoteke sa svih priključenih uređaja za trajno spremanje (zbog toga to ponešto traje). To znači da, osim ako tvoj sustav ili druge aplikacije ne rade ispravno, nikada nećeš morati koristiti ovu funkciju.\n\nNedostaju ti neke pjesme? Provjeri Postavke &gt; Ponašanje za filtar minimalne duljine i mapu Crne liste i potvrdi da su te postavke postavljene na očekivanu vrijednost. Pronađi još mogućih razloga na našoj ČPP stranici.</string>
     <string name="rename_failed_playlist">Neuspjelo preimenovanje playliste: %s</string>
     <string name="playlist_name">Ime playliste</string>
     <string name="create_failed_playlist">Neuspjelo stvaranje playliste: %s</string>
@@ -482,8 +482,8 @@
     <string name="edit_favorites_failed">Uređivanje favorita neuspjelo: %s</string>
     <string name="favorite">Favorit</string>
     <string name="favorite_failed_title">Nije bilo moguće promijeniti stanje pjesme kao favorita</string>
-    <string name="favorite_failed_text">Pritisni ovdje za primjenu promjena, davajući dozvole favoritnoj datoteci playliste</string>
-    <string name="error_in_bg">Događaju se greške u pozadini</string>
+    <string name="favorite_failed_text">Pritisni ovdje za primjenu promjena, davajući dozvole datoteci favorita playliste</string>
+    <string name="error_in_bg">Greške koje se događaju u pozadini</string>
     <string name="settings_whitelist">Bijela lista</string>
     <string name="search_query">Pretraga: %s</string>
     <string name="discard_changes_title">Odbaciti promjene?</string>
@@ -532,4 +532,5 @@
     <string name="contributors_banksio">Android Auto</string>
     <string name="unfavorite">Ukloni iz favorita</string>
     <string name="edit_mode">Uđi u modus uređivanja</string>
+    <string name="whitelist_and_blacklist">Ako u Bijeloj listi nije odabrana nijedna mapa, sve će mape biti dopuštene.\n\nBijela lista i Crna lista se primjenjuju zajedno, pri čemu Crna lista ima prioritet. Na primjer, možeš dopustiti mapu u Bijeloj listi, a isključiti jednu od njezinih podmapa u Crnoj listi.</string>
 </resources>
