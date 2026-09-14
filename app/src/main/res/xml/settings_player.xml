@@ -85,6 +85,24 @@
             android:title="@string/settings_cookie_info"
             android:widgetLayout="@layout/preference_switch_widget" />
 
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:icon="@drawable/ic_refresh"
+            android:key="rotate_cookie_button"
+            android:layout="@layout/preference_switch"
+            android:summary="@string/settings_rotate_cookie_button_summary"
+            android:title="@string/settings_rotate_cookie_button"
+            android:widgetLayout="@layout/preference_switch_widget" />
+
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:icon="@drawable/ic_skip_next"
+            android:key="swipe_to_switch_track"
+            android:layout="@layout/preference_switch"
+            android:summary="@string/settings_swipe_to_switch_track_summary"
+            android:title="@string/settings_swipe_to_switch_track"
+            android:widgetLayout="@layout/preference_switch_widget" />
+
     </PreferenceCategory>
 
     <PreferenceCategory

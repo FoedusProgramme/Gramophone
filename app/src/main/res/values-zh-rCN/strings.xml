@@ -157,6 +157,9 @@
     <string name="settings_status_bar_lyrics_summary">启用魅族状态栏歌词（仅适用于部分设备）</string>
     <string name="settings_lyrics_ui">启用新歌词界面</string>
     <string name="lyric_widget_description">显示当前播放媒体歌词的小部件</string>
+    <string name="card_widget_title">卡片小组件</string>
+    <string name="card_widget_description">提供音乐播放控制的桌面小组件</string>
+    <string name="pause">暂停</string>
     <string name="scroll_to_albums">滚动到专辑</string>
     <string name="scroll_to_songs">滚动到歌曲</string>
     <string name="expand_less">关闭</string>
