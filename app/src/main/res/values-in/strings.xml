@@ -273,7 +273,7 @@
     <string name="oh_no">Oh tidak!</string>
     <string name="gramophone_crashed_explainer2">Gramophone mengalami kerusakan :(\n\nHarap kirimkan laporan bug kepada saya agar masalah seperti yang menyebabkan kerusakan ini dapat diperbaiki!\n\nSetiap situasi seunik musik, tanpa bantuan Anda, bug ini kemungkinan besar <b>TIDAK</b> akan diperbaiki!</string>
     <string name="send_email">Kirim email</string>
-    <string name="send_email_manually">Harap kirim log ke [nift4dev@gmail.com](mailto:nift4dev@gmail.com) - tidak dapat menemukan aplikasi email</string>
+    <string name="send_email_manually">Silakan kirim log ke nift4@posteo.net - aplikasi email tidak ditemukan</string>
     <string name="failed_to_parse_lyric">Gagal menguraikan lirik</string>
     <string name="settings_lyrics_no_animation_summary">Nonaktifkan semua animasi transisi baris lirik</string>
     <string name="package_type_explainer">APK Gramophone dapat dibuat oleh siapa saja, karena Gramophone bersumber terbuka. Untuk membantu mengingat asal suatu APK, Gramophone menyediakan tipe paket.\n\nTipe yang paling umum adalah Rilis, yang diperoleh dari F-Droid, Google Play, GitHub, atau IzzyOnDroid.\nTipe paket CI mengacu pada build otomatis yang dibuat untuk setiap commit di GitHub. Build ini mungkin tidak stabil.\nUntuk tipe paket lainnya, namanya seharusnya memberikan petunjuk yang wajar tentang asal APK tersebut.</string>
@@ -433,7 +433,7 @@
     <string name="spk_encoding_pcm_20bit_big_endian">PCM 20-bit (big endian)</string>
     <string name="settings_cookie_summary">Jadikan sampul album berbentuk kue</string>
     <string name="settings_cookie_info">Sampul kue</string>
-    <string name="settings_pure_dark">Tema gelap murni</string>
+    <string name="settings_pure_dark">Hitam pekat pada tema gelap</string>
     <string name="settings_pure_dark_summary">Tema di mana semua permukaan dalam aplikasi berwarna hitam murni (dapat menyebabkan black crush pada layar OLED)</string>
     <string name="settings_stop_on_dismiss">Hentikan saat ditutup</string>
     <string name="settings_stop_on_dismiss_summary">Hentikan pemutaran saat tugas aplikasi ditutup dari daftar terbaru</string>
@@ -509,7 +509,16 @@
         <item quantity="other">%d menit</item>
     </plurals>
     <string name="settings_mq_enabled">Beberapa antrean</string>
-    <string name="mq_pin_queue">Sematkan antrian ini agar tidak dihapus secara otomatis setelah beberapa waktu</string>
+    <string name="mq_pin_queue">Sematkan antrean</string>
     <string name="shuffled">%s (diacak)</string>
     <string name="mq_unpin_queue">Lepaskan penandaan antrian ini dan izinkan agar antrian tersebut dihapus setelah jangka waktu tertentu</string>
+    <string name="reverse_order">Urutan terbalik</string>
+    <string name="settings_notification_lyrics_title">Lirik notifikasi</string>
+    <string name="settings_notification_lyrics_summary">Tampilkan lirik sebagai judul notifikasi dan artis - judul sebagai subjudul</string>
+    <string name="settings_always_skip_previous">Selalu pindah ke lagu sebelumnya</string>
+    <string name="settings_always_skip_previous_summary">Langsung pindah ke lagu sebelumnya saat menekan tombol sebelumnya, alih-alih kembali ke awal lagu</string>
+    <string name="contributors_banksio">Android Auto</string>
+    <string name="unfavorite">Hapus dari favorit</string>
+    <string name="loading_playlists">Memuat playlist...</string>
+    <string name="edit_mode">Masuk ke mode edit</string>
 </resources>
