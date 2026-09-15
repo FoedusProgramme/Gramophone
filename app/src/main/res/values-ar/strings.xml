@@ -468,6 +468,11 @@
     <string name="album_gain">الحفاظ على ديناميكيات الألبوم</string>
     <string name="mix_port_flag_mmap_noirq">MMAP (بدون irq)</string>
     <string name="tempo_pitch_value">%s: %.2fx</string>
-    <string name="settings_replaygain_no_rg_amp">التوهين (دون RG)</string>
+    <string name="settings_replaygain_no_rg_amp">التخفيف (دون RG)</string>
     <string name="settings_replaygain_preamp">مضخم مسبق</string>
+    <string name="reverse_order">عكس الترتيب</string>
+    <string name="settings_notification_lyrics_title">إشعارات الكلمات</string>
+    <string name="settings_notification_lyrics_summary">عرض الكلمات كعنوان الإشعار والفنان - العنوان كعنوان فرعي</string>
+    <string name="settings_always_skip_previous">التخطى دائمًا إلى الأغنية السابقة‌</string>
+    <string name="settings_always_skip_previous_summary">الانتقال مباشرة إلى الأغنية السابقة عند الضغط على زر السابق بدلاً من الذهاب إلى البداية</string>
 </resources>
