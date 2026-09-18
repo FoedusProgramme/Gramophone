@@ -18,8 +18,12 @@
 package org.akanework.gramophone.ui.widget
 
 import android.app.PendingIntent
+import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
+import androidx.core.content.edit
+import androidx.core.net.toUri
+import androidx.media3.common.Player
 
 data class CardWidgetPlaybackState(
     val title: String = "",
@@ -27,9 +31,13 @@ data class CardWidgetPlaybackState(
     val isPlaying: Boolean = false,
     val isFavorite: Boolean = false,
     val isShuffle: Boolean = false,
+    val repeatMode: Int = Player.REPEAT_MODE_OFF,
     val artworkUri: Uri? = null,
     val artworkBitmap: Bitmap? = null
-)
+) {
+    val hasTrack: Boolean
+        get() = title.isNotEmpty() || artist.isNotEmpty() || artworkUri != null
+}
 
 data class CardWidgetActions(
     val openAppPi: PendingIntent,
@@ -37,5 +45,49 @@ data class CardWidgetActions(
     val prevPi: PendingIntent,
     val playPausePi: PendingIntent,
     val nextPi: PendingIntent,
-    val shufflePi: PendingIntent
+    val repeatPi: PendingIntent? = null,
+    val shufflePi: PendingIntent? = null
 )
+
+object CardWidgetStore {
+    private const val PREFS_NAME = "CardWidgetStore"
+    private const val KEY_TITLE = "last_title"
+    private const val KEY_ARTIST = "last_artist"
+    private const val KEY_ARTWORK_URI = "last_artwork_uri"
+    private const val KEY_FAVORITE = "last_favorite"
+    private const val KEY_SHUFFLE = "last_shuffle"
+    private const val KEY_REPEAT_MODE = "last_repeat_mode"
+
+    fun saveLastPlaybackState(context: Context, state: CardWidgetPlaybackState) {
+        if (!state.hasTrack) return
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        prefs.edit {
+            putString(KEY_TITLE, state.title)
+            putString(KEY_ARTIST, state.artist)
+            putString(KEY_ARTWORK_URI, state.artworkUri?.toString())
+            putBoolean(KEY_FAVORITE, state.isFavorite)
+            putBoolean(KEY_SHUFFLE, state.isShuffle)
+            putInt(KEY_REPEAT_MODE, state.repeatMode)
+        }
+    }
+
+    fun loadLastPlaybackState(context: Context): CardWidgetPlaybackState {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val title = prefs.getString(KEY_TITLE, null).orEmpty()
+        val artist = prefs.getString(KEY_ARTIST, null).orEmpty()
+        val uriStr = prefs.getString(KEY_ARTWORK_URI, null)
+        val isFavorite = prefs.getBoolean(KEY_FAVORITE, false)
+        val isShuffle = prefs.getBoolean(KEY_SHUFFLE, false)
+        val repeatMode = prefs.getInt(KEY_REPEAT_MODE, Player.REPEAT_MODE_OFF)
+        return CardWidgetPlaybackState(
+            title = title,
+            artist = artist,
+            isPlaying = false,
+            isFavorite = isFavorite,
+            isShuffle = isShuffle,
+            repeatMode = repeatMode,
+            artworkUri = uriStr?.toUri(),
+            artworkBitmap = null
+        )
+    }
+}

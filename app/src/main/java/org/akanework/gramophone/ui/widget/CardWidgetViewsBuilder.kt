@@ -26,14 +26,42 @@ import android.util.SizeF
 import android.view.Gravity
 import android.view.View
 import android.widget.RemoteViews
+import androidx.core.content.ContextCompat
+import androidx.media3.common.Player
 import androidx.preference.PreferenceManager
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.dpToPx
-import kotlin.math.abs
 
 object CardWidgetViewsBuilder {
 
-    fun buildResponsiveRemoteViews(
+    fun buildCardResponsiveRemoteViews(
+        context: Context,
+        appWidgetManager: AppWidgetManager,
+        appWidgetId: Int,
+        state: CardWidgetPlaybackState,
+        actions: CardWidgetActions
+    ): RemoteViews {
+        val card = buildCardViews(context, state, actions, showPrevious = true, showNext = true)
+        val medium = buildMediumViews(context, state, actions, showMoreButtons = false)
+        val mediumWide = buildMediumViews(context, state, actions, showMoreButtons = true)
+        val large = buildLargeViews(context, state, actions, showMoreButtons = false)
+        val largeWide = buildLargeViews(context, state, actions, showMoreButtons = true)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val viewMapping = mapOf(
+                SizeF(180f, 60f) to card,
+                SizeF(180f, 80f) to medium,
+                SizeF(260f, 80f) to mediumWide,
+                SizeF(180f, 160f) to large,
+                SizeF(260f, 160f) to largeWide
+            )
+            return RemoteViews(viewMapping)
+        } else {
+            return selectPreSCardLayout(appWidgetManager, appWidgetId, card, medium, mediumWide, large, largeWide)
+        }
+    }
+
+    fun buildCircleResponsiveRemoteViews(
         context: Context,
         appWidgetManager: AppWidgetManager,
         appWidgetId: Int,
@@ -43,37 +71,31 @@ object CardWidgetViewsBuilder {
         val pillSingle = buildPillViews(context, state, actions, showCover = false)
         val pill = buildPillViews(context, state, actions, showCover = true)
         val circle = buildCircleViews(context, state, actions)
-        val card = buildCardViews(context, state, actions, showPrevious = true, showNext = true)
-        val cardNarrow = buildCardViews(context, state, actions, showPrevious = false, showNext = true)
-        val medium = buildMediumViews(context, state, actions, showMoreButtons = false)
-        val mediumWide = buildMediumViews(context, state, actions, showMoreButtons = true)
-        val large = buildLargeViews(context, state, actions, showMoreButtons = false)
-        val largeWide = buildLargeViews(context, state, actions, showMoreButtons = true)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             val viewMapping = mapOf(
                 SizeF(40f, 40f) to pillSingle,
                 SizeF(100f, 40f) to pill,
-                SizeF(190f, 40f) to card,
-                SizeF(90f, 90f) to circle,
-                SizeF(180f, 80f) to medium,
-                SizeF(280f, 80f) to mediumWide,
-                SizeF(180f, 170f) to large,
-                SizeF(280f, 170f) to largeWide
+                SizeF(80f, 80f) to circle
             )
             return RemoteViews(viewMapping)
         } else {
-            return selectPreSLayout(appWidgetManager, appWidgetId, pillSingle, pill, card, circle, medium, mediumWide, large, largeWide)
+            return selectPreSCircleLayout(appWidgetManager, appWidgetId, pillSingle, pill, circle)
         }
     }
 
-    private fun selectPreSLayout(
+    fun buildResponsiveRemoteViews(
+        context: Context,
         appWidgetManager: AppWidgetManager,
         appWidgetId: Int,
-        pillSingle: RemoteViews,
-        pill: RemoteViews,
+        state: CardWidgetPlaybackState,
+        actions: CardWidgetActions
+    ): RemoteViews = buildCardResponsiveRemoteViews(context, appWidgetManager, appWidgetId, state, actions)
+
+    private fun selectPreSCardLayout(
+        appWidgetManager: AppWidgetManager,
+        appWidgetId: Int,
         card: RemoteViews,
-        circle: RemoteViews,
         medium: RemoteViews,
         mediumWide: RemoteViews,
         large: RemoteViews,
@@ -88,15 +110,32 @@ object CardWidgetViewsBuilder {
         val minHeight = options?.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT, 0) ?: 0
 
         return when {
-            minHeight < 75 && minWidth in 1..99 -> pillSingle
-            minHeight < 75 && minWidth in 100..189 -> pill
-            minHeight < 75 && minWidth >= 190 -> card
-            minWidth in 75..220 && minHeight in 75..220 && abs(minWidth - minHeight) < 50 -> circle
-            minHeight in 75..165 && minWidth >= 190 -> if (minWidth >= 280) mediumWide else medium
-            minHeight >= 165 && minWidth >= 190 -> if (minWidth >= 280) largeWide else large
-            minWidth < 190 && minHeight < 75 -> pill
-            minWidth < 190 -> circle
+            minHeight < 75 -> card
+            minHeight in 75..165 -> if (minWidth >= 260) mediumWide else medium
+            minHeight >= 165 -> if (minWidth >= 260) largeWide else large
             else -> card
+        }
+    }
+
+    private fun selectPreSCircleLayout(
+        appWidgetManager: AppWidgetManager,
+        appWidgetId: Int,
+        pillSingle: RemoteViews,
+        pill: RemoteViews,
+        circle: RemoteViews
+    ): RemoteViews {
+        val options = try {
+            appWidgetManager.getAppWidgetOptions(appWidgetId)
+        } catch (_: Exception) {
+            null
+        }
+        val minWidth = options?.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, 0) ?: 0
+        val minHeight = options?.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT, 0) ?: 0
+
+        return when {
+            minHeight < 75 && minWidth in 1..99 -> pillSingle
+            minHeight < 75 -> pill
+            else -> circle
         }
     }
 
@@ -147,6 +186,7 @@ object CardWidgetViewsBuilder {
             setOnClickPendingIntent(R.id.widget_card_root, actions.openAppPi)
             setOnClickPendingIntent(R.id.widget_cover, actions.openAppPi)
 
+            applyFavoriteControl(this, context, state.isFavorite, actions.favoritePi)
             applyNavControls(this, showPrevious, actions.prevPi, showNext, actions.nextPi)
             applyArtwork(this, state.artworkBitmap, R.id.widget_cover, cornerRadiusPx = 12.dpToPx(context).toFloat())
         }
@@ -167,7 +207,8 @@ object CardWidgetViewsBuilder {
             setOnClickPendingIntent(R.id.widget_card_root, actions.openAppPi)
             setOnClickPendingIntent(R.id.widget_cover, actions.openAppPi)
 
-            applyMoreButtons(this, showMoreButtons, state.isFavorite, actions.favoritePi, state.isShuffle, actions.shufflePi)
+            applyFavoriteControl(this, context, state.isFavorite, actions.favoritePi)
+            applyRepeatAndShuffleControls(this, context, showMoreButtons, state.repeatMode, actions.repeatPi, state.isShuffle, actions.shufflePi)
             applyNavControls(this, showPrevious, actions.prevPi, showNext, actions.nextPi)
             applyArtwork(this, state.artworkBitmap, R.id.widget_cover, cornerRadiusPx = 12.dpToPx(context).toFloat())
         }
@@ -196,7 +237,8 @@ object CardWidgetViewsBuilder {
             setOnClickPendingIntent(R.id.widget_card_root, actions.openAppPi)
             setOnClickPendingIntent(R.id.widget_cover, actions.openAppPi)
 
-            applyMoreButtons(this, showMoreButtons, state.isFavorite, actions.favoritePi, state.isShuffle, actions.shufflePi)
+            applyFavoriteControl(this, context, state.isFavorite, actions.favoritePi)
+            applyRepeatAndShuffleControls(this, context, showMoreButtons, state.repeatMode, actions.repeatPi, state.isShuffle, actions.shufflePi)
             applyNavControls(this, showPrevious, actions.prevPi, showNext, actions.nextPi)
             applyArtwork(this, state.artworkBitmap, R.id.widget_cover, cornerRadiusPx = 12.dpToPx(context).toFloat())
         }
@@ -217,6 +259,73 @@ object CardWidgetViewsBuilder {
             context.getString(if (isPlaying) R.string.pause else R.string.play)
         )
         views.setOnClickPendingIntent(R.id.widget_play_pause, playPausePi)
+    }
+
+    private fun applyFavoriteControl(
+        views: RemoteViews,
+        context: Context,
+        isFavorite: Boolean,
+        favoritePi: PendingIntent
+    ) {
+        views.setImageViewResource(
+            R.id.widget_favorite,
+            if (isFavorite) R.drawable.ic_favorite_filled else R.drawable.ic_favorite
+        )
+        views.setInt(R.id.widget_favorite, "setImageAlpha", 255)
+        val color = ContextCompat.getColor(
+            context,
+            if (isFavorite) R.color.widget_primary else R.color.widget_on_surface
+        )
+        views.setInt(R.id.widget_favorite, "setColorFilter", color)
+        views.setContentDescription(
+            R.id.widget_favorite,
+            context.getString(if (isFavorite) R.string.unfavorite else R.string.playlist_favourite)
+        )
+        views.setOnClickPendingIntent(R.id.widget_favorite, favoritePi)
+    }
+
+    private fun applyRepeatAndShuffleControls(
+        views: RemoteViews,
+        context: Context,
+        showMore: Boolean,
+        repeatMode: Int,
+        repeatPi: PendingIntent?,
+        isShuffle: Boolean,
+        shufflePi: PendingIntent?
+    ) {
+        if (showMore && repeatPi != null && shufflePi != null) {
+            views.setViewVisibility(R.id.widget_repeat, View.VISIBLE)
+            views.setViewVisibility(R.id.widget_shuffle, View.VISIBLE)
+
+            val repeatIcon = if (repeatMode == Player.REPEAT_MODE_ONE) {
+                R.drawable.ic_repeat_one
+            } else {
+                R.drawable.ic_repeat
+            }
+            views.setImageViewResource(R.id.widget_repeat, repeatIcon)
+            val isRepeatActive = repeatMode != Player.REPEAT_MODE_OFF
+            views.setInt(R.id.widget_repeat, "setImageAlpha", if (isRepeatActive) 255 else 100)
+            val repeatColor = ContextCompat.getColor(
+                context,
+                if (isRepeatActive) R.color.widget_primary else R.color.widget_on_surface
+            )
+            views.setInt(R.id.widget_repeat, "setColorFilter", repeatColor)
+            views.setContentDescription(R.id.widget_repeat, context.getString(R.string.repeat_mode))
+            views.setOnClickPendingIntent(R.id.widget_repeat, repeatPi)
+
+            views.setImageViewResource(R.id.widget_shuffle, R.drawable.ic_shuffle)
+            views.setInt(R.id.widget_shuffle, "setImageAlpha", if (isShuffle) 255 else 100)
+            val shuffleColor = ContextCompat.getColor(
+                context,
+                if (isShuffle) R.color.widget_primary else R.color.widget_on_surface
+            )
+            views.setInt(R.id.widget_shuffle, "setColorFilter", shuffleColor)
+            views.setContentDescription(R.id.widget_shuffle, context.getString(R.string.shuffle))
+            views.setOnClickPendingIntent(R.id.widget_shuffle, shufflePi)
+        } else {
+            views.setViewVisibility(R.id.widget_repeat, View.GONE)
+            views.setViewVisibility(R.id.widget_shuffle, View.GONE)
+        }
     }
 
     private fun applyArtwork(
@@ -257,32 +366,6 @@ object CardWidgetViewsBuilder {
             views.setOnClickPendingIntent(R.id.widget_next, nextPi)
         } else {
             views.setViewVisibility(R.id.widget_next, View.GONE)
-        }
-    }
-
-    private fun applyMoreButtons(
-        views: RemoteViews,
-        showMore: Boolean,
-        isFavorite: Boolean,
-        favoritePi: PendingIntent,
-        isShuffle: Boolean,
-        shufflePi: PendingIntent
-    ) {
-        if (showMore) {
-            views.setViewVisibility(R.id.widget_favorite, View.VISIBLE)
-            views.setViewVisibility(R.id.widget_shuffle, View.VISIBLE)
-            views.setImageViewResource(
-                R.id.widget_favorite,
-                if (isFavorite) R.drawable.ic_favorite_filled else R.drawable.ic_favorite
-            )
-            views.setInt(R.id.widget_favorite, "setImageAlpha", if (isFavorite) 255 else 180)
-            views.setImageViewResource(R.id.widget_shuffle, R.drawable.ic_shuffle)
-            views.setInt(R.id.widget_shuffle, "setImageAlpha", if (isShuffle) 255 else 90)
-            views.setOnClickPendingIntent(R.id.widget_favorite, favoritePi)
-            views.setOnClickPendingIntent(R.id.widget_shuffle, shufflePi)
-        } else {
-            views.setViewVisibility(R.id.widget_favorite, View.GONE)
-            views.setViewVisibility(R.id.widget_shuffle, View.GONE)
         }
     }
 }

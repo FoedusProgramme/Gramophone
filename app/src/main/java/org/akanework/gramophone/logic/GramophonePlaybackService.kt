@@ -842,7 +842,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         mediaSession = null
         broadcastAudioSessionClose()
         LyricWidgetProvider.update(this)
-        CardWidgetProvider.update(this)
+        CardWidgetProvider.updateAllWidgets(this)
         internalPlaybackThread.quitSafely()
         super.onDestroy()
         Log.i(TAG, "-onDestroy()")
@@ -1632,7 +1632,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
             }
         }
 
-        CardWidgetProvider.update(this)
+        CardWidgetProvider.updateAllWidgets(this)
         lastPlayedManager.save()
     }
 
@@ -1648,12 +1648,12 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
 
     override fun onMediaMetadataChanged(mediaMetadata: MediaMetadata) {
         refreshMediaButtonCustomLayout()
-        CardWidgetProvider.update(this)
+        CardWidgetProvider.updateAllWidgets(this)
     }
 
     override fun onIsPlayingChanged(isPlaying: Boolean) {
         scheduleSendingLyrics(false)
-        CardWidgetProvider.update(this)
+        CardWidgetProvider.updateAllWidgets(this)
         lastPlayedManager.save()
     }
 
@@ -1695,7 +1695,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
     }
     override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
         refreshMediaButtonCustomLayout()
-        CardWidgetProvider.update(this)
+        CardWidgetProvider.updateAllWidgets(this)
         if (needsMissingOnDestroyCallWorkarounds()) {
             handler.post { lastPlayedManager.save() }
         }
@@ -1703,7 +1703,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
 
     override fun onRepeatModeChanged(repeatMode: Int) {
         refreshMediaButtonCustomLayout()
-        CardWidgetProvider.update(this)
+        CardWidgetProvider.updateAllWidgets(this)
         if (needsMissingOnDestroyCallWorkarounds()) {
             handler.post { lastPlayedManager.save() }
         }

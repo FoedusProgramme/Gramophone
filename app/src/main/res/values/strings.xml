@@ -401,7 +401,9 @@
     <!-- Description shown about lyric widget in Android launcher / home screen's widget selector on Android 12+ -->
     <string name="lyric_widget_description">Widget that shows lyrics of currently playing media</string>
     <string name="card_widget_title">Card widget</string>
-    <string name="card_widget_description">Widget that provides music playback controls</string>
+    <string name="card_widget_description">Widget that provides music playback controls and track details</string>
+    <string name="circle_widget_title">Circle &amp; pill widget</string>
+    <string name="circle_widget_description">Compact circular and pill-shaped widget with playback controls</string>
     <string name="pause">Pause</string>
     <!-- Settings toggle in behavior settings to always skip to previous track on previous button press. Title -->
     <string name="settings_always_skip_previous">Always skip to previous track</string>
