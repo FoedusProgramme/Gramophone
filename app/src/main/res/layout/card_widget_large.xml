@@ -36,6 +36,13 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
+            <View
+                android:id="@+id/widget_title_start_spacer"
+                android:layout_width="40dp"
+                android:layout_height="1dp"
+                android:layout_marginEnd="6dp"
+                android:visibility="gone" />
+
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

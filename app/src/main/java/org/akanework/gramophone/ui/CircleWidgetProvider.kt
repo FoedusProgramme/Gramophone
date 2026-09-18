@@ -18,58 +18,26 @@
 package org.akanework.gramophone.ui
 
 import android.appwidget.AppWidgetManager
-import android.appwidget.AppWidgetProvider
-import android.content.ComponentName
 import android.content.Context
-import android.os.Bundle
+import android.widget.RemoteViews
+import org.akanework.gramophone.ui.widget.BaseWidgetProvider
+import org.akanework.gramophone.ui.widget.CardWidgetActions
+import org.akanework.gramophone.ui.widget.CardWidgetPlaybackState
 import org.akanework.gramophone.ui.widget.CardWidgetViewsBuilder
 
-class CircleWidgetProvider : AppWidgetProvider() {
+class CircleWidgetProvider : BaseWidgetProvider() {
 
-    override fun onAppWidgetOptionsChanged(
+    override val isCircleFamily: Boolean = true
+
+    override fun buildViews(
         context: Context,
         appWidgetManager: AppWidgetManager,
         appWidgetId: Int,
-        newOptions: Bundle?
-    ) {
-        super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions)
-        onUpdate(context, appWidgetManager, intArrayOf(appWidgetId))
-    }
-
-    override fun onUpdate(
-        context: Context,
-        appWidgetManager: AppWidgetManager,
-        appWidgetIds: IntArray
-    ) {
-        val state = CardWidgetProvider.buildCurrentPlaybackState(context)
-        val actions = CardWidgetProvider.buildWidgetActions(context, state)
-
-        for (appWidgetId in appWidgetIds) {
-            val views = CardWidgetViewsBuilder.buildCircleResponsiveRemoteViews(
-                context, appWidgetManager, appWidgetId, state, actions
-            )
-            appWidgetManager.updateAppWidget(appWidgetId, views)
-
-            if (state.artworkUri != null && (state.artworkUri != CardWidgetProvider.cachedArtworkUri || CardWidgetProvider.cachedArtworkBitmap == null)) {
-                CardWidgetProvider.loadArtworkAndRefresh(
-                    context, appWidgetManager, appWidgetId, state, actions, isCircle = true
-                )
-            }
-        }
-    }
-
-    companion object {
-        fun hasWidget(context: Context): Boolean {
-            val awm = AppWidgetManager.getInstance(context) ?: return false
-            return awm.getAppWidgetIds(ComponentName(context, CircleWidgetProvider::class.java)).isNotEmpty()
-        }
-
-        fun update(context: Context) {
-            val awm = AppWidgetManager.getInstance(context) ?: return
-            val ids = awm.getAppWidgetIds(ComponentName(context, CircleWidgetProvider::class.java))
-            if (ids.isNotEmpty()) {
-                CircleWidgetProvider().onUpdate(context, awm, ids)
-            }
-        }
+        state: CardWidgetPlaybackState,
+        actions: CardWidgetActions
+    ): RemoteViews {
+        return CardWidgetViewsBuilder.buildCircleResponsiveRemoteViews(
+            context, appWidgetManager, appWidgetId, state, actions
+        )
     }
 }

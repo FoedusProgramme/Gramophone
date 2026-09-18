@@ -23,7 +23,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.os.Build
 import android.util.SizeF
-import android.view.Gravity
 import android.view.View
 import android.widget.RemoteViews
 import androidx.core.content.ContextCompat
@@ -42,22 +41,20 @@ object CardWidgetViewsBuilder {
         actions: CardWidgetActions
     ): RemoteViews {
         val card = buildCardViews(context, state, actions, showPrevious = true, showNext = true)
-        val medium = buildMediumViews(context, state, actions, showMoreButtons = false)
-        val mediumWide = buildMediumViews(context, state, actions, showMoreButtons = true)
-        val large = buildLargeViews(context, state, actions, showMoreButtons = false)
+        val medium = buildMediumViews(context, state, actions, showMoreButtons = true)
+        val large = buildLargeViews(context, state, actions, showMoreButtons = true)
         val largeWide = buildLargeViews(context, state, actions, showMoreButtons = true)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             val viewMapping = mapOf(
-                SizeF(180f, 60f) to card,
-                SizeF(180f, 80f) to medium,
-                SizeF(260f, 80f) to mediumWide,
-                SizeF(180f, 160f) to large,
-                SizeF(260f, 160f) to largeWide
+                SizeF(120f, 50f) to card,
+                SizeF(180f, 75f) to medium,
+                SizeF(180f, 130f) to large,
+                SizeF(250f, 130f) to largeWide
             )
             return RemoteViews(viewMapping)
         } else {
-            return selectPreSCardLayout(appWidgetManager, appWidgetId, card, medium, mediumWide, large, largeWide)
+            return selectPreSCardLayout(appWidgetManager, appWidgetId, card, medium, large, largeWide)
         }
     }
 
@@ -76,7 +73,7 @@ object CardWidgetViewsBuilder {
             val viewMapping = mapOf(
                 SizeF(40f, 40f) to pillSingle,
                 SizeF(100f, 40f) to pill,
-                SizeF(80f, 80f) to circle
+                SizeF(100f, 95f) to circle
             )
             return RemoteViews(viewMapping)
         } else {
@@ -84,20 +81,11 @@ object CardWidgetViewsBuilder {
         }
     }
 
-    fun buildResponsiveRemoteViews(
-        context: Context,
-        appWidgetManager: AppWidgetManager,
-        appWidgetId: Int,
-        state: CardWidgetPlaybackState,
-        actions: CardWidgetActions
-    ): RemoteViews = buildCardResponsiveRemoteViews(context, appWidgetManager, appWidgetId, state, actions)
-
     private fun selectPreSCardLayout(
         appWidgetManager: AppWidgetManager,
         appWidgetId: Int,
         card: RemoteViews,
         medium: RemoteViews,
-        mediumWide: RemoteViews,
         large: RemoteViews,
         largeWide: RemoteViews
     ): RemoteViews {
@@ -110,10 +98,10 @@ object CardWidgetViewsBuilder {
         val minHeight = options?.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT, 0) ?: 0
 
         return when {
-            minHeight < 75 -> card
-            minHeight in 75..165 -> if (minWidth >= 260) mediumWide else medium
-            minHeight >= 165 -> if (minWidth >= 260) largeWide else large
-            else -> card
+            minHeight < 95 && minWidth in 1..179 -> card
+            minHeight < 95 -> medium
+            minWidth >= 240 -> largeWide
+            else -> large
         }
     }
 
@@ -133,8 +121,8 @@ object CardWidgetViewsBuilder {
         val minHeight = options?.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT, 0) ?: 0
 
         return when {
-            minHeight < 75 && minWidth in 1..99 -> pillSingle
-            minHeight < 75 -> pill
+            minHeight < 90 && minWidth in 1..90 -> pillSingle
+            minHeight < 90 -> pill
             else -> circle
         }
     }
@@ -225,13 +213,12 @@ object CardWidgetViewsBuilder {
         return RemoteViews(context.packageName, R.layout.card_widget_large).apply {
             setTextViewText(R.id.widget_title, state.title)
             setTextViewText(R.id.widget_artist, state.artist)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-                val isCentered = prefs.getBoolean("centered_title", false)
-                val gravity = if (isCentered) Gravity.CENTER else (Gravity.START or Gravity.CENTER_VERTICAL)
-                setInt(R.id.widget_title, "setGravity", gravity)
-                setInt(R.id.widget_artist, "setGravity", gravity)
-            }
+            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+            val isCentered = prefs.getBoolean("widget_centered_title", prefs.getBoolean("centered_title", false))
+            // Note: TextView.setGravity(int) is NOT annotated with @RemotableViewMethod in Android SDK.
+            // Calling setInt(..., "setGravity", ...) on TextView causes ActionException (VIEW_MODE_ERROR in AppWidgetHostView).
+            // Centering is achieved geometrically via widget_title_start_spacer mirroring widget_favorite.
+            setViewVisibility(R.id.widget_title_start_spacer, if (isCentered) View.VISIBLE else View.GONE)
 
             applyPlayPauseControl(this, context, state.isPlaying, actions.playPausePi)
             setOnClickPendingIntent(R.id.widget_card_root, actions.openAppPi)

@@ -140,6 +140,7 @@ import org.akanework.gramophone.ui.AudioPreviewActivity
 import org.akanework.gramophone.ui.CardWidgetProvider
 import org.akanework.gramophone.ui.LyricWidgetProvider
 import org.akanework.gramophone.ui.MainActivity
+import org.akanework.gramophone.ui.widget.BaseWidgetProvider
 import org.akanework.gramophone.ui.fragments.compose.MqState.Companion.CLIENT_QB_REFRESH_ALL
 import org.akanework.gramophone.ui.fragments.compose.MqState.Companion.CLIENT_QB_REFRESH_CLEAR
 import org.akanework.gramophone.ui.fragments.compose.MqState.Companion.CLIENT_QB_REFRESH_ITEM
@@ -821,6 +822,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
     // alongside with the mediaSession.
     override fun onDestroy() {
         Log.i(TAG, "+onDestroy()")
+        BaseWidgetProvider.savePlaybackSnapshot(this)
         instanceForWidgetAndLyricsOnly = null
         unregisterReceiver(seekReceiver)
         unregisterReceiver(btReceiver)
@@ -842,7 +844,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         mediaSession = null
         broadcastAudioSessionClose()
         LyricWidgetProvider.update(this)
-        CardWidgetProvider.updateAllWidgets(this)
+        BaseWidgetProvider.updateAllWidgets(this)
         internalPlaybackThread.quitSafely()
         super.onDestroy()
         Log.i(TAG, "-onDestroy()")
