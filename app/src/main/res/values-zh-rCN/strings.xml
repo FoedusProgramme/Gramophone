@@ -163,6 +163,8 @@
     <string name="skip_previous">跳到上一个</string>
     <string name="position_slider">位置滑块</string>
     <string name="settings_lyrics_ui_summary">实验性界面，显示逐字歌词，具有高级功能</string>
+    <string name="settings_lrc_bracket_word_sync_title">逐字LRC解析</string>
+    <string name="settings_lrc_bracket_word_sync_summary">支持方括号内嵌时间戳的逐字LRC歌词；关闭时仅作为行级歌词显示</string>
     <string name="back">返回</string>
     <string name="divider">分隔线</string>
     <string name="shuffle_all">全部随机播放</string>
