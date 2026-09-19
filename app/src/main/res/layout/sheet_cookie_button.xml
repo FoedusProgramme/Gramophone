@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~     Copyright (C) 2026 stevezmtstudios <me@stevezmt.top>
+  ~
+  ~     Gramophone is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, either version 3 of the License, or
+  ~     (at your option) any later version.
+  ~
+  ~     Gramophone is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/sheet_mid_button_frame"
+    android:layout_width="90dp"
+    android:layout_height="90dp">
+
+    <ImageView
+        android:id="@+id/sheet_mid_button_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@null"
+        android:importantForAccessibility="no"
+        android:src="@drawable/bg_play_anim"
+        app:tint="?attr/colorSecondaryContainer" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/sheet_mid_button"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/play"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        app:backgroundTint="@android:color/transparent"
+        app:icon="@drawable/play_anim"
+        app:iconGravity="textStart"
+        app:iconPadding="0dp"
+        app:iconSize="42dp"
+        app:iconTint="?attr/colorOnSecondaryContainer"
+        app:rippleColor="@android:color/transparent"
+        app:tooltipText="@string/play" />
+
+</FrameLayout>
