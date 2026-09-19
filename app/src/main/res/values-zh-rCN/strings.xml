@@ -526,4 +526,12 @@
     <string name="settings_always_skip_previous">总是跳至上一曲</string>
     <string name="settings_always_skip_previous_summary">点按上一曲按钮时直接跳至上一首曲目，而非跳回开头</string>
     <string name="reverse_order">反向顺序</string>
+    <string name="settings_preference_category_desktop_widgets">桌面小组件</string>
+    <string name="settings_widget_theme">小组件主题</string>
+    <string name="widget_theme_wallpaper_follow_system">壁纸取色 · 跟随系统</string>
+    <string name="widget_theme_wallpaper_dark">壁纸取色 · 深色</string>
+    <string name="widget_theme_wallpaper_light">壁纸取色 · 浅色</string>
+    <string name="widget_theme_album_art_follow_system">封面取色 · 跟随系统</string>
+    <string name="widget_theme_album_art_dark">封面取色 · 深色</string>
+    <string name="widget_theme_album_art_light">封面取色 · 浅色</string>
 </resources>

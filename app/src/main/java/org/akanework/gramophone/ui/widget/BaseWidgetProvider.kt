@@ -20,12 +20,12 @@ package org.akanework.gramophone.ui.widget
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.widget.RemoteViews
 import androidx.annotation.OptIn
 import androidx.core.graphics.drawable.toBitmap
@@ -38,6 +38,7 @@ import coil3.asDrawable
 import coil3.imageLoader
 import coil3.request.ImageRequest
 import coil3.request.allowHardware
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -46,7 +47,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.akanework.gramophone.logic.GramophonePlaybackService
 import org.akanework.gramophone.ui.CardWidgetProvider
-import org.akanework.gramophone.ui.CircleWidgetProvider
 import org.akanework.gramophone.ui.MainActivity
 import uk.akane.libphonograph.items.hdArtworkUri
 
@@ -59,8 +59,6 @@ abstract class BaseWidgetProvider : AppWidgetProvider() {
         state: CardWidgetPlaybackState,
         actions: CardWidgetActions
     ): RemoteViews
-
-    abstract val isCircleFamily: Boolean
 
     override fun onAppWidgetOptionsChanged(
         context: Context,
@@ -83,22 +81,73 @@ abstract class BaseWidgetProvider : AppWidgetProvider() {
         for (appWidgetId in appWidgetIds) {
             val views = buildViews(context, appWidgetManager, appWidgetId, state, actions)
             appWidgetManager.updateAppWidget(appWidgetId, views)
+        }
 
-            val artUri = state.bestArtworkUri
-            if (artUri != null && (artUri != cachedArtworkUri || cachedArtworkBitmap == null)) {
-                loadArtworkAndRefresh(context, appWidgetManager, appWidgetId, state, actions, isCircleFamily)
+        val artUri = state.bestArtworkUri
+        if (artUri != null && artUri != cachedArtworkUri && artUri != failedArtworkUri) {
+            loadArtworkAndRefresh(context, artUri)
+        }
+    }
+
+    private fun loadArtworkAndRefresh(
+        context: Context,
+        uri: Uri
+    ) {
+        if (loadingArtworkUri == uri) return
+        loadingArtworkUri = uri
+        coroutineScope.launch {
+            try {
+                val bitmap: Bitmap? = try {
+                    val request = ImageRequest.Builder(context)
+                        .data(uri)
+                        .size(256, 256)
+                        .allowHardware(false)
+                        .build()
+                    val result = context.imageLoader.execute(request)
+                    (result.image as? BitmapImage)?.bitmap
+                        ?: result.image?.asDrawable(context.resources)?.toBitmap()
+                } catch (t: Throwable) {
+                    Log.w(TAG, "Artwork load failed: $uri", t)
+                    null
+                } finally {
+                    withContext(Dispatchers.Main) {
+                        loadingArtworkUri = null
+                    }
+                }
+
+                withContext(Dispatchers.Main) {
+                    val currentState = buildCurrentPlaybackState(context)
+                    if (currentState.bestArtworkUri == uri) {
+                        if (bitmap != null) {
+                            cachedArtworkUri = uri
+                            cachedArtworkBitmap = bitmap
+                            failedArtworkUri = null
+                            DesktopWidgetManager.updateAllWidgets(context)
+                        } else {
+                            failedArtworkUri = uri
+                        }
+                    }
+                }
+            } catch (t: Throwable) {
+                Log.w(TAG, "Error in widget artwork loading workflow", t)
             }
         }
     }
 
     companion object {
+        private const val TAG = "BaseWidgetProvider"
+
         const val ACTION_REPEAT = "org.akanework.gramophone.ACTION_CARD_WIDGET_REPEAT"
         const val ACTION_SHUFFLE = "org.akanework.gramophone.ACTION_CARD_WIDGET_SHUFFLE"
         const val ACTION_FAVORITE = "org.akanework.gramophone.ACTION_CARD_WIDGET_FAVORITE"
-
-        private val coroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        private val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
+            Log.w(TAG, "Uncaught exception in widget coroutine scope", throwable)
+        }
+        private val coroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob() + coroutineExceptionHandler)
         private var cachedArtworkUri: Uri? = null
         private var cachedArtworkBitmap: Bitmap? = null
+        private var loadingArtworkUri: Uri? = null
+        private var failedArtworkUri: Uri? = null
 
         fun buildCurrentPlaybackState(context: Context): CardWidgetPlaybackState {
             val service = GramophonePlaybackService.instanceForWidgetAndLyricsOnly
@@ -154,17 +203,29 @@ abstract class BaseWidgetProvider : AppWidgetProvider() {
             ).setStartAsForegroundService(!state.isPlaying)
                 .build()
 
-            val prevPi = PlaybackPendingIntentBuilder(
-                context,
-                Player.COMMAND_SEEK_TO_PREVIOUS,
-                GramophonePlaybackService::class.java
-            ).build()
+            // Seek previous / next via PlaybackPendingIntentBuilder only uses startService on API 26+
+            // which is rejected by Android when the app is in background/dead ("Background start not allowed").
+            // When the service is not active, fallback to openAppPi so user click smoothly opens the app.
+            val isServiceAlive = GramophonePlaybackService.instanceForWidgetAndLyricsOnly != null
+            val prevPi = if (isServiceAlive) {
+                PlaybackPendingIntentBuilder(
+                    context,
+                    Player.COMMAND_SEEK_TO_PREVIOUS,
+                    GramophonePlaybackService::class.java
+                ).build()
+            } else {
+                openAppPi
+            }
 
-            val nextPi = PlaybackPendingIntentBuilder(
-                context,
-                Player.COMMAND_SEEK_TO_NEXT,
-                GramophonePlaybackService::class.java
-            ).build()
+            val nextPi = if (isServiceAlive) {
+                PlaybackPendingIntentBuilder(
+                    context,
+                    Player.COMMAND_SEEK_TO_NEXT,
+                    GramophonePlaybackService::class.java
+                ).build()
+            } else {
+                openAppPi
+            }
 
             val favoritePi = buildBroadcastPendingIntent(context, ACTION_FAVORITE, 105)
             val repeatPi = buildBroadcastPendingIntent(context, ACTION_REPEAT, 106)
@@ -195,63 +256,6 @@ abstract class BaseWidgetProvider : AppWidgetProvider() {
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
-        }
-
-        private fun loadArtworkAndRefresh(
-            context: Context,
-            appWidgetManager: AppWidgetManager,
-            appWidgetId: Int,
-            state: CardWidgetPlaybackState,
-            actions: CardWidgetActions,
-            isCircle: Boolean
-        ) {
-            val uri = state.bestArtworkUri ?: return
-            coroutineScope.launch {
-                val request = ImageRequest.Builder(context)
-                    .data(uri)
-                    .size(256, 256)
-                    .allowHardware(false)
-                    .build()
-                val result = context.imageLoader.execute(request)
-                if (!isActive) return@launch
-                val bitmap: Bitmap? = (result.image as? BitmapImage)?.bitmap
-                    ?: result.image?.asDrawable(context.resources)?.toBitmap()
-
-                withContext(Dispatchers.Main) {
-                    cachedArtworkUri = uri
-                    cachedArtworkBitmap = bitmap
-                    val updatedState = state.copy(artworkBitmap = bitmap)
-                    val views = if (isCircle) {
-                        CardWidgetViewsBuilder.buildCircleResponsiveRemoteViews(
-                            context, appWidgetManager, appWidgetId, updatedState, actions
-                        )
-                    } else {
-                        CardWidgetViewsBuilder.buildCardResponsiveRemoteViews(
-                            context, appWidgetManager, appWidgetId, updatedState, actions
-                        )
-                    }
-                    try {
-                        appWidgetManager.updateAppWidget(appWidgetId, views)
-                    } catch (_: Exception) {
-                        // ignore if widget was removed in the meantime
-                    }
-                }
-            }
-        }
-
-        fun updateProvider(context: Context, providerClass: Class<out BaseWidgetProvider>) {
-            val awm = AppWidgetManager.getInstance(context) ?: return
-            val ids = awm.getAppWidgetIds(ComponentName(context, providerClass))
-            if (ids.isNotEmpty()) {
-                val providerInstance = providerClass.getDeclaredConstructor().newInstance()
-                providerInstance.onUpdate(context, awm, ids)
-            }
-        }
-
-        fun updateAllWidgets(context: Context) {
-            savePlaybackSnapshot(context)
-            updateProvider(context, CardWidgetProvider::class.java)
-            updateProvider(context, CircleWidgetProvider::class.java)
         }
     }
 }

@@ -27,8 +27,6 @@ import org.akanework.gramophone.ui.widget.CardWidgetViewsBuilder
 
 class CircleWidgetProvider : BaseWidgetProvider() {
 
-    override val isCircleFamily: Boolean = true
-
     override fun buildViews(
         context: Context,
         appWidgetManager: AppWidgetManager,

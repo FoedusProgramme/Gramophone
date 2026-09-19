@@ -28,10 +28,9 @@ import org.akanework.gramophone.ui.widget.CardWidgetActions
 import org.akanework.gramophone.ui.widget.CardWidgetPlaybackState
 import org.akanework.gramophone.ui.widget.CardWidgetStore
 import org.akanework.gramophone.ui.widget.CardWidgetViewsBuilder
+import org.akanework.gramophone.ui.widget.DesktopWidgetManager
 
 class CardWidgetProvider : BaseWidgetProvider() {
-
-    override val isCircleFamily: Boolean = false
 
     override fun buildViews(
         context: Context,
@@ -52,31 +51,31 @@ class CardWidgetProvider : BaseWidgetProvider() {
     }
 
     private fun handleWidgetAction(context: Context, action: String) {
-        val service = GramophonePlaybackService.instanceForWidgetAndLyricsOnly ?: return
-        val player = service.endedWorkaroundPlayer ?: return
-        when (action) {
-            ACTION_REPEAT -> {
-                player.repeatMode = when (player.repeatMode) {
-                    Player.REPEAT_MODE_OFF -> Player.REPEAT_MODE_ALL
-                    Player.REPEAT_MODE_ALL -> Player.REPEAT_MODE_ONE
-                    Player.REPEAT_MODE_ONE -> Player.REPEAT_MODE_OFF
-                    else -> Player.REPEAT_MODE_OFF
+        val service = GramophonePlaybackService.instanceForWidgetAndLyricsOnly
+        val player = service?.endedWorkaroundPlayer
+        if (service != null && player != null) {
+            when (action) {
+                ACTION_REPEAT -> {
+                    player.repeatMode = nextRepeatMode(player.repeatMode)
                 }
-                updateAllWidgets(context)
-            }
-            ACTION_SHUFFLE -> {
-                player.shuffleModeEnabled = !player.shuffleModeEnabled
-                updateAllWidgets(context)
-            }
-            ACTION_FAVORITE -> {
-                service.toggleCurrentItemFavorite()
+                ACTION_SHUFFLE -> {
+                    player.shuffleModeEnabled = !player.shuffleModeEnabled
+                }
+                ACTION_FAVORITE -> {
+                    service.toggleCurrentItemFavorite()
+                }
             }
         }
     }
 
     companion object {
-        fun updateAllWidgets(context: Context) = BaseWidgetProvider.updateAllWidgets(context)
-        fun savePlaybackSnapshot(context: Context) = BaseWidgetProvider.savePlaybackSnapshot(context)
+
+        fun nextRepeatMode(currentMode: Int): Int = when (currentMode) {
+            Player.REPEAT_MODE_OFF -> Player.REPEAT_MODE_ALL
+            Player.REPEAT_MODE_ALL -> Player.REPEAT_MODE_ONE
+            Player.REPEAT_MODE_ONE -> Player.REPEAT_MODE_OFF
+            else -> Player.REPEAT_MODE_OFF
+        }
     }
 }
 

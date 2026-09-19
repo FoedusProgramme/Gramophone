@@ -22,6 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
+            android:minHeight="48dp"
             android:background="@drawable/widget_card_cover_background"
             android:clipToOutline="true"
             android:contentDescription="@string/album_cover"
@@ -36,7 +37,7 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <View
+            <ImageView
                 android:id="@+id/widget_title_start_spacer"
                 android:layout_width="40dp"
                 android:layout_height="1dp"

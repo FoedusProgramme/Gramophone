@@ -23,15 +23,77 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.os.Build
 import android.util.SizeF
+import android.view.Gravity
 import android.view.View
 import android.widget.RemoteViews
-import androidx.core.content.ContextCompat
 import androidx.media3.common.Player
 import androidx.preference.PreferenceManager
 import org.akanework.gramophone.R
-import org.akanework.gramophone.logic.dpToPx
+import org.akanework.gramophone.logic.getBooleanStrict
+
+enum class CardLayoutVariant(val minWidth: Float, val minHeight: Float) {
+    LARGE_WIDE(220f, 180f),
+    LARGE(180f, 180f),
+    MEDIUM_WIDE(220f, 75f),
+    MEDIUM(180f, 75f),
+    CARD(180f, 50f)
+}
+
+enum class CircleLayoutVariant(val minWidth: Float, val minHeight: Float) {
+    CIRCLE(110f, 110f),
+    PILL(110f, 56f),
+    PILL_SINGLE(56f, 56f)
+}
 
 object CardWidgetViewsBuilder {
+
+    const val PREF_CENTERED_TITLE = "centered_title"
+
+    fun selectCardVariant(widthDp: Int, heightDp: Int): CardLayoutVariant =
+        CardLayoutVariant.entries
+            .filter { widthDp >= it.minWidth && heightDp >= it.minHeight }
+            .maxByOrNull { it.minWidth * it.minHeight }
+            ?: CardLayoutVariant.CARD
+
+    fun selectCircleVariant(widthDp: Int, heightDp: Int): CircleLayoutVariant =
+        CircleLayoutVariant.entries
+            .filter { widthDp >= it.minWidth && heightDp >= it.minHeight }
+            .maxByOrNull { it.minWidth * it.minHeight }
+            ?: CircleLayoutVariant.PILL_SINGLE
+
+    fun getCardVariantViewsMap(
+        context: Context,
+        state: CardWidgetPlaybackState,
+        actions: CardWidgetActions,
+        colors: CardWidgetColors = CardWidgetColorResolver.resolve(context, state.artworkBitmap)
+    ): Map<CardLayoutVariant, RemoteViews> {
+        val card = buildCardViews(context, state, actions, colors, showPrevious = true, showNext = true)
+        val medium = buildMediumViews(context, state, actions, colors, showMoreButtons = false)
+        val mediumWide = buildMediumViews(context, state, actions, colors, showMoreButtons = true)
+        val large = buildLargeViews(context, state, actions, colors, showMoreButtons = false)
+        val largeWide = buildLargeViews(context, state, actions, colors, showMoreButtons = true)
+
+        return mapOf(
+            CardLayoutVariant.LARGE_WIDE to largeWide,
+            CardLayoutVariant.LARGE to large,
+            CardLayoutVariant.MEDIUM_WIDE to mediumWide,
+            CardLayoutVariant.MEDIUM to medium,
+            CardLayoutVariant.CARD to card
+        )
+    }
+
+    fun getCircleVariantViewsMap(
+        context: Context,
+        state: CardWidgetPlaybackState,
+        actions: CardWidgetActions,
+        colors: CardWidgetColors = CardWidgetColorResolver.resolve(context, state.artworkBitmap)
+    ): Map<CircleLayoutVariant, RemoteViews> {
+        return mapOf(
+            CircleLayoutVariant.CIRCLE to buildCircleViews(context, state, actions, colors),
+            CircleLayoutVariant.PILL to buildPillViews(context, state, actions, colors, showCover = true),
+            CircleLayoutVariant.PILL_SINGLE to buildPillViews(context, state, actions, colors, showCover = false)
+        )
+    }
 
     fun buildCardResponsiveRemoteViews(
         context: Context,
@@ -40,22 +102,15 @@ object CardWidgetViewsBuilder {
         state: CardWidgetPlaybackState,
         actions: CardWidgetActions
     ): RemoteViews {
-        val card = buildCardViews(context, state, actions, showPrevious = true, showNext = true)
-        val medium = buildMediumViews(context, state, actions, showMoreButtons = true)
-        val large = buildLargeViews(context, state, actions, showMoreButtons = true)
-        val largeWide = buildLargeViews(context, state, actions, showMoreButtons = true)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val viewMapping = mapOf(
-                SizeF(120f, 50f) to card,
-                SizeF(180f, 75f) to medium,
-                SizeF(180f, 130f) to large,
-                SizeF(250f, 130f) to largeWide
-            )
-            return RemoteViews(viewMapping)
-        } else {
-            return selectPreSCardLayout(appWidgetManager, appWidgetId, card, medium, large, largeWide)
-        }
+        val colors = CardWidgetColorResolver.resolve(context, state.artworkBitmap)
+        val variantMap = getCardVariantViewsMap(context, state, actions, colors)
+        return buildResponsiveRemoteViews(
+            appWidgetManager,
+            appWidgetId,
+            variantMap,
+            sizeOf = { SizeF(it.minWidth, it.minHeight) },
+            selector = ::selectCardVariant
+        )
     }
 
     fun buildCircleResponsiveRemoteViews(
@@ -65,65 +120,36 @@ object CardWidgetViewsBuilder {
         state: CardWidgetPlaybackState,
         actions: CardWidgetActions
     ): RemoteViews {
-        val pillSingle = buildPillViews(context, state, actions, showCover = false)
-        val pill = buildPillViews(context, state, actions, showCover = true)
-        val circle = buildCircleViews(context, state, actions)
+        val colors = CardWidgetColorResolver.resolve(context, state.artworkBitmap)
+        val variantMap = getCircleVariantViewsMap(context, state, actions, colors)
+        return buildResponsiveRemoteViews(
+            appWidgetManager,
+            appWidgetId,
+            variantMap,
+            sizeOf = { SizeF(it.minWidth, it.minHeight) },
+            selector = ::selectCircleVariant
+        )
+    }
 
+    private fun <V> buildResponsiveRemoteViews(
+        appWidgetManager: AppWidgetManager,
+        appWidgetId: Int,
+        variantMap: Map<V, RemoteViews>,
+        sizeOf: (V) -> SizeF,
+        selector: (minWidth: Int, minHeight: Int) -> V
+    ): RemoteViews {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val viewMapping = mapOf(
-                SizeF(40f, 40f) to pillSingle,
-                SizeF(100f, 40f) to pill,
-                SizeF(100f, 95f) to circle
-            )
+            val viewMapping = variantMap.mapKeys { (variant, _) -> sizeOf(variant) }
             return RemoteViews(viewMapping)
         } else {
-            return selectPreSCircleLayout(appWidgetManager, appWidgetId, pillSingle, pill, circle)
-        }
-    }
-
-    private fun selectPreSCardLayout(
-        appWidgetManager: AppWidgetManager,
-        appWidgetId: Int,
-        card: RemoteViews,
-        medium: RemoteViews,
-        large: RemoteViews,
-        largeWide: RemoteViews
-    ): RemoteViews {
-        val options = try {
-            appWidgetManager.getAppWidgetOptions(appWidgetId)
-        } catch (_: Exception) {
-            null
-        }
-        val minWidth = options?.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, 0) ?: 0
-        val minHeight = options?.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT, 0) ?: 0
-
-        return when {
-            minHeight < 95 && minWidth in 1..179 -> card
-            minHeight < 95 -> medium
-            minWidth >= 240 -> largeWide
-            else -> large
-        }
-    }
-
-    private fun selectPreSCircleLayout(
-        appWidgetManager: AppWidgetManager,
-        appWidgetId: Int,
-        pillSingle: RemoteViews,
-        pill: RemoteViews,
-        circle: RemoteViews
-    ): RemoteViews {
-        val options = try {
-            appWidgetManager.getAppWidgetOptions(appWidgetId)
-        } catch (_: Exception) {
-            null
-        }
-        val minWidth = options?.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, 0) ?: 0
-        val minHeight = options?.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT, 0) ?: 0
-
-        return when {
-            minHeight < 90 && minWidth in 1..90 -> pillSingle
-            minHeight < 90 -> pill
-            else -> circle
+            val options = try {
+                appWidgetManager.getAppWidgetOptions(appWidgetId)
+            } catch (_: Exception) {
+                null
+            }
+            val minWidth = options?.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, 0) ?: 0
+            val minHeight = options?.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT, 0) ?: 0
+            return variantMap.getValue(selector(minWidth, minHeight))
         }
     }
 
@@ -131,16 +157,25 @@ object CardWidgetViewsBuilder {
         context: Context,
         state: CardWidgetPlaybackState,
         actions: CardWidgetActions,
+        colors: CardWidgetColors = CardWidgetColorResolver.resolve(context, state.artworkBitmap),
         showCover: Boolean = true
     ): RemoteViews {
         return RemoteViews(context.packageName, R.layout.card_widget_pill).apply {
-            applyPlayPauseControl(this, context, state.isPlaying, actions.playPausePi)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                setColorStateList(
+                    R.id.widget_card_bg,
+                    "setBackgroundTintList",
+                    android.content.res.ColorStateList.valueOf(colors.background)
+                )
+            }
+            setInt(R.id.widget_play_pause_bg, "setColorFilter", colors.primary)
+            applyPlayPauseControl(this, context, state.isPlaying, actions.playPausePi, iconColor = colors.onPrimary)
             setOnClickPendingIntent(R.id.widget_card_root, actions.openAppPi)
             setOnClickPendingIntent(R.id.widget_cover, actions.openAppPi)
 
             if (showCover) {
                 setViewVisibility(R.id.widget_cover, View.VISIBLE)
-                applyArtwork(this, state.artworkBitmap, R.id.widget_cover, isCircular = true)
+                applyArtwork(this, state.artworkBitmap, R.id.widget_cover)
             } else {
                 setViewVisibility(R.id.widget_cover, View.GONE)
             }
@@ -150,13 +185,15 @@ object CardWidgetViewsBuilder {
     fun buildCircleViews(
         context: Context,
         state: CardWidgetPlaybackState,
-        actions: CardWidgetActions
+        actions: CardWidgetActions,
+        colors: CardWidgetColors = CardWidgetColorResolver.resolve(context, state.artworkBitmap)
     ): RemoteViews {
         return RemoteViews(context.packageName, R.layout.card_widget_circle).apply {
-            applyPlayPauseControl(this, context, state.isPlaying, actions.playPausePi)
+            setInt(R.id.widget_play_pause_bg, "setColorFilter", colors.primary)
+            applyPlayPauseControl(this, context, state.isPlaying, actions.playPausePi, iconColor = colors.onPrimary)
             setOnClickPendingIntent(R.id.widget_card_root, actions.openAppPi)
             setOnClickPendingIntent(R.id.widget_cover, actions.openAppPi)
-            applyArtwork(this, state.artworkBitmap, R.id.widget_cover, isCircular = true)
+            applyArtwork(this, state.artworkBitmap, R.id.widget_cover)
         }
     }
 
@@ -164,19 +201,22 @@ object CardWidgetViewsBuilder {
         context: Context,
         state: CardWidgetPlaybackState,
         actions: CardWidgetActions,
+        colors: CardWidgetColors = CardWidgetColorResolver.resolve(context, state.artworkBitmap),
         showPrevious: Boolean = true,
         showNext: Boolean = true
     ): RemoteViews {
         return RemoteViews(context.packageName, R.layout.card_widget).apply {
+            setInt(R.id.widget_card_bg, "setColorFilter", colors.background)
+            setTextColor(R.id.widget_title, colors.onSurface)
+            setTextColor(R.id.widget_artist, colors.onSurfaceVariant)
             setTextViewText(R.id.widget_title, state.title)
             setTextViewText(R.id.widget_artist, state.artist)
-            applyPlayPauseControl(this, context, state.isPlaying, actions.playPausePi)
+            applyPlayPauseControl(this, context, state.isPlaying, actions.playPausePi, iconColor = colors.primary)
             setOnClickPendingIntent(R.id.widget_card_root, actions.openAppPi)
             setOnClickPendingIntent(R.id.widget_cover, actions.openAppPi)
 
-            applyFavoriteControl(this, context, state.isFavorite, actions.favoritePi)
-            applyNavControls(this, showPrevious, actions.prevPi, showNext, actions.nextPi)
-            applyArtwork(this, state.artworkBitmap, R.id.widget_cover, cornerRadiusPx = 12.dpToPx(context).toFloat())
+            applyNavControls(this, showPrevious, actions.prevPi, showNext, actions.nextPi, onSurfaceColor = colors.onSurface)
+            applyArtwork(this, state.artworkBitmap, R.id.widget_cover)
         }
     }
 
@@ -184,21 +224,25 @@ object CardWidgetViewsBuilder {
         context: Context,
         state: CardWidgetPlaybackState,
         actions: CardWidgetActions,
+        colors: CardWidgetColors = CardWidgetColorResolver.resolve(context, state.artworkBitmap),
         showMoreButtons: Boolean,
         showPrevious: Boolean = true,
         showNext: Boolean = true
     ): RemoteViews {
         return RemoteViews(context.packageName, R.layout.card_widget_medium).apply {
+            setInt(R.id.widget_card_bg, "setColorFilter", colors.background)
+            setTextColor(R.id.widget_title, colors.onSurface)
+            setTextColor(R.id.widget_artist, colors.onSurfaceVariant)
             setTextViewText(R.id.widget_title, state.title)
             setTextViewText(R.id.widget_artist, state.artist)
-            applyPlayPauseControl(this, context, state.isPlaying, actions.playPausePi)
+            applyPlayPauseControl(this, context, state.isPlaying, actions.playPausePi, iconColor = colors.primary)
             setOnClickPendingIntent(R.id.widget_card_root, actions.openAppPi)
             setOnClickPendingIntent(R.id.widget_cover, actions.openAppPi)
 
-            applyFavoriteControl(this, context, state.isFavorite, actions.favoritePi)
-            applyRepeatAndShuffleControls(this, context, showMoreButtons, state.repeatMode, actions.repeatPi, state.isShuffle, actions.shufflePi)
-            applyNavControls(this, showPrevious, actions.prevPi, showNext, actions.nextPi)
-            applyArtwork(this, state.artworkBitmap, R.id.widget_cover, cornerRadiusPx = 12.dpToPx(context).toFloat())
+            applyFavoriteControl(this, context, state.isFavorite, actions.favoritePi, colors)
+            applyRepeatAndShuffleControls(this, context, showMoreButtons, state.repeatMode, actions.repeatPi, state.isShuffle, actions.shufflePi, colors)
+            applyNavControls(this, showPrevious, actions.prevPi, showNext, actions.nextPi, onSurfaceColor = colors.onSurface)
+            applyArtwork(this, state.artworkBitmap, R.id.widget_cover)
         }
     }
 
@@ -206,28 +250,34 @@ object CardWidgetViewsBuilder {
         context: Context,
         state: CardWidgetPlaybackState,
         actions: CardWidgetActions,
+        colors: CardWidgetColors = CardWidgetColorResolver.resolve(context, state.artworkBitmap),
         showMoreButtons: Boolean,
         showPrevious: Boolean = true,
         showNext: Boolean = true
     ): RemoteViews {
         return RemoteViews(context.packageName, R.layout.card_widget_large).apply {
+            setInt(R.id.widget_card_bg, "setColorFilter", colors.background)
+            setTextColor(R.id.widget_title, colors.onSurface)
+            setTextColor(R.id.widget_artist, colors.onSurfaceVariant)
             setTextViewText(R.id.widget_title, state.title)
             setTextViewText(R.id.widget_artist, state.artist)
             val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-            val isCentered = prefs.getBoolean("widget_centered_title", prefs.getBoolean("centered_title", false))
-            // Note: TextView.setGravity(int) is NOT annotated with @RemotableViewMethod in Android SDK.
-            // Calling setInt(..., "setGravity", ...) on TextView causes ActionException (VIEW_MODE_ERROR in AppWidgetHostView).
-            // Centering is achieved geometrically via widget_title_start_spacer mirroring widget_favorite.
+            val isCentered = prefs.getBooleanStrict(PREF_CENTERED_TITLE, false)
+            // TextView.setGravity(int) is an allowed @RemotableViewMethod in Android SDK (TextView.java:5962).
+            // Together with the geometric spacer on the left, it centers both the container bounds and text glyphs.
             setViewVisibility(R.id.widget_title_start_spacer, if (isCentered) View.VISIBLE else View.GONE)
+            val gravity = if (isCentered) Gravity.CENTER_HORIZONTAL else Gravity.START
+            setInt(R.id.widget_title, "setGravity", gravity)
+            setInt(R.id.widget_artist, "setGravity", gravity)
 
-            applyPlayPauseControl(this, context, state.isPlaying, actions.playPausePi)
+            applyPlayPauseControl(this, context, state.isPlaying, actions.playPausePi, iconColor = colors.primary)
             setOnClickPendingIntent(R.id.widget_card_root, actions.openAppPi)
             setOnClickPendingIntent(R.id.widget_cover, actions.openAppPi)
 
-            applyFavoriteControl(this, context, state.isFavorite, actions.favoritePi)
-            applyRepeatAndShuffleControls(this, context, showMoreButtons, state.repeatMode, actions.repeatPi, state.isShuffle, actions.shufflePi)
-            applyNavControls(this, showPrevious, actions.prevPi, showNext, actions.nextPi)
-            applyArtwork(this, state.artworkBitmap, R.id.widget_cover, cornerRadiusPx = 12.dpToPx(context).toFloat())
+            applyFavoriteControl(this, context, state.isFavorite, actions.favoritePi, colors)
+            applyRepeatAndShuffleControls(this, context, showMoreButtons, state.repeatMode, actions.repeatPi, state.isShuffle, actions.shufflePi, colors)
+            applyNavControls(this, showPrevious, actions.prevPi, showNext, actions.nextPi, onSurfaceColor = colors.onSurface)
+            applyArtwork(this, state.artworkBitmap, R.id.widget_cover)
         }
     }
 
@@ -235,12 +285,16 @@ object CardWidgetViewsBuilder {
         views: RemoteViews,
         context: Context,
         isPlaying: Boolean,
-        playPausePi: PendingIntent
+        playPausePi: PendingIntent,
+        iconColor: Int? = null
     ) {
         views.setImageViewResource(
             R.id.widget_play_pause,
             if (isPlaying) R.drawable.ic_pause_filled else R.drawable.ic_play_arrow_filled
         )
+        if (iconColor != null) {
+            views.setInt(R.id.widget_play_pause, "setColorFilter", iconColor)
+        }
         views.setContentDescription(
             R.id.widget_play_pause,
             context.getString(if (isPlaying) R.string.pause else R.string.play)
@@ -252,17 +306,15 @@ object CardWidgetViewsBuilder {
         views: RemoteViews,
         context: Context,
         isFavorite: Boolean,
-        favoritePi: PendingIntent
+        favoritePi: PendingIntent,
+        colors: CardWidgetColors
     ) {
         views.setImageViewResource(
             R.id.widget_favorite,
             if (isFavorite) R.drawable.ic_favorite_filled else R.drawable.ic_favorite
         )
         views.setInt(R.id.widget_favorite, "setImageAlpha", 255)
-        val color = ContextCompat.getColor(
-            context,
-            if (isFavorite) R.color.widget_primary else R.color.widget_on_surface
-        )
+        val color = if (isFavorite) colors.primary else colors.onSurface
         views.setInt(R.id.widget_favorite, "setColorFilter", color)
         views.setContentDescription(
             R.id.widget_favorite,
@@ -278,7 +330,8 @@ object CardWidgetViewsBuilder {
         repeatMode: Int,
         repeatPi: PendingIntent?,
         isShuffle: Boolean,
-        shufflePi: PendingIntent?
+        shufflePi: PendingIntent?,
+        colors: CardWidgetColors
     ) {
         if (showMore && repeatPi != null && shufflePi != null) {
             views.setViewVisibility(R.id.widget_repeat, View.VISIBLE)
@@ -292,20 +345,14 @@ object CardWidgetViewsBuilder {
             views.setImageViewResource(R.id.widget_repeat, repeatIcon)
             val isRepeatActive = repeatMode != Player.REPEAT_MODE_OFF
             views.setInt(R.id.widget_repeat, "setImageAlpha", if (isRepeatActive) 255 else 100)
-            val repeatColor = ContextCompat.getColor(
-                context,
-                if (isRepeatActive) R.color.widget_primary else R.color.widget_on_surface
-            )
+            val repeatColor = if (isRepeatActive) colors.primary else colors.onSurface
             views.setInt(R.id.widget_repeat, "setColorFilter", repeatColor)
             views.setContentDescription(R.id.widget_repeat, context.getString(R.string.repeat_mode))
             views.setOnClickPendingIntent(R.id.widget_repeat, repeatPi)
 
             views.setImageViewResource(R.id.widget_shuffle, R.drawable.ic_shuffle)
             views.setInt(R.id.widget_shuffle, "setImageAlpha", if (isShuffle) 255 else 100)
-            val shuffleColor = ContextCompat.getColor(
-                context,
-                if (isShuffle) R.color.widget_primary else R.color.widget_on_surface
-            )
+            val shuffleColor = if (isShuffle) colors.primary else colors.onSurface
             views.setInt(R.id.widget_shuffle, "setColorFilter", shuffleColor)
             views.setContentDescription(R.id.widget_shuffle, context.getString(R.string.shuffle))
             views.setOnClickPendingIntent(R.id.widget_shuffle, shufflePi)
@@ -318,17 +365,10 @@ object CardWidgetViewsBuilder {
     private fun applyArtwork(
         views: RemoteViews,
         bitmap: Bitmap?,
-        viewId: Int,
-        cornerRadiusPx: Float = 0f,
-        isCircular: Boolean = false
+        viewId: Int
     ) {
         if (bitmap != null) {
-            val processed = if (isCircular) {
-                CardWidgetBitmapUtils.getCircularBitmap(bitmap)
-            } else {
-                CardWidgetBitmapUtils.getRoundedBitmap(bitmap, cornerRadiusPx)
-            }
-            views.setImageViewBitmap(viewId, processed)
+            views.setImageViewBitmap(viewId, bitmap)
         } else {
             views.setImageViewResource(viewId, R.drawable.ic_default_cover)
         }
@@ -339,10 +379,14 @@ object CardWidgetViewsBuilder {
         showPrevious: Boolean,
         prevPi: PendingIntent,
         showNext: Boolean,
-        nextPi: PendingIntent
+        nextPi: PendingIntent,
+        onSurfaceColor: Int? = null
     ) {
         if (showPrevious) {
             views.setViewVisibility(R.id.widget_previous, View.VISIBLE)
+            if (onSurfaceColor != null) {
+                views.setInt(R.id.widget_previous, "setColorFilter", onSurfaceColor)
+            }
             views.setOnClickPendingIntent(R.id.widget_previous, prevPi)
         } else {
             views.setViewVisibility(R.id.widget_previous, View.GONE)
@@ -350,6 +394,9 @@ object CardWidgetViewsBuilder {
 
         if (showNext) {
             views.setViewVisibility(R.id.widget_next, View.VISIBLE)
+            if (onSurfaceColor != null) {
+                views.setInt(R.id.widget_next, "setColorFilter", onSurfaceColor)
+            }
             views.setOnClickPendingIntent(R.id.widget_next, nextPi)
         } else {
             views.setViewVisibility(R.id.widget_next, View.GONE)

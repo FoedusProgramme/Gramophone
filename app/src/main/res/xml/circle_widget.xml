@@ -4,10 +4,11 @@
     android:initialLayout="@layout/card_widget_circle"
     android:minWidth="90dp"
     android:minHeight="90dp"
-    android:minResizeWidth="40dp"
-    android:minResizeHeight="40dp"
+    android:minResizeWidth="56dp"
+    android:minResizeHeight="56dp"
     android:resizeMode="horizontal|vertical"
     android:targetCellWidth="2"
     android:targetCellHeight="2"
+    android:previewImage="@drawable/circle_widget_previewimg"
     android:updatePeriodMillis="0"
     android:widgetCategory="home_screen" />

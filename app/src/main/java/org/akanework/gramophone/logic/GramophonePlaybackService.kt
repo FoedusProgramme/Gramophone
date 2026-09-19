@@ -137,10 +137,10 @@ import org.akanework.gramophone.logic.utils.exoplayer.GramophoneExtractorsFactor
 import org.akanework.gramophone.logic.utils.exoplayer.GramophoneMediaSourceFactory
 import org.akanework.gramophone.logic.utils.exoplayer.GramophoneRenderFactory
 import org.akanework.gramophone.ui.AudioPreviewActivity
-import org.akanework.gramophone.ui.CardWidgetProvider
 import org.akanework.gramophone.ui.LyricWidgetProvider
 import org.akanework.gramophone.ui.MainActivity
 import org.akanework.gramophone.ui.widget.BaseWidgetProvider
+import org.akanework.gramophone.ui.widget.DesktopWidgetManager
 import org.akanework.gramophone.ui.fragments.compose.MqState.Companion.CLIENT_QB_REFRESH_ALL
 import org.akanework.gramophone.ui.fragments.compose.MqState.Companion.CLIENT_QB_REFRESH_CLEAR
 import org.akanework.gramophone.ui.fragments.compose.MqState.Companion.CLIENT_QB_REFRESH_ITEM
@@ -844,7 +844,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         mediaSession = null
         broadcastAudioSessionClose()
         LyricWidgetProvider.update(this)
-        BaseWidgetProvider.updateAllWidgets(this)
+        DesktopWidgetManager.updateAllWidgets(this)
         internalPlaybackThread.quitSafely()
         super.onDestroy()
         Log.i(TAG, "-onDestroy()")
@@ -1634,7 +1634,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
             }
         }
 
-        CardWidgetProvider.updateAllWidgets(this)
+        DesktopWidgetManager.refreshFromPlayback(this)
         lastPlayedManager.save()
     }
 
@@ -1650,12 +1650,12 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
 
     override fun onMediaMetadataChanged(mediaMetadata: MediaMetadata) {
         refreshMediaButtonCustomLayout()
-        CardWidgetProvider.updateAllWidgets(this)
+        DesktopWidgetManager.refreshFromPlayback(this)
     }
 
     override fun onIsPlayingChanged(isPlaying: Boolean) {
         scheduleSendingLyrics(false)
-        CardWidgetProvider.updateAllWidgets(this)
+        DesktopWidgetManager.updateAllWidgets(this)
         lastPlayedManager.save()
     }
 
@@ -1697,7 +1697,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
     }
     override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
         refreshMediaButtonCustomLayout()
-        CardWidgetProvider.updateAllWidgets(this)
+        DesktopWidgetManager.refreshFromPlayback(this)
         if (needsMissingOnDestroyCallWorkarounds()) {
             handler.post { lastPlayedManager.save() }
         }
@@ -1705,7 +1705,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
 
     override fun onRepeatModeChanged(repeatMode: Int) {
         refreshMediaButtonCustomLayout()
-        CardWidgetProvider.updateAllWidgets(this)
+        DesktopWidgetManager.refreshFromPlayback(this)
         if (needsMissingOnDestroyCallWorkarounds()) {
             handler.post { lastPlayedManager.save() }
         }

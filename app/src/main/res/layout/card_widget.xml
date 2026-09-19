@@ -23,10 +23,8 @@
 
         <ImageView
             android:id="@+id/widget_cover"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:maxWidth="48dp"
-            android:adjustViewBounds="true"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:background="@drawable/widget_card_cover_background"
             android:clipToOutline="true"
             android:contentDescription="@string/album_cover"
@@ -39,7 +37,6 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="2dp"
             android:layout_weight="1"
-            android:minWidth="50dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -47,7 +44,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:minWidth="30dp"
                 android:gravity="center_vertical"
                 android:orientation="vertical">
 
@@ -76,34 +72,23 @@
                     android:textSize="12sp" />
             </LinearLayout>
 
-            <ImageButton
-                android:id="@+id/widget_favorite"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_marginStart="2dp"
-                android:background="?android:attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/playlist_favourite"
-                android:padding="5dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_favorite"
-                android:tint="@color/widget_on_surface" />
-
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <ImageButton
                 android:id="@+id/widget_previous"
                 android:layout_width="34dp"
-                android:layout_height="match_parent"
+                android:layout_height="34dp"
                 android:minHeight="34dp"
+                android:layout_gravity="center_vertical"
                 android:background="?android:attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/skip_previous"
-                android:padding="6dp"
+                android:padding="5dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_skip_previous_filled"
                 android:tint="@color/widget_on_surface" />
@@ -111,11 +96,12 @@
             <ImageButton
                 android:id="@+id/widget_play_pause"
                 android:layout_width="38dp"
-                android:layout_height="match_parent"
+                android:layout_height="38dp"
                 android:minHeight="38dp"
+                android:layout_gravity="center_vertical"
                 android:background="?android:attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/play"
-                android:padding="5dp"
+                android:padding="4dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_play_arrow_filled"
                 android:tint="@color/widget_primary" />
@@ -123,11 +109,12 @@
             <ImageButton
                 android:id="@+id/widget_next"
                 android:layout_width="34dp"
-                android:layout_height="match_parent"
+                android:layout_height="34dp"
                 android:minHeight="34dp"
+                android:layout_gravity="center_vertical"
                 android:background="?android:attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/skip_next"
-                android:padding="6dp"
+                android:padding="5dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_skip_next_filled"
                 android:tint="@color/widget_on_surface" />

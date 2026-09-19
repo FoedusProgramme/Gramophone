@@ -1310,4 +1310,12 @@ supporting local search. This string is displayed in the search bar when using G
     <string name="loading_playlists">Loading playlists...</string>
     <!-- Option to enable reordering mode for items in a list -->
     <string name="edit_mode">Enter edit mode</string>
+    <string name="settings_preference_category_desktop_widgets">Desktop widgets</string>
+    <string name="settings_widget_theme">Widget theme</string>
+    <string name="widget_theme_wallpaper_follow_system">Wallpaper · Follow system</string>
+    <string name="widget_theme_wallpaper_dark">Wallpaper · Dark</string>
+    <string name="widget_theme_wallpaper_light">Wallpaper · Light</string>
+    <string name="widget_theme_album_art_follow_system">Album art · Follow system</string>
+    <string name="widget_theme_album_art_dark">Album art · Dark</string>
+    <string name="widget_theme_album_art_light">Album art · Light</string>
 </resources>

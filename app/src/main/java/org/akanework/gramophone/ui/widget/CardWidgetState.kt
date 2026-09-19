@@ -53,6 +53,19 @@ data class CardWidgetActions(
     val shufflePi: PendingIntent? = null
 )
 
+/**
+ * Isolated persistent store for widget playback state.
+ *
+ * NOTE ON ARCHITECTURAL INVARIANT:
+ * [CardWidgetStore] persists track metadata and playback preferences across process terminations.
+ * `isPlaying` is intentionally NOT stored to disk, and [loadPlaybackState] always returns `isPlaying = false`.
+ * This is because the saved snapshot is only consumed when [GramophonePlaybackService] is not alive
+ * (e.g. cold start, app killed, or service destroyed). In such circumstances, playback is not active.
+ *
+ * Selection Strategy:
+ * [BaseWidgetProvider.buildCurrentPlaybackState] uses the live [GramophonePlaybackService] whenever
+ * the service is running. When the service dies or before it starts, it falls back to this snapshot.
+ */
 object CardWidgetStore {
     private const val PREFS_NAME = "GramophoneCardWidget"
     private const val KEY_TITLE = "widget_last_title"
@@ -89,6 +102,7 @@ object CardWidgetStore {
         return CardWidgetPlaybackState(
             title = title,
             artist = artist,
+            // Inactive service fallback: never show "playing" if process/service is dead
             isPlaying = false,
             isFavorite = isFavorite,
             isShuffle = isShuffle,
