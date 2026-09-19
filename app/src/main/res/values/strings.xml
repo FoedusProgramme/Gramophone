@@ -374,6 +374,8 @@
     <string name="scroll_to_songs">Scroll to songs</string>
     <!-- Tooltip for play button in full player -->
     <string name="play">Play</string>
+    <!-- Tooltip for pause button in full player -->
+    <string name="pause">Pause</string>
     <!-- Tooltip for three dots button opening context menu -->
     <string name="more">More</string>
     <!-- Tooltip for x button removing song from queue/playlist -->
@@ -390,6 +392,10 @@
     <string name="settings_lyrics_ui">Enable new lyric UI</string>
     <!-- Settings toggle to enable newer lyrics rendering code. Subtext -->
     <string name="settings_lyrics_ui_summary">Experimental UI to display word-by-word lyric with advanced features</string>
+    <!-- Settings toggle to enable inline bracket word-by-word LRC parsing. Title -->
+    <string name="settings_lrc_bracket_word_sync_title">Word-by-word LRC lyrics</string>
+    <!-- Settings toggle to enable inline bracket word-by-word LRC parsing. Subtext -->
+    <string name="settings_lrc_bracket_word_sync_summary">Enable support for word-by-word LRC format with inline bracket timestamps; falls back to line-level lyrics when disabled</string>
     <!-- Settings toggle to enable showing lyrics in status bar (requires meizu phone). Title -->
     <string name="settings_status_bar_lyrics_title">Status bar lyrics</string>
     <!-- Settings toggle to enable showing lyrics in status bar (requires meizu phone). Subtext -->
@@ -400,10 +406,22 @@
     <string name="settings_notification_lyrics_summary">Display lyrics as the notification title and artist - title as subtitle</string>
     <!-- Description shown about lyric widget in Android launcher / home screen's widget selector on Android 12+ -->
     <string name="lyric_widget_description">Widget that shows lyrics of currently playing media</string>
+    <string name="card_widget_title">Card widget</string>
+    <string name="card_widget_description">Widget that provides music playback controls and track details</string>
+    <string name="circle_widget_title">Circle &amp; pill widget</string>
+    <string name="circle_widget_description">Compact circular and pill-shaped widget with playback controls</string>
     <!-- Settings toggle in behavior settings to always skip to previous track on previous button press. Title -->
     <string name="settings_always_skip_previous">Always skip to previous track</string>
     <!-- Settings toggle in behavior settings to always skip to previous track on previous button press. Subtext -->
     <string name="settings_always_skip_previous_summary">Directly switch to previous track when pressing previous button instead of seeking to start</string>
+    <!-- Settings toggle in player settings to enable subtle rotation of cookie-styled play button. Title -->
+    <string name="settings_rotate_cookie_button">Rotate play button</string>
+    <!-- Settings toggle in player settings to enable subtle rotation of cookie-styled play button. Subtext -->
+    <string name="settings_rotate_cookie_button_summary">Subtly rotate the cookie-style play/pause button while playing</string>
+    <!-- Settings toggle in player settings to enable swipe gestures on album cover to switch tracks. Title -->
+    <string name="settings_swipe_to_switch_track">Swipe to switch track</string>
+    <!-- Settings toggle in player settings to enable swipe gestures on album cover to switch tracks. Subtext -->
+    <string name="settings_swipe_to_switch_track_summary">Swipe left or right on the album cover to switch tracks</string>
     <!-- Context menu item to delete song/album/playlist -->
     <string name="delete">Delete</string>
     <!-- Dialog text to confirm user wants to delete a specific song or playlist with user defined name -->
@@ -1305,4 +1323,12 @@ supporting local search. This string is displayed in the search bar when using G
     <string name="loading_playlists">Loading playlists...</string>
     <!-- Option to enable reordering mode for items in a list -->
     <string name="edit_mode">Enter edit mode</string>
+    <string name="settings_preference_category_desktop_widgets">Desktop widgets</string>
+    <string name="settings_widget_theme">Widget theme</string>
+    <string name="widget_theme_wallpaper_follow_system">Wallpaper · Follow system</string>
+    <string name="widget_theme_wallpaper_dark">Wallpaper · Dark</string>
+    <string name="widget_theme_wallpaper_light">Wallpaper · Light</string>
+    <string name="widget_theme_album_art_follow_system">Album art · Follow system</string>
+    <string name="widget_theme_album_art_dark">Album art · Dark</string>
+    <string name="widget_theme_album_art_light">Album art · Light</string>
 </resources>

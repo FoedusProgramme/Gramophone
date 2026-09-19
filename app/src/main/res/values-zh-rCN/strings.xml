@@ -148,6 +148,7 @@
     <string name="remove">移除</string>
     <string name="more">更多</string>
     <string name="play">播放</string>
+    <string name="pause">暂停</string>
     <string name="sort">排序</string>
     <string name="play_all">全部播放</string>
     <string name="settings_preference_category_home">主屏幕</string>
@@ -157,12 +158,22 @@
     <string name="settings_status_bar_lyrics_summary">启用魅族状态栏歌词（仅适用于部分设备）</string>
     <string name="settings_lyrics_ui">启用新歌词界面</string>
     <string name="lyric_widget_description">显示当前播放媒体歌词的小部件</string>
+    <string name="card_widget_title">卡片小组件</string>
+    <string name="card_widget_description">显示专辑封面、歌曲信息并提供播放控制的卡片小组件</string>
+    <string name="circle_widget_title">圆形与胶囊小组件</string>
+    <string name="circle_widget_description">显示专辑封面与播放控制的圆形或胶囊小组件</string>
+    <string name="settings_rotate_cookie_button">旋转播放按钮</string>
+    <string name="settings_rotate_cookie_button_summary">播放时让饼干样式的播放/暂停按钮细微地转动</string>
+    <string name="settings_swipe_to_switch_track">滑动切歌</string>
+    <string name="settings_swipe_to_switch_track_summary">在播放器封面上左右滑动以切换上一曲/下一曲</string>
     <string name="scroll_to_albums">滚动到专辑</string>
     <string name="scroll_to_songs">滚动到歌曲</string>
     <string name="expand_less">关闭</string>
     <string name="skip_previous">跳到上一个</string>
     <string name="position_slider">位置滑块</string>
     <string name="settings_lyrics_ui_summary">实验性界面，显示逐字歌词，具有高级功能</string>
+    <string name="settings_lrc_bracket_word_sync_title">逐字LRC解析</string>
+    <string name="settings_lrc_bracket_word_sync_summary">支持方括号内嵌时间戳的逐字LRC歌词；关闭时仅作为行级歌词显示</string>
     <string name="back">返回</string>
     <string name="divider">分隔线</string>
     <string name="shuffle_all">全部随机播放</string>
@@ -521,4 +532,12 @@
     <string name="settings_always_skip_previous">总是跳至上一曲</string>
     <string name="settings_always_skip_previous_summary">点按上一曲按钮时直接跳至上一首曲目，而非跳回开头</string>
     <string name="reverse_order">反向顺序</string>
+    <string name="settings_preference_category_desktop_widgets">桌面小组件</string>
+    <string name="settings_widget_theme">小组件主题</string>
+    <string name="widget_theme_wallpaper_follow_system">壁纸取色 · 跟随系统</string>
+    <string name="widget_theme_wallpaper_dark">壁纸取色 · 深色</string>
+    <string name="widget_theme_wallpaper_light">壁纸取色 · 浅色</string>
+    <string name="widget_theme_album_art_follow_system">封面取色 · 跟随系统</string>
+    <string name="widget_theme_album_art_dark">封面取色 · 深色</string>
+    <string name="widget_theme_album_art_light">封面取色 · 浅色</string>
 </resources>
