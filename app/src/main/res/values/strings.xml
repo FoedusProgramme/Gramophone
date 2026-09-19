@@ -374,6 +374,8 @@
     <string name="scroll_to_songs">Scroll to songs</string>
     <!-- Tooltip for play button in full player -->
     <string name="play">Play</string>
+    <!-- Tooltip for pause button in full player -->
+    <string name="pause">Pause</string>
     <!-- Tooltip for three dots button opening context menu -->
     <string name="more">More</string>
     <!-- Tooltip for x button removing song from queue/playlist -->
@@ -408,11 +410,18 @@
     <string name="card_widget_description">Widget that provides music playback controls and track details</string>
     <string name="circle_widget_title">Circle &amp; pill widget</string>
     <string name="circle_widget_description">Compact circular and pill-shaped widget with playback controls</string>
-    <string name="pause">Pause</string>
     <!-- Settings toggle in behavior settings to always skip to previous track on previous button press. Title -->
     <string name="settings_always_skip_previous">Always skip to previous track</string>
     <!-- Settings toggle in behavior settings to always skip to previous track on previous button press. Subtext -->
     <string name="settings_always_skip_previous_summary">Directly switch to previous track when pressing previous button instead of seeking to start</string>
+    <!-- Settings toggle in player settings to enable subtle rotation of cookie-styled play button. Title -->
+    <string name="settings_rotate_cookie_button">Rotate play button</string>
+    <!-- Settings toggle in player settings to enable subtle rotation of cookie-styled play button. Subtext -->
+    <string name="settings_rotate_cookie_button_summary">Subtly rotate the cookie-style play/pause button while playing</string>
+    <!-- Settings toggle in player settings to enable swipe gestures on album cover to switch tracks. Title -->
+    <string name="settings_swipe_to_switch_track">Swipe to switch track</string>
+    <!-- Settings toggle in player settings to enable swipe gestures on album cover to switch tracks. Subtext -->
+    <string name="settings_swipe_to_switch_track_summary">Swipe left or right on the album cover to switch tracks</string>
     <!-- Context menu item to delete song/album/playlist -->
     <string name="delete">Delete</string>
     <!-- Dialog text to confirm user wants to delete a specific song or playlist with user defined name -->
