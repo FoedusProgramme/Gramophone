@@ -208,15 +208,15 @@ class PlayerSheetViewImpl private constructor(
                     val inst = instance
                     val duration = inst?.duration?.takeIf { it > 0 }
                         ?: inst?.currentMediaItem?.mediaMetadata?.durationMs
-                    val position = inst?.currentPosition ?: 0L
-                    playerState.positionMs.value = position
-                    playerState.durationMs.value = duration ?: 0L
+                    if (inst != null && duration != null && duration > 0) {
+                        val position = inst.currentPosition
+                        playerState.positionMs.value = position
+                        playerState.durationMs.value = duration
+                        playerState.positionFraction.value =
+                            (position.toFloat() / duration).coerceIn(0f, 1f)
+                    }
                     val timer = inst?.getTimer()
                     playerState.timerActive.value = timer?.first != null || timer?.second == true
-                    playerState.positionFraction.value =
-                        if (duration != null && duration > 0)
-                            (position.toFloat() / duration).coerceIn(0f, 1f)
-                        else 0f
                     if (sheetState.expandedTarget) lyricsView.updateLyricPositionFromPlaybackPos()
                 }
                 delay(if (sheetState.expandedTarget) PlayerUtilities.FULL_POLL_MS else PlayerUtilities.POSITION_POLL_MS)
