@@ -314,6 +314,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended")
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.material3.adaptive:adaptive")
+    implementation("androidx.compose.animation:animation-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     debugImplementation("androidx.compose.ui:ui-tooling")
     implementation("androidx.activity:activity-compose:1.11.0")
@@ -326,6 +327,7 @@ dependencies {
     implementation("androidx.fragment:fragment-ktx:1.8.9")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.4")
     implementation("androidx.mediarouter:mediarouter:1.8.1")
+    implementation("com.materialkolor:material-kolor:5.0.1")
     implementation("io.github.nift4.mediastorecompat:mediastorecompat:1.0.0-alpha33")
     val media3Version = "1.10.1"
     implementation("androidx.media3:media3-common-ktx:$media3Version")

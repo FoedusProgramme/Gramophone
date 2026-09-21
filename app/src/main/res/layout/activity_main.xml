@@ -15,21 +15,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <org.akanework.gramophone.ui.components.PlayerBottomSheet
+    <org.akanework.gramophone.ui.components.player.PlayerSheetViewImpl
         android:id="@+id/player_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:backgroundTint="?attr/colorSurfaceContainer"
         android:clipChildren="false"
-        android:clipToPadding="false"
-        android:elevation="?attr/previewPlayerElevation"
-        app:behavior_hideable="true"
-        app:behavior_halfExpandedRatio="0.8"
-        app:layout_behavior="org.akanework.gramophone.logic.ui.MyBottomSheetBehavior"
-        app:marginLeftSystemWindowInsets="false"
-        app:marginRightSystemWindowInsets="false"
-        app:paddingBottomSystemWindowInsets="false"
-        app:shapeAppearance="@style/BottomPlayerCornerShape"
-        tools:behavior_peekHeight="1000dp" />
+        android:clipToPadding="false" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

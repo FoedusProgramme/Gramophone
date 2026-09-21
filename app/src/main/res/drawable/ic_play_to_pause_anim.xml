@@ -1,0 +1,44 @@
+<!--
+  ~     Copyright (C) 2025 Akane Foundation
+  ~
+  ~     Gramophone is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, either version 3 of the License, or
+  ~     (at your option) any later version.
+  ~
+  ~     Gramophone is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt">
+    <aapt:attr name="android:drawable">
+        <vector
+            android:width="24dp"
+            android:height="24dp"
+            android:viewportWidth="960"
+            android:viewportHeight="960"
+            android:tint="?attr/colorControlNormal">
+            <path
+                android:name="shape"
+                android:fillColor="@android:color/white"
+                android:fillType="evenOdd"
+                android:pathData="M320,200 L480,301.818 L480,658.182 L320,760 Z M400,346 L480,397.048 L480,562.952 L400,614 Z M480,301.818 L760,480 L760,480 L480,658.182 Z M480,397.048 L610,480 L610,480 L480,562.952 Z" />
+        </vector>
+    </aapt:attr>
+    <target android:name="shape">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:duration="280"
+                android:interpolator="@android:interpolator/fast_out_slow_in"
+                android:propertyName="pathData"
+                android:valueFrom="M320,200 L480,301.818 L480,658.182 L320,760 Z M400,346 L480,397.048 L480,562.952 L400,614 Z M480,301.818 L760,480 L760,480 L480,658.182 Z M480,397.048 L610,480 L610,480 L480,562.952 Z"
+                android:valueTo="M200,200 L440,200 L440,760 L200,760 Z M280,280 L360,280 L360,680 L280,680 Z M520,200 L760,200 L760,760 L520,760 Z M600,280 L680,280 L680,680 L600,680 Z"
+                android:valueType="pathType" />
+        </aapt:attr>
+    </target>
+</animated-vector>

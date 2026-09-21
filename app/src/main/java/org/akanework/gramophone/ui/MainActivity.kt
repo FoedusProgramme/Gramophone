@@ -18,7 +18,6 @@
 package org.akanework.gramophone.ui
 
 import android.annotation.SuppressLint
-import android.app.AlertDialog
 import android.app.NotificationManager
 import android.app.SearchManager
 import android.app.assist.AssistContent
@@ -48,7 +47,6 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.IntentCompat
 import androidx.core.content.pm.ShortcutManagerCompat
@@ -77,7 +75,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 import org.akanework.gramophone.BuildConfig
@@ -93,7 +90,7 @@ import org.akanework.gramophone.logic.needsMissingOnDestroyCallWorkarounds
 import org.akanework.gramophone.logic.postAtFrontOfQueueAsync
 import org.akanework.gramophone.logic.ui.BaseActivity
 import org.akanework.gramophone.ui.adapters.PlaylistAdapter
-import org.akanework.gramophone.ui.components.PlayerBottomSheet
+import org.akanework.gramophone.ui.components.player.PlayerSheetViewImpl
 import org.akanework.gramophone.ui.fragments.BaseFragment
 import org.akanework.gramophone.ui.fragments.GeneralSubFragment
 import org.akanework.gramophone.ui.fragments.SearchFragment
@@ -132,7 +129,7 @@ class MainActivity : BaseActivity() {
     private val handler = Handler(Looper.getMainLooper())
     private val reportFullyDrawnRunnable = Runnable { if (!ready) reportFullyDrawn() }
     private var ready = false
-    lateinit var playerBottomSheet: PlayerBottomSheet
+    lateinit var playerBottomSheet: PlayerSheetViewImpl
         private set
     private lateinit var intentSenderDelete: ActivityResultLauncher<IntentSenderRequest>
     private lateinit var addToPlaylistIntentSender: ActivityResultLauncher<IntentSenderRequest>

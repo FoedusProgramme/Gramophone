@@ -57,8 +57,10 @@ class LyricsView(context: Context, attrs: AttributeSet?) : FrameLayout(context, 
     var highlightTlTextColor = 0
         private set
     private var lyrics: SemanticLyrics? = null
-    private val fullPlayer by lazy { (parent.parent as ViewGroup)
-        .findViewById<FullBottomSheet>(R.id.full_player)!! }
+
+    // TODO: Make LyricsView compose component
+    var onCoveringChanged: ((Boolean) -> Unit)? = null
+    private var covering = false
 
     init {
         ViewCompat.setOnApplyWindowInsetsListener(this) { v, insets ->
@@ -172,10 +174,14 @@ class LyricsView(context: Context, attrs: AttributeSet?) : FrameLayout(context, 
         }
     }
 
+    // Temp class
     private fun updateFullPlayerVisibility() {
-        fullPlayer.visibilityDueToLyrics = if (isVisible && alpha == 1f && scaleX == 1f &&
-            scaleY == 1f && translationX == 0f && translationY == 0f && !hasTransientState())
-                GONE else VISIBLE
+        val nowCovering = isVisible && alpha == 1f && scaleX == 1f &&
+            scaleY == 1f && translationX == 0f && translationY == 0f && !hasTransientState()
+        if (nowCovering != covering) {
+            covering = nowCovering
+            onCoveringChanged?.invoke(nowCovering)
+        }
     }
 
     override fun setHasTransientState(hasTransientState: Boolean) {

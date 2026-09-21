@@ -53,7 +53,6 @@ import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
 import androidx.media3.extractor.mp3.Mp3Extractor
-import androidx.preference.PreferenceManager
 import coil3.load
 import coil3.request.error
 import com.google.android.material.button.MaterialButton
@@ -80,7 +79,6 @@ import org.akanework.gramophone.logic.utils.ReplayGainAudioProcessor
 import org.akanework.gramophone.logic.utils.exoplayer.GramophoneExtractorsFactory
 import org.akanework.gramophone.logic.utils.exoplayer.GramophoneMediaSourceFactory
 import org.akanework.gramophone.logic.utils.exoplayer.GramophoneRenderFactory
-import org.akanework.gramophone.ui.components.FullBottomSheet.Companion.SLIDER_UPDATE_INTERVAL
 import org.akanework.gramophone.ui.components.SquigglyProgress
 import uk.akane.libphonograph.toUriCompat
 import java.io.File
@@ -350,13 +348,13 @@ class AudioPreviewActivity : BaseActivity(), View.OnClickListener {
                 intent.data?.let { uri ->
                     Log.i(TAG, "Audio preview opening $uri")
                     var fileUri: Uri? = null
-                    val queryUri = if (uri.scheme == "file") {
-                        fileUri = uri
-                        null
-                    } else if (uri.scheme == "content" && uri.host == MediaStore.AUTHORITY)
-                        uri
-                    else if (uri.scheme == "content")
-                        try {
+                    val queryUri = when (uri.scheme) {
+                        "file" -> {
+                            fileUri = uri
+                            null
+                        }
+                        "content" if uri.host == MediaStore.AUTHORITY -> uri
+                        "content" -> try {
                             if (hasScopedStorageV1()) MediaStore.getMediaUri(
                                 this@AudioPreviewActivity,
                                 uri
@@ -401,7 +399,8 @@ class AudioPreviewActivity : BaseActivity(), View.OnClickListener {
                             }
                             null
                         }
-                    else null
+                        else -> null
+                    }
                     Log.i(TAG, "Audio preview opening $uri with query=$queryUri file=$fileUri")
                     val cursor = if (queryUri != null || fileUri != null) contentResolver.query(
                         queryUri ?: MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
@@ -538,7 +537,7 @@ class AudioPreviewActivity : BaseActivity(), View.OnClickListener {
                 progressDrawable.animate = true
             }
             if (!runnableRunning) {
-                handler.postDelayed(updateSliderRunnable, SLIDER_UPDATE_INTERVAL)
+                handler.postDelayed(updateSliderRunnable, 100L /* slider update interval */)
                 runnableRunning = true
             }
         } else if (player.playbackState != Player.STATE_BUFFERING) {

@@ -56,7 +56,7 @@ import org.akanework.gramophone.logic.utils.SdScanner
 import org.akanework.gramophone.logic.setMediaItemsWithTitle
 import org.akanework.gramophone.ui.MainActivity
 import org.akanework.gramophone.ui.adapters.ViewPager2Adapter
-import org.akanework.gramophone.ui.components.PlayerBottomSheet
+import org.akanework.gramophone.ui.components.player.PlayerSheetViewImpl
 import org.akanework.gramophone.ui.fragments.settings.MainSettingsActivity
 import org.nift4.mediastorecompat.MediaStoreCompat
 
@@ -274,7 +274,7 @@ class ViewPagerFragment : BaseFragment(true) {
             mainActivity.maybeReportFullyDrawn()
     }
 
-    private fun showRefreshDoneSnackBar(playerLayout: PlayerBottomSheet, count: Int) {
+    private fun showRefreshDoneSnackBar(playerLayout: PlayerSheetViewImpl, count: Int) {
         val view = view
         if (view == null) return
         val snackBar =
