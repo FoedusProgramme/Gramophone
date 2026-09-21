@@ -426,17 +426,28 @@ private fun SharedArtwork(
                 onDragStopped = { velocity -> state.settle(velocity) },
             )
             .then(clickModifier)
-    AsyncImage(
-        model = request,
-        contentDescription = null,
-        contentScale = ContentScale.Crop,
-        modifier = Modifier
-            .absolute(metrics.artLeftRoot, metrics.artTopRoot, metrics.artSize, metrics.artSize)
-            .alpha(coverAlpha)
-            .clip(shape)
-            .background(MaterialTheme.colorScheme.surfaceContainerHighest)
-            .then(gestures),
-    )
+    Box(
+        Modifier
+            .absolute(metrics.sheetLeft, metrics.sheetTop, metrics.sheetWidth, metrics.sheetHeight)
+            .clip(RoundedCornerShape(metrics.cornerDp)),
+    ) {
+        AsyncImage(
+            model = request,
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .absolute(
+                    metrics.artLeftRoot - metrics.sheetLeft,
+                    metrics.artTopRoot - metrics.sheetTop,
+                    metrics.artSize,
+                    metrics.artSize,
+                )
+                .alpha(coverAlpha)
+                .clip(shape)
+                .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                .then(gestures),
+        )
+    }
 }
 
 @Composable

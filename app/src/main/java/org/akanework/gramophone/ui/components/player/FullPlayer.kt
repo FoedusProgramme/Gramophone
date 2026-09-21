@@ -128,7 +128,7 @@ internal fun FullPlayerContent(
                 .absoluteUnbounded(-metrics.sheetLeft, 0f, metrics.rootWidth, metrics.rootHeight)
                 .graphicsLayer { translationY = metrics.contentFollowTop - metrics.sheetTop },
         )
-        if (contentAlpha > 0f && playerVisibility > 0f) {
+        if (state.progress > 0f && playerVisibility > 0f) {
             Box(
                 Modifier
                     .absoluteUnbounded(-metrics.sheetLeft, 0f, metrics.rootWidth, metrics.rootHeight)
