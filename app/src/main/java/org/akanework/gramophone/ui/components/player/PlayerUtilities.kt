@@ -69,6 +69,9 @@ object PlayerUtilities {
     val LAND_ART_START = 24.dp
     val LAND_ART_TOP = 16.dp
     val LAND_ART_BOTTOM = 25.dp
+    val PORTRAIT_MARGIN = 36.dp
+    val LANDSCAPE_MARGIN = 28.dp
+    val LANDSCAPE_TOP_BUTTON_SIZE = 52.dp
     
     const val CORNER_SQUARE_START = 0.9f
     

@@ -77,6 +77,9 @@ import androidx.compose.ui.viewinterop.AndroidView
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.utils.CalculationUtils
 import org.akanework.gramophone.ui.components.LyricsView
+import org.akanework.gramophone.ui.components.player.PlayerUtilities.LANDSCAPE_MARGIN
+import org.akanework.gramophone.ui.components.player.PlayerUtilities.LANDSCAPE_TOP_BUTTON_SIZE
+import org.akanework.gramophone.ui.components.player.PlayerUtilities.PORTRAIT_MARGIN
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.absolute
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.absoluteUnbounded
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.expandedContentAlpha
@@ -181,9 +184,9 @@ private fun FullPlayerScaffold(
                     .heightIn(min = 250.dp),
                 verticalArrangement = Arrangement.Center,
             ) {
-                TitleArtist(player, actions, scheme)
+                TitleArtist(player, actions, scheme, PORTRAIT_MARGIN)
                 Spacer(Modifier.height(12.dp))
-                ProgressSection(player, actions, scheme)
+                ProgressSection(player, actions, scheme, PORTRAIT_MARGIN)
                 Spacer(Modifier.height(18.dp))
                 TransportRow(player, actions, scheme)
             }
@@ -220,7 +223,7 @@ private fun LandscapeScaffold(
                 Modifier
                     .weight(1f)
                     .fillMaxHeight()
-                    .padding(top = 10.dp),
+                    .padding(top = 10.dp, end = LANDSCAPE_TOP_BUTTON_SIZE),
             ) {
                 Column(
                     Modifier
@@ -229,9 +232,9 @@ private fun LandscapeScaffold(
                         .heightIn(min = 200.dp),
                     verticalArrangement = Arrangement.Center,
                 ) {
-                    TitleArtist(player, actions, scheme)
+                    TitleArtist(player, actions, scheme, LANDSCAPE_MARGIN)
                     Spacer(Modifier.height(12.dp))
-                    ProgressSection(player, actions, scheme)
+                    ProgressSection(player, actions, scheme, LANDSCAPE_MARGIN)
                     Spacer(Modifier.height(18.dp))
                     TransportRow(player, actions, scheme)
                 }
@@ -307,13 +310,18 @@ private fun IconSlot(res: Int, tint: Color, box: Dp, icon: Dp, onClick: () -> Un
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun TitleArtist(player: PlayerSheetPlayerState, actions: FullPlayerActions, scheme: ColorScheme) {
+private fun TitleArtist(
+    player: PlayerSheetPlayerState,
+    actions: FullPlayerActions,
+    scheme: ColorScheme,
+    horizontalMargin: Dp,
+) {
     val title by player.title.collectAsState()
     val artist by player.artist.collectAsState()
     Column(
         Modifier
             .fillMaxWidth()
-            .padding(horizontal = 36.dp),
+            .padding(horizontal = horizontalMargin),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
@@ -347,7 +355,12 @@ private fun TitleArtist(player: PlayerSheetPlayerState, actions: FullPlayerActio
 }
 
 @Composable
-private fun ProgressSection(player: PlayerSheetPlayerState, actions: FullPlayerActions, scheme: ColorScheme) {
+private fun ProgressSection(
+    player: PlayerSheetPlayerState,
+    actions: FullPlayerActions,
+    scheme: ColorScheme,
+    horizontalMargin: Dp,
+) {
     val positionMs by player.positionMs.collectAsState()
     val durationMs by player.durationMs.collectAsState()
     val isPlaying by player.isPlaying.collectAsState()
@@ -367,7 +380,7 @@ private fun ProgressSection(player: PlayerSheetPlayerState, actions: FullPlayerA
         trackColor = scheme.primary.copy(alpha = PlayerUtilities.SQUIGGLY_TRACK_ALPHA),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 23.dp)
+            .padding(horizontal = horizontalMargin)
             .height(48.dp),
         onScrub = { scrub = it },
         onSeek = {
@@ -378,7 +391,7 @@ private fun ProgressSection(player: PlayerSheetPlayerState, actions: FullPlayerA
     Row(
         Modifier
             .fillMaxWidth()
-            .padding(horizontal = 36.dp),
+            .padding(horizontal = horizontalMargin),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
