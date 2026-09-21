@@ -47,13 +47,11 @@ import org.akanework.gramophone.logic.ui.MyRecyclerView
 import org.akanework.gramophone.ui.MediaControllerViewModel
 import org.akanework.gramophone.ui.SongPickerActivity
 import org.akanework.gramophone.ui.components.NowPlayingDrawable
-import org.akanework.gramophone.ui.fragments.ArtistSubFragment
 import org.akanework.gramophone.ui.fragments.DetailDialogFragment
 import org.akanework.gramophone.ui.fragments.GeneralSubFragment
 import org.akanework.gramophone.ui.fragments.SearchFragment
 import uk.akane.libphonograph.items.addDate
 import uk.akane.libphonograph.items.albumId
-import uk.akane.libphonograph.items.artistId
 import uk.akane.libphonograph.items.modifiedDate
 import uk.akane.libphonograph.manipulator.ItemManipulator
 import java.io.File
@@ -267,10 +265,7 @@ class SongAdapter(
                 }
 
                 R.id.artist -> {
-                    mainActivity.startFragment(ArtistSubFragment()) {
-                        putString("Id", item.mediaMetadata.artistId?.toString())
-                        putInt("Item", R.id.artist)
-                    }
+                    mainActivity.navigateToArtistDialog(item)
                     true
                 }
 
