@@ -205,6 +205,8 @@ fun PlayerSheet(
             rootHeight = rootH,
             statusTop = c.top.toFloat(),
             bottomInset = c.bottom.toFloat(),
+            leftInset = c.left.toFloat(),
+            rightInset = c.right.toFloat(),
             pageCorner = deviceScreenCornerRadius(),
             density = density,
             collapsedContainerColor = coverScheme.surface,

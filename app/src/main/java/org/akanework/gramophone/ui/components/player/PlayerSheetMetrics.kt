@@ -67,6 +67,8 @@ class PlayerSheetMetrics(
     val expandedArtSize: Float,
     val statusTop: Float,
     val bottomInset: Float,
+    val leftInset: Float,
+    val rightInset: Float,
 )
 
 @Composable
@@ -77,6 +79,8 @@ fun playerSheetMetrics(
     rootHeight: Float,
     statusTop: Float,
     bottomInset: Float,
+    leftInset: Float,
+    rightInset: Float,
     pageCorner: Dp,
     density: Density,
     collapsedContainerColor: Color,
@@ -91,19 +95,23 @@ fun playerSheetMetrics(
     val sheetTopCollapsed = rootHeight - platform - collapsedHeight
     val sheetTop = lerp(sheetTopCollapsed, 0f, progress)
     val sheetBottom = rootHeight - lerp(platform, 0f, progress)
-    val sideInset = lerp(MINI_SIDE_INSET.px(), 0f, progress)
+    val collapsedLeft = maxOf(MINI_SIDE_INSET.px(), leftInset)
+    val collapsedRight = maxOf(MINI_SIDE_INSET.px(), rightInset)
+    val sheetLeftPx = lerp(collapsedLeft, 0f, progress)
+    val sheetRightPx = lerp(collapsedRight, 0f, progress)
 
     val collapsedArtSize = MINI_ARTWORK.px()
-    val collapsedArtLeft = sideInset + MINI_ARTWORK_PAD.px()
+    val collapsedArtLeft = collapsedLeft + MINI_ARTWORK_PAD.px()
     val collapsedArtTop = sheetTopCollapsed + (collapsedHeight - collapsedArtSize) / 2f
 
+    val safeWidth = (rootWidth - leftInset - rightInset).coerceAtLeast(0f)
     val expandedArtTop = statusTop + EXPANDED_ART_TOP_OFFSET.px()
     val expandedArtSize =
         minOf(
-            rootWidth - EXPANDED_ART_SIDE_INSET.px() * 2f,
+            safeWidth - EXPANDED_ART_SIDE_INSET.px() * 2f,
             (rootHeight - expandedArtTop) * EXPANDED_ART_MAX_HEIGHT_FRACTION,
         ).coerceAtLeast(0f)
-    val expandedArtLeft = (rootWidth - expandedArtSize) / 2f
+    val expandedArtLeft = leftInset + (safeWidth - expandedArtSize) / 2f
 
     val horizontalFraction = arcFraction(clamped, ARC_HORIZONTAL_EASING)
     val artSize = lerp(collapsedArtSize, expandedArtSize, SIZE_EASING.transform(clamped))
@@ -132,9 +140,9 @@ fun playerSheetMetrics(
         eased = progress,
         rootWidth = rootWidth,
         rootHeight = rootHeight,
-        sheetLeft = sideInset,
+        sheetLeft = sheetLeftPx,
         sheetTop = sheetTop,
-        sheetWidth = rootWidth - sideInset * 2f,
+        sheetWidth = rootWidth - sheetLeftPx - sheetRightPx,
         sheetHeight = sheetBottom - sheetTop,
         cornerDp = cornerDp,
         containerColor = lerp(collapsedContainerColor, MaterialTheme.colorScheme.surface, clamped),
@@ -151,5 +159,7 @@ fun playerSheetMetrics(
         expandedArtSize = expandedArtSize,
         statusTop = statusTop,
         bottomInset = bottomInset,
+        leftInset = leftInset,
+        rightInset = rightInset,
     )
 }

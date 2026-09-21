@@ -159,11 +159,13 @@ private fun FullPlayerScaffold(
     val density = LocalDensity.current
     val statusDp = with(density) { metrics.statusTop.toDp() }
     val navDp = with(density) { metrics.bottomInset.toDp() }
+    val leftDp = with(density) { metrics.leftInset.toDp() }
+    val rightDp = with(density) { metrics.rightInset.toDp() }
     val coverDp = with(density) { metrics.expandedArtSize.toDp() }
     Column(
         Modifier
             .fillMaxSize()
-            .padding(top = statusDp, bottom = navDp),
+            .padding(top = statusDp, bottom = navDp, start = leftDp, end = rightDp),
     ) {
         TopButtonRow(player, actions, scheme, onOpenDialog)
         Spacer(Modifier.height(16.dp))
