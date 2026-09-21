@@ -93,6 +93,8 @@ class NowPlayingSheetState(
 
     fun snapToCollapsed() = snapTo(0f)
 
+    fun snapToExpanded() = snapTo(1f)
+
     private fun snapTo(target: Float) {
         animation?.cancel()
         expandedTarget = target == 1f

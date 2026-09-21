@@ -5,6 +5,9 @@ import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
+import android.os.Bundle
+import android.os.Parcelable
+import androidx.core.os.BundleCompat
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -63,6 +66,8 @@ class PlayerSheetViewImpl private constructor(
 
     companion object {
         private const val TAG = "PlayerBottomSheet"
+        private const val STATE_SUPER = "super"
+        private const val STATE_EXPANDED = "expanded"
     }
 
     @SuppressLint("RestrictedApi")
@@ -91,6 +96,7 @@ class PlayerSheetViewImpl private constructor(
         get() = activity.getPlayer()
     private var lastActuallyVisible: Boolean? = null
     private var lastMeasuredHeight: Int? = null
+    private var pendingExpanded = false
 
     var visible = false
         set(value) {
@@ -255,7 +261,12 @@ class PlayerSheetViewImpl private constructor(
         val show = visible && hasMedia
         if (chromeState.value.shown != show) {
             chromeState.value = chromeState.value.copy(shown = show)
-            if (!show) sheetState.snapToCollapsed()
+            if (!show) {
+                sheetState.snapToCollapsed()
+            } else if (pendingExpanded) {
+                pendingExpanded = false
+                sheetState.snapToExpanded()
+            }
         }
         dispatchBottomSheetInsets()
     }
@@ -339,6 +350,21 @@ class PlayerSheetViewImpl private constructor(
         bottomSheetBackCallback?.remove()
         sheetScope.cancel()
         onStop(lifecycleOwner)
+    }
+
+    override fun onSaveInstanceState(): Parcelable =
+        Bundle().apply {
+            putParcelable(STATE_SUPER, super.onSaveInstanceState())
+            putBoolean(STATE_EXPANDED, sheetState.expandedTarget)
+        }
+
+    override fun onRestoreInstanceState(state: Parcelable?) {
+        if (state is Bundle) {
+            pendingExpanded = state.getBoolean(STATE_EXPANDED, false)
+            super.onRestoreInstanceState(BundleCompat.getParcelable(state, STATE_SUPER, Parcelable::class.java))
+        } else {
+            super.onRestoreInstanceState(state)
+        }
     }
 
     /**
