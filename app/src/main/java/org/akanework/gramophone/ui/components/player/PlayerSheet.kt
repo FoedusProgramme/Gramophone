@@ -18,6 +18,7 @@
 package org.akanework.gramophone.ui.components.player
 
 import android.net.Uri
+import androidx.collection.LruCache
 import android.os.Build
 import android.view.RoundedCorner
 import android.view.View
@@ -469,13 +470,20 @@ private fun rememberArtworkColorScheme(artworkUri: Uri?): ColorScheme {
     else rememberDynamicColorScheme(seedColor = seed, isDark = isDark, style = PaletteStyle.TonalSpot)
 }
 
+private val artworkSeedCache = LruCache<Uri, Color>(64)
+
 @Composable
 private fun rememberArtworkSeed(artworkUri: Uri?): Color? {
     val context = LocalPlatformContext.current
-    var seed by remember { mutableStateOf<Color?>(null) }
+    var seed by remember { mutableStateOf(artworkUri?.let { artworkSeedCache[it] }) }
     LaunchedEffect(artworkUri) {
-        seed = if (artworkUri == null) null
-        else runCatching { extractArtworkSeed(context, artworkUri) }.getOrNull()
+        if (artworkUri == null) {
+            seed = null
+            return@LaunchedEffect
+        }
+        artworkSeedCache[artworkUri]?.let { seed = it; return@LaunchedEffect }
+        seed = runCatching { extractArtworkSeed(context, artworkUri) }.getOrNull()
+            ?.also { artworkSeedCache.put(artworkUri, it) }
     }
     return seed
 }

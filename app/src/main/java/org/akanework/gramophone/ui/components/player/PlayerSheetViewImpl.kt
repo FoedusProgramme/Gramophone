@@ -68,6 +68,9 @@ class PlayerSheetViewImpl private constructor(
         private const val TAG = "PlayerBottomSheet"
         private const val STATE_SUPER = "super"
         private const val STATE_EXPANDED = "expanded"
+        private const val STATE_FRACTION = "fraction"
+        private const val STATE_POSITION = "position"
+        private const val STATE_DURATION = "duration"
     }
 
     @SuppressLint("RestrictedApi")
@@ -356,11 +359,17 @@ class PlayerSheetViewImpl private constructor(
         Bundle().apply {
             putParcelable(STATE_SUPER, super.onSaveInstanceState())
             putBoolean(STATE_EXPANDED, sheetState.expandedTarget)
+            putFloat(STATE_FRACTION, playerState.positionFraction.value)
+            putLong(STATE_POSITION, playerState.positionMs.value)
+            putLong(STATE_DURATION, playerState.durationMs.value)
         }
 
     override fun onRestoreInstanceState(state: Parcelable?) {
         if (state is Bundle) {
             pendingExpanded = state.getBoolean(STATE_EXPANDED, false)
+            playerState.positionFraction.value = state.getFloat(STATE_FRACTION, 0f)
+            playerState.positionMs.value = state.getLong(STATE_POSITION, 0L)
+            playerState.durationMs.value = state.getLong(STATE_DURATION, 0L)
             super.onRestoreInstanceState(BundleCompat.getParcelable(state, STATE_SUPER, Parcelable::class.java))
         } else {
             super.onRestoreInstanceState(state)
