@@ -123,10 +123,8 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
                 ThreadPolicy.Builder()
                     .detectAll()
                     .let {
-                        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.UPSIDE_DOWN_CAKE ||
-                            Build.VERSION.SDK_INT == Build.VERSION_CODES.VANILLA_ICE_CREAM
-                        ) {
-                            it.permitExplicitGc() // platform bug, now fixed
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                            it.permitExplicitGc() // platform calls System.gc() on activity destroy
                         } else it
                     }
                     .let {
