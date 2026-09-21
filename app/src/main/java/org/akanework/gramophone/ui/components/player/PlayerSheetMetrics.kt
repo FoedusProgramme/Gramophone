@@ -32,6 +32,9 @@ import org.akanework.gramophone.ui.components.player.PlayerUtilities.EXPANDED_AR
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.EXPANDED_ART_MAX_HEIGHT_FRACTION
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.EXPANDED_ART_SIDE_INSET
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.EXPANDED_ART_TOP_OFFSET
+import org.akanework.gramophone.ui.components.player.PlayerUtilities.LAND_ART_BOTTOM
+import org.akanework.gramophone.ui.components.player.PlayerUtilities.LAND_ART_START
+import org.akanework.gramophone.ui.components.player.PlayerUtilities.LAND_ART_TOP
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.MINI_ARTWORK
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.MINI_ARTWORK_CORNER
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.MINI_ARTWORK_PAD
@@ -65,6 +68,9 @@ class PlayerSheetMetrics(
     val travelPx: Float,
     // Expanded album-cover rect
     val expandedArtSize: Float,
+    val expandedArtLeft: Float,
+    val expandedArtTop: Float,
+    val isWideLandscape: Boolean,
     val statusTop: Float,
     val bottomInset: Float,
     val leftInset: Float,
@@ -81,6 +87,7 @@ fun playerSheetMetrics(
     bottomInset: Float,
     leftInset: Float,
     rightInset: Float,
+    isWideLandscape: Boolean,
     pageCorner: Dp,
     density: Density,
     collapsedContainerColor: Color,
@@ -105,13 +112,23 @@ fun playerSheetMetrics(
     val collapsedArtTop = sheetTopCollapsed + (collapsedHeight - collapsedArtSize) / 2f
 
     val safeWidth = (rootWidth - leftInset - rightInset).coerceAtLeast(0f)
-    val expandedArtTop = statusTop + EXPANDED_ART_TOP_OFFSET.px()
-    val expandedArtSize =
-        minOf(
-            safeWidth - EXPANDED_ART_SIDE_INSET.px() * 2f,
-            (rootHeight - expandedArtTop) * EXPANDED_ART_MAX_HEIGHT_FRACTION,
-        ).coerceAtLeast(0f)
-    val expandedArtLeft = leftInset + (safeWidth - expandedArtSize) / 2f
+    val expandedArtTop: Float
+    val expandedArtSize: Float
+    val expandedArtLeft: Float
+    if (isWideLandscape) {
+        expandedArtTop = statusTop + LAND_ART_TOP.px()
+        expandedArtSize = (rootHeight - statusTop - bottomInset - LAND_ART_TOP.px() - LAND_ART_BOTTOM.px())
+            .coerceAtLeast(0f)
+        expandedArtLeft = leftInset + LAND_ART_START.px()
+    } else {
+        expandedArtTop = statusTop + EXPANDED_ART_TOP_OFFSET.px()
+        expandedArtSize =
+            minOf(
+                safeWidth - EXPANDED_ART_SIDE_INSET.px() * 2f,
+                (rootHeight - expandedArtTop) * EXPANDED_ART_MAX_HEIGHT_FRACTION,
+            ).coerceAtLeast(0f)
+        expandedArtLeft = leftInset + (safeWidth - expandedArtSize) / 2f
+    }
 
     val horizontalFraction = arcFraction(clamped, ARC_HORIZONTAL_EASING)
     val artSize = lerp(collapsedArtSize, expandedArtSize, SIZE_EASING.transform(clamped))
@@ -154,9 +171,12 @@ fun playerSheetMetrics(
         collapsedArtLeft = collapsedArtLeft,
         collapsedHeight = collapsedHeight,
         collapsedFootprint = platform + collapsedHeight,
-        contentFollowTop = centerY - (expandedArtTop + expandedArtSize / 2f),
+        contentFollowTop = if (isWideLandscape) 0f else centerY - (expandedArtTop + expandedArtSize / 2f),
         travelPx = sheetTopCollapsed.coerceAtLeast(1f),
         expandedArtSize = expandedArtSize,
+        expandedArtLeft = expandedArtLeft,
+        expandedArtTop = expandedArtTop,
+        isWideLandscape = isWideLandscape,
         statusTop = statusTop,
         bottomInset = bottomInset,
         leftInset = leftInset,

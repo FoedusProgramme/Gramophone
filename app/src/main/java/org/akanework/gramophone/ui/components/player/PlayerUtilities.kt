@@ -64,6 +64,11 @@ object PlayerUtilities {
     val EXPANDED_ART_TOP_OFFSET = 68.dp // 52dp top-button row + 16dp gap
     val EXPANDED_ART_CORNER = 22.dp
     const val EXPANDED_ART_MAX_HEIGHT_FRACTION = 0.5f
+
+    const val WIDE_LANDSCAPE_MIN_WIDTH = 600
+    val LAND_ART_START = 24.dp
+    val LAND_ART_TOP = 16.dp
+    val LAND_ART_BOTTOM = 25.dp
     
     const val CORNER_SQUARE_START = 0.9f
     

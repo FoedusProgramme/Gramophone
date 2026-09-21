@@ -110,6 +110,7 @@ import org.akanework.gramophone.ui.components.player.PlayerUtilities.MINI_ICON_S
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.SCRIM_MAX_ALPHA
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.SETTLED_EPS
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.TAP_EXPAND_LIMIT
+import org.akanework.gramophone.ui.components.player.PlayerUtilities.WIDE_LANDSCAPE_MIN_WIDTH
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.miniContentAlpha
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.absolute
 import kotlin.math.roundToInt
@@ -200,6 +201,7 @@ fun PlayerSheet(
     BoxWithConstraints(Modifier.fillMaxSize()) {
         val rootW = constraints.maxWidth.toFloat()
         val rootH = constraints.maxHeight.toFloat()
+        val isWideLandscape = maxWidth >= WIDE_LANDSCAPE_MIN_WIDTH.dp && maxWidth > maxHeight
         val metrics = playerSheetMetrics(
             progress = state.progress,
             rootWidth = rootW,
@@ -208,6 +210,7 @@ fun PlayerSheet(
             bottomInset = c.bottom.toFloat(),
             leftInset = c.left.toFloat(),
             rightInset = c.right.toFloat(),
+            isWideLandscape = isWideLandscape,
             pageCorner = deviceScreenCornerRadius(),
             density = density,
             collapsedContainerColor = coverScheme.surface,

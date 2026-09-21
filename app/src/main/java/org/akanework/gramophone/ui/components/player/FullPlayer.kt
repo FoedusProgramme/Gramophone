@@ -38,6 +38,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -162,28 +163,106 @@ private fun FullPlayerScaffold(
     val leftDp = with(density) { metrics.leftInset.toDp() }
     val rightDp = with(density) { metrics.rightInset.toDp() }
     val coverDp = with(density) { metrics.expandedArtSize.toDp() }
-    Column(
+    if (metrics.isWideLandscape) {
+        LandscapeScaffold(coverDp, statusDp, navDp, leftDp, rightDp, player, actions, scheme, onOpenDialog)
+    } else {
+        Column(
+            Modifier
+                .fillMaxSize()
+                .padding(top = statusDp, bottom = navDp, start = leftDp, end = rightDp),
+        ) {
+            TopButtonRow(player, actions, scheme, onOpenDialog)
+            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(coverDp))
+            Column(
+                Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .heightIn(min = 250.dp),
+                verticalArrangement = Arrangement.Center,
+            ) {
+                TitleArtist(player, actions, scheme)
+                Spacer(Modifier.height(12.dp))
+                ProgressSection(player, actions, scheme)
+                Spacer(Modifier.height(18.dp))
+                TransportRow(player, actions, scheme)
+            }
+            ActionBarRow(player, actions, scheme)
+        }
+    }
+}
+
+@Composable
+private fun LandscapeScaffold(
+    coverDp: Dp,
+    statusDp: Dp,
+    navDp: Dp,
+    leftDp: Dp,
+    rightDp: Dp,
+    player: PlayerSheetPlayerState,
+    actions: FullPlayerActions,
+    scheme: ColorScheme,
+    onOpenDialog: (PlayerDialog) -> Unit,
+) {
+    Box(
         Modifier
             .fillMaxSize()
             .padding(top = statusDp, bottom = navDp, start = leftDp, end = rightDp),
     ) {
-        TopButtonRow(player, actions, scheme, onOpenDialog)
-        Spacer(Modifier.height(16.dp))
-        Spacer(Modifier.height(coverDp))
-        Column(
-            Modifier
-                .weight(1f)
-                .fillMaxWidth()
-                .heightIn(min = 250.dp),
-            verticalArrangement = Arrangement.Center,
-        ) {
-            TitleArtist(player, actions, scheme)
-            Spacer(Modifier.height(12.dp))
-            ProgressSection(player, actions, scheme)
-            Spacer(Modifier.height(18.dp))
-            TransportRow(player, actions, scheme)
+        Row(Modifier.fillMaxSize()) {
+            Box(
+                Modifier
+                    .padding(start = 24.dp, top = 16.dp, bottom = 25.dp)
+                    .fillMaxHeight()
+                    .width(coverDp),
+            )
+            Column(
+                Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
+                    .padding(top = 10.dp),
+            ) {
+                Column(
+                    Modifier
+                        .weight(1f)
+                        .fillMaxWidth()
+                        .heightIn(min = 200.dp),
+                    verticalArrangement = Arrangement.Center,
+                ) {
+                    TitleArtist(player, actions, scheme)
+                    Spacer(Modifier.height(12.dp))
+                    ProgressSection(player, actions, scheme)
+                    Spacer(Modifier.height(18.dp))
+                    TransportRow(player, actions, scheme)
+                }
+                ActionBarRow(player, actions, scheme)
+            }
         }
-        ActionBarRow(player, actions, scheme)
+        TopButtonColumn(
+            player, actions, scheme, onOpenDialog,
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(top = 16.dp),
+        )
+    }
+}
+
+@Composable
+private fun TopButtonColumn(
+    player: PlayerSheetPlayerState,
+    actions: FullPlayerActions,
+    scheme: ColorScheme,
+    onOpenDialog: (PlayerDialog) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val timerActive by player.timerActive.collectAsState()
+    Column(modifier) {
+        IconSlot(R.drawable.ic_expand_more, scheme.onSurface, 52.dp, 28.dp, actions.minimize)
+        IconSlot(R.drawable.ic_speed, scheme.onSurface, 52.dp, 24.dp) { onOpenDialog(PlayerDialog.Speed) }
+        IconSlot(
+            res = if (timerActive) R.drawable.ic_alarm_on else R.drawable.ic_alarm_off,
+            tint = scheme.onSurface, box = 52.dp, icon = 24.dp, onClick = { onOpenDialog(PlayerDialog.Timer) },
+        )
     }
 }
 
