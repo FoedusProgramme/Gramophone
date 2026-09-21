@@ -143,6 +143,45 @@ class DesktopWidgetTest {
     }
 
     @Test
+    fun testFavoriteButtonVisibilityOnCardVariants() {
+        val state = CardWidgetPlaybackState(
+            title = "Test Song",
+            artist = "Test Artist",
+            isPlaying = true,
+            isFavorite = true
+        )
+        val actions = createDummyActions()
+        val variantMap = CardWidgetViewsBuilder.getCardVariantViewsMap(context, state, actions)
+
+        // 1. In MEDIUM (2x1 and narrow width where media controls lack space), favorite button must be GONE
+        val mediumViews = variantMap.getValue(CardLayoutVariant.MEDIUM)
+        val mediumRoot = mediumViews.apply(context, null)
+        val mediumFavorite = mediumRoot.findViewById<View>(R.id.widget_favorite)
+        assertNotNull(mediumFavorite)
+        assertEquals("Favorite button must be GONE in MEDIUM variant (2x1 / narrow)", View.GONE, mediumFavorite.visibility)
+
+        // 2. In MEDIUM_WIDE (>= 220dp, wide width with full media controls), favorite button must be VISIBLE
+        val mediumWideViews = variantMap.getValue(CardLayoutVariant.MEDIUM_WIDE)
+        val mediumWideRoot = mediumWideViews.apply(context, null)
+        val mediumWideFavorite = mediumWideRoot.findViewById<View>(R.id.widget_favorite)
+        assertNotNull(mediumWideFavorite)
+        assertEquals("Favorite button must be VISIBLE in MEDIUM_WIDE variant", View.VISIBLE, mediumWideFavorite.visibility)
+
+        // 3. In LARGE and LARGE_WIDE variants, favorite button must remain VISIBLE
+        val largeViews = variantMap.getValue(CardLayoutVariant.LARGE)
+        val largeRoot = largeViews.apply(context, null)
+        val largeFavorite = largeRoot.findViewById<View>(R.id.widget_favorite)
+        assertNotNull(largeFavorite)
+        assertEquals("Favorite button must be VISIBLE in LARGE variant", View.VISIBLE, largeFavorite.visibility)
+
+        val largeWideViews = variantMap.getValue(CardLayoutVariant.LARGE_WIDE)
+        val largeWideRoot = largeWideViews.apply(context, null)
+        val largeWideFavorite = largeWideRoot.findViewById<View>(R.id.widget_favorite)
+        assertNotNull(largeWideFavorite)
+        assertEquals("Favorite button must be VISIBLE in LARGE_WIDE variant", View.VISIBLE, largeWideFavorite.visibility)
+    }
+
+    @Test
     fun testSelectCardVariantTableDriven() {
         // Measured real-device slots from audit reviews
         assertEquals(CardLayoutVariant.MEDIUM, CardWidgetViewsBuilder.selectCardVariant(191, 88))

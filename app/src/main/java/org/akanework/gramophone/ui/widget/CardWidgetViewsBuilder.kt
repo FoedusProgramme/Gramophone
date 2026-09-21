@@ -68,10 +68,10 @@ object CardWidgetViewsBuilder {
         colors: CardWidgetColors = CardWidgetColorResolver.resolve(context, state.artworkBitmap)
     ): Map<CardLayoutVariant, RemoteViews> {
         val card = buildCardViews(context, state, actions, colors, showPrevious = true, showNext = true)
-        val medium = buildMediumViews(context, state, actions, colors, showMoreButtons = false)
-        val mediumWide = buildMediumViews(context, state, actions, colors, showMoreButtons = true)
-        val large = buildLargeViews(context, state, actions, colors, showMoreButtons = false)
-        val largeWide = buildLargeViews(context, state, actions, colors, showMoreButtons = true)
+        val medium = buildMediumViews(context, state, actions, colors, showMoreButtons = false, showFavorite = false)
+        val mediumWide = buildMediumViews(context, state, actions, colors, showMoreButtons = true, showFavorite = true)
+        val large = buildLargeViews(context, state, actions, colors, showMoreButtons = false, showFavorite = true)
+        val largeWide = buildLargeViews(context, state, actions, colors, showMoreButtons = true, showFavorite = true)
 
         return mapOf(
             CardLayoutVariant.LARGE_WIDE to largeWide,
@@ -226,6 +226,7 @@ object CardWidgetViewsBuilder {
         actions: CardWidgetActions,
         colors: CardWidgetColors = CardWidgetColorResolver.resolve(context, state.artworkBitmap),
         showMoreButtons: Boolean,
+        showFavorite: Boolean = showMoreButtons,
         showPrevious: Boolean = true,
         showNext: Boolean = true
     ): RemoteViews {
@@ -239,7 +240,7 @@ object CardWidgetViewsBuilder {
             setOnClickPendingIntent(R.id.widget_card_root, actions.openAppPi)
             setOnClickPendingIntent(R.id.widget_cover, actions.openAppPi)
 
-            applyFavoriteControl(this, context, state.isFavorite, actions.favoritePi, colors)
+            applyFavoriteControl(this, context, showFavorite, state.isFavorite, actions.favoritePi, colors)
             applyRepeatAndShuffleControls(this, context, showMoreButtons, state.repeatMode, actions.repeatPi, state.isShuffle, actions.shufflePi, colors)
             applyNavControls(this, showPrevious, actions.prevPi, showNext, actions.nextPi, onSurfaceColor = colors.onSurface)
             applyArtwork(this, state.artworkBitmap, R.id.widget_cover)
@@ -252,6 +253,7 @@ object CardWidgetViewsBuilder {
         actions: CardWidgetActions,
         colors: CardWidgetColors = CardWidgetColorResolver.resolve(context, state.artworkBitmap),
         showMoreButtons: Boolean,
+        showFavorite: Boolean = true,
         showPrevious: Boolean = true,
         showNext: Boolean = true
     ): RemoteViews {
@@ -274,7 +276,7 @@ object CardWidgetViewsBuilder {
             setOnClickPendingIntent(R.id.widget_card_root, actions.openAppPi)
             setOnClickPendingIntent(R.id.widget_cover, actions.openAppPi)
 
-            applyFavoriteControl(this, context, state.isFavorite, actions.favoritePi, colors)
+            applyFavoriteControl(this, context, showFavorite, state.isFavorite, actions.favoritePi, colors)
             applyRepeatAndShuffleControls(this, context, showMoreButtons, state.repeatMode, actions.repeatPi, state.isShuffle, actions.shufflePi, colors)
             applyNavControls(this, showPrevious, actions.prevPi, showNext, actions.nextPi, onSurfaceColor = colors.onSurface)
             applyArtwork(this, state.artworkBitmap, R.id.widget_cover)
@@ -305,22 +307,28 @@ object CardWidgetViewsBuilder {
     private fun applyFavoriteControl(
         views: RemoteViews,
         context: Context,
+        showFavorite: Boolean,
         isFavorite: Boolean,
         favoritePi: PendingIntent,
         colors: CardWidgetColors
     ) {
-        views.setImageViewResource(
-            R.id.widget_favorite,
-            if (isFavorite) R.drawable.ic_favorite_filled else R.drawable.ic_favorite
-        )
-        views.setInt(R.id.widget_favorite, "setImageAlpha", 255)
-        val color = if (isFavorite) colors.primary else colors.onSurface
-        views.setInt(R.id.widget_favorite, "setColorFilter", color)
-        views.setContentDescription(
-            R.id.widget_favorite,
-            context.getString(if (isFavorite) R.string.unfavorite else R.string.playlist_favourite)
-        )
-        views.setOnClickPendingIntent(R.id.widget_favorite, favoritePi)
+        if (showFavorite) {
+            views.setViewVisibility(R.id.widget_favorite, View.VISIBLE)
+            views.setImageViewResource(
+                R.id.widget_favorite,
+                if (isFavorite) R.drawable.ic_favorite_filled else R.drawable.ic_favorite
+            )
+            views.setInt(R.id.widget_favorite, "setImageAlpha", 255)
+            val color = if (isFavorite) colors.primary else colors.onSurface
+            views.setInt(R.id.widget_favorite, "setColorFilter", color)
+            views.setContentDescription(
+                R.id.widget_favorite,
+                context.getString(if (isFavorite) R.string.unfavorite else R.string.playlist_favourite)
+            )
+            views.setOnClickPendingIntent(R.id.widget_favorite, favoritePi)
+        } else {
+            views.setViewVisibility(R.id.widget_favorite, View.GONE)
+        }
     }
 
     private fun applyRepeatAndShuffleControls(

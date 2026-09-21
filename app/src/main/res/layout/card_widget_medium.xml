@@ -104,7 +104,8 @@
                     android:padding="6dp"
                     android:scaleType="fitCenter"
                     android:src="@drawable/ic_favorite"
-                    android:tint="@color/widget_on_surface" />
+                    android:tint="@color/widget_on_surface"
+                    android:visibility="gone" />
 
             </LinearLayout>
 
