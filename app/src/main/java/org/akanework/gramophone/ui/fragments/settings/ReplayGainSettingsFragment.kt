@@ -20,11 +20,6 @@ package org.akanework.gramophone.ui.fragments.settings
 import android.os.Bundle
 import org.akanework.gramophone.R
 import org.akanework.gramophone.ui.fragments.BasePreferenceFragment
-import org.akanework.gramophone.ui.fragments.BaseSettingsActivity
-
-class ReplayGainSettingsActivity : BaseSettingsActivity(
-    R.string.settings_replaygain,
-    { ReplayGainSettingsFragment() })
 
 class ReplayGainSettingsFragment : BasePreferenceFragment() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {

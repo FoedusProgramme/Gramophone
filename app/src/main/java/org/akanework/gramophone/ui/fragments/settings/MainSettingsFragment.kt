@@ -20,12 +20,14 @@ package org.akanework.gramophone.ui.fragments.settings
 import android.os.Bundle
 import androidx.preference.Preference
 import org.akanework.gramophone.R
+import org.akanework.gramophone.ui.MainActivity
 import org.akanework.gramophone.ui.fragments.BasePreferenceFragment
-import org.akanework.gramophone.ui.fragments.BaseSettingsActivity
-
-class MainSettingsActivity : BaseSettingsActivity(
-    R.string.home_menu_settings,
-    { MainSettingsFragment() })
+import org.akanework.gramophone.ui.nav.aboutSettingsKey
+import org.akanework.gramophone.ui.nav.appearanceSettingsKey
+import org.akanework.gramophone.ui.nav.audioSettingsKey
+import org.akanework.gramophone.ui.nav.behaviorSettingsKey
+import org.akanework.gramophone.ui.nav.experimentalSettingsKey
+import org.akanework.gramophone.ui.nav.playerSettingsKey
 
 class MainSettingsFragment : BasePreferenceFragment() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -33,30 +35,14 @@ class MainSettingsFragment : BasePreferenceFragment() {
     }
 
     override fun onPreferenceTreeClick(preference: Preference): Boolean {
+        val activity = requireActivity() as MainActivity
         when (preference.key) {
-            "appearance" -> {
-                startActivity(AppearanceSettingsActivity::class.java)
-            }
-
-            "behavior" -> {
-                startActivity(BehaviorSettingsActivity::class.java)
-            }
-
-            "about" -> {
-                startActivity(AboutSettingsActivity::class.java)
-            }
-
-            "player" -> {
-                startActivity(PlayerSettingsActivity::class.java)
-            }
-
-            "audio" -> {
-                startActivity(AudioSettingsActivity::class.java)
-            }
-
-            "experimental" -> {
-                startActivity(ExperimentalSettingsActivity::class.java)
-            }
+            "appearance" -> activity.navigateTo(appearanceSettingsKey())
+            "behavior" -> activity.navigateTo(behaviorSettingsKey())
+            "about" -> activity.navigateTo(aboutSettingsKey())
+            "player" -> activity.navigateTo(playerSettingsKey())
+            "audio" -> activity.navigateTo(audioSettingsKey())
+            "experimental" -> activity.navigateTo(experimentalSettingsKey())
         }
         return super.onPreferenceTreeClick(preference)
     }

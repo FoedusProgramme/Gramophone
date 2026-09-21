@@ -17,7 +17,6 @@
 
 package org.akanework.gramophone.ui
 
-import android.annotation.SuppressLint
 import android.app.NotificationManager
 import android.app.SearchManager
 import android.app.assist.AssistContent
@@ -28,7 +27,6 @@ import android.content.ContentUris
 import android.content.Intent
 import android.content.IntentSender
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -41,7 +39,6 @@ import android.view.Choreographer
 import android.view.SearchEvent
 import android.view.ViewGroup
 import android.widget.ProgressBar
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
@@ -53,10 +50,8 @@ import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.net.toUri
 import androidx.core.os.BundleCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentManager.FragmentLifecycleCallbacks
-import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
@@ -94,7 +89,13 @@ import org.akanework.gramophone.ui.components.player.PlayerSheetViewImpl
 import org.akanework.gramophone.ui.fragments.BaseFragment
 import org.akanework.gramophone.ui.fragments.GeneralSubFragment
 import org.akanework.gramophone.ui.fragments.SearchFragment
-import org.akanework.gramophone.ui.fragments.ViewPagerFragment
+import org.akanework.gramophone.ui.nav.AppNavKey
+import org.akanework.gramophone.ui.nav.AppRoot
+import org.akanework.gramophone.ui.nav.FragmentKey
+import org.akanework.gramophone.ui.nav.HomeKey
+import org.akanework.gramophone.ui.nav.NavViewModel
+import org.akanework.gramophone.ui.nav.popIfPossible
+import org.akanework.gramophone.ui.nav.warmUpNavAxisEasing
 import org.nift4.mediastorecompat.MediaStoreCompat
 import uk.akane.libphonograph.dynamicitem.Favorite
 import uk.akane.libphonograph.manipulator.ItemManipulator
@@ -123,6 +124,7 @@ class MainActivity : BaseActivity() {
 
     // Import our viewModels.
     val controllerViewModel: MediaControllerViewModel by viewModels()
+    private val navViewModel: NavViewModel by viewModels()
     val startingActivity =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
 
@@ -162,6 +164,7 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         lifecycle.addObserver(controllerViewModel)
         enableEdgeToEdgeProperly()
+        CoroutineScope(Dispatchers.Default).launch { warmUpNavAxisEasing() }
         if (savedInstanceState?.containsKey("AddToPlaylistPendingRequest") == true) {
             pendingPlaylistRequest = savedInstanceState.getBundle("AddToPlaylistPendingRequest")
         }
@@ -203,31 +206,29 @@ class MainActivity : BaseActivity() {
         //  forward events to our session no matter whether it makes sense or not to currently
         //  handle volume there... but it's still better than not getting the key events I guess?
 
-        supportFragmentManager.registerFragmentLifecycleCallbacks(object :
-            FragmentLifecycleCallbacks() {
-            override fun onFragmentStarted(fm: FragmentManager, f: Fragment) {
-                super.onFragmentStarted(fm, f)
-                if (fm.fragments.lastOrNull() != f) return
-                // this won't be called in case we show()/hide() so
-                // we handle that case in BaseFragment
-                if (f is BaseFragment && f.wantsPlayer != null) {
-                    playerBottomSheet.visible = f.wantsPlayer
+        playerBottomSheet = PlayerSheetViewImpl(this, null).apply {
+            id = R.id.player_layout
+            clipChildren = false
+            clipToPadding = false
+        }
+        val pureDark = prefs.getBooleanStrict("pureDark", false)
+        setContentView(ComposeView(this).apply {
+            setContent {
+                GramophoneTheme(pureDark = pureDark) {
+                    AppRoot(
+                        backStack = navViewModel.backStack,
+                        onPlayerVisibleChanged = { playerBottomSheet.visible = it },
+                        debug = BuildConfig.DEBUG,
+                    )
                 }
             }
-        }, false)
-
-        // Set content Views.
-        setContentView(R.layout.activity_main)
-        if (BuildConfig.DEBUG) {
-            @SuppressLint("SetTextI18n")
-            findViewById<ViewGroup>(R.id.rootView).addView(TextView(this).apply {
-                text = "DEBUG"
-                setTextColor(Color.RED)
-                translationZ = 9999999f
-                translationX = 50f
-            })
-        }
-        playerBottomSheet = findViewById(R.id.player_layout)
+        })
+        addContentView(
+            playerBottomSheet,
+            ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
+            )
+        )
 
         // Check all permissions.
         if (!hasAudioPermission()) {
@@ -251,9 +252,7 @@ class MainActivity : BaseActivity() {
                 updateLibrary()
             } else onLibraryLoaded() // <-- when recreating activity due to rotation
         }
-        // ViewPagerFragment will call reportFullyDrawn itself, for every other fragment we'll handle it
-        // (this will happen on activity recreation with non-empty fragment backstack)
-        if (supportFragmentManager.findFragmentById(R.id.fragment_viewpager) !is ViewPagerFragment)
+        if (navViewModel.backStack.lastOrNull() != HomeKey)
             handler.post { maybeReportFullyDrawn() }
     }
 
@@ -806,20 +805,23 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    /**
-     * startFragment:
-     *   Used by child fragments / drawer to start
-     * a fragment inside MainActivity's fragment
-     * scope.
-     *
-     * @param frag: Target fragment.
-     */
     fun startFragment(frag: Fragment, args: (Bundle.() -> Unit)? = null) {
-        supportFragmentManager.commit {
-            addToBackStack(System.currentTimeMillis().toString())
-            hide(supportFragmentManager.fragments.last())
-            add(R.id.container, frag.apply { args?.let { arguments = Bundle().apply(it) } })
-        }
+        navViewModel.backStack.add(
+            FragmentKey(
+                className = frag::class.java.name,
+                args = args?.let { Bundle().apply(it) },
+                wantsPlayer = (frag as? BaseFragment)?.wantsPlayer ?: false,
+            )
+        )
+        if (!ready) handler.post { maybeReportFullyDrawn() }
+    }
+
+    fun navigateUp() {
+        navViewModel.backStack.popIfPossible()
+    }
+
+    fun navigateTo(key: AppNavKey) {
+        navViewModel.backStack.add(key)
     }
 
     override fun onDestroy() {

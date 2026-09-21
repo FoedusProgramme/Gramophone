@@ -56,12 +56,12 @@ class DetailDialogFragment : BaseFragment(false) {
         rootView.findViewById<AppBarLayout>(R.id.appbarlayout).enableEdgeToEdgePaddingListener()
         rootView.findViewById<View>(R.id.scrollView).enableEdgeToEdgePaddingListener()
         rootView.findViewById<MaterialToolbar>(R.id.topAppBar).setNavigationOnClickListener {
-            requireActivity().supportFragmentManager.popBackStack()
+            mainActivity.navigateUp()
         }
         val id = requireArguments().getString("Id")?.toMediaStoreId()
         val mediaItem = runBlocking { mainActivity.reader.idMapFlow.map { it[id] }.first() }
         if (mediaItem == null) {
-            parentFragmentManager.popBackStack()
+            mainActivity.navigateUp()
             return null
         }
         val mediaMetadata = mediaItem.mediaMetadata

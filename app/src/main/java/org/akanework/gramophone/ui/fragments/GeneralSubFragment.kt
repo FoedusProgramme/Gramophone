@@ -188,7 +188,7 @@ class GeneralSubFragment : BaseFragment(true) {
         recyclerView.fastScroll(songAdapter, songAdapter.itemHeightHelper)
 
         topAppBar.setNavigationOnClickListener {
-            requireActivity().supportFragmentManager.popBackStack()
+            mainActivity.navigateUp()
         }
 
         return rootView

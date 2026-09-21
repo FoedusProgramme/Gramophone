@@ -101,7 +101,7 @@ class ArtistSubFragment : BaseFragment(true), PopupTextProvider {
         recyclerView!!.fastScroll(this, ih)
 
         topAppBar.setNavigationOnClickListener {
-            requireActivity().supportFragmentManager.popBackStack()
+            mainActivity.navigateUp()
         }
         lifecycleScope.launch(Dispatchers.Default) {
             title.collect {

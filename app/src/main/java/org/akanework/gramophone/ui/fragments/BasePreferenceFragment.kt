@@ -17,7 +17,6 @@
 
 package org.akanework.gramophone.ui.fragments
 
-import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.Drawable
@@ -60,10 +59,6 @@ abstract class BasePreferenceFragment : PreferenceFragmentCompat(),
 
     override fun setDividerHeight(height: Int) {
         super.setDividerHeight(0)
-    }
-
-    fun startActivity(target: Class<*>) {
-        startActivity(Intent(requireActivity(), target))
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {

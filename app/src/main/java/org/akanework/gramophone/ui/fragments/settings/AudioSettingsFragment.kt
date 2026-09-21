@@ -21,12 +21,9 @@ import android.os.Bundle
 import androidx.preference.Preference
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.utils.PostAmpAudioOutputProvider
+import org.akanework.gramophone.ui.MainActivity
 import org.akanework.gramophone.ui.fragments.BasePreferenceFragment
-import org.akanework.gramophone.ui.fragments.BaseSettingsActivity
-
-class AudioSettingsActivity : BaseSettingsActivity(
-    R.string.settings_player_options,
-    { AudioSettingsFragment() })
+import org.akanework.gramophone.ui.nav.replayGainSettingsKey
 
 class AudioSettingsFragment : BasePreferenceFragment() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -37,9 +34,7 @@ class AudioSettingsFragment : BasePreferenceFragment() {
 
     override fun onPreferenceTreeClick(preference: Preference): Boolean {
         when (preference.key) {
-            "replaygain" -> {
-                startActivity(ReplayGainSettingsActivity::class.java)
-            }
+            "replaygain" -> (requireActivity() as MainActivity).navigateTo(replayGainSettingsKey())
         }
         return super.onPreferenceTreeClick(preference)
     }

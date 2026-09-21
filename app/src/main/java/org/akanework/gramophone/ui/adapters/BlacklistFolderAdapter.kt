@@ -37,7 +37,6 @@ import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.gramophoneApplication
 import org.akanework.gramophone.logic.ui.MyRecyclerView
 import org.akanework.gramophone.logic.utils.flows.repeatPausingWithLifecycle
-import org.akanework.gramophone.ui.fragments.settings.BlacklistSettingsActivity
 import java.io.File
 
 @SuppressLint("NotifyDataSetChanged")

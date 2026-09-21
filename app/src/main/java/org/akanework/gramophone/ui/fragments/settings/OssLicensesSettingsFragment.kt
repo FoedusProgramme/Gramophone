@@ -17,8 +17,6 @@
 
 package org.akanework.gramophone.ui.fragments.settings
 
-import android.os.Bundle
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.only
@@ -40,51 +38,37 @@ import androidx.compose.ui.res.stringResource
 import com.mikepenz.aboutlibraries.ui.compose.android.produceLibraries
 import com.mikepenz.aboutlibraries.ui.compose.m3.LibrariesContainer
 import org.akanework.gramophone.R
-import org.akanework.gramophone.ui.BaseComposeActivity
-import org.akanework.gramophone.ui.GramophoneTheme
 
-class OssLicensesSettingsActivity : BaseComposeActivity() {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            GramophoneTheme {
-                OssLicensesSettingsScreen()
-            }
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun OssLicensesScreen(onBack: () -> Unit) {
+    val libraries by produceLibraries(R.raw.aboutlibraries)
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            TopAppBar(
+                title = { Text(stringResource(R.string.settings_open_source_licenses)) },
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.back)
+                        )
+                    }
+                },
+                windowInsets = WindowInsets.safeDrawing.only(
+                    sides = WindowInsetsSides.Top + WindowInsetsSides.Horizontal
+                ),
+                scrollBehavior = scrollBehavior
+            )
+        },
+        contentWindowInsets = WindowInsets.safeDrawing,
+        content = { paddingValues ->
+            LibrariesContainer(
+                libraries = libraries,
+                contentPadding = paddingValues
+            )
         }
-    }
-
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Composable
-    private fun OssLicensesSettingsScreen() {
-        val libraries by produceLibraries(R.raw.aboutlibraries)
-        val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-        Scaffold(
-            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-            topBar = {
-                TopAppBar(
-                    title = { Text(stringResource(R.string.settings_open_source_licenses)) },
-                    navigationIcon = {
-                        IconButton(onClick = { finish() }) {
-                            Icon(
-                                Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = stringResource(R.string.back)
-                            )
-                        }
-                    },
-                    windowInsets = WindowInsets.safeDrawing.only(
-                        sides = WindowInsetsSides.Top + WindowInsetsSides.Horizontal
-                    ),
-                    scrollBehavior = scrollBehavior
-                )
-            },
-            contentWindowInsets = WindowInsets.safeDrawing,
-            content = { paddingValues ->
-                LibrariesContainer(
-                    libraries = libraries,
-                    contentPadding = paddingValues
-                )
-            }
-        )
-    }
+    )
 }

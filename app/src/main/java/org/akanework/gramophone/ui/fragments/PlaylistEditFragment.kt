@@ -140,7 +140,7 @@ class PlaylistEditFragment : BaseFragment(false) {
                         R.string.unknown_playlist,
                         Toast.LENGTH_LONG
                     ).show()
-                    requireActivity().supportFragmentManager.popBackStack()
+                    mainActivity.navigateUp()
                 }
                 return@launch
             }
@@ -184,7 +184,7 @@ class PlaylistEditFragment : BaseFragment(false) {
                                                 R.string.mount_storage,
                                                 Toast.LENGTH_LONG
                                             ).show()
-                                            requireActivity().supportFragmentManager.popBackStack()
+                                            mainActivity.navigateUp()
                                         }
                                         return@launch
                                     }
@@ -192,7 +192,7 @@ class PlaylistEditFragment : BaseFragment(false) {
                                 }
                             }
                             .setNeutralButton(android.R.string.cancel) { _, _ ->
-                                requireActivity().supportFragmentManager.popBackStack()
+                                mainActivity.navigateUp()
                             }
                             .setCancelable(false)
                             .show()
@@ -207,7 +207,7 @@ class PlaylistEditFragment : BaseFragment(false) {
                             requireContext(), R.string.mount_storage,
                             Toast.LENGTH_LONG
                         ).show()
-                        requireActivity().supportFragmentManager.popBackStack()
+                        mainActivity.navigateUp()
                     }
                 }
             }
@@ -238,7 +238,7 @@ class PlaylistEditFragment : BaseFragment(false) {
             withContext(Dispatchers.Main) {
                 Toast.makeText(requireContext(), e.toString(),
                     Toast.LENGTH_LONG).show()
-                requireActivity().supportFragmentManager.popBackStack()
+                mainActivity.navigateUp()
             }
             return
         }.let { playlist ->
@@ -252,10 +252,10 @@ class PlaylistEditFragment : BaseFragment(false) {
                     .setTitle(R.string.playlist_empty)
                     .setMessage(R.string.playlist_empty_msg)
                     .setPositiveButton(android.R.string.ok) { _, _ ->
-                        requireActivity().supportFragmentManager.popBackStack()
+                        mainActivity.navigateUp()
                     }
                     .setOnCancelListener {
-                        requireActivity().supportFragmentManager.popBackStack()
+                        mainActivity.navigateUp()
                     }
                     .show()
             }
@@ -357,7 +357,7 @@ class PlaylistEditFragment : BaseFragment(false) {
                     withContext(Dispatchers.Main) {
                         Toast.makeText(requireContext(), e.toString(),
                             Toast.LENGTH_LONG).show()
-                        requireActivity().supportFragmentManager.popBackStack()
+                        mainActivity.navigateUp()
                     }
                     return@collectLatest
                 }
@@ -371,7 +371,7 @@ class PlaylistEditFragment : BaseFragment(false) {
             return
         }
         if (entries.value.first <= 1) { // nothing was changed
-            requireActivity().supportFragmentManager.popBackStack()
+            mainActivity.navigateUp()
             return
         }
         val context = requireContext()
@@ -399,7 +399,7 @@ class PlaylistEditFragment : BaseFragment(false) {
                         }
                     }
                 }
-                requireActivity().supportFragmentManager.popBackStack()
+                mainActivity.navigateUp()
             }
             .setNeutralButton(android.R.string.cancel) { _, _ -> }
             .show()
@@ -434,7 +434,7 @@ class PlaylistEditFragment : BaseFragment(false) {
                     }
                 }
                 lifecycleScope.launch(Dispatchers.Main) {
-                    requireActivity().supportFragmentManager.popBackStack()
+                    mainActivity.navigateUp()
                 }
             }
         }
@@ -509,7 +509,7 @@ class PlaylistEditFragment : BaseFragment(false) {
     private fun onRequest(resultCode: Int) {
         if (resultCode != Activity.RESULT_OK) {
             // If there are any saved edits, don't commit (we can't, user said no) nor discard them
-            requireActivity().supportFragmentManager.popBackStack()
+            mainActivity.navigateUp()
             return
         }
     }

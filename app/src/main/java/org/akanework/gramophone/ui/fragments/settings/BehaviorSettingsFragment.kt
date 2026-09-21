@@ -28,13 +28,10 @@ import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.hasImagePermission
 import org.akanework.gramophone.logic.hasScopedStorageWithMediaTypes
 import org.akanework.gramophone.logic.utils.Flags
+import org.akanework.gramophone.ui.MainActivity
 import org.akanework.gramophone.ui.fragments.BasePreferenceFragment
-import org.akanework.gramophone.ui.fragments.BaseSettingsActivity
+import org.akanework.gramophone.ui.nav.BlacklistKey
 
-
-class BehaviorSettingsActivity : BaseSettingsActivity(
-    R.string.settings_category_behavior,
-    { BehaviorSettingsFragment() })
 
 class BehaviorSettingsFragment : BasePreferenceFragment() {
 
@@ -56,7 +53,7 @@ class BehaviorSettingsFragment : BasePreferenceFragment() {
 
     override fun onPreferenceTreeClick(preference: Preference): Boolean {
         if (preference.key == "blacklist") {
-            startActivity(BlacklistSettingsActivity::class.java)
+            (requireActivity() as MainActivity).navigateTo(BlacklistKey())
         }
         // Prior to Android 13, this changes a setting which changes MediaStoreUtils behaviour
         // Android 13 and later, this displays state of images permission granted/denied

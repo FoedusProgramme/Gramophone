@@ -57,7 +57,7 @@ import org.akanework.gramophone.logic.setMediaItemsWithTitle
 import org.akanework.gramophone.ui.MainActivity
 import org.akanework.gramophone.ui.adapters.ViewPager2Adapter
 import org.akanework.gramophone.ui.components.player.PlayerSheetViewImpl
-import org.akanework.gramophone.ui.fragments.settings.MainSettingsActivity
+import org.akanework.gramophone.ui.nav.mainSettingsKey
 import org.nift4.mediastorecompat.MediaStoreCompat
 
 /**
@@ -188,7 +188,7 @@ class ViewPagerFragment : BaseFragment(true) {
                 }
 
                 R.id.settings -> {
-                    activity.startActivity(Intent(activity, MainSettingsActivity::class.java))
+                    activity.navigateTo(mainSettingsKey())
                 }
 
                 R.id.shuffle -> {

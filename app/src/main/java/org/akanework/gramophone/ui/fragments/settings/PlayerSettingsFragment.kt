@@ -23,12 +23,9 @@ import androidx.preference.SeekBarPreference
 import androidx.preference.SwitchPreferenceCompat
 import com.google.android.material.color.DynamicColors
 import org.akanework.gramophone.R
+import org.akanework.gramophone.ui.MainActivity
 import org.akanework.gramophone.ui.fragments.BasePreferenceFragment
-import org.akanework.gramophone.ui.fragments.BaseSettingsActivity
-
-class PlayerSettingsActivity : BaseSettingsActivity(
-    R.string.settings_player_ui,
-    { PlayerSettingsFragment() })
+import org.akanework.gramophone.ui.nav.lyricSettingsKey
 
 class PlayerSettingsFragment : BasePreferenceFragment() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -50,7 +47,7 @@ class PlayerSettingsFragment : BasePreferenceFragment() {
 
     override fun onPreferenceTreeClick(preference: Preference): Boolean {
         if (preference.key == "lyrics") {
-            startActivity(LyricSettingsActivity::class.java)
+            (requireActivity() as MainActivity).navigateTo(lyricSettingsKey())
         }
         return super.onPreferenceTreeClick(preference)
     }

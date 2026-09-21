@@ -100,7 +100,7 @@ class SearchFragment : BaseFragment(true) {
         }
 
         returnButton.setOnClickListener {
-            requireActivity().supportFragmentManager.popBackStack()
+            mainActivity.navigateUp()
         }
 
         return rootView

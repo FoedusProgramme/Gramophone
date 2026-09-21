@@ -31,12 +31,10 @@ import org.akanework.gramophone.BuildConfig
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.utils.ColorUtils
 import org.akanework.gramophone.logic.utils.data.Contributors
+import org.akanework.gramophone.ui.MainActivity
 import org.akanework.gramophone.ui.fragments.BasePreferenceFragment
-import org.akanework.gramophone.ui.fragments.BaseSettingsActivity
-
-class AboutSettingsActivity : BaseSettingsActivity(
-    R.string.settings_about_app,
-    { AboutSettingsFragment() })
+import org.akanework.gramophone.ui.nav.ContributorsKey
+import org.akanework.gramophone.ui.nav.OssLicensesKey
 
 class AboutSettingsFragment : BasePreferenceFragment() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -77,7 +75,7 @@ class AboutSettingsFragment : BasePreferenceFragment() {
             aboutTextView.text = requireContext()
                 .getString(R.string.opensource_info, "© 2023-2026 AkaneTan, nift4 and contributors")
         } else if (preference.key == "contributors") {
-            startActivity(ContributorsSettingsActivity::class.java)
+            (requireActivity() as MainActivity).navigateTo(ContributorsKey())
         } else if (preference.key == "package_type") {
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle(R.string.settings_package_type)
@@ -113,7 +111,7 @@ class AboutSettingsFragment : BasePreferenceFragment() {
                             "firebase.test.lab"
                         ) != "true"
                     ) {
-                        startActivity(OssLicensesSettingsActivity::class.java)
+                        (requireActivity() as MainActivity).navigateTo(OssLicensesKey())
                     }
                 }
                 .show()

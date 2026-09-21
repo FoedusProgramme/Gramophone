@@ -279,54 +279,6 @@
         <service android:name=".ui.LyricWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
 
-        <activity
-            android:name=".ui.fragments.settings.PlayerSettingsActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".ui.fragments.settings.LyricSettingsActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".ui.fragments.settings.ReplayGainSettingsActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".ui.fragments.settings.AboutSettingsActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".ui.fragments.settings.AudioSettingsActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".ui.fragments.settings.AppearanceSettingsActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".ui.fragments.settings.BehaviorSettingsActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".ui.fragments.settings.MainSettingsActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".ui.fragments.settings.ExperimentalSettingsActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".ui.fragments.settings.ContributorsSettingsActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".ui.fragments.settings.BlacklistSettingsActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".ui.fragments.settings.OssLicensesSettingsActivity"
-            android:exported="false" />
-
         <!-- allow multi-resume for some Android 9 devices in multi-window -->
         <meta-data android:name="android.allow_multiple_resumed_activities" android:value="true" />
     </application>

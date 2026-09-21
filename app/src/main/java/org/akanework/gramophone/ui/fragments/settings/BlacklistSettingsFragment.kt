@@ -21,7 +21,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
@@ -36,26 +35,28 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.enableEdgeToEdgePaddingListener
-import org.akanework.gramophone.logic.ui.BaseActivity
+import org.akanework.gramophone.ui.MainActivity
 import org.akanework.gramophone.ui.adapters.BlacklistFolderAdapter
 
-class BlacklistSettingsActivity : BaseActivity() {
+class BlacklistHostFragment : Fragment() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_blacklist_settings)
-        val topAppBar = findViewById<MaterialToolbar>(R.id.topAppBar)
-        val tabLayout = findViewById<TabLayout>(R.id.tab_layout)
-        val viewPager2 = findViewById<ViewPager2>(R.id.fragment_viewpager)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        val rootView = inflater.inflate(R.layout.activity_blacklist_settings, container, false)
+        val topAppBar = rootView.findViewById<MaterialToolbar>(R.id.topAppBar)
+        val tabLayout = rootView.findViewById<TabLayout>(R.id.tab_layout)
+        val viewPager2 = rootView.findViewById<ViewPager2>(R.id.fragment_viewpager)
 
-        findViewById<AppBarLayout>(R.id.appbarlayout).enableEdgeToEdgePaddingListener()
+        rootView.findViewById<AppBarLayout>(R.id.appbarlayout).enableEdgeToEdgePaddingListener()
 
         topAppBar.setNavigationOnClickListener {
-            finish()
+            (requireActivity() as MainActivity).navigateUp()
         }
 
-        viewPager2.adapter = object : FragmentStateAdapter(supportFragmentManager, lifecycle) {
+        viewPager2.adapter = object : FragmentStateAdapter(childFragmentManager, viewLifecycleOwner.lifecycle) {
             override fun createFragment(position: Int): Fragment {
                 return BlacklistSettingsFragment().apply {
                     arguments = Bundle().apply {
@@ -74,11 +75,6 @@ class BlacklistSettingsActivity : BaseActivity() {
                 R.string.settings_blacklist)
             tab.view.post {
                 try {
-                    /*
-                     * Add margin to last and first tab.
-                     * There's no attribute to let you set margin
-                     * to the last tab.
-                     */
                     val lp = tab.view.layoutParams as ViewGroup.MarginLayoutParams
                     lp.marginStart = if (position == 0)
                         resources.getDimension(R.dimen.tab_layout_content_padding).toInt() else 0
@@ -89,6 +85,8 @@ class BlacklistSettingsActivity : BaseActivity() {
                 }
             }
         }.attach()
+
+        return rootView
     }
 }
 

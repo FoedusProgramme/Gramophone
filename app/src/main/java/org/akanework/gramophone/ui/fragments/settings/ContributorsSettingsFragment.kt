@@ -19,9 +19,7 @@ package org.akanework.gramophone.ui.fragments.settings
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -61,6 +59,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -71,167 +70,154 @@ import coil3.compose.AsyncImage
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.utils.data.Contributors
 import org.akanework.gramophone.logic.utils.data.GitHubUser
-import org.akanework.gramophone.ui.BaseComposeActivity
-import org.akanework.gramophone.ui.GramophoneTheme
 
-class ContributorsSettingsActivity : BaseComposeActivity() {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            GramophoneTheme {
-                ContributorsSettingsScreen()
+@Composable
+private fun SimpleCard(
+    shape: Shape, url: String?, icon: @Composable () -> Unit,
+    name: String?, login: String?, subtitle: String
+) {
+    val context = LocalContext.current
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(2.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        shape = shape,
+        onClick = {
+            if (url != null) {
+                val intent = Intent(Intent.ACTION_VIEW, url.toUri())
+                try {
+                    context.startActivity(intent)
+                } catch (_: ActivityNotFoundException) {
+                    Toast.makeText(context, R.string.no_app_found, Toast.LENGTH_LONG).show()
+                }
             }
         }
-    }
-
-    @Composable
-    fun SimpleCard(
-        shape: Shape, url: String?, icon: @Composable () -> Unit,
-        name: String?, login: String?, subtitle: String
     ) {
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(2.dp),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-            shape = shape,
-            onClick = {
-                if (url != null) {
-                    val intent = Intent(Intent.ACTION_VIEW, url.toUri())
-                    try {
-                        startActivity(intent)
-                    } catch (_: ActivityNotFoundException) {
-                        Toast.makeText(this, R.string.no_app_found, Toast.LENGTH_LONG).show()
-                    }
-                }
-            }
+        Row(
+            modifier = Modifier.padding(12.dp)
         ) {
-            Row(
-                modifier = Modifier.padding(12.dp)
-            ) {
-                icon()
-                Spacer(modifier = Modifier.width(12.dp))
-                Column {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            text = name ?: login ?: "",
-                            fontWeight = FontWeight.Bold,
-                            style = MaterialTheme.typography.titleSmall
-                        )
-                        if (name != null && name != login && login != null)
-                            Text(
-                                text = "@$login",
-                                modifier = Modifier.padding(start = 8.dp),
-                                style = MaterialTheme.typography.labelMedium,
-                                fontWeight = FontWeight.Normal,
-                                fontFamily = FontFamily.Monospace,
-                                color = LocalContentColor.current.copy(alpha = 0.8f)
-                            )
-                    }
+            icon()
+            Spacer(modifier = Modifier.width(12.dp))
+            Column {
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = subtitle,
-                        style = MaterialTheme.typography.labelMedium,
-                        fontWeight = FontWeight.Normal,
-                        color = LocalContentColor.current.copy(alpha = 0.8f)
+                        text = name ?: login ?: "",
+                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.titleSmall
                     )
+                    if (name != null && name != login && login != null)
+                        Text(
+                            text = "@$login",
+                            modifier = Modifier.padding(start = 8.dp),
+                            style = MaterialTheme.typography.labelMedium,
+                            fontWeight = FontWeight.Normal,
+                            fontFamily = FontFamily.Monospace,
+                            color = LocalContentColor.current.copy(alpha = 0.8f)
+                        )
                 }
+                Text(
+                    text = subtitle,
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = FontWeight.Normal,
+                    color = LocalContentColor.current.copy(alpha = 0.8f)
+                )
             }
         }
     }
+}
 
-    @Composable
-    fun ContributorCard(shape: Shape, contributor: GitHubUser) {
-        SimpleCard(
-            shape,
-            url = if (contributor.link) "https://github.com/${contributor.login}" else null,
-            icon = {
-                AsyncImage(
-                    model = contributor.avatar,
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(36.dp)
-                        .clip(CircleShape)
+@Composable
+private fun ContributorCard(shape: Shape, contributor: GitHubUser) {
+    SimpleCard(
+        shape,
+        url = if (contributor.link) "https://github.com/${contributor.login}" else null,
+        icon = {
+            AsyncImage(
+                model = contributor.avatar,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(36.dp)
+                    .clip(CircleShape)
+            )
+        },
+        name = contributor.name,
+        login = contributor.login,
+        subtitle = stringResource(contributor.contributed)
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ContributorsScreen(onBack: () -> Unit) {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(stringResource(R.string.settings_contributors)) },
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.back)
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                    scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainer
+                ),
+                windowInsets = WindowInsets.safeDrawing.only(
+                    sides = WindowInsetsSides.Top + WindowInsetsSides.Horizontal
                 )
-            },
-            name = contributor.name,
-            login = contributor.login,
-            subtitle = stringResource(contributor.contributed)
-        )
-    }
-
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Composable
-    fun ContributorsSettingsScreen() {
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = { Text(stringResource(R.string.settings_contributors)) },
-                    navigationIcon = {
-                        IconButton(onClick = { finish() }) {
-                            Icon(
-                                Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = stringResource(R.string.back)
-                            )
-                        }
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceContainer,
-                        scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainer
+            )
+        },
+        containerColor = MaterialTheme.colorScheme.surfaceContainer,
+        contentWindowInsets = WindowInsets.safeDrawing
+    ) { paddingValues ->
+        LazyColumn(
+            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 2.dp) + paddingValues
+        ) {
+            itemsIndexed(Contributors.LIST) { i, contributor ->
+                val top = if (i == 0) CornerSize(16.dp) else CornerSize(8.dp)
+                val bottom = CornerSize(8.dp)
+                ContributorCard(
+                    RoundedCornerShape(
+                        top, top, bottom, bottom
+                    ), contributor
+                )
+            }
+            item {
+                val top = CornerSize(8.dp)
+                val bottom = CornerSize(16.dp)
+                SimpleCard(
+                    shape = RoundedCornerShape(
+                        top, top, bottom, bottom
                     ),
-                    windowInsets = WindowInsets.safeDrawing.only(
-                        sides = WindowInsetsSides.Top + WindowInsetsSides.Horizontal
-                    )
-                )
-            },
-            containerColor = MaterialTheme.colorScheme.surfaceContainer,
-            contentWindowInsets = WindowInsets.safeDrawing
-        ) { paddingValues ->
-            LazyColumn(
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 2.dp) + paddingValues
-            ) {
-                itemsIndexed(Contributors.LIST) { i, contributor ->
-                    val top = if (i == 0) CornerSize(16.dp) else CornerSize(8.dp)
-                    val bottom = CornerSize(8.dp)
-                    ContributorCard(
-                        RoundedCornerShape(
-                            top, top, bottom, bottom
-                        ), contributor
-                    )
-                }
-                item {
-                    val top = CornerSize(8.dp)
-                    val bottom = CornerSize(16.dp)
-                    SimpleCard(
-                        shape = RoundedCornerShape(
-                            top, top, bottom, bottom
-                        ),
-                        url = "https://hosted.weblate.org/engage/gramophone/",
-                        icon = {
-                            AsyncImage(
-                                model = R.drawable.outline_translate_24,
-                                contentDescription = null,
-                                contentScale = ContentScale.Crop,
-                                modifier = Modifier
-                                    .size(36.dp)
-                                    .padding(6.dp)
-                            )
-                        },
-                        name = stringResource(R.string.translators),
-                        login = null,
-                        subtitle = remember { Contributors.TRANSLATORS.joinToString() })
-                }
+                    url = "https://hosted.weblate.org/engage/gramophone/",
+                    icon = {
+                        AsyncImage(
+                            model = R.drawable.outline_translate_24,
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .size(36.dp)
+                                .padding(6.dp)
+                        )
+                    },
+                    name = stringResource(R.string.translators),
+                    login = null,
+                    subtitle = remember { Contributors.TRANSLATORS.joinToString() })
             }
         }
     }
+}
 
-    operator fun PaddingValues.plus(other: PaddingValues): PaddingValues {
-        return PaddingValues(
-            start = this.calculateStartPadding(Ltr) + other.calculateStartPadding(Ltr),
-            top = this.calculateTopPadding() + other.calculateTopPadding(),
-            end = this.calculateEndPadding(Ltr) + other.calculateEndPadding(Ltr),
-            bottom = this.calculateBottomPadding() + other.calculateBottomPadding()
-        )
-    }
+private operator fun PaddingValues.plus(other: PaddingValues): PaddingValues {
+    return PaddingValues(
+        start = this.calculateStartPadding(Ltr) + other.calculateStartPadding(Ltr),
+        top = this.calculateTopPadding() + other.calculateTopPadding(),
+        end = this.calculateEndPadding(Ltr) + other.calculateEndPadding(Ltr),
+        bottom = this.calculateBottomPadding() + other.calculateBottomPadding()
+    )
 }

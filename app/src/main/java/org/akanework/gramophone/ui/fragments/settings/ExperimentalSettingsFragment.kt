@@ -32,13 +32,8 @@ import org.akanework.gramophone.BuildConfig
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.utils.Flags
 import org.akanework.gramophone.ui.fragments.BasePreferenceFragment
-import org.akanework.gramophone.ui.fragments.BaseSettingsActivity
 import java.io.File
 import java.nio.charset.Charset
-
-class ExperimentalSettingsActivity : BaseSettingsActivity(
-    R.string.settings_experimental_settings,
-    { ExperimentalSettingsFragment() })
 
 class ExperimentalSettingsFragment : BasePreferenceFragment() {
 
