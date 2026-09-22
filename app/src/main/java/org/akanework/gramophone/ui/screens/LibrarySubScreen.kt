@@ -222,6 +222,8 @@ fun LibrarySubScreen(key: LibrarySubKey, onBack: () -> Unit, modifier: Modifier 
     CollectLibraryItems(page.songs)
     page.albums?.let { CollectLibraryItems(it) }
     val density = LocalDensity.current
+    val topInset = WindowInsets.systemBars.union(WindowInsets.displayCutout)
+        .asPaddingValues().calculateTopPadding()
     val titleState = rememberLargeTitleState()
     val overscroll = rememberIosOverscrollState()
     val songs = page.songs
@@ -237,7 +239,8 @@ fun LibrarySubScreen(key: LibrarySubKey, onBack: () -> Unit, modifier: Modifier 
         (if (songLayout == LayoutType.LIST) LARGER_LIST_HEIGHT else LIST_HEIGHT).roundToPx()
     }
     val decorPx = with(density) { DECOR_HEIGHT.roundToPx() }
-    val scrolled = { with(density) { largeTitleScroll(gridState, overscroll, titleState) } }
+    val contentTopPx = with(density) { (topInset + GLASS_BAR_HEIGHT).toPx() }
+    val scrolled = { largeTitleScroll(gridState, overscroll, titleState, contentTopPx) }
     var songSortOpen by remember { mutableStateOf(false) }
     var albumSortOpen by remember { mutableStateOf(false) }
     // The title item comes first, then for an artist the albums header and the album grid.
@@ -254,8 +257,6 @@ fun LibrarySubScreen(key: LibrarySubKey, onBack: () -> Unit, modifier: Modifier 
     }
 
     val hazeState = remember { HazeState() }
-    val topInset = WindowInsets.systemBars.union(WindowInsets.displayCutout)
-        .asPaddingValues().calculateTopPadding()
     val barTopPadding = topInset + GLASS_BAR_HEIGHT
     val background = MaterialTheme.colorScheme.surface
     Box(modifier.background(background)) {

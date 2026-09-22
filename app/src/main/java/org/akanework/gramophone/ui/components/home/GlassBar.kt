@@ -39,7 +39,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.style.TextOverflow
@@ -52,7 +51,6 @@ import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
 import dev.chrisbanes.haze.hazeEffect
-import kotlin.math.roundToInt
 
 /*
  * The frosted toolbar, adapted from FundamentalApps/Weather (GlassTopAppBar): a transparent bar of
@@ -65,9 +63,6 @@ val GLASS_BAR_HEIGHT = 64.dp
 private val TOOLBAR_PADDING_START = 24.dp
 private val TOOLBAR_PADDING_END = 8.dp
 private val BAR_TITLE_SIZE = 22.sp // textAppearanceTitleLarge
-
-/** The frost thins out over this much at the bottom of the bar. */
-private val FROST_FALLOFF = 32.dp
 
 /** Blur only, no tint: a tint would read as a solid band laid across the blurred content. */
 @Composable
@@ -82,38 +77,35 @@ fun glassHazeStyle(): HazeStyle = HazeStyle(
 )
 
 /**
- * Blurs whatever [hazeState] recorded over the bar's current [height] in px: full from the top
- * edge of the screen down to [falloffPx] above the bottom, then eased out to nothing at the
- * bottom. A hard edge would leave a visible line where the bar meets the content, while easing
- * over the whole bar would leave the pinned tab row barely frosted.
- *
- * Haze redraws the whole area from its half resolution copy of the content whatever the
- * intensity, so the node must never extend over content that should stay sharp. [height] is
- * read under snapshot observation, so a bar that grows extends its frost with it.
+ * Full blur against the top edge of the screen, gone by the bottom of the bar. The easing matters
+ * at both ends: haze's default holds the blur and drops it at the very end, which leaves a
+ * visible line where the bar meets the content, while decaying early leaves the middle of the
+ * bar barely blurred. Flat at both ends and steep in between frosts the bar and still lets it
+ * meet the content without a step.
  */
-fun Modifier.topEdgeBlur(
-    hazeState: HazeState,
-    style: HazeStyle,
-    falloffPx: Float,
-    height: () -> Float,
-): Modifier = hazeEffect(hazeState, style) {
-    inputScale = HazeInputScale.Fixed(0.5f)
-    val bottom = height()
-    progressive = HazeProgressive.verticalGradient(
-        easing = EaseInOut,
-        startY = (bottom - falloffPx).coerceAtLeast(0f),
-        startIntensity = 1f,
-        endY = bottom,
-        endIntensity = 0f,
-        preferPerformance = false,
-    )
-}
+private val TopEdgeProgressive = HazeProgressive.verticalGradient(
+    easing = EaseInOut,
+    startY = 0f,
+    startIntensity = 1f,
+    endY = Float.POSITIVE_INFINITY,
+    endIntensity = 0f,
+    preferPerformance = false,
+)
+
+/**
+ * Blurs whatever [hazeState] recorded, strongest against the top edge of the screen. Haze
+ * redraws the whole node from its half resolution copy of the content whatever the intensity,
+ * so the node must be exactly the bar and never extend over content that should stay sharp.
+ */
+fun Modifier.topEdgeBlur(hazeState: HazeState, style: HazeStyle): Modifier =
+    hazeEffect(hazeState, style) {
+        inputScale = HazeInputScale.Fixed(0.5f)
+        progressive = TopEdgeProgressive
+    }
 
 /**
  * The glass toolbar over a page's content: [navigationIcon], the small [title], then [actions].
- * The title fades in as the content's [LargeTitle] passes underneath, measured by [scrolled]. The
- * frost can extend by up to [blurExtension] below the toolbar, by [blurExtensionFraction] of it,
- * for a row that pins under the bar.
+ * The title fades in as the content's [LargeTitle] passes underneath, measured by [scrolled].
  */
 @Composable
 fun GlassTitleBar(
@@ -121,37 +113,22 @@ fun GlassTitleBar(
     title: String,
     scrolled: () -> Float,
     modifier: Modifier = Modifier,
-    blurExtension: Dp = 0.dp,
-    blurExtensionFraction: () -> Float = { 0f },
     toolbarPaddingStart: Dp = TOOLBAR_PADDING_START,
     toolbarPaddingEnd: Dp = TOOLBAR_PADDING_END,
     titlePaddingStart: Dp = 0.dp,
     navigationIcon: (@Composable () -> Unit)? = null,
     actions: @Composable RowScope.() -> Unit = {},
 ) {
-    val density = LocalDensity.current
     val insets = WindowInsets.systemBars.union(WindowInsets.displayCutout)
     val topInset = insets.asPaddingValues().calculateTopPadding()
-    val toolbarBottomPx = with(density) { (topInset + GLASS_BAR_HEIGHT).toPx() }
-    val blurExtensionPx = with(density) { blurExtension.toPx() }
-    val falloffPx = with(density) { FROST_FALLOFF.toPx() }
     val style = glassHazeStyle()
-    val frostHeight = {
-        toolbarBottomPx + blurExtensionPx * blurExtensionFraction().coerceIn(0f, 1f)
-    }
     Box(modifier.fillMaxWidth()) {
         // The blur is its own box, sized to exactly the frosted area, status bar included.
         Box(
             Modifier
                 .fillMaxWidth()
-                .layout { measurable, constraints ->
-                    val height = frostHeight().roundToInt()
-                    val placeable = measurable.measure(
-                        constraints.copy(minHeight = height, maxHeight = height)
-                    )
-                    layout(placeable.width, height) { placeable.place(0, 0) }
-                }
-                .topEdgeBlur(hazeState, style, falloffPx, frostHeight),
+                .height(topInset + GLASS_BAR_HEIGHT)
+                .topEdgeBlur(hazeState, style),
         )
         Row(
             Modifier

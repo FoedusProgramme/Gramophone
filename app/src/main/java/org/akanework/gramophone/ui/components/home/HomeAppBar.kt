@@ -25,20 +25,12 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.displayCutout
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -73,7 +65,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.chrisbanes.haze.HazeState
@@ -110,65 +101,37 @@ private val OVERFLOW_BUTTON_SHAPE = RoundedCornerShape(
 )
 
 /**
- * The home app bar: the glass toolbar with search and overflow, and the tab row. The tab row
- * rests under the page's large title and rides up with it until it meets the toolbar, where it
- * pins and the frost extends down to cover it. [scrolled] is the page's travel from rest, see
- * [largeTitleScroll].
+ * The home's glass toolbar: the app name, fading in as the page's large title slides under it,
+ * with the search and overflow actions. [scrolled] is the page's travel from rest, see
+ * [largeTitleScroll]. The tab row is not part of it: it scrolls with the content, see
+ * [HomeTabRow].
  */
 @Composable
 fun HomeAppBar(
     hazeState: HazeState,
-    titleState: LargeTitleState,
     scrolled: () -> Float,
-    tabs: List<HomeTab>,
-    selectedTab: Int,
-    tabOffsetFraction: Float,
-    onTabClick: (Int) -> Unit,
     onSearch: () -> Unit,
     onMenuAction: (HomeMenuAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val density = LocalDensity.current
-    val insets = WindowInsets.systemBars.union(WindowInsets.displayCutout)
-    val showTabs = tabs.size >= 2
-    val toolbarBottomPx = insets.getTop(density) + with(density) { GLASS_BAR_HEIGHT.toPx() }
-    val tabRowOffset = { (titleState.itemHeight - scrolled()).coerceAtLeast(0f) }
-    // Sized to the screen so the tab row stays inside it wherever the title puts it.
-    Box(modifier.fillMaxSize()) {
-        GlassTitleBar(
-            hazeState = hazeState,
-            title = stringResource(R.string.app_name),
-            scrolled = scrolled,
-            blurExtension = if (showTabs) TAB_ROW_HEIGHT else 0.dp,
-            blurExtensionFraction = {
-                val height = titleState.itemHeight
-                if (height > 0f) 1f - tabRowOffset() / height else 1f
-            },
-            toolbarPaddingEnd = 16.dp,
-            actions = {
-                HomeActionButton(
-                    icon = Icons.Rounded.Search,
-                    iconSize = 24.dp,
-                    shape = SEARCH_BUTTON_SHAPE,
-                    iconOffsetX = ACTION_ICON_INNER_OFFSET, // nudge toward the inner edge
-                    onClick = onSearch,
-                )
-                Spacer(Modifier.width(ACTION_BUTTON_GAP))
-                HomeOverflowMenu(onMenuAction)
-            },
-        )
-        if (showTabs) {
-            HomeTabRow(
-                tabs = tabs,
-                selectedTab = selectedTab,
-                offsetFraction = tabOffsetFraction,
-                onTabClick = onTabClick,
-                modifier = Modifier
-                    .offset { IntOffset(0, (toolbarBottomPx + tabRowOffset()).roundToInt()) }
-                    .windowInsetsPadding(insets.only(WindowInsetsSides.Horizontal)),
+    GlassTitleBar(
+        hazeState = hazeState,
+        title = stringResource(R.string.app_name),
+        scrolled = scrolled,
+        modifier = modifier,
+        toolbarPaddingEnd = 16.dp,
+        actions = {
+            HomeActionButton(
+                icon = Icons.Rounded.Search,
+                iconSize = 24.dp,
+                shape = SEARCH_BUTTON_SHAPE,
+                iconOffsetX = ACTION_ICON_INNER_OFFSET, // nudge toward the inner edge
+                onClick = onSearch,
             )
-        }
-    }
+            Spacer(Modifier.width(ACTION_BUTTON_GAP))
+            HomeOverflowMenu(onMenuAction)
+        },
+    )
 }
 
 /**
@@ -239,15 +202,18 @@ private fun HomeOverflowMenu(onMenuAction: (HomeMenuAction) -> Unit) {
 
 /**
  * Scrollable tab row with the chip-shaped indicator of `selected_chip_background`, following
- * the pager (selected tab + offset fraction) and keeping the selected tab centred.
+ * the pager (selected tab + offset fraction) and keeping the selected tab centred. Drawn over
+ * the pages below the large title and scrolling with them, so [enabled] is false once it has
+ * gone under the toolbar and touches there belong to whatever is underneath.
  */
 @Composable
-private fun HomeTabRow(
+fun HomeTabRow(
     tabs: List<HomeTab>,
     selectedTab: Int,
     offsetFraction: Float,
     onTabClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
 ) {
     val density = LocalDensity.current
     val scrollState = rememberScrollState()
@@ -275,7 +241,7 @@ private fun HomeTabRow(
             .fillMaxWidth()
             .height(TAB_ROW_HEIGHT)
             .onSizeChanged { rowWidth = it.width }
-            .horizontalScroll(scrollState)
+            .horizontalScroll(scrollState, enabled = enabled)
             .drawBehind {
                 val current = tabBounds.getOrNull(selectedTab) ?: return@drawBehind
                 val nextIndex = if (offsetFraction >= 0f) selectedTab + 1 else selectedTab - 1
@@ -308,6 +274,7 @@ private fun HomeTabRow(
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null,
+                        enabled = enabled,
                         onClick = { onTabClick(index) },
                     )
                     .onGloballyPositioned { coords ->

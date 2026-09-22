@@ -20,19 +20,24 @@ package org.akanework.gramophone.ui.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.union
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
@@ -44,6 +49,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.IntOffset
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.chrisbanes.haze.HazeState
@@ -56,7 +62,9 @@ import org.akanework.gramophone.ui.actions.findMainActivity
 import org.akanework.gramophone.ui.components.compose.rememberPreference
 import org.akanework.gramophone.ui.components.home.GLASS_BAR_HEIGHT
 import org.akanework.gramophone.ui.components.home.HomeAppBar
+import org.akanework.gramophone.ui.components.home.HomeTabRow
 import org.akanework.gramophone.ui.components.home.IosOverscrollState
+import org.akanework.gramophone.ui.components.home.TAB_ROW_HEIGHT
 import org.akanework.gramophone.ui.components.home.largeTitleScroll
 import org.akanework.gramophone.ui.components.home.rememberLargeTitleState
 import org.akanework.gramophone.ui.components.home.rememberNowPlayingState
@@ -66,6 +74,7 @@ import org.akanework.gramophone.ui.state.HomeViewModel
 import org.akanework.gramophone.ui.state.LibraryTabSpec
 import org.akanework.gramophone.ui.visibleHomeTabs
 import kotlin.math.abs
+import kotlin.math.roundToInt
 
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier) {
@@ -87,6 +96,10 @@ fun HomeScreen(modifier: Modifier = Modifier) {
     val playerBottomPadding = LocalPlayerBottomPadding.current
     val hazeState = remember { HazeState() }
     val titleState = rememberLargeTitleState()
+    val insets = WindowInsets.systemBars.union(WindowInsets.displayCutout)
+    val topInset = insets.asPaddingValues().calculateTopPadding()
+    val toolbarBottomPx = with(density) { (topInset + GLASS_BAR_HEIGHT).toPx() }
+    val tabRowPx = with(density) { TAB_ROW_HEIGHT.toPx() }
     val overscrolls = remember { HashMap<HomeTab, IosOverscrollState>() }
     fun overscrollOf(tab: HomeTab) = overscrolls.getOrPut(tab) { IosOverscrollState() }
     fun gridOf(tab: HomeTab): LazyGridState {
@@ -94,7 +107,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
         return if (spec != null) viewModel.tabState(spec).gridState
         else viewModel.folderState(isDetailed = tab == HomeTab.FileSystem).songs.gridState
     }
-    fun scrollOf(tab: HomeTab) = with(density) { largeTitleScroll(gridOf(tab), overscrollOf(tab), titleState) }
+    fun scrollOf(tab: HomeTab) = largeTitleScroll(gridOf(tab), overscrollOf(tab), titleState, toolbarBottomPx)
     // The bar follows the page on show, blended with its neighbour while a swipe is in flight.
     val scrolled = {
         val current = pagerState.currentPage
@@ -105,62 +118,75 @@ fun HomeScreen(modifier: Modifier = Modifier) {
             from + (scrollOf(tabs[next]) - from) * abs(fraction)
         }
     }
-    val topInset = WindowInsets.systemBars.union(WindowInsets.displayCutout)
-        .asPaddingValues().calculateTopPadding()
+    // The tab row scrolls with the pages, from its slot under the large title up under the
+    // toolbar. Once it is more than half way under, touches there belong to the list beneath.
+    val tabRowOffset = { toolbarBottomPx + titleState.itemHeight - tabRowPx - scrolled() }
+    val tabsReachable by remember(tabs) {
+        derivedStateOf { scrolled() < titleState.itemHeight - tabRowPx / 2f }
+    }
     val background = MaterialTheme.colorScheme.surfaceContainerLow
     Box(modifier.background(background)) {
-        // The pages sit behind the bar as its blur source, padded clear of the toolbar at the top.
-        // The background is painted inside the source, or the recorded layer is transparent
-        // between the items and the sharp text underneath shows through the frost.
-        CompositionLocalProvider(LocalAppBarTopPadding provides topInset + GLASS_BAR_HEIGHT) {
-            HorizontalPager(
-                state = pagerState,
-                modifier = Modifier.fillMaxSize().hazeSource(hazeState).background(background),
-                beyondViewportPageCount = 1,
-                key = { tabs[it].name },
-                userScrollEnabled = showTabs,
-            ) { page ->
-                val tab = tabs[page]
-                val spec = LibraryTabSpec.forTab(tab)
-                if (spec != null) {
-                    LibraryTabScreen(
-                        state = viewModel.tabState(spec),
-                        nowPlaying = nowPlaying,
-                        reselectTick = reselectTicks[tab] ?: 0,
-                        title = stringResource(R.string.app_name),
-                        titleState = titleState,
-                        overscroll = overscrollOf(tab),
-                        hasTabRow = showTabs,
-                        modifier = Modifier.fillMaxSize(),
-                    )
-                } else {
-                    FolderTabScreen(
-                        state = viewModel.folderState(isDetailed = tab == HomeTab.FileSystem),
-                        nowPlaying = nowPlaying,
-                        reselectTick = reselectTicks[tab] ?: 0,
-                        title = stringResource(R.string.app_name),
-                        titleState = titleState,
-                        overscroll = overscrollOf(tab),
-                        hasTabRow = showTabs,
-                        modifier = Modifier.fillMaxSize(),
-                    )
+        // The pages and the tab row sit behind the bar as its blur source, padded clear of the
+        // toolbar at the top. The background is painted inside the source, or the recorded
+        // layer is transparent between the items and the sharp text underneath shows through.
+        Box(Modifier.fillMaxSize().hazeSource(hazeState).background(background)) {
+            CompositionLocalProvider(LocalAppBarTopPadding provides topInset + GLASS_BAR_HEIGHT) {
+                HorizontalPager(
+                    state = pagerState,
+                    modifier = Modifier.fillMaxSize(),
+                    beyondViewportPageCount = 1,
+                    key = { tabs[it].name },
+                    userScrollEnabled = showTabs,
+                ) { page ->
+                    val tab = tabs[page]
+                    val spec = LibraryTabSpec.forTab(tab)
+                    if (spec != null) {
+                        LibraryTabScreen(
+                            state = viewModel.tabState(spec),
+                            nowPlaying = nowPlaying,
+                            reselectTick = reselectTicks[tab] ?: 0,
+                            title = stringResource(R.string.app_name),
+                            titleState = titleState,
+                            overscroll = overscrollOf(tab),
+                            hasTabRow = showTabs,
+                            modifier = Modifier.fillMaxSize(),
+                        )
+                    } else {
+                        FolderTabScreen(
+                            state = viewModel.folderState(isDetailed = tab == HomeTab.FileSystem),
+                            nowPlaying = nowPlaying,
+                            reselectTick = reselectTicks[tab] ?: 0,
+                            title = stringResource(R.string.app_name),
+                            titleState = titleState,
+                            overscroll = overscrollOf(tab),
+                            hasTabRow = showTabs,
+                            modifier = Modifier.fillMaxSize(),
+                        )
+                    }
                 }
+            }
+            if (showTabs) {
+                HomeTabRow(
+                    tabs = tabs,
+                    selectedTab = pagerState.currentPage,
+                    offsetFraction = pagerState.currentPageOffsetFraction,
+                    onTabClick = { index ->
+                        if (index == pagerState.currentPage) {
+                            reselectTicks[tabs[index]] = (reselectTicks[tabs[index]] ?: 0) + 1
+                        } else {
+                            scope.launch { pagerState.animateScrollToPage(index) }
+                        }
+                    },
+                    enabled = tabsReachable,
+                    modifier = Modifier
+                        .offset { IntOffset(0, tabRowOffset().roundToInt()) }
+                        .windowInsetsPadding(insets.only(WindowInsetsSides.Horizontal)),
+                )
             }
         }
         HomeAppBar(
             hazeState = hazeState,
-            titleState = titleState,
             scrolled = scrolled,
-            tabs = tabs,
-            selectedTab = pagerState.currentPage,
-            tabOffsetFraction = pagerState.currentPageOffsetFraction,
-            onTabClick = { index ->
-                if (index == pagerState.currentPage) {
-                    reselectTicks[tabs[index]] = (reselectTicks[tabs[index]] ?: 0) + 1
-                } else {
-                    scope.launch { pagerState.animateScrollToPage(index) }
-                }
-            },
             onSearch = { HomeActions.search(activity) },
             onMenuAction = { HomeActions.run(activity, it) },
         )

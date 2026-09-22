@@ -20,14 +20,12 @@ package org.akanework.gramophone.ui.screens
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.union
@@ -175,8 +173,9 @@ fun ReportFullyDrawnWhen(loaded: Boolean) {
 }
 
 /**
- * One of the simple library tabs: the large [title], a slot for the pinned tab row when
- * [hasTabRow], then the header and the list / grid of items, all scrolling with iOS physics.
+ * One of the simple library tabs: the large [title] (with room under it for the home's tab row
+ * when [hasTabRow]), then the header and the list / grid of items, all scrolling with iOS
+ * physics.
  */
 @Composable
 fun <T : Any> LibraryTabScreen(
@@ -203,10 +202,10 @@ fun <T : Any> LibraryTabScreen(
     val rowHeightPx = with(density) {
         (if (layoutType == LayoutType.LIST) LARGER_LIST_HEIGHT else LIST_HEIGHT).roundToPx()
     }
-    val tabRowPx = if (hasTabRow) with(density) { TAB_ROW_HEIGHT.roundToPx() } else 0
-    // Items before the first list item: the title, the tab row slot and the header.
-    val leadingItems = if (hasTabRow) 3 else 2
-    val scrolled = { with(density) { largeTitleScroll(state.gridState, overscroll, titleState) } }
+    val contentTopPx = with(density) { LocalAppBarTopPadding.current.toPx() }
+    // Items before the first list item: the title and the header.
+    val leadingItems = 2
+    val scrolled = { largeTitleScroll(state.gridState, overscroll, titleState, contentTopPx) }
     val queueTitle = state.queueTitleOverride ?: context.getString(spec.queueTitle)
     val goToPlayingSong: (() -> Unit)? = if (spec === LibraryTabSpec.Songs) {
         {
@@ -214,11 +213,8 @@ fun <T : Any> LibraryTabScreen(
             val index = if (id != null) items.indexOfFirst { (it as MediaItem).mediaId == id } else -1
             if (index >= 0) {
                 scope.launch {
-                    // QuickLinearSmoothScroller with SNAP_TO_START lands half a row below the
-                    // top, which here is the bottom of the pinned tab row.
-                    state.gridState.animateScrollToItem(
-                        index + leadingItems, -(tabRowPx + rowHeightPx / 2)
-                    )
+                    // QuickLinearSmoothScroller with SNAP_TO_START lands half a row below the top.
+                    state.gridState.animateScrollToItem(index + leadingItems, -rowHeightPx / 2)
                 }
             }
         }
@@ -244,12 +240,11 @@ fun <T : Any> LibraryTabScreen(
         overscrollEffect = null,
     ) {
         item(key = "title", span = { GridItemSpan(maxLineSpan) }) {
-            LargeTitle(title, titleState, scrolled, gutter = if (isGrid) GRID_CARD_SIDE_PADDING else 0.dp)
-        }
-        if (hasTabRow) {
-            item(key = "tabs", span = { GridItemSpan(maxLineSpan) }) {
-                Spacer(Modifier.height(TAB_ROW_HEIGHT))
-            }
+            LargeTitle(
+                title, titleState, scrolled,
+                gutter = if (isGrid) GRID_CARD_SIDE_PADDING else 0.dp,
+                bottomSpacer = if (hasTabRow) TAB_ROW_HEIGHT else 0.dp,
+            )
         }
         item(key = "header", span = { GridItemSpan(maxLineSpan) }) {
             LibraryHeader(
@@ -308,11 +303,9 @@ fun <T : Any> LibraryTabScreen(
         headerCount = leadingItems,
         columns = columns,
         rowHeightPx = if (isGrid) gridRowHeightPx else rowHeightPx,
-        headerHeightPx = titleState.itemHeight.roundToInt() + tabRowPx + headerHeightPx,
+        headerHeightPx = titleState.itemHeight.roundToInt() + headerHeightPx,
         hintFor = { i -> items.getOrNull(i)?.let { state.fastScrollHintFor(it, i) } ?: "-" },
-        modifier = Modifier.padding(
-            top = LocalAppBarTopPadding.current + (if (hasTabRow) TAB_ROW_HEIGHT else 0.dp)
-        ),
+        modifier = Modifier.padding(top = LocalAppBarTopPadding.current),
     )
     }
 }

@@ -81,15 +81,18 @@ fun Density.barTitleAlpha(scrolled: Float): Float =
 
 /**
  * How far a grid whose first item is the [LargeTitle] has moved from rest, in px: positive once
- * scrolled up, negative while the rubber band holds it pulled down. Capped once the title has
- * gone under the toolbar and the handover is complete, which is all the bar needs to know.
+ * scrolled up, negative while the rubber band holds it pulled down. The grid only reports the
+ * offset while the title item is in the viewport, which with [contentTopPx] of padding above it
+ * is until it has travelled its own height plus that padding. The value is capped there, so it
+ * stays continuous when the grid moves on to the next item.
  */
-fun Density.largeTitleScroll(
+fun largeTitleScroll(
     grid: LazyGridState,
     overscroll: IosOverscrollState,
     state: LargeTitleState,
+    contentTopPx: Float,
 ): Float {
-    val limit = state.itemHeight + TITLE_FADE_SPAN.toPx()
+    val limit = state.itemHeight + contentTopPx
     val scrolled = if (grid.firstVisibleItemIndex == 0) grid.firstVisibleItemScrollOffset.toFloat() else limit
     return (scrolled - overscroll.offset).coerceAtMost(limit)
 }
@@ -97,6 +100,8 @@ fun Density.largeTitleScroll(
 /**
  * The large title, as the first (full span) item of a page's grid. [gutter] is the grid's own
  * side padding, taken off the margin so the title stays on the 24dp line in grid layouts.
+ * [bottomSpacer] leaves room below the title for a row drawn over the content, such as the
+ * home's tab row, which then scrolls as if it were part of this item.
  */
 @Composable
 fun LargeTitle(
@@ -106,6 +111,7 @@ fun LargeTitle(
     modifier: Modifier = Modifier,
     maxLines: Int = 1,
     gutter: Dp = 0.dp,
+    bottomSpacer: Dp = 0.dp,
 ) {
     BasicText(
         text = title,
@@ -120,7 +126,7 @@ fun LargeTitle(
                 start = LARGE_TITLE_MARGIN_START - gutter,
                 end = LARGE_TITLE_MARGIN_END - gutter,
                 top = LARGE_TITLE_TOP_GAP,
-                bottom = LARGE_TITLE_BOTTOM_GAP,
+                bottom = LARGE_TITLE_BOTTOM_GAP + bottomSpacer,
             )
             .graphicsLayer { alpha = 1f - barTitleAlpha(scrolled()) },
     )

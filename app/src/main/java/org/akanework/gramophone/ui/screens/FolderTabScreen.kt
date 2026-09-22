@@ -25,9 +25,7 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
@@ -104,19 +102,19 @@ fun FolderTabScreen(
     val rowHeightPx = with(density) {
         (if (layoutType == LayoutType.LIST) LARGER_LIST_HEIGHT else LIST_HEIGHT).roundToPx()
     }
-    val tabRowPx = if (hasTabRow) with(density) { TAB_ROW_HEIGHT.roundToPx() } else 0
+    val contentTopPx = with(density) { LocalAppBarTopPadding.current.toPx() }
     val gridState = songs.gridState
-    val scrolled = { with(density) { largeTitleScroll(gridState, overscroll, titleState) } }
+    val scrolled = { largeTitleScroll(gridState, overscroll, titleState, contentTopPx) }
     val queueTitle = songs.queueTitleOverride ?: "/"
     var folderSortOpen by remember { mutableStateOf(false) }
     var songSortOpen by remember { mutableStateOf(false) }
     val showPop = !path.isNullOrEmpty()
-    // Items before the folders header: the title and the tab row slot.
-    val leadingItems = if (hasTabRow) 2 else 1
+    // Items before the folders header: the title.
+    val leadingItems = 1
     val songsHeaderIndex = leadingItems + 1 + (if (showPop) 1 else 0) + state.folders.size
 
     fun scrollTo(index: Int) {
-        scope.launch { gridState.animateScrollToItem(index, -(tabRowPx + rowHeightPx / 2)) }
+        scope.launch { gridState.animateScrollToItem(index, -rowHeightPx / 2) }
     }
 
     val goToPlayingSong = {
@@ -149,12 +147,11 @@ fun FolderTabScreen(
             overscrollEffect = null,
         ) {
             item(key = "title", span = { GridItemSpan(maxLineSpan) }) {
-                LargeTitle(title, titleState, scrolled, gutter = if (isGrid) GRID_CARD_SIDE_PADDING else 0.dp)
-            }
-            if (hasTabRow) {
-                item(key = "tabs", span = { GridItemSpan(maxLineSpan) }) {
-                    Spacer(Modifier.height(TAB_ROW_HEIGHT))
-                }
+                LargeTitle(
+                    title, titleState, scrolled,
+                    gutter = if (isGrid) GRID_CARD_SIDE_PADDING else 0.dp,
+                    bottomSpacer = if (hasTabRow) TAB_ROW_HEIGHT else 0.dp,
+                )
             }
             item(key = "folders-header", span = { GridItemSpan(maxLineSpan) }) {
                 val count = state.folders.size
@@ -232,12 +229,10 @@ fun FolderTabScreen(
             headerCount = songsHeaderIndex + 1,
             columns = columns,
             rowHeightPx = if (isGrid) libraryGridRowHeightPx(true, columns) else rowHeightPx,
-            headerHeightPx = titleState.itemHeight.roundToInt() + tabRowPx + decorPx * 2 +
+            headerHeightPx = titleState.itemHeight.roundToInt() + decorPx * 2 +
                     folderRowPx * (songsHeaderIndex - leadingItems - 1),
             hintFor = { i -> songs.items.getOrNull(i)?.let { songs.fastScrollHintFor(it, i) } ?: "-" },
-            modifier = Modifier.padding(
-                top = LocalAppBarTopPadding.current + (if (hasTabRow) TAB_ROW_HEIGHT else 0.dp)
-            ),
+            modifier = Modifier.padding(top = LocalAppBarTopPadding.current),
         )
         }
     }
