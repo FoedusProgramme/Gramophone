@@ -41,8 +41,8 @@ import androidx.compose.ui.unit.sp
 import org.akanework.gramophone.R
 import org.akanework.gramophone.ui.adapters.BaseAdapter.LayoutType
 import org.akanework.gramophone.ui.adapters.Sorter
-import org.akanework.gramophone.ui.home.LibraryMenuAction
-import org.akanework.gramophone.ui.home.SortPrefState
+import org.akanework.gramophone.ui.state.LibraryMenuAction
+import org.akanework.gramophone.ui.state.SortPrefState
 
 private val sortTitles = mapOf(
     Sorter.Type.NaturalOrder to R.string.natural_order,

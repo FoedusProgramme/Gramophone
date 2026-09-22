@@ -8,8 +8,8 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.util.Log
 import androidx.media3.session.LibraryResult
-import androidx.media3.session.MediaLibraryService.LibraryParams
 import androidx.media3.session.MediaConstants
+import androidx.media3.session.MediaLibraryService.LibraryParams
 import com.google.common.collect.ImmutableList
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
@@ -19,16 +19,16 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.guava.future
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.comparators.SupportComparator
+import org.akanework.gramophone.ui.HomeTab
+import org.akanework.gramophone.ui.LibraryAdapterTypes
+import org.akanework.gramophone.ui.adapters.PlaylistAdapter
+import org.akanework.gramophone.ui.adapters.SongAdapter
+import org.akanework.gramophone.ui.adapters.Sorter
 import org.akanework.gramophone.ui.adapters.StoreAlbumHelper
 import org.akanework.gramophone.ui.adapters.StoreArtistHelper
 import org.akanework.gramophone.ui.adapters.StoreDateHelper
 import org.akanework.gramophone.ui.adapters.StoreGenreHelper
-import org.akanework.gramophone.ui.adapters.PlaylistAdapter
-import org.akanework.gramophone.ui.adapters.SongAdapter
-import org.akanework.gramophone.ui.LibraryAdapterTypes
-import org.akanework.gramophone.ui.adapters.Sorter
-import org.akanework.gramophone.ui.home.HomeTab
-import org.akanework.gramophone.ui.home.mapSettingToTabList
+import org.akanework.gramophone.ui.mapSettingToTabList
 import uk.akane.libphonograph.items.*
 
 /**

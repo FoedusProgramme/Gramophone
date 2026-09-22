@@ -23,29 +23,29 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
+import org.akanework.gramophone.ui.HomeTab
+import org.akanework.gramophone.ui.actions.HomeActions
+import org.akanework.gramophone.ui.actions.findMainActivity
+import org.akanework.gramophone.ui.components.compose.rememberPreference
 import org.akanework.gramophone.ui.components.home.HomeAppBar
 import org.akanework.gramophone.ui.components.home.rememberHomeAppBarScrollBehavior
 import org.akanework.gramophone.ui.components.home.rememberNowPlayingState
-import org.akanework.gramophone.ui.home.HomeActions
-import org.akanework.gramophone.ui.home.HomeTab
-import org.akanework.gramophone.ui.home.HomeViewModel
-import org.akanework.gramophone.ui.home.LibraryTabSpec
-import org.akanework.gramophone.ui.home.findMainActivity
-import org.akanework.gramophone.ui.home.rememberPreference
-import org.akanework.gramophone.ui.home.visibleHomeTabs
+import org.akanework.gramophone.ui.state.HomeViewModel
+import org.akanework.gramophone.ui.state.LibraryTabSpec
+import org.akanework.gramophone.ui.visibleHomeTabs
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

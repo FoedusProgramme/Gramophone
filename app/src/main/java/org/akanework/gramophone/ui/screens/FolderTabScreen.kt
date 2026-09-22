@@ -44,8 +44,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.media3.common.MediaItem
 import kotlinx.coroutines.launch
 import org.akanework.gramophone.R
+import org.akanework.gramophone.ui.actions.LibraryActions
+import org.akanework.gramophone.ui.actions.findMainActivity
 import org.akanework.gramophone.ui.adapters.BaseAdapter.LayoutType
-import org.akanework.gramophone.ui.nav.LocalPlayerBottomPadding
 import org.akanework.gramophone.ui.components.home.DECOR_HEIGHT
 import org.akanework.gramophone.ui.components.home.FOLDER_CARD_HEIGHT
 import org.akanework.gramophone.ui.components.home.LARGER_LIST_HEIGHT
@@ -55,12 +56,11 @@ import org.akanework.gramophone.ui.components.home.LibraryFolderRow
 import org.akanework.gramophone.ui.components.home.LibraryHeader
 import org.akanework.gramophone.ui.components.home.NowPlayingState
 import org.akanework.gramophone.ui.components.home.SortMenu
-import org.akanework.gramophone.ui.home.FolderTabState
-import org.akanework.gramophone.ui.home.LibraryActions
-import org.akanework.gramophone.ui.home.findMainActivity
-import org.akanework.gramophone.ui.home.LibraryTabSpec
-import org.akanework.gramophone.ui.home.LibraryTabState
-import org.akanework.gramophone.ui.home.SortPrefState
+import org.akanework.gramophone.ui.nav.LocalPlayerBottomPadding
+import org.akanework.gramophone.ui.state.FolderTabState
+import org.akanework.gramophone.ui.state.LibraryTabSpec
+import org.akanework.gramophone.ui.state.LibraryTabState
+import org.akanework.gramophone.ui.state.SortPrefState
 
 /** The Folders / Filesystem tab. */
 @Composable

@@ -33,9 +33,9 @@ import androidx.recyclerview.widget.ItemTouchHelper.UP
 import androidx.recyclerview.widget.RecyclerView
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.ui.MyRecyclerView
-import org.akanework.gramophone.ui.home.mapSettingToTabList
-import org.akanework.gramophone.ui.home.mapTabListToSetting
 import org.akanework.gramophone.ui.components.TabOrderPreference.TabOrderAdapter.TabOrderViewHolder
+import org.akanework.gramophone.ui.mapSettingToTabList
+import org.akanework.gramophone.ui.mapTabListToSetting
 
 class TabOrderPreference(context: Context, attrs: AttributeSet) : DialogPreference(context, attrs) {
     private var _value = ""

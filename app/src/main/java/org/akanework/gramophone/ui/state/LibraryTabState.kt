@@ -15,9 +15,8 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.akanework.gramophone.ui.home
+package org.akanework.gramophone.ui.state
 
-import android.app.Application
 import android.content.SharedPreferences
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.runtime.Stable
@@ -25,9 +24,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.core.content.edit
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.viewModelScope
-import androidx.preference.PreferenceManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -35,7 +31,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import org.akanework.gramophone.logic.getStringStrict
-import org.akanework.gramophone.logic.gramophoneApplication
 import org.akanework.gramophone.logic.utils.flows.PauseManagingSharedFlow.Companion.sharePauseableIn
 import org.akanework.gramophone.ui.adapters.BaseAdapter.LayoutType
 import org.akanework.gramophone.ui.adapters.Sorter
@@ -198,24 +193,4 @@ class LibraryTabState<T : Any>(
         layoutType = type
         prefs.edit { putString(layoutKey, type.toString()) }
     }
-}
-
-/** Activity-scoped holder of the home tab states, so they outlive the home screen composition. */
-class HomeViewModel(application: Application) : AndroidViewModel(application) {
-    private val prefs = PreferenceManager.getDefaultSharedPreferences(application)
-    private val reader get() = getApplication<Application>().gramophoneApplication.reader
-    private val states = HashMap<HomeTab, LibraryTabState<*>>()
-
-    @Suppress("UNCHECKED_CAST")
-    fun <T : Any> tabState(spec: LibraryTabSpec<T>): LibraryTabState<T> =
-        states.getOrPut(spec.tab) {
-            LibraryTabState(spec, prefs, reader, viewModelScope)
-        } as LibraryTabState<T>
-
-    private val folderStates = HashMap<Boolean, FolderTabState>()
-
-    fun folderState(isDetailed: Boolean): FolderTabState =
-        folderStates.getOrPut(isDetailed) {
-            FolderTabState(isDetailed, prefs, reader, viewModelScope)
-        }
 }

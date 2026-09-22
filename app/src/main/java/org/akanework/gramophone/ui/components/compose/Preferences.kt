@@ -15,7 +15,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.akanework.gramophone.ui.home
+package org.akanework.gramophone.ui.components.compose
 
 import android.content.SharedPreferences
 import androidx.compose.runtime.Composable

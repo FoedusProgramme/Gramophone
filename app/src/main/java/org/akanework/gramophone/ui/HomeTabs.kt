@@ -15,7 +15,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.akanework.gramophone.ui.home
+package org.akanework.gramophone.ui
 
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.hasImprovedMediaStore

@@ -56,12 +56,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.utils.flows.LifecyclePauseManager
+import org.akanework.gramophone.ui.actions.LibraryActions
+import org.akanework.gramophone.ui.actions.PlaylistDialogs
+import org.akanework.gramophone.ui.actions.findMainActivity
 import org.akanework.gramophone.ui.adapters.BaseAdapter.LayoutType
 import org.akanework.gramophone.ui.components.CustomGridLayoutManager
-import org.akanework.gramophone.ui.nav.LocalPlayerBottomPadding
-import uk.akane.libphonograph.items.Album
-import kotlin.math.max
-import kotlin.math.roundToInt
+import org.akanework.gramophone.ui.components.compose.rememberPreference
 import org.akanework.gramophone.ui.components.home.DECOR_HEIGHT
 import org.akanework.gramophone.ui.components.home.GRID_CARD_LABEL_HEIGHT
 import org.akanework.gramophone.ui.components.home.GRID_CARD_MARGIN_LABEL
@@ -78,13 +78,13 @@ import org.akanework.gramophone.ui.components.home.LibraryListRow
 import org.akanework.gramophone.ui.components.home.NowPlayingIndicator
 import org.akanework.gramophone.ui.components.home.NowPlayingState
 import org.akanework.gramophone.ui.components.home.SortMenu
-import org.akanework.gramophone.ui.home.LibraryActions
-import org.akanework.gramophone.ui.home.LibraryTabSpec
-import org.akanework.gramophone.ui.home.findMainActivity
-import org.akanework.gramophone.ui.home.LibraryTabState
-import org.akanework.gramophone.ui.home.PlaylistDialogs
-import org.akanework.gramophone.ui.home.SortPrefState
-import org.akanework.gramophone.ui.home.rememberPreference
+import org.akanework.gramophone.ui.nav.LocalPlayerBottomPadding
+import org.akanework.gramophone.ui.state.LibraryTabSpec
+import org.akanework.gramophone.ui.state.LibraryTabState
+import org.akanework.gramophone.ui.state.SortPrefState
+import uk.akane.libphonograph.items.Album
+import kotlin.math.max
+import kotlin.math.roundToInt
 
 /** Column count of a list / grid, from `BaseAdapter.getSpanSize` + `CustomGridLayoutManager`. */
 @Composable
