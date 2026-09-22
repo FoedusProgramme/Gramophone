@@ -25,7 +25,6 @@ import androidx.recyclerview.widget.RecyclerView
 import org.akanework.gramophone.R
 import org.akanework.gramophone.ui.adapters.BaseAdapter
 import org.akanework.gramophone.ui.adapters.BaseDecorAdapter
-import org.akanework.gramophone.ui.adapters.DetailedFolderAdapter
 
 class GridPaddingDecoration(context: Context) : RecyclerView.ItemDecoration() {
     private var mPadding = context.resources.getDimensionPixelSize(R.dimen.grid_card_side_padding)
@@ -56,7 +55,7 @@ class GridPaddingDecoration(context: Context) : RecyclerView.ItemDecoration() {
             }
             throw IllegalStateException("can't find desired adapter?")
         }
-        if (adapter is BaseDecorAdapter<*> || adapter is DetailedFolderAdapter.FolderCardAdapter) {
+        if (adapter is BaseDecorAdapter<*>) {
             return
         }
         if (adapter !is BaseAdapter<*>) {

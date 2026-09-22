@@ -15,7 +15,7 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.unit.dp
 
 val NAV_TRANSITION_DISTANCE = 96.dp
-private const val NAV_TRANSITION_MS = 450
+internal const val NAV_TRANSITION_MS = 450
 private const val NAV_FADE_MS = 83
 private const val NAV_OPEN_FADE_DELAY_MS = 50
 private const val NAV_CLOSE_FADE_DELAY_MS = 35

@@ -19,15 +19,16 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.guava.future
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.comparators.SupportComparator
-import org.akanework.gramophone.ui.adapters.AlbumAdapter
-import org.akanework.gramophone.ui.adapters.ArtistAdapter
-import org.akanework.gramophone.ui.adapters.DateAdapter
-import org.akanework.gramophone.ui.adapters.GenreAdapter
+import org.akanework.gramophone.ui.adapters.StoreAlbumHelper
+import org.akanework.gramophone.ui.adapters.StoreArtistHelper
+import org.akanework.gramophone.ui.adapters.StoreDateHelper
+import org.akanework.gramophone.ui.adapters.StoreGenreHelper
 import org.akanework.gramophone.ui.adapters.PlaylistAdapter
 import org.akanework.gramophone.ui.adapters.SongAdapter
 import org.akanework.gramophone.ui.LibraryAdapterTypes
 import org.akanework.gramophone.ui.adapters.Sorter
-import org.akanework.gramophone.ui.adapters.ViewPager2Adapter
+import org.akanework.gramophone.ui.home.HomeTab
+import org.akanework.gramophone.ui.home.mapSettingToTabList
 import uk.akane.libphonograph.items.*
 
 /**
@@ -50,11 +51,11 @@ class LibraryTreeLoader(
 
     // --- Helpers ---
 
-    private fun getEnabledTabs(): List<ViewPager2Adapter.Companion.Tab> {
-        val tabs = ViewPager2Adapter.mapSettingToTabList(prefs.getString("tabs", "")!!)
+    private fun getEnabledTabs(): List<HomeTab> {
+        val tabs = mapSettingToTabList(prefs.getString("tabs", "")!!)
         return tabs.takeWhile { it != null }
             .filterNotNull()
-            .filter { it != ViewPager2Adapter.Companion.Tab.FileSystem }
+            .filter { it != HomeTab.FileSystem }
     }
 
     private fun getCategoryItem(id: String): MediaItem? {
@@ -204,12 +205,12 @@ class LibraryTreeLoader(
                         val tabCount = parentId.substring("more_".length).toInt()
                         getEnabledTabs().drop(tabCount - 1).map { getCategoryItem(mapTabToMediaId(it))!! }
                     }
-                    "albums" -> sortList(app.reader.albumListFlow.first(), LibraryAdapterTypes.ALBUM, Sorter(AlbumAdapter.StoreAlbumHelper, null)).map { mapDomainItemToMediaItem(it)!! }
-                    "artists" -> sortList(app.reader.artistListFlow.first(), LibraryAdapterTypes.ARTIST, Sorter(ArtistAdapter.StoreArtistHelper, null)).map { mapDomainItemToMediaItem(it)!! }
+                    "albums" -> sortList(app.reader.albumListFlow.first(), LibraryAdapterTypes.ALBUM, Sorter(StoreAlbumHelper, null)).map { mapDomainItemToMediaItem(it)!! }
+                    "artists" -> sortList(app.reader.artistListFlow.first(), LibraryAdapterTypes.ARTIST, Sorter(StoreArtistHelper, null)).map { mapDomainItemToMediaItem(it)!! }
                     "songs" -> queueWithTitle(sortList(app.reader.songListFlow.first(), LibraryAdapterTypes.SONG, Sorter(SongAdapter.MediaItemHelper, null)), context.getString(R.string.category_songs))
                     "playlists" -> sortList(app.reader.playlistListFlow.first(), LibraryAdapterTypes.PLAYLIST, Sorter(PlaylistAdapter.StorePlaylistHelper, null)).map { mapDomainItemToMediaItem(it)!! }
-                    "genres" -> sortList(app.reader.genreListFlow.first(), LibraryAdapterTypes.GENRE, Sorter(GenreAdapter.StoreGenreHelper, null)).map { mapDomainItemToMediaItem(it)!! }
-                    "dates" -> sortList(app.reader.dateListFlow.first(), LibraryAdapterTypes.DATE, Sorter(DateAdapter.StoreDateHelper, null)).map { mapDomainItemToMediaItem(it)!! }
+                    "genres" -> sortList(app.reader.genreListFlow.first(), LibraryAdapterTypes.GENRE, Sorter(StoreGenreHelper, null)).map { mapDomainItemToMediaItem(it)!! }
+                    "dates" -> sortList(app.reader.dateListFlow.first(), LibraryAdapterTypes.DATE, Sorter(StoreDateHelper, null)).map { mapDomainItemToMediaItem(it)!! }
                     "folders" -> {
                         val folders = app.reader.shallowFolderFlow.first().folderList.values.toList()
                         folders.sortedWith(SupportComparator.createAlphanumericComparator(cnv = { it.folderName })).map { mapDomainItemToMediaItem(it)!! }
@@ -226,15 +227,15 @@ class LibraryTreeLoader(
             }
     }
 
-    private fun mapTabToMediaId(tab: ViewPager2Adapter.Companion.Tab) = when (tab) {
-        ViewPager2Adapter.Companion.Tab.Songs -> "songs"
-        ViewPager2Adapter.Companion.Tab.Albums -> "albums"
-        ViewPager2Adapter.Companion.Tab.Artists -> "artists"
-        ViewPager2Adapter.Companion.Tab.Genres -> "genres"
-        ViewPager2Adapter.Companion.Tab.Dates -> "dates"
-        ViewPager2Adapter.Companion.Tab.Folders -> "folders"
-        ViewPager2Adapter.Companion.Tab.Playlist -> "playlists"
-        ViewPager2Adapter.Companion.Tab.FileSystem -> "detailed_folders"
+    private fun mapTabToMediaId(tab: HomeTab) = when (tab) {
+        HomeTab.Songs -> "songs"
+        HomeTab.Albums -> "albums"
+        HomeTab.Artists -> "artists"
+        HomeTab.Genres -> "genres"
+        HomeTab.Dates -> "dates"
+        HomeTab.Folders -> "folders"
+        HomeTab.Playlist -> "playlists"
+        HomeTab.FileSystem -> "detailed_folders"
     }
 
     fun getItem(mediaId: String): ListenableFuture<LibraryResult<MediaItem>> = scope.future(Dispatchers.Default) {

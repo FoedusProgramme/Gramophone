@@ -35,8 +35,8 @@ import org.akanework.gramophone.logic.utils.AudioFormatDetector.AudioFormatInfo
 import org.akanework.gramophone.logic.utils.AudioFormatDetector.AudioQuality
 import org.akanework.gramophone.logic.utils.AudioFormatDetector.SpatialFormat
 import org.akanework.gramophone.ui.MainActivity
-import org.akanework.gramophone.ui.fragments.ArtistSubFragment
-import org.akanework.gramophone.ui.fragments.GeneralSubFragment
+import org.akanework.gramophone.ui.nav.AlbumKey
+import org.akanework.gramophone.ui.nav.ArtistKey
 import uk.akane.libphonograph.items.albumId
 import uk.akane.libphonograph.items.artistId
 
@@ -154,18 +154,12 @@ class NowPlayingController(
 
     fun openAlbumPage() {
         minimize()
-        activity.startFragment(GeneralSubFragment()) {
-            putString("Id", instance?.currentMediaItem?.mediaMetadata?.albumId?.toString())
-            putInt("Item", R.id.album)
-        }
+        activity.navigateTo(AlbumKey(instance?.currentMediaItem?.mediaMetadata?.albumId))
     }
 
     fun openArtistPage() {
         minimize()
-        activity.startFragment(ArtistSubFragment()) {
-            putString("Id", instance?.currentMediaItem?.mediaMetadata?.artistId?.toString())
-            putInt("Item", R.id.artist)
-        }
+        activity.navigateTo(ArtistKey(instance?.currentMediaItem?.mediaMetadata?.artistId, false))
     }
 
     fun showQueue() {

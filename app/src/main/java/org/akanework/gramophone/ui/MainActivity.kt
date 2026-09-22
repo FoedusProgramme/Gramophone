@@ -50,6 +50,7 @@ import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.net.toUri
 import androidx.core.os.BundleCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -84,13 +85,13 @@ import org.akanework.gramophone.logic.hasScopedStorageWithMediaTypes
 import org.akanework.gramophone.logic.needsMissingOnDestroyCallWorkarounds
 import org.akanework.gramophone.logic.postAtFrontOfQueueAsync
 import org.akanework.gramophone.logic.ui.BaseActivity
-import org.akanework.gramophone.ui.adapters.PlaylistAdapter
 import org.akanework.gramophone.ui.components.player.PlayerSheetViewImpl
 import org.akanework.gramophone.ui.fragments.BaseFragment
-import org.akanework.gramophone.ui.fragments.GeneralSubFragment
 import org.akanework.gramophone.ui.fragments.SearchFragment
 import org.akanework.gramophone.ui.nav.AppNavKey
+import org.akanework.gramophone.ui.home.PlaylistDialogs
 import org.akanework.gramophone.ui.nav.AppRoot
+import org.akanework.gramophone.ui.nav.PlaylistKey
 import org.akanework.gramophone.ui.nav.FragmentKey
 import org.akanework.gramophone.ui.nav.HomeKey
 import org.akanework.gramophone.ui.nav.NavViewModel
@@ -133,10 +134,14 @@ class MainActivity : BaseActivity() {
     private var ready = false
     lateinit var playerBottomSheet: PlayerSheetViewImpl
         private set
+    /** Bottom padding lists need so the mini player does not cover them (px). */
+    val playerBottomPadding = mutableIntStateOf(0)
     private lateinit var intentSenderDelete: ActivityResultLauncher<IntentSenderRequest>
     private lateinit var addToPlaylistIntentSender: ActivityResultLauncher<IntentSenderRequest>
     private lateinit var markIsFavoriteStatusIntentSender: ActivityResultLauncher<IntentSenderRequest>
     private var pendingPlaylistRequest: Bundle? = null
+    private lateinit var renamePlaylistIntentSender: ActivityResultLauncher<IntentSenderRequest>
+    private var pendingRenamePlaylistRequest: Bundle? = null
     private var pendingDeleteRequest: Bundle? = null
     private var pendingMarkIsFavoriteRequest: Bundle? = null
 
@@ -174,6 +179,9 @@ class MainActivity : BaseActivity() {
         if (savedInstanceState?.containsKey("pendingMarkIsFavoriteRequest") == true) {
             pendingMarkIsFavoriteRequest = savedInstanceState.getBundle("pendingMarkIsFavoriteRequest")
         }
+        if (savedInstanceState?.containsKey("pendingRenamePlaylistRequest") == true) {
+            pendingRenamePlaylistRequest = savedInstanceState.getBundle("pendingRenamePlaylistRequest")
+        }
         intentSenderDelete =
             registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {
                 val req = pendingDeleteRequest
@@ -191,6 +199,13 @@ class MainActivity : BaseActivity() {
                 CoroutineScope(Dispatchers.Default).launch {
                     doAddToPlaylist(it.resultCode, req)
                 }
+            }
+        renamePlaylistIntentSender =
+            registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {
+                val req = pendingRenamePlaylistRequest
+                    ?: throw IllegalStateException("pending playlist rename request is null")
+                pendingRenamePlaylistRequest = null
+                PlaylistDialogs.continueRename(this, it.resultCode, req)
             }
         markIsFavoriteStatusIntentSender =
             registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {
@@ -218,6 +233,7 @@ class MainActivity : BaseActivity() {
                     AppRoot(
                         backStack = navViewModel.backStack,
                         onPlayerVisibleChanged = { playerBottomSheet.visible = it },
+                        playerBottomPadding = playerBottomPadding.intValue,
                         debug = BuildConfig.DEBUG,
                     )
                 }
@@ -307,7 +323,7 @@ class MainActivity : BaseActivity() {
                     } + getString(R.string.create_playlist)).toTypedArray())
                     { _, item ->
                         if (playlists.size == item) {
-                            PlaylistAdapter.playlistNameDialog(this@MainActivity,
+                            PlaylistDialogs.playlistNameDialog(this@MainActivity,
                                 R.string.create_playlist, "",
                                 { ItemManipulator.getDefaultPlaylistFile(it) }) { name ->
                                 addToPlaylist(null, name, listOf(song))
@@ -497,6 +513,9 @@ class MainActivity : BaseActivity() {
         if (pendingDeleteRequest != null) {
             outState.putBundle("DeletePendingRequest", pendingDeleteRequest)
         }
+        if (pendingRenamePlaylistRequest != null) {
+            outState.putBundle("pendingRenamePlaylistRequest", pendingRenamePlaylistRequest)
+        }
         if (pendingMarkIsFavoriteRequest != null) {
             outState.putBundle("pendingMarkIsFavoriteRequest", pendingMarkIsFavoriteRequest)
         }
@@ -563,10 +582,7 @@ class MainActivity : BaseActivity() {
         if (intent.action == Intent.ACTION_VIEW) {
             val id = intent.getStringExtra("playlist")?.toLongOrNull()
             if (id != null) {
-                startFragment(GeneralSubFragment()) {
-                    putString("Id", id.toString())
-                    putInt("Item", R.id.playlist)
-                }
+                navigateTo(PlaylistKey(id, null))
             }
         }
         if (intent.action == Intent.ACTION_SEARCH ||
@@ -842,6 +858,12 @@ class MainActivity : BaseActivity() {
      * getPlayer:
      *   Returns a media controller.
      */
+    /** Asks for MediaStore write access before a playlist rename (see [PlaylistDialogs]). */
+    fun requestPlaylistRename(sender: IntentSender, data: Bundle) {
+        pendingRenamePlaylistRequest = data
+        renamePlaylistIntentSender.launch(IntentSenderRequest.Builder(sender).build())
+    }
+
     fun getPlayer() = controllerViewModel.get()
 
     inline val reader

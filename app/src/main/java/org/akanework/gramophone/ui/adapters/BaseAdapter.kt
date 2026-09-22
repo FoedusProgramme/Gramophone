@@ -71,7 +71,6 @@ import org.akanework.gramophone.logic.utils.flows.repeatPausingWithLifecycle
 import org.akanework.gramophone.ui.MainActivity
 import org.akanework.gramophone.ui.components.CustomGridLayoutManager
 import org.akanework.gramophone.ui.components.NowPlayingDrawable
-import org.akanework.gramophone.ui.fragments.AdapterFragment
 import org.akanework.gramophone.ui.getAdapterType
 import uk.akane.libphonograph.items.Item
 
@@ -90,7 +89,7 @@ abstract class BaseAdapter<T : Any>(
     private val canSort: Boolean = true,
     private val hasMenu: Boolean = true,
     private val fallbackContext: AppCompatActivity? = null,
-) : AdapterFragment.BaseInterface<BaseAdapter.ViewHolder>(), PopupTextProvider, ItemHeightHelper {
+) : BaseInterface<BaseAdapter.ViewHolder>(), PopupTextProvider, ItemHeightHelper {
 
     override val canChangeLayout = true
     override val context = fragment?.requireContext() ?: fallbackContext!!

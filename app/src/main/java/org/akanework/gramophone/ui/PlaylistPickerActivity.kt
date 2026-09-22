@@ -32,11 +32,7 @@ import uk.akane.libphonograph.items.Playlist
 
 class PlaylistPickerActivity : PickerActivity<Playlist>() {
     override fun makeAdapter() =
-        PlaylistAdapter(
-            null,
-            isSubFragment = R.id.songs,
-            fallbackContext = this
-        )
+        PlaylistAdapter(fallbackContext = this)
 
     override fun getTitleStr() = getString(R.string.playlist_picker_activity)
 

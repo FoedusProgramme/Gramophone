@@ -34,10 +34,10 @@ import kotlinx.coroutines.launch
 import kotlin.math.min
 
 /**
- * Drives the Android-style (cross-activity) predictive back preview: tracks the gesture while
- * the user drags, then plays either a spring-back cancel or a post-commit settle + fling.
+ * Drives the Android-style cross-activity predictive back preview: tracks the gesture while the
+ * finger drags, then plays either a spring-back cancel or a post-commit settle and fling.
  *
- * Ported from tuned (ink.duo3.tuned.navigation.AndroidPredictiveBackState).
+ * Adapted from tuned (ink.duo3.tuned.navigation.AndroidPredictiveBackState).
  */
 @Stable
 internal class AndroidPredictiveBackState {

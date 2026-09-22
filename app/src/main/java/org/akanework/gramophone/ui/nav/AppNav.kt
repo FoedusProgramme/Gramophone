@@ -1,12 +1,16 @@
 package org.akanework.gramophone.ui.nav
 
 import android.os.Bundle
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -23,15 +27,17 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.compose.AndroidFragment
 import androidx.fragment.compose.rememberFragmentState
 import androidx.lifecycle.ViewModel
+import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import org.akanework.gramophone.ui.fragments.SettingsPageFragment
-import org.akanework.gramophone.ui.fragments.ViewPagerFragment
 import org.akanework.gramophone.ui.fragments.settings.BlacklistHostFragment
 import org.akanework.gramophone.ui.fragments.settings.ContributorsScreen
 import org.akanework.gramophone.ui.fragments.settings.OssLicensesScreen
+import org.akanework.gramophone.ui.screens.HomeScreen
+import org.akanework.gramophone.ui.screens.LibrarySubScreen
 
 sealed interface AppNavKey : NavKey {
     val wantsPlayer: Boolean
@@ -47,18 +53,38 @@ class FragmentKey(
     override val wantsPlayer: Boolean,
 ) : AppNavKey
 
+/** A library detail page. Plain classes, so the same page can be on the back stack twice. */
+sealed interface LibrarySubKey : AppNavKey {
+    override val wantsPlayer: Boolean get() = true
+}
+
+class AlbumKey(val id: Long?) : LibrarySubKey
+class GenreKey(val id: Long?) : LibrarySubKey
+class DateKey(val id: Long?) : LibrarySubKey
+class PlaylistKey(val id: Long?, val className: String?) : LibrarySubKey
+class ArtistKey(val id: Long?, val albumArtist: Boolean) : LibrarySubKey
+
 class NavViewModel : ViewModel() {
     val backStack: SnapshotStateList<AppNavKey> = mutableStateListOf(HomeKey)
 }
+
+/** Bottom padding (px) content should keep clear so the mini player does not cover it. */
+val LocalPlayerBottomPadding = compositionLocalOf { 0 }
 
 fun SnapshotStateList<AppNavKey>.popIfPossible() {
     if (size > 1) removeAt(size - 1)
 }
 
+/** True while a page covers the always-composed home (so it can pause its animations). */
+val LocalHomeCovered = compositionLocalOf { false }
+
+private val HOME_CONTENT_KEY: Any = NavEntry<AppNavKey>(HomeKey, content = {}).contentKey
+
 @Composable
 fun AppRoot(
     backStack: SnapshotStateList<AppNavKey>,
     onPlayerVisibleChanged: (Boolean) -> Unit,
+    playerBottomPadding: Int,
     debug: Boolean,
 ) {
     val top = backStack.lastOrNull()
@@ -66,7 +92,9 @@ fun AppRoot(
         top?.let { onPlayerVisibleChanged(it.wantsPlayer) }
     }
     Box(Modifier.fillMaxSize()) {
-        AppNavHost(backStack)
+        CompositionLocalProvider(LocalPlayerBottomPadding provides playerBottomPadding) {
+            AppNavHost(backStack)
+        }
         if (debug) {
             Text(
                 "DEBUG",
@@ -79,6 +107,13 @@ fun AppRoot(
     }
 }
 
+/**
+ * The home is composed once and kept underneath the NavDisplay instead of being a real entry,
+ * which nav3 would dispose whenever a page is pushed and rebuild on every back gesture. Its
+ * NavDisplay entry is a transparent placeholder. The home container plays the "previous page"
+ * role of the predictive back preview when a gesture reveals it, and slides 96dp like the
+ * shared-axis transition of a real entry when pages are pushed or popped.
+ */
 @Composable
 private fun AppNavHost(backStack: SnapshotStateList<AppNavKey>) {
     val density = LocalDensity.current
@@ -90,11 +125,14 @@ private fun AppNavHost(backStack: SnapshotStateList<AppNavKey>) {
         entryDecorators = listOf(rememberSaveableStateHolderNavEntryDecorator()),
         entryProvider = entryProvider {
             entry<HomeKey> {
-                AndroidFragment<ViewPagerFragment>(
-                    modifier = Modifier.fillMaxSize(),
-                    fragmentState = rememberFragmentState(),
-                )
+                // Placeholder: the home itself lives below the NavDisplay, see AppNavHost.
+                Box(Modifier.fillMaxSize())
             }
+            entry<AlbumKey> { LibrarySubScreen(it, onBack = { backStack.removeLastOrNull() }) }
+            entry<GenreKey> { LibrarySubScreen(it, onBack = { backStack.removeLastOrNull() }) }
+            entry<DateKey> { LibrarySubScreen(it, onBack = { backStack.removeLastOrNull() }) }
+            entry<PlaylistKey> { LibrarySubScreen(it, onBack = { backStack.removeLastOrNull() }) }
+            entry<ArtistKey> { LibrarySubScreen(it, onBack = { backStack.removeLastOrNull() }) }
             entry<FragmentKey> { key ->
                 val clazz = remember(key.className) {
                     @Suppress("UNCHECKED_CAST")
@@ -131,18 +169,71 @@ private fun AppNavHost(backStack: SnapshotStateList<AppNavKey>) {
             }
         },
     )
-    AndroidPredictiveBackNavigationScene(navDisplayState, offset)
+    val visualState = navDisplayState.visualState
+    val previousEntry = navDisplayState.sceneState.previousScenes.lastOrNull()?.entries?.lastOrNull()
+    val homeIsPrevious = previousEntry?.contentKey == HOME_CONTENT_KEY
+    // Back to the home: nothing is moved. The home container plays the "previous page" role
+    // and the NavDisplay container the "current page" role of the Android-style preview.
+    val inlinePreview = visualState.isActive() && homeIsPrevious
+    val covered = backStack.size > 1
+    // Shared-axis motion of the home, in step with NavDisplay's push / pop transition.
+    val homeOffset = remember { Animatable(0f) }
+    LaunchedEffect(covered) {
+        val target = if (covered) -offset.toFloat() else 0f
+        if (!covered && visualState.suppressNextPopTransition) {
+            // The predictive preview already brought the home back into place.
+            homeOffset.snapTo(0f)
+        } else {
+            homeOffset.animateTo(target, tween(NAV_TRANSITION_MS, easing = NavAxisEasing))
+        }
+    }
+    Box(Modifier.fillMaxSize()) {
+        Box(
+            Modifier
+                .fillMaxSize()
+                .predictiveBackRole(
+                    visualState, PredictiveBackRole.Previous,
+                    enabled = inlinePreview,
+                    idleTranslationX = { homeOffset.value },
+                ),
+        ) {
+            CompositionLocalProvider(LocalHomeCovered provides covered) {
+                HomeScreen(modifier = Modifier.fillMaxSize())
+            }
+        }
+        if (inlinePreview) AndroidPredictiveBackScrim(visualState)
+        Box(
+            Modifier
+                .fillMaxSize()
+                .predictiveBackRoleDrawn(
+                    visualState, PredictiveBackRole.Current,
+                    enabled = inlinePreview,
+                    // NavDisplay still shows the popped page for one frame after a predictive
+                    // commit, until its (silent) pop transition has run.
+                    hidden = { visualState.suppressNextPopTransition && backStack.size == 1 },
+                ),
+        ) {
+            AndroidPredictiveBackNavigationScene(
+                navDisplayState = navDisplayState,
+                horizontalOffset = offset,
+                homeIsPrevious = homeIsPrevious,
+            )
+        }
+    }
 }
 
 /**
- * While a predictive back gesture is past its reveal threshold the two topmost entries are drawn
- * by [AndroidPredictiveBackPreview]. Otherwise NavDisplay renders them with the shared-axis
- * open/close transitions.
+ * While a predictive back gesture is past its reveal threshold and the page underneath is a
+ * real entry, the two topmost entries are drawn by [AndroidPredictiveBackPreview]. Otherwise
+ * NavDisplay renders them with the shared-axis open and close transitions. When the home, drawn
+ * outside NavDisplay, is underneath, NavDisplay's own predictive seek is silenced because
+ * [AppNavHost] animates the containers instead.
  */
 @Composable
 private fun AndroidPredictiveBackNavigationScene(
     navDisplayState: AndroidPredictiveBackNavDisplayState<AppNavKey>,
     horizontalOffset: Int,
+    homeIsPrevious: Boolean,
 ) {
     val visualState = navDisplayState.visualState
     LaunchedEffect(visualState.suppressNextPopTransition) {
@@ -152,7 +243,7 @@ private fun AndroidPredictiveBackNavigationScene(
             visualState.clearPopTransitionSuppression()
         }
     }
-    if (visualState.isActive()) {
+    if (visualState.isActive() && !homeIsPrevious) {
         AndroidPredictiveBackPreview(
             state = visualState,
             sceneState = navDisplayState.sceneState,
@@ -166,7 +257,9 @@ private fun AndroidPredictiveBackNavigationScene(
             modifier = Modifier.fillMaxSize(),
             transitionSpec = { navOpenTransition(horizontalOffset) },
             popTransitionSpec = { navPopTransition(suppressPop, horizontalOffset) },
-            predictivePopTransitionSpec = { navPopTransition(suppressPop, horizontalOffset) },
+            predictivePopTransitionSpec = {
+                navPopTransition(suppressPop || homeIsPrevious, horizontalOffset)
+            },
         )
     }
 }

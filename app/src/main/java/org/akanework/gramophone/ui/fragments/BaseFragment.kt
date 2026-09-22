@@ -30,6 +30,6 @@ abstract class BaseFragment(val wantsPlayer: Boolean? = null) : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.setBackgroundColor(MaterialColors.getColor(view, android.R.attr.colorBackground))
+        view.setBackgroundColor(MaterialColors.getColor(view, com.google.android.material.R.attr.colorSurface))
     }
 }

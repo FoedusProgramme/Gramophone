@@ -25,7 +25,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.getRecyclerView
 import org.akanework.gramophone.ui.adapters.BaseAdapter
 import org.akanework.gramophone.ui.adapters.BaseDecorAdapter
-import org.akanework.gramophone.ui.adapters.DetailedFolderAdapter
 
 /**
  * CustomGridLayoutManager:
@@ -87,10 +86,6 @@ class CustomGridLayoutManager(
                             spanCount
                         }
 
-                        is DetailedFolderAdapter.FolderCardAdapter -> {
-                            spanCount
-                        }
-
                         is BaseAdapter<*> -> {
                             adapter.getSpanSize()
                         }
@@ -105,10 +100,6 @@ class CustomGridLayoutManager(
                     val (adapter, pos) = getAdapterAndPosForPos(position)
                     return when (adapter) {
                         is BaseDecorAdapter<*> -> {
-                            0
-                        }
-
-                        is DetailedFolderAdapter.FolderCardAdapter -> {
                             0
                         }
 

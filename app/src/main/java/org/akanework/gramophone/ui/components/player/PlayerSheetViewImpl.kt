@@ -377,8 +377,8 @@ class PlayerSheetViewImpl private constructor(
     }
 
     /**
-     * The floating mini bar's total footprint from the screen bottom (px) — its platform above the
-     * navigation bar plus the 56dp card — so lists get a bottom padding that clears it. Mirrors
+     * The floating mini bar's total footprint from the screen bottom (px), that is its platform
+     * above the navigation bar plus the 56dp card, so lists get a bottom padding that clears it. Mirrors
      * PlayerSheetMetrics.collapsedFootprint (MINI_HEIGHT).
      */
     private fun collapsedHeightPx(): Int {
@@ -397,6 +397,7 @@ class PlayerSheetViewImpl private constructor(
 
         lastMeasuredHeight = height
         lastActuallyVisible = actuallyVisible
+        activity.playerBottomPadding.intValue = getBottomPadding()
 
         // Re-dispatch the last known insets to force regeneration of the FragmentContainerView's
         // insets, which give lists a bottom padding equal to the collapsed mini bar height.

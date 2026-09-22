@@ -36,10 +36,9 @@ import org.akanework.gramophone.logic.ui.ItemHeightHelper
 import org.akanework.gramophone.logic.ui.MyRecyclerView
 import org.akanework.gramophone.logic.ui.QuickLinearSmoothScroller
 import org.akanework.gramophone.logic.setMediaItemsWithTitle
-import org.akanework.gramophone.ui.fragments.AdapterFragment
 import org.akanework.gramophone.ui.getAdapterType
 
-open class BaseDecorAdapter<T : AdapterFragment.BaseInterface<*>>(
+open class BaseDecorAdapter<T : BaseInterface<*>>(
     protected val adapter: T,
     private val pluralStr: Int
 ) : MyRecyclerView.Adapter<BaseDecorAdapter.ViewHolder>(), ItemHeightHelper {
@@ -63,11 +62,9 @@ open class BaseDecorAdapter<T : AdapterFragment.BaseInterface<*>>(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val count = adapter.itemCountForDecor
         holder.playAll.visibility =
-            if (adapter is SongAdapter && adapter.isSubFragment != R.id.songs ||
-                adapter is AlbumAdapter) View.VISIBLE else View.GONE
+            if (adapter is SongAdapter && adapter.isSubFragment != R.id.songs) View.VISIBLE else View.GONE
         holder.shuffleAll.visibility =
-            if (adapter is SongAdapter && adapter.isSubFragment != R.id.songs ||
-                adapter is AlbumAdapter) View.VISIBLE else View.GONE
+            if (adapter is SongAdapter && adapter.isSubFragment != R.id.songs) View.VISIBLE else View.GONE
         holder.counter.text = context.resources.getQuantityString(pluralStr, count, count)
         if (adapter is SongAdapter) {
             holder.counter.setOnClickListener {
@@ -215,21 +212,6 @@ open class BaseDecorAdapter<T : AdapterFragment.BaseInterface<*>>(
                         play()
                     }
                 }
-            } else if (adapter is AlbumAdapter) {
-                val list = adapter.getAlbumList()
-                val controller = adapter.getActivity().getPlayer()
-                controller?.apply {
-                    list.takeIf { it.isNotEmpty() }?.also { albums ->
-                        setMediaItemsWithTitle(
-                            albums.flatMap { it.songList },
-                            title = runBlocking { adapter.queueTitle.first() },
-                            shuffleEnabled = false,
-                            repeatMode = REPEAT_MODE_OFF,
-                        )
-                        prepare()
-                        play()
-                    } ?: setMediaItems(listOf())
-                }
             }
         }
         holder.shuffleAll.setOnClickListener {
@@ -247,22 +229,6 @@ open class BaseDecorAdapter<T : AdapterFragment.BaseInterface<*>>(
                         prepare()
                         play()
                     }
-                }
-            } else if (adapter is AlbumAdapter) {
-                val list = adapter.getAlbumList()
-                val controller = adapter.getActivity().getPlayer()
-                controller?.apply {
-                    list.takeIf { it.isNotEmpty() }?.also { albums ->
-                        setMediaItemsWithTitle(
-                            albums.shuffled().flatMap { it.songList },
-                            title = context.getString(R.string.shuffled,
-                                    runBlocking { adapter.queueTitle.first() }),
-                            shuffleEnabled = false,
-                            repeatMode = REPEAT_MODE_OFF,
-                        )
-                        prepare()
-                        play()
-                    } ?: setMediaItems(listOf())
                 }
             }
         }
