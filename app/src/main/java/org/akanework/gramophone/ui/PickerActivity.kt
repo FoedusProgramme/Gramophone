@@ -1,5 +1,5 @@
 /*
- *     Copyright (C) 2026 nift4
+ *     Copyright (C) 2025 Akane Foundation
  *
  *     Gramophone is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -14,7 +14,6 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-
 package org.akanework.gramophone.ui
 
 import android.content.Intent
@@ -22,60 +21,53 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.Settings
 import android.widget.Toast
+import androidx.activity.compose.setContent
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.collectAsState
 import androidx.core.app.ActivityCompat
 import androidx.core.net.toUri
-import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.appbar.CollapsingToolbarLayout
-import com.google.android.material.appbar.MaterialToolbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.akanework.gramophone.R
-import org.akanework.gramophone.logic.enableEdgeToEdgePaddingListener
-import org.akanework.gramophone.logic.enableEdgeToEdgeProperly
+import org.akanework.gramophone.logic.getBooleanStrict
 import org.akanework.gramophone.logic.gramophoneApplication
 import org.akanework.gramophone.logic.hasAudioPermission
 import org.akanework.gramophone.logic.hasScopedStorageV2
 import org.akanework.gramophone.logic.hasScopedStorageWithMediaTypes
 import org.akanework.gramophone.logic.ui.BaseActivity
-import org.akanework.gramophone.logic.ui.MyRecyclerView
-import org.akanework.gramophone.ui.adapters.BaseAdapter
+import org.akanework.gramophone.ui.screens.PickerEntry
+import org.akanework.gramophone.ui.screens.PickerScreen
 
+/**
+ * The activities other apps call to pick a song or a playlist: the library's list, each row
+ * returning its item as the result.
+ */
 abstract class PickerActivity<T : Any> : BaseActivity() {
     companion object {
         private const val PERMISSION_READ_MEDIA_AUDIO = 100
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        enableEdgeToEdgeProperly()
-        setContentView(R.layout.fragment_general_sub)
-        val topAppBar = findViewById<MaterialToolbar>(R.id.topAppBar)
-        val collapsingToolbarLayout =
-            findViewById<CollapsingToolbarLayout>(R.id.collapsingtoolbar)
-        val recyclerView = findViewById<MyRecyclerView>(R.id.recyclerview)
-        val appBarLayout = findViewById<AppBarLayout>(R.id.appbarlayout)
-        appBarLayout.enableEdgeToEdgePaddingListener()
-
-        // Show title text.
-        collapsingToolbarLayout.title = getTitleStr()
-
-        val songAdapter = makeAdapter()
-
-        recyclerView.enableEdgeToEdgePaddingListener()
-        recyclerView.setAppBar(appBarLayout)
-        recyclerView.adapter = songAdapter.concatAdapter
-
-        // Build FastScroller.
-        recyclerView.fastScroll(songAdapter, songAdapter.itemHeightHelper)
-
-        topAppBar.setNavigationOnClickListener {
-            finish()
+        setContent {
+            GramophoneTheme {
+                val items by remember { itemsFlow() }.collectAsState(emptyList())
+                val entries = remember(items) {
+                    items.map { entryOf(it) }.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.title })
+                }
+                PickerScreen(
+                    title = getTitleStr(),
+                    entries = entries,
+                    onPick = { onSelected(it) },
+                    onBack = { finish() },
+                )
+            }
         }
-
-        // Check all permissions.
         if (!hasAudioPermission()) {
-            // Ask if was denied.
             ActivityCompat.requestPermissions(
                 this,
                 if (hasScopedStorageWithMediaTypes())
@@ -89,30 +81,24 @@ abstract class PickerActivity<T : Any> : BaseActivity() {
                     ),
                 PERMISSION_READ_MEDIA_AUDIO,
             )
-        } else {
-            // If all permissions are granted, we can update library now.
-            if (!gramophoneApplication.reader.hadFirstRefresh) {
-                CoroutineScope(Dispatchers.Default).launch {
-                    gramophoneApplication.reader.refresh()
-                }
+        } else if (!gramophoneApplication.reader.hadFirstRefresh) {
+            CoroutineScope(Dispatchers.Default).launch {
+                gramophoneApplication.reader.refresh()
             }
         }
     }
 
-    protected abstract fun makeAdapter(): BaseAdapter<T>
+    protected abstract fun itemsFlow(): Flow<List<T>>
+    protected abstract fun entryOf(item: T): PickerEntry<T>
     protected abstract fun getTitleStr(): String
+    protected abstract fun onSelected(item: T)
 
-    /**
-     * onRequestPermissionResult:
-     *   Update library after permission is granted.
-     */
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,
         grantResults: IntArray,
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
         if (requestCode == PERMISSION_READ_MEDIA_AUDIO) {
             if (grantResults.isNotEmpty() &&
                 grantResults[0] == PackageManager.PERMISSION_GRANTED

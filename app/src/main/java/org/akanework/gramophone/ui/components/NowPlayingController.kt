@@ -47,6 +47,8 @@ class NowPlayingController(
     private val lyricsView: LyricsView,
     private val minimize: () -> Unit,
     private val onQualityChanged: (iconRes: Int?, text: String?) -> Unit,
+    private val openQueue: () -> Unit,
+    private val closeQueue: () -> Unit,
 ) : SharedPreferences.OnSharedPreferenceChangeListener {
 
     private val instance get() = activity.getPlayer()
@@ -55,7 +57,6 @@ class NowPlayingController(
     private var enableQualityInfo = prefs.getBooleanStrict("audio_quality_info", false)
     private var currentFormat: AudioFormatDetector.AudioFormats? = null
     private var lastQualityInfo: AudioFormatInfo? = null
-    private var pqs: PlaylistQueueSheet? = null
 
     private val formatUpdateRunnable = Runnable {
         pushQuality(if (enableQualityInfo) AudioFormatDetector.detectAudioFormat(currentFormat) else null)
@@ -90,7 +91,7 @@ class NowPlayingController(
     fun refreshLyrics() = lyricsView.updateLyrics(instance?.getLyrics())
 
     fun onStop() {
-        pqs?.dismiss()
+        closeQueue()
     }
 
     fun release() {
@@ -163,6 +164,6 @@ class NowPlayingController(
     }
 
     fun showQueue() {
-        if (instance != null) pqs = PlaylistQueueSheet(activity, activity).also { it.show() }
+        if (instance != null) openQueue()
     }
 }

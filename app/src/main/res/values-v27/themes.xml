@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="V27.Theme.Gramophone" parent="PreV31.Theme.Gramophone">
+    <style name="V27.Theme.Gramophone" parent="Common.Theme.Gramophone">
         <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
     </style>
 

@@ -91,6 +91,7 @@ fun playerSheetMetrics(
     pageCorner: Dp,
     density: Density,
     collapsedContainerColor: Color,
+    expandedArtCorner: Dp = EXPANDED_ART_CORNER,
 ): PlayerSheetMetrics {
     val clamped = progress.coerceIn(0f, 1f) // Sanitize
 
@@ -166,7 +167,7 @@ fun playerSheetMetrics(
         artSize = artSize,
         artLeftRoot = centerX - artSize / 2f,
         artTopRoot = centerY - artSize / 2f,
-        artCornerDp = lerp(MINI_ARTWORK_CORNER, EXPANDED_ART_CORNER, clamped),
+        artCornerDp = lerp(MINI_ARTWORK_CORNER, expandedArtCorner, clamped),
         collapsedArtSize = collapsedArtSize,
         collapsedArtLeft = collapsedArtLeft,
         collapsedHeight = collapsedHeight,

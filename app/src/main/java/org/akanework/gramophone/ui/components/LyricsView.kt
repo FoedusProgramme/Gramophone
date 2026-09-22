@@ -22,6 +22,7 @@ import android.content.SharedPreferences
 import android.util.AttributeSet
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.recyclerview.widget.RecyclerView
 import androidx.core.graphics.Insets
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -33,7 +34,6 @@ import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.GramophonePlaybackService
 import org.akanework.gramophone.logic.defaultPrefs
 import org.akanework.gramophone.logic.getBooleanStrict
-import org.akanework.gramophone.logic.ui.MyRecyclerView
 import org.akanework.gramophone.logic.utils.SemanticLyrics
 import org.akanework.gramophone.ui.MainActivity
 import org.akanework.gramophone.ui.MediaControllerViewModel
@@ -46,7 +46,7 @@ class LyricsView(context: Context, attrs: AttributeSet?) : FrameLayout(context, 
 
 
     private val prefs = context.defaultPrefs
-    private var recyclerView: MyRecyclerView? = null
+    private var recyclerView: RecyclerView? = null
     private var newView: NewLyricsView? = null
     private val adapter
         get() = recyclerView?.adapter as LegacyLyricsAdapter?
@@ -159,6 +159,7 @@ class LyricsView(context: Context, attrs: AttributeSet?) : FrameLayout(context, 
         } else {
             inflate(context, R.layout.lyric_view, this)
             recyclerView = findViewById(R.id.recycler_view)
+            recyclerView?.setHasFixedSize(true)
             recyclerView?.setPadding(
                 oldPaddingLeft,
                 oldPaddingTop,

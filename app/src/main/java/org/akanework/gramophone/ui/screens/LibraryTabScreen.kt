@@ -19,6 +19,7 @@ package org.akanework.gramophone.ui.screens
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -26,13 +27,13 @@ import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -61,8 +62,7 @@ import org.akanework.gramophone.logic.utils.flows.LifecyclePauseManager
 import org.akanework.gramophone.ui.actions.LibraryActions
 import org.akanework.gramophone.ui.actions.PlaylistDialogs
 import org.akanework.gramophone.ui.actions.findMainActivity
-import org.akanework.gramophone.ui.adapters.BaseAdapter.LayoutType
-import org.akanework.gramophone.ui.components.CustomGridLayoutManager
+import org.akanework.gramophone.ui.library.LayoutType
 import org.akanework.gramophone.ui.components.compose.rememberPreference
 import org.akanework.gramophone.ui.components.home.DECOR_HEIGHT
 import org.akanework.gramophone.ui.components.home.GRID_CARD_LABEL_HEIGHT
@@ -76,6 +76,10 @@ import org.akanework.gramophone.ui.components.home.LIST_HEIGHT
 import org.akanework.gramophone.ui.components.home.LibraryFastScroller
 import org.akanework.gramophone.ui.components.home.LibraryGridCard
 import org.akanework.gramophone.ui.components.home.LibraryHeader
+import org.akanework.gramophone.ui.components.home.libraryItemCard
+import org.akanework.gramophone.ui.components.home.libraryItemShape
+import org.akanework.gramophone.ui.components.home.libraryCellShape
+import org.akanework.gramophone.ui.components.home.LIBRARY_ITEM_GAP
 import org.akanework.gramophone.ui.components.home.LibraryItemMenu
 import org.akanework.gramophone.ui.components.home.LibraryListRow
 import org.akanework.gramophone.ui.components.home.NowPlayingIndicator
@@ -93,7 +97,16 @@ import uk.akane.libphonograph.items.Album
 import kotlin.math.max
 import kotlin.math.roundToInt
 
-/** Column count of a list / grid, from `BaseAdapter.getSpanSize` + `CustomGridLayoutManager`. */
+/* The grid is twelve spans wide, and each layout takes a share of them per item. */
+private const val FULL_SPAN_COUNT = 12
+private const val LIST_PORTRAIT_SPAN_SIZE = 12
+private const val LIST_LANDSCAPE_SPAN_SIZE = 6
+private const val GRID_PORTRAIT_SPAN_SIZE = 6
+private const val GRID_LANDSCAPE_SPAN_SIZE = 3
+private const val COMPACT_GRID_PORTRAIT_SPAN_SIZE = 4
+private const val COMPACT_GRID_LANDSCAPE_SPAN_SIZE = 2
+
+/** Column count of a list / grid. */
 @Composable
 fun libraryColumns(layoutType: LayoutType?): Int {
     val config = LocalConfiguration.current
@@ -101,34 +114,32 @@ fun libraryColumns(layoutType: LayoutType?): Int {
     val lowWidth = config.orientation == Configuration.ORIENTATION_PORTRAIT ||
             config.screenWidthDp < 600
     val spanSize = when {
-        isList && lowWidth -> CustomGridLayoutManager.LIST_PORTRAIT_SPAN_SIZE
-        isList -> CustomGridLayoutManager.LIST_LANDSCAPE_SPAN_SIZE
-        layoutType == LayoutType.GRID && lowWidth -> CustomGridLayoutManager.GRID_PORTRAIT_SPAN_SIZE
-        layoutType == LayoutType.GRID -> CustomGridLayoutManager.GRID_LANDSCAPE_SPAN_SIZE
-        layoutType == LayoutType.COMPACT_GRID && lowWidth -> CustomGridLayoutManager.COMPACT_GRID_PORTRAIT_SPAN_SIZE
-        else -> CustomGridLayoutManager.COMPACT_GRID_LANDSCAPE_SPAN_SIZE
+        isList && lowWidth -> LIST_PORTRAIT_SPAN_SIZE
+        isList -> LIST_LANDSCAPE_SPAN_SIZE
+        layoutType == LayoutType.GRID && lowWidth -> GRID_PORTRAIT_SPAN_SIZE
+        layoutType == LayoutType.GRID -> GRID_LANDSCAPE_SPAN_SIZE
+        layoutType == LayoutType.COMPACT_GRID && lowWidth -> COMPACT_GRID_PORTRAIT_SPAN_SIZE
+        else -> COMPACT_GRID_LANDSCAPE_SPAN_SIZE
     }
-    return CustomGridLayoutManager.FULL_SPAN_COUNT / spanSize
+    return FULL_SPAN_COUNT / spanSize
 }
 
 /**
- * Content padding of a list: horizontal system bar / cutout insets plus the grid gutter, and
- * at the bottom whichever is larger of the navigation bar and the mini player.
+ * Content padding of a list: horizontal system bar / cutout insets, and at the bottom whichever
+ * is larger of the navigation bar and the mini player.
  */
 @Composable
 fun libraryContentPadding(
-    isGrid: Boolean,
     // The list scrolls under the frosted top bar, so it keeps the bar's height clear at the top.
     top: Dp = LocalAppBarTopPadding.current,
 ): PaddingValues {
     val insets = WindowInsets.systemBars.union(WindowInsets.displayCutout).asPaddingValues()
     val direction = LocalLayoutDirection.current
     val playerPadding = with(LocalDensity.current) { LocalPlayerBottomPadding.current.toDp() }
-    val gutter = if (isGrid) GRID_CARD_SIDE_PADDING else 0.dp
     return PaddingValues(
         top = top,
-        start = insets.calculateStartPadding(direction) + gutter,
-        end = insets.calculateEndPadding(direction) + gutter,
+        start = insets.calculateStartPadding(direction),
+        end = insets.calculateEndPadding(direction),
         bottom = LocalListBottomPadding.current
             ?: max(insets.calculateBottomPadding().value, playerPadding.value).dp,
     )
@@ -185,6 +196,9 @@ fun <T : Any> LibraryTabScreen(
     val context = LocalContext.current
     val activity = remember(context) { context.findMainActivity() }
     val scope = rememberCoroutineScope()
+    // Owned by the composition, not the view model: a LazyGridState holds on to its layout
+    // node and through it the activity, which a view model would keep across recreation.
+    val gridState = rememberLazyGridState()
     CollectLibraryItems(state)
     ReportFullyDrawnWhen(state.loaded)
     val spec = state.spec
@@ -205,8 +219,8 @@ fun <T : Any> LibraryTabScreen(
             val index = if (id != null) items.indexOfFirst { (it as MediaItem).mediaId == id } else -1
             if (index >= 0) {
                 scope.launch {
-                    // QuickLinearSmoothScroller with SNAP_TO_START lands half a row below the top.
-                    state.gridState.animateScrollToItem(index + leadingItems, -rowHeightPx / 2)
+                    // Land half a row below the top, the way the View list used to.
+                    gridState.animateScrollToItem(index + leadingItems, -rowHeightPx / 2)
                 }
             }
         }
@@ -221,18 +235,27 @@ fun <T : Any> LibraryTabScreen(
     } else null
 
     val gridRowHeightPx = libraryGridRowHeightPx(isGrid, columns)
-    val headerHeightPx = with(density) { DECOR_HEIGHT.roundToPx() }
+    val gapPx = with(density) { LIBRARY_ITEM_GAP.roundToPx() }
+    val headerHeightPx = with(density) { DECOR_HEIGHT.roundToPx() } + gapPx
     Box(modifier.fillMaxSize()) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(columns),
-        state = state.gridState,
+        state = gridState,
         modifier = Modifier.fillMaxSize().iosOverscroll(overscroll),
-        contentPadding = libraryContentPadding(isGrid),
-        flingBehavior = rememberIosFlingBehavior(state.gridState),
+        contentPadding = libraryContentPadding(),
+        verticalArrangement = Arrangement.spacedBy(LIBRARY_ITEM_GAP),
+        horizontalArrangement = if (isGrid) Arrangement.spacedBy(LIBRARY_ITEM_GAP) else Arrangement.Start,
+        flingBehavior = rememberIosFlingBehavior(gridState),
         overscrollEffect = null,
     ) {
         item(key = "header", span = { GridItemSpan(maxLineSpan) }) {
             LibraryHeader(
+                modifier = Modifier.libraryItemCard(
+                    libraryItemShape(
+                        topStart = true, topEnd = true,
+                        bottomStart = items.isEmpty(), bottomEnd = items.isEmpty(),
+                    )
+                ),
                 counterText = context.resources.getQuantityString(spec.pluralStr, items.size, items.size),
                 onCounterClick = goToPlayingSong,
                 onCreatePlaylist = if (spec === LibraryTabSpec.Playlists) {
@@ -278,38 +301,41 @@ fun <T : Any> LibraryTabScreen(
                 },
             )
         }
-        items(items, key = { spec.helper.getId(it) }) { item ->
-            LibraryItem(state, item, nowPlaying, activity, layoutType)
+        itemsIndexed(items, key = { _, it -> spec.helper.getId(it) }) { index, item ->
+            LibraryItem(
+                state, item, nowPlaying, activity, layoutType,
+                Modifier.libraryItemCard(libraryCellShape(index, items.size, columns)),
+            )
         }
     }
     LibraryFastScroller(
-        gridState = state.gridState,
+        gridState = gridState,
         itemCount = items.size,
         headerCount = leadingItems,
         columns = columns,
-        rowHeightPx = if (isGrid) gridRowHeightPx else rowHeightPx,
+        rowHeightPx = (if (isGrid) gridRowHeightPx else rowHeightPx) + gapPx,
         headerHeightPx = headerHeightPx,
         hintFor = { i -> items.getOrNull(i)?.let { state.fastScrollHintFor(it, i) } ?: "-" },
-        modifier = Modifier.padding(top = LocalAppBarTopPadding.current),
     )
     }
 }
 
 /**
- * Height of one grid row, from `BaseAdapter.calculateGridSizeIfNeeded`: the cell width minus
- * the side paddings gives the square cover, plus the label block.
+ * Height of one grid row: the cell width minus the side paddings gives the square cover, plus
+ * the label block.
  */
 @Composable
 fun libraryGridRowHeightPx(isGrid: Boolean, columns: Int): Int {
     if (!isGrid) return 0
     val density = LocalDensity.current
-    val padding = libraryContentPadding(true)
+    val padding = libraryContentPadding()
     val direction = LocalLayoutDirection.current
     val config = LocalConfiguration.current
     return with(density) {
         val width = config.screenWidthDp.dp.toPx() -
                 padding.calculateStartPadding(direction).toPx() -
-                padding.calculateEndPadding(direction).toPx()
+                padding.calculateEndPadding(direction).toPx() -
+                LIBRARY_ITEM_GAP.toPx() * (columns - 1)
         val cover = width / columns - GRID_CARD_SIDE_PADDING.toPx() * 2
         (cover + GRID_CARD_MARGIN_TOP.toPx() + GRID_CARD_LABEL_HEIGHT.toPx() +
                 GRID_CARD_MARGIN_LABEL.toPx() * 2 + GRID_CARD_PADDING_BOTTOM.toPx()).roundToInt()
@@ -323,6 +349,7 @@ internal fun <T : Any> LibraryItem(
     nowPlaying: NowPlayingState,
     activity: org.akanework.gramophone.ui.MainActivity,
     layoutType: LayoutType,
+    modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     val spec = state.spec
@@ -376,6 +403,7 @@ internal fun <T : Any> LibraryItem(
             hasMenu = actions.isNotEmpty(),
             onClick = onClick,
             onMenu = { menuOpen = true },
+            modifier = modifier,
             nowPlaying = nowPlayingSlot,
             menu = menu,
         )
@@ -389,6 +417,7 @@ internal fun <T : Any> LibraryItem(
             hasMenu = actions.isNotEmpty(),
             onClick = onClick,
             onMenu = { menuOpen = true },
+            modifier = modifier,
             nowPlaying = nowPlayingSlot,
             menu = menu,
         )

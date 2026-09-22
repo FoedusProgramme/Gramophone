@@ -22,7 +22,6 @@ import android.content.Intent
 import android.media.audiofx.AudioEffect
 import android.os.Build
 import android.provider.Settings
-import android.view.View
 import android.widget.Toast
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Equalizer
@@ -30,12 +29,8 @@ import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Shuffle
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import coil3.SingletonImageLoader
-import com.google.android.material.color.MaterialColors
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -44,16 +39,15 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.clone
-import org.akanework.gramophone.logic.needsManualSnackBarInset
 import org.akanework.gramophone.logic.setMediaItemsWithTitle
-import org.akanework.gramophone.logic.updateMargin
 import org.akanework.gramophone.logic.utils.SdScanner
 import org.akanework.gramophone.ui.MainActivity
-import org.akanework.gramophone.ui.fragments.SearchFragment
+import org.akanework.gramophone.ui.components.compose.AppDialog
 import org.akanework.gramophone.ui.nav.MainSettingsKey
+import org.akanework.gramophone.ui.nav.SearchKey
 import org.nift4.mediastorecompat.MediaStoreCompat
 
-/** The home toolbar menu entries, in `home_menu.xml` order (search is an action button). */
+/** The home toolbar menu entries (search is an action button). */
 enum class HomeMenuAction(val title: Int, val icon: ImageVector) {
     Shuffle(R.string.home_menu_shuffle, Icons.Outlined.Shuffle),
     QuickRefresh(R.string.home_menu_quick_refresh, Icons.Outlined.Refresh),
@@ -65,7 +59,7 @@ enum class HomeMenuAction(val title: Int, val icon: ImageVector) {
 /** The home toolbar actions. */
 object HomeActions {
     fun search(activity: MainActivity) {
-        activity.startFragment(SearchFragment())
+        activity.navigateTo(SearchKey(null))
     }
 
     fun run(activity: MainActivity, action: HomeMenuAction) {
@@ -102,12 +96,11 @@ object HomeActions {
                 val context = activity
                 val imageLoader = SingletonImageLoader.get(context)
                 imageLoader.memoryCache?.clear()
-                MaterialAlertDialogBuilder(context)
-                    .setIcon(R.drawable.ic_refresh)
-                    .setTitle(R.string.did_you_know)
-                    .setMessage(R.string.refresh_did_you_know)
-                    .setPositiveButton(android.R.string.ok) { _, _ -> }
-                    .show()
+                activity.dialogs.show(AppDialog.Message(
+                    title = context.getString(R.string.did_you_know),
+                    message = context.getString(R.string.refresh_did_you_know),
+                    icon = Icons.Outlined.Refresh,
+                ))
                 Toast.makeText(context, R.string.refreshing_wait, Toast.LENGTH_LONG).show()
                 CoroutineScope(Dispatchers.Default).launch {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -162,34 +155,11 @@ object HomeActions {
     }
 
     private fun showRefreshDoneSnackBar(activity: MainActivity, count: Int) {
-        val playerLayout = activity.playerBottomSheet
-        val view = activity.findViewById<View>(android.R.id.content) ?: return
-        val snackBar = Snackbar.make(
-            view, activity.getString(R.string.refreshed_songs, count), Snackbar.LENGTH_LONG,
-        )
-        snackBar.setAction(R.string.dismiss) { snackBar.dismiss() }
-        // Let's override snack bar's color here so it would adapt dark mode.
-        snackBar.setBackgroundTint(
-            MaterialColors.getColor(snackBar.view, com.google.android.material.R.attr.colorSurface)
-        )
-        snackBar.setActionTextColor(
-            MaterialColors.getColor(snackBar.view, androidx.appcompat.R.attr.colorPrimary)
-        )
-        snackBar.setTextColor(
-            MaterialColors.getColor(snackBar.view, com.google.android.material.R.attr.colorOnSurface)
-        )
-        // Set an anchor for snack bar.
-        if (playerLayout.visible && playerLayout.actuallyVisible)
-            snackBar.anchorView = playerLayout
-        else if (needsManualSnackBarInset()) {
-            // snack bar only implements proper insets handling for Q+
-            snackBar.view.updateMargin {
-                val i = ViewCompat.getRootWindowInsets(activity.window.decorView)
-                if (i != null) {
-                    bottom += i.clone().getInsets(WindowInsetsCompat.Type.systemBars()).bottom
-                }
-            }
+        activity.lifecycleScope.launch {
+            activity.dialogs.snackbar(
+                activity.getString(R.string.refreshed_songs, count),
+                activity.getString(R.string.dismiss),
+            )
         }
-        snackBar.show()
     }
 }

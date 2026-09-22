@@ -23,7 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.integerResource
 import androidx.compose.ui.res.stringResource
-import com.google.android.material.color.DynamicColors
+import android.os.Build
 import org.akanework.gramophone.R
 import org.akanework.gramophone.ui.components.compose.rememberBooleanPreference
 import org.akanework.gramophone.ui.components.compose.rememberIntPreference
@@ -49,7 +49,7 @@ fun PlayerSettingsScreen(
     val defaultProgressBar = rememberBooleanPreference("default_progress_bar", false)
     val audioQualityInfo = rememberBooleanPreference("audio_quality_info", false)
     val cookieCover = rememberBooleanPreference("cookie_cover", false)
-    val dynamicColor = remember { DynamicColors.isDynamicColorAvailable() }
+    val dynamicColor = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
 
     val fullPlayer = buildList<@Composable (Shape) -> Unit> {
         add { shape ->

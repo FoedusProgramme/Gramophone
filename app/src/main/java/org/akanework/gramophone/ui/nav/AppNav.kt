@@ -1,11 +1,14 @@
 package org.akanework.gramophone.ui.nav
 
-import android.os.Bundle
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -23,19 +26,22 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.fragment.app.Fragment
-import androidx.fragment.compose.AndroidFragment
-import androidx.fragment.compose.rememberFragmentState
 import androidx.lifecycle.ViewModel
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
+import org.akanework.gramophone.ui.components.compose.AppDialogHost
+import org.akanework.gramophone.ui.components.compose.AppDialogHostState
 import org.akanework.gramophone.ui.screens.HomeScreen
 import org.akanework.gramophone.ui.screens.LibrarySubScreen
+import org.akanework.gramophone.ui.screens.PlaylistEditScreen
+import org.akanework.gramophone.ui.screens.SearchScreen
+import org.akanework.gramophone.ui.screens.SongDetailScreen
 import org.akanework.gramophone.ui.screens.settings.AboutSettingsScreen
 import org.akanework.gramophone.ui.screens.settings.AppearanceSettingsScreen
+import org.akanework.gramophone.ui.screens.settings.ThemeSettingsScreen
 import org.akanework.gramophone.ui.screens.settings.AudioSettingsScreen
 import org.akanework.gramophone.ui.screens.settings.BehaviorSettingsScreen
 import org.akanework.gramophone.ui.screens.settings.BlacklistScreen
@@ -55,11 +61,20 @@ data object HomeKey : AppNavKey {
     override val wantsPlayer = true
 }
 
-class FragmentKey(
-    val className: String,
-    val args: Bundle?,
-    override val wantsPlayer: Boolean,
-) : AppNavKey
+/** The search page, opened with [query] typed in already when it comes from an intent. */
+class SearchKey(val query: String?) : AppNavKey {
+    override val wantsPlayer = true
+}
+
+/** The details of one song. */
+class SongDetailKey(val mediaId: String) : AppNavKey {
+    override val wantsPlayer = false
+}
+
+/** Editing the playlist with MediaStore id [id]. */
+class PlaylistEditKey(val id: Long) : AppNavKey {
+    override val wantsPlayer = false
+}
 
 /** A library detail page. Plain classes, so the same page can be on the back stack twice. */
 sealed interface LibrarySubKey : AppNavKey {
@@ -102,6 +117,7 @@ fun AppRoot(
     backStack: SnapshotStateList<AppNavKey>,
     onPlayerVisibleChanged: (Boolean) -> Unit,
     playerBottomPadding: Int,
+    dialogs: AppDialogHostState,
     debug: Boolean,
 ) {
     val top = backStack.lastOrNull()
@@ -112,6 +128,14 @@ fun AppRoot(
         CompositionLocalProvider(LocalPlayerBottomPadding provides playerBottomPadding) {
             AppNavHost(backStack)
         }
+        AppDialogHost(dialogs)
+        // Above the mini player when it shows, else above the navigation bar.
+        val snackbarBottom = if (playerBottomPadding > 0) with(LocalDensity.current) { playerBottomPadding.toDp() }
+            else WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+        SnackbarHost(
+            hostState = dialogs.snackbarHostState,
+            modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = snackbarBottom),
+        )
         if (debug) {
             Text(
                 "DEBUG",
@@ -152,20 +176,12 @@ private fun AppNavHost(backStack: SnapshotStateList<AppNavKey>) {
             entry<DateKey> { LibrarySubScreen(it, onBack = { backStack.removeLastOrNull() }) }
             entry<PlaylistKey> { LibrarySubScreen(it, onBack = { backStack.removeLastOrNull() }) }
             entry<ArtistKey> { LibrarySubScreen(it, onBack = { backStack.removeLastOrNull() }) }
-            entry<FragmentKey> { key ->
-                val clazz = remember(key.className) {
-                    @Suppress("UNCHECKED_CAST")
-                    Class.forName(key.className) as Class<Fragment>
-                }
-                AndroidFragment(
-                    clazz = clazz,
-                    modifier = Modifier.fillMaxSize(),
-                    fragmentState = rememberFragmentState(),
-                    arguments = key.args ?: Bundle.EMPTY,
-                )
-            }
+            entry<SearchKey> { key -> SearchScreen(initialQuery = key.query, onBack = pop) }
+            entry<SongDetailKey> { key -> SongDetailScreen(mediaId = key.mediaId, onBack = pop) }
+            entry<PlaylistEditKey> { key -> PlaylistEditScreen(playlistId = key.id, onBack = pop) }
             entry<MainSettingsKey> { MainSettingsScreen(onBack = pop, onNavigate = push) }
-            entry<AppearanceSettingsKey> { AppearanceSettingsScreen(onBack = pop) }
+            entry<AppearanceSettingsKey> { AppearanceSettingsScreen(onBack = pop, onNavigate = push) }
+            entry<ThemeSettingsKey> { ThemeSettingsScreen(onBack = pop) }
             entry<PlayerSettingsKey> { PlayerSettingsScreen(onBack = pop, onNavigate = push) }
             entry<LyricSettingsKey> { LyricSettingsScreen(onBack = pop) }
             entry<BehaviorSettingsKey> { BehaviorSettingsScreen(onBack = pop, onNavigate = push) }

@@ -32,7 +32,7 @@ import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
-import androidx.appcompat.view.ContextThemeWrapper
+import android.view.ContextThemeWrapper
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import kotlinx.coroutines.CoroutineScope

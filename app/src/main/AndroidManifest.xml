@@ -93,6 +93,7 @@
         <activity
             android:name=".ui.MainActivity"
             android:theme="@style/Theme.Splash"
+            android:configChanges="uiMode"
             android:exported="true"
             android:launchMode="singleTop">
             <intent-filter>

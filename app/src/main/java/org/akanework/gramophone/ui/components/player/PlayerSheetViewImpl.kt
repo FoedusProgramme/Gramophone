@@ -1,7 +1,6 @@
 package org.akanework.gramophone.ui.components.player
 
 import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
@@ -34,7 +33,6 @@ import androidx.media3.common.PlaybackParameters
 import androidx.media3.common.Player
 import androidx.media3.common.util.Log
 import androidx.media3.session.MediaController
-import com.google.android.material.motion.MaterialBottomContainerBackHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
@@ -54,8 +52,11 @@ import org.akanework.gramophone.ui.GramophoneTheme
 import org.akanework.gramophone.ui.MainActivity
 import org.akanework.gramophone.ui.components.LyricsView
 import org.akanework.gramophone.ui.components.NowPlayingController
-import org.akanework.gramophone.ui.fragments.DetailDialogFragment
+import org.akanework.gramophone.ui.nav.SongDetailKey
 import uk.akane.libphonograph.manipulator.PlaylistSerializer
+
+/** How much the lyrics shrink at the end of a predictive back gesture. */
+private const val LYRICS_BACK_MAX_SHRINK = 0.1f
 
 class PlayerSheetViewImpl private constructor(
     context: Context, attributeSet: AttributeSet?, defStyleAttr: Int, defStyleRes: Int
@@ -74,7 +75,6 @@ class PlayerSheetViewImpl private constructor(
     }
 
     @SuppressLint("RestrictedApi")
-    private var lyricsBackHelper: MaterialBottomContainerBackHelper? = null
     private var bottomSheetBackCallback: OnBackPressedCallback? = null
 
     // The whole morph is driven by this single 0..1 progress. The scope
@@ -97,6 +97,7 @@ class PlayerSheetViewImpl private constructor(
         get() = activity
     private val instance: MediaController?
         get() = activity.getPlayer()
+    private val queueOpen = mutableStateOf(false)
     private var lastActuallyVisible: Boolean? = null
     private var lastMeasuredHeight: Int? = null
     private var pendingExpanded = false
@@ -168,14 +169,14 @@ class PlayerSheetViewImpl private constructor(
                 playerState.qualityIcon.value = icon
                 playerState.qualityText.value = text
             },
+            openQueue = { queueOpen.value = true },
+            closeQueue = { queueOpen.value = false },
         )
 
-        val pureDark = context.defaultPrefs
-            .getBoolean("pureDark", false)
         composeView = ComposeView(context).apply {
             layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
             setContent {
-                GramophoneTheme(pureDark = pureDark) {
+                GramophoneTheme {
                     PlayerSheet(
                         state = sheetState,
                         player = playerState,
@@ -184,9 +185,7 @@ class PlayerSheetViewImpl private constructor(
                         onPlayPause = { instance?.playOrPause() },
                         onNext = { instance?.seekToNext() },
                         onCoverClick = {
-                            activity.startFragment(DetailDialogFragment()) {
-                                putString("Id", instance?.currentMediaItem?.mediaId)
-                            }
+                            instance?.currentMediaItem?.mediaId?.let { activity.navigateTo(SongDetailKey(it)) }
                         },
                         onExpandedTargetChanged = { expanded ->
                             bottomSheetBackCallback?.isEnabled = expanded
@@ -194,6 +193,9 @@ class PlayerSheetViewImpl private constructor(
                         actions = fullPlayerActions,
                         dialogCallbacks = dialogCallbacks,
                     )
+                    if (queueOpen.value) {
+                        QueueSheet(activity, onDismiss = { queueOpen.value = false })
+                    }
                 }
             }
         }
@@ -285,21 +287,17 @@ class PlayerSheetViewImpl private constructor(
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         doOnLayout {
-            @SuppressLint("RestrictedApi")
-            lyricsBackHelper =
-                MaterialBottomContainerBackHelper(lyricsView)
             bottomSheetBackCallback = object : OnBackPressedCallback(enabled = false) {
                 override fun handleOnBackStarted(backEvent: BackEventCompat) {
-                    if (lyricsView.isVisible) {
-                        @SuppressLint("RestrictedApi")
-                        lyricsBackHelper!!.startBackProgress(backEvent)
-                    }
+                    if (lyricsView.isVisible) lyricsView.animate().cancel()
                 }
 
                 override fun handleOnBackProgressed(backEvent: BackEventCompat) {
                     if (lyricsView.isVisible) {
-                        @SuppressLint("RestrictedApi")
-                        lyricsBackHelper!!.updateBackProgress(backEvent)
+                        // The lyrics shrink a little under the gesture, the way a sheet does.
+                        val scale = 1f - LYRICS_BACK_MAX_SHRINK * backEvent.progress
+                        lyricsView.scaleX = scale
+                        lyricsView.scaleY = scale
                     } else {
                         sheetState.onBackProgress(backEvent.progress)
                     }
@@ -307,22 +305,10 @@ class PlayerSheetViewImpl private constructor(
 
                 override fun handleOnBackPressed() {
                     if (lyricsView.isVisible) {
-                        @SuppressLint("RestrictedApi")
-                        val backEvent = lyricsBackHelper!!.onHandleBackInvoked()
-                        if (backEvent == null || backEvent.progress == 0f
-                            || Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE
-                        ) {
-                            lyricsView.fadOutAnimation(PlayerUtilities.LYRIC_COVER_FADE_MS.toLong())
-                            return
+                        lyricsView.fadOutAnimation(PlayerUtilities.LYRIC_COVER_FADE_MS.toLong()) {
+                            lyricsView.scaleX = 1f
+                            lyricsView.scaleY = 1f
                         }
-                        @SuppressLint("RestrictedApi")
-                        lyricsBackHelper!!.finishBackProgressPersistent(
-                            backEvent,
-                            object : AnimatorListenerAdapter() {
-                                override fun onAnimationStart(animation: Animator) {
-                                    lyricsView.fadOutAnimation(PlayerUtilities.LYRIC_COVER_FADE_MS.toLong())
-                                }
-                            })
                     } else {
                         sheetState.collapse()
                     }
@@ -330,8 +316,8 @@ class PlayerSheetViewImpl private constructor(
 
                 override fun handleOnBackCancelled() {
                     if (lyricsView.isVisible) {
-                        @SuppressLint("RestrictedApi")
-                        lyricsBackHelper!!.cancelBackProgress()
+                        lyricsView.animate().scaleX(1f).scaleY(1f)
+                            .setDuration(PlayerUtilities.LYRIC_COVER_FADE_MS.toLong()).start()
                     } else {
                         sheetState.expand()
                     }

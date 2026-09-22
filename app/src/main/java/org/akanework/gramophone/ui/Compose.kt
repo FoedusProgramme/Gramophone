@@ -1,125 +1,79 @@
 package org.akanework.gramophone.ui
 
-import android.os.Build
+import android.content.Context
+import android.content.ContextWrapper
+import androidx.activity.ComponentActivity
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.contentColorFor
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
-import org.akanework.gramophone.R
+import androidx.compose.ui.platform.LocalView
+import com.materialkolor.hct.Hct
+import com.materialkolor.ktx.animateColorScheme
+import com.materialkolor.ktx.toColor
+import com.materialkolor.ktx.toHct
+import org.akanework.gramophone.logic.enableEdgeToEdgeProperly
+import org.akanework.gramophone.ui.theme.isDark
+import org.akanework.gramophone.ui.theme.rememberThemeSettings
+import org.akanework.gramophone.ui.theme.themeColorScheme
 
-@Composable
-fun GramophoneTheme(
-    useDarkTheme: Boolean = isSystemInDarkTheme(),
-    pureDark: Boolean,
-    content: @Composable () -> Unit
-) {
-    MaterialTheme(
-        colorScheme = (if (useDarkTheme) {
-            (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-                dynamicDarkColorScheme(LocalContext.current)
-            else
-                legacyColorScheme(dark = true)).let {
-                if (pureDark) {
-                    it.copy(
-                        background = Color.Black,
-                        surface = Color.Black,
-                        surfaceVariant = Color.Black,
-                        surfaceContainerLowest = Color.Black,
-                        surfaceContainerLow = Color.Black,
-                        surfaceContainer = Color.Black,
-                        surfaceContainerHigh = Color.Black,
-                        surfaceContainerHighest = Color.Black,
-                    )
-                } else it
-            }
-        } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-                dynamicLightColorScheme(LocalContext.current)
-            else
-                legacyColorScheme(dark = false)
-        }), content = {
-            CompositionLocalProvider(
-                LocalContentColor provides contentColorFor(MaterialTheme.colorScheme.surface),
-            ) {
-                content()
-            }
-        }
-    )
-}
+val LocalCardSurface = staticCompositionLocalOf { Color.Unspecified }
+
+/** Whether the app draws its dark theme, whatever the system is set to. */
+val LocalDarkTheme = staticCompositionLocalOf { false }
+
+/** How long a change of palette, seed or brightness takes to cross over. */
+const val THEME_ANIMATION_MS = 400
+
+private const val DARK_CARD_CHROMA = 8.0
+private const val DARK_CARD_TONE = 10.0
+
+private fun cardSurface(scheme: ColorScheme, dark: Boolean): Color =
+    if (dark) scheme.primary.tonal(DARK_CARD_CHROMA, DARK_CARD_TONE) else scheme.surfaceBright
+
+/** This colour's hue at the given [chroma] and [tone]. */
+fun Color.tonal(chroma: Double, tone: Double): Color = Hct.from(toHct().hue, chroma, tone).toColor()
 
 /**
- * Pre-Android-12 colors: the same `md_theme_*` palette the XML theme (`PreV31.Theme.Gramophone`)
- * uses, so View and Compose screens match. The resources are day/night qualified, so they
- * resolve to the variant matching the current configuration.
+ * The app theme from the stored theme settings. Colours cross over when the settings change,
+ * and the system bars are kept matched to the brightness.
  */
 @Composable
-private fun legacyColorScheme(dark: Boolean): ColorScheme {
-    val primary = colorResource(R.color.md_theme_primary)
-    val onPrimary = colorResource(R.color.md_theme_onPrimary)
-    val primaryContainer = colorResource(R.color.md_theme_primaryContainer)
-    val onPrimaryContainer = colorResource(R.color.md_theme_onPrimaryContainer)
-    val inversePrimary = colorResource(R.color.md_theme_inversePrimary)
-    val secondary = colorResource(R.color.md_theme_secondary)
-    val onSecondary = colorResource(R.color.md_theme_onSecondary)
-    val secondaryContainer = colorResource(R.color.md_theme_secondaryContainer)
-    val onSecondaryContainer = colorResource(R.color.md_theme_onSecondaryContainer)
-    val tertiary = colorResource(R.color.md_theme_tertiary)
-    val onTertiary = colorResource(R.color.md_theme_onTertiary)
-    val tertiaryContainer = colorResource(R.color.md_theme_tertiaryContainer)
-    val onTertiaryContainer = colorResource(R.color.md_theme_onTertiaryContainer)
-    val background = colorResource(R.color.md_theme_background)
-    val onBackground = colorResource(R.color.md_theme_onBackground)
-    val surface = colorResource(R.color.md_theme_surface)
-    val onSurface = colorResource(R.color.md_theme_onSurface)
-    val surfaceVariant = colorResource(R.color.md_theme_surfaceVariant)
-    val onSurfaceVariant = colorResource(R.color.md_theme_onSurfaceVariant)
-    val inverseSurface = colorResource(R.color.md_theme_inverseSurface)
-    val inverseOnSurface = colorResource(R.color.md_theme_inverseOnSurface)
-    val error = colorResource(R.color.md_theme_error)
-    val onError = colorResource(R.color.md_theme_onError)
-    val errorContainer = colorResource(R.color.md_theme_errorContainer)
-    val onErrorContainer = colorResource(R.color.md_theme_onErrorContainer)
-    val outline = colorResource(R.color.md_theme_outline)
-    val outlineVariant = colorResource(R.color.md_theme_outlineVariant)
-    val surfaceBright = colorResource(R.color.md_theme_surfaceBright)
-    val surfaceDim = colorResource(R.color.md_theme_surfaceDim)
-    val surfaceContainer = colorResource(R.color.md_theme_surfaceContainer)
-    val surfaceContainerHigh = colorResource(R.color.md_theme_surfaceContainerHigh)
-    val surfaceContainerHighest = colorResource(R.color.md_theme_surfaceContainerHighest)
-    val surfaceContainerLow = colorResource(R.color.md_theme_surfaceContainerLow)
-    val surfaceContainerLowest = colorResource(R.color.md_theme_surfaceContainerLowest)
-    val base = if (dark) darkColorScheme() else lightColorScheme()
-    return base.copy(
-        primary = primary, onPrimary = onPrimary,
-        primaryContainer = primaryContainer, onPrimaryContainer = onPrimaryContainer,
-        inversePrimary = inversePrimary,
-        secondary = secondary, onSecondary = onSecondary,
-        secondaryContainer = secondaryContainer, onSecondaryContainer = onSecondaryContainer,
-        tertiary = tertiary, onTertiary = onTertiary,
-        tertiaryContainer = tertiaryContainer, onTertiaryContainer = onTertiaryContainer,
-        background = background, onBackground = onBackground,
-        surface = surface, onSurface = onSurface,
-        surfaceVariant = surfaceVariant, onSurfaceVariant = onSurfaceVariant,
-        surfaceTint = primary,
-        inverseSurface = inverseSurface, inverseOnSurface = inverseOnSurface,
-        error = error, onError = onError,
-        errorContainer = errorContainer, onErrorContainer = onErrorContainer,
-        outline = outline, outlineVariant = outlineVariant,
-        surfaceBright = surfaceBright, surfaceDim = surfaceDim,
-        surfaceContainer = surfaceContainer,
-        surfaceContainerHigh = surfaceContainerHigh,
-        surfaceContainerHighest = surfaceContainerHighest,
-        surfaceContainerLow = surfaceContainerLow,
-        surfaceContainerLowest = surfaceContainerLowest,
-    )
+fun GramophoneTheme(content: @Composable () -> Unit) {
+    val context = LocalContext.current
+    val settings = rememberThemeSettings()
+    val dark = settings.mode.isDark(isSystemInDarkTheme())
+    val target = remember(context, settings, dark) { themeColorScheme(context, settings, dark) }
+    val colorScheme = animateColorScheme(target, animationSpec = { tween(THEME_ANIMATION_MS) })
+    val cardSurface by animateColorAsState(cardSurface(target, dark), tween(THEME_ANIMATION_MS))
+    val view = LocalView.current
+    if (!view.isInEditMode) {
+        SideEffect { view.context.findActivity()?.enableEdgeToEdgeProperly(dark) }
+    }
+    MaterialTheme(colorScheme = colorScheme) {
+        CompositionLocalProvider(
+            LocalContentColor provides contentColorFor(MaterialTheme.colorScheme.surface),
+            LocalCardSurface provides cardSurface,
+            LocalDarkTheme provides dark,
+        ) {
+            content()
+        }
+    }
+}
+
+tailrec fun Context.findActivity(): ComponentActivity? = when (this) {
+    is ComponentActivity -> this
+    is ContextWrapper -> baseContext.findActivity()
+    else -> null
 }

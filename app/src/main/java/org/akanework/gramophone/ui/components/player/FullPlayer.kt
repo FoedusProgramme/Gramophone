@@ -64,6 +64,8 @@ import androidx.compose.material.icons.outlined.SkipPrevious
 import androidx.compose.material.icons.outlined.Speed
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -92,6 +94,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.utils.CalculationUtils
 import org.akanework.gramophone.ui.components.LyricsView
+import org.akanework.gramophone.ui.components.compose.rememberBooleanPreference
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.LANDSCAPE_MARGIN
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.LANDSCAPE_TOP_BUTTON_SIZE
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.PORTRAIT_MARGIN
@@ -333,6 +336,9 @@ private fun TitleArtist(
 ) {
     val title by player.title.collectAsState()
     val artist by player.artist.collectAsState()
+    val bold = rememberBooleanPreference("bold_title", true).value
+    val centered = rememberBooleanPreference("centered_title", false).value
+    val align = if (centered) TextAlign.Center else TextAlign.Start
     Column(
         Modifier
             .fillMaxWidth()
@@ -343,10 +349,10 @@ private fun TitleArtist(
             text = title?.toString().orEmpty(),
             color = scheme.primary,
             fontSize = 24.sp,
-            fontWeight = FontWeight.W500,
+            fontWeight = if (bold) FontWeight.W600 else FontWeight.W400,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            textAlign = TextAlign.Center,
+            textAlign = align,
             modifier = Modifier
                 .fillMaxWidth()
                 .basicMarquee()
@@ -360,7 +366,7 @@ private fun TitleArtist(
             fontWeight = FontWeight.W500,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            textAlign = TextAlign.Center,
+            textAlign = align,
             modifier = Modifier
                 .fillMaxWidth()
                 .basicMarquee()
@@ -387,22 +393,41 @@ private fun ProgressSection(
     val liveFraction = (positionMs.toFloat() / duration).coerceIn(0f, 1f)
     val fraction = scrub ?: liveFraction
     val displayPositionMs = scrub?.let { (it * duration).toLong() } ?: positionMs
+    val defaultProgressBar = rememberBooleanPreference("default_progress_bar", false).value
 
-    SquigglyProgressBar(
-        fraction = fraction,
-        animating = isPlaying && scrub == null,
-        color = scheme.primary,
-        trackColor = scheme.primary.copy(alpha = PlayerUtilities.SQUIGGLY_TRACK_ALPHA),
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = horizontalMargin)
-            .height(48.dp),
-        onScrub = { scrub = it },
-        onSeek = {
-            actions.seekTo((it * duration).toLong())
-            scrub = null
-        },
-    )
+    val barModifier = Modifier
+        .fillMaxWidth()
+        .padding(horizontal = horizontalMargin)
+        .height(48.dp)
+    if (defaultProgressBar) {
+        Slider(
+            value = fraction,
+            onValueChange = { scrub = it },
+            onValueChangeFinished = {
+                scrub?.let { actions.seekTo((it * duration).toLong()) }
+                scrub = null
+            },
+            colors = SliderDefaults.colors(
+                thumbColor = scheme.primary,
+                activeTrackColor = scheme.primary,
+                inactiveTrackColor = scheme.primary.copy(alpha = PlayerUtilities.SQUIGGLY_TRACK_ALPHA),
+            ),
+            modifier = barModifier,
+        )
+    } else {
+        SquigglyProgressBar(
+            fraction = fraction,
+            animating = isPlaying && scrub == null,
+            color = scheme.primary,
+            trackColor = scheme.primary.copy(alpha = PlayerUtilities.SQUIGGLY_TRACK_ALPHA),
+            modifier = barModifier,
+            onScrub = { scrub = it },
+            onSeek = {
+                actions.seekTo((it * duration).toLong())
+                scrub = null
+            },
+        )
+    }
     Row(
         Modifier
             .fillMaxWidth()

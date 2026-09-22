@@ -22,7 +22,7 @@
             android:height="24dp"
             android:viewportWidth="960"
             android:viewportHeight="960"
-            android:tint="?attr/colorControlNormal">
+            android:tint="?android:attr/colorControlNormal">
             <path
                 android:name="shape"
                 android:fillColor="@android:color/white"

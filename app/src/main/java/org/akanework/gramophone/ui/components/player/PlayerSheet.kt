@@ -79,6 +79,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.res.integerResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil3.BitmapImage
@@ -100,8 +101,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
 import org.akanework.gramophone.R
+import org.akanework.gramophone.ui.components.compose.rememberBooleanPreference
+import org.akanework.gramophone.ui.components.compose.rememberIntPreference
+import org.akanework.gramophone.ui.tonal
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.ARTWORK_QUANTIZE_MAX
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.ARTWORK_SEED_SIZE
+import org.akanework.gramophone.ui.components.player.PlayerUtilities.ARTWORK_SEED_SIZE_ACCURATE
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.COVER_CLICK_MIN
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.FALLBACK_PAGE_CORNER
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.LYRIC_COVER_FADE_MS
@@ -186,7 +191,16 @@ fun PlayerSheet(
     val c = chrome.value
     val hasMedia by player.hasMedia.collectAsState()
     val artworkUri by player.artworkUri.collectAsState()
-    val coverScheme = rememberCoverScheme(artworkUri)
+    val contentBasedColor = rememberBooleanPreference("content_based_color", true).value
+    val colorAccuracy = rememberBooleanPreference("color_accuracy", false).value
+    val cookieCover = rememberBooleanPreference("cookie_cover", false).value
+    val expandedArtCorner = rememberIntPreference(
+        "album_round_corner", integerResource(R.integer.round_corner_radius)
+    ).value.dp
+    val coverScheme = rememberCoverScheme(
+        if (contentBasedColor) artworkUri else null,
+        accurate = colorAccuracy,
+    )
     var activeDialog by remember { mutableStateOf<PlayerDialog?>(null) }
     PlayerDialogs(activeDialog, coverScheme, dialogCallbacks, onDismiss = { activeDialog = null })
 
@@ -199,6 +213,9 @@ fun PlayerSheet(
         label = "sheet show",
     )
 
+    // By night the cover scheme's surface is nearly black and its primary container dull, so
+    // the collapsed bar and its progress take the cover's hue at tones of their own.
+    val isDark = MaterialTheme.colorScheme.surface.luminance() < 0.5f
     BoxWithConstraints(Modifier.fillMaxSize()) {
         val rootW = constraints.maxWidth.toFloat()
         val rootH = constraints.maxHeight.toFloat()
@@ -214,7 +231,9 @@ fun PlayerSheet(
             isWideLandscape = isWideLandscape,
             pageCorner = deviceScreenCornerRadius(),
             density = density,
-            collapsedContainerColor = coverScheme.surface,
+            collapsedContainerColor = if (isDark) coverScheme.primary.tonal(DARK_BAR_CHROMA, DARK_BAR_TONE)
+                else coverScheme.surface,
+            expandedArtCorner = expandedArtCorner,
         )
         state.travelPx = metrics.travelPx
 
@@ -233,7 +252,11 @@ fun PlayerSheet(
                 .graphicsLayer { translationY = (1f - showFraction) * metrics.collapsedFootprint },
         ) {
             SheetSurface(metrics)
-            ProgressFill(player, metrics, coverScheme.primaryContainer)
+            ProgressFill(
+                player, metrics,
+                if (isDark) coverScheme.primary.tonal(DARK_BAR_FILL_CHROMA, DARK_BAR_FILL_TONE)
+                else coverScheme.primaryContainer,
+            )
             FullPlayerContent(
                 state, metrics, player, actions, coverScheme, fullPlayerView,
                 onOpenDialog = { activeDialog = it },
@@ -246,7 +269,7 @@ fun PlayerSheet(
                     onPlayPause, onNext,
                 )
             }
-            SharedArtwork(state, player, metrics, onCoverClick)
+            SharedArtwork(state, player, metrics, cookie = cookieCover, onCoverClick = onCoverClick)
         }
     }
 }
@@ -391,6 +414,7 @@ private fun SharedArtwork(
     state: NowPlayingSheetState,
     player: PlayerSheetPlayerState,
     metrics: PlayerSheetMetrics,
+    cookie: Boolean,
     onCoverClick: () -> Unit,
 ) {
     val artwork by player.artworkUri.collectAsState()
@@ -403,7 +427,7 @@ private fun SharedArtwork(
         label = "cover lyrics fade",
     )
 
-    val shape = RoundedCornerShape(metrics.artCornerDp)
+    val shape = if (cookie) CookieMorphShape(metrics.eased) else RoundedCornerShape(metrics.artCornerDp)
     val context = LocalPlatformContext.current
     val requestSizePx = metrics.rootWidth.roundToInt().coerceAtLeast(1)
     val model: Any = artwork ?: R.drawable.ic_default_cover
@@ -472,33 +496,45 @@ private fun deviceScreenCornerRadius(): Dp {
 }
 
 @Composable
-private fun rememberCoverScheme(artworkUri: Uri?): ColorScheme =
-    animateColorScheme(rememberArtworkColorScheme(artworkUri))
+private fun rememberCoverScheme(artworkUri: Uri?, accurate: Boolean): ColorScheme =
+    animateColorScheme(rememberArtworkColorScheme(artworkUri, accurate))
 
 @Composable
-private fun rememberArtworkColorScheme(artworkUri: Uri?): ColorScheme {
+private fun rememberArtworkColorScheme(artworkUri: Uri?, accurate: Boolean): ColorScheme {
     val theme = MaterialTheme.colorScheme
-    val seed = rememberArtworkSeed(artworkUri)
+    val seed = rememberArtworkSeed(artworkUri, accurate)
     // Match the applied theme's light/dark rather than the raw system setting.
     val isDark = theme.surface.luminance() < 0.5f
     return if (seed == null) theme
     else rememberDynamicColorScheme(seedColor = seed, isDark = isDark, style = PaletteStyle.TonalSpot)
 }
 
+/** The collapsed bar and its progress fill by night, see the sheet composable. */
+private const val DARK_BAR_CHROMA = 14.0
+private const val DARK_BAR_TONE = 12.0
+private const val DARK_BAR_FILL_CHROMA = 32.0
+private const val DARK_BAR_FILL_TONE = 35.0
+
+/** Seeds by cover, one cache per accuracy since the two decodes can score differently. */
 private val artworkSeedCache = LruCache<Uri, Color>(64)
+private val accurateArtworkSeedCache = LruCache<Uri, Color>(64)
 
 @Composable
-private fun rememberArtworkSeed(artworkUri: Uri?): Color? {
+private fun rememberArtworkSeed(artworkUri: Uri?, accurate: Boolean): Color? {
     val context = LocalPlatformContext.current
-    var seed by remember { mutableStateOf(artworkUri?.let { artworkSeedCache[it] }) }
-    LaunchedEffect(artworkUri) {
+    val cache = if (accurate) accurateArtworkSeedCache else artworkSeedCache
+    var seed by remember { mutableStateOf(artworkUri?.let { cache[it] }) }
+    LaunchedEffect(artworkUri, accurate) {
         if (artworkUri == null) {
             seed = null
             return@LaunchedEffect
         }
-        artworkSeedCache[artworkUri]?.let { seed = it; return@LaunchedEffect }
-        seed = runCatching { extractArtworkSeed(context, artworkUri) }.getOrNull()
-            ?.also { artworkSeedCache.put(artworkUri, it) }
+        cache[artworkUri]?.let {
+            seed = it
+            return@LaunchedEffect
+        }
+        seed = runCatching { extractArtworkSeed(context, artworkUri, accurate) }.getOrNull()
+            ?.also { cache.put(artworkUri, it) }
     }
     return seed
 }
@@ -506,9 +542,11 @@ private fun rememberArtworkSeed(artworkUri: Uri?): Color? {
 private suspend fun extractArtworkSeed(
     context: PlatformContext,
     uri: Uri,
+    accurate: Boolean,
 ): Color? = withContext(Dispatchers.Default) {
     // A tiny decode is plenty for a stable dominant colour and keeps quantisation near-free.
-    val request = ImageRequest.Builder(context).data(uri).size(ARTWORK_SEED_SIZE).allowHardware(false).build()
+    val size = if (accurate) ARTWORK_SEED_SIZE_ACCURATE else ARTWORK_SEED_SIZE
+    val request = ImageRequest.Builder(context).data(uri).size(size).allowHardware(false).build()
     val image = (context.imageLoader.execute(request) as? SuccessResult)?.image
     val bitmap = (image as? BitmapImage)?.bitmap?.asImageBitmap() ?: return@withContext null
     val population = QuantizerCelebi.quantize(bitmap, ARTWORK_QUANTIZE_MAX)

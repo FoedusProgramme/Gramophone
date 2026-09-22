@@ -22,7 +22,7 @@ import android.graphics.drawable.Drawable
 import android.os.Handler
 import android.os.Looper
 import androidx.annotation.DrawableRes
-import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.ContextCompat
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.RememberObserver
 import androidx.compose.runtime.getValue
@@ -43,7 +43,7 @@ import kotlin.math.roundToInt
 
 /**
  * Draws any [Drawable] (layer lists, insets, tinted vectors...) the way an `ImageView` would,
- * at the composable's size, so `AppCompatResources` icons render identically to the View UI.
+ * at the composable's size, so resource icons render identically to the View UI.
  */
 class DrawablePainter(val drawable: Drawable) : Painter(), RememberObserver {
     private var drawInvalidateTick by mutableIntStateOf(0)
@@ -121,11 +121,11 @@ class DrawablePainter(val drawable: Drawable) : Painter(), RememberObserver {
     }
 }
 
-/** A [Painter] for any drawable resource, resolved through `AppCompatResources` like Views do. */
+/** A [Painter] for any drawable resource, resolved against the current theme like Views do. */
 @Composable
 fun rememberDrawablePainter(@DrawableRes id: Int): Painter {
     val context = LocalContext.current
     return remember(context, id) {
-        DrawablePainter(AppCompatResources.getDrawable(context, id)!!.mutate())
+        DrawablePainter(ContextCompat.getDrawable(context, id)!!.mutate())
     }
 }

@@ -33,14 +33,14 @@ import org.akanework.gramophone.ui.HomeTab
 import org.akanework.gramophone.ui.LibraryAdapterTypes
 import org.akanework.gramophone.ui.MainActivity
 import org.akanework.gramophone.ui.actions.LibraryActions
-import org.akanework.gramophone.ui.adapters.BaseAdapter.LayoutType
-import org.akanework.gramophone.ui.adapters.PlaylistAdapter
-import org.akanework.gramophone.ui.adapters.SongAdapter
-import org.akanework.gramophone.ui.adapters.Sorter
-import org.akanework.gramophone.ui.adapters.StoreAlbumHelper
-import org.akanework.gramophone.ui.adapters.StoreArtistHelper
-import org.akanework.gramophone.ui.adapters.StoreDateHelper
-import org.akanework.gramophone.ui.adapters.StoreGenreHelper
+import org.akanework.gramophone.ui.library.LayoutType
+import org.akanework.gramophone.ui.library.MediaItemHelper
+import org.akanework.gramophone.ui.library.Sorter
+import org.akanework.gramophone.ui.library.StorePlaylistHelper
+import org.akanework.gramophone.ui.library.StoreAlbumHelper
+import org.akanework.gramophone.ui.library.StoreArtistHelper
+import org.akanework.gramophone.ui.library.StoreDateHelper
+import org.akanework.gramophone.ui.library.StoreGenreHelper
 import org.akanework.gramophone.ui.components.compose.booleanFlow
 import uk.akane.libphonograph.dynamicitem.Favorite
 import uk.akane.libphonograph.dynamicitem.RecentlyAdded
@@ -98,7 +98,7 @@ sealed class LibraryTabSpec<T : Any>(
     data object Songs : LibraryTabSpec<MediaItem>(
         tab = HomeTab.Songs,
         adapterType = LibraryAdapterTypes.SONG,
-        helper = SongAdapter.MediaItemHelper,
+        helper = MediaItemHelper,
         initialSortType = Sorter.Type.ByTitleAscending,
         defaultLayoutType = LayoutType.COMPACT_LIST,
         pluralStr = R.plurals.songs,
@@ -142,7 +142,7 @@ sealed class LibraryTabSpec<T : Any>(
     data object FolderSongs : LibraryTabSpec<MediaItem>(
         tab = HomeTab.Folders,
         adapterType = LibraryAdapterTypes.FOLDER,
-        helper = SongAdapter.MediaItemHelper,
+        helper = MediaItemHelper,
         initialSortType = Sorter.Type.ByFilePathAscending,
         defaultLayoutType = LayoutType.COMPACT_LIST,
         pluralStr = R.plurals.songs,
@@ -308,7 +308,7 @@ sealed class LibraryTabSpec<T : Any>(
     data object Playlists : LibraryTabSpec<Playlist>(
         tab = HomeTab.Playlist,
         adapterType = LibraryAdapterTypes.PLAYLIST,
-        helper = PlaylistAdapter.StorePlaylistHelper,
+        helper = StorePlaylistHelper,
         initialSortType = Sorter.Type.ByTitleAscending,
         defaultLayoutType = LayoutType.LIST,
         pluralStr = R.plurals.items,
@@ -372,7 +372,7 @@ sealed class LibraryTabSpec<T : Any>(
     ) : LibraryTabSpec<MediaItem>(
         tab = HomeTab.Songs,
         adapterType = adapterType,
-        helper = SongAdapter.MediaItemHelper,
+        helper = MediaItemHelper,
         initialSortType = rawOrderExposed ?: Sorter.Type.ByTitleAscending,
         defaultLayoutType = LayoutType.COMPACT_LIST,
         pluralStr = R.plurals.songs,

@@ -49,6 +49,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -61,7 +62,8 @@ import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import coil3.request.crossfade
-import org.akanework.gramophone.ui.adapters.BaseAdapter.LayoutType
+import org.akanework.gramophone.ui.LocalCardSurface
+import org.akanework.gramophone.ui.library.LayoutType
 
 /** Centre like the View framework does: integer division, i.e. the odd pixel goes to the end. */
 val FloorCenter = Alignment { size, space, _ ->
@@ -86,6 +88,46 @@ val GRID_CARD_MARGIN_LABEL = 12.5.dp
 val GRID_CARD_PADDING_BOTTOM = 0.dp
 val GRID_CARD_LABEL_HEIGHT = 85.sp
 val DECOR_HEIGHT = 48.dp
+
+/** Between the home's items, where the sheet's surface-container-low shows through. */
+val LIBRARY_ITEM_GAP = 4.dp
+
+/** The corners the home's items turn to that gap. */
+val LIBRARY_ITEM_CORNER = 4.dp
+
+/** The corners of the sheet the home's items sit in, and of the items at its two ends. */
+val LIBRARY_GROUP_CORNER = 28.dp
+
+/**
+ * An item's shape: the group's corner on the sides given as true, which are the group's own
+ * ends, and the small corner elsewhere, where the item meets another.
+ */
+fun libraryItemShape(
+    topStart: Boolean = false,
+    topEnd: Boolean = false,
+    bottomStart: Boolean = false,
+    bottomEnd: Boolean = false,
+): Shape = RoundedCornerShape(
+    topStart = if (topStart) LIBRARY_GROUP_CORNER else LIBRARY_ITEM_CORNER,
+    topEnd = if (topEnd) LIBRARY_GROUP_CORNER else LIBRARY_ITEM_CORNER,
+    bottomEnd = if (bottomEnd) LIBRARY_GROUP_CORNER else LIBRARY_ITEM_CORNER,
+    bottomStart = if (bottomStart) LIBRARY_GROUP_CORNER else LIBRARY_ITEM_CORNER,
+)
+
+/** The shape of cell [index] of [count] in a grid of [columns], the last row closing the group. */
+fun libraryCellShape(index: Int, count: Int, columns: Int): Shape {
+    val lastRow = index / columns == (count - 1) / columns
+    val column = index % columns
+    return libraryItemShape(
+        bottomStart = lastRow && column == 0,
+        bottomEnd = lastRow && (column == columns - 1 || index == count - 1),
+    )
+}
+
+/** One of the home's items: a card of [shape] on the sheet. */
+@Composable
+fun Modifier.libraryItemCard(shape: Shape = libraryItemShape()): Modifier =
+    clip(shape).background(LocalCardSurface.current)
 
 /** `rp_buttons`: a borderless 24dp ripple, used by every 48dp icon button in the lists. */
 @Composable
@@ -278,7 +320,7 @@ fun LibraryGridCard(
     }
 }
 
-/** `adapter_folder_card`: folder icon in a transparent card, title and item count. */
+/** Folder icon in a transparent card, title and item count. */
 @Composable
 fun LibraryFolderRow(
     title: String,

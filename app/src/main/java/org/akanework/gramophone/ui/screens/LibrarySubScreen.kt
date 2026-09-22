@@ -34,6 +34,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Edit
@@ -66,8 +67,8 @@ import org.akanework.gramophone.logic.utils.flows.provideReplayCacheInvalidation
 import org.akanework.gramophone.ui.LibraryAdapterTypes
 import org.akanework.gramophone.ui.actions.LibraryActions
 import org.akanework.gramophone.ui.actions.findMainActivity
-import org.akanework.gramophone.ui.adapters.BaseAdapter.LayoutType
-import org.akanework.gramophone.ui.adapters.Sorter
+import org.akanework.gramophone.ui.library.LayoutType
+import org.akanework.gramophone.ui.library.Sorter
 import org.akanework.gramophone.ui.components.compose.rememberDefaultPreferences
 import org.akanework.gramophone.ui.components.home.DECOR_HEIGHT
 import org.akanework.gramophone.ui.components.home.GLASS_BAR_HEIGHT
@@ -86,12 +87,12 @@ import org.akanework.gramophone.ui.components.home.rememberIosFlingBehavior
 import org.akanework.gramophone.ui.components.home.rememberIosOverscrollState
 import org.akanework.gramophone.ui.components.home.rememberLargeTitleState
 import org.akanework.gramophone.ui.components.home.rememberNowPlayingState
-import org.akanework.gramophone.ui.fragments.PlaylistEditFragment
 import org.akanework.gramophone.ui.nav.AlbumKey
 import org.akanework.gramophone.ui.nav.ArtistKey
 import org.akanework.gramophone.ui.nav.DateKey
 import org.akanework.gramophone.ui.nav.GenreKey
 import org.akanework.gramophone.ui.nav.LibrarySubKey
+import org.akanework.gramophone.ui.nav.PlaylistEditKey
 import org.akanework.gramophone.ui.nav.PlaylistKey
 import org.akanework.gramophone.ui.state.LibraryTabSpec
 import org.akanework.gramophone.ui.state.LibraryTabState
@@ -234,7 +235,7 @@ fun LibrarySubScreen(key: LibrarySubKey, onBack: () -> Unit, modifier: Modifier 
     val albumCols = if (albums != null) libraryColumns(albumLayout) else 1
     val albumIsGrid = albumLayout == LayoutType.GRID || albumLayout == LayoutType.COMPACT_GRID
     val cols = lcm(songCols, albumCols)
-    val gridState = songs.gridState
+    val gridState = rememberLazyGridState()
     val rowHeightPx = with(density) {
         (if (songLayout == LayoutType.LIST) LARGER_LIST_HEIGHT else LIST_HEIGHT).roundToPx()
     }
@@ -267,7 +268,7 @@ fun LibrarySubScreen(key: LibrarySubKey, onBack: () -> Unit, modifier: Modifier 
                 columns = GridCells.Fixed(cols),
                 state = gridState,
                 modifier = Modifier.fillMaxSize().iosOverscroll(overscroll),
-                contentPadding = libraryContentPadding(isGrid = false, top = barTopPadding),
+                contentPadding = libraryContentPadding(top = barTopPadding),
                 flingBehavior = rememberIosFlingBehavior(gridState),
                 overscrollEffect = null,
             ) {
@@ -384,11 +385,7 @@ fun LibrarySubScreen(key: LibrarySubKey, onBack: () -> Unit, modifier: Modifier 
                         icon = Icons.Outlined.Edit,
                         iconSize = 24.dp,
                         tint = MaterialTheme.colorScheme.onSurface,
-                        onClick = {
-                            activity.startFragment(PlaylistEditFragment()) {
-                                putString("Id", page.editablePlaylistId.toString())
-                            }
-                        },
+                        onClick = { activity.navigateTo(PlaylistEditKey(page.editablePlaylistId)) },
                     )
                 }
             },

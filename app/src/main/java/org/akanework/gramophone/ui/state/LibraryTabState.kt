@@ -18,7 +18,6 @@
 package org.akanework.gramophone.ui.state
 
 import android.content.SharedPreferences
-import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,8 +31,8 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import org.akanework.gramophone.logic.getStringStrict
 import org.akanework.gramophone.logic.utils.flows.PauseManagingSharedFlow.Companion.sharePauseableIn
-import org.akanework.gramophone.ui.adapters.BaseAdapter.LayoutType
-import org.akanework.gramophone.ui.adapters.Sorter
+import org.akanework.gramophone.ui.library.LayoutType
+import org.akanework.gramophone.ui.library.Sorter
 import uk.akane.libphonograph.reader.FlowReader
 
 /**
@@ -143,8 +142,6 @@ class LibraryTabState<T : Any>(
 
     /** Title of the queue created from this list, when it is not the tab's own. */
     var queueTitleOverride: String? by mutableStateOf(null)
-
-    val gridState = LazyGridState()
 
     /** The raw list combined with the sort choice. Shared, so re-subscribing within 5s is free. */
     val sortedFlow: Flow<List<T>> = (flowOverride ?: spec.flow(reader, prefs))

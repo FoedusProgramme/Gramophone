@@ -5,14 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <org.akanework.gramophone.logic.ui.MyRecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipChildren="false"
         android:clipToPadding="false"
         android:scrollbars="none"
-        app:hasFixedSize="true"
         app:layoutManager="org.akanework.gramophone.logic.ui.CustomLinearLayoutManager"
         tools:listitem="@layout/lyrics" />
 </merge>

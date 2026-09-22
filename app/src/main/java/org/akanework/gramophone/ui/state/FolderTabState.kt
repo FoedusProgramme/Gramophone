@@ -35,7 +35,7 @@ import org.akanework.gramophone.logic.comparators.SupportComparator
 import org.akanework.gramophone.logic.emitOrDie
 import org.akanework.gramophone.logic.utils.flows.PauseManagingSharedFlow.Companion.sharePauseableIn
 import org.akanework.gramophone.ui.LibraryAdapterTypes
-import org.akanework.gramophone.ui.adapters.Sorter
+import org.akanework.gramophone.ui.library.Sorter
 import uk.akane.libphonograph.items.FileNode
 import uk.akane.libphonograph.reader.FlowReader
 

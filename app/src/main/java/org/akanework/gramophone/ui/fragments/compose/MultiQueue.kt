@@ -71,7 +71,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
@@ -96,14 +95,16 @@ import org.akanework.gramophone.logic.loadQueue
 import org.akanework.gramophone.logic.pinQueue
 import org.akanework.gramophone.logic.playOrPause
 import org.akanework.gramophone.logic.renameQueue
+import org.akanework.gramophone.logic.replaceAllSupport
 import org.akanework.gramophone.logic.supportsWideScreen
 import org.akanework.gramophone.logic.unpinQueue
 import org.akanework.gramophone.logic.utils.CalculationUtils.convertDurationToTimeStamp
 import org.akanework.gramophone.logic.utils.Flags
 import org.akanework.gramophone.logic.utils.convertDurationToTimeStamp
 import org.akanework.gramophone.ui.MainActivity
-import org.akanework.gramophone.ui.components.Chronometer
-import org.akanework.gramophone.ui.components.PlaylistQueueSheet
+import org.akanework.gramophone.ui.components.player.QueueSheetHost
+import org.akanework.gramophone.ui.components.player.QueueTimer
+import org.akanework.gramophone.ui.components.player.QueueTimerState
 import org.akanework.gramophone.ui.components.compose.QueueDropdownMenu
 import java.util.LinkedList
 
@@ -612,7 +613,7 @@ fun ActionBar(
 @Composable
 fun BottomSheetActions(
     mqState: MqState,
-    durationView: Chronometer,
+    timer: QueueTimerState,
     modifier: Modifier = Modifier,
     onDismiss: (() -> Unit)? = null,
     onRecyclerScrollTo: (() -> Unit)? = null,
@@ -658,11 +659,7 @@ fun BottomSheetActions(
             }
         }
 
-        AndroidView(
-            factory = {
-                durationView
-            },
-        )
+        QueueTimer(timer)
     }
 }
 
@@ -671,7 +668,7 @@ fun QueueRoot(
     mqState: MqState,
     pagerState: PagerState,
     coroutineScope: CoroutineScope,
-    durationView: Chronometer,
+    timer: QueueTimerState,
     mqEnabled: Boolean,
     modifier: Modifier = Modifier,
     onDismiss: (() -> Unit)? = null,
@@ -718,7 +715,7 @@ fun QueueRoot(
                 1 -> {
                     BottomSheetActions(
                         mqState = mqState,
-                        durationView = durationView,
+                        timer = timer,
                         onDismiss = onDismiss,
                         onRecyclerScrollTo = onRecyclerScrollTo,
                     )
@@ -808,7 +805,7 @@ fun QueueRoot(
 class MqState(
     private val coroutineScope: CoroutineScope,
     private val activity: MainActivity,
-    private val playlistQueueSheet: PlaylistQueueSheet?,
+    private val host: QueueSheetHost,
 ) {
 
     companion object {
@@ -858,7 +855,7 @@ class MqState(
         get() = detachedQueueState.value
         private set(value) {
             detachedQueueState.value = value
-            playlistQueueSheet?.lockQueue(value != null)
+            host.lockQueue(value != null)
         }
 
     var activeQueue: Pair<MutableList<Int>, MultiQueueObject>? by mutableStateOf(null)
@@ -897,12 +894,12 @@ class MqState(
 
     init {
         activity.controllerViewModel.addRecreationalPlayerListener(
-            playlistQueueSheet!!.lifecycle,
+            host.lifecycle,
             playerListener
         ) {
         }
 
-        activity.controllerViewModel.customCommandListeners.addCallback(playlistQueueSheet.lifecycle) { _, command, _ ->
+        activity.controllerViewModel.customCommandListeners.addCallback(host.lifecycle) { _, command, _ ->
             when (command.customAction) {
                 CLIENT_QB_REFRESH_ALL, CLIENT_QB_REFRESH_QUEUES, CLIENT_QB_REFRESH_ITEM, CLIENT_QB_REFRESH_LIST, CLIENT_QB_REFRESH_CLEAR -> {
                     SessionResult(SessionResult.RESULT_SUCCESS).also { res ->
@@ -957,10 +954,10 @@ class MqState(
                 playlist.first.indexOfFirst { i ->
                     i == (instance.currentMediaItemIndex)
                 }.let { scrollPos ->
-                    playlistQueueSheet.scrollToPositionWithOffsetCompat(
+                    host.scrollToPositionWithOffset(
                         scrollPos,
                         // quick UX hack to show there's more songs above (well, if there is).
-                        if (scrollPos >= playlist.first.size - 2) 0 else (playlistQueueSheet.context
+                        if (scrollPos >= playlist.first.size - 2) 0 else (host.context
                             .resources.getDimensionPixelOffset(R.dimen.list_height) * 0.5f).toInt()
                     )
                 }
@@ -984,7 +981,7 @@ class MqState(
             val i = (instance.currentMediaItemIndex).let {
                 if (it == -1) 0 else it
             }
-            playlistQueueSheet?.playlistAdapter?.currentMediaItemIndex = playlist.first.indexOf(i)
+            host.currentMediaItemIndex = playlist.first.indexOf(i)
         }
         instance.getInactiveQueues().toMutableList().let {
             inactiveQueues.addAll(it)
@@ -1084,7 +1081,7 @@ class MqState(
 
         // do not use full resetHead(false) to avoid restoring the stats of old active queue right before the new one is loaded
         detachedQueue = null
-        playlistQueueSheet?.lockQueue(detachedQueue != null)
+        host.lockQueue(false)
 
         coroutineScope.launch {
             init()
@@ -1161,6 +1158,8 @@ class MqState(
      *
      * @param currentMediaItemIndex Override for [androidx.media3.session.MediaBrowser.currentMediaItemIndex]
      * @param currentPosition Override for [androidx.media3.session.MediaBrowser.getCurrentPosition]
+     *
+     * TODO: this recomputes the whole timer even when a caller only changed a single row.
      */
     fun updateTimer(currentMediaItemIndex: Int? = null, currentPosition: Long? = null) {
         if (currentMediaItemIndex == -1) return
@@ -1169,21 +1168,67 @@ class MqState(
         } ?: 0
         if (current < 0) return
         val elapsedCurrentMs = currentPosition ?: instance.currentPosition
-        playlistQueueSheet?.durationView?.format = playlistQueueSheet.context.getString(
-            R.string.duration_queue,
-            "%s", playlist.second.sumOf { it.mediaMetadata.durationMs ?: 0L }
-                .convertDurationToTimeStamp(true))
-        if (instance.isPlaying) {
-            playlistQueueSheet?.durationView?.start()
-        } else {
-            playlistQueueSheet?.durationView?.stop()
-        }
-        playlistQueueSheet?.durationView?.base =
-            SystemClock.elapsedRealtime() + playlist.first.subList(
+        host.updateTimer(
+            totalMs = playlist.second.sumOf { it.mediaMetadata.durationMs ?: 0L },
+            baseRealtime = SystemClock.elapsedRealtime() + playlist.first.subList(
                 current,
                 playlist.first.size
             ).sumOf { playlist.second[it].mediaMetadata.durationMs ?: 0L } -
-                    elapsedCurrentMs + 1000
+                    elapsedCurrentMs + 1000,
+            running = instance.isPlaying,
+        )
+    }
+
+    /** A tap on row [pos] of the queue: play it, or in a detached queue load that queue there. */
+    fun clickRow(pos: Int) {
+        if (isDetached()) {
+            detachedQueue?.let { loadDetached(playlist.first[pos]) }
+        } else {
+            instance.seekToDefaultPosition(playlist.first[pos])
+        }
+    }
+
+    /** Row [from] of the queue dragged to [to]. */
+    fun moveRow(from: Int, to: Int) {
+        if (from == to) return
+        val mediaController = activity.getPlayer()
+        val from1 = playlist.first.removeAt(from)
+        playlist.first.replaceAllSupport { if (it > from1) it - 1 else it }
+        val movedItem = playlist.second.removeAt(from1)
+        val to1 = if (to > 0) playlist.first[to - 1] + 1 else 0
+        playlist.first.replaceAllSupport { if (it >= to1) it + 1 else it }
+        playlist.first.add(to, to1)
+        playlist.second.add(to1, movedItem)
+        mediaController?.moveMediaItem(from1, to1)
+        host.notifyListChanged()
+        val currentIndex = host.currentMediaItemIndex
+        if (currentIndex != null) {
+            if (currentIndex == from)
+                host.currentMediaItemIndex = to
+            else if (from < to && from < currentIndex && currentIndex <= to)
+                host.currentMediaItemIndex = currentIndex - 1
+            else if (from > to && to <= currentIndex && currentIndex < from)
+                host.currentMediaItemIndex = currentIndex + 1
+        }
+        updateTimer()
+    }
+
+    /** Row [pos] of the queue removed. The last row goes with its whole queue. */
+    fun removeRow(pos: Int) {
+        if (playlist.first.size <= 1) {
+            removeQueue()
+            return
+        }
+        val idx = playlist.first.removeAt(pos)
+        playlist.first.replaceAllSupport { if (it > idx) it - 1 else it }
+        instance.removeMediaItem(idx)
+        playlist.second.removeAt(idx)
+        host.notifyListChanged()
+        val currentIndex = host.currentMediaItemIndex
+        if (currentIndex != null && pos < currentIndex) {
+            host.currentMediaItemIndex = currentIndex - 1
+        }
+        updateTimer()
     }
 
 
@@ -1286,7 +1331,7 @@ class MqState(
             }
 
             RefreshLevel.CLEAR -> {
-                playlistQueueSheet?.dismiss()
+                host.dismiss()
             }
         }
     }
@@ -1306,14 +1351,14 @@ class MqState(
             dumpPlaylist()
         }
         playlist = pl
-        playlistQueueSheet?.playlistAdapter?.notifyDataSetChanged()
+        host.notifyListChanged()
 
         // update playing indicator, scroll to
         val i = (mq?.second?.startIndex ?: instance.currentMediaItemIndex).let {
             if (it == -1) 0 else it
         }
-        playlistQueueSheet?.setCurrentMediaItemIndex(playlist.first.indexOf(i))
-        playlistQueueSheet?.smoothScrollToCurrentPosition(playlist.first.indexOf(i))
+        host.currentMediaItemIndex = playlist.first.indexOf(i)
+        host.smoothScrollTo(playlist.first.indexOf(i))
 
         updateTimer(mq?.second?.startIndex, mq?.second?.startPositionMs)
     }
@@ -1343,9 +1388,9 @@ class MqState(
 fun rememberMqState(
     coroutineScope: CoroutineScope,
     instance: MainActivity,
-    playlistQueueSheet: PlaylistQueueSheet?,
+    host: QueueSheetHost,
 ): MqState {
     return remember {
-        MqState(coroutineScope, instance, playlistQueueSheet)
+        MqState(coroutineScope, instance, host)
     } // TODO: rememberSaveable
 }

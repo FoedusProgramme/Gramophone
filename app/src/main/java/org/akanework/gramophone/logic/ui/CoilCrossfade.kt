@@ -17,7 +17,7 @@
 
 package org.akanework.gramophone.logic.ui
 
-import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.ContextCompat
 import coil3.asImage
 import coil3.request.ImageRequest
 import coil3.size.ScaleDrawable
@@ -25,7 +25,7 @@ import coil3.size.ScaleDrawable
 fun ImageRequest.Builder.placeholderScaleToFit(placeholder: Int) {
     placeholder {
         ScaleDrawable(
-            AppCompatResources.getDrawable(
+            ContextCompat.getDrawable(
                 it.context,
                 placeholder
             )!!

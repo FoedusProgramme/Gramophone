@@ -38,28 +38,29 @@ import android.provider.Settings
 import android.view.Choreographer
 import android.view.SearchEvent
 import android.view.ViewGroup
-import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.PlaylistPlay
 import androidx.compose.ui.platform.ComposeView
+import org.akanework.gramophone.ui.components.compose.AppDialog
+import org.akanework.gramophone.ui.components.compose.AppDialogHostState
 import androidx.core.app.ActivityCompat
 import androidx.core.content.IntentCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.net.toUri
 import androidx.core.os.BundleCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.util.Log
 import androidx.media3.session.DefaultMediaNotificationProvider
 import coil3.imageLoader
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
@@ -75,8 +76,6 @@ import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 import org.akanework.gramophone.BuildConfig
 import org.akanework.gramophone.R
-import org.akanework.gramophone.logic.dpToPx
-import org.akanework.gramophone.logic.enableEdgeToEdgeProperly
 import org.akanework.gramophone.logic.getBooleanStrict
 import org.akanework.gramophone.logic.gramophoneApplication
 import org.akanework.gramophone.logic.hasAudioPermission
@@ -87,11 +86,9 @@ import org.akanework.gramophone.logic.postAtFrontOfQueueAsync
 import org.akanework.gramophone.logic.ui.BaseActivity
 import org.akanework.gramophone.ui.actions.PlaylistDialogs
 import org.akanework.gramophone.ui.components.player.PlayerSheetViewImpl
-import org.akanework.gramophone.ui.fragments.BaseFragment
-import org.akanework.gramophone.ui.fragments.SearchFragment
 import org.akanework.gramophone.ui.nav.AppNavKey
 import org.akanework.gramophone.ui.nav.AppRoot
-import org.akanework.gramophone.ui.nav.FragmentKey
+import org.akanework.gramophone.ui.nav.SearchKey
 import org.akanework.gramophone.ui.nav.HomeKey
 import org.akanework.gramophone.ui.nav.NavViewModel
 import org.akanework.gramophone.ui.nav.PlaylistKey
@@ -134,6 +131,9 @@ class MainActivity : BaseActivity() {
     private var ready = false
     lateinit var playerBottomSheet: PlayerSheetViewImpl
         private set
+
+    /** The dialogs and snackbars the actions ask for, drawn by the root composition. */
+    val dialogs = AppDialogHostState()
     /** Bottom padding lists need so the mini player does not cover them (px). */
     val playerBottomPadding = mutableIntStateOf(0)
     private lateinit var intentSenderDelete: ActivityResultLauncher<IntentSenderRequest>
@@ -168,7 +168,6 @@ class MainActivity : BaseActivity() {
         installSplashScreen().setKeepOnScreenCondition { !ready }
         super.onCreate(savedInstanceState)
         lifecycle.addObserver(controllerViewModel)
-        enableEdgeToEdgeProperly()
         CoroutineScope(Dispatchers.Default).launch { warmUpNavAxisEasing() }
         if (savedInstanceState?.containsKey("AddToPlaylistPendingRequest") == true) {
             pendingPlaylistRequest = savedInstanceState.getBundle("AddToPlaylistPendingRequest")
@@ -226,14 +225,14 @@ class MainActivity : BaseActivity() {
             clipChildren = false
             clipToPadding = false
         }
-        val pureDark = prefs.getBooleanStrict("pureDark", false)
         setContentView(ComposeView(this).apply {
             setContent {
-                GramophoneTheme(pureDark = pureDark) {
+                GramophoneTheme {
                     AppRoot(
                         backStack = navViewModel.backStack,
                         onPlayerVisibleChanged = { playerBottomSheet.visible = it },
                         playerBottomPadding = playerBottomPadding.intValue,
+                        dialogs = dialogs,
                         debug = BuildConfig.DEBUG,
                     )
                 }
@@ -293,19 +292,12 @@ class MainActivity : BaseActivity() {
             val playlists = maybeValue ?: run {
                 launch(Dispatchers.Main) {
                     withContext(NonCancellable) {
-                        val progressBar = ProgressBar(this@MainActivity)
-                        val padding = 20.dpToPx(this@MainActivity)
-                        progressBar.isIndeterminate = true
-                        progressBar.setPadding(0, padding / 2, 0, padding)
-                        val d = MaterialAlertDialogBuilder(this@MainActivity)
-                            .setTitle(R.string.loading_playlists)
-                            .setView(progressBar)
-                            .setCancelable(false)
-                            .show()
+                        val progress = AppDialog.Progress(getString(R.string.loading_playlists))
+                        dialogs.show(progress)
                         job.invokeOnCompletion {
                             launch(Dispatchers.Main, start = CoroutineStart.ATOMIC) {
                                 withContext(NonCancellable) {
-                                    d.dismiss()
+                                    dialogs.dismissIf(progress)
                                 }
                             }
                         }
@@ -314,32 +306,31 @@ class MainActivity : BaseActivity() {
                 job.await()
             }
             launch(Dispatchers.Main) {
-                MaterialAlertDialogBuilder(this@MainActivity)
-                    .setTitle(R.string.add_to_playlist)
-                    .setIcon(R.drawable.ic_playlist_play)
-                    .setItems((playlists.map {
-                        if (it is Favorite) getString(R.string.playlist_favourite) else
-                            it.title ?: it.path?.absolutePath ?: it.id.toString()
-                    } + getString(R.string.create_playlist)).toTypedArray())
-                    { _, item ->
-                        if (playlists.size == item) {
-                            PlaylistDialogs.playlistNameDialog(this@MainActivity,
-                                R.string.create_playlist, "",
-                                { ItemManipulator.getDefaultPlaylistFile(it) }) { name ->
-                                addToPlaylist(null, name, listOf(song))
-                            }
-                            return@setItems
+                val names = playlists.map {
+                    if (it is Favorite) getString(R.string.playlist_favourite) else
+                        it.title ?: it.path?.absolutePath ?: it.id.toString()
+                } + getString(R.string.create_playlist)
+                dialogs.show(AppDialog.Choice(
+                    title = getString(R.string.add_to_playlist),
+                    icon = Icons.AutoMirrored.Outlined.PlaylistPlay,
+                    items = names,
+                ) { item ->
+                    if (playlists.size == item) {
+                        PlaylistDialogs.playlistNameDialog(this@MainActivity,
+                            R.string.create_playlist, "",
+                            { ItemManipulator.getDefaultPlaylistFile(it) }) { name ->
+                            addToPlaylist(null, name, listOf(song))
                         }
-                        val pl = playlists[item]
-                        addToPlaylist(
-                            ContentUris.withAppendedId(
-                                @Suppress("deprecation") MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI,
-                                pl.id!!
-                            ), null, listOf(song)
-                        )
+                        return@Choice
                     }
-                    .setNegativeButton(android.R.string.cancel) { _, _ -> }
-                    .show()
+                    val pl = playlists[item]
+                    addToPlaylist(
+                        ContentUris.withAppendedId(
+                            @Suppress("deprecation") MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI,
+                            pl.id!!
+                        ), null, listOf(song)
+                    )
+                })
             }
         }
     }
@@ -587,9 +578,7 @@ class MainActivity : BaseActivity() {
         }
         if (intent.action == Intent.ACTION_SEARCH ||
             intent.action == "com.google.android.gms.actions.SEARCH_ACTION") {
-            startFragment(SearchFragment()) {
-                putString("query", intent.getStringExtra(SearchManager.QUERY))
-            }
+            navigateTo(SearchKey(intent.getStringExtra(SearchManager.QUERY)))
         }
         if (intent.action == MediaStore.INTENT_ACTION_MEDIA_SEARCH
             || intent.action == MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH) {
@@ -686,11 +675,8 @@ class MainActivity : BaseActivity() {
                     }
                 }
             } else {
-                startFragment(SearchFragment()) {
-                    putString("query", mainQuery)
-                    // TODO: support sub queries or at least focus to use a different type of
-                    //  search fragment.
-                }
+                // TODO: support sub queries or at least focus to use a different type of search.
+                navigateTo(SearchKey(mainQuery))
             }
         }
         if (intent.action == "org.akanework.gramophone.action.SHUFFLE") {
@@ -726,7 +712,7 @@ class MainActivity : BaseActivity() {
     }
 
     override fun onSearchRequested(): Boolean {
-        startFragment(SearchFragment())
+        navigateTo(SearchKey(null))
         return true
     }
 
@@ -819,17 +805,6 @@ class MainActivity : BaseActivity() {
                 finish()
             }
         }
-    }
-
-    fun startFragment(frag: Fragment, args: (Bundle.() -> Unit)? = null) {
-        navViewModel.backStack.add(
-            FragmentKey(
-                className = frag::class.java.name,
-                args = args?.let { Bundle().apply(it) },
-                wantsPlayer = (frag as? BaseFragment)?.wantsPlayer ?: false,
-            )
-        )
-        if (!ready) handler.post { maybeReportFullyDrawn() }
     }
 
     fun navigateUp() {

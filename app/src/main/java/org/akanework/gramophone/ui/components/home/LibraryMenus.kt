@@ -39,8 +39,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.akanework.gramophone.R
-import org.akanework.gramophone.ui.adapters.BaseAdapter.LayoutType
-import org.akanework.gramophone.ui.adapters.Sorter
+import org.akanework.gramophone.ui.library.LayoutType
+import org.akanework.gramophone.ui.library.Sorter
 import org.akanework.gramophone.ui.state.LibraryMenuAction
 import org.akanework.gramophone.ui.state.SortPrefState
 
@@ -146,7 +146,7 @@ fun SortMenu(
     }
 }
 
-/** The per-item `more_menu` / `more_menu_less` as a DropdownMenu. */
+/** The per-item menu as a DropdownMenu. */
 @Composable
 fun LibraryItemMenu(
     expanded: Boolean,

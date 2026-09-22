@@ -45,6 +45,8 @@ object PlayerUtilities {
     const val MINI_FADE_END = 0.1f
     const val COVER_CLICK_MIN = 0.95f
     const val ARTWORK_SEED_SIZE = 24
+    /** With the colour accuracy setting on: more of the cover goes into the seed. */
+    const val ARTWORK_SEED_SIZE_ACCURATE = 128
     const val ARTWORK_QUANTIZE_MAX = 128
 
     const val SETTLED_EPS = 0.99f

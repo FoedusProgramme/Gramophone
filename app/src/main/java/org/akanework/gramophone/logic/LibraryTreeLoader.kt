@@ -21,13 +21,13 @@ import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.comparators.SupportComparator
 import org.akanework.gramophone.ui.HomeTab
 import org.akanework.gramophone.ui.LibraryAdapterTypes
-import org.akanework.gramophone.ui.adapters.PlaylistAdapter
-import org.akanework.gramophone.ui.adapters.SongAdapter
-import org.akanework.gramophone.ui.adapters.Sorter
-import org.akanework.gramophone.ui.adapters.StoreAlbumHelper
-import org.akanework.gramophone.ui.adapters.StoreArtistHelper
-import org.akanework.gramophone.ui.adapters.StoreDateHelper
-import org.akanework.gramophone.ui.adapters.StoreGenreHelper
+import org.akanework.gramophone.ui.library.MediaItemHelper
+import org.akanework.gramophone.ui.library.Sorter
+import org.akanework.gramophone.ui.library.StorePlaylistHelper
+import org.akanework.gramophone.ui.library.StoreAlbumHelper
+import org.akanework.gramophone.ui.library.StoreArtistHelper
+import org.akanework.gramophone.ui.library.StoreDateHelper
+import org.akanework.gramophone.ui.library.StoreGenreHelper
 import org.akanework.gramophone.ui.mapSettingToTabList
 import uk.akane.libphonograph.items.*
 
@@ -162,7 +162,7 @@ class LibraryTreeLoader(
             else -> Triple(emptyList(), -1, false)
         }
         if (adapterType == -1) return emptyList()
-        val sorter = Sorter(SongAdapter.MediaItemHelper, null, if (naturalOrder) Sorter.Type.NaturalOrder else null)
+        val sorter = Sorter(MediaItemHelper, null, if (naturalOrder) Sorter.Type.NaturalOrder else null)
         return sortList(songs, adapterType, sorter)
     }
 
@@ -207,8 +207,8 @@ class LibraryTreeLoader(
                     }
                     "albums" -> sortList(app.reader.albumListFlow.first(), LibraryAdapterTypes.ALBUM, Sorter(StoreAlbumHelper, null)).map { mapDomainItemToMediaItem(it)!! }
                     "artists" -> sortList(app.reader.artistListFlow.first(), LibraryAdapterTypes.ARTIST, Sorter(StoreArtistHelper, null)).map { mapDomainItemToMediaItem(it)!! }
-                    "songs" -> queueWithTitle(sortList(app.reader.songListFlow.first(), LibraryAdapterTypes.SONG, Sorter(SongAdapter.MediaItemHelper, null)), context.getString(R.string.category_songs))
-                    "playlists" -> sortList(app.reader.playlistListFlow.first(), LibraryAdapterTypes.PLAYLIST, Sorter(PlaylistAdapter.StorePlaylistHelper, null)).map { mapDomainItemToMediaItem(it)!! }
+                    "songs" -> queueWithTitle(sortList(app.reader.songListFlow.first(), LibraryAdapterTypes.SONG, Sorter(MediaItemHelper, null)), context.getString(R.string.category_songs))
+                    "playlists" -> sortList(app.reader.playlistListFlow.first(), LibraryAdapterTypes.PLAYLIST, Sorter(StorePlaylistHelper, null)).map { mapDomainItemToMediaItem(it)!! }
                     "genres" -> sortList(app.reader.genreListFlow.first(), LibraryAdapterTypes.GENRE, Sorter(StoreGenreHelper, null)).map { mapDomainItemToMediaItem(it)!! }
                     "dates" -> sortList(app.reader.dateListFlow.first(), LibraryAdapterTypes.DATE, Sorter(StoreDateHelper, null)).map { mapDomainItemToMediaItem(it)!! }
                     "folders" -> {
@@ -316,7 +316,7 @@ class LibraryTreeLoader(
     private suspend fun searchForMediaItem(query: String): List<MediaItem> {
         val text = query.trim()
         val list = app.reader.songListFlow.first()
-        val sortedList = sortList(list, LibraryAdapterTypes.SEARCH, Sorter(SongAdapter.MediaItemHelper, null))
+        val sortedList = sortList(list, LibraryAdapterTypes.SEARCH, Sorter(MediaItemHelper, null))
         // TODO support focus and sub queries (see MainActivity)
         if (text == "") return sortedList
         return sortedList.filter {
@@ -355,7 +355,7 @@ class LibraryTreeLoader(
             } else if (item.mediaId != MediaItem.DEFAULT_MEDIA_ID) {
                 if (item.requestMetadata != MediaItem.RequestMetadata.EMPTY) {
                     val fullSongList = app.reader.songListFlow.first()
-                    val sortedFull = sortList(fullSongList, LibraryAdapterTypes.SONG, Sorter(SongAdapter.MediaItemHelper, null))
+                    val sortedFull = sortList(fullSongList, LibraryAdapterTypes.SONG, Sorter(MediaItemHelper, null))
                     val idx = sortedFull.indexOfFirst { it.mediaId == item.mediaId }
                     if (idx >= 0 && startingIndex == null) {
                         startingIndex = resultList.size + idx

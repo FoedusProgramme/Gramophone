@@ -153,6 +153,15 @@
     <string name="folders">Folders</string>
     <!-- Color theme in appearance settings: light/dark/follow system -->
     <string name="settings_app_theme">App theme</string>
+    <string name="settings_theme_title">Theme</string>
+    <string name="settings_theme_summary">Light and dark mode, colour and palette style</string>
+    <string name="settings_theme_mode_section">Light and dark</string>
+    <string name="settings_theme_color_section">Colour</string>
+    <string name="settings_theme_wallpaper_color">Wallpaper colour</string>
+    <string name="settings_theme_wallpaper_color_summary">Follow the colours the system derives from the wallpaper</string>
+    <string name="settings_theme_custom_color">Custom colour</string>
+    <string name="settings_theme_custom_color_summary">Pick a colour or drag the hue slider</string>
+    <string name="settings_theme_style_section">Palette style</string>
     <!-- Switch that reverses the order of the selected sort mode -->
     <string name="reverse_order">Reverse order</string>
     <!-- The sort mode if something has inherent proper order (playlist order for playlist, CD order

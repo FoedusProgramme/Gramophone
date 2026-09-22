@@ -312,21 +312,19 @@ dependencies {
     implementation(composeBom)
     androidTestImplementation(composeBom)
     implementation("androidx.compose.material:material-icons-extended")
-    implementation("androidx.compose.material3:material3")
-    implementation("androidx.compose.material3.adaptive:adaptive")
+    // Compile against the material3 the runtime already resolves to through the JetBrains
+    // material3 that materialkolor and aboutlibraries depend on.
+    implementation("androidx.compose.material3:material3:1.5.0-alpha22")
     implementation("androidx.compose.animation:animation-graphics")
     implementation("dev.chrisbanes.haze:haze:1.7.2")
     implementation("androidx.compose.ui:ui-tooling-preview")
     debugImplementation("androidx.compose.ui:ui-tooling")
     implementation("androidx.activity:activity-compose:1.11.0")
-    implementation("androidx.appcompat:appcompat:1.7.1")
     implementation("androidx.collection:collection-ktx:1.5.0")
     implementation("androidx.concurrent:concurrent-futures-ktx:1.3.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.2.1")
     implementation("androidx.core:core-ktx:1.17.0")
+    implementation("androidx.graphics:graphics-shapes:1.1.0")
     implementation("androidx.core:core-splashscreen:1.2.0")
-    implementation("androidx.fragment:fragment-ktx:1.8.9")
-    implementation("androidx.fragment:fragment-compose:1.8.9")
     implementation("androidx.navigation3:navigation3-runtime:1.1.7")
     implementation("androidx.navigation3:navigation3-ui:1.1.7")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.4")
@@ -341,10 +339,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.11.0")
     //implementation("androidx.paging:paging-runtime-ktx:3.2.1") TODO paged, partial, flow based library loading
     //implementation("androidx.paging:paging-guava:3.2.1") TODO do we have guava? do we need this?
-    implementation("androidx.transition:transition-ktx:1.6.0") // <-- for predictive back TODO can we remove explicit dep now?
     implementation("com.mikepenz:aboutlibraries-compose-m3:$aboutLibsVersion")
-    implementation("com.google.android.material:material:1.13.0")
-    implementation("me.zhanghai.android.fastscroll:library:1.3.0")
     val coilVersion = "3.4.0"
     implementation("io.coil-kt.coil3:coil-compose:$coilVersion")
     lintChecks("io.coil-kt.coil3:coil-lint:$coilVersion")
@@ -352,6 +347,7 @@ dependencies {
     //noinspection GradleDependency newer versions need java.nio which is api 26+
     //implementation("com.github.albfernandez:juniversalchardet:2.0.3") TODO
     implementation("androidx.profileinstaller:profileinstaller:1.4.1")
+    implementation("androidx.recyclerview:recyclerview:1.4.0")
     "baselineProfile"(project(":baselineprofile"))
     // --- below does not apply to release builds ---
     debugImplementation("com.squareup.leakcanary:leakcanary-android:2.14")

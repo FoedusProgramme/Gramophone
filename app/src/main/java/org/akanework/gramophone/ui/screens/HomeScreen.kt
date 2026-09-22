@@ -62,6 +62,7 @@ import org.akanework.gramophone.ui.components.home.GLASS_BAR_HEIGHT
 import org.akanework.gramophone.ui.components.home.HomeAppBar
 import org.akanework.gramophone.ui.components.home.HomeTabRow
 import org.akanework.gramophone.ui.components.home.IosOverscrollState
+import org.akanework.gramophone.ui.components.home.LIBRARY_GROUP_CORNER
 import org.akanework.gramophone.ui.components.home.TAB_INDICATOR_INSET
 import org.akanework.gramophone.ui.components.home.rememberNowPlayingState
 import org.akanework.gramophone.ui.nav.LocalAppBarTopPadding
@@ -73,8 +74,8 @@ import org.akanework.gramophone.ui.visibleHomeTabs
 
 /*
  * The home as two containers: the bar and the tab row sit still on the surface-container-low
- * ground, and the library pages scroll inside a rounded surface-bright sheet under them, which
- * ends above the mini player.
+ * ground, and the library pages scroll inside a rounded sheet under them, which ends above the
+ * mini player. The items are surface-bright blocks with the sheet's colour between them.
  */
 
 /*
@@ -89,7 +90,7 @@ private val BUTTON_TO_BAR_BOTTOM = (GLASS_BAR_HEIGHT - ACTION_BUTTON_HEIGHT) / 2
 private val TABS_OVERLAP_BAR = BUTTON_TO_BAR_BOTTOM + TAB_INDICATOR_INSET - HEADER_GAP
 private val TABS_TO_SHEET_GAP = HEADER_GAP - TAB_INDICATOR_INSET
 private val BAR_TO_SHEET_GAP = 16.dp
-private val SHEET_CORNER = 28.dp
+private val SHEET_SIDE_MARGIN = 8.dp
 
 /** Between the sheet and what is under it: the mini player, or else the navigation bar. */
 private val SHEET_BOTTOM_GAP = 16.dp
@@ -146,15 +147,20 @@ fun HomeScreen(modifier: Modifier = Modifier) {
         } else {
             Spacer(Modifier.height(BAR_TO_SHEET_GAP))
         }
-        // The sheet. The pages scroll inside it, clipped by its corners, and the rubber band
-        // shows its own surface. It keeps nothing clear at its top or bottom itself.
+        // The sheet. The pages scroll inside it, clipped by its corners, their items on its
+        // surface with its colour showing between them. It keeps nothing clear at its top or
+        // bottom itself.
         Box(
             Modifier
                 .fillMaxWidth()
                 .weight(1f)
-                .padding(bottom = sheetBottomInset + SHEET_BOTTOM_GAP)
-                .clip(RoundedCornerShape(SHEET_CORNER))
-                .background(MaterialTheme.colorScheme.surfaceBright),
+                .padding(
+                    start = SHEET_SIDE_MARGIN,
+                    end = SHEET_SIDE_MARGIN,
+                    bottom = sheetBottomInset + SHEET_BOTTOM_GAP,
+                )
+                .clip(RoundedCornerShape(LIBRARY_GROUP_CORNER))
+                .background(MaterialTheme.colorScheme.surfaceContainerLow),
         ) {
             CompositionLocalProvider(
                 LocalAppBarTopPadding provides 0.dp,
@@ -163,6 +169,8 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                 HorizontalPager(
                     state = pagerState,
                     modifier = Modifier.fillMaxSize(),
+                    // Between two pages in flight, the ground shows as it does beside the sheet.
+                    pageSpacing = SHEET_SIDE_MARGIN * 2,
                     beyondViewportPageCount = 1,
                     key = { tabs[it].name },
                     userScrollEnabled = showTabs,

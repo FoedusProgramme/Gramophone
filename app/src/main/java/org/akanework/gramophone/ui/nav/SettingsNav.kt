@@ -24,6 +24,7 @@ sealed interface SettingsKey : AppNavKey {
 
 class MainSettingsKey : SettingsKey
 class AppearanceSettingsKey : SettingsKey
+class ThemeSettingsKey : SettingsKey
 class PlayerSettingsKey : SettingsKey
 class LyricSettingsKey : SettingsKey
 class BehaviorSettingsKey : SettingsKey

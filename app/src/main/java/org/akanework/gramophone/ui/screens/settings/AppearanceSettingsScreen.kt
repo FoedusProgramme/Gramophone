@@ -17,59 +17,44 @@
 
 package org.akanework.gramophone.ui.screens.settings
 
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import org.akanework.gramophone.R
 import org.akanework.gramophone.ui.components.compose.rememberBooleanPreference
 import org.akanework.gramophone.ui.components.compose.rememberStringPreference
-import org.akanework.gramophone.ui.components.settings.DropdownPreferenceRow
 import org.akanework.gramophone.ui.components.settings.NavigationPreferenceRow
 import org.akanework.gramophone.ui.components.settings.PreferenceGroup
 import org.akanework.gramophone.ui.components.settings.PreferenceScreen
 import org.akanework.gramophone.ui.components.settings.PreferenceSectionHeader
 import org.akanework.gramophone.ui.components.settings.SwitchPreferenceRow
+import org.akanework.gramophone.ui.nav.AppNavKey
+import org.akanework.gramophone.ui.nav.ThemeSettingsKey
 
 @Composable
-fun AppearanceSettingsScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
-    val themeMode = rememberStringPreference("theme_mode", "0")
-    val pureDark = rememberBooleanPreference("pureDark", false)
+fun AppearanceSettingsScreen(
+    onBack: () -> Unit,
+    onNavigate: (AppNavKey) -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val tabs = rememberStringPreference("tabs", "")
     val showFileNames = rememberBooleanPreference("show_file_names", true)
     var tabOrderOpen by remember { mutableStateOf(false) }
 
     PreferenceScreen(title = stringResource(R.string.settings_category_appearance), onBack = onBack, modifier = modifier) {
         PreferenceSectionHeader(stringResource(R.string.settings_preference_category_application))
-        PreferenceGroup(
-            { shape ->
-                DropdownPreferenceRow(
-                    shape,
-                    title = stringResource(R.string.settings_app_theme),
-                    entries = stringArrayResource(R.array.theme_switch).toList(),
-                    values = stringArrayResource(R.array.theme_switch_val).toList(),
-                    value = themeMode.value,
-                    onValueChange = {
-                        themeMode.set(it)
-                        applyThemeMode(it)
-                    },
-                )
-            },
-            { shape ->
-                SwitchPreferenceRow(
-                    shape,
-                    title = stringResource(R.string.settings_pure_dark),
-                    subtitle = stringResource(R.string.settings_pure_dark_summary),
-                    checked = pureDark.value,
-                    onCheckedChange = { pureDark.set(it) },
-                )
-            },
-        )
+        PreferenceGroup({ shape ->
+            NavigationPreferenceRow(
+                shape,
+                title = stringResource(R.string.settings_theme_title),
+                subtitle = stringResource(R.string.settings_theme_summary),
+                onClick = { onNavigate(ThemeSettingsKey()) },
+            )
+        })
 
         PreferenceSectionHeader(stringResource(R.string.settings_preference_category_home))
         PreferenceGroup({ shape ->
@@ -103,15 +88,4 @@ fun AppearanceSettingsScreen(onBack: () -> Unit, modifier: Modifier = Modifier) 
             },
         )
     }
-}
-
-/** The stored theme mode, applied the way GramophoneApplication does at startup. */
-private fun applyThemeMode(mode: String) {
-    AppCompatDelegate.setDefaultNightMode(
-        when (mode) {
-            "1" -> AppCompatDelegate.MODE_NIGHT_YES
-            "2" -> AppCompatDelegate.MODE_NIGHT_NO
-            else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-        }
-    )
 }

@@ -17,38 +17,26 @@
 
 package org.akanework.gramophone.logic.ui
 
+import android.content.Context
 import android.content.SharedPreferences
-import android.content.res.Configuration
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.ComponentActivity
 import org.akanework.gramophone.logic.defaultPrefs
-import org.akanework.gramophone.R
-import org.akanework.gramophone.logic.getBooleanStrict
+import org.akanework.gramophone.ui.theme.overrideConfiguration
+import org.akanework.gramophone.ui.theme.themeMode
 
-open class BaseActivity : AppCompatActivity() {
+open class BaseActivity : ComponentActivity() {
     lateinit var prefs: SharedPreferences
-    private val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
-        if (key == "pureDark" && (resources.configuration.uiMode and
-                    Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        ) {
-            recreate()
-        }
+
+    override fun attachBaseContext(newBase: Context) {
+        val override = newBase.defaultPrefs.themeMode().overrideConfiguration()
+        super.attachBaseContext(
+            if (override == null) newBase else newBase.createConfigurationContext(override)
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         prefs = defaultPrefs
-        if (prefs.getBooleanStrict("pureDark", false) &&
-            (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
-            Configuration.UI_MODE_NIGHT_YES
-        ) {
-            setTheme(R.style.Theme_Gramophone_PureDark)
-        }
-        prefs.registerOnSharedPreferenceChangeListener(listener)
         super.onCreate(savedInstanceState)
-    }
-
-    override fun onDestroy() {
-        prefs.unregisterOnSharedPreferenceChangeListener(listener)
-        super.onDestroy()
     }
 }

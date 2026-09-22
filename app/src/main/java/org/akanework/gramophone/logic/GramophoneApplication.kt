@@ -28,11 +28,9 @@ import android.os.Environment
 import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy
 import android.os.StrictMode.VmPolicy
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.runtime.Composer
 import androidx.compose.runtime.ExperimentalComposeRuntimeApi
 import androidx.core.content.edit
-import androidx.fragment.app.strictmode.FragmentStrictMode
 import androidx.media3.common.util.Log
 import androidx.media3.session.DefaultMediaNotificationProvider
 import coil3.ImageLoader
@@ -52,6 +50,8 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.akanework.gramophone.BuildConfig
 import org.akanework.gramophone.R
+import org.akanework.gramophone.ui.theme.applyToSystem
+import org.akanework.gramophone.ui.theme.themeModeOf
 import org.akanework.gramophone.logic.ui.BugHandlerActivity
 import org.akanework.gramophone.logic.utils.CoilArtPipeline
 import org.akanework.gramophone.ui.LyricWidgetProvider
@@ -113,7 +113,8 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
 
     override fun onCreate() {
         super.onCreate()
-        // disk read and write on first launch, but unavoidable as threads would race setDefaultNightMode
+        // disk read and write on first launch, but unavoidable as the night mode has to be known
+        // before any activity starts
         val prefs = defaultPrefs
         val themeMode = prefs.getString("theme_mode", "0")
         if (BuildConfig.DEBUG && !isColorOS()) {
@@ -152,16 +153,6 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
                     }
                     .build()
             )
-            FragmentStrictMode.defaultPolicy = FragmentStrictMode.Policy.Builder()
-                .detectFragmentReuse()
-                .detectFragmentTagUsage()
-                .detectRetainInstanceUsage()
-                .detectSetUserVisibleHint()
-                //.detectTargetFragmentUsage() TODO onDisplayPreferenceDialog()
-                .detectWrongFragmentContainer()
-                .detectWrongNestedHierarchy()
-                .penaltyDeath()
-                .build()
         }
         android.util.Log.d(TAG, "GramophoneApplication.onCreate()")
         org.nift4.mediastorecompat.Log.setLogger(object : org.nift4.mediastorecompat.Log.Logger {
@@ -244,19 +235,7 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
             recentlyAddedFilterSecondFlow
         )
         // Set application theme when launching.
-        when (themeMode) {
-            "0" -> {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-            }
-
-            "1" -> {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            }
-
-            "2" -> {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            }
-        }
+        themeModeOf(themeMode).applyToSystem(this)
         // This is a separate thread to avoid disk read on main thread and improve startup time
         CoroutineScope(Dispatchers.Default).launch {
             if (prefs.getBoolean("needToAdd_isMusicBlacklist", true)) {

@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <dimen name="media_seekbar_progress_wavelength">27dp</dimen>
-    <dimen name="media_seekbar_progress_amplitude">2.7dp</dimen>
-    <dimen name="media_seekbar_progress_phase">8dp</dimen>
-    <dimen name="media_seekbar_progress_stroke_width">3.4dp</dimen>
     <dimen name="list_round_corner_size">6dp</dimen>
     <dimen name="grid_round_corner_size">10dp</dimen>
-    <dimen name="tab_layout_content_padding">24dp</dimen>
     <dimen name="grid_card_side_padding">12dp</dimen>
     <!-- https://github.com/zhanghai/AndroidFastScroll/issues/3 -->
     <dimen name="afs_min_touch_target_size" tools:keep="@dimen/afs_min_touch_target_size">24dp
@@ -28,5 +23,4 @@
     <dimen name="lyric_widget_nn">20sp</dimen>
     <dimen name="lyric_widget_tl">15sp</dimen>
     <dimen name="lyric_widget_tb">12sp</dimen>
-    <dimen name="folder_card_height">75dp</dimen>
 </resources>

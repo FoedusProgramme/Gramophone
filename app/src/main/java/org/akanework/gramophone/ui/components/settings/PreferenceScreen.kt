@@ -63,6 +63,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeSource
+import org.akanework.gramophone.ui.LocalCardSurface
 import org.akanework.gramophone.ui.components.home.GLASS_BAR_HEIGHT
 import org.akanework.gramophone.ui.components.home.GlassTitleBar
 import org.akanework.gramophone.ui.components.home.LargeTitle
@@ -128,8 +129,8 @@ fun PreferenceScreen(
     val barTopPadding = topInset + GLASS_BAR_HEIGHT
     // How far the content has moved from rest, following the rubber band like the library pages.
     val scrolled = { scrollState.value.toFloat() - overscroll.offset }
-    // The page sits a step under the rows it carries: containers behind, bright surfaces on top.
-    val background = MaterialTheme.colorScheme.surfaceContainer
+    // The same ground as the home, with the same cards on it.
+    val background = MaterialTheme.colorScheme.surfaceContainerLow
     Box(modifier.fillMaxSize().background(background)) {
         // The content sits behind the frosted bar as its blur source, padded clear of it at the
         // top. The background is painted inside the source so the recorded layer is opaque.
@@ -254,7 +255,7 @@ fun PreferenceRow(
         modifier = Modifier
             .fillMaxWidth()
             .clip(shape)
-            .background(MaterialTheme.colorScheme.surfaceBright)
+            .background(LocalCardSurface.current)
             .then(if (onClick != null) Modifier.clickable(enabled = enabled, onClick = onClick) else Modifier)
             .padding(ROW_PADDING)
             .alpha(if (enabled) 1f else PREFERENCE_DISABLED_ALPHA),

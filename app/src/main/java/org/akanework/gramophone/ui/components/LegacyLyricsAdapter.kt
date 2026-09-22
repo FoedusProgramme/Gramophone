@@ -20,20 +20,18 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.doOnLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.card.MaterialCardView
 import org.akanework.gramophone.logic.defaultPrefs
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.dpToPx
 import org.akanework.gramophone.logic.getBooleanStrict
 import org.akanework.gramophone.logic.ui.CustomSmoothScroller
-import org.akanework.gramophone.logic.ui.MyRecyclerView
 import org.akanework.gramophone.logic.utils.SemanticLyrics
 import org.akanework.gramophone.logic.utils.SemanticLyrics.SyncedLyrics
 import org.akanework.gramophone.ui.MainActivity
 
 class LegacyLyricsAdapter(
     private val context: Context,
-) : MyRecyclerView.Adapter<LegacyLyricsAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<LegacyLyricsAdapter.ViewHolder>() {
     companion object {
         const val LYRIC_REMOVE_HIGHLIGHT = 0
         const val LYRIC_SET_HIGHLIGHT = 1
@@ -45,7 +43,7 @@ class LegacyLyricsAdapter(
     var callback: NewLyricsView.Callbacks? = null
     private val speed
         get() = callback?.speed() ?: 1f
-    private var recyclerView: MyRecyclerView? = null
+    private var recyclerView: RecyclerView? = null
     private val prefs = context.defaultPrefs
     private var defaultTextColor = 0
     private var highlightTextColor = 0
@@ -183,13 +181,13 @@ class LegacyLyricsAdapter(
         scaleY = scale
     }
 
-    override fun onAttachedToRecyclerView(recyclerView: MyRecyclerView) {
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
         updateLyricStatus()
         this.recyclerView = recyclerView
     }
 
-    override fun onDetachedFromRecyclerView(recyclerView: MyRecyclerView) {
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
         super.onDetachedFromRecyclerView(recyclerView)
         this.recyclerView = null
     }
@@ -206,7 +204,7 @@ class LegacyLyricsAdapter(
         view: View
     ) : RecyclerView.ViewHolder(view) {
         val lyricTextView: TextView = view.findViewById(R.id.lyric)
-        val lyricCard: MaterialCardView = view.findViewById(R.id.cardview)
+        val lyricCard: View = view.findViewById(R.id.cardview)
     }
 
     fun updateHighlight(position: Int) {

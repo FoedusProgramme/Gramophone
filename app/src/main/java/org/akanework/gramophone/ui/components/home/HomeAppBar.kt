@@ -75,6 +75,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.akanework.gramophone.R
+import org.akanework.gramophone.ui.LocalCardSurface
 import org.akanework.gramophone.ui.HomeTab
 import org.akanework.gramophone.ui.actions.HomeMenuAction
 import kotlin.math.PI
@@ -84,7 +85,7 @@ import kotlin.math.roundToInt
 import kotlin.math.sin
 
 val TAB_ROW_HEIGHT = 48.dp
-private val TAB_CONTENT_PADDING = 24.dp // tab_layout_content_padding
+private val TAB_CONTENT_PADDING = 24.dp
 private val TAB_PADDING = 12.dp
 /** How far the chip indicator sits inside the tab row, top and bottom. */
 val TAB_INDICATOR_INSET = 6.dp
@@ -168,7 +169,7 @@ private fun HomeActionButton(
         modifier
             .size(width = ACTION_BUTTON_WIDTH, height = ACTION_BUTTON_HEIGHT)
             .clip(shape)
-            .background(MaterialTheme.colorScheme.surfaceBright)
+            .background(LocalCardSurface.current)
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = ripple(),

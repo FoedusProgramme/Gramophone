@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Day.Theme.Splash" parent="Impl.Day.Theme.Splash" />
+
+    <style name="Night.Theme.Splash" parent="Impl.Night.Theme.Splash" />
+
+    <style name="Theme.Gramophone" parent="Common.Theme.Gramophone">
+        <item name="android:colorPrimary">@android:color/system_accent1_200</item>
+        <item name="android:colorBackground">@android:color/system_neutral1_900</item>
+        <item name="colorSurface">@android:color/system_neutral1_900</item>
+        <item name="colorOnSurface">@android:color/system_neutral1_100</item>
+        <item name="colorSurfaceVariant">@android:color/system_neutral2_700</item>
+        <item name="system_app_widget_background_radius">
+            @android:dimen/system_app_widget_background_radius
+        </item>
+        <item name="system_app_widget_inner_radius">@android:dimen/system_app_widget_inner_radius
+        </item>
+    </style>
+</resources>

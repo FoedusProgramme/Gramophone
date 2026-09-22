@@ -24,6 +24,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -55,8 +56,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
-private val THUMB_WIDTH = 8.dp
-private val THUMB_HEIGHT = 48.dp
+/** The thumb as drawn, inside a touch target of its old width so it is no harder to grab. */
+private val THUMB_WIDTH = 4.dp
+private val THUMB_TOUCH_WIDTH = 8.dp
+private val THUMB_HEIGHT = 40.dp
 private val THUMB_MARGIN_END = 4.dp
 private val POPUP_SIZE = 88.dp
 private const val AUTO_HIDE_DELAY_MS = 1500L
@@ -78,7 +81,8 @@ fun LibraryFastScroller(
     rowHeightPx: Int,
     headerHeightPx: Int,
     hintFor: (Int) -> String,
-    modifier: Modifier = Modifier,
+    // Inset within the sheet's corners by default, so the thumb is never cut by them.
+    modifier: Modifier = Modifier.padding(vertical = LIBRARY_GROUP_CORNER),
 ) {
     if (itemCount == 0) return
     val density = LocalDensity.current
@@ -147,10 +151,8 @@ fun LibraryFastScroller(
                         .align(Alignment.TopEnd)
                         .offset { IntOffset(0, thumbTop) }
                         .padding(end = THUMB_MARGIN_END)
-                        .width(THUMB_WIDTH)
+                        .width(THUMB_TOUCH_WIDTH)
                         .height(THUMB_HEIGHT)
-                        .clip(RoundedCornerShape(4.dp))
-                        .background(MaterialTheme.colorScheme.primary)
                         .pointerInput(trackHeight, contentHeight) {
                             detectDragGestures(
                                 onDragStart = { dragging = true; dragProgress = progress },
@@ -168,7 +170,16 @@ fun LibraryFastScroller(
                                 scope.launch { gridState.scrollToItem(index, offset) }
                             }
                         },
-                )
+                    contentAlignment = Alignment.CenterEnd,
+                ) {
+                    Box(
+                        Modifier
+                            .width(THUMB_WIDTH)
+                            .fillMaxHeight()
+                            .clip(RoundedCornerShape(2.dp))
+                            .background(MaterialTheme.colorScheme.outlineVariant),
+                    )
+                }
             }
         }
     }

@@ -50,6 +50,15 @@
     <string name="recently_added">最近添加</string>
     <string name="folders">文件夹</string>
     <string name="settings_app_theme">应用主题</string>
+    <string name="settings_theme_title">主题</string>
+    <string name="settings_theme_summary">亮暗模式、颜色与主题样式</string>
+    <string name="settings_theme_mode_section">亮暗模式</string>
+    <string name="settings_theme_color_section">颜色</string>
+    <string name="settings_theme_wallpaper_color">使用壁纸颜色</string>
+    <string name="settings_theme_wallpaper_color_summary">跟随系统从壁纸提取的颜色</string>
+    <string name="settings_theme_custom_color">自定义颜色</string>
+    <string name="settings_theme_custom_color_summary">选择一种颜色，或拖动色相滑块</string>
+    <string name="settings_theme_style_section">主题样式</string>
     <string name="natural_order">自然排序</string>
     <plurals name="songs">
         <item quantity="other">%d 首歌曲</item>

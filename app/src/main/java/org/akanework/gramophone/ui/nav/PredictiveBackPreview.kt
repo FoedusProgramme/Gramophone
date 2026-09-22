@@ -4,7 +4,6 @@ import android.os.Build
 import android.view.RoundedCorner
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -32,6 +31,7 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.scene.SceneState
 import androidx.navigationevent.NavigationEvent
+import org.akanework.gramophone.ui.LocalDarkTheme
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -68,7 +68,7 @@ internal fun <T : Any> AndroidPredictiveBackPreview(
 
 @Composable
 internal fun AndroidPredictiveBackScrim(state: AndroidPredictiveBackState) {
-    val maxAlpha = if (isSystemInDarkTheme()) MAX_SCRIM_ALPHA_DARK else MAX_SCRIM_ALPHA_LIGHT
+    val maxAlpha = if (LocalDarkTheme.current) MAX_SCRIM_ALPHA_DARK else MAX_SCRIM_ALPHA_LIGHT
     Box(
         Modifier
             .fillMaxSize()

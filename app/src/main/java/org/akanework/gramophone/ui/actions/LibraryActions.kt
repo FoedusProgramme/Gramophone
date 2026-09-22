@@ -25,7 +25,6 @@ import androidx.core.app.ShareCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -36,12 +35,13 @@ import org.akanework.gramophone.logic.requireMediaStoreId
 import org.akanework.gramophone.logic.setMediaItemsSeamlessly
 import org.akanework.gramophone.logic.setMediaItemsWithTitle
 import org.akanework.gramophone.ui.MainActivity
-import org.akanework.gramophone.ui.fragments.DetailDialogFragment
+import org.akanework.gramophone.ui.components.compose.AppDialog
 import org.akanework.gramophone.ui.nav.AlbumKey
 import org.akanework.gramophone.ui.nav.ArtistKey
 import org.akanework.gramophone.ui.nav.DateKey
 import org.akanework.gramophone.ui.nav.GenreKey
 import org.akanework.gramophone.ui.nav.PlaylistKey
+import org.akanework.gramophone.ui.nav.SongDetailKey
 import uk.akane.libphonograph.dynamicitem.Favorite
 import uk.akane.libphonograph.items.Album
 import uk.akane.libphonograph.items.Playlist
@@ -151,11 +151,8 @@ object LibraryActions {
     fun goToArtist(activity: MainActivity, item: MediaItem) =
         openArtist(activity, item.mediaMetadata.artistId, albumArtist = false)
 
-    fun showDetails(activity: MainActivity, item: MediaItem) {
-        activity.startFragment(DetailDialogFragment()) {
-            putString("Id", item.mediaId)
-        }
-    }
+    fun showDetails(activity: MainActivity, item: MediaItem) =
+        activity.navigateTo(SongDetailKey(item.mediaId))
 
     fun deleteSongs(
         activity: MainActivity, songs: List<MediaItem>, @StringRes message: Int, name: CharSequence?
@@ -166,12 +163,12 @@ object LibraryActions {
             )
             if (res != null) {
                 withContext(Dispatchers.Main) {
-                    MaterialAlertDialogBuilder(activity)
-                        .setTitle(R.string.delete)
-                        .setMessage(activity.getString(message, name))
-                        .setPositiveButton(R.string.delete) { _, _ -> res.invoke() }
-                        .setNegativeButton(android.R.string.cancel) { _, _ -> }
-                        .show()
+                    activity.dialogs.show(AppDialog.Confirm(
+                        title = activity.getString(R.string.delete),
+                        message = activity.getString(message, name),
+                        confirmText = activity.getString(R.string.delete),
+                        onConfirm = { res.invoke() },
+                    ))
                 }
             }
         }
@@ -190,18 +187,16 @@ object LibraryActions {
             val res = ItemManipulator.deletePlaylist(activity, id)
             if (res != null) {
                 withContext(Dispatchers.Main) {
-                    MaterialAlertDialogBuilder(activity)
-                        .setTitle(R.string.delete)
-                        .setMessage(
-                            activity.getString(
-                                R.string.delete_really,
-                                if (item is Favorite) activity.getString(R.string.playlist_favourite)
-                                else item.title
-                            )
-                        )
-                        .setPositiveButton(R.string.delete) { _, _ -> res.invoke() }
-                        .setNegativeButton(android.R.string.cancel) { _, _ -> }
-                        .show()
+                    activity.dialogs.show(AppDialog.Confirm(
+                        title = activity.getString(R.string.delete),
+                        message = activity.getString(
+                            R.string.delete_really,
+                            if (item is Favorite) activity.getString(R.string.playlist_favourite)
+                            else item.title
+                        ),
+                        confirmText = activity.getString(R.string.delete),
+                        onConfirm = { res.invoke() },
+                    ))
                 }
             }
         }

@@ -1,5 +1,5 @@
 /*
- *     Copyright (C) 2026 nift4
+ *     Copyright (C) 2025 Akane Foundation
  *
  *     Gramophone is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -14,36 +14,39 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-
 package org.akanework.gramophone.ui
 
 import android.content.ContentUris
 import android.content.Intent
 import android.provider.MediaStore
 import androidx.media3.common.MediaItem
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.Flow
 import org.akanework.gramophone.R
+import org.akanework.gramophone.logic.gramophoneApplication
 import org.akanework.gramophone.logic.requireMediaStoreId
-import org.akanework.gramophone.ui.adapters.SongAdapter
-import org.akanework.gramophone.ui.adapters.Sorter
+import org.akanework.gramophone.ui.screens.PickerEntry
 
 class SongPickerActivity : PickerActivity<MediaItem>() {
-    override fun makeAdapter() =
-        SongAdapter(
-            null,
-            null,
-            rawOrderExposed = Sorter.Type.ByTitleAscending,
-            isSubFragment = R.id.songs,
-            fallbackContext = this
-        )
+    override fun itemsFlow(): Flow<List<MediaItem>> = gramophoneApplication.reader.songListFlow
+
+    override fun entryOf(item: MediaItem) = PickerEntry(
+        item = item,
+        title = item.mediaMetadata.title?.toString() ?: getString(R.string.unknown_title),
+        subtitle = item.mediaMetadata.artist?.toString() ?: getString(R.string.unknown_artist),
+        cover = item.mediaMetadata.artworkUri,
+        defaultCover = R.drawable.ic_default_cover,
+    )
 
     override fun getTitleStr() = getString(R.string.picker_activity)
 
-    fun onSelected(item: MediaItem) {
+    override fun onSelected(item: MediaItem) {
         setResult(RESULT_OK, Intent().apply {
-            setDataAndType(ContentUris.withAppendedId(
-                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                item.requireMediaStoreId()), item.localConfiguration?.mimeType)
+            setDataAndType(
+                ContentUris.withAppendedId(
+                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, item.requireMediaStoreId()
+                ),
+                item.localConfiguration?.mimeType,
+            )
             setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         })
         finish()
