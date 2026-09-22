@@ -32,7 +32,6 @@
     <string name="natural_order">Természetes sorrend</string>
     <string name="list">Lista</string>
     <string name="equalizer_not_found">Hangszínszabályozó nem található!</string>
-    <string name="compact_list">Lista (kompakt)</string>
     <string name="settings_default_progress_bar">Alap folyamatjelző sáv</string>
     <string name="now_playing">Lejátszás alatt</string>
     <string name="settings_content_based_color_summary">Album alapú színgenerálás engedélyezése</string>

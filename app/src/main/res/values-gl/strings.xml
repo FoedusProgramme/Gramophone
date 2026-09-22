@@ -73,7 +73,6 @@
     <string name="layout">Disposición</string>
     <string name="home_menu_equalizer">Ecualizador</string>
     <string name="equalizer_not_found">Non hai ecualizador!</string>
-    <string name="compact_list">Lista (compacta)</string>
     <string name="check_for_updates">Accede á nosa canle de actualizacións!</string>
     <string name="settings_default_progress_bar">Barra de progreso predeterminada</string>
     <string name="settings_default_progress_bar_summary">Activar a barra de progreso co estilo de Material</string>
@@ -437,7 +436,7 @@
     <string name="settings_stop_on_dismiss_summary">Detén a reprodución cando a tarefa da app se desbota das recentes</string>
     <string name="compact_grid">Grella (compacta)</string>
     <string name="sort_by_album_year">Ano do álbum</string>
-    <string name="sort_by_album_artist_year"><![CDATA[Artista do album -&gt; ano]]></string>
+    <string name="sort_by_album_artist_year"><![CDATA[Artista do album -> ano]]></string>
     <string name="forbidden_symbol_error">Carácter non válido no nome</string>
     <string name="translators">Traducións</string>
     <string name="settings_replaygain">ReplayGain</string>
@@ -463,7 +462,7 @@
     <string name="settings_replaygain_no_rg_amp_desc">Reducir o volume para cancións que soan moi alto e que non teñen etiquetas ReplayGain</string>
     <string name="settings_replaygain_preamp_desc">Aumentar ou diminuír o volume das cancións con etiquetas ReplayGain. Os valores máis altos poderían causar perdas no rango dináminco para evitar solapamentos.</string>
     <string name="settings_replaygain_mode_desc">«Intelixente» conserva automáticamente a dinámica do álbum so cando se reproducen cancións de xeito consecutivo dun álbum.</string>
-    <string name="sort_by_artist_year"><![CDATA[Artist -&gt; ano]]></string>
+    <string name="sort_by_artist_year"><![CDATA[Artist -> ano]]></string>
     <string name="clear_queue">Limpar cola</string>
     <string name="contributors_saladnoober">Control da calidade</string>
     <string name="actions_query_shuffle_all_songs">barallar todas as cancións</string>

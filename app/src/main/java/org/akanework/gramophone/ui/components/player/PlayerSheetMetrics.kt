@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
 import org.akanework.gramophone.logic.utils.CalculationUtils.lerp
+import org.akanework.gramophone.ui.components.home.LIBRARY_COVER_START
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.ARC_HORIZONTAL_EASING
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.CORNER_SQUARE_START
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.EXPANDED_ART_CORNER
@@ -37,7 +38,6 @@ import org.akanework.gramophone.ui.components.player.PlayerUtilities.LAND_ART_ST
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.LAND_ART_TOP
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.MINI_ARTWORK
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.MINI_ARTWORK_CORNER
-import org.akanework.gramophone.ui.components.player.PlayerUtilities.MINI_ARTWORK_PAD
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.MINI_CORNER
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.MINI_HEIGHT
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.MINI_PLATFORM_GAP
@@ -109,7 +109,8 @@ fun playerSheetMetrics(
     val sheetRightPx = lerp(collapsedRight, 0f, progress)
 
     val collapsedArtSize = MINI_ARTWORK.px()
-    val collapsedArtLeft = collapsedLeft + MINI_ARTWORK_PAD.px()
+    // Lined up with the covers of the home's list rows.
+    val collapsedArtLeft = leftInset + LIBRARY_COVER_START.px()
     val collapsedArtTop = sheetTopCollapsed + (collapsedHeight - collapsedArtSize) / 2f
 
     val safeWidth = (rootWidth - leftInset - rightInset).coerceAtLeast(0f)

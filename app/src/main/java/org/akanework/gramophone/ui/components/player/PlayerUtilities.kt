@@ -55,9 +55,8 @@ object PlayerUtilities {
     val MINI_HEIGHT = 56.dp
     val MINI_SIDE_INSET = 16.dp
     val MINI_ARTWORK = 44.dp
-    val MINI_ARTWORK_PAD = 6.dp
     val MINI_CORNER = 24.dp
-    val MINI_ARTWORK_CORNER = 12.dp
+    val MINI_ARTWORK_CORNER = 6.dp
     val MINI_PLATFORM_GAP = 8.dp
     val MINI_PLATFORM_MIN = 24.dp
 

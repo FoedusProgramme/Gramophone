@@ -246,7 +246,6 @@
     <string name="grid">Mřížka</string>
     <string name="list">Seznam</string>
     <string name="layout">Displej</string>
-    <string name="compact_list">Seznam (kompaktní)</string>
     <string name="settings_package_type">Typ balíčku</string>
     <string name="settings_player_ui">UI přehrávač</string>
     <string name="settings_player_ui_summary">Plný přehrávač UI, text skladby</string>

@@ -215,7 +215,6 @@
     <string name="play_next">เล่นเพลงถัดไป</string>
     <string name="settings_mediastore_filter">ความยาวเพลงที่สั้นที่สุด (วินาที)</string>
     <string name="layout">แสดง</string>
-    <string name="compact_list">รายการ (เล็ก)</string>
     <string name="natural_order">ตามตัวอักษร</string>
     <string name="check_for_updates">ตรวจสอบอัพเดตได้ที่ช่องทางของเรา</string>
     <string name="settings_default_progress_bar">แถบเวลาแบบค่าเริ่มต้น</string>

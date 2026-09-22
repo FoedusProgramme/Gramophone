@@ -22,7 +22,6 @@
     <string name="settings_behavior_summary">Filtry, zachowania przy uruchamianiu</string>
     <string name="settings_app_theme">Motyw aplikacji</string>
     <string name="settings_about_gramophone">Informacje o aplikacji</string>
-    <string name="compact_list">Lista (kompaktowa)</string>
     <string name="dialog_album_artist">Wykonawca albumu</string>
     <string name="settings_customization_summary">Zarządzaj opcjami personalizacji</string>
     <string name="equalizer_not_found">Nie znaleziono korektora dźwięku!</string>
@@ -447,7 +446,7 @@
     <string name="settings_stop_on_dismiss_summary">Zatrzymaj odtwarzanie, gdy zadanie aplikacji zostanie zamknięte z listy ostatnich</string>
     <string name="compact_grid">Siatka (kompaktowa)</string>
     <string name="sort_by_album_year">Rok albumu</string>
-    <string name="sort_by_album_artist_year"><![CDATA[Album artist -&gt; year]]></string>
+    <string name="sort_by_album_artist_year"><![CDATA[Album artist -> year]]></string>
     <string name="forbidden_symbol_error">Nieprawidłowy znak w nazwie</string>
     <string name="translators">Tłumacze</string>
     <string name="settings_replaygain_mode">Tryb</string>
@@ -473,7 +472,7 @@
     <string name="settings_replaygain_no_rg_amp_desc">Zmniejsz głośność głośnych utworów, które nie mają znaczników ReplayGain</string>
     <string name="settings_replaygain_preamp_desc">Zwiększ lub zmniejsz głośność utworów ze znacznikami ReplayGain. Wyższe wartości mogą powodować utratę dynamiki z powodu zapobiegania przesterowaniu.</string>
     <string name="settings_replaygain_mode_desc">Funkcja „Inteligentny” automatycznie zachowuje dynamikę albumu tylko podczas odtwarzania utworów z albumu jeden po drugim.</string>
-    <string name="sort_by_artist_year"><![CDATA[Artist -&gt; rok]]></string>
+    <string name="sort_by_artist_year"><![CDATA[Artist -> rok]]></string>
     <string name="clear_queue">Wyczyść kolejkę</string>
     <string name="contributors_saladnoober">Kontrola jakości</string>
     <string name="actions_query_shuffle_all_songs">mieszaj wszystkie piosenki</string>

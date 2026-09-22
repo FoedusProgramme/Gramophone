@@ -32,7 +32,6 @@
     <string name="settings_mediastore_filter">음악 최소 길이 (초)</string>
     <string name="dialog_path">경로</string>
     <string name="unknown_album">알 수 없는 앨범</string>
-    <string name="compact_list">목록 (콤팩트)</string>
     <string name="settings_default_progress_bar_summary">Material 스타일 진행 표시줄 사용</string>
     <string name="opensource_info">GPL-3.0에 따라 오픈 소스로 공개됨\nCopyright %s</string>
     <string name="playlist_favourite">즐겨찾기</string>
@@ -416,7 +415,7 @@
     <plurals name="folders_plural">
         <item quantity="other">%d개 폴더</item>
     </plurals>
-    <string name="sort_by_album_artist_year"><![CDATA[앨범 아티스트 -&gt; 연도]]></string>
+    <string name="sort_by_album_artist_year"><![CDATA[앨범 아티스트 -> 연도]]></string>
     <string name="search_query">검색: %s</string>
     <string name="reverse_order">역순</string>
     <string name="playback_speed">재생 속도</string>
@@ -468,7 +467,7 @@
     <string name="scroll_to_playing">재생 중인 곡으로 이동</string>
     <string name="duration_queue">%s 남음, 총 %s</string>
     <string name="d_db">%d dB</string>
-    <string name="sort_by_artist_year"><![CDATA[아티스트 -&gt; 연도]]></string>
+    <string name="sort_by_artist_year"><![CDATA[아티스트 -> 연도]]></string>
     <string name="clear_queue">대기열 비우기</string>
     <string name="actions_query_shuffle_all_songs">모든 곡 셔플</string>
     <string name="actions_query_shuffle_everything">전부 셔플</string>

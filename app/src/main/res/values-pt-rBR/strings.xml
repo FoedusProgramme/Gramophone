@@ -18,7 +18,6 @@
     <string name="settings_behavior_summary">Configurar o comportamento do aplicativo</string>
     <string name="settings_app_theme">Tema do aplicativo</string>
     <string name="settings_about_gramophone">Sobre o aplicativo</string>
-    <string name="compact_list">Lista (compacta)</string>
     <string name="dialog_album_artist">Álbum do artista</string>
     <string name="settings_customization_summary">Gerenciar opções de customização</string>
     <string name="equalizer_not_found">Equalizador não encontrado!</string>
@@ -436,6 +435,6 @@
     <string name="settings_stop_on_dismiss_summary">Pare a reprodução quando o app for dispensado dos aplicativos recentes</string>
     <string name="compact_grid">Grade (compacta)</string>
     <string name="sort_by_album_year">Ano do álbum</string>
-    <string name="sort_by_album_artist_year"><![CDATA[Album artist -&gt;year]]></string>
+    <string name="sort_by_album_artist_year"><![CDATA[Album artist ->year]]></string>
     <string name="forbidden_symbol_error">Caractere inválido no nome</string>
 </resources>

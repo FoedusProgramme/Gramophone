@@ -178,7 +178,6 @@
     <!-- Error if the external equalizer app isn't installed -->
     <string name="equalizer_not_found">Equalizer not found!</string>
     <!-- Display style where songs/albums/etc are displayed as list, but smaller -->
-    <string name="compact_list">List (compact)</string>
     <!-- In about screen, link to our Telegram channel -->
     <string name="check_for_updates">Check our channel for updates!</string>
     <!-- In player UI settings, change between wavy(Gramophone's default) and default/modern

@@ -27,6 +27,10 @@ import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.PlayArrow
+import androidx.compose.material.icons.outlined.Shuffle
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -59,24 +63,23 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.akanework.gramophone.R
+import org.akanework.gramophone.ui.MainActivity
 import org.akanework.gramophone.logic.utils.flows.LifecyclePauseManager
 import org.akanework.gramophone.ui.actions.LibraryActions
 import org.akanework.gramophone.ui.actions.PlaylistDialogs
 import org.akanework.gramophone.ui.actions.findMainActivity
 import org.akanework.gramophone.ui.library.LayoutType
 import org.akanework.gramophone.ui.components.compose.rememberPreference
-import org.akanework.gramophone.ui.components.home.DECOR_HEIGHT
 import org.akanework.gramophone.ui.components.home.GRID_CARD_LABEL_HEIGHT
 import org.akanework.gramophone.ui.components.home.GRID_CARD_MARGIN_LABEL
 import org.akanework.gramophone.ui.components.home.GRID_CARD_MARGIN_TOP
 import org.akanework.gramophone.ui.components.home.GRID_CARD_PADDING_BOTTOM
 import org.akanework.gramophone.ui.components.home.GRID_CARD_SIDE_PADDING
 import org.akanework.gramophone.ui.components.home.IosOverscrollState
-import org.akanework.gramophone.ui.components.home.LARGER_LIST_HEIGHT
 import org.akanework.gramophone.ui.components.home.LIST_HEIGHT
 import org.akanework.gramophone.ui.components.home.LibraryFastScroller
 import org.akanework.gramophone.ui.components.home.LibraryGridCard
-import org.akanework.gramophone.ui.components.home.LibraryHeader
+import org.akanework.gramophone.ui.components.home.LibraryFabAction
 import org.akanework.gramophone.ui.components.home.libraryItemCard
 import org.akanework.gramophone.ui.components.home.libraryItemShape
 import org.akanework.gramophone.ui.components.home.libraryCellShape
@@ -209,10 +212,8 @@ fun <T : Any> LibraryTabScreen(
     val columns = libraryColumns(layoutType)
     val density = LocalDensity.current
     val rowHeightPx = with(density) {
-        (if (layoutType == LayoutType.LIST) LARGER_LIST_HEIGHT else LIST_HEIGHT).roundToPx()
+        LIST_HEIGHT.roundToPx()
     }
-    // Items before the first list item: the header.
-    val leadingItems = 1
     val queueTitle = state.queueTitleOverride ?: context.getString(spec.queueTitle)
     val goToPlayingSong: (() -> Unit)? = if (spec === LibraryTabSpec.Songs) {
         {
@@ -221,23 +222,14 @@ fun <T : Any> LibraryTabScreen(
             if (index >= 0) {
                 scope.launch {
                     // Land half a row below the top, the way the View list used to.
-                    gridState.animateScrollToItem(index + leadingItems, -rowHeightPx / 2)
+                    gridState.animateScrollToItem(index, -rowHeightPx / 2)
                 }
             }
         }
     } else null
     LaunchedEffect(reselectTick) { if (reselectTick > 0) goToPlayingSong?.invoke() }
-    var sortMenuOpen by remember { mutableStateOf(false) }
-    val extraCheckbox = if (spec === LibraryTabSpec.Artists) {
-        val albumArtist by rememberPreference(LibraryTabSpec.Artists.ALBUM_ARTIST_PREF) {
-            it.getBoolean(LibraryTabSpec.Artists.ALBUM_ARTIST_PREF, false)
-        }
-        context.getString(R.string.album_artist) to albumArtist
-    } else null
-
     val gridRowHeightPx = libraryGridRowHeightPx(isGrid, columns)
     val gapPx = with(density) { LIBRARY_ITEM_GAP.roundToPx() }
-    val headerHeightPx = with(density) { DECOR_HEIGHT.roundToPx() } + gapPx
     Box(modifier.fillMaxSize()) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(columns),
@@ -249,77 +241,83 @@ fun <T : Any> LibraryTabScreen(
         flingBehavior = rememberIosFlingBehavior(gridState),
         overscrollEffect = null,
     ) {
-        item(key = "header", span = { GridItemSpan(maxLineSpan) }) {
-            LibraryHeader(
-                modifier = Modifier.libraryItemCard(
-                    libraryItemShape(
-                        topStart = true, topEnd = true,
-                        bottomStart = items.isEmpty(), bottomEnd = items.isEmpty(),
-                    )
-                ),
-                counterText = context.resources.getQuantityString(spec.pluralStr, items.size, items.size),
-                onCounterClick = goToPlayingSong,
-                onCreatePlaylist = if (spec === LibraryTabSpec.Playlists) {
-                    { PlaylistDialogs.create(activity) }
-                } else null,
-                onPlayAll = if (spec.hasPlayButtons) {
-                    {
-                        @Suppress("UNCHECKED_CAST")
-                        if (spec === LibraryTabSpec.Albums)
-                            LibraryActions.playAllAlbums(activity, items as List<Album>, queueTitle)
-                        else
-                            LibraryActions.playAll(activity, items as List<MediaItem>, queueTitle)
-                    }
-                } else null,
-                onShuffleAll = if (spec.hasPlayButtons) {
-                    {
-                        @Suppress("UNCHECKED_CAST")
-                        if (spec === LibraryTabSpec.Albums)
-                            LibraryActions.shuffleAllAlbums(activity, items as List<Album>, queueTitle)
-                        else
-                            LibraryActions.shuffleAll(activity, items as List<MediaItem>, queueTitle)
-                    }
-                } else null,
-                onSort = { sortMenuOpen = true },
-                sortMenu = {
-                    SortMenu(
-                        expanded = sortMenuOpen,
-                        onDismiss = { sortMenuOpen = false },
-                        sortTypes = state.sortTypes,
-                        activeSort = state.sort.activeSortBase(SortPrefState.SORT_MENU_ORDER),
-                        isReversed = state.sort.isReversed,
-                        canReverse = state.sort.canReverse,
-                        onSelectSort = { state.sort.selectSort(it) },
-                        onToggleReverse = { state.sort.toggleReverse() },
-                        layoutType = layoutType,
-                        onSelectLayout = { state.selectLayout(it) },
-                        extraCheckbox = extraCheckbox,
-                        onExtraCheckbox = {
-                            val key = LibraryTabSpec.Artists.ALBUM_ARTIST_PREF
-                            state.prefs.edit().putBoolean(key, !state.prefs.getBoolean(key, false)).apply()
-                        },
-                    )
-                },
-            )
-        }
         itemsIndexed(items, key = { _, it -> spec.helper.getId(it) }) { index, item ->
             LibraryItem(
                 state, item, nowPlaying, activity, layoutType,
                 Modifier.animateItem(),
-                cardShape = { libraryCellShape(index, items.size, columns, it) },
+                cardShape = { libraryCellShape(index, items.size, columns, it, opensGroup = true) },
             )
         }
     }
     LibraryFastScroller(
         gridState = gridState,
         itemCount = items.size,
-        headerCount = leadingItems,
+        headerCount = 0,
         columns = columns,
         rowHeightPx = (if (isGrid) gridRowHeightPx else rowHeightPx) + gapPx,
-        headerHeightPx = headerHeightPx,
+        headerHeightPx = 0,
         hintFor = { i -> items.getOrNull(i)?.let { state.fastScrollHintFor(it, i) } ?: "-" },
     )
     }
+}
+
+/**
+ * The home's FABs for a tab: a new playlist, or play and shuffle all. Empty when it has none.
+ * Their bottom clearance is given to the list through [LocalListBottomPadding].
+ */
+fun <T : Any> libraryFabActions(state: LibraryTabState<T>, activity: MainActivity): List<LibraryFabAction> {
+    val spec = state.spec
+    val queueTitle = state.queueTitleOverride ?: activity.getString(spec.queueTitle)
+    return buildList {
+        if (spec === LibraryTabSpec.Playlists) {
+            add(LibraryFabAction(Icons.Outlined.Add) { PlaylistDialogs.create(activity) })
+        }
+        if (spec.hasPlayButtons) {
+            @Suppress("UNCHECKED_CAST")
+            add(LibraryFabAction(Icons.Outlined.PlayArrow, iconOffsetX = 2.dp) {
+                if (spec === LibraryTabSpec.Albums)
+                    LibraryActions.playAllAlbums(activity, state.items as List<Album>, queueTitle)
+                else
+                    LibraryActions.playAll(activity, state.items as List<MediaItem>, queueTitle)
+            })
+            @Suppress("UNCHECKED_CAST")
+            add(LibraryFabAction(Icons.Outlined.Shuffle, 22.dp, iconOffsetX = -2.dp) {
+                if (spec === LibraryTabSpec.Albums)
+                    LibraryActions.shuffleAllAlbums(activity, state.items as List<Album>, queueTitle)
+                else
+                    LibraryActions.shuffleAll(activity, state.items as List<MediaItem>, queueTitle)
+            })
+        }
+    }
+}
+
+/** The sort and layout menu of a home tab, opened from the home bar's sort button. */
+@Composable
+fun <T : Any> LibrarySortMenu(state: LibraryTabState<T>, expanded: Boolean, onDismiss: () -> Unit) {
+    val context = LocalContext.current
+    val extraCheckbox = if (state.spec === LibraryTabSpec.Artists) {
+        val albumArtist by rememberPreference(LibraryTabSpec.Artists.ALBUM_ARTIST_PREF) {
+            it.getBoolean(LibraryTabSpec.Artists.ALBUM_ARTIST_PREF, false)
+        }
+        context.getString(R.string.album_artist) to albumArtist
+    } else null
+    SortMenu(
+        expanded = expanded,
+        onDismiss = onDismiss,
+        sortTypes = state.sortTypes,
+        activeSort = state.sort.activeSortBase(SortPrefState.SORT_MENU_ORDER),
+        isReversed = state.sort.isReversed,
+        canReverse = state.sort.canReverse,
+        onSelectSort = { state.sort.selectSort(it) },
+        onToggleReverse = { state.sort.toggleReverse() },
+        layoutType = state.layoutType,
+        onSelectLayout = { state.selectLayout(it) },
+        extraCheckbox = extraCheckbox,
+        onExtraCheckbox = {
+            val key = LibraryTabSpec.Artists.ALBUM_ARTIST_PREF
+            state.prefs.edit().putBoolean(key, !state.prefs.getBoolean(key, false)).apply()
+        },
+    )
 }
 
 /**
@@ -411,7 +409,6 @@ internal fun <T : Any> LibraryItem(
         )
     } else {
         LibraryListRow(
-            layout = layoutType,
             title = title,
             subtitle = subtitle,
             cover = cover,

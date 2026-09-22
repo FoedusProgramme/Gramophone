@@ -22,7 +22,6 @@
     <string name="settings_behavior_summary">الفلاتر وسلوكيّات التَّشغيل</string>
     <string name="settings_app_theme">سِمَة البرنامج</string>
     <string name="settings_about_gramophone">حول التطبيق</string>
-    <string name="compact_list">قائمة (مضغوطة)</string>
     <string name="dialog_album_artist">فنّان الألبوم</string>
     <string name="settings_customization_summary">إدارة إعدادات التَّخصيص</string>
     <string name="equalizer_not_found">لم يَتِمّ العثور على مُعادِل الصَّوت!</string>

@@ -17,7 +17,12 @@
 
 package org.akanework.gramophone.ui.components.home
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandHorizontally
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -41,6 +46,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Sort
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.DropdownMenu
@@ -91,10 +97,10 @@ private val TAB_PADDING = 12.dp
 val TAB_INDICATOR_INSET = 6.dp
 private val TAB_INDICATOR_RADIUS = 12.dp
 
-// The two connected app-bar actions (search + overflow): 44×48 filled buttons, rounded 24dp on
-// the outer edge and 4dp where they face each other, with a 4dp gap between them.
-private val ACTION_BUTTON_WIDTH = 38.dp
-val ACTION_BUTTON_HEIGHT = 42.dp
+// The connected app-bar actions (search, the optional sort, overflow): filled buttons, rounded
+// 24dp on the group's outer edges and 4dp where they face each other, with a 4dp gap between them.
+private val ACTION_BUTTON_WIDTH = 42.dp
+val ACTION_BUTTON_HEIGHT = 44.dp
 private val ACTION_OUTER_CORNER = 24.dp
 private val ACTION_INNER_CORNER = 4.dp
 private val ACTION_BUTTON_GAP = 4.dp
@@ -103,6 +109,7 @@ private val SEARCH_BUTTON_SHAPE = RoundedCornerShape(
     topStart = ACTION_OUTER_CORNER, bottomStart = ACTION_OUTER_CORNER,
     topEnd = ACTION_INNER_CORNER, bottomEnd = ACTION_INNER_CORNER,
 )
+private val MIDDLE_BUTTON_SHAPE = RoundedCornerShape(ACTION_INNER_CORNER)
 private val OVERFLOW_BUTTON_SHAPE = RoundedCornerShape(
     topStart = ACTION_INNER_CORNER, bottomStart = ACTION_INNER_CORNER,
     topEnd = ACTION_OUTER_CORNER, bottomEnd = ACTION_OUTER_CORNER,
@@ -117,11 +124,15 @@ private val OVERFLOW_BUTTON_SHAPE = RoundedCornerShape(
 private val BAR_PADDING_START = 24.dp
 private val BAR_PADDING_END = 16.dp
 
-/** The home's bar: the app's mark at the start, the search and overflow actions at the end. */
+/**
+ * The home's bar: the app's mark at the start, the search and overflow actions at the end, and
+ * between them a sort button while [sortMenu] is non-null, squeezing in and out as it changes.
+ */
 @Composable
 fun HomeAppBar(
     onSearch: () -> Unit,
     onMenuAction: (HomeMenuAction) -> Unit,
+    sortMenu: (@Composable (expanded: Boolean, onDismiss: () -> Unit) -> Unit)? = null,
     modifier: Modifier = Modifier,
 ) {
     val insets = WindowInsets.systemBars.union(WindowInsets.displayCutout)
@@ -147,12 +158,36 @@ fun HomeAppBar(
             onClick = onSearch,
         )
         Spacer(Modifier.width(ACTION_BUTTON_GAP))
+        // Keeps the last menu while the button squeezes out.
+        var shownSortMenu by remember { mutableStateOf(sortMenu) }
+        if (sortMenu != null) shownSortMenu = sortMenu
+        var sortMenuOpen by remember { mutableStateOf(false) }
+        if (sortMenu == null) sortMenuOpen = false
+        AnimatedVisibility(
+            visible = sortMenu != null,
+            enter = expandHorizontally(expandFrom = Alignment.Start) + fadeIn(),
+            exit = shrinkHorizontally(shrinkTowards = Alignment.Start) + fadeOut(),
+        ) {
+            Row {
+                Box {
+                    HomeActionButton(
+                        icon = Icons.AutoMirrored.Outlined.Sort,
+                        iconSize = 24.dp,
+                        shape = MIDDLE_BUTTON_SHAPE,
+                        iconOffsetX = 0.dp,
+                        onClick = { sortMenuOpen = true },
+                    )
+                    shownSortMenu?.invoke(sortMenuOpen) { sortMenuOpen = false }
+                }
+                Spacer(Modifier.width(ACTION_BUTTON_GAP))
+            }
+        }
         HomeOverflowMenu(onMenuAction)
     }
 }
 
 /**
- * One of the two connected app-bar actions: a filled [ACTION_BUTTON_WIDTH]×[ACTION_BUTTON_HEIGHT]
+ * One of the connected app-bar actions: a filled [ACTION_BUTTON_WIDTH]×[ACTION_BUTTON_HEIGHT]
  * button rounded 24dp on its outer edge and 4dp on the edge facing its neighbour, with the icon
  * nudged [iconOffsetX] toward the inner edge for optical balance.
  */

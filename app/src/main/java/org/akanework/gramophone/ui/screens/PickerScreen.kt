@@ -55,7 +55,6 @@ import org.akanework.gramophone.ui.components.home.libraryItemCard
 import org.akanework.gramophone.ui.components.home.libraryItemShape
 import org.akanework.gramophone.ui.components.home.rememberIosFlingBehavior
 import org.akanework.gramophone.ui.components.home.rememberIosOverscrollState
-import org.akanework.gramophone.ui.library.LayoutType
 
 /** One thing to pick, as the picker activities list it. */
 class PickerEntry<T : Any>(
@@ -100,7 +99,6 @@ fun <T : Any> PickerScreen(
             ) {
                 itemsIndexed(entries) { index, entry ->
                     LibraryListRow(
-                        layout = LayoutType.COMPACT_LIST,
                         title = entry.title,
                         subtitle = entry.subtitle,
                         cover = entry.cover,

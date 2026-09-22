@@ -77,7 +77,6 @@
     <string name="layout">ສະແດງຜົນ</string>
     <string name="home_menu_equalizer">ອິຄວໍໄລເຊີ</string>
     <string name="equalizer_not_found">ບໍ່ພົບ ອິຄວໍໄລເຊີ!</string>
-    <string name="compact_list">ລາຍການ (ກະທັດຮັດ)</string>
     <string name="check_for_updates">ກວດສອບຊ່ອງຂອງພວກເຮົາສຳລັບການອັບເດດ!</string>
     <string name="settings_default_progress_bar">ແຖບຄວາມຄືບໜ້າເລີ່ມຕົ້ນ</string>
     <string name="settings_default_progress_bar_summary">ເປີດໃຊ້ແຖບຄວາມຄືບໜ້າແບບ material</string>
@@ -448,7 +447,7 @@
     <string name="settings_stop_on_dismiss_summary">ຢຸດການຫຼິ້ນເມື່ອປັດແອັບອອກຈາກໜ້າແອັບທີ່ເປີດລ່າສຸດ</string>
     <string name="compact_grid">ຕາໜ່າງ (ກະທັດຮັດ)</string>
     <string name="sort_by_album_year">ປີຂອງອະລະບ້ຳ</string>
-    <string name="sort_by_album_artist_year"><![CDATA[ສິລະປິນອະລະບ້ຳ -&gt; ປີ]]></string>
+    <string name="sort_by_album_artist_year"><![CDATA[ສິລະປິນອະລະບ້ຳ -> ປີ]]></string>
     <string name="forbidden_symbol_error">ມີຕົວອັກສອນທີ່ບໍ່ຖືກຕ້ອງຢູ່ໃນຊື່</string>
     <string name="translators">ຜູ້ແປພາສາ</string>
     <string name="settings_replaygain">ReplayGain</string>
@@ -468,7 +467,7 @@
     <string name="settings_replaygain_no_rg_amp_desc">ຫຼຸດລະດັບສຽງລົງສຳລັບເພງທີ່ດັງແຮງແຕ່ບໍ່ມີແທັກ ReplayGain</string>
     <string name="settings_replaygain_preamp_desc">ເພີ່ມ ຫຼື ຫຼຸດລະດັບສຽງຂອງເພງທີ່ມີແທັກ ReplayGain. ຄ່າທີ່ສູງຂຶ້ນອາດເຮັດໃຫ້ສູນເສຍໄດນາມິກເນື່ອງຈາກການປ້ອງກັນສຽງແຕກ.</string>
     <string name="settings_replaygain_mode_desc">\"ສະຫຼາດ\" ຈະຮັກສາໄດນາມິກຂອງອະລະບ້ຳໂດຍອັດຕະໂນມັດສະເພາະເວລາຫຼິ້ນເພງຈາກອະລະບ້ຳດຽວກັນຕໍ່ເນື່ອງກັນເທົ່ານັ້ນ.</string>
-    <string name="sort_by_artist_year"><![CDATA[ສິລະປິນ -&gt; ປີ]]></string>
+    <string name="sort_by_artist_year"><![CDATA[ສິລະປິນ -> ປີ]]></string>
     <string name="clear_queue">ລຶບຄິວ</string>
     <string name="actions_query_shuffle_all_songs">ສຸ່ມເພງທັງໝົດ</string>
     <string name="actions_query_shuffle_everything">ສຸ່ມທຸກຢ່າງ</string>
@@ -501,7 +500,7 @@
     <string name="search_hint">ຄົ້ນຫາເພງ ແລະ ສິລະປິນ</string>
     <string name="picker_activity">ເລືອກໄຟລ໌ເພງ</string>
     <string name="playlist_picker_activity">ເລືອກລາຍການຫຼິ້ນ</string>
-    <string name="settings_preference_category_folders_filesystem"><![CDATA[ແຖບໂຟນເດີ &amp; ລະບົບໄຟລ໌]]></string>
+    <string name="settings_preference_category_folders_filesystem"><![CDATA[ແຖບໂຟນເດີ & ລະບົບໄຟລ໌]]></string>
     <string name="show_file_names">ສະແດງຊື່ໄຟລ໌</string>
     <string name="show_file_names_summary">ສະແດງຊື່ໄຟລ໌ແທນຊື່ເພງ ໃນແຖບໂຟນເດີ ແລະ ແຖບລະບົບໄຟລ໌</string>
     <string name="another_with_name">ຊື່ນີ້ຖືກນຳໃຊ້ແລ້ວ</string>

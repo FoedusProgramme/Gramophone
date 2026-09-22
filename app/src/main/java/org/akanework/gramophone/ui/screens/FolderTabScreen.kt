@@ -55,7 +55,6 @@ import org.akanework.gramophone.ui.components.home.DECOR_HEIGHT
 import org.akanework.gramophone.ui.components.home.FOLDER_CARD_HEIGHT
 import org.akanework.gramophone.ui.components.home.GRID_CARD_SIDE_PADDING
 import org.akanework.gramophone.ui.components.home.IosOverscrollState
-import org.akanework.gramophone.ui.components.home.LARGER_LIST_HEIGHT
 import org.akanework.gramophone.ui.components.home.LIST_HEIGHT
 import org.akanework.gramophone.ui.components.home.LibraryFastScroller
 import org.akanework.gramophone.ui.components.home.LIBRARY_ITEM_GAP
@@ -98,7 +97,7 @@ fun FolderTabScreen(
     val columns = libraryColumns(layoutType)
     val density = LocalDensity.current
     val rowHeightPx = with(density) {
-        (if (layoutType == LayoutType.LIST) LARGER_LIST_HEIGHT else LIST_HEIGHT).roundToPx()
+        LIST_HEIGHT.roundToPx()
     }
     val gridState = rememberLazyGridState()
     val queueTitle = songs.queueTitleOverride ?: "/"

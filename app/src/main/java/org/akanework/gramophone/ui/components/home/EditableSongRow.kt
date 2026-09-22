@@ -64,7 +64,7 @@ fun EditableSongRow(
         modifier
             .background(colors.container, colors.containerShape)
             .fillMaxWidth()
-            .height(LIST_HEIGHT)
+            .height(EDITABLE_ROW_HEIGHT)
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,

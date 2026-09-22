@@ -82,7 +82,6 @@
     <string name="layout">Отображение</string>
     <string name="home_menu_equalizer">Эквалайзер</string>
     <string name="equalizer_not_found">Эквалайзер не найден!</string>
-    <string name="compact_list">Список (компактный)</string>
     <string name="settings_content_based_color">Цвета на основе контента</string>
     <string name="settings_default_progress_bar">Полоса прогресса по умолчанию</string>
     <string name="check_for_updates">Следите за обновлениями в нашем канале!</string>
@@ -449,7 +448,7 @@
     <string name="settings_cookie_info">Обложка-печенье</string>
     <string name="compact_grid">Сетка (компактная)</string>
     <string name="sort_by_album_year">Год альбома</string>
-    <string name="sort_by_album_artist_year"><![CDATA[Исполнитель альбома -&gt; Год]]></string>
+    <string name="sort_by_album_artist_year"><![CDATA[Исполнитель альбома -> Год]]></string>
     <string name="forbidden_symbol_error">Недопустимый символ в названии</string>
     <string name="translators">Переводчики</string>
     <string name="settings_replaygain_drc_desc">Использовать \"Компрессию динамического диапазона\" для защиты от клиппинга (рекомендуется). Если отключено, громкость будет просто понижена (из-за чего она не будет оставаться на одном уровне, что сведёт на нет эффект нормализации).</string>
@@ -476,7 +475,7 @@
     <string name="settings_replaygain_no_rg_amp_desc">Снижать громкость для громких треков без тегов ReplayGain</string>
     <string name="settings_replaygain_preamp_desc">Увеличение или уменьшение громкости треков с тегами ReplayGain. Слишком высокие значения могут привести к потере динамики из-за защиты от клиппинга.</string>
     <string name="settings_replaygain_mode_desc">Режим «Умный» автоматически сохраняет динамику альбома только при последовательном прослушивании треков из него.</string>
-    <string name="sort_by_artist_year"><![CDATA[Исполнитель -&gt; год]]></string>
+    <string name="sort_by_artist_year"><![CDATA[Исполнитель -> год]]></string>
     <string name="clear_queue">Очистить очередь</string>
     <string name="actions_query_shuffle_all_songs">Перемешать все песни</string>
     <string name="actions_query_shuffle_everything">Перемешать всё</string>

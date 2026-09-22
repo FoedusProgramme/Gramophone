@@ -74,7 +74,6 @@ import org.akanework.gramophone.ui.components.home.DECOR_HEIGHT
 import org.akanework.gramophone.ui.components.home.GLASS_BAR_HEIGHT
 import org.akanework.gramophone.ui.components.home.GRID_CARD_SIDE_PADDING
 import org.akanework.gramophone.ui.components.home.GlassTitleBar
-import org.akanework.gramophone.ui.components.home.LARGER_LIST_HEIGHT
 import org.akanework.gramophone.ui.components.home.LIST_HEIGHT
 import org.akanework.gramophone.ui.components.home.LargeTitle
 import org.akanework.gramophone.ui.components.home.LibraryFastScroller
@@ -237,7 +236,7 @@ fun LibrarySubScreen(key: LibrarySubKey, onBack: () -> Unit, modifier: Modifier 
     val cols = lcm(songCols, albumCols)
     val gridState = rememberLazyGridState()
     val rowHeightPx = with(density) {
-        (if (songLayout == LayoutType.LIST) LARGER_LIST_HEIGHT else LIST_HEIGHT).roundToPx()
+        LIST_HEIGHT.roundToPx()
     }
     val decorPx = with(density) { DECOR_HEIGHT.roundToPx() }
     val contentTopPx = with(density) { (topInset + GLASS_BAR_HEIGHT).toPx() }

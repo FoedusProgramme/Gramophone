@@ -8,7 +8,6 @@
     <string name="settings_repository">Mã nguồn</string>
     <string name="settings_mediastore_filter">Thời lượng tối thiểu của bài hát (giây)</string>
     <string name="category_songs">Bài hát</string>
-    <string name="compact_list">Danh sách (gọn gàng)</string>
     <string name="equalizer_not_found">Không tìm thấy bộ chỉnh âm!</string>
     <string name="category_genres">Thể loại</string>
     <string name="natural_order">Xếp tự nhiên</string>
@@ -131,8 +130,8 @@
     <string name="settings_trim_lyrics">Loại bỏ dấu cách xung quanh lời bài hát</string>
     <string name="dialog_lyrics">Lời bài hát</string>
     <string name="settings_blacklist">Danh sách loại trừ</string>
-    <string name="deny_images"><![CDATA[Vui lòng tắt quyền \"Truy cập ảnh &amp; video\" trong cài đặt]]></string>
-    <string name="grant_images"><![CDATA[Vui lòng cho phép quyền \"Truy cập ảnh &amp; video\"]]></string>
+    <string name="deny_images"><![CDATA[Vui lòng tắt quyền \"Truy cập ảnh & video\" trong cài đặt]]></string>
+    <string name="grant_images"><![CDATA[Vui lòng cho phép quyền \"Truy cập ảnh & video\"]]></string>
     <string name="current_playlist">Danh sách phát gần đây</string>
     <string name="timer">Hẹn giờ ngủ</string>
     <string name="fgs_failed_text">Nhấn vào đây để mở ứng dụng và phát tiếp</string>
@@ -323,7 +322,7 @@
     <string name="settings_stop_on_dismiss_summary">Dừng phát khi tác vụ ứng dụng được xóa trong danh sách ứng dụng gần đây</string>
     <string name="compact_grid">Lưới (gọn)</string>
     <string name="sort_by_album_year">Năm phát hành album</string>
-    <string name="sort_by_album_artist_year"><![CDATA[Album nghệ sĩ -&gt; năm]]></string>
+    <string name="sort_by_album_artist_year"><![CDATA[Album nghệ sĩ -> năm]]></string>
     <string name="forbidden_symbol_error">Ký tự không hợp lệ trong tên</string>
     <string name="translators">Dịch giả</string>
     <string name="settings_replaygain_drc">Bật DRC</string>
@@ -337,7 +336,7 @@
     <string name="settings_replaygain_no_rg_amp_desc">Giảm âm lượng bài hát có âm lượng lớn mà không có tag ReplayGain</string>
     <string name="settings_replaygain_preamp_desc">Tăng hoặc giảm âm lượng bài hát có tag ReplayGain. Giá trị cao hơn có thể gây mất độ động do ngăn ngừa hiện tượng méo tiếng.</string>
     <string name="settings_replaygain_mode_desc">Chế độ \"Thông minh\" tự động bảo toàn dải động của album chỉ khi phát các bài hát trong cùng một album một cách liên tiếp.</string>
-    <string name="sort_by_artist_year"><![CDATA[Nghệ sĩ -&gt; năm]]></string>
+    <string name="sort_by_artist_year"><![CDATA[Nghệ sĩ -> năm]]></string>
     <string name="clear_queue">Xóa hàng đợi</string>
     <string name="actions_query_shuffle_all_songs">Trộn tất cả bài hát</string>
     <string name="actions_query_shuffle_everything">Trộn mọi thứ</string>

@@ -62,7 +62,6 @@ private val sortTitles = mapOf(
 
 /** Layout entries in `sort_menu.xml`'s "display" submenu order. */
 private val layoutEntries = listOf(
-    LayoutType.COMPACT_LIST to R.string.compact_list,
     LayoutType.LIST to R.string.list,
     LayoutType.COMPACT_GRID to R.string.compact_grid,
     LayoutType.GRID to R.string.grid,

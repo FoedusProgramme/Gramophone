@@ -1,7 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
     <string name="settings_category_links">Tautan</string>
-    <string name="compact_list">Daftar (ringkas)</string>
     <string name="settings_customization_summary">Kelola opsi kustomisasi</string>
     <string name="settings_play_on_launch_summary">Putar musik saat diluncurkan</string>
     <string name="refreshed_songs">Disegarkan %1$d lagu</string>
@@ -439,7 +438,7 @@
     <string name="settings_stop_on_dismiss_summary">Hentikan pemutaran saat tugas aplikasi ditutup dari daftar terbaru</string>
     <string name="compact_grid">Kisi (ringkas)</string>
     <string name="sort_by_album_year">Tahun album</string>
-    <string name="sort_by_album_artist_year"><![CDATA[Artis album -&gt; tahun]]></string>
+    <string name="sort_by_album_artist_year"><![CDATA[Artis album -> tahun]]></string>
     <string name="forbidden_symbol_error">Karakter tidak valid dalam nama</string>
     <string name="translators">Penerjemah</string>
     <string name="settings_replaygain">ReplayGain</string>
@@ -459,7 +458,7 @@
     <string name="settings_replaygain_no_rg_amp_desc">Kurangi volume untuk lagu keras yang tidak memiliki tag ReplayGain</string>
     <string name="settings_replaygain_preamp_desc">Tingkatkan atau kurangi volume lagu yang memiliki tag ReplayGain. Nilai yang lebih tinggi dapat menyebabkan hilangnya dinamika akibat pencegahan clipping.</string>
     <string name="settings_replaygain_mode_desc">\"Cerdas\" secara otomatis mempertahankan dinamika album hanya saat memutar lagu dari sebuah album secara berurutan.</string>
-    <string name="sort_by_artist_year"><![CDATA[Artis -&gt; tahun]]></string>
+    <string name="sort_by_artist_year"><![CDATA[Artis -> tahun]]></string>
     <string name="clear_queue">Kosongkan antrean</string>
     <string name="actions_query_shuffle_all_songs">acak semua lagu</string>
     <string name="actions_query_shuffle_everything">acak semua</string>
@@ -494,7 +493,7 @@
     <string name="search_hint">Cari lagu dan artis</string>
     <string name="picker_activity">Pilih trek musik</string>
     <string name="playlist_picker_activity">Pilih playlist</string>
-    <string name="settings_preference_category_folders_filesystem"><![CDATA[Tab folder &amp; sistem file]]></string>
+    <string name="settings_preference_category_folders_filesystem"><![CDATA[Tab folder & sistem file]]></string>
     <string name="show_file_names">Tampilkan nama file</string>
     <string name="show_file_names_summary">Tampilkan nama file sebagai pengganti nama lagu pada tab folder dan sistem file</string>
     <string name="another_with_name">Nama sudah digunakan</string>

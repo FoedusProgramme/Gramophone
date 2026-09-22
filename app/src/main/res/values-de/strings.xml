@@ -39,7 +39,6 @@
     <string name="settings_repository">Repository</string>
     <string name="settings_mediastore_filter">Mindestlänge eines Titels (Sekunden)</string>
     <string name="settings_app_theme">Farbschema</string>
-    <string name="compact_list">Liste (kompakt)</string>
     <string name="dialog_album_artist">Interpret des Albums</string>
     <string name="equalizer_not_found">Equalizer nicht gefunden!</string>
     <plurals name="items">
@@ -429,7 +428,7 @@
     <string name="spk_encoding_pcm_20bit_big_endian">20-bit PCM (big endian)</string>
     <string name="compact_grid">Raster (kompakt)</string>
     <string name="sort_by_album_year">Albumjahr</string>
-    <string name="sort_by_album_artist_year"><![CDATA[Albuminterpret -&gt; Jahr]]></string>
+    <string name="sort_by_album_artist_year"><![CDATA[Albuminterpret -> Jahr]]></string>
     <string name="d_db">%d dB</string>
     <string name="playback_speed">Wiedergabegeschwindigkeit</string>
     <string name="tempo">Tempo</string>
@@ -466,7 +465,7 @@
     <string name="another_with_name">Name bereits in Verwendung</string>
     <string name="show_file_names_summary">Dateinamen statt Song-Namen in den Order- und Dateisystem-Tabs anzeigen</string>
     <string name="show_file_names">Dateinamen anzeigen</string>
-    <string name="settings_preference_category_folders_filesystem"><![CDATA[Order- &amp; Dateisystem-Tabs]]></string>
+    <string name="settings_preference_category_folders_filesystem"><![CDATA[Order- & Dateisystem-Tabs]]></string>
     <string name="search_hint">Titel und Interpreten suchen</string>
     <string name="search_desc">Interpreten, Alben und Titel</string>
     <string name="playlist_empty_msg">Füge einige Lieder hinzu, indem Du \"Zur Wiedergabeliste hinzufügen\" im Kontextmenü eines Lieds wählst.</string>
@@ -489,7 +488,7 @@
     <string name="settings_replaygain_no_rg_amp">Dämpfung (kein RG)</string>
     <string name="scroll_to_playing">Zum aktuellen Titel scrollen</string>
     <string name="settings_replaygain_no_rg_amp_desc">Lautstärke bei lauten Songs ohne ReplayGain-Tags reduzieren</string>
-    <string name="sort_by_artist_year"><![CDATA[Interpret -&gt; Jahr]]></string>
+    <string name="sort_by_artist_year"><![CDATA[Interpret -> Jahr]]></string>
     <string name="settings_mq_enabled">Mehrere Warteschlangen</string>
     <string name="settings_replaygain_drc_desc">Kompressor benutzen, um Übersteuerung zu vermeiden (empfohlen). Ist diese Funktion deaktiviert, wird stattdessen die Lautstärke reduziert, was den Normalisierungseffekt zunichtemacht.</string>
     <string name="contributors_banksio">Android Auto</string>

@@ -18,5 +18,5 @@ package org.akanework.gramophone.ui.library
 
 /** How a library list lays its items out. NONE stands for the tab's default. */
 enum class LayoutType {
-    NONE, LIST, COMPACT_LIST, GRID, COMPACT_GRID
+    NONE, LIST, GRID, COMPACT_GRID
 }

@@ -43,6 +43,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.layout
@@ -62,7 +63,11 @@ import org.akanework.gramophone.ui.components.home.GLASS_BAR_HEIGHT
 import org.akanework.gramophone.ui.components.home.HomeAppBar
 import org.akanework.gramophone.ui.components.home.HomeTabRow
 import org.akanework.gramophone.ui.components.home.IosOverscrollState
+import org.akanework.gramophone.ui.components.home.LIBRARY_FAB_HEIGHT
+import org.akanework.gramophone.ui.components.home.LIBRARY_FAB_MARGIN
 import org.akanework.gramophone.ui.components.home.LIBRARY_GROUP_CORNER
+import org.akanework.gramophone.ui.components.home.LibraryFab
+import org.akanework.gramophone.ui.components.home.LIBRARY_SIDE_MARGIN
 import org.akanework.gramophone.ui.components.home.TAB_INDICATOR_INSET
 import org.akanework.gramophone.ui.components.home.rememberNowPlayingState
 import org.akanework.gramophone.ui.nav.LocalAppBarTopPadding
@@ -83,14 +88,13 @@ import org.akanework.gramophone.ui.visibleHomeTabs
  * tab row's chips. The buttons end above the bar's bottom edge and the chips sit inside the tab
  * row, so both gaps are measured from those, not from the layout boxes.
  */
-private val HEADER_GAP = 24.dp
+private val HEADER_GAP = 20.dp
 
 /** How far above the bar's bottom edge its buttons end. */
 private val BUTTON_TO_BAR_BOTTOM = (GLASS_BAR_HEIGHT - ACTION_BUTTON_HEIGHT) / 2
 private val TABS_OVERLAP_BAR = BUTTON_TO_BAR_BOTTOM + TAB_INDICATOR_INSET - HEADER_GAP
 private val TABS_TO_SHEET_GAP = HEADER_GAP - TAB_INDICATOR_INSET
 private val BAR_TO_SHEET_GAP = 16.dp
-private val SHEET_SIDE_MARGIN = 8.dp
 
 /** Between the sheet and what is under it: the mini player, or else the navigation bar. */
 private val SHEET_BOTTOM_GAP = 16.dp
@@ -123,9 +127,16 @@ fun HomeScreen(modifier: Modifier = Modifier) {
     }
 
     Column(modifier.fillMaxSize().background(MaterialTheme.colorScheme.surfaceContainerLow)) {
+        // The folder tabs sort their two lists from their own headers.
+        val currentSpec = tabs.getOrNull(pagerState.currentPage)?.let { LibraryTabSpec.forTab(it) }
         HomeAppBar(
             onSearch = { HomeActions.search(activity) },
             onMenuAction = { HomeActions.run(activity, it) },
+            sortMenu = currentSpec?.let { spec ->
+                { expanded, onDismiss ->
+                    LibrarySortMenu(viewModel.tabState(spec), expanded, onDismiss)
+                }
+            },
         )
         if (showTabs) {
             HomeTabRow(
@@ -155,8 +166,8 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                 .fillMaxWidth()
                 .weight(1f)
                 .padding(
-                    start = SHEET_SIDE_MARGIN,
-                    end = SHEET_SIDE_MARGIN,
+                    start = LIBRARY_SIDE_MARGIN,
+                    end = LIBRARY_SIDE_MARGIN,
                     bottom = sheetBottomInset + SHEET_BOTTOM_GAP,
                 )
                 .clip(RoundedCornerShape(LIBRARY_GROUP_CORNER))
@@ -170,7 +181,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                     state = pagerState,
                     modifier = Modifier.fillMaxSize(),
                     // Between two pages in flight, the ground shows as it does beside the sheet.
-                    pageSpacing = SHEET_SIDE_MARGIN * 2,
+                    pageSpacing = LIBRARY_SIDE_MARGIN * 2,
                     beyondViewportPageCount = 1,
                     key = { tabs[it].name },
                     userScrollEnabled = showTabs,
@@ -178,13 +189,21 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                     val tab = tabs[page]
                     val spec = LibraryTabSpec.forTab(tab)
                     if (spec != null) {
-                        LibraryTabScreen(
-                            state = viewModel.tabState(spec),
-                            nowPlaying = nowPlaying,
-                            reselectTick = reselectTicks[tab] ?: 0,
-                            overscroll = overscrollOf(tab),
-                            modifier = Modifier.fillMaxSize(),
-                        )
+                        val state = viewModel.tabState(spec)
+                        // The last items scroll clear of the FABs.
+                        val hasFabs = libraryFabActions(state, activity).isNotEmpty()
+                        CompositionLocalProvider(
+                            LocalListBottomPadding provides
+                                if (hasFabs) LIBRARY_FAB_HEIGHT + LIBRARY_FAB_MARGIN * 2 else 0.dp,
+                        ) {
+                            LibraryTabScreen(
+                                state = state,
+                                nowPlaying = nowPlaying,
+                                reselectTick = reselectTicks[tab] ?: 0,
+                                overscroll = overscrollOf(tab),
+                                modifier = Modifier.fillMaxSize(),
+                            )
+                        }
                     } else {
                         FolderTabScreen(
                             state = viewModel.folderState(isDetailed = tab == HomeTab.FileSystem),
@@ -196,6 +215,15 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                     }
                 }
             }
+            // Shared by the pages, stretching and squeezing with the current one's actions.
+            val fabs = currentSpec?.let { libraryFabActions(viewModel.tabState(it), activity) }.orEmpty()
+            LibraryFab(
+                actions = fabs,
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .windowInsetsPadding(insets.only(WindowInsetsSides.Horizontal))
+                    .padding(LIBRARY_FAB_MARGIN),
+            )
         }
     }
 }

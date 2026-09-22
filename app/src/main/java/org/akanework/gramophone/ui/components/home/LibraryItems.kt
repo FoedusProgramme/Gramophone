@@ -64,7 +64,6 @@ import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import org.akanework.gramophone.ui.LocalCardSurface
-import org.akanework.gramophone.ui.library.LayoutType
 
 /** Centre like the View framework does: integer division, i.e. the odd pixel goes to the end. */
 val FloorCenter = Alignment { size, space, _ ->
@@ -78,8 +77,19 @@ val IconCenter = Alignment { size, space, _ ->
 }
 
 // Values from res/values/dimens.xml and the adapter_*_card layouts.
-val LIST_HEIGHT = 75.dp
-val LARGER_LIST_HEIGHT = 78.dp
+val LIST_HEIGHT = 60.dp
+private val LIST_ROW_PADDING = 6.dp
+private val LIST_COVER_START = 18.dp
+
+/** Between the screen's (inset) edge and the home's sheet of items. */
+val LIBRARY_SIDE_MARGIN = 12.dp
+
+/**
+ * From the screen's (inset) edge to a list row's cover on the home. The mini player's cover
+ * starts here too, lining up with the covers.
+ */
+val LIBRARY_COVER_START = LIBRARY_SIDE_MARGIN + LIST_ROW_PADDING + LIST_COVER_START
+val EDITABLE_ROW_HEIGHT = 75.dp
 val FOLDER_CARD_HEIGHT = 75.dp
 val LIST_ROUND_CORNER_SIZE = 6.dp
 val GRID_ROUND_CORNER_SIZE = 10.dp
@@ -91,10 +101,10 @@ val GRID_CARD_LABEL_HEIGHT = 85.sp
 val DECOR_HEIGHT = 48.dp
 
 /** Between the home's items, where the sheet's surface-container-low shows through. */
-val LIBRARY_ITEM_GAP = 4.dp
+val LIBRARY_ITEM_GAP = 2.dp
 
 /** The corners the home's items turn to that gap. */
-val LIBRARY_ITEM_CORNER = 4.dp
+val LIBRARY_ITEM_CORNER = 2.dp
 
 /** The corners of the sheet the home's items sit in, and of the items at its two ends. */
 val LIBRARY_GROUP_CORNER = 28.dp
@@ -124,11 +134,19 @@ fun libraryItemShape(
     )
 }
 
-/** The shape of cell [index] of [count] in a grid of [columns], the last row closing the group. */
-fun libraryCellShape(index: Int, count: Int, columns: Int, emphasis: Float = 0f): Shape {
+/**
+ * The shape of cell [index] of [count] in a grid of [columns], the last row closing the group,
+ * and the first row opening it when [opensGroup].
+ */
+fun libraryCellShape(
+    index: Int, count: Int, columns: Int, emphasis: Float = 0f, opensGroup: Boolean = false,
+): Shape {
+    val firstRow = opensGroup && index < columns
     val lastRow = index / columns == (count - 1) / columns
     val column = index % columns
     return libraryItemShape(
+        topStart = firstRow && column == 0,
+        topEnd = firstRow && (column == columns - 1 || index == count - 1),
         bottomStart = lastRow && column == 0,
         bottomEnd = lastRow && (column == columns - 1 || index == count - 1),
         emphasis = emphasis,
@@ -199,10 +217,9 @@ fun LibraryCover(
     )
 }
 
-/** `adapter_list_card` (COMPACT_LIST) / `adapter_list_card_larger` (LIST). */
+/** `adapter_list_card_larger` (LIST). */
 @Composable
 fun LibraryListRow(
-    layout: LayoutType,
     title: String,
     subtitle: String,
     cover: Uri?,
@@ -214,40 +231,35 @@ fun LibraryListRow(
     colors: LibraryRowColors = defaultLibraryRowColors(),
     menu: @Composable () -> Unit = {},
 ) {
-    val larger = layout == LayoutType.LIST
-    val rowHeight = if (larger) LARGER_LIST_HEIGHT else LIST_HEIGHT
-    val coverSize = if (larger) 54.dp else 50.dp
-    val textMargin = if (larger) 16.dp else 18.dp
-    val subtitleSize = if (larger) 15.sp else 14.sp
     Row(
         modifier
             .background(colors.container, colors.containerShape)
             .fillMaxWidth()
-            .height(rowHeight)
+            .height(LIST_HEIGHT)
             // The View row is clickable but has no selectable background: no ripple.
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,
                 onClick = onClick,
             )
-            .padding(start = 6.dp, end = 6.dp),
+            .padding(start = LIST_ROW_PADDING, end = LIST_ROW_PADDING),
         verticalAlignment = FloorCenterVertically,
     ) {
         LibraryCover(
             uri = cover,
             defaultCover = defaultCover,
             cornerRadius = LIST_ROUND_CORNER_SIZE,
-            modifier = Modifier.padding(start = 18.dp).size(coverSize),
+            modifier = Modifier.padding(start = LIST_COVER_START).size(46.dp),
         )
         Column(
-            Modifier.weight(1f).padding(start = textMargin),
+            Modifier.weight(1f).padding(start = 16.dp),
         ) {
             SingleLineText(
-                title, 17.sp, 500, colors.title,
+                title, 14.sp, 500, colors.title,
                 Modifier.fillMaxWidth(),
             )
             SingleLineText(
-                subtitle, subtitleSize, 400, colors.subtitle,
+                subtitle, 14.sp, 400, colors.subtitle,
                 Modifier.fillMaxWidth(),
             )
         }

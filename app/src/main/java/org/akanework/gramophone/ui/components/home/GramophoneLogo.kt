@@ -34,7 +34,7 @@ private const val LOGO_VIEWPORT_WIDTH = 220.90429f
 private const val LOGO_VIEWPORT_HEIGHT = 185.20018f
 
 /** The height the bar shows the mark at, centred on its action buttons. */
-val LOGO_HEIGHT = 32.dp
+val LOGO_HEIGHT = 28.dp
 
 val GramophoneLogo: ImageVector by lazy {
     ImageVector.Builder(
