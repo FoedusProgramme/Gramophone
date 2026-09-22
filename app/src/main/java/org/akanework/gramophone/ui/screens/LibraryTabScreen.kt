@@ -73,8 +73,6 @@ import org.akanework.gramophone.ui.components.home.GRID_CARD_SIDE_PADDING
 import org.akanework.gramophone.ui.components.home.IosOverscrollState
 import org.akanework.gramophone.ui.components.home.LARGER_LIST_HEIGHT
 import org.akanework.gramophone.ui.components.home.LIST_HEIGHT
-import org.akanework.gramophone.ui.components.home.LargeTitle
-import org.akanework.gramophone.ui.components.home.LargeTitleState
 import org.akanework.gramophone.ui.components.home.LibraryFastScroller
 import org.akanework.gramophone.ui.components.home.LibraryGridCard
 import org.akanework.gramophone.ui.components.home.LibraryHeader
@@ -83,11 +81,10 @@ import org.akanework.gramophone.ui.components.home.LibraryListRow
 import org.akanework.gramophone.ui.components.home.NowPlayingIndicator
 import org.akanework.gramophone.ui.components.home.NowPlayingState
 import org.akanework.gramophone.ui.components.home.SortMenu
-import org.akanework.gramophone.ui.components.home.TAB_ROW_HEIGHT
 import org.akanework.gramophone.ui.components.home.iosOverscroll
-import org.akanework.gramophone.ui.components.home.largeTitleScroll
 import org.akanework.gramophone.ui.components.home.rememberIosFlingBehavior
 import org.akanework.gramophone.ui.nav.LocalAppBarTopPadding
+import org.akanework.gramophone.ui.nav.LocalListBottomPadding
 import org.akanework.gramophone.ui.nav.LocalPlayerBottomPadding
 import org.akanework.gramophone.ui.state.LibraryTabSpec
 import org.akanework.gramophone.ui.state.LibraryTabState
@@ -132,7 +129,8 @@ fun libraryContentPadding(
         top = top,
         start = insets.calculateStartPadding(direction) + gutter,
         end = insets.calculateEndPadding(direction) + gutter,
-        bottom = max(insets.calculateBottomPadding().value, playerPadding.value).dp,
+        bottom = LocalListBottomPadding.current
+            ?: max(insets.calculateBottomPadding().value, playerPadding.value).dp,
     )
 }
 
@@ -173,19 +171,15 @@ fun ReportFullyDrawnWhen(loaded: Boolean) {
 }
 
 /**
- * One of the simple library tabs: the large [title] (with room under it for the home's tab row
- * when [hasTabRow]), then the header and the list / grid of items, all scrolling with iOS
- * physics.
+ * One of the simple library tabs: the header, then the list / grid of items, scrolling with
+ * iOS physics.
  */
 @Composable
 fun <T : Any> LibraryTabScreen(
     state: LibraryTabState<T>,
     nowPlaying: NowPlayingState,
     reselectTick: Int,
-    title: String,
-    titleState: LargeTitleState,
     overscroll: IosOverscrollState,
-    hasTabRow: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
@@ -202,10 +196,8 @@ fun <T : Any> LibraryTabScreen(
     val rowHeightPx = with(density) {
         (if (layoutType == LayoutType.LIST) LARGER_LIST_HEIGHT else LIST_HEIGHT).roundToPx()
     }
-    val contentTopPx = with(density) { LocalAppBarTopPadding.current.toPx() }
-    // Items before the first list item: the title and the header.
-    val leadingItems = 2
-    val scrolled = { largeTitleScroll(state.gridState, overscroll, titleState, contentTopPx) }
+    // Items before the first list item: the header.
+    val leadingItems = 1
     val queueTitle = state.queueTitleOverride ?: context.getString(spec.queueTitle)
     val goToPlayingSong: (() -> Unit)? = if (spec === LibraryTabSpec.Songs) {
         {
@@ -239,13 +231,6 @@ fun <T : Any> LibraryTabScreen(
         flingBehavior = rememberIosFlingBehavior(state.gridState),
         overscrollEffect = null,
     ) {
-        item(key = "title", span = { GridItemSpan(maxLineSpan) }) {
-            LargeTitle(
-                title, titleState, scrolled,
-                gutter = if (isGrid) GRID_CARD_SIDE_PADDING else 0.dp,
-                bottomSpacer = if (hasTabRow) TAB_ROW_HEIGHT else 0.dp,
-            )
-        }
         item(key = "header", span = { GridItemSpan(maxLineSpan) }) {
             LibraryHeader(
                 counterText = context.resources.getQuantityString(spec.pluralStr, items.size, items.size),
@@ -303,7 +288,7 @@ fun <T : Any> LibraryTabScreen(
         headerCount = leadingItems,
         columns = columns,
         rowHeightPx = if (isGrid) gridRowHeightPx else rowHeightPx,
-        headerHeightPx = titleState.itemHeight.roundToInt() + headerHeightPx,
+        headerHeightPx = headerHeightPx,
         hintFor = { i -> items.getOrNull(i)?.let { state.fastScrollHintFor(it, i) } ?: "-" },
         modifier = Modifier.padding(top = LocalAppBarTopPadding.current),
     )

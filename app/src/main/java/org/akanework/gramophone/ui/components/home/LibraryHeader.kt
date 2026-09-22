@@ -26,12 +26,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.Sort
-import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material.icons.rounded.ArrowDownward
-import androidx.compose.material.icons.rounded.ArrowUpward
-import androidx.compose.material.icons.rounded.PlayArrow
-import androidx.compose.material.icons.rounded.Shuffle
+import androidx.compose.material.icons.automirrored.outlined.Sort
+import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.ArrowDownward
+import androidx.compose.material.icons.outlined.ArrowUpward
+import androidx.compose.material.icons.outlined.PlayArrow
+import androidx.compose.material.icons.outlined.Shuffle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -77,21 +77,21 @@ fun LibraryHeader(
             verticalAlignment = FloorCenterVertically,
         ) {
             if (onCreatePlaylist != null)
-                LibraryIconButton(Icons.Rounded.Add, 26.dp, tint, onCreatePlaylist)
+                LibraryIconButton(Icons.Outlined.Add, 26.dp, tint, onCreatePlaylist)
             if (onPlayAll != null)
-                LibraryIconButton(Icons.Rounded.PlayArrow, 26.dp, tint, onPlayAll)
+                LibraryIconButton(Icons.Outlined.PlayArrow, 26.dp, tint, onPlayAll)
             if (onShuffleAll != null)
-                LibraryIconButton(Icons.Rounded.Shuffle, 22.dp, tint, onShuffleAll)
+                LibraryIconButton(Icons.Outlined.Shuffle, 22.dp, tint, onShuffleAll)
             if (onSort != null) {
                 Box {
-                    LibraryIconButton(Icons.AutoMirrored.Rounded.Sort, 24.dp, tint, onSort)
+                    LibraryIconButton(Icons.AutoMirrored.Outlined.Sort, 24.dp, tint, onSort)
                     sortMenu()
                 }
             }
             if (onJumpUp != null)
-                LibraryIconButton(Icons.Rounded.ArrowUpward, 24.dp, tint, onJumpUp)
+                LibraryIconButton(Icons.Outlined.ArrowUpward, 24.dp, tint, onJumpUp)
             if (onJumpDown != null)
-                LibraryIconButton(Icons.Rounded.ArrowDownward, 24.dp, tint, onJumpDown)
+                LibraryIconButton(Icons.Outlined.ArrowDownward, 24.dp, tint, onJumpDown)
         }
     }
 }

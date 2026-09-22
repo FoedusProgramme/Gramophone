@@ -20,9 +20,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.compose.AndroidFragment
 import androidx.fragment.compose.rememberFragmentState
@@ -32,12 +32,20 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
-import org.akanework.gramophone.ui.fragments.SettingsPageFragment
-import org.akanework.gramophone.ui.fragments.settings.BlacklistHostFragment
-import org.akanework.gramophone.ui.fragments.settings.ContributorsScreen
-import org.akanework.gramophone.ui.fragments.settings.OssLicensesScreen
 import org.akanework.gramophone.ui.screens.HomeScreen
 import org.akanework.gramophone.ui.screens.LibrarySubScreen
+import org.akanework.gramophone.ui.screens.settings.AboutSettingsScreen
+import org.akanework.gramophone.ui.screens.settings.AppearanceSettingsScreen
+import org.akanework.gramophone.ui.screens.settings.AudioSettingsScreen
+import org.akanework.gramophone.ui.screens.settings.BehaviorSettingsScreen
+import org.akanework.gramophone.ui.screens.settings.BlacklistScreen
+import org.akanework.gramophone.ui.screens.settings.ContributorsScreen
+import org.akanework.gramophone.ui.screens.settings.ExperimentalSettingsScreen
+import org.akanework.gramophone.ui.screens.settings.LyricSettingsScreen
+import org.akanework.gramophone.ui.screens.settings.MainSettingsScreen
+import org.akanework.gramophone.ui.screens.settings.OssLicensesScreen
+import org.akanework.gramophone.ui.screens.settings.PlayerSettingsScreen
+import org.akanework.gramophone.ui.screens.settings.ReplayGainSettingsScreen
 
 sealed interface AppNavKey : NavKey {
     val wantsPlayer: Boolean
@@ -73,6 +81,12 @@ val LocalPlayerBottomPadding = compositionLocalOf { 0 }
 
 /** Top padding (dp) content should keep clear so the frosted top bar does not cover it. */
 val LocalAppBarTopPadding = compositionLocalOf { 0.dp }
+
+/**
+ * Bottom padding (dp) a list keeps clear, or null for the default: the navigation bar or the
+ * mini player, whichever is taller. The home's sheet ends above both, so its lists get 0.
+ */
+val LocalListBottomPadding = compositionLocalOf<Dp?> { null }
 
 fun SnapshotStateList<AppNavKey>.popIfPossible() {
     if (size > 1) removeAt(size - 1)
@@ -122,6 +136,8 @@ private fun AppNavHost(backStack: SnapshotStateList<AppNavKey>) {
     val density = LocalDensity.current
     val offset = with(density) { NAV_TRANSITION_DISTANCE.roundToPx() } *
         if (LocalLayoutDirection.current == LayoutDirection.Ltr) 1 else -1
+    val pop: () -> Unit = { backStack.removeLastOrNull() }
+    val push: (AppNavKey) -> Unit = { backStack.add(it) }
     val navDisplayState = rememberAndroidPredictiveBackNavDisplayState(
         backStack = backStack,
         onBack = { backStack.removeLastOrNull() },
@@ -148,28 +164,18 @@ private fun AppNavHost(backStack: SnapshotStateList<AppNavKey>) {
                     arguments = key.args ?: Bundle.EMPTY,
                 )
             }
-            entry<SettingsKey> { key ->
-                AndroidFragment<SettingsPageFragment>(
-                    modifier = Modifier.fillMaxSize(),
-                    fragmentState = rememberFragmentState(),
-                    arguments = bundleOf(
-                        SettingsPageFragment.ARG_TITLE to key.titleRes,
-                        SettingsPageFragment.ARG_FRAGMENT to key.fragmentClassName,
-                    ),
-                )
-            }
-            entry<BlacklistKey> {
-                AndroidFragment<BlacklistHostFragment>(
-                    modifier = Modifier.fillMaxSize(),
-                    fragmentState = rememberFragmentState(),
-                )
-            }
-            entry<OssLicensesKey> {
-                OssLicensesScreen(onBack = { backStack.removeLastOrNull() })
-            }
-            entry<ContributorsKey> {
-                ContributorsScreen(onBack = { backStack.removeLastOrNull() })
-            }
+            entry<MainSettingsKey> { MainSettingsScreen(onBack = pop, onNavigate = push) }
+            entry<AppearanceSettingsKey> { AppearanceSettingsScreen(onBack = pop) }
+            entry<PlayerSettingsKey> { PlayerSettingsScreen(onBack = pop, onNavigate = push) }
+            entry<LyricSettingsKey> { LyricSettingsScreen(onBack = pop) }
+            entry<BehaviorSettingsKey> { BehaviorSettingsScreen(onBack = pop, onNavigate = push) }
+            entry<AudioSettingsKey> { AudioSettingsScreen(onBack = pop, onNavigate = push) }
+            entry<ReplayGainSettingsKey> { ReplayGainSettingsScreen(onBack = pop) }
+            entry<ExperimentalSettingsKey> { ExperimentalSettingsScreen(onBack = pop) }
+            entry<AboutSettingsKey> { AboutSettingsScreen(onBack = pop, onNavigate = push) }
+            entry<BlacklistKey> { BlacklistScreen(onBack = pop) }
+            entry<OssLicensesKey> { OssLicensesScreen(onBack = pop) }
+            entry<ContributorsKey> { ContributorsScreen(onBack = pop) }
         },
     )
     val visualState = navDisplayState.visualState

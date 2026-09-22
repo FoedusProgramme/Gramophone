@@ -26,11 +26,11 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.edit
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.media3.common.Player.REPEAT_MODE_OFF
-import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
+import org.akanework.gramophone.logic.defaultPrefs
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.ui.ItemHeightHelper
 import org.akanework.gramophone.logic.ui.MyRecyclerView
@@ -46,7 +46,7 @@ open class BaseDecorAdapter<T : BaseInterface<*>>(
     protected val context: Context = adapter.context
     private val dpHeight = context.resources.getDimensionPixelSize(R.dimen.decor_height)
     private var recyclerView: MyRecyclerView? = null
-    private var prefs = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
+    private var prefs = context.defaultPrefs
     var jumpUpPos: (() -> Int)? = null
     var jumpDownPos: (() -> Int)? = null
     var offsetPos: (() -> Int)? = null

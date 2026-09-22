@@ -19,6 +19,8 @@ package org.akanework.gramophone.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
@@ -26,55 +28,71 @@ import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
-import dev.chrisbanes.haze.HazeState
-import dev.chrisbanes.haze.hazeSource
 import kotlinx.coroutines.launch
-import org.akanework.gramophone.R
 import org.akanework.gramophone.ui.HomeTab
 import org.akanework.gramophone.ui.actions.HomeActions
 import org.akanework.gramophone.ui.actions.findMainActivity
 import org.akanework.gramophone.ui.components.compose.rememberPreference
+import org.akanework.gramophone.ui.components.home.ACTION_BUTTON_HEIGHT
 import org.akanework.gramophone.ui.components.home.GLASS_BAR_HEIGHT
 import org.akanework.gramophone.ui.components.home.HomeAppBar
 import org.akanework.gramophone.ui.components.home.HomeTabRow
 import org.akanework.gramophone.ui.components.home.IosOverscrollState
-import org.akanework.gramophone.ui.components.home.TAB_ROW_HEIGHT
-import org.akanework.gramophone.ui.components.home.largeTitleScroll
-import org.akanework.gramophone.ui.components.home.rememberLargeTitleState
+import org.akanework.gramophone.ui.components.home.TAB_INDICATOR_INSET
 import org.akanework.gramophone.ui.components.home.rememberNowPlayingState
 import org.akanework.gramophone.ui.nav.LocalAppBarTopPadding
+import org.akanework.gramophone.ui.nav.LocalListBottomPadding
 import org.akanework.gramophone.ui.nav.LocalPlayerBottomPadding
 import org.akanework.gramophone.ui.state.HomeViewModel
 import org.akanework.gramophone.ui.state.LibraryTabSpec
 import org.akanework.gramophone.ui.visibleHomeTabs
-import kotlin.math.abs
-import kotlin.math.roundToInt
+
+/*
+ * The home as two containers: the bar and the tab row sit still on the surface-container-low
+ * ground, and the library pages scroll inside a rounded surface-bright sheet under them, which
+ * ends above the mini player.
+ */
+
+/*
+ * The tab row sits [HEADER_GAP] under the bar's buttons and the sheet [HEADER_GAP] under the
+ * tab row's chips. The buttons end above the bar's bottom edge and the chips sit inside the tab
+ * row, so both gaps are measured from those, not from the layout boxes.
+ */
+private val HEADER_GAP = 24.dp
+
+/** How far above the bar's bottom edge its buttons end. */
+private val BUTTON_TO_BAR_BOTTOM = (GLASS_BAR_HEIGHT - ACTION_BUTTON_HEIGHT) / 2
+private val TABS_OVERLAP_BAR = BUTTON_TO_BAR_BOTTOM + TAB_INDICATOR_INSET - HEADER_GAP
+private val TABS_TO_SHEET_GAP = HEADER_GAP - TAB_INDICATOR_INSET
+private val BAR_TO_SHEET_GAP = 16.dp
+private val SHEET_CORNER = 28.dp
+
+/** Between the sheet and what is under it: the mini player, or else the navigation bar. */
+private val SHEET_BOTTOM_GAP = 16.dp
 
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier) {
@@ -94,43 +112,54 @@ fun HomeScreen(modifier: Modifier = Modifier) {
     val reselectTicks = remember { mutableStateMapOf<HomeTab, Int>() }
     // Height (px) from the screen bottom to the collapsed mini player's top, 0 when it is hidden.
     val playerBottomPadding = LocalPlayerBottomPadding.current
-    val hazeState = remember { HazeState() }
-    val titleState = rememberLargeTitleState()
     val insets = WindowInsets.systemBars.union(WindowInsets.displayCutout)
-    val topInset = insets.asPaddingValues().calculateTopPadding()
-    val toolbarBottomPx = with(density) { (topInset + GLASS_BAR_HEIGHT).toPx() }
-    val tabRowPx = with(density) { TAB_ROW_HEIGHT.toPx() }
     val overscrolls = remember { HashMap<HomeTab, IosOverscrollState>() }
     fun overscrollOf(tab: HomeTab) = overscrolls.getOrPut(tab) { IosOverscrollState() }
-    fun gridOf(tab: HomeTab): LazyGridState {
-        val spec = LibraryTabSpec.forTab(tab)
-        return if (spec != null) viewModel.tabState(spec).gridState
-        else viewModel.folderState(isDetailed = tab == HomeTab.FileSystem).songs.gridState
+    val sheetBottomInset = if (playerBottomPadding > 0) {
+        with(density) { playerBottomPadding.toDp() }
+    } else {
+        insets.asPaddingValues().calculateBottomPadding()
     }
-    fun scrollOf(tab: HomeTab) = largeTitleScroll(gridOf(tab), overscrollOf(tab), titleState, toolbarBottomPx)
-    // The bar follows the page on show, blended with its neighbour while a swipe is in flight.
-    val scrolled = {
-        val current = pagerState.currentPage
-        if (current > tabs.lastIndex) 0f else {
-            val fraction = pagerState.currentPageOffsetFraction
-            val next = (if (fraction >= 0f) current + 1 else current - 1).coerceIn(0, tabs.lastIndex)
-            val from = scrollOf(tabs[current])
-            from + (scrollOf(tabs[next]) - from) * abs(fraction)
+
+    Column(modifier.fillMaxSize().background(MaterialTheme.colorScheme.surfaceContainerLow)) {
+        HomeAppBar(
+            onSearch = { HomeActions.search(activity) },
+            onMenuAction = { HomeActions.run(activity, it) },
+        )
+        if (showTabs) {
+            HomeTabRow(
+                tabs = tabs,
+                selectedTab = pagerState.currentPage,
+                offsetFraction = pagerState.currentPageOffsetFraction,
+                onTabClick = { index ->
+                    if (index == pagerState.currentPage) {
+                        reselectTicks[tabs[index]] = (reselectTicks[tabs[index]] ?: 0) + 1
+                    } else {
+                        scope.launch { pagerState.animateScrollToPage(index) }
+                    }
+                },
+                modifier = Modifier
+                    .pulledUp(TABS_OVERLAP_BAR)
+                    .windowInsetsPadding(insets.only(WindowInsetsSides.Horizontal)),
+            )
+            Spacer(Modifier.height(TABS_TO_SHEET_GAP))
+        } else {
+            Spacer(Modifier.height(BAR_TO_SHEET_GAP))
         }
-    }
-    // The tab row scrolls with the pages, from its slot under the large title up under the
-    // toolbar. Once it is more than half way under, touches there belong to the list beneath.
-    val tabRowOffset = { toolbarBottomPx + titleState.itemHeight - tabRowPx - scrolled() }
-    val tabsReachable by remember(tabs) {
-        derivedStateOf { scrolled() < titleState.itemHeight - tabRowPx / 2f }
-    }
-    val background = MaterialTheme.colorScheme.surfaceContainerLow
-    Box(modifier.background(background)) {
-        // The pages and the tab row sit behind the bar as its blur source, padded clear of the
-        // toolbar at the top. The background is painted inside the source, or the recorded
-        // layer is transparent between the items and the sharp text underneath shows through.
-        Box(Modifier.fillMaxSize().hazeSource(hazeState).background(background)) {
-            CompositionLocalProvider(LocalAppBarTopPadding provides topInset + GLASS_BAR_HEIGHT) {
+        // The sheet. The pages scroll inside it, clipped by its corners, and the rubber band
+        // shows its own surface. It keeps nothing clear at its top or bottom itself.
+        Box(
+            Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .padding(bottom = sheetBottomInset + SHEET_BOTTOM_GAP)
+                .clip(RoundedCornerShape(SHEET_CORNER))
+                .background(MaterialTheme.colorScheme.surfaceBright),
+        ) {
+            CompositionLocalProvider(
+                LocalAppBarTopPadding provides 0.dp,
+                LocalListBottomPadding provides 0.dp,
+            ) {
                 HorizontalPager(
                     state = pagerState,
                     modifier = Modifier.fillMaxSize(),
@@ -145,10 +174,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                             state = viewModel.tabState(spec),
                             nowPlaying = nowPlaying,
                             reselectTick = reselectTicks[tab] ?: 0,
-                            title = stringResource(R.string.app_name),
-                            titleState = titleState,
                             overscroll = overscrollOf(tab),
-                            hasTabRow = showTabs,
                             modifier = Modifier.fillMaxSize(),
                         )
                     } else {
@@ -156,54 +182,24 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                             state = viewModel.folderState(isDetailed = tab == HomeTab.FileSystem),
                             nowPlaying = nowPlaying,
                             reselectTick = reselectTicks[tab] ?: 0,
-                            title = stringResource(R.string.app_name),
-                            titleState = titleState,
                             overscroll = overscrollOf(tab),
-                            hasTabRow = showTabs,
                             modifier = Modifier.fillMaxSize(),
                         )
                     }
                 }
             }
-            if (showTabs) {
-                HomeTabRow(
-                    tabs = tabs,
-                    selectedTab = pagerState.currentPage,
-                    offsetFraction = pagerState.currentPageOffsetFraction,
-                    onTabClick = { index ->
-                        if (index == pagerState.currentPage) {
-                            reselectTicks[tabs[index]] = (reselectTicks[tabs[index]] ?: 0) + 1
-                        } else {
-                            scope.launch { pagerState.animateScrollToPage(index) }
-                        }
-                    },
-                    enabled = tabsReachable,
-                    modifier = Modifier
-                        .offset { IntOffset(0, tabRowOffset().roundToInt()) }
-                        .windowInsetsPadding(insets.only(WindowInsetsSides.Horizontal)),
-                )
-            }
         }
-        HomeAppBar(
-            hazeState = hazeState,
-            scrolled = scrolled,
-            onSearch = { HomeActions.search(activity) },
-            onMenuAction = { HomeActions.run(activity, it) },
-        )
-        // Behind the floating mini player: fade the content scrolling under it into the surface
-        // colour, from the screen bottom up to the collapsed player's top.
-        if (playerBottomPadding > 0) {
-            Box(
-                Modifier
-                    .align(Alignment.BottomCenter)
-                    .fillMaxWidth()
-                    .height(with(density) { playerBottomPadding.toDp() })
-                    .background(
-                        Brush.verticalGradient(
-                            listOf(Color.Transparent, MaterialTheme.colorScheme.surfaceContainerLow),
-                        ),
-                    ),
-            )
-        }
+    }
+}
+
+/**
+ * Draws the content [by] higher than its slot and gives the slot back that much, so what comes
+ * before is overlapped and what follows closes up. A negative [by] leaves a gap instead.
+ */
+private fun Modifier.pulledUp(by: Dp): Modifier = layout { measurable, constraints ->
+    val placeable = measurable.measure(constraints)
+    val shift = by.roundToPx()
+    layout(placeable.width, (placeable.height - shift).coerceAtLeast(0)) {
+        placeable.placeRelative(0, -shift)
     }
 }

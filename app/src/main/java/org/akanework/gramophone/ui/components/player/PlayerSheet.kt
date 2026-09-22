@@ -52,7 +52,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.SkipNext
+import androidx.compose.material.icons.outlined.SkipNext
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -367,7 +367,7 @@ private fun SheetInteraction(
                 }
                 IconButton(onClick = onNext, modifier = Modifier.size(MINI_BUTTON_SIZE)) {
                     Icon(
-                        imageVector = Icons.Rounded.SkipNext,
+                        imageVector = Icons.Outlined.SkipNext,
                         contentDescription = null,
                         tint = contentColor,
                         modifier = Modifier.size(MINI_ICON_SIZE),

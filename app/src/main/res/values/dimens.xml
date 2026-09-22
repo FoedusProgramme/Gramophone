@@ -25,7 +25,6 @@
     <dimen name="lyric_text_size">34sp</dimen>
     <dimen name="lyric_tl_text_size">20sp</dimen>
     <dimen name="lyric_tl_bg_text_size">14sp</dimen>
-    <dimen name="tab_list_item_height">50dp</dimen>
     <dimen name="lyric_widget_nn">20sp</dimen>
     <dimen name="lyric_widget_tl">15sp</dimen>
     <dimen name="lyric_widget_tb">12sp</dimen>

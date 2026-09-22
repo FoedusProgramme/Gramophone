@@ -25,10 +25,10 @@ import android.provider.Settings
 import android.view.View
 import android.widget.Toast
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Equalizer
-import androidx.compose.material.icons.rounded.Refresh
-import androidx.compose.material.icons.rounded.Settings
-import androidx.compose.material.icons.rounded.Shuffle
+import androidx.compose.material.icons.outlined.Equalizer
+import androidx.compose.material.icons.outlined.Refresh
+import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.outlined.Shuffle
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -50,16 +50,16 @@ import org.akanework.gramophone.logic.updateMargin
 import org.akanework.gramophone.logic.utils.SdScanner
 import org.akanework.gramophone.ui.MainActivity
 import org.akanework.gramophone.ui.fragments.SearchFragment
-import org.akanework.gramophone.ui.nav.mainSettingsKey
+import org.akanework.gramophone.ui.nav.MainSettingsKey
 import org.nift4.mediastorecompat.MediaStoreCompat
 
 /** The home toolbar menu entries, in `home_menu.xml` order (search is an action button). */
 enum class HomeMenuAction(val title: Int, val icon: ImageVector) {
-    Shuffle(R.string.home_menu_shuffle, Icons.Rounded.Shuffle),
-    QuickRefresh(R.string.home_menu_quick_refresh, Icons.Rounded.Refresh),
-    Refresh(R.string.home_menu_refresh, Icons.Rounded.Refresh),
-    Equalizer(R.string.home_menu_equalizer, Icons.Rounded.Equalizer),
-    Settings(R.string.home_menu_settings, Icons.Rounded.Settings),
+    Shuffle(R.string.home_menu_shuffle, Icons.Outlined.Shuffle),
+    QuickRefresh(R.string.home_menu_quick_refresh, Icons.Outlined.Refresh),
+    Refresh(R.string.home_menu_refresh, Icons.Outlined.Refresh),
+    Equalizer(R.string.home_menu_equalizer, Icons.Outlined.Equalizer),
+    Settings(R.string.home_menu_settings, Icons.Outlined.Settings),
 }
 
 /** The home toolbar actions. */
@@ -149,7 +149,7 @@ object HomeActions {
                 }
             }
 
-            HomeMenuAction.Settings -> activity.navigateTo(mainSettingsKey())
+            HomeMenuAction.Settings -> activity.navigateTo(MainSettingsKey())
 
             HomeMenuAction.Shuffle -> {
                 val controller = activity.getPlayer()

@@ -1,55 +1,36 @@
+/*
+ *     Copyright (C) 2025 Akane Foundation
+ *
+ *     Gramophone is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     Gramophone is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package org.akanework.gramophone.ui.nav
 
-import org.akanework.gramophone.R
-import org.akanework.gramophone.ui.fragments.settings.AboutSettingsFragment
-import org.akanework.gramophone.ui.fragments.settings.AppearanceSettingsFragment
-import org.akanework.gramophone.ui.fragments.settings.AudioSettingsFragment
-import org.akanework.gramophone.ui.fragments.settings.BehaviorSettingsFragment
-import org.akanework.gramophone.ui.fragments.settings.ExperimentalSettingsFragment
-import org.akanework.gramophone.ui.fragments.settings.LyricSettingsFragment
-import org.akanework.gramophone.ui.fragments.settings.MainSettingsFragment
-import org.akanework.gramophone.ui.fragments.settings.PlayerSettingsFragment
-import org.akanework.gramophone.ui.fragments.settings.ReplayGainSettingsFragment
-
-class SettingsKey(val fragmentClassName: String, val titleRes: Int) : AppNavKey {
-    override val wantsPlayer = false
+/** A settings page. Plain classes like the library keys, so nav3 never conflates two pushes. */
+sealed interface SettingsKey : AppNavKey {
+    override val wantsPlayer: Boolean get() = false
 }
 
-class OssLicensesKey : AppNavKey {
-    override val wantsPlayer = false
-}
-
-class ContributorsKey : AppNavKey {
-    override val wantsPlayer = false
-}
-
-class BlacklistKey : AppNavKey {
-    override val wantsPlayer = false
-}
-
-fun mainSettingsKey() =
-    SettingsKey(MainSettingsFragment::class.java.name, R.string.home_menu_settings)
-
-fun appearanceSettingsKey() =
-    SettingsKey(AppearanceSettingsFragment::class.java.name, R.string.settings_category_appearance)
-
-fun behaviorSettingsKey() =
-    SettingsKey(BehaviorSettingsFragment::class.java.name, R.string.settings_category_behavior)
-
-fun audioSettingsKey() =
-    SettingsKey(AudioSettingsFragment::class.java.name, R.string.settings_player_options)
-
-fun replayGainSettingsKey() =
-    SettingsKey(ReplayGainSettingsFragment::class.java.name, R.string.settings_replaygain)
-
-fun playerSettingsKey() =
-    SettingsKey(PlayerSettingsFragment::class.java.name, R.string.settings_player_ui)
-
-fun lyricSettingsKey() =
-    SettingsKey(LyricSettingsFragment::class.java.name, R.string.settings_lyric)
-
-fun experimentalSettingsKey() =
-    SettingsKey(ExperimentalSettingsFragment::class.java.name, R.string.settings_experimental_settings)
-
-fun aboutSettingsKey() =
-    SettingsKey(AboutSettingsFragment::class.java.name, R.string.settings_about_app)
+class MainSettingsKey : SettingsKey
+class AppearanceSettingsKey : SettingsKey
+class PlayerSettingsKey : SettingsKey
+class LyricSettingsKey : SettingsKey
+class BehaviorSettingsKey : SettingsKey
+class AudioSettingsKey : SettingsKey
+class ReplayGainSettingsKey : SettingsKey
+class ExperimentalSettingsKey : SettingsKey
+class AboutSettingsKey : SettingsKey
+class BlacklistKey : SettingsKey
+class ContributorsKey : SettingsKey
+class OssLicensesKey : SettingsKey

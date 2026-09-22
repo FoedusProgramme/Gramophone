@@ -19,8 +19,8 @@ package org.akanework.gramophone.ui.components.home
 
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.ArrowBack
-import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowRight
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -102,7 +102,7 @@ fun SortMenu(
         if (showLayouts && onSelectLayout != null) {
             DropdownMenuItem(
                 text = { MenuText(stringResource(R.string.layout)) },
-                leadingIcon = { Icon(Icons.AutoMirrored.Rounded.ArrowBack, null) },
+                leadingIcon = { Icon(Icons.AutoMirrored.Outlined.ArrowBack, null) },
                 onClick = { showLayouts = false },
             )
             layoutEntries.forEach { (type, title) ->
@@ -139,7 +139,7 @@ fun SortMenu(
         if (onSelectLayout != null) {
             DropdownMenuItem(
                 text = { MenuText(stringResource(R.string.layout)) },
-                trailingIcon = { Icon(Icons.AutoMirrored.Rounded.KeyboardArrowRight, null) },
+                trailingIcon = { Icon(Icons.AutoMirrored.Outlined.KeyboardArrowRight, null) },
                 onClick = { showLayouts = true },
             )
         }

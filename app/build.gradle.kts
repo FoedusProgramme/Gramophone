@@ -341,7 +341,6 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.11.0")
     //implementation("androidx.paging:paging-runtime-ktx:3.2.1") TODO paged, partial, flow based library loading
     //implementation("androidx.paging:paging-guava:3.2.1") TODO do we have guava? do we need this?
-    implementation("androidx.preference:preference-ktx:1.2.1")
     implementation("androidx.transition:transition-ktx:1.6.0") // <-- for predictive back TODO can we remove explicit dep now?
     implementation("com.mikepenz:aboutlibraries-compose-m3:$aboutLibsVersion")
     implementation("com.google.android.material:material:1.13.0")

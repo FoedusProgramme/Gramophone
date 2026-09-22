@@ -26,6 +26,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.union
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.displayCutout
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -34,8 +41,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.MoreVert
-import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -67,7 +74,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dev.chrisbanes.haze.HazeState
 import org.akanework.gramophone.R
 import org.akanework.gramophone.ui.HomeTab
 import org.akanework.gramophone.ui.actions.HomeMenuAction
@@ -80,13 +86,14 @@ import kotlin.math.sin
 val TAB_ROW_HEIGHT = 48.dp
 private val TAB_CONTENT_PADDING = 24.dp // tab_layout_content_padding
 private val TAB_PADDING = 12.dp
-private val TAB_INDICATOR_INSET = 6.dp
-private val TAB_INDICATOR_RADIUS = 10.dp
+/** How far the chip indicator sits inside the tab row, top and bottom. */
+val TAB_INDICATOR_INSET = 6.dp
+private val TAB_INDICATOR_RADIUS = 12.dp
 
 // The two connected app-bar actions (search + overflow): 44×48 filled buttons, rounded 24dp on
 // the outer edge and 4dp where they face each other, with a 4dp gap between them.
-private val ACTION_BUTTON_WIDTH = 44.dp
-private val ACTION_BUTTON_HEIGHT = 48.dp
+private val ACTION_BUTTON_WIDTH = 38.dp
+val ACTION_BUTTON_HEIGHT = 42.dp
 private val ACTION_OUTER_CORNER = 24.dp
 private val ACTION_INNER_CORNER = 4.dp
 private val ACTION_BUTTON_GAP = 4.dp
@@ -106,32 +113,41 @@ private val OVERFLOW_BUTTON_SHAPE = RoundedCornerShape(
  * [largeTitleScroll]. The tab row is not part of it: it scrolls with the content, see
  * [HomeTabRow].
  */
+private val BAR_PADDING_START = 24.dp
+private val BAR_PADDING_END = 16.dp
+
+/** The home's bar: the app's mark at the start, the search and overflow actions at the end. */
 @Composable
 fun HomeAppBar(
-    hazeState: HazeState,
-    scrolled: () -> Float,
     onSearch: () -> Unit,
     onMenuAction: (HomeMenuAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    GlassTitleBar(
-        hazeState = hazeState,
-        title = stringResource(R.string.app_name),
-        scrolled = scrolled,
-        modifier = modifier,
-        toolbarPaddingEnd = 16.dp,
-        actions = {
-            HomeActionButton(
-                icon = Icons.Rounded.Search,
-                iconSize = 24.dp,
-                shape = SEARCH_BUTTON_SHAPE,
-                iconOffsetX = ACTION_ICON_INNER_OFFSET, // nudge toward the inner edge
-                onClick = onSearch,
-            )
-            Spacer(Modifier.width(ACTION_BUTTON_GAP))
-            HomeOverflowMenu(onMenuAction)
-        },
-    )
+    val insets = WindowInsets.systemBars.union(WindowInsets.displayCutout)
+    Row(
+        modifier
+            .fillMaxWidth()
+            .windowInsetsPadding(insets.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal))
+            .height(GLASS_BAR_HEIGHT)
+            .padding(start = BAR_PADDING_START, end = BAR_PADDING_END),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Icon(
+            imageVector = GramophoneLogo,
+            contentDescription = stringResource(R.string.app_name),
+            tint = MaterialTheme.colorScheme.onSurface,
+        )
+        Spacer(Modifier.weight(1f))
+        HomeActionButton(
+            icon = Icons.Outlined.Search,
+            iconSize = 24.dp,
+            shape = SEARCH_BUTTON_SHAPE,
+            iconOffsetX = ACTION_ICON_INNER_OFFSET, // nudge toward the inner edge
+            onClick = onSearch,
+        )
+        Spacer(Modifier.width(ACTION_BUTTON_GAP))
+        HomeOverflowMenu(onMenuAction)
+    }
 }
 
 /**
@@ -175,7 +191,7 @@ private fun HomeOverflowMenu(onMenuAction: (HomeMenuAction) -> Unit) {
     var menuOpen by remember { mutableStateOf(false) }
     Box {
         HomeActionButton(
-            icon = Icons.Rounded.MoreVert,
+            icon = Icons.Outlined.MoreVert,
             iconSize = 24.dp,
             shape = OVERFLOW_BUTTON_SHAPE,
             iconOffsetX = -ACTION_ICON_INNER_OFFSET, // nudge toward the inner edge
@@ -215,10 +231,30 @@ fun HomeTabRow(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
 ) {
+    LabelTabRow(
+        labels = tabs.map { stringResource(it.label) },
+        selectedTab = selectedTab,
+        offsetFraction = offsetFraction,
+        onTabClick = onTabClick,
+        modifier = modifier,
+        enabled = enabled,
+    )
+}
+
+/** The same tab row for any set of [labels], such as the folder filter's two lists. */
+@Composable
+fun LabelTabRow(
+    labels: List<String>,
+    selectedTab: Int,
+    offsetFraction: Float,
+    onTabClick: (Int) -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+) {
     val density = LocalDensity.current
     val scrollState = rememberScrollState()
-    val tabBounds = remember(tabs) {
-        mutableStateListOf<Pair<Float, Float>>().apply { repeat(tabs.size) { add(0f to 0f) } }
+    val tabBounds = remember(labels) {
+        mutableStateListOf<Pair<Float, Float>>().apply { repeat(labels.size) { add(0f to 0f) } }
     }
     var rowWidth by remember { mutableStateOf(0) }
     val indicatorColor = MaterialTheme.colorScheme.secondaryContainer
@@ -263,12 +299,12 @@ fun HomeTabRow(
                 )
             },
     ) {
-        tabs.forEachIndexed { index, tab ->
+        labels.forEachIndexed { index, label ->
             Box(
                 Modifier
                     .padding(
                         start = if (index == 0) TAB_CONTENT_PADDING else 0.dp,
-                        end = if (index == tabs.lastIndex) TAB_CONTENT_PADDING else 0.dp,
+                        end = if (index == labels.lastIndex) TAB_CONTENT_PADDING else 0.dp,
                     )
                     .height(TAB_ROW_HEIGHT)
                     .clickable(
@@ -284,7 +320,7 @@ fun HomeTabRow(
                 contentAlignment = Alignment.Center,
             ) {
                 SingleLineText(
-                    stringResource(tab.label), 15.sp, 500,
+                    label, 15.sp, 500,
                     if (index == selectedTab) selectedColor else unselectedColor,
                 )
             }

@@ -29,9 +29,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.media3.common.Player
-import androidx.preference.PreferenceManager
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.GramophonePlaybackService
+import org.akanework.gramophone.logic.defaultPrefs
 import org.akanework.gramophone.logic.getBooleanStrict
 import org.akanework.gramophone.logic.ui.MyRecyclerView
 import org.akanework.gramophone.logic.utils.SemanticLyrics
@@ -45,7 +45,7 @@ class LyricsView(context: Context, attrs: AttributeSet?) : FrameLayout(context, 
     SharedPreferences.OnSharedPreferenceChangeListener {
 
 
-    private val prefs = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
+    private val prefs = context.defaultPrefs
     private var recyclerView: MyRecyclerView? = null
     private var newView: NewLyricsView? = null
     private val adapter

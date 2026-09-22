@@ -35,8 +35,8 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.ArrowBack
-import androidx.compose.material.icons.rounded.Edit
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -372,7 +372,7 @@ fun LibrarySubScreen(key: LibrarySubKey, onBack: () -> Unit, modifier: Modifier 
             titlePaddingStart = 4.dp,
             navigationIcon = {
                 LibraryIconButton(
-                    icon = Icons.AutoMirrored.Rounded.ArrowBack,
+                    icon = Icons.AutoMirrored.Outlined.ArrowBack,
                     iconSize = 24.dp,
                     tint = MaterialTheme.colorScheme.onSurface,
                     onClick = onBack,
@@ -381,7 +381,7 @@ fun LibrarySubScreen(key: LibrarySubKey, onBack: () -> Unit, modifier: Modifier 
             actions = {
                 if (page.editablePlaylistId != null) {
                     LibraryIconButton(
-                        icon = Icons.Rounded.Edit,
+                        icon = Icons.Outlined.Edit,
                         iconSize = 24.dp,
                         tint = MaterialTheme.colorScheme.onSurface,
                         onClick = {

@@ -35,8 +35,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Folder
-import androidx.compose.material.icons.rounded.MoreVert
+import androidx.compose.material.icons.outlined.Folder
+import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ripple
@@ -201,7 +201,7 @@ fun LibraryListRow(
         if (hasMenu) {
             Box {
                 LibraryIconButton(
-                    icon = Icons.Rounded.MoreVert,
+                    icon = Icons.Outlined.MoreVert,
                     iconSize = 24.dp,
                     tint = MaterialTheme.colorScheme.onSurface,
                     onClick = onMenu,
@@ -300,7 +300,7 @@ fun LibraryFolderRow(
     ) {
         Box(Modifier.size(50.dp).clip(RoundedCornerShape(LIST_ROUND_CORNER_SIZE))) {
             Icon(
-                imageVector = Icons.Rounded.Folder,
+                imageVector = Icons.Outlined.Folder,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.fillMaxSize().padding(10.dp),

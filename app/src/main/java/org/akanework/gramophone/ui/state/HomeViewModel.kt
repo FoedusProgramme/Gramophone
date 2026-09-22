@@ -20,13 +20,13 @@ package org.akanework.gramophone.ui.state
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.preference.PreferenceManager
+import org.akanework.gramophone.logic.defaultPrefs
 import org.akanework.gramophone.logic.gramophoneApplication
 import org.akanework.gramophone.ui.HomeTab
 
 /** Activity-scoped holder of the home tab states, so they outlive the home screen composition. */
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
-    private val prefs = PreferenceManager.getDefaultSharedPreferences(application)
+    private val prefs = application.defaultPrefs
     private val reader get() = getApplication<Application>().gramophoneApplication.reader
     private val states = HashMap<HomeTab, LibraryTabState<*>>()
 

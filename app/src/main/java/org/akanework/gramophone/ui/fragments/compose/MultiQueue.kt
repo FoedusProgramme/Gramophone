@@ -36,9 +36,9 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.DragHandle
-import androidx.compose.material.icons.rounded.ExpandLess
-import androidx.compose.material.icons.rounded.ExpandMore
+import androidx.compose.material.icons.outlined.DragHandle
+import androidx.compose.material.icons.outlined.ExpandLess
+import androidx.compose.material.icons.outlined.ExpandMore
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -280,7 +280,7 @@ fun MqListItem(
 
                 if (isEditAllowed && !isActiveQueue) {
                     Icon(
-                        imageVector = Icons.Rounded.DragHandle,
+                        imageVector = Icons.Outlined.DragHandle,
                         contentDescription = null,
                         modifier = Modifier
                             .padding(8.dp)
@@ -415,7 +415,7 @@ fun QueueInfo(
                 modifier = Modifier.padding(vertical = 6.dp)
             ) {
                 Icon(
-                    imageVector = if (mqState.expanded) Icons.Rounded.ExpandLess else Icons.Rounded.ExpandMore,
+                    imageVector = if (mqState.expanded) Icons.Outlined.ExpandLess else Icons.Outlined.ExpandMore,
                     contentDescription = null,
                 )
             }

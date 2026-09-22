@@ -51,8 +51,6 @@ import kotlin.math.ln
 import kotlin.math.sign
 
 /*
- * iOS scroll physics, adapted from FundamentalApps/Weather (ui.components.IosOverscroll).
- *
  * UIScrollView's numbers, as reverse engineered by github.com/ktiays/fluid-scroll (Apache-2.0), the
  * same source FluidRecyclerView builds on. Using the real constants rather than hand-tuned ones is
  * what makes the motion read as iOS instead of merely bouncy.

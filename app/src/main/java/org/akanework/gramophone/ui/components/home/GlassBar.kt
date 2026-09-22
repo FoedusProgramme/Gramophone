@@ -53,7 +53,7 @@ import dev.chrisbanes.haze.HazeTint
 import dev.chrisbanes.haze.hazeEffect
 
 /*
- * The frosted toolbar, adapted from FundamentalApps/Weather (GlassTopAppBar): a transparent bar of
+ * A transparent bar of
  * fixed height that blurs whatever scrolls under it. The page's large title lives in the content
  * (see LargeTitle) and the bar's own small title fades in as it slides underneath.
  */
@@ -118,6 +118,8 @@ fun GlassTitleBar(
     titlePaddingStart: Dp = 0.dp,
     navigationIcon: (@Composable () -> Unit)? = null,
     actions: @Composable RowScope.() -> Unit = {},
+    /** How far below the bar the content's large title starts at rest, see [barTitleAlpha]. */
+    titleTopGap: Dp = LARGE_TITLE_TOP_GAP,
 ) {
     val insets = WindowInsets.systemBars.union(WindowInsets.displayCutout)
     val topInset = insets.asPaddingValues().calculateTopPadding()
@@ -148,7 +150,7 @@ fun GlassTitleBar(
                 modifier = Modifier
                     .weight(1f)
                     .padding(start = titlePaddingStart, end = 8.dp)
-                    .graphicsLayer { alpha = barTitleAlpha(scrolled()) },
+                    .graphicsLayer { alpha = barTitleAlpha(scrolled(), titleTopGap) },
             )
             actions()
         }

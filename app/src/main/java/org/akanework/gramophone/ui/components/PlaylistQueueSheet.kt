@@ -34,7 +34,6 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.Timeline
 import androidx.media3.session.MediaBrowser
-import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -46,6 +45,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.stateIn
+import org.akanework.gramophone.logic.defaultPrefs
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.dpToPx
 import org.akanework.gramophone.logic.getBooleanStrict
@@ -75,7 +75,7 @@ class PlaylistQueueSheet(
     private var lockEdit = MutableStateFlow(false)
 
     init {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
+        val prefs = context.defaultPrefs
         mqEnabled = Flags.MQ_PREVIEW && prefs.getBooleanStrict("mq_preview", false)
 
         setContentView(R.layout.playlist_bottom_sheet)

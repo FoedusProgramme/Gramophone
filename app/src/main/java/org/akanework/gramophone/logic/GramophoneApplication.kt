@@ -35,7 +35,6 @@ import androidx.core.content.edit
 import androidx.fragment.app.strictmode.FragmentStrictMode
 import androidx.media3.common.util.Log
 import androidx.media3.session.DefaultMediaNotificationProvider
-import androidx.preference.PreferenceManager
 import coil3.ImageLoader
 import coil3.PlatformContext
 import coil3.SingletonImageLoader
@@ -115,7 +114,7 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
     override fun onCreate() {
         super.onCreate()
         // disk read and write on first launch, but unavoidable as threads would race setDefaultNightMode
-        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        val prefs = defaultPrefs
         val themeMode = prefs.getString("theme_mode", "0")
         if (BuildConfig.DEBUG && !isColorOS()) {
             // Use StrictMode to find antipattern issues

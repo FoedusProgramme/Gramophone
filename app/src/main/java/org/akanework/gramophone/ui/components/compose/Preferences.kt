@@ -20,24 +20,27 @@ package org.akanework.gramophone.ui.components.compose
 import android.content.SharedPreferences
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.LocalContext
-import androidx.preference.PreferenceManager
+import androidx.core.content.edit
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.conflate
+import org.akanework.gramophone.logic.defaultPrefs
+import org.akanework.gramophone.logic.getBooleanStrict
+import org.akanework.gramophone.logic.getIntStrict
+import org.akanework.gramophone.logic.getStringStrict
 
 @Composable
 fun rememberDefaultPreferences(): SharedPreferences {
     val context = LocalContext.current
-    return remember(context) {
-        PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
-    }
+    return remember(context) { context.defaultPrefs }
 }
 
 /**
@@ -57,6 +60,45 @@ fun <T> rememberPreference(key: String, read: (SharedPreferences) -> T): State<T
         onDispose { prefs.unregisterOnSharedPreferenceChangeListener(listener) }
     }
     return state
+}
+
+/**
+ * One preference as state that writes through: [value] follows the stored one (whoever changed
+ * it) and [set] stores a new one, which comes back through the change listener before the next
+ * frame.
+ */
+@Stable
+class PreferenceHandle<T>(private val state: State<T>, private val write: (T) -> Unit) {
+    val value: T get() = state.value
+    fun set(value: T) = write(value)
+}
+
+@Composable
+fun rememberBooleanPreference(key: String, default: Boolean): PreferenceHandle<Boolean> {
+    val prefs = rememberDefaultPreferences()
+    val state = rememberPreference(key) { it.getBooleanStrict(key, default) }
+    return remember(prefs, key) { PreferenceHandle(state) { v -> prefs.edit { putBoolean(key, v) } } }
+}
+
+@Composable
+fun rememberIntPreference(key: String, default: Int): PreferenceHandle<Int> {
+    val prefs = rememberDefaultPreferences()
+    val state = rememberPreference(key) { it.getIntStrict(key, default) }
+    return remember(prefs, key) { PreferenceHandle(state) { v -> prefs.edit { putInt(key, v) } } }
+}
+
+@Composable
+fun rememberStringPreference(key: String, default: String): PreferenceHandle<String> {
+    val prefs = rememberDefaultPreferences()
+    val state = rememberPreference(key) { it.getStringStrict(key, default) ?: default }
+    return remember(prefs, key) { PreferenceHandle(state) { v -> prefs.edit { putString(key, v) } } }
+}
+
+@Composable
+fun rememberStringSetPreference(key: String): PreferenceHandle<Set<String>> {
+    val prefs = rememberDefaultPreferences()
+    val state = rememberPreference(key) { it.getStringSet(key, null)?.toSet() ?: emptySet() }
+    return remember(prefs, key) { PreferenceHandle(state) { v -> prefs.edit { putStringSet(key, v) } } }
 }
 
 /** Emits the current value of [key] and again whenever it changes. */

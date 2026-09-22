@@ -49,19 +49,19 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.Article
-import androidx.compose.material.icons.automirrored.rounded.PlaylistPlay
-import androidx.compose.material.icons.rounded.AlarmOff
-import androidx.compose.material.icons.rounded.AlarmOn
-import androidx.compose.material.icons.rounded.ExpandMore
-import androidx.compose.material.icons.rounded.Favorite
-import androidx.compose.material.icons.rounded.FavoriteBorder
-import androidx.compose.material.icons.rounded.Repeat
-import androidx.compose.material.icons.rounded.RepeatOne
-import androidx.compose.material.icons.rounded.Shuffle
-import androidx.compose.material.icons.rounded.SkipNext
-import androidx.compose.material.icons.rounded.SkipPrevious
-import androidx.compose.material.icons.rounded.Speed
+import androidx.compose.material.icons.automirrored.outlined.Article
+import androidx.compose.material.icons.automirrored.outlined.PlaylistPlay
+import androidx.compose.material.icons.outlined.AlarmOff
+import androidx.compose.material.icons.outlined.AlarmOn
+import androidx.compose.material.icons.outlined.ExpandMore
+import androidx.compose.material.icons.outlined.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material.icons.outlined.Repeat
+import androidx.compose.material.icons.outlined.RepeatOne
+import androidx.compose.material.icons.outlined.Shuffle
+import androidx.compose.material.icons.outlined.SkipNext
+import androidx.compose.material.icons.outlined.SkipPrevious
+import androidx.compose.material.icons.outlined.Speed
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -275,10 +275,10 @@ private fun TopButtonColumn(
 ) {
     val timerActive by player.timerActive.collectAsState()
     Column(modifier) {
-        IconSlot(Icons.Rounded.ExpandMore, scheme.onSurface, 52.dp, 28.dp, actions.minimize)
-        IconSlot(Icons.Rounded.Speed, scheme.onSurface, 52.dp, 24.dp) { onOpenDialog(PlayerDialog.Speed) }
+        IconSlot(Icons.Outlined.ExpandMore, scheme.onSurface, 52.dp, 28.dp, actions.minimize)
+        IconSlot(Icons.Outlined.Speed, scheme.onSurface, 52.dp, 24.dp) { onOpenDialog(PlayerDialog.Speed) }
         IconSlot(
-            image = if (timerActive) Icons.Rounded.AlarmOn else Icons.Rounded.AlarmOff,
+            image = if (timerActive) Icons.Outlined.AlarmOn else Icons.Outlined.AlarmOff,
             tint = scheme.onSurface, box = 52.dp, icon = 24.dp, onClick = { onOpenDialog(PlayerDialog.Timer) },
         )
     }
@@ -299,13 +299,13 @@ private fun TopButtonRow(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Spacer(Modifier.width(24.dp))
-        IconSlot(Icons.Rounded.ExpandMore, scheme.onSurface, 52.dp, 28.dp, actions.minimize)
+        IconSlot(Icons.Outlined.ExpandMore, scheme.onSurface, 52.dp, 28.dp, actions.minimize)
         Spacer(Modifier.weight(1f))
         IconSlot(
-            image = if (timerActive) Icons.Rounded.AlarmOn else Icons.Rounded.AlarmOff,
+            image = if (timerActive) Icons.Outlined.AlarmOn else Icons.Outlined.AlarmOff,
             tint = scheme.onSurface, box = 52.dp, icon = 24.dp, onClick = { onOpenDialog(PlayerDialog.Timer) },
         )
-        IconSlot(Icons.Rounded.Speed, scheme.onSurface, 52.dp, 24.dp) { onOpenDialog(PlayerDialog.Speed) }
+        IconSlot(Icons.Outlined.Speed, scheme.onSurface, 52.dp, 24.dp) { onOpenDialog(PlayerDialog.Speed) }
         Spacer(Modifier.width(24.dp))
     }
 }
@@ -456,7 +456,7 @@ private fun TransportRow(player: PlayerSheetPlayerState, actions: FullPlayerActi
         verticalAlignment = Alignment.CenterVertically,
     ) {
         TransportButton(
-            image = Icons.Rounded.SkipPrevious, tint = scheme.onSurface, icon = 38.dp,
+            image = Icons.Outlined.SkipPrevious, tint = scheme.onSurface, icon = 38.dp,
             onClick = actions.previous, onLongClick = actions.seekBack,
         )
         Spacer(Modifier.width(8.dp))
@@ -478,7 +478,7 @@ private fun TransportRow(player: PlayerSheetPlayerState, actions: FullPlayerActi
         }
         Spacer(Modifier.width(8.dp))
         TransportButton(
-            image = Icons.Rounded.SkipNext, tint = scheme.onSurface, icon = 38.dp,
+            image = Icons.Outlined.SkipNext, tint = scheme.onSurface, icon = 38.dp,
             onClick = actions.next, onLongClick = actions.seekForward,
         )
     }
@@ -526,18 +526,18 @@ private fun ActionBarRow(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        IconSlot(Icons.AutoMirrored.Rounded.Article, scheme.onSurface, 48.dp, 24.dp, actions.showLyrics)
+        IconSlot(Icons.AutoMirrored.Outlined.Article, scheme.onSurface, 48.dp, 24.dp, actions.showLyrics)
         IconSlot(
-            image = if (repeatMode == PlayerUtilities.PLAYER_REPEAT_ONE) Icons.Rounded.RepeatOne else Icons.Rounded.Repeat,
+            image = if (repeatMode == PlayerUtilities.PLAYER_REPEAT_ONE) Icons.Outlined.RepeatOne else Icons.Outlined.Repeat,
             tint = checkTint(repeatMode != PlayerUtilities.PLAYER_REPEAT_OFF),
             box = 48.dp, icon = 24.dp, onClick = actions.cycleRepeat,
         )
-        IconSlot(Icons.Rounded.Shuffle, checkTint(shuffle), 48.dp, 24.dp) { actions.toggleShuffle(!shuffle) }
+        IconSlot(Icons.Outlined.Shuffle, checkTint(shuffle), 48.dp, 24.dp) { actions.toggleShuffle(!shuffle) }
         IconSlot(
-            image = if (favorite) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder,
+            image = if (favorite) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
             tint = if (favorite) scheme.tertiary else scheme.onSurface,
             box = 48.dp, icon = 24.dp, onClick = { actions.toggleFavorite(!favorite) },
         )
-        IconSlot(Icons.AutoMirrored.Rounded.PlaylistPlay, scheme.onSurface, 48.dp, 24.dp, actions.showQueue)
+        IconSlot(Icons.AutoMirrored.Outlined.PlaylistPlay, scheme.onSurface, 48.dp, 24.dp, actions.showQueue)
     }
 }

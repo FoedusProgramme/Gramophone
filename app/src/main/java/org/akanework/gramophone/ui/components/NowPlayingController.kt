@@ -23,10 +23,10 @@ import android.os.Handler
 import android.os.Looper
 import androidx.media3.session.SessionError
 import androidx.media3.session.SessionResult
-import androidx.preference.PreferenceManager
 import com.google.common.util.concurrent.Futures
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.GramophonePlaybackService
+import org.akanework.gramophone.logic.defaultPrefs
 import org.akanework.gramophone.logic.getAudioFormat
 import org.akanework.gramophone.logic.getBooleanStrict
 import org.akanework.gramophone.logic.getLyrics
@@ -50,7 +50,7 @@ class NowPlayingController(
 ) : SharedPreferences.OnSharedPreferenceChangeListener {
 
     private val instance get() = activity.getPlayer()
-    private val prefs = PreferenceManager.getDefaultSharedPreferences(activity.applicationContext)
+    private val prefs = activity.defaultPrefs
     private val handler = Handler(Looper.getMainLooper())
     private var enableQualityInfo = prefs.getBooleanStrict("audio_quality_info", false)
     private var currentFormat: AudioFormatDetector.AudioFormats? = null

@@ -34,7 +34,6 @@ import androidx.media3.common.PlaybackParameters
 import androidx.media3.common.Player
 import androidx.media3.common.util.Log
 import androidx.media3.session.MediaController
-import androidx.preference.PreferenceManager
 import com.google.android.material.motion.MaterialBottomContainerBackHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
@@ -44,6 +43,7 @@ import kotlinx.coroutines.launch
 import org.akanework.gramophone.BuildConfig
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.clone
+import org.akanework.gramophone.logic.defaultPrefs
 import org.akanework.gramophone.logic.fadInAnimation
 import org.akanework.gramophone.logic.fadOutAnimation
 import org.akanework.gramophone.logic.getBooleanStrict
@@ -144,7 +144,7 @@ class PlayerSheetViewImpl private constructor(
     )
 
     // Reads/writes the Compose timer & speed dialogs need (MediaController + prefs)
-    private val prefs = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
+    private val prefs = context.defaultPrefs
     private val dialogCallbacks = PlayerDialogCallbacks(
         currentSpeed = { instance?.playbackParameters?.speed ?: 1f },
         currentPitch = { instance?.playbackParameters?.pitch ?: 1f },
@@ -170,7 +170,7 @@ class PlayerSheetViewImpl private constructor(
             },
         )
 
-        val pureDark = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
+        val pureDark = context.defaultPrefs
             .getBoolean("pureDark", false)
         composeView = ComposeView(context).apply {
             layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)

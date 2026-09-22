@@ -18,10 +18,10 @@ import androidx.core.graphics.TypefaceCompat
 import androidx.core.view.HapticFeedbackConstantsCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.doOnLayout
-import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
+import org.akanework.gramophone.logic.defaultPrefs
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.dpToPx
 import org.akanework.gramophone.logic.getBooleanStrict
@@ -46,7 +46,7 @@ class LegacyLyricsAdapter(
     private val speed
         get() = callback?.speed() ?: 1f
     private var recyclerView: MyRecyclerView? = null
-    private val prefs = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
+    private val prefs = context.defaultPrefs
     private var defaultTextColor = 0
     private var highlightTextColor = 0
     private val interpolator = PathInterpolator(0.4f, 0.2f, 0f, 1f)

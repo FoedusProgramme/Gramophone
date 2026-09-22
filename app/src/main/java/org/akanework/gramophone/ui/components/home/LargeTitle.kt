@@ -33,6 +33,8 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.PlatformTextStyle
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
@@ -42,12 +44,9 @@ import androidx.compose.ui.unit.sp
 /*
  * The large title a page's content starts with, under the glass toolbar. It scrolls with the
  * content and fades out as it passes under the toolbar, whose own small title takes over.
- * Adapted from FundamentalApps/Weather (CollapsingLargeTitle / CollapsingTitle), except that the
- * handover is measured from the list's scroll position rather than from layout callbacks, so it
- * also follows the rubber band.
  */
 
-private val LARGE_TITLE_TOP_GAP = 8.dp
+val LARGE_TITLE_TOP_GAP = 32.dp
 private val LARGE_TITLE_BOTTOM_GAP = 8.dp
 private val LARGE_TITLE_MARGIN_START = 24.dp
 private val LARGE_TITLE_MARGIN_END = 16.dp
@@ -55,6 +54,20 @@ private val LARGE_TITLE_SIZE = 32.sp // textAppearanceHeadlineLarge
 
 /** How far the large title travels under the toolbar before the toolbar's own is fully in. */
 private val TITLE_FADE_SPAN = 48.dp
+
+/**
+ * The title of the settings pages: displayMedium at 42sp with a 48sp line height, medium weight.
+ */
+val PageTitleStyle: TextStyle
+    @Composable get() = MaterialTheme.typography.displayMedium.copy(
+        color = MaterialTheme.colorScheme.onSurface,
+        fontSize = 42.sp,
+        lineHeight = 48.sp,
+        fontWeight = FontWeight.Medium,
+    )
+
+/** Where that title's text starts below the bar. */
+val PAGE_TITLE_TOP_GAP = 16.dp + 24.dp
 
 /** Height of the [LargeTitle] item once laid out, starting from an estimate for the first frame. */
 @Stable
@@ -75,9 +88,12 @@ fun rememberLargeTitleState(): LargeTitleState {
     }
 }
 
-/** 0 while the large title is clear of the toolbar, 1 once its top is [TITLE_FADE_SPAN] under it. */
-fun Density.barTitleAlpha(scrolled: Float): Float =
-    ((scrolled - LARGE_TITLE_TOP_GAP.toPx()) / TITLE_FADE_SPAN.toPx()).coerceIn(0f, 1f)
+/**
+ * 0 while the large title is clear of the toolbar, 1 once its top is [TITLE_FADE_SPAN] under it.
+ * [titleTopGap] is how far below the toolbar the title's text starts at rest.
+ */
+fun Density.barTitleAlpha(scrolled: Float, titleTopGap: Dp = LARGE_TITLE_TOP_GAP): Float =
+    ((scrolled - titleTopGap.toPx()) / TITLE_FADE_SPAN.toPx()).coerceIn(0f, 1f)
 
 /**
  * How far a grid whose first item is the [LargeTitle] has moved from rest, in px: positive once
@@ -112,11 +128,15 @@ fun LargeTitle(
     maxLines: Int = 1,
     gutter: Dp = 0.dp,
     bottomSpacer: Dp = 0.dp,
+    /** The text style. */
+    style: TextStyle = textViewStyle(LARGE_TITLE_SIZE, 400, MaterialTheme.colorScheme.onSurface)
+        .copy(platformStyle = PlatformTextStyle(includeFontPadding = false)),
+    topGap: Dp = LARGE_TITLE_TOP_GAP,
+    bottomGap: Dp = LARGE_TITLE_BOTTOM_GAP,
 ) {
     BasicText(
         text = title,
-        style = textViewStyle(LARGE_TITLE_SIZE, 400, MaterialTheme.colorScheme.onSurface)
-            .copy(platformStyle = PlatformTextStyle(includeFontPadding = false)),
+        style = style,
         maxLines = maxLines,
         overflow = TextOverflow.Ellipsis,
         modifier = modifier
@@ -125,9 +145,9 @@ fun LargeTitle(
             .padding(
                 start = LARGE_TITLE_MARGIN_START - gutter,
                 end = LARGE_TITLE_MARGIN_END - gutter,
-                top = LARGE_TITLE_TOP_GAP,
-                bottom = LARGE_TITLE_BOTTOM_GAP + bottomSpacer,
+                top = topGap,
+                bottom = bottomGap + bottomSpacer,
             )
-            .graphicsLayer { alpha = 1f - barTitleAlpha(scrolled()) },
+            .graphicsLayer { alpha = 1f - barTitleAlpha(scrolled(), topGap) },
     )
 }

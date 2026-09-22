@@ -33,7 +33,6 @@ import androidx.core.view.doOnLayout
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.media3.common.util.Log
-import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -60,6 +59,7 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 import me.zhanghai.android.fastscroll.PopupTextProvider
+import org.akanework.gramophone.logic.defaultPrefs
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.getStringStrict
 import org.akanework.gramophone.logic.ui.DefaultItemHeightHelper
@@ -119,7 +119,7 @@ abstract class BaseAdapter<T : Any>(
     protected var recyclerView: MyRecyclerView? = null
         private set
 
-    protected val prefs = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
+    protected val prefs = context.defaultPrefs
 
     override var layoutType: LayoutType? = null
         @SuppressLint("NotifyDataSetChanged")

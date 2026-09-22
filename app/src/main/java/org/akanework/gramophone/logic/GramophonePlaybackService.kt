@@ -88,7 +88,6 @@ import androidx.media3.session.SessionCommand
 import androidx.media3.session.SessionError
 import androidx.media3.session.SessionResult
 import androidx.media3.session.addToCommandQueueThenFlush
-import androidx.preference.PreferenceManager
 import androidx.media3.session.CacheBitmapLoader
 import androidx.media3.session.CommandButton
 import androidx.media3.session.MediaBrowser
@@ -325,7 +324,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         handler = Handler(Looper.getMainLooper())
         mainExecutor = ContextCompat.getMainExecutor(this)
         nm = NotificationManagerCompat.from(this)
-        prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        prefs = defaultPrefs
         qb = QueueBoard(this)
         setListener(this)
         setMediaNotificationProvider(

@@ -41,7 +41,7 @@ import androidx.core.graphics.TypefaceCompat
 import androidx.core.text.getSpans
 import androidx.core.util.forEach
 import androidx.media3.common.util.Log
-import androidx.preference.PreferenceManager
+import org.akanework.gramophone.logic.defaultPrefs
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.dpToPx
 import org.akanework.gramophone.logic.getBooleanStrict
@@ -75,7 +75,7 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
     private val scrollInterpolator = PathInterpolator(0.4f, 0.2f, 0f, 1f)
     private val delayedInInterpolator = PathInterpolator(0.96f, 0.43f, 0.72f, 1f)
     private val delayedOutInterpolator = PathInterpolator(0.17f, 0f, -0.15f, 1f)
-    private val prefs = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
+    private val prefs = context.defaultPrefs
     private lateinit var typeface: Typeface
     private val grdWidth = context.resources.getDimension(R.dimen.lyric_gradient_size)
     private val defaultTextSize = context.resources.getDimension(R.dimen.lyric_text_size)
