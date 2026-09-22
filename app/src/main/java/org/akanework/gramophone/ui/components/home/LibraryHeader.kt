@@ -25,6 +25,13 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.Sort
+import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.ArrowDownward
+import androidx.compose.material.icons.rounded.ArrowUpward
+import androidx.compose.material.icons.rounded.PlayArrow
+import androidx.compose.material.icons.rounded.Shuffle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -32,7 +39,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import org.akanework.gramophone.R
 
 /**
  * `general_decor`: the 48dp row above every list with the item counter on the left and the
@@ -71,21 +77,21 @@ fun LibraryHeader(
             verticalAlignment = FloorCenterVertically,
         ) {
             if (onCreatePlaylist != null)
-                LibraryIconButton(R.drawable.outline_add_24, 26.dp, tint, onCreatePlaylist)
+                LibraryIconButton(Icons.Rounded.Add, 26.dp, tint, onCreatePlaylist)
             if (onPlayAll != null)
-                LibraryIconButton(R.drawable.ic_play_arrow, 26.dp, tint, onPlayAll)
+                LibraryIconButton(Icons.Rounded.PlayArrow, 26.dp, tint, onPlayAll)
             if (onShuffleAll != null)
-                LibraryIconButton(R.drawable.ic_shuffle, 22.dp, tint, onShuffleAll)
+                LibraryIconButton(Icons.Rounded.Shuffle, 22.dp, tint, onShuffleAll)
             if (onSort != null) {
                 Box {
-                    LibraryIconButton(R.drawable.ic_sort, 24.dp, tint, onSort)
+                    LibraryIconButton(Icons.AutoMirrored.Rounded.Sort, 24.dp, tint, onSort)
                     sortMenu()
                 }
             }
             if (onJumpUp != null)
-                LibraryIconButton(R.drawable.baseline_arrow_upward_24, 24.dp, tint, onJumpUp)
+                LibraryIconButton(Icons.Rounded.ArrowUpward, 24.dp, tint, onJumpUp)
             if (onJumpDown != null)
-                LibraryIconButton(R.drawable.baseline_arrow_downward_24, 24.dp, tint, onJumpDown)
+                LibraryIconButton(Icons.Rounded.ArrowDownward, 24.dp, tint, onJumpDown)
         }
     }
 }

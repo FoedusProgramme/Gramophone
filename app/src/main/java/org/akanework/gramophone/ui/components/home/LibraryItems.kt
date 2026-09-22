@@ -20,7 +20,6 @@ package org.akanework.gramophone.ui.components.home
 import android.net.Uri
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
@@ -35,6 +34,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Folder
+import androidx.compose.material.icons.rounded.MoreVert
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
@@ -46,7 +49,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -58,7 +61,6 @@ import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import coil3.request.crossfade
-import org.akanework.gramophone.R
 import org.akanework.gramophone.ui.adapters.BaseAdapter.LayoutType
 
 /** Centre like the View framework does: integer division, i.e. the odd pixel goes to the end. */
@@ -96,7 +98,7 @@ fun Modifier.iconButtonRipple(onClick: () -> Unit): Modifier = clickable(
 /** A 48dp `MaterialButton` with only an icon (insets 0, `rp_buttons` background). */
 @Composable
 fun LibraryIconButton(
-    @DrawableRes icon: Int,
+    icon: ImageVector,
     iconSize: Dp,
     tint: Color,
     onClick: () -> Unit,
@@ -106,11 +108,11 @@ fun LibraryIconButton(
         modifier.size(48.dp).iconButtonRipple(onClick),
         contentAlignment = IconCenter,
     ) {
-        Image(
-            painter = rememberDrawablePainter(icon),
+        Icon(
+            imageVector = icon,
             contentDescription = null,
+            tint = tint,
             modifier = Modifier.size(iconSize),
-            colorFilter = ColorFilter.tint(tint),
         )
     }
 }
@@ -199,7 +201,7 @@ fun LibraryListRow(
         if (hasMenu) {
             Box {
                 LibraryIconButton(
-                    icon = R.drawable.ic_more_vert_alt,
+                    icon = Icons.Rounded.MoreVert,
                     iconSize = 24.dp,
                     tint = MaterialTheme.colorScheme.onSurface,
                     onClick = onMenu,
@@ -297,10 +299,10 @@ fun LibraryFolderRow(
         verticalAlignment = FloorCenterVertically,
     ) {
         Box(Modifier.size(50.dp).clip(RoundedCornerShape(LIST_ROUND_CORNER_SIZE))) {
-            Image(
-                painter = rememberDrawablePainter(R.drawable.ic_folder),
+            Icon(
+                imageVector = Icons.Rounded.Folder,
                 contentDescription = null,
-                contentScale = ContentScale.Crop,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.fillMaxSize().padding(10.dp),
             )
         }

@@ -25,7 +25,10 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -41,6 +44,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.media3.common.MediaItem
 import kotlinx.coroutines.launch
 import org.akanework.gramophone.R
@@ -49,26 +53,38 @@ import org.akanework.gramophone.ui.actions.findMainActivity
 import org.akanework.gramophone.ui.adapters.BaseAdapter.LayoutType
 import org.akanework.gramophone.ui.components.home.DECOR_HEIGHT
 import org.akanework.gramophone.ui.components.home.FOLDER_CARD_HEIGHT
+import org.akanework.gramophone.ui.components.home.GRID_CARD_SIDE_PADDING
+import org.akanework.gramophone.ui.components.home.IosOverscrollState
 import org.akanework.gramophone.ui.components.home.LARGER_LIST_HEIGHT
 import org.akanework.gramophone.ui.components.home.LIST_HEIGHT
+import org.akanework.gramophone.ui.components.home.LargeTitle
+import org.akanework.gramophone.ui.components.home.LargeTitleState
 import org.akanework.gramophone.ui.components.home.LibraryFastScroller
 import org.akanework.gramophone.ui.components.home.LibraryFolderRow
 import org.akanework.gramophone.ui.components.home.LibraryHeader
 import org.akanework.gramophone.ui.components.home.NowPlayingState
 import org.akanework.gramophone.ui.components.home.SortMenu
-import org.akanework.gramophone.ui.nav.LocalPlayerBottomPadding
+import org.akanework.gramophone.ui.components.home.TAB_ROW_HEIGHT
+import org.akanework.gramophone.ui.components.home.iosOverscroll
+import org.akanework.gramophone.ui.components.home.largeTitleScroll
+import org.akanework.gramophone.ui.components.home.rememberIosFlingBehavior
+import org.akanework.gramophone.ui.nav.LocalAppBarTopPadding
 import org.akanework.gramophone.ui.state.FolderTabState
 import org.akanework.gramophone.ui.state.LibraryTabSpec
 import org.akanework.gramophone.ui.state.LibraryTabState
 import org.akanework.gramophone.ui.state.SortPrefState
+import kotlin.math.roundToInt
 
-/** The Folders / Filesystem tab. */
+/** The Folders / Filesystem tab, laid out like [LibraryTabScreen] with the large [title] first. */
 @Composable
 fun FolderTabScreen(
     state: FolderTabState,
     nowPlaying: NowPlayingState,
     reselectTick: Int,
-    onCollapseAppBar: () -> Unit,
+    title: String,
+    titleState: LargeTitleState,
+    overscroll: IosOverscrollState,
+    hasTabRow: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
@@ -84,19 +100,23 @@ fun FolderTabScreen(
     val layoutType = songs.layoutType
     val isGrid = layoutType == LayoutType.GRID || layoutType == LayoutType.COMPACT_GRID
     val columns = libraryColumns(layoutType)
-    val rowHeightPx = with(LocalDensity.current) {
+    val density = LocalDensity.current
+    val rowHeightPx = with(density) {
         (if (layoutType == LayoutType.LIST) LARGER_LIST_HEIGHT else LIST_HEIGHT).roundToPx()
     }
+    val tabRowPx = if (hasTabRow) with(density) { TAB_ROW_HEIGHT.roundToPx() } else 0
     val gridState = songs.gridState
+    val scrolled = { with(density) { largeTitleScroll(gridState, overscroll, titleState) } }
     val queueTitle = songs.queueTitleOverride ?: "/"
     var folderSortOpen by remember { mutableStateOf(false) }
     var songSortOpen by remember { mutableStateOf(false) }
     val showPop = !path.isNullOrEmpty()
-    val songsHeaderIndex = 1 + (if (showPop) 1 else 0) + state.folders.size
+    // Items before the folders header: the title and the tab row slot.
+    val leadingItems = if (hasTabRow) 2 else 1
+    val songsHeaderIndex = leadingItems + 1 + (if (showPop) 1 else 0) + state.folders.size
 
     fun scrollTo(index: Int) {
-        onCollapseAppBar()
-        scope.launch { gridState.animateScrollToItem(index, -rowHeightPx / 2) }
+        scope.launch { gridState.animateScrollToItem(index, -(tabRowPx + rowHeightPx / 2)) }
     }
 
     val goToPlayingSong = {
@@ -123,9 +143,19 @@ fun FolderTabScreen(
         LazyVerticalGrid(
             columns = GridCells.Fixed(columns),
             state = gridState,
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize().iosOverscroll(overscroll),
             contentPadding = libraryContentPadding(isGrid),
+            flingBehavior = rememberIosFlingBehavior(gridState),
+            overscrollEffect = null,
         ) {
+            item(key = "title", span = { GridItemSpan(maxLineSpan) }) {
+                LargeTitle(title, titleState, scrolled, gutter = if (isGrid) GRID_CARD_SIDE_PADDING else 0.dp)
+            }
+            if (hasTabRow) {
+                item(key = "tabs", span = { GridItemSpan(maxLineSpan) }) {
+                    Spacer(Modifier.height(TAB_ROW_HEIGHT))
+                }
+            }
             item(key = "folders-header", span = { GridItemSpan(maxLineSpan) }) {
                 val count = state.folders.size
                 LibraryHeader(
@@ -173,7 +203,7 @@ fun FolderTabScreen(
                     onPlayAll = { LibraryActions.playAll(activity, songs.items, queueTitle) },
                     onShuffleAll = { LibraryActions.shuffleAll(activity, songs.items, queueTitle) },
                     onSort = { songSortOpen = true },
-                    onJumpUp = { scrollTo(0) },
+                    onJumpUp = { scrollTo(leadingItems) },
                     sortMenu = {
                         SortMenu(
                             expanded = songSortOpen,
@@ -202,8 +232,12 @@ fun FolderTabScreen(
             headerCount = songsHeaderIndex + 1,
             columns = columns,
             rowHeightPx = if (isGrid) libraryGridRowHeightPx(true, columns) else rowHeightPx,
-            headerHeightPx = decorPx * 2 + folderRowPx * (songsHeaderIndex - 1),
+            headerHeightPx = titleState.itemHeight.roundToInt() + tabRowPx + decorPx * 2 +
+                    folderRowPx * (songsHeaderIndex - leadingItems - 1),
             hintFor = { i -> songs.items.getOrNull(i)?.let { songs.fastScrollHintFor(it, i) } ?: "-" },
+            modifier = Modifier.padding(
+                top = LocalAppBarTopPadding.current + (if (hasTabRow) TAB_ROW_HEIGHT else 0.dp)
+            ),
         )
         }
     }

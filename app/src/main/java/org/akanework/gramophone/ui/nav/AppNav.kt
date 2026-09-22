@@ -71,6 +71,9 @@ class NavViewModel : ViewModel() {
 /** Bottom padding (px) content should keep clear so the mini player does not cover it. */
 val LocalPlayerBottomPadding = compositionLocalOf { 0 }
 
+/** Top padding (dp) content should keep clear so the frosted top bar does not cover it. */
+val LocalAppBarTopPadding = compositionLocalOf { 0.dp }
+
 fun SnapshotStateList<AppNavKey>.popIfPossible() {
     if (size > 1) removeAt(size - 1)
 }

@@ -23,32 +23,33 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.displayCutout
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.union
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.BasicText
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.MoreVert
+import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.TopAppBarScrollBehavior
-import androidx.compose.material3.rememberTopAppBarState
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -58,25 +59,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.TransformOrigin
-import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.chrisbanes.haze.HazeState
 import org.akanework.gramophone.R
 import org.akanework.gramophone.ui.HomeTab
 import org.akanework.gramophone.ui.actions.HomeMenuAction
@@ -86,106 +86,40 @@ import kotlin.math.cos
 import kotlin.math.roundToInt
 import kotlin.math.sin
 
-// M3 medium collapsing toolbar (fragment_viewpager.xml)
-val APP_BAR_EXPANDED_HEIGHT = 112.dp
-val APP_BAR_LARGE_EXPANDED_HEIGHT = 152.dp
-val APP_BAR_COLLAPSED_HEIGHT = 64.dp
 val TAB_ROW_HEIGHT = 48.dp
-private val EXPANDED_TITLE_MARGIN_START = 24.dp
-private val EXPANDED_TITLE_MARGIN_BOTTOM = 16.dp
-private val EXPANDED_TITLE_MARGIN_END = 16.dp
-private val TOOLBAR_PADDING_START = 24.dp
-private val TOOLBAR_PADDING_END = 8.dp
-private val EXPANDED_TITLE_SIZE = 32.sp // textAppearanceHeadlineLarge
-private val COLLAPSED_TITLE_SIZE = 22.sp // textAppearanceTitleLarge
 private val TAB_CONTENT_PADDING = 24.dp // tab_layout_content_padding
 private val TAB_PADDING = 12.dp
 private val TAB_INDICATOR_INSET = 6.dp
 private val TAB_INDICATOR_RADIUS = 10.dp
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun rememberHomeAppBarScrollBehavior(): TopAppBarScrollBehavior {
-    val state = rememberTopAppBarState()
-    return TopAppBarDefaults.exitUntilCollapsedScrollBehavior(state)
-}
-
-/** Decelerate interpolator, as the collapsing toolbar uses for the title size. */
-private fun decelerate(f: Float) = 1f - (1f - f) * (1f - f)
+// The two connected app-bar actions (search + overflow): 44×48 filled buttons, rounded 24dp on
+// the outer edge and 4dp where they face each other, with a 4dp gap between them.
+private val ACTION_BUTTON_WIDTH = 44.dp
+private val ACTION_BUTTON_HEIGHT = 48.dp
+private val ACTION_OUTER_CORNER = 24.dp
+private val ACTION_INNER_CORNER = 4.dp
+private val ACTION_BUTTON_GAP = 4.dp
+private val ACTION_ICON_INNER_OFFSET = 2.dp
+private val SEARCH_BUTTON_SHAPE = RoundedCornerShape(
+    topStart = ACTION_OUTER_CORNER, bottomStart = ACTION_OUTER_CORNER,
+    topEnd = ACTION_INNER_CORNER, bottomEnd = ACTION_INNER_CORNER,
+)
+private val OVERFLOW_BUTTON_SHAPE = RoundedCornerShape(
+    topStart = ACTION_INNER_CORNER, bottomStart = ACTION_INNER_CORNER,
+    topEnd = ACTION_OUTER_CORNER, bottomEnd = ACTION_OUTER_CORNER,
+)
 
 /**
- * A collapsing top bar in the style of Material's medium / large collapsing toolbar: the title
- * scales from headline-large at the bottom of the expanded area into the pinned 64dp toolbar
- * row, which holds [navigationIcon] at the start and [actions] at the end. [below] is laid out
- * under the collapsing area (the home puts its tab row there).
+ * The home app bar: the glass toolbar with search and overflow, and the tab row. The tab row
+ * rests under the page's large title and rides up with it until it meets the toolbar, where it
+ * pins and the frost extends down to cover it. [scrolled] is the page's travel from rest, see
+ * [largeTitleScroll].
  */
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun CollapsingTitleBar(
-    scrollBehavior: TopAppBarScrollBehavior,
-    title: String,
-    expandedHeight: Dp,
-    modifier: Modifier = Modifier,
-    titleMaxLines: Int = 1,
-    toolbarPaddingStart: Dp = TOOLBAR_PADDING_START,
-    collapsedTitleStart: Dp = TOOLBAR_PADDING_START,
-    navigationIcon: (@Composable () -> Unit)? = null,
-    actions: @Composable RowScope.() -> Unit = {},
-    below: @Composable ColumnScope.() -> Unit = {},
-) {
-    val density = LocalDensity.current
-    val collapseRangePx = with(density) { (expandedHeight - APP_BAR_COLLAPSED_HEIGHT).toPx() }
-    LaunchedEffect(collapseRangePx) {
-        scrollBehavior.state.heightOffsetLimit = -collapseRangePx
-    }
-    val offset = scrollBehavior.state.heightOffset
-    val fraction = scrollBehavior.state.collapsedFraction
-    val collapsingHeight = with(density) { expandedHeight.toPx() + offset }
-    val insets = WindowInsets.systemBars.union(WindowInsets.displayCutout)
-
-    Column(
-        modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.surface)
-            .windowInsetsPadding(insets.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal)),
-    ) {
-        Box(
-            Modifier
-                .fillMaxWidth()
-                .height(with(density) { collapsingHeight.toDp() })
-                .clipToBounds(),
-        ) {
-            CollapsingTitle(
-                title = title,
-                fraction = fraction,
-                offset = offset,
-                expandedHeight = expandedHeight,
-                collapsedStart = collapsedTitleStart,
-                maxLines = titleMaxLines,
-                modifier = Modifier.align(Alignment.TopStart),
-            )
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .height(APP_BAR_COLLAPSED_HEIGHT)
-                    .padding(start = toolbarPaddingStart, end = TOOLBAR_PADDING_END)
-                    .align(Alignment.TopStart),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                navigationIcon?.invoke()
-                Spacer(Modifier.weight(1f))
-                actions()
-            }
-        }
-        below()
-    }
-}
-
-/** The home app bar: the collapsing title bar with search / overflow, then the tab row. */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeAppBar(
-    scrollBehavior: TopAppBarScrollBehavior,
+    hazeState: HazeState,
+    titleState: LargeTitleState,
+    scrolled: () -> Float,
     tabs: List<HomeTab>,
     selectedTab: Int,
     tabOffsetFraction: Float,
@@ -194,77 +128,82 @@ fun HomeAppBar(
     onMenuAction: (HomeMenuAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    CollapsingTitleBar(
-        scrollBehavior = scrollBehavior,
-        title = stringResource(R.string.app_name),
-        expandedHeight = APP_BAR_EXPANDED_HEIGHT,
-        modifier = modifier,
-        actions = {
-            LibraryIconButton(
-                icon = R.drawable.ic_search,
-                iconSize = 24.dp,
-                tint = MaterialTheme.colorScheme.onSurface,
-                onClick = onSearch,
-            )
-            HomeOverflowMenu(onMenuAction)
-        },
-    ) {
-        if (tabs.size >= 2) {
+    val density = LocalDensity.current
+    val insets = WindowInsets.systemBars.union(WindowInsets.displayCutout)
+    val showTabs = tabs.size >= 2
+    val toolbarBottomPx = insets.getTop(density) + with(density) { GLASS_BAR_HEIGHT.toPx() }
+    val tabRowOffset = { (titleState.itemHeight - scrolled()).coerceAtLeast(0f) }
+    // Sized to the screen so the tab row stays inside it wherever the title puts it.
+    Box(modifier.fillMaxSize()) {
+        GlassTitleBar(
+            hazeState = hazeState,
+            title = stringResource(R.string.app_name),
+            scrolled = scrolled,
+            blurExtension = if (showTabs) TAB_ROW_HEIGHT else 0.dp,
+            blurExtensionFraction = {
+                val height = titleState.itemHeight
+                if (height > 0f) 1f - tabRowOffset() / height else 1f
+            },
+            toolbarPaddingEnd = 16.dp,
+            actions = {
+                HomeActionButton(
+                    icon = Icons.Rounded.Search,
+                    iconSize = 24.dp,
+                    shape = SEARCH_BUTTON_SHAPE,
+                    iconOffsetX = ACTION_ICON_INNER_OFFSET, // nudge toward the inner edge
+                    onClick = onSearch,
+                )
+                Spacer(Modifier.width(ACTION_BUTTON_GAP))
+                HomeOverflowMenu(onMenuAction)
+            },
+        )
+        if (showTabs) {
             HomeTabRow(
                 tabs = tabs,
                 selectedTab = selectedTab,
                 offsetFraction = tabOffsetFraction,
                 onTabClick = onTabClick,
+                modifier = Modifier
+                    .offset { IntOffset(0, (toolbarBottomPx + tabRowOffset()).roundToInt()) }
+                    .windowInsetsPadding(insets.only(WindowInsetsSides.Horizontal)),
             )
         }
     }
 }
 
 /**
- * The title, scaling from 32sp at the bottom-left of the expanded area to 22sp centred in the
- * pinned 64dp toolbar row, like `titleCollapseMode="scale"`.
+ * One of the two connected app-bar actions: a filled [ACTION_BUTTON_WIDTH]×[ACTION_BUTTON_HEIGHT]
+ * button rounded 24dp on its outer edge and 4dp on the edge facing its neighbour, with the icon
+ * nudged [iconOffsetX] toward the inner edge for optical balance.
  */
 @Composable
-private fun CollapsingTitle(
-    title: String,
-    fraction: Float,
-    offset: Float,
-    expandedHeight: Dp,
-    collapsedStart: Dp,
-    maxLines: Int,
+private fun HomeActionButton(
+    icon: ImageVector,
+    iconSize: Dp,
+    shape: Shape,
+    iconOffsetX: Dp,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val density = LocalDensity.current
-    var titleSize by remember { mutableStateOf(IntSize.Zero) }
-    val scale = 1f + (COLLAPSED_TITLE_SIZE.value / EXPANDED_TITLE_SIZE.value - 1f) * decelerate(fraction)
-    val collapsedScale = COLLAPSED_TITLE_SIZE.value / EXPANDED_TITLE_SIZE.value
-    val expandedX = with(density) { EXPANDED_TITLE_MARGIN_START.toPx() }
-    val collapsedX = with(density) { collapsedStart.toPx() }
-    val expandedY = with(density) {
-        expandedHeight.toPx() - EXPANDED_TITLE_MARGIN_BOTTOM.toPx() - titleSize.height
+    Box(
+        modifier
+            .size(width = ACTION_BUTTON_WIDTH, height = ACTION_BUTTON_HEIGHT)
+            .clip(shape)
+            .background(MaterialTheme.colorScheme.surfaceBright)
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = ripple(),
+                onClick = onClick,
+            ),
+        contentAlignment = Alignment.Center,
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.offset(x = iconOffsetX).size(iconSize),
+        )
     }
-    // Collapsed position in expanded-area coordinates, before the area is translated up.
-    val collapsedY = with(density) {
-        (expandedHeight - APP_BAR_COLLAPSED_HEIGHT).toPx() +
-                (APP_BAR_COLLAPSED_HEIGHT.toPx() - titleSize.height * collapsedScale) / 2f
-    }
-    BasicText(
-        text = title,
-        style = textViewStyle(EXPANDED_TITLE_SIZE, 400, MaterialTheme.colorScheme.onSurface)
-            .copy(platformStyle = PlatformTextStyle(includeFontPadding = false)),
-        maxLines = maxLines,
-        overflow = TextOverflow.Ellipsis,
-        modifier = modifier
-            .padding(end = EXPANDED_TITLE_MARGIN_END)
-            .onSizeChanged { titleSize = it }
-            .graphicsLayer {
-                transformOrigin = TransformOrigin(0f, 0f)
-                scaleX = scale
-                scaleY = scale
-                translationX = expandedX + (collapsedX - expandedX) * fraction
-                translationY = expandedY + (collapsedY - expandedY) * fraction + offset
-            },
-    )
 }
 
 /** The overflow button with the `home_menu` entries. */
@@ -272,10 +211,11 @@ private fun CollapsingTitle(
 private fun HomeOverflowMenu(onMenuAction: (HomeMenuAction) -> Unit) {
     var menuOpen by remember { mutableStateOf(false) }
     Box {
-        LibraryIconButton(
-            icon = R.drawable.ic_more_vert_alt_topappbar,
-            iconSize = 32.dp,
-            tint = MaterialTheme.colorScheme.onSurface,
+        HomeActionButton(
+            icon = Icons.Rounded.MoreVert,
+            iconSize = 24.dp,
+            shape = OVERFLOW_BUTTON_SHAPE,
+            iconOffsetX = -ACTION_ICON_INNER_OFFSET, // nudge toward the inner edge
             onClick = { menuOpen = true },
         )
         DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
@@ -288,7 +228,7 @@ private fun HomeOverflowMenu(onMenuAction: (HomeMenuAction) -> Unit) {
                         )
                     },
                     leadingIcon = {
-                        Icon(rememberDrawablePainter(action.icon), contentDescription = null)
+                        Icon(action.icon, contentDescription = null)
                     },
                     onClick = { menuOpen = false; onMenuAction(action) },
                 )

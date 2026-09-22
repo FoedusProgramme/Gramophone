@@ -24,6 +24,12 @@ import android.os.Build
 import android.provider.Settings
 import android.view.View
 import android.widget.Toast
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Equalizer
+import androidx.compose.material.icons.rounded.Refresh
+import androidx.compose.material.icons.rounded.Settings
+import androidx.compose.material.icons.rounded.Shuffle
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import coil3.SingletonImageLoader
@@ -48,12 +54,12 @@ import org.akanework.gramophone.ui.nav.mainSettingsKey
 import org.nift4.mediastorecompat.MediaStoreCompat
 
 /** The home toolbar menu entries, in `home_menu.xml` order (search is an action button). */
-enum class HomeMenuAction(val title: Int, val icon: Int) {
-    Shuffle(R.string.home_menu_shuffle, R.drawable.ic_shuffle),
-    QuickRefresh(R.string.home_menu_quick_refresh, R.drawable.ic_refresh),
-    Refresh(R.string.home_menu_refresh, R.drawable.ic_refresh),
-    Equalizer(R.string.home_menu_equalizer, R.drawable.ic_equalizer),
-    Settings(R.string.home_menu_settings, R.drawable.ic_settings),
+enum class HomeMenuAction(val title: Int, val icon: ImageVector) {
+    Shuffle(R.string.home_menu_shuffle, Icons.Rounded.Shuffle),
+    QuickRefresh(R.string.home_menu_quick_refresh, Icons.Rounded.Refresh),
+    Refresh(R.string.home_menu_refresh, Icons.Rounded.Refresh),
+    Equalizer(R.string.home_menu_equalizer, Icons.Rounded.Equalizer),
+    Settings(R.string.home_menu_settings, Icons.Rounded.Settings),
 }
 
 /** The home toolbar actions. */

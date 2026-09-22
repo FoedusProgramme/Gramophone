@@ -51,6 +51,8 @@ import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.SkipNext
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -73,7 +75,6 @@ import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
@@ -366,7 +367,7 @@ private fun SheetInteraction(
                 }
                 IconButton(onClick = onNext, modifier = Modifier.size(MINI_BUTTON_SIZE)) {
                     Icon(
-                        painter = painterResource(R.drawable.ic_skip_next),
+                        imageVector = Icons.Rounded.SkipNext,
                         contentDescription = null,
                         tint = contentColor,
                         modifier = Modifier.size(MINI_ICON_SIZE),

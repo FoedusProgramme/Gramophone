@@ -22,14 +22,21 @@ import android.content.SharedPreferences
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -40,12 +47,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.media3.common.MediaItem
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.hazeSource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -61,17 +69,22 @@ import org.akanework.gramophone.ui.actions.findMainActivity
 import org.akanework.gramophone.ui.adapters.BaseAdapter.LayoutType
 import org.akanework.gramophone.ui.adapters.Sorter
 import org.akanework.gramophone.ui.components.compose.rememberDefaultPreferences
-import org.akanework.gramophone.ui.components.home.APP_BAR_LARGE_EXPANDED_HEIGHT
-import org.akanework.gramophone.ui.components.home.CollapsingTitleBar
 import org.akanework.gramophone.ui.components.home.DECOR_HEIGHT
+import org.akanework.gramophone.ui.components.home.GLASS_BAR_HEIGHT
 import org.akanework.gramophone.ui.components.home.GRID_CARD_SIDE_PADDING
+import org.akanework.gramophone.ui.components.home.GlassTitleBar
 import org.akanework.gramophone.ui.components.home.LARGER_LIST_HEIGHT
 import org.akanework.gramophone.ui.components.home.LIST_HEIGHT
+import org.akanework.gramophone.ui.components.home.LargeTitle
 import org.akanework.gramophone.ui.components.home.LibraryFastScroller
 import org.akanework.gramophone.ui.components.home.LibraryHeader
 import org.akanework.gramophone.ui.components.home.LibraryIconButton
 import org.akanework.gramophone.ui.components.home.SortMenu
-import org.akanework.gramophone.ui.components.home.rememberHomeAppBarScrollBehavior
+import org.akanework.gramophone.ui.components.home.iosOverscroll
+import org.akanework.gramophone.ui.components.home.largeTitleScroll
+import org.akanework.gramophone.ui.components.home.rememberIosFlingBehavior
+import org.akanework.gramophone.ui.components.home.rememberIosOverscrollState
+import org.akanework.gramophone.ui.components.home.rememberLargeTitleState
 import org.akanework.gramophone.ui.components.home.rememberNowPlayingState
 import org.akanework.gramophone.ui.fragments.PlaylistEditFragment
 import org.akanework.gramophone.ui.nav.AlbumKey
@@ -88,6 +101,7 @@ import uk.akane.libphonograph.dynamicitem.RecentlyAdded
 import uk.akane.libphonograph.items.Album
 import uk.akane.libphonograph.items.Playlist
 import uk.akane.libphonograph.reader.FlowReader
+import kotlin.math.roundToInt
 
 /** The data behind a detail page: a title, its songs and, for artists, its albums. */
 private class LibrarySubPage(
@@ -187,10 +201,9 @@ private fun gcd(a: Int, b: Int): Int = if (b == 0) a else gcd(b, a % b)
 private fun lcm(a: Int, b: Int): Int = a / gcd(a, b) * b
 
 /**
- * Album, genre, date, playlist and artist pages: a large collapsing title bar over the songs
- * (and, for an artist, the album grid above them, with jump buttons between the two).
+ * Album, genre, date, playlist and artist pages: the large title over the songs (and, for an
+ * artist, the album grid above them, with jump buttons between the two), under a glass toolbar.
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LibrarySubScreen(key: LibrarySubKey, onBack: () -> Unit, modifier: Modifier = Modifier) {
     val context = LocalContext.current
@@ -208,7 +221,9 @@ fun LibrarySubScreen(key: LibrarySubKey, onBack: () -> Unit, modifier: Modifier 
     )
     CollectLibraryItems(page.songs)
     page.albums?.let { CollectLibraryItems(it) }
-    val scrollBehavior = rememberHomeAppBarScrollBehavior()
+    val density = LocalDensity.current
+    val titleState = rememberLargeTitleState()
+    val overscroll = rememberIosOverscrollState()
     val songs = page.songs
     val albums = page.albums
     val songLayout = songs.layoutType
@@ -218,16 +233,17 @@ fun LibrarySubScreen(key: LibrarySubKey, onBack: () -> Unit, modifier: Modifier 
     val albumIsGrid = albumLayout == LayoutType.GRID || albumLayout == LayoutType.COMPACT_GRID
     val cols = lcm(songCols, albumCols)
     val gridState = songs.gridState
-    val rowHeightPx = with(LocalDensity.current) {
+    val rowHeightPx = with(density) {
         (if (songLayout == LayoutType.LIST) LARGER_LIST_HEIGHT else LIST_HEIGHT).roundToPx()
     }
-    val decorPx = with(LocalDensity.current) { DECOR_HEIGHT.roundToPx() }
+    val decorPx = with(density) { DECOR_HEIGHT.roundToPx() }
+    val scrolled = { with(density) { largeTitleScroll(gridState, overscroll, titleState) } }
     var songSortOpen by remember { mutableStateOf(false) }
     var albumSortOpen by remember { mutableStateOf(false) }
-    val songsHeaderIndex = if (albums != null) 1 + albums.items.size else 0
+    // The title item comes first, then for an artist the albums header and the album grid.
+    val songsHeaderIndex = 1 + (if (albums != null) 1 + albums.items.size else 0)
 
     fun scrollTo(index: Int) {
-        scrollBehavior.state.heightOffset = scrollBehavior.state.heightOffsetLimit
         scope.launch { gridState.animateScrollToItem(index, -rowHeightPx / 2) }
     }
 
@@ -237,48 +253,26 @@ fun LibrarySubScreen(key: LibrarySubKey, onBack: () -> Unit, modifier: Modifier 
         if (index >= 0) scrollTo(songsHeaderIndex + 1 + index)
     }
 
-    Column(
-        modifier
-            .background(MaterialTheme.colorScheme.surface)
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
-    ) {
-        CollapsingTitleBar(
-            scrollBehavior = scrollBehavior,
-            title = title,
-            expandedHeight = APP_BAR_LARGE_EXPANDED_HEIGHT,
-            titleMaxLines = 2,
-            toolbarPaddingStart = 4.dp,
-            collapsedTitleStart = 56.dp,
-            navigationIcon = {
-                LibraryIconButton(
-                    icon = R.drawable.ic_arrow_back,
-                    iconSize = 24.dp,
-                    tint = MaterialTheme.colorScheme.onSurface,
-                    onClick = onBack,
-                )
-            },
-            actions = {
-                if (page.editablePlaylistId != null) {
-                    LibraryIconButton(
-                        icon = R.drawable.ic_edit,
-                        iconSize = 24.dp,
-                        tint = MaterialTheme.colorScheme.onSurface,
-                        onClick = {
-                            activity.startFragment(PlaylistEditFragment()) {
-                                putString("Id", page.editablePlaylistId.toString())
-                            }
-                        },
-                    )
-                }
-            },
-        )
-        Box(Modifier.fillMaxWidth().weight(1f)) {
+    val hazeState = remember { HazeState() }
+    val topInset = WindowInsets.systemBars.union(WindowInsets.displayCutout)
+        .asPaddingValues().calculateTopPadding()
+    val barTopPadding = topInset + GLASS_BAR_HEIGHT
+    val background = MaterialTheme.colorScheme.surface
+    Box(modifier.background(background)) {
+        // The list sits behind the frosted bar as its blur source, padded clear of it at the top.
+        // The background is painted inside the source so the recorded layer is opaque.
+        Box(Modifier.fillMaxSize().hazeSource(hazeState).background(background)) {
             LazyVerticalGrid(
                 columns = GridCells.Fixed(cols),
                 state = gridState,
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = libraryContentPadding(isGrid = false),
+                modifier = Modifier.fillMaxSize().iosOverscroll(overscroll),
+                contentPadding = libraryContentPadding(isGrid = false, top = barTopPadding),
+                flingBehavior = rememberIosFlingBehavior(gridState),
+                overscrollEffect = null,
             ) {
+                item(key = "title", span = { GridItemSpan(maxLineSpan) }) {
+                    LargeTitle(title, titleState, scrolled, maxLines = 2)
+                }
                 if (albums != null) {
                     item(key = "albums-header", span = { GridItemSpan(maxLineSpan) }) {
                         val count = albums.items.size
@@ -329,7 +323,7 @@ fun LibrarySubScreen(key: LibrarySubKey, onBack: () -> Unit, modifier: Modifier 
                         onPlayAll = { LibraryActions.playAll(activity, songs.items, title) },
                         onShuffleAll = { LibraryActions.shuffleAll(activity, songs.items, title) },
                         onSort = { songSortOpen = true },
-                        onJumpUp = if (albums != null) { { scrollTo(0) } } else null,
+                        onJumpUp = if (albums != null) { { scrollTo(1) } } else null,
                         sortMenu = {
                             SortMenu(
                                 expanded = songSortOpen,
@@ -361,11 +355,42 @@ fun LibrarySubScreen(key: LibrarySubKey, onBack: () -> Unit, modifier: Modifier 
                 columns = songCols,
                 rowHeightPx = if (songLayout == LayoutType.GRID || songLayout == LayoutType.COMPACT_GRID)
                     libraryGridRowHeightPx(true, songCols) else rowHeightPx,
-                headerHeightPx = decorPx * (if (albums != null) 2 else 1) +
+                headerHeightPx = titleState.itemHeight.roundToInt() +
+                        decorPx * (if (albums != null) 2 else 1) +
                         (if (albums != null) (albums.items.size + albumCols - 1) / albumCols *
                                 libraryGridRowHeightPx(albumIsGrid, albumCols) else 0),
                 hintFor = { i -> songs.items.getOrNull(i)?.let { songs.fastScrollHintFor(it, i) } ?: "-" },
+                modifier = Modifier.padding(top = barTopPadding),
             )
         }
+        GlassTitleBar(
+            hazeState = hazeState,
+            title = title,
+            scrolled = scrolled,
+            toolbarPaddingStart = 4.dp,
+            titlePaddingStart = 4.dp,
+            navigationIcon = {
+                LibraryIconButton(
+                    icon = Icons.AutoMirrored.Rounded.ArrowBack,
+                    iconSize = 24.dp,
+                    tint = MaterialTheme.colorScheme.onSurface,
+                    onClick = onBack,
+                )
+            },
+            actions = {
+                if (page.editablePlaylistId != null) {
+                    LibraryIconButton(
+                        icon = Icons.Rounded.Edit,
+                        iconSize = 24.dp,
+                        tint = MaterialTheme.colorScheme.onSurface,
+                        onClick = {
+                            activity.startFragment(PlaylistEditFragment()) {
+                                putString("Id", page.editablePlaylistId.toString())
+                            }
+                        },
+                    )
+                }
+            },
+        )
     }
 }

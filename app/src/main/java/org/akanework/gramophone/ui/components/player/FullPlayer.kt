@@ -48,6 +48,20 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.Article
+import androidx.compose.material.icons.automirrored.rounded.PlaylistPlay
+import androidx.compose.material.icons.rounded.AlarmOff
+import androidx.compose.material.icons.rounded.AlarmOn
+import androidx.compose.material.icons.rounded.ExpandMore
+import androidx.compose.material.icons.rounded.Favorite
+import androidx.compose.material.icons.rounded.FavoriteBorder
+import androidx.compose.material.icons.rounded.Repeat
+import androidx.compose.material.icons.rounded.RepeatOne
+import androidx.compose.material.icons.rounded.Shuffle
+import androidx.compose.material.icons.rounded.SkipNext
+import androidx.compose.material.icons.rounded.SkipPrevious
+import androidx.compose.material.icons.rounded.Speed
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -65,6 +79,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -260,10 +275,10 @@ private fun TopButtonColumn(
 ) {
     val timerActive by player.timerActive.collectAsState()
     Column(modifier) {
-        IconSlot(R.drawable.ic_expand_more, scheme.onSurface, 52.dp, 28.dp, actions.minimize)
-        IconSlot(R.drawable.ic_speed, scheme.onSurface, 52.dp, 24.dp) { onOpenDialog(PlayerDialog.Speed) }
+        IconSlot(Icons.Rounded.ExpandMore, scheme.onSurface, 52.dp, 28.dp, actions.minimize)
+        IconSlot(Icons.Rounded.Speed, scheme.onSurface, 52.dp, 24.dp) { onOpenDialog(PlayerDialog.Speed) }
         IconSlot(
-            res = if (timerActive) R.drawable.ic_alarm_on else R.drawable.ic_alarm_off,
+            image = if (timerActive) Icons.Rounded.AlarmOn else Icons.Rounded.AlarmOff,
             tint = scheme.onSurface, box = 52.dp, icon = 24.dp, onClick = { onOpenDialog(PlayerDialog.Timer) },
         )
     }
@@ -284,19 +299,19 @@ private fun TopButtonRow(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Spacer(Modifier.width(24.dp))
-        IconSlot(R.drawable.ic_expand_more, scheme.onSurface, 52.dp, 28.dp, actions.minimize)
+        IconSlot(Icons.Rounded.ExpandMore, scheme.onSurface, 52.dp, 28.dp, actions.minimize)
         Spacer(Modifier.weight(1f))
         IconSlot(
-            res = if (timerActive) R.drawable.ic_alarm_on else R.drawable.ic_alarm_off,
+            image = if (timerActive) Icons.Rounded.AlarmOn else Icons.Rounded.AlarmOff,
             tint = scheme.onSurface, box = 52.dp, icon = 24.dp, onClick = { onOpenDialog(PlayerDialog.Timer) },
         )
-        IconSlot(R.drawable.ic_speed, scheme.onSurface, 52.dp, 24.dp) { onOpenDialog(PlayerDialog.Speed) }
+        IconSlot(Icons.Rounded.Speed, scheme.onSurface, 52.dp, 24.dp) { onOpenDialog(PlayerDialog.Speed) }
         Spacer(Modifier.width(24.dp))
     }
 }
 
 @Composable
-private fun IconSlot(res: Int, tint: Color, box: Dp, icon: Dp, onClick: () -> Unit) {
+private fun IconSlot(image: ImageVector, tint: Color, box: Dp, icon: Dp, onClick: () -> Unit) {
     Box(
         Modifier
             .size(box)
@@ -304,7 +319,7 @@ private fun IconSlot(res: Int, tint: Color, box: Dp, icon: Dp, onClick: () -> Un
             .clickable(onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {
-        Icon(painterResource(res), contentDescription = null, tint = tint, modifier = Modifier.size(icon))
+        Icon(image, contentDescription = null, tint = tint, modifier = Modifier.size(icon))
     }
 }
 
@@ -441,7 +456,7 @@ private fun TransportRow(player: PlayerSheetPlayerState, actions: FullPlayerActi
         verticalAlignment = Alignment.CenterVertically,
     ) {
         TransportButton(
-            res = R.drawable.ic_skip_previous, tint = scheme.onSurface, icon = 38.dp,
+            image = Icons.Rounded.SkipPrevious, tint = scheme.onSurface, icon = 38.dp,
             onClick = actions.previous, onLongClick = actions.seekBack,
         )
         Spacer(Modifier.width(8.dp))
@@ -463,7 +478,7 @@ private fun TransportRow(player: PlayerSheetPlayerState, actions: FullPlayerActi
         }
         Spacer(Modifier.width(8.dp))
         TransportButton(
-            res = R.drawable.ic_skip_next, tint = scheme.onSurface, icon = 38.dp,
+            image = Icons.Rounded.SkipNext, tint = scheme.onSurface, icon = 38.dp,
             onClick = actions.next, onLongClick = actions.seekForward,
         )
     }
@@ -472,7 +487,7 @@ private fun TransportRow(player: PlayerSheetPlayerState, actions: FullPlayerActi
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun TransportButton(
-    res: Int,
+    image: ImageVector,
     tint: Color,
     icon: Dp,
     onClick: () -> Unit,
@@ -490,7 +505,7 @@ private fun TransportButton(
             ),
         contentAlignment = Alignment.Center,
     ) {
-        Icon(painterResource(res), contentDescription = null, tint = tint, modifier = Modifier.size(icon))
+        Icon(image, contentDescription = null, tint = tint, modifier = Modifier.size(icon))
     }
 }
 
@@ -511,18 +526,18 @@ private fun ActionBarRow(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        IconSlot(R.drawable.ic_article, scheme.onSurface, 48.dp, 24.dp, actions.showLyrics)
+        IconSlot(Icons.AutoMirrored.Rounded.Article, scheme.onSurface, 48.dp, 24.dp, actions.showLyrics)
         IconSlot(
-            res = if (repeatMode == PlayerUtilities.PLAYER_REPEAT_ONE) R.drawable.ic_repeat_one else R.drawable.ic_repeat,
+            image = if (repeatMode == PlayerUtilities.PLAYER_REPEAT_ONE) Icons.Rounded.RepeatOne else Icons.Rounded.Repeat,
             tint = checkTint(repeatMode != PlayerUtilities.PLAYER_REPEAT_OFF),
             box = 48.dp, icon = 24.dp, onClick = actions.cycleRepeat,
         )
-        IconSlot(R.drawable.ic_shuffle, checkTint(shuffle), 48.dp, 24.dp) { actions.toggleShuffle(!shuffle) }
+        IconSlot(Icons.Rounded.Shuffle, checkTint(shuffle), 48.dp, 24.dp) { actions.toggleShuffle(!shuffle) }
         IconSlot(
-            res = if (favorite) R.drawable.ic_favorite_filled else R.drawable.ic_favorite,
+            image = if (favorite) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder,
             tint = if (favorite) scheme.tertiary else scheme.onSurface,
             box = 48.dp, icon = 24.dp, onClick = { actions.toggleFavorite(!favorite) },
         )
-        IconSlot(R.drawable.ic_playlist_play, scheme.onSurface, 48.dp, 24.dp, actions.showQueue)
+        IconSlot(Icons.AutoMirrored.Rounded.PlaylistPlay, scheme.onSurface, 48.dp, 24.dp, actions.showQueue)
     }
 }
