@@ -187,6 +187,11 @@ private fun AppNavHost(backStack: SnapshotStateList<AppNavKey>) {
             homeOffset.animateTo(target, tween(NAV_TRANSITION_MS, easing = NavAxisEasing))
         }
     }
+    // Read in the draw phase. Right after a predictive commit the animatable still holds the
+    // covered offset until the effect above has run, which would shift the home for a frame.
+    val homeIdleTranslation = {
+        if (!covered && visualState.suppressNextPopTransition) 0f else homeOffset.value
+    }
     Box(Modifier.fillMaxSize()) {
         Box(
             Modifier
@@ -194,7 +199,7 @@ private fun AppNavHost(backStack: SnapshotStateList<AppNavKey>) {
                 .predictiveBackRole(
                     visualState, PredictiveBackRole.Previous,
                     enabled = inlinePreview,
-                    idleTranslationX = { homeOffset.value },
+                    idleTranslationX = homeIdleTranslation,
                 ),
         ) {
             CompositionLocalProvider(LocalHomeCovered provides covered) {
@@ -225,9 +230,8 @@ private fun AppNavHost(backStack: SnapshotStateList<AppNavKey>) {
 /**
  * While a predictive back gesture is past its reveal threshold and the page underneath is a
  * real entry, the two topmost entries are drawn by [AndroidPredictiveBackPreview]. Otherwise
- * NavDisplay renders them with the shared-axis open and close transitions. When the home, drawn
- * outside NavDisplay, is underneath, NavDisplay's own predictive seek is silenced because
- * [AppNavHost] animates the containers instead.
+ * NavDisplay renders them with the shared-axis open and close transitions. With the home
+ * underneath, [AppNavHost] draws the gesture on the containers instead.
  */
 @Composable
 private fun AndroidPredictiveBackNavigationScene(
@@ -257,9 +261,6 @@ private fun AndroidPredictiveBackNavigationScene(
             modifier = Modifier.fillMaxSize(),
             transitionSpec = { navOpenTransition(horizontalOffset) },
             popTransitionSpec = { navPopTransition(suppressPop, horizontalOffset) },
-            predictivePopTransitionSpec = {
-                navPopTransition(suppressPop || homeIsPrevious, horizontalOffset)
-            },
         )
     }
 }

@@ -71,9 +71,9 @@ fun navCloseTransition(horizontalOffset: Int): ContentTransform =
     )
 
 /**
- * Pop transition for both button back and NavDisplay's own predictive seek. When the
- * [AndroidPredictiveBackPreview] has just animated the swap itself, NavDisplay must snap in
- * silently instead of playing the close animation a second time.
+ * Pop transition for every pop NavDisplay plays itself. When the [AndroidPredictiveBackPreview]
+ * has just animated the swap, NavDisplay must snap in silently instead of playing the close
+ * animation a second time.
  */
 fun navPopTransition(suppress: Boolean, horizontalOffset: Int): ContentTransform =
     if (suppress) {

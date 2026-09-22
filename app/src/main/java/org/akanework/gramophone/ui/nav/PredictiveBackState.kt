@@ -195,7 +195,10 @@ internal data class AndroidPredictiveBackNavDisplayState<T : Any>(
 /**
  * Builds the [SceneState] / [NavigationEventState] pair that [androidx.navigation3.ui.NavDisplay]
  * consumes, but owns the back handler itself so a predictive gesture can be routed to
- * [AndroidPredictiveBackPreview] instead of NavDisplay's built-in seekable transition.
+ * [AndroidPredictiveBackPreview] instead of NavDisplay's built-in seekable transition. The state
+ * handed to NavDisplay never reports a gesture, so NavDisplay only plays its plain push and pop
+ * transitions: a flick too short for the preview pops like a button press, and a pop right after
+ * the preview is silenced through [AndroidPredictiveBackState.suppressNextPopTransition].
  */
 @Composable
 internal fun <T : Any> rememberAndroidPredictiveBackNavDisplayState(
@@ -216,12 +219,17 @@ internal fun <T : Any> rememberAndroidPredictiveBackNavDisplayState(
         onBack = onBack,
     )
     val scene = sceneState.currentScene
-    val navigationEventState = rememberNavigationEventState(
+    val gestureEventState = rememberNavigationEventState(
         currentInfo = SceneInfo(scene),
         backInfo = sceneState.previousScenes.map { SceneInfo(it) },
     )
+    // Not driven by any handler, so NavDisplay never sees a gesture and never seeks on its own.
+    val navigationEventState = rememberNavigationEventState(
+        currentInfo = SceneInfo(scene),
+        backInfo = emptyList(),
+    )
     val coroutineScope = rememberCoroutineScope()
-    val gestureTransition = navigationEventState.transitionState
+    val gestureTransition = gestureEventState.transitionState
     LaunchedEffect(gestureTransition) {
         when (val transition = gestureTransition) {
             is InProgress -> visualState.updateGesture(transition.latestEvent)
@@ -229,7 +237,7 @@ internal fun <T : Any> rememberAndroidPredictiveBackNavDisplayState(
         }
     }
     NavigationBackHandler(
-        state = navigationEventState,
+        state = gestureEventState,
         isBackEnabled = scene.previousEntries.isNotEmpty(),
         onBackCancelled = { visualState.cancel(coroutineScope) },
         onBackCompleted = {
