@@ -16,6 +16,7 @@
  */
 package org.akanework.gramophone.ui.components.home
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -29,7 +30,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.DragHandle
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -58,10 +58,11 @@ fun EditableSongRow(
     handleModifier: Modifier,
     modifier: Modifier = Modifier,
     showControls: Boolean = true,
-    nowPlaying: (@Composable () -> Unit)? = null,
+    colors: LibraryRowColors = defaultLibraryRowColors(),
 ) {
     Row(
         modifier
+            .background(colors.container, colors.containerShape)
             .fillMaxWidth()
             .height(LIST_HEIGHT)
             .clickable(
@@ -80,7 +81,7 @@ fun EditableSongRow(
                 Icon(
                     imageVector = Icons.Outlined.DragHandle,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurface,
+                    tint = colors.icon,
                     modifier = Modifier.size(24.dp),
                 )
             }
@@ -93,20 +94,19 @@ fun EditableSongRow(
         )
         Column(Modifier.weight(1f).padding(start = TEXT_MARGIN)) {
             SingleLineText(
-                title, 17.sp, 400, MaterialTheme.colorScheme.onSurface,
+                title, 17.sp, 400, colors.title,
                 Modifier.fillMaxWidth(),
             )
             SingleLineText(
-                subtitle, 14.sp, 400, MaterialTheme.colorScheme.onSurfaceVariant,
+                subtitle, 14.sp, 400, colors.subtitle,
                 Modifier.fillMaxWidth(),
             )
         }
-        nowPlaying?.invoke()
         if (showControls) {
             LibraryIconButton(
                 icon = Icons.Outlined.Close,
                 iconSize = 24.dp,
-                tint = MaterialTheme.colorScheme.onSurface,
+                tint = colors.icon,
                 onClick = onRemove,
             )
         }

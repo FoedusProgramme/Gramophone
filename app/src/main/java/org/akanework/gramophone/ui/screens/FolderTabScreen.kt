@@ -182,7 +182,7 @@ fun FolderTabScreen(
                     title = node.folderName,
                     subtitle = context.resources.getQuantityString(R.plurals.items, n, n),
                     onClick = { state.enter(node.folderName) },
-                    modifier = Modifier.libraryItemCard(),
+                    modifier = Modifier.animateItem().libraryItemCard(),
                 )
             }
             item(key = "songs-header", span = { GridItemSpan(maxLineSpan) }) {
@@ -216,7 +216,8 @@ fun FolderTabScreen(
             itemsIndexed(songs.items, key = { _, it -> "song:" + it.mediaId }) { index, item: MediaItem ->
                 LibraryItem(
                     songs, item, nowPlaying, activity, layoutType,
-                    Modifier.libraryItemCard(libraryCellShape(index, songs.items.size, columns)),
+                    Modifier.animateItem(),
+                    cardShape = { libraryCellShape(index, songs.items.size, columns, it) },
                 )
             }
         }

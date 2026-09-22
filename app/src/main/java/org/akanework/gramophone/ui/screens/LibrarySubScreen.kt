@@ -308,7 +308,7 @@ fun LibrarySubScreen(key: LibrarySubKey, onBack: () -> Unit, modifier: Modifier 
                         // The outer grid gutter the Albums tab gets from its content padding.
                         val column = index % albumCols
                         Box(
-                            Modifier.padding(
+                            Modifier.animateItem().padding(
                                 start = if (albumIsGrid && column == 0) GRID_CARD_SIDE_PADDING else 0.dp,
                                 end = if (albumIsGrid && column == albumCols - 1) GRID_CARD_SIDE_PADDING else 0.dp,
                             )
@@ -347,7 +347,7 @@ fun LibrarySubScreen(key: LibrarySubKey, onBack: () -> Unit, modifier: Modifier 
                     key = { _, it -> "song:" + it.mediaId },
                     span = { _, _ -> GridItemSpan(cols / songCols) },
                 ) { _, item ->
-                    LibraryItem(songs, item, nowPlaying, activity, songLayout)
+                    LibraryItem(songs, item, nowPlaying, activity, songLayout, Modifier.animateItem())
                 }
             }
             LibraryFastScroller(

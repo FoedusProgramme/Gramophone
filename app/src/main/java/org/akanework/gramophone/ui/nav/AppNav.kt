@@ -2,12 +2,14 @@ package org.akanework.gramophone.ui.nav
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -217,7 +219,9 @@ private fun AppNavHost(backStack: SnapshotStateList<AppNavKey>) {
     val homeIdleTranslation = {
         if (!covered && visualState.suppressNextPopTransition) 0f else homeOffset.value
     }
-    Box(Modifier.fillMaxSize()) {
+    // What the preview reveals around the two containers. Left to the window, it would be the
+    // XML theme's surface, resolved once from the system palette and brightness.
+    Box(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surfaceContainer)) {
         Box(
             Modifier
                 .fillMaxSize()

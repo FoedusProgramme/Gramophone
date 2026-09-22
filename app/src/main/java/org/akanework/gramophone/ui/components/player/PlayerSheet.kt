@@ -18,7 +18,6 @@
 package org.akanework.gramophone.ui.components.player
 
 import android.net.Uri
-import androidx.collection.LruCache
 import android.os.Build
 import android.view.RoundedCorner
 import android.view.View
@@ -46,7 +45,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -56,7 +54,6 @@ import androidx.compose.material.icons.outlined.SkipNext
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
@@ -69,9 +66,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
@@ -82,31 +77,15 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.res.integerResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import coil3.BitmapImage
-import coil3.PlatformContext
 import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
-import coil3.imageLoader
 import coil3.request.ImageRequest
-import coil3.request.SuccessResult
-import coil3.request.allowHardware
 import coil3.size.Precision
-import com.materialkolor.PaletteStyle
 import com.materialkolor.ktx.animateColorScheme
-import com.materialkolor.ktx.quantize
-import com.materialkolor.quantize.QuantizerCelebi
-import com.materialkolor.rememberDynamicColorScheme
-import com.materialkolor.score.Score
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.withContext
 import org.akanework.gramophone.R
 import org.akanework.gramophone.ui.components.compose.rememberBooleanPreference
 import org.akanework.gramophone.ui.components.compose.rememberIntPreference
-import org.akanework.gramophone.ui.tonal
-import org.akanework.gramophone.ui.components.player.PlayerUtilities.ARTWORK_QUANTIZE_MAX
-import org.akanework.gramophone.ui.components.player.PlayerUtilities.ARTWORK_SEED_SIZE
-import org.akanework.gramophone.ui.components.player.PlayerUtilities.ARTWORK_SEED_SIZE_ACCURATE
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.COVER_CLICK_MIN
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.FALLBACK_PAGE_CORNER
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.LYRIC_COVER_FADE_MS
@@ -191,16 +170,11 @@ fun PlayerSheet(
     val c = chrome.value
     val hasMedia by player.hasMedia.collectAsState()
     val artworkUri by player.artworkUri.collectAsState()
-    val contentBasedColor = rememberBooleanPreference("content_based_color", true).value
-    val colorAccuracy = rememberBooleanPreference("color_accuracy", false).value
     val cookieCover = rememberBooleanPreference("cookie_cover", false).value
     val expandedArtCorner = rememberIntPreference(
         "album_round_corner", integerResource(R.integer.round_corner_radius)
     ).value.dp
-    val coverScheme = rememberCoverScheme(
-        if (contentBasedColor) artworkUri else null,
-        accurate = colorAccuracy,
-    )
+    val coverScheme = animateColorScheme(rememberArtworkColorScheme(artworkUri))
     var activeDialog by remember { mutableStateOf<PlayerDialog?>(null) }
     PlayerDialogs(activeDialog, coverScheme, dialogCallbacks, onDismiss = { activeDialog = null })
 
@@ -213,9 +187,7 @@ fun PlayerSheet(
         label = "sheet show",
     )
 
-    // By night the cover scheme's surface is nearly black and its primary container dull, so
-    // the collapsed bar and its progress take the cover's hue at tones of their own.
-    val isDark = MaterialTheme.colorScheme.surface.luminance() < 0.5f
+    val barColors = nowPlayingColors(coverScheme, MaterialTheme.colorScheme.primary)
     BoxWithConstraints(Modifier.fillMaxSize()) {
         val rootW = constraints.maxWidth.toFloat()
         val rootH = constraints.maxHeight.toFloat()
@@ -231,8 +203,7 @@ fun PlayerSheet(
             isWideLandscape = isWideLandscape,
             pageCorner = deviceScreenCornerRadius(),
             density = density,
-            collapsedContainerColor = if (isDark) coverScheme.primary.tonal(DARK_BAR_CHROMA, DARK_BAR_TONE)
-                else coverScheme.surface,
+            collapsedContainerColor = barColors.bar,
             expandedArtCorner = expandedArtCorner,
         )
         state.travelPx = metrics.travelPx
@@ -252,11 +223,7 @@ fun PlayerSheet(
                 .graphicsLayer { translationY = (1f - showFraction) * metrics.collapsedFootprint },
         ) {
             SheetSurface(metrics)
-            ProgressFill(
-                player, metrics,
-                if (isDark) coverScheme.primary.tonal(DARK_BAR_FILL_CHROMA, DARK_BAR_FILL_TONE)
-                else coverScheme.primaryContainer,
-            )
+            ProgressFill(player, metrics, barColors.fill)
             FullPlayerContent(
                 state, metrics, player, actions, coverScheme, fullPlayerView,
                 onOpenDialog = { activeDialog = it },
@@ -493,64 +460,4 @@ private fun deviceScreenCornerRadius(): Dp {
         }
         with(density) { radiusPx.toDp() }.takeIf { it > 0.dp } ?: FALLBACK_PAGE_CORNER
     }
-}
-
-@Composable
-private fun rememberCoverScheme(artworkUri: Uri?, accurate: Boolean): ColorScheme =
-    animateColorScheme(rememberArtworkColorScheme(artworkUri, accurate))
-
-@Composable
-private fun rememberArtworkColorScheme(artworkUri: Uri?, accurate: Boolean): ColorScheme {
-    val theme = MaterialTheme.colorScheme
-    val seed = rememberArtworkSeed(artworkUri, accurate)
-    // Match the applied theme's light/dark rather than the raw system setting.
-    val isDark = theme.surface.luminance() < 0.5f
-    return if (seed == null) theme
-    else rememberDynamicColorScheme(seedColor = seed, isDark = isDark, style = PaletteStyle.TonalSpot)
-}
-
-/** The collapsed bar and its progress fill by night, see the sheet composable. */
-private const val DARK_BAR_CHROMA = 14.0
-private const val DARK_BAR_TONE = 12.0
-private const val DARK_BAR_FILL_CHROMA = 32.0
-private const val DARK_BAR_FILL_TONE = 35.0
-
-/** Seeds by cover, one cache per accuracy since the two decodes can score differently. */
-private val artworkSeedCache = LruCache<Uri, Color>(64)
-private val accurateArtworkSeedCache = LruCache<Uri, Color>(64)
-
-@Composable
-private fun rememberArtworkSeed(artworkUri: Uri?, accurate: Boolean): Color? {
-    val context = LocalPlatformContext.current
-    val cache = if (accurate) accurateArtworkSeedCache else artworkSeedCache
-    var seed by remember { mutableStateOf(artworkUri?.let { cache[it] }) }
-    LaunchedEffect(artworkUri, accurate) {
-        if (artworkUri == null) {
-            seed = null
-            return@LaunchedEffect
-        }
-        cache[artworkUri]?.let {
-            seed = it
-            return@LaunchedEffect
-        }
-        seed = runCatching { extractArtworkSeed(context, artworkUri, accurate) }.getOrNull()
-            ?.also { cache.put(artworkUri, it) }
-    }
-    return seed
-}
-
-private suspend fun extractArtworkSeed(
-    context: PlatformContext,
-    uri: Uri,
-    accurate: Boolean,
-): Color? = withContext(Dispatchers.Default) {
-    // A tiny decode is plenty for a stable dominant colour and keeps quantisation near-free.
-    val size = if (accurate) ARTWORK_SEED_SIZE_ACCURATE else ARTWORK_SEED_SIZE
-    val request = ImageRequest.Builder(context).data(uri).size(size).allowHardware(false).build()
-    val image = (context.imageLoader.execute(request) as? SuccessResult)?.image
-    val bitmap = (image as? BitmapImage)?.bitmap?.asImageBitmap() ?: return@withContext null
-    val population = QuantizerCelebi.quantize(bitmap, ARTWORK_QUANTIZE_MAX)
-    val scored = Score.score(population, desired = 1, fallbackColorArgb = null, filter = true)
-        .ifEmpty { Score.score(population, desired = 1, fallbackColorArgb = null, filter = false) }
-    scored.firstOrNull()?.let { Color(it) }
 }

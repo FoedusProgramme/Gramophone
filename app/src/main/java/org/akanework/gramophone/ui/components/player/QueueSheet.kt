@@ -26,6 +26,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -36,7 +37,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
@@ -65,7 +65,8 @@ import org.akanework.gramophone.ui.components.compose.DismissibleRow
 import org.akanework.gramophone.ui.components.compose.reorderHandle
 import org.akanework.gramophone.ui.components.compose.reorderableRow
 import org.akanework.gramophone.ui.components.home.EditableSongRow
-import org.akanework.gramophone.ui.components.home.NowPlayingIndicator
+import org.akanework.gramophone.ui.components.home.LIBRARY_PLAYING_CORNER
+import org.akanework.gramophone.ui.components.home.nowPlayingRowColors
 import org.akanework.gramophone.ui.fragments.compose.QueueRoot
 import org.akanework.gramophone.ui.fragments.compose.rememberMqState
 
@@ -189,7 +190,6 @@ fun QueueSheet(activity: MainActivity, onDismiss: () -> Unit) {
     val mqState = rememberMqState(scope, activity, host)
     val mqEnabled = remember { Flags.MQ_PREVIEW && context.defaultPrefs.getBooleanStrict("mq_preview", false) }
     val pagerState = rememberPagerState(initialPage = if (Flags.MQ_PREVIEW) 0 else 1) { 2 }
-    val isPlaying by mqState.isPlaying.collectAsState()
     val instance = activity.getPlayer()
 
     DisposableEffect(host, mqState) {
@@ -248,6 +248,10 @@ fun QueueSheet(activity: MainActivity, onDismiss: () -> Unit) {
     val editable = !mqState.isDetached()
     val reorder = rememberReorderableListState(listState) { from, to -> mqState.moveRow(from, to) }
     val unknownArtist = stringResource(R.string.unknown_artist)
+    val currentArtwork = host.currentMediaItemIndex?.let { rows.getOrNull(it) }?.item?.mediaMetadata?.artworkUri
+    val nowPlayingColors = nowPlayingColors(
+        rememberArtworkColorScheme(currentArtwork), MaterialTheme.colorScheme.primary,
+    )
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -291,13 +295,11 @@ fun QueueSheet(activity: MainActivity, onDismiss: () -> Unit) {
                             onRemove = { mqState.removeRow(index) },
                             handleModifier = if (editable) Modifier.reorderHandle(reorder, index) else Modifier,
                             showControls = editable,
-                            nowPlaying = {
-                                NowPlayingIndicator(
-                                    isCurrent = index == host.currentMediaItemIndex,
-                                    isPlaying = isPlaying && !mqState.isDetached(),
-                                    color = MaterialTheme.colorScheme.onSurface,
-                                )
-                            },
+                            colors = nowPlayingRowColors(
+                                isCurrent = index == host.currentMediaItemIndex,
+                                colors = nowPlayingColors,
+                                containerShape = RoundedCornerShape(LIBRARY_PLAYING_CORNER),
+                            ),
                         )
                     }
                 }

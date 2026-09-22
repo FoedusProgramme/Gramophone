@@ -57,6 +57,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.lerp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
@@ -98,29 +99,39 @@ val LIBRARY_ITEM_CORNER = 4.dp
 /** The corners of the sheet the home's items sit in, and of the items at its two ends. */
 val LIBRARY_GROUP_CORNER = 28.dp
 
+/** Every corner of the playing song's card, setting it apart from its neighbours. */
+val LIBRARY_PLAYING_CORNER = 12.dp
+
 /**
  * An item's shape: the group's corner on the sides given as true, which are the group's own
- * ends, and the small corner elsewhere, where the item meets another.
+ * ends, and the small corner elsewhere, where the item meets another. At [emphasis] 1 every
+ * corner is [LIBRARY_PLAYING_CORNER], the way the playing song's card stands apart.
  */
 fun libraryItemShape(
     topStart: Boolean = false,
     topEnd: Boolean = false,
     bottomStart: Boolean = false,
     bottomEnd: Boolean = false,
-): Shape = RoundedCornerShape(
-    topStart = if (topStart) LIBRARY_GROUP_CORNER else LIBRARY_ITEM_CORNER,
-    topEnd = if (topEnd) LIBRARY_GROUP_CORNER else LIBRARY_ITEM_CORNER,
-    bottomEnd = if (bottomEnd) LIBRARY_GROUP_CORNER else LIBRARY_ITEM_CORNER,
-    bottomStart = if (bottomStart) LIBRARY_GROUP_CORNER else LIBRARY_ITEM_CORNER,
-)
+    emphasis: Float = 0f,
+): Shape {
+    fun corner(groupEnd: Boolean) =
+        lerp(if (groupEnd) LIBRARY_GROUP_CORNER else LIBRARY_ITEM_CORNER, LIBRARY_PLAYING_CORNER, emphasis)
+    return RoundedCornerShape(
+        topStart = corner(topStart),
+        topEnd = corner(topEnd),
+        bottomEnd = corner(bottomEnd),
+        bottomStart = corner(bottomStart),
+    )
+}
 
 /** The shape of cell [index] of [count] in a grid of [columns], the last row closing the group. */
-fun libraryCellShape(index: Int, count: Int, columns: Int): Shape {
+fun libraryCellShape(index: Int, count: Int, columns: Int, emphasis: Float = 0f): Shape {
     val lastRow = index / columns == (count - 1) / columns
     val column = index % columns
     return libraryItemShape(
         bottomStart = lastRow && column == 0,
         bottomEnd = lastRow && (column == columns - 1 || index == count - 1),
+        emphasis = emphasis,
     )
 }
 
@@ -200,7 +211,7 @@ fun LibraryListRow(
     onClick: () -> Unit,
     onMenu: () -> Unit,
     modifier: Modifier = Modifier,
-    nowPlaying: (@Composable () -> Unit)? = null,
+    colors: LibraryRowColors = defaultLibraryRowColors(),
     menu: @Composable () -> Unit = {},
 ) {
     val larger = layout == LayoutType.LIST
@@ -210,6 +221,7 @@ fun LibraryListRow(
     val subtitleSize = if (larger) 15.sp else 14.sp
     Row(
         modifier
+            .background(colors.container, colors.containerShape)
             .fillMaxWidth()
             .height(rowHeight)
             // The View row is clickable but has no selectable background: no ripple.
@@ -231,21 +243,20 @@ fun LibraryListRow(
             Modifier.weight(1f).padding(start = textMargin),
         ) {
             SingleLineText(
-                title, 17.sp, 400, MaterialTheme.colorScheme.onSurface,
+                title, 17.sp, 500, colors.title,
                 Modifier.fillMaxWidth(),
             )
             SingleLineText(
-                subtitle, subtitleSize, 400, MaterialTheme.colorScheme.onSurfaceVariant,
+                subtitle, subtitleSize, 400, colors.subtitle,
                 Modifier.fillMaxWidth(),
             )
         }
-        nowPlaying?.invoke()
         if (hasMenu) {
             Box {
                 LibraryIconButton(
                     icon = Icons.Outlined.MoreVert,
                     iconSize = 24.dp,
-                    tint = MaterialTheme.colorScheme.onSurface,
+                    tint = colors.icon,
                     onClick = onMenu,
                 )
                 menu()
@@ -267,12 +278,13 @@ fun LibraryGridCard(
     onClick: () -> Unit,
     onMenu: () -> Unit,
     modifier: Modifier = Modifier,
-    nowPlaying: (@Composable () -> Unit)? = null,
+    colors: LibraryRowColors = defaultLibraryRowColors(),
     menu: @Composable () -> Unit = {},
 ) {
     val labelHeight = with(LocalDensity.current) { GRID_CARD_LABEL_HEIGHT.toDp() }
     Column(
         modifier
+            .background(colors.container, colors.containerShape)
             .fillMaxWidth()
             .combinedClickable(
                 interactionSource = remember { MutableInteractionSource() },
@@ -302,20 +314,19 @@ fun LibraryGridCard(
                     .height(labelHeight),
             ) {
                 SingleLineText(
-                    title, 15.sp, 500, MaterialTheme.colorScheme.onSurface,
+                    title, 15.sp, 500, colors.title,
                     Modifier.fillMaxWidth(),
                 )
                 SingleLineText(
-                    subtitle, 15.sp, 500, MaterialTheme.colorScheme.onSurfaceVariant,
+                    subtitle, 15.sp, 500, colors.subtitle,
                     Modifier.fillMaxWidth(),
                 )
                 SingleLineText(
-                    trackCount, 12.sp, 500, MaterialTheme.colorScheme.onSurfaceVariant,
+                    trackCount, 12.sp, 500, colors.subtitle,
                     Modifier.fillMaxWidth(),
                 )
             }
-            nowPlaying?.invoke()
-        }
+            }
         menu()
     }
 }

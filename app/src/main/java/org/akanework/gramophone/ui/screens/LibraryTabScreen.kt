@@ -34,7 +34,6 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -44,6 +43,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -82,7 +83,7 @@ import org.akanework.gramophone.ui.components.home.libraryCellShape
 import org.akanework.gramophone.ui.components.home.LIBRARY_ITEM_GAP
 import org.akanework.gramophone.ui.components.home.LibraryItemMenu
 import org.akanework.gramophone.ui.components.home.LibraryListRow
-import org.akanework.gramophone.ui.components.home.NowPlayingIndicator
+import org.akanework.gramophone.ui.components.home.nowPlayingRowColors
 import org.akanework.gramophone.ui.components.home.NowPlayingState
 import org.akanework.gramophone.ui.components.home.SortMenu
 import org.akanework.gramophone.ui.components.home.iosOverscroll
@@ -304,7 +305,8 @@ fun <T : Any> LibraryTabScreen(
         itemsIndexed(items, key = { _, it -> spec.helper.getId(it) }) { index, item ->
             LibraryItem(
                 state, item, nowPlaying, activity, layoutType,
-                Modifier.libraryItemCard(libraryCellShape(index, items.size, columns)),
+                Modifier.animateItem(),
+                cardShape = { libraryCellShape(index, items.size, columns, it) },
             )
         }
     }
@@ -350,6 +352,7 @@ internal fun <T : Any> LibraryItem(
     activity: org.akanework.gramophone.ui.MainActivity,
     layoutType: LayoutType,
     modifier: Modifier = Modifier,
+    cardShape: ((emphasis: Float) -> Shape)? = null,
 ) {
     val context = LocalContext.current
     val spec = state.spec
@@ -372,15 +375,14 @@ internal fun <T : Any> LibraryItem(
             onAction = { spec.onMenuAction(activity, item, it) },
         )
     }
-    val nowPlayingSlot: (@Composable () -> Unit)? = if (item is MediaItem) {
-        {
-            NowPlayingIndicator(
-                isCurrent = item.mediaId == nowPlaying.currentMediaId,
-                isPlaying = nowPlaying.isPlaying,
-                color = MaterialTheme.colorScheme.onSurface,
-            )
-        }
-    } else null
+    val colors = nowPlayingRowColors(
+        isCurrent = item is MediaItem && item.mediaId == nowPlaying.currentMediaId,
+        colors = nowPlaying.colors,
+        containerShape = if (cardShape == null) libraryItemShape(emphasis = 1f) else RectangleShape,
+    )
+    // The playing song's card takes its own corners, see libraryItemShape.
+    val rowModifier = if (cardShape == null) modifier
+        else modifier.libraryItemCard(cardShape(colors.emphasis))
     val onClick = { spec.onClick(activity, state, item, state.items.indexOf(item)) }
     if (layoutType == LayoutType.GRID || layoutType == LayoutType.COMPACT_GRID) {
         val trackCount = if (helper.canGetSize()) {
@@ -403,8 +405,8 @@ internal fun <T : Any> LibraryItem(
             hasMenu = actions.isNotEmpty(),
             onClick = onClick,
             onMenu = { menuOpen = true },
-            modifier = modifier,
-            nowPlaying = nowPlayingSlot,
+            modifier = rowModifier,
+            colors = colors,
             menu = menu,
         )
     } else {
@@ -417,8 +419,8 @@ internal fun <T : Any> LibraryItem(
             hasMenu = actions.isNotEmpty(),
             onClick = onClick,
             onMenu = { menuOpen = true },
-            modifier = modifier,
-            nowPlaying = nowPlayingSlot,
+            modifier = rowModifier,
+            colors = colors,
             menu = menu,
         )
     }

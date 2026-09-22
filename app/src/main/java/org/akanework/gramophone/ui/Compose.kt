@@ -38,9 +38,14 @@ const val THEME_ANIMATION_MS = 400
 
 private const val DARK_CARD_CHROMA = 8.0
 private const val DARK_CARD_TONE = 10.0
+/** How far a dark card sits above the page, which differs between colour spec versions. */
+private const val DARK_CARD_TONE_LIFT = 4.0
 
 private fun cardSurface(scheme: ColorScheme, dark: Boolean): Color =
-    if (dark) scheme.primary.tonal(DARK_CARD_CHROMA, DARK_CARD_TONE) else scheme.surfaceBright
+    if (dark) {
+        val pageTone = scheme.surfaceContainerLow.toHct().tone
+        scheme.primary.tonal(DARK_CARD_CHROMA, maxOf(DARK_CARD_TONE, pageTone + DARK_CARD_TONE_LIFT))
+    } else scheme.surfaceBright
 
 /** This colour's hue at the given [chroma] and [tone]. */
 fun Color.tonal(chroma: Double, tone: Double): Color = Hct.from(toHct().hue, chroma, tone).toColor()
