@@ -32,6 +32,8 @@
     <string name="category_playlists">Playlists</string>
     <!-- Used in place of the artist name if the artist can't be found unexpectedly -->
     <string name="unknown_artist">Unknown artist</string>
+    <!-- Dialog title when clicking the artist of a track that has multiple artists, prompting the user to select which artist to navigate to -->
+    <string name="select_artist">Select artist</string>
     <!-- Tab on home screen showing a list of years (2002, 2003, etc.) -->
     <string name="category_dates">Dates</string>
     <!-- Counting how many songs are in a song list -->
@@ -1330,4 +1332,50 @@ supporting local search. This string is displayed in the search bar when using G
     <string name="widget_theme_album_art_follow_system">Album art · Follow system</string>
     <string name="widget_theme_album_art_dark">Album art · Dark</string>
     <string name="widget_theme_album_art_light">Album art · Light</string>
+    <!-- Preference title in behavior settings to enable multi-artist detection and indexing -->
+    <string name="settings_multi_artist">Multi-artist support</string>
+    <!-- Preference summary in behavior settings explaining multi-artist support -->
+    <string name="settings_multi_artist_summary">Detect and index multiple artists from track metadata</string>
+    <!-- Preference title in behavior settings to enable multi-genre detection and indexing -->
+    <string name="settings_multi_genre">Multi-genre support</string>
+    <!-- Preference summary in behavior settings explaining multi-genre support -->
+    <string name="settings_multi_genre_summary">Detect and index multiple genres from track metadata</string>
+    <!-- Preference title to open configuration screen for artist split symbols and words -->
+    <string name="settings_split_artists">Artist split delimiters</string>
+    <!-- Preference summary explaining artist split delimiter configuration -->
+    <string name="settings_split_artists_summary">Configure symbols and words used to split multiple artists</string>
+    <!-- Preference title to open configuration screen for genre split symbols -->
+    <string name="settings_split_genres">Genre split delimiters</string>
+    <!-- Preference summary explaining genre split delimiter configuration -->
+    <string name="settings_split_genres_summary">Configure symbols used to split multiple genres</string>
+    <!-- Section title in delimiter settings screen grouping punctuation/symbol chips (e.g. commas, slashes) -->
+    <string name="split_symbols_title">Symbols</string>
+    <!-- Section title in delimiter settings screen grouping word chips (e.g. feat., ft.) -->
+    <string name="split_words_title">Words</string>
+    <!-- Button text to add a new symbol delimiter in split tag settings -->
+    <string name="split_add_symbol">Add symbol</string>
+    <!-- Button text to add a new word delimiter in split tag settings -->
+    <string name="split_add_word">Add word</string>
+    <!-- Informational hint at the bottom of the split settings screen explaining how to prevent unwanted splitting using a backslash -->
+    <string name="split_escape_hint">Tip: If an artist or genre name in audio metadata contains a symbol that should not be split, you can edit it manually to escape the symbol with a backslash (e.g. AC\\/DC)</string>
+    <!-- Menu item in split settings screen to restore delimiters to factory defaults -->
+    <string name="reset_to_default">Reset to default</string>
+    <!-- Example placeholder hint shown in the input field when adding a word delimiter (e.g. feat., ft.) -->
+    <string name="split_add_word_hint">feat., ft., etc.</string>
+    <!-- Example placeholder hint shown in the input field when adding a symbol delimiter (e.g. comma, slash, semicolon) -->
+    <string name="split_add_symbol_hint">, / ; etc.</string>
+    <!-- Category title in behavior settings grouping multi-artist and multi-genre tag splitting preferences -->
+    <string name="settings_category_tag_splitting">Tag Splitting</string>
+    <!-- Validation error message shown when a symbol is longer than a single character -->
+    <string name="split_symbol_single_char_only">Symbols must be a single character</string>
+    <!-- Validation error message shown when attempting to add backslash as a delimiter -->
+    <string name="split_backslash_not_allowed">Backslash cannot be used as a delimiter</string>
+    <!-- Validation error message shown when attempting to add a letter or digit as a symbol delimiter -->
+    <string name="split_symbol_no_letter_or_digit">Symbols cannot be letters or digits</string>
+    <!-- Validation error message shown when a delimiter already exists in configuration -->
+    <string name="split_delimiter_already_exists">Delimiter already exists</string>
+    <!-- Validation error message shown when a word delimiter contains whitespace -->
+    <string name="split_word_no_whitespace">Words cannot contain whitespace</string>
+    <!-- Accessibility content description for chip remove button -->
+    <string name="split_remove_delimiter">Remove %s</string>
 </resources>
