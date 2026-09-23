@@ -48,6 +48,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ListView
@@ -210,7 +211,7 @@ class FullBottomSheet
                 if (mediaId != null) {
                     if (seekBar != null) {
                         instance?.seekTo((seekBar.progress.toLong()))
-                        bottomSheetFullLyricView.updateLyricPositionFromPlaybackPos()
+                        lyricPanelController.syncPlaybackPosition()
                     }
                 }
                 isUserTracking = false
@@ -226,7 +227,7 @@ class FullBottomSheet
                 val mediaId = instance?.currentMediaItem
                 if (mediaId != null) {
                     instance?.seekTo((slider.value.toLong()))
-                    bottomSheetFullLyricView.updateLyricPositionFromPlaybackPos()
+                    lyricPanelController.syncPlaybackPosition()
                 }
                 isUserTracking = false
             }
@@ -279,6 +280,8 @@ class FullBottomSheet
     private val bottomSheetFullSlider: Slider
     private val bottomSheetFullCoverFrame: MaterialCardView
     val bottomSheetFullLyricView: LyricsView by lazy { (parent as ViewGroup).findViewById(R.id.lyric_frame)!! }
+    private val lyricPanelController: LyricPanelController
+
     private val progressDrawable: SquigglyProgress
     private var pqs: PlaylistQueueSheet? = null
 
@@ -286,6 +289,19 @@ class FullBottomSheet
         inflate(context, R.layout.full_player, this)
         bottomSheetFullCoverFrame = findViewById(R.id.album_cover_frame)
         bottomSheetFullCover = findViewById(R.id.full_sheet_cover)
+        val bottomSheetInlineLyricFrame: FrameLayout = findViewById(R.id.inline_lyric_frame)
+        val bottomSheetInlineLyricView: LyricsView = findViewById(R.id.inline_lyric_view)
+        bottomSheetLyricButton = findViewById(R.id.lyrics)
+        lyricPanelController = LyricPanelController(
+            fullLyricViewProvider = { bottomSheetFullLyricView },
+            inlineLyricFrame = bottomSheetInlineLyricFrame,
+            inlineLyricView = bottomSheetInlineLyricView,
+            coverFrame = bottomSheetFullCoverFrame,
+            lyricButton = bottomSheetLyricButton,
+            prefs = prefs,
+            contextProvider = { wrappedContext ?: context },
+            onFullPlayerVisibilityRequest = { visibilityDueToLyrics = it }
+        )
         bottomSheetFullTitle = findViewById(R.id.full_song_name)
         bottomSheetFullSubtitle = findViewById(R.id.full_song_artist)
         bottomSheetFullPreviousButton = findViewById(R.id.sheet_previous_song)
@@ -303,7 +319,6 @@ class FullBottomSheet
         bottomSheetPlaybackSpeedButton = findViewById(R.id.playback_speed)
         bottomSheetFavoriteButton = findViewById(R.id.favor)
         bottomSheetPlaylistButton = findViewById(R.id.playlist)
-        bottomSheetLyricButton = findViewById(R.id.lyrics)
         bottomSheetFullQualityDetails = findViewById(R.id.quality_details)
         refreshSettings(null)
         prefs.registerOnSharedPreferenceChangeListener(this)
@@ -313,7 +328,7 @@ class FullBottomSheet
 
                 GramophonePlaybackService.SERVICE_GET_LYRICS -> {
                     val parsedLyrics = instance?.getLyrics()
-                    bottomSheetFullLyricView.updateLyrics(parsedLyrics)
+                    lyricPanelController.updateLyrics(parsedLyrics)
                 }
 
                 GramophonePlaybackService.SERVICE_GET_AUDIO_FORMAT -> {
@@ -602,7 +617,7 @@ class FullBottomSheet
 
         bottomSheetLyricButton.setOnClickListener {
             ViewCompat.performHapticFeedback(it, HapticFeedbackConstantsCompat.CONTEXT_CLICK)
-            bottomSheetFullLyricView.fadInAnimation(LYRIC_FADE_TRANSITION_SEC)
+            lyricPanelController.onLyricButtonClicked()
         }
 
         bottomSheetShuffleButton.setOnClickListener {
@@ -644,12 +659,15 @@ class FullBottomSheet
                 Player.MEDIA_ITEM_TRANSITION_REASON_PLAYLIST_CHANGED
             )
             onMediaMetadataChanged(instance?.mediaMetadata ?: MediaMetadata.EMPTY)
+            val parsedLyrics = instance?.getLyrics()
+            lyricPanelController.updateLyrics(parsedLyrics)
             firstTime = false
         }
     }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
+        lyricPanelController.attachFullLyricView()
         val colorPrimary =
             MaterialColors.getColor(
                 context,
@@ -666,18 +684,17 @@ class FullBottomSheet
             ColorUtils.ColorType.COLOR_BACKGROUND_ELEVATED,
             context
         )
-        bottomSheetFullLyricView.updateTextColor(
-            androidx.core.graphics.ColorUtils.compositeColors(
-                androidx.core.graphics.ColorUtils.setAlphaComponent(colorPrimary, 77),
-                backgroundProcessedColor
-            ),
-            colorPrimary,
-            androidx.core.graphics.ColorUtils.compositeColors(
-                androidx.core.graphics.ColorUtils.setAlphaComponent(colorPrimary, 200),
-                backgroundProcessedColor
-            ),
+        val lyricsTextCol = androidx.core.graphics.ColorUtils.compositeColors(
+            androidx.core.graphics.ColorUtils.setAlphaComponent(colorPrimary, 77),
+            backgroundProcessedColor
         )
+        val lyricsHighlightTlCol = androidx.core.graphics.ColorUtils.compositeColors(
+            androidx.core.graphics.ColorUtils.setAlphaComponent(colorPrimary, 200),
+            backgroundProcessedColor
+        )
+        lyricPanelController.updateColors(lyricsTextCol, colorPrimary, lyricsHighlightTlCol)
         bottomSheetFullSeekBar.progressTintList = ColorStateList.valueOf(colorPrimary)
+        lyricPanelController.updateButtonTint()
         shouldRotateCookieButton = instance?.isPlaying == true
         syncButtonRotation()
     }
@@ -719,14 +736,14 @@ class FullBottomSheet
     override fun onSaveInstanceState(): Parcelable {
         return Bundle().apply {
             putParcelable("Super", super.onSaveInstanceState())
-            putBoolean("Lyrics", bottomSheetFullLyricView.isVisible)
+            lyricPanelController.saveInstanceState(this)
         }
     }
 
     override fun onRestoreInstanceState(state: Parcelable?) {
         state as Bundle?
         if (state != null) {
-            bottomSheetFullLyricView.isVisible = state.getBoolean("Lyrics")
+            lyricPanelController.restoreInstanceState(state)
             super.onRestoreInstanceState(BundleCompat.getParcelable(state, "Super", AbsSavedState::class.java))
         } else {
             super.onRestoreInstanceState(null)
@@ -761,6 +778,7 @@ class FullBottomSheet
     }
 
     private fun refreshSettings(key: String?) {
+        lyricPanelController.onPreferenceChanged(key)
         if (key == null || key == "default_progress_bar") {
             if (prefs.getBooleanStrict("default_progress_bar", false)) {
                 bottomSheetFullSlider.visibility = VISIBLE
@@ -1252,18 +1270,26 @@ class FullBottomSheet
                 colorContrastFainted
             )
 
+            val lyricTransition = lyricPanelController.createLyricButtonTransition(
+                colorOnSurface,
+                colorOnSurfaceVariant,
+                BACKGROUND_COLOR_TRANSITION_SEC
+            )
+
+            // The playlist button tint represents the single solid colorOnSurface from the previous transition,
+            // serving as an authoritative monochrome start value (the lyrics button uses a 2-state selector in inline mode).
             val colorOnSurfaceTransition = ValueAnimator.ofArgb(
-                bottomSheetLyricButton.iconTint.defaultColor,
+                bottomSheetPlaylistButton.iconTint.defaultColor,
                 colorOnSurface
             )
 
             val lyricTextColorTransition = ValueAnimator.ofArgb(
-                bottomSheetFullLyricView.defaultTextColor,
+                lyricPanelController.defaultTextColor,
                 lyricsTextColor
             )
 
             val lyricHighlightTlColorTransition = ValueAnimator.ofArgb(
-                bottomSheetFullLyricView.highlightTlTextColor,
+                lyricPanelController.highlightTlTextColor,
                 lyricsHighlightTlColor
             )
 
@@ -1299,7 +1325,7 @@ class FullBottomSheet
                     setBackgroundColor(
                         animation.animatedValue as Int
                     )
-                    bottomSheetFullLyricView.setBackgroundColor(
+                    lyricPanelController.setFullLyricBackgroundColor(
                         animation.animatedValue as Int
                     )
                 }
@@ -1317,7 +1343,7 @@ class FullBottomSheet
                         ColorStateList.valueOf(progressColor)
                     bottomSheetFullSeekBar.thumbTintList =
                         ColorStateList.valueOf(progressColor)
-                    bottomSheetFullLyricView.updateHighlightColor(progressColor)
+                    lyricPanelController.updateHighlightColor(progressColor)
                 }
                 duration = BACKGROUND_COLOR_TRANSITION_SEC
             }
@@ -1358,8 +1384,6 @@ class FullBottomSheet
                         ColorStateList.valueOf(progressColor)
                     bottomSheetPlaylistButton.iconTint =
                         ColorStateList.valueOf(progressColor)
-                    bottomSheetLyricButton.iconTint =
-                        ColorStateList.valueOf(progressColor)
                     bottomSheetFullNextButton.iconTint =
                         ColorStateList.valueOf(progressColor)
                     bottomSheetFullPreviousButton.iconTint =
@@ -1373,7 +1397,7 @@ class FullBottomSheet
             lyricTextColorTransition.apply {
                 addUpdateListener { animation ->
                     val progressColor = animation.animatedValue as Int
-                    bottomSheetFullLyricView.updateTextColor(progressColor)
+                    lyricPanelController.updateTextColor(progressColor)
                 }
                 duration = BACKGROUND_COLOR_TRANSITION_SEC
             }
@@ -1381,7 +1405,7 @@ class FullBottomSheet
             lyricHighlightTlColorTransition.apply {
                 addUpdateListener { animation ->
                     val progressColor = animation.animatedValue as Int
-                    bottomSheetFullLyricView.updateHighlightTlColor(progressColor)
+                    lyricPanelController.updateHighlightTlColor(progressColor)
                 }
                 duration = BACKGROUND_COLOR_TRANSITION_SEC
             }
@@ -1417,6 +1441,7 @@ class FullBottomSheet
                 onSecondaryContainerTransition.start()
                 colorContrastFaintedTransition.start()
                 colorOnSurfaceTransition.start()
+                lyricTransition.start()
                 lyricTextColorTransition.start()
                 lyricHighlightTlColorTransition.start()
                 loopTransition.start()
@@ -1431,6 +1456,7 @@ class FullBottomSheet
                 onSecondaryContainerTransition.awaitEnd()
                 colorContrastFaintedTransition.awaitEnd()
                 colorOnSurfaceTransition.awaitEnd()
+                lyricTransition.awaitEnd()
                 lyricTextColorTransition.awaitEnd()
                 lyricHighlightTlColorTransition.awaitEnd()
                 loopTransition.awaitEnd()
@@ -1442,7 +1468,7 @@ class FullBottomSheet
         currentJob = null
         postOnAnimation {
             setBackgroundColor(backgroundProcessedColor)
-            bottomSheetFullLyricView.setBackgroundColor(backgroundProcessedColor)
+            lyricPanelController.setFullLyricBackgroundColor(backgroundProcessedColor)
             bottomSheetFullTitle.setTextColor(
                 colorPrimary
             )
@@ -1471,7 +1497,7 @@ class FullBottomSheet
             bottomSheetFullQualityDetails.setTextColor(
                 colorOnSurfaceVariant
             )
-            bottomSheetFullLyricView.updateTextColor(
+            lyricPanelController.updateColors(
                 lyricsTextColor,
                 colorPrimary,
                 lyricsHighlightTlColor,
@@ -1487,8 +1513,7 @@ class FullBottomSheet
                 selectorBackground
             bottomSheetLoopButton.iconTint =
                 selectorBackground
-            bottomSheetLyricButton.iconTint =
-                ColorStateList.valueOf(colorOnSurface)
+            lyricPanelController.updateButtonTint()
             bottomSheetFavoriteButton.iconTint =
                 selectorFavBackground
 
@@ -1577,7 +1602,7 @@ class FullBottomSheet
                     min(instance?.currentPosition?.toFloat() ?: 0f, bottomSheetFullSlider.valueTo)
                 bottomSheetFullPosition.text = position
             }
-            bottomSheetFullLyricView.updateLyricPositionFromPlaybackPos()
+            lyricPanelController.syncPlaybackPosition()
         }
     }
 
@@ -1707,7 +1732,7 @@ class FullBottomSheet
                     min(instance?.currentPosition?.toFloat() ?: 0f, bottomSheetFullSlider.valueTo)
                 bottomSheetFullPosition.text = position
             }
-            bottomSheetFullLyricView.updateLyricPositionFromPlaybackPos()
+            lyricPanelController.syncPlaybackPosition()
             if (instance?.isPlaying == true && runnableRunning) {
                 handler.postDelayed(this, SLIDER_UPDATE_INTERVAL)
             } else {

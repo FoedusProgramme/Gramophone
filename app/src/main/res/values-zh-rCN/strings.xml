@@ -111,6 +111,8 @@
     <string name="settings_lyric">歌词</string>
     <string name="settings_lyrics_configuration">歌词配置</string>
     <string name="settings_lyrics_configuration_summary">配置歌词外观</string>
+    <string name="settings_lyrics_fullscreen">全屏歌词</string>
+    <string name="settings_lyrics_fullscreen_summary">在全屏模式下展示歌词面板</string>
     <string name="settings_lyrics_bold">加粗歌词</string>
     <string name="settings_lyrics_bold_summary">为歌词使用更粗的字体</string>
     <string name="settings_lyrics_center">居中对齐</string>
