@@ -63,7 +63,6 @@ import org.akanework.gramophone.ui.components.home.GLASS_BAR_HEIGHT
 import org.akanework.gramophone.ui.components.home.HomeAppBar
 import org.akanework.gramophone.ui.components.home.HomeTabRow
 import org.akanework.gramophone.ui.components.home.IosOverscrollState
-import org.akanework.gramophone.ui.components.home.LIBRARY_FAB_HEIGHT
 import org.akanework.gramophone.ui.components.home.LIBRARY_FAB_MARGIN
 import org.akanework.gramophone.ui.components.home.LIBRARY_GROUP_CORNER
 import org.akanework.gramophone.ui.components.home.LibraryFab
@@ -189,21 +188,13 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                     val tab = tabs[page]
                     val spec = LibraryTabSpec.forTab(tab)
                     if (spec != null) {
-                        val state = viewModel.tabState(spec)
-                        // The last items scroll clear of the FABs.
-                        val hasFabs = libraryFabActions(state, activity).isNotEmpty()
-                        CompositionLocalProvider(
-                            LocalListBottomPadding provides
-                                if (hasFabs) LIBRARY_FAB_HEIGHT + LIBRARY_FAB_MARGIN * 2 else 0.dp,
-                        ) {
-                            LibraryTabScreen(
-                                state = state,
-                                nowPlaying = nowPlaying,
-                                reselectTick = reselectTicks[tab] ?: 0,
-                                overscroll = overscrollOf(tab),
-                                modifier = Modifier.fillMaxSize(),
-                            )
-                        }
+                        LibraryTabScreen(
+                            state = viewModel.tabState(spec),
+                            nowPlaying = nowPlaying,
+                            reselectTick = reselectTicks[tab] ?: 0,
+                            overscroll = overscrollOf(tab),
+                            modifier = Modifier.fillMaxSize(),
+                        )
                     } else {
                         FolderTabScreen(
                             state = viewModel.folderState(isDetailed = tab == HomeTab.FileSystem),

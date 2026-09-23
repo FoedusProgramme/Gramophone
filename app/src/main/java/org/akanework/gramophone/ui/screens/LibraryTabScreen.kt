@@ -84,7 +84,7 @@ import org.akanework.gramophone.ui.components.home.libraryItemCard
 import org.akanework.gramophone.ui.components.home.libraryItemShape
 import org.akanework.gramophone.ui.components.home.libraryCellShape
 import org.akanework.gramophone.ui.components.home.LIBRARY_ITEM_GAP
-import org.akanework.gramophone.ui.components.home.LibraryItemMenu
+import org.akanework.gramophone.ui.components.home.LibraryItemSheet
 import org.akanework.gramophone.ui.components.home.LibraryListRow
 import org.akanework.gramophone.ui.components.home.nowPlayingRowColors
 import org.akanework.gramophone.ui.components.home.NowPlayingState
@@ -94,6 +94,7 @@ import org.akanework.gramophone.ui.components.home.rememberIosFlingBehavior
 import org.akanework.gramophone.ui.nav.LocalAppBarTopPadding
 import org.akanework.gramophone.ui.nav.LocalListBottomPadding
 import org.akanework.gramophone.ui.nav.LocalPlayerBottomPadding
+import org.akanework.gramophone.ui.state.LibraryMenuAction
 import org.akanework.gramophone.ui.state.LibraryTabSpec
 import org.akanework.gramophone.ui.state.LibraryTabState
 import org.akanework.gramophone.ui.state.SortPrefState
@@ -263,7 +264,6 @@ fun <T : Any> LibraryTabScreen(
 
 /**
  * The home's FABs for a tab: a new playlist, or play and shuffle all. Empty when it has none.
- * Their bottom clearance is given to the list through [LocalListBottomPadding].
  */
 fun <T : Any> libraryFabActions(state: LibraryTabState<T>, activity: MainActivity): List<LibraryFabAction> {
     val spec = state.spec
@@ -363,14 +363,25 @@ internal fun <T : Any> LibraryItem(
         context.resources.getQuantityString(R.plurals.songs, s, s)
     } else "null"
     val cover = spec.coverOf(context, item)
+    val defaultCover = spec.defaultCoverOf(item)
     val actions = spec.menuActions(item)
     var menuOpen by remember { mutableStateOf(false) }
     val menu: @Composable () -> Unit = {
-        LibraryItemMenu(
+        // The sheet's play button is its header, not one of the listed actions.
+        val onMenuAction = { action: LibraryMenuAction ->
+            spec.onMenuAction(activity, state, item, state.items.indexOf(item), action)
+        }
+        LibraryItemSheet(
             expanded = menuOpen,
             onDismiss = { menuOpen = false },
+            title = title,
+            subtitle = subtitle,
+            category = context.getString(spec.tab.label),
+            cover = cover,
+            defaultCover = defaultCover,
             actions = actions,
-            onAction = { spec.onMenuAction(activity, item, it) },
+            onPlay = { onMenuAction(LibraryMenuAction.Play) },
+            onAction = onMenuAction,
         )
     }
     val colors = nowPlayingRowColors(
@@ -399,7 +410,7 @@ internal fun <T : Any> LibraryItem(
             subtitle = subtitle,
             trackCount = trackCount,
             cover = cover,
-            defaultCover = spec.defaultCover,
+            defaultCover = defaultCover,
             hasMenu = actions.isNotEmpty(),
             onClick = onClick,
             onMenu = { menuOpen = true },
@@ -412,7 +423,7 @@ internal fun <T : Any> LibraryItem(
             title = title,
             subtitle = subtitle,
             cover = cover,
-            defaultCover = spec.defaultCover,
+            defaultCover = defaultCover,
             hasMenu = actions.isNotEmpty(),
             onClick = onClick,
             onMenu = { menuOpen = true },

@@ -17,7 +17,6 @@
 
 package org.akanework.gramophone.ui.state
 
-import android.content.ContentResolver
 import android.content.Context
 import android.content.SharedPreferences
 import android.net.Uri
@@ -52,8 +51,12 @@ import uk.akane.libphonograph.items.Playlist
 import uk.akane.libphonograph.reader.FlowReader
 import uk.akane.libphonograph.toUriCompat
 
-/** Entries of the per-item overflow / long-press menu, in the order of `more_menu.xml`. */
+/**
+ * Entries of the per-item menu, in the order of `more_menu.xml`. [Play] is not listed with
+ * [LibraryTabSpec.menuActions]'s other entries: it is the sheet header's play button.
+ */
 enum class LibraryMenuAction(val title: Int) {
+    Play(R.string.play),
     PlayNext(R.string.play_next),
     AddToQueue(R.string.add_to_queue),
     GoToAlbum(R.string.go_to_album),
@@ -91,9 +94,23 @@ sealed class LibraryTabSpec<T : Any>(
     abstract fun virtualTitleOf(context: Context, item: T): String
     open fun getPinnedOrder(item: T): Int = 0
     open fun coverOf(context: Context, item: T): Uri? = helper.getCover(item)
+
+    /** Placeholder of an item without a cover; the list may pick a different one per item. */
+    @DrawableRes
+    open fun defaultCoverOf(item: T): Int = defaultCover
     abstract fun menuActions(item: T): List<LibraryMenuAction>
     abstract fun onClick(activity: MainActivity, state: LibraryTabState<T>, item: T, position: Int)
-    abstract fun onMenuAction(activity: MainActivity, item: T, action: LibraryMenuAction)
+    abstract fun onMenuAction(
+        activity: MainActivity,
+        state: LibraryTabState<T>,
+        item: T,
+        position: Int,
+        action: LibraryMenuAction,
+    )
+
+    /** Title of a queue created from this list, named the way [onClick] names it. */
+    fun queueTitleOf(activity: MainActivity, state: LibraryTabState<T>): String =
+        state.queueTitleOverride ?: activity.getString(queueTitle)
 
     data object Songs : LibraryTabSpec<MediaItem>(
         tab = HomeTab.Songs,
@@ -121,8 +138,17 @@ sealed class LibraryTabSpec<T : Any>(
             LibraryActions.playSong(activity, state.items, position, activity.getString(queueTitle))
         }
 
-        override fun onMenuAction(activity: MainActivity, item: MediaItem, action: LibraryMenuAction) {
+        override fun onMenuAction(
+            activity: MainActivity,
+            state: LibraryTabState<MediaItem>,
+            item: MediaItem,
+            position: Int,
+            action: LibraryMenuAction,
+        ) {
             when (action) {
+                LibraryMenuAction.Play -> LibraryActions.playSong(
+                    activity, state.items, position, queueTitleOf(activity, state)
+                )
                 LibraryMenuAction.PlayNext -> LibraryActions.playNext(activity, listOf(item))
                 LibraryMenuAction.AddToQueue -> LibraryActions.addToQueue(activity, listOf(item))
                 LibraryMenuAction.GoToAlbum -> LibraryActions.goToAlbum(activity, item)
@@ -168,8 +194,13 @@ sealed class LibraryTabSpec<T : Any>(
             )
         }
 
-        override fun onMenuAction(activity: MainActivity, item: MediaItem, action: LibraryMenuAction) =
-            Songs.onMenuAction(activity, item, action)
+        override fun onMenuAction(
+            activity: MainActivity,
+            state: LibraryTabState<MediaItem>,
+            item: MediaItem,
+            position: Int,
+            action: LibraryMenuAction,
+        ) = Songs.onMenuAction(activity, state, item, position, action)
     }
 
     data object Albums : LibraryTabSpec<Album>(
@@ -194,8 +225,17 @@ sealed class LibraryTabSpec<T : Any>(
             LibraryActions.openAlbum(activity, item.id)
         }
 
-        override fun onMenuAction(activity: MainActivity, item: Album, action: LibraryMenuAction) {
+        override fun onMenuAction(
+            activity: MainActivity,
+            state: LibraryTabState<Album>,
+            item: Album,
+            position: Int,
+            action: LibraryMenuAction,
+        ) {
             when (action) {
+                LibraryMenuAction.Play -> LibraryActions.playAll(
+                    activity, item.songList, queueTitleOf(activity, state)
+                )
                 LibraryMenuAction.PlayNext -> LibraryActions.playNext(activity, item.songList)
                 LibraryMenuAction.AddToQueue -> LibraryActions.addToQueue(activity, item.songList)
                 LibraryMenuAction.Delete -> LibraryActions.deleteSongs(
@@ -235,8 +275,17 @@ sealed class LibraryTabSpec<T : Any>(
             LibraryActions.openArtist(activity, item.id, isAlbumArtist)
         }
 
-        override fun onMenuAction(activity: MainActivity, item: Artist, action: LibraryMenuAction) {
+        override fun onMenuAction(
+            activity: MainActivity,
+            state: LibraryTabState<Artist>,
+            item: Artist,
+            position: Int,
+            action: LibraryMenuAction,
+        ) {
             when (action) {
+                LibraryMenuAction.Play -> LibraryActions.playAll(
+                    activity, item.songList, queueTitleOf(activity, state)
+                )
                 LibraryMenuAction.PlayNext -> LibraryActions.playNext(activity, item.songList)
                 LibraryMenuAction.AddToQueue -> LibraryActions.addToQueue(activity, item.songList)
                 LibraryMenuAction.Delete -> LibraryActions.deleteSongs(
@@ -260,15 +309,25 @@ sealed class LibraryTabSpec<T : Any>(
         override fun virtualTitleOf(context: Context, item: Genre) =
             context.getString(R.string.unknown_genre)
 
-        override fun menuActions(item: Genre) =
-            listOf(LibraryMenuAction.PlayNext, LibraryMenuAction.AddToQueue)
+        override fun menuActions(item: Genre) = listOf(
+            LibraryMenuAction.PlayNext, LibraryMenuAction.AddToQueue,
+        )
 
         override fun onClick(activity: MainActivity, state: LibraryTabState<Genre>, item: Genre, position: Int) {
             LibraryActions.openGenre(activity, item.id)
         }
 
-        override fun onMenuAction(activity: MainActivity, item: Genre, action: LibraryMenuAction) {
+        override fun onMenuAction(
+            activity: MainActivity,
+            state: LibraryTabState<Genre>,
+            item: Genre,
+            position: Int,
+            action: LibraryMenuAction,
+        ) {
             when (action) {
+                LibraryMenuAction.Play -> LibraryActions.playAll(
+                    activity, item.songList, queueTitleOf(activity, state)
+                )
                 LibraryMenuAction.PlayNext -> LibraryActions.playNext(activity, item.songList)
                 LibraryMenuAction.AddToQueue -> LibraryActions.addToQueue(activity, item.songList)
                 else -> {}
@@ -289,15 +348,25 @@ sealed class LibraryTabSpec<T : Any>(
         override fun virtualTitleOf(context: Context, item: Date) =
             context.getString(R.string.unknown_year)
 
-        override fun menuActions(item: Date) =
-            listOf(LibraryMenuAction.PlayNext, LibraryMenuAction.AddToQueue)
+        override fun menuActions(item: Date) = listOf(
+            LibraryMenuAction.PlayNext, LibraryMenuAction.AddToQueue,
+        )
 
         override fun onClick(activity: MainActivity, state: LibraryTabState<Date>, item: Date, position: Int) {
             LibraryActions.openDate(activity, item.id)
         }
 
-        override fun onMenuAction(activity: MainActivity, item: Date, action: LibraryMenuAction) {
+        override fun onMenuAction(
+            activity: MainActivity,
+            state: LibraryTabState<Date>,
+            item: Date,
+            position: Int,
+            action: LibraryMenuAction,
+        ) {
             when (action) {
+                LibraryMenuAction.Play -> LibraryActions.playAll(
+                    activity, item.songList, queueTitleOf(activity, state)
+                )
                 LibraryMenuAction.PlayNext -> LibraryActions.playNext(activity, item.songList)
                 LibraryMenuAction.AddToQueue -> LibraryActions.addToQueue(activity, item.songList)
                 else -> {}
@@ -327,20 +396,19 @@ sealed class LibraryTabSpec<T : Any>(
             else -> 999
         }
 
-        override fun coverOf(context: Context, item: Playlist): Uri? {
-            return if (item.title != null) {
-                item.cover?.toUriCompat() ?: super.coverOf(context, item)
-            } else
-                Uri.Builder()
-                    .scheme(ContentResolver.SCHEME_ANDROID_RESOURCE)
-                    .authority(context.packageName)
-                    .path(
-                        when (item) {
-                            is RecentlyAdded -> R.drawable.ic_default_cover_playlist_recently
-                            is Favorite -> R.drawable.ic_default_cover_playlist_favorite
-                            else -> R.drawable.ic_default_cover_playlist
-                        }.toString()
-                    ).build()
+        /**
+         * Only a playlist that has artwork of its own gets a URI. A missing one falls through to
+         * [defaultCoverOf]: a resource drawable would be decoded against the fixed XML theme and
+         * so would keep the palette the app shipped with, whatever is picked in the settings.
+         */
+        override fun coverOf(context: Context, item: Playlist): Uri? =
+            if (item.title != null) item.cover?.toUriCompat() ?: super.coverOf(context, item)
+            else null
+
+        override fun defaultCoverOf(item: Playlist): Int = when (item) {
+            is RecentlyAdded -> R.drawable.ic_default_cover_playlist_recently
+            is Favorite -> R.drawable.ic_default_cover_playlist_favorite
+            else -> defaultCover
         }
 
         override fun menuActions(item: Playlist) = buildList {
@@ -354,8 +422,17 @@ sealed class LibraryTabSpec<T : Any>(
             LibraryActions.openPlaylist(activity, item)
         }
 
-        override fun onMenuAction(activity: MainActivity, item: Playlist, action: LibraryMenuAction) {
+        override fun onMenuAction(
+            activity: MainActivity,
+            state: LibraryTabState<Playlist>,
+            item: Playlist,
+            position: Int,
+            action: LibraryMenuAction,
+        ) {
             when (action) {
+                LibraryMenuAction.Play -> LibraryActions.playAll(
+                    activity, item.songList, queueTitleOf(activity, state)
+                )
                 LibraryMenuAction.PlayNext -> LibraryActions.playNext(activity, item.songList)
                 LibraryMenuAction.AddToQueue -> LibraryActions.addToQueue(activity, item.songList)
                 LibraryMenuAction.Delete -> LibraryActions.deletePlaylist(activity, item)
@@ -391,8 +468,13 @@ sealed class LibraryTabSpec<T : Any>(
             LibraryActions.playSong(activity, state.items, position, state.queueTitleOverride ?: "")
         }
 
-        override fun onMenuAction(activity: MainActivity, item: MediaItem, action: LibraryMenuAction) =
-            Songs.onMenuAction(activity, item, action)
+        override fun onMenuAction(
+            activity: MainActivity,
+            state: LibraryTabState<MediaItem>,
+            item: MediaItem,
+            position: Int,
+            action: LibraryMenuAction,
+        ) = Songs.onMenuAction(activity, state, item, position, action)
     }
 
     /** The album grid of an artist page. */
@@ -416,8 +498,13 @@ sealed class LibraryTabSpec<T : Any>(
         override fun onClick(activity: MainActivity, state: LibraryTabState<Album>, item: Album, position: Int) =
             Albums.onClick(activity, state, item, position)
 
-        override fun onMenuAction(activity: MainActivity, item: Album, action: LibraryMenuAction) =
-            Albums.onMenuAction(activity, item, action)
+        override fun onMenuAction(
+            activity: MainActivity,
+            state: LibraryTabState<Album>,
+            item: Album,
+            position: Int,
+            action: LibraryMenuAction,
+        ) = Albums.onMenuAction(activity, state, item, position, action)
     }
 
     companion object {

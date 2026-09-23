@@ -101,7 +101,7 @@ import org.akanework.gramophone.logic.utils.CalculationUtils.convertDurationToTi
 import org.akanework.gramophone.logic.utils.Flags
 import org.akanework.gramophone.ui.components.compose.rememberBooleanPreference
 import org.akanework.gramophone.ui.components.home.LibraryCover
-import org.akanework.gramophone.ui.components.home.rememberDrawablePainter
+import org.akanework.gramophone.ui.components.home.rememberDefaultCoverPainter
 import org.akanework.gramophone.ui.components.home.textViewStyle
 import org.akanework.gramophone.ui.components.player.PlayPauseIcon
 import org.akanework.gramophone.ui.components.player.PlayerUtilities
@@ -456,8 +456,8 @@ private fun PreviewContent(
                 AsyncImage(
                     model = state.artworkData,
                     contentDescription = null,
-                    placeholder = rememberDrawablePainter(R.drawable.ic_default_cover),
-                    error = rememberDrawablePainter(R.drawable.ic_default_cover),
+                    placeholder = rememberDefaultCoverPainter(R.drawable.ic_default_cover),
+                    error = rememberDefaultCoverPainter(R.drawable.ic_default_cover),
                     modifier = Modifier.size(COVER_SIZE).clip(RoundedCornerShape(6.dp)),
                 )
             } else {

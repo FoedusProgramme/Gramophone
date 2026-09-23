@@ -200,7 +200,7 @@ fun LibraryCover(
     cornerRadius: Dp,
     modifier: Modifier = Modifier,
 ) {
-    val fallback = rememberDrawablePainter(defaultCover)
+    val fallback = rememberDefaultCoverPainter(defaultCover)
     AsyncImage(
         model = ImageRequest.Builder(LocalPlatformContext.current)
             .data(uri)

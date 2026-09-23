@@ -19,10 +19,12 @@ package org.akanework.gramophone.ui.components.home
 
 import android.graphics.drawable.Animatable
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.LayerDrawable
 import android.os.Handler
 import android.os.Looper
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.RememberObserver
 import androidx.compose.runtime.getValue
@@ -36,6 +38,7 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.withSave
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.LayoutDirection
@@ -121,11 +124,31 @@ class DrawablePainter(val drawable: Drawable) : Painter(), RememberObserver {
     }
 }
 
-/** A [Painter] for any drawable resource, resolved against the current theme like Views do. */
+/**
+ * A [Painter] for a default cover. Those covers carry their colours as `?attr/...` tints, which
+ * resolve against the Android XML theme; that theme is fixed, so the palette chosen in the
+ * settings never reaches them and a themed app would keep showing them in the colours it
+ * shipped with. Paint them here instead: the layer list's background takes the scheme's
+ * `surfaceVariant` and the glyph over it `onSurface`.
+ */
 @Composable
-fun rememberDrawablePainter(@DrawableRes id: Int): Painter {
+fun rememberDefaultCoverPainter(@DrawableRes id: Int): Painter {
     val context = LocalContext.current
-    return remember(context, id) {
-        DrawablePainter(ContextCompat.getDrawable(context, id)!!.mutate())
+    val background = MaterialTheme.colorScheme.surfaceVariant
+    val glyph = MaterialTheme.colorScheme.onSurface
+    return remember(context, id, background, glyph) {
+        DrawablePainter(
+            ContextCompat.getDrawable(context, id)!!.mutate().apply {
+                if (this is LayerDrawable) {
+                    for (index in 0 until numberOfLayers) {
+                        val layer = getDrawable(index)?.mutate() ?: continue
+                        layer.setTint((if (index == 0) background else glyph).toArgb())
+                        setDrawable(index, layer)
+                    }
+                } else {
+                    setTint(glyph.toArgb())
+                }
+            }
+        )
     }
 }
