@@ -289,4 +289,7 @@
     <string name="spk_encoding_aac_lc">AAC-LC</string>
     <string name="spk_encoding_aac_he_v1">HE-AAC v1</string>
     <string name="spk_encoding_aac_he_v2">HE-AAC v2</string>
+    <string name="settings_notification_lyrics_title">通知栏歌詞</string>
+    <string name="settings_notification_lyrics_summary">將歌詞顯示為通知標題，將歌手/歌名顯示為副標題</string>
+    <string name="settings_always_skip_previous">始終跳至上一首曲目</string>
 </resources>
