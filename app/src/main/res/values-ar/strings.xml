@@ -426,6 +426,7 @@
     <string name="settings_pure_dark_summary">سمة تكون فيها جميع الأسطح في التطبيق سوداء نقية (قد يتسبب ذلك في ظهور تطبيع أسود على شاشات OLED)</string>
     <string name="settings_pure_dark">أسود نقي في السمة الداكنة</string>
     <string name="settings_replaygain_preamp_desc">زيادة أو خفض مستوى صوت الأغاني باستخدام علامات ReplayGain. قد تتسبب القيم الأعلى في فقدان الديناميكيات بسبب منع الـclipping.</string>
+    <string name="unfavorite">إلغاء المفضلة</string>
     <string name="edit_mode">الدخول إلى وضع التعديل</string>
     <string name="spk_channel_out_5point1">٥.١</string>
     <string name="spk_channel_out_6point1">٦.١</string>
