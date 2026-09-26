@@ -37,6 +37,7 @@ import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.library.LibraryReadiness
 import org.akanework.gramophone.logic.library.LibraryWriteRepository
 import org.akanework.gramophone.ui.MediaControllerViewModel
+import org.akanework.gramophone.ui.actions.SHORTCUT_SHUFFLE_ALL
 import org.akanework.gramophone.ui.nav.AppNavKey
 import org.akanework.gramophone.ui.nav.NavViewModel
 import org.akanework.gramophone.ui.nav.PlaylistKey
@@ -154,7 +155,7 @@ class DefaultPlayIntentExecutor(
                 controller.play()
             }
             is PlayIntentAction.Shuffle -> {
-                ShortcutManagerCompat.reportShortcutUsed(context, "shuffle_all")
+                ShortcutManagerCompat.reportShortcutUsed(context, SHORTCUT_SHUFFLE_ALL)
                 val controller = host.awaitController()
                 controller.shuffleModeEnabled = true
                 controller.setMediaItem(

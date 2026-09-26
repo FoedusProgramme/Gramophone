@@ -91,6 +91,25 @@ class LibraryWriteRepository internal constructor(
     suspend fun deletePlaylist(id: Long): DeleteResult =
         writes.deletePlaylist(id).also(::queueIfNeeded)
 
+    /**
+     * Like the suspending [deleteSongs], but runs on the application scope so it finishes even if
+     * the screen that asked goes away. [onResult] is called on the main thread.
+     */
+    fun deleteSongs(list: List<Pair<File, Long>>, onResult: (DeleteResult) -> Unit) {
+        scope.launch {
+            val result = deleteSongs(list)
+            withContext(Dispatchers.Main) { onResult(result) }
+        }
+    }
+
+    /** Like [deleteSongs] with a callback, for the playlist with MediaStore [id]. */
+    fun deletePlaylist(id: Long, onResult: (DeleteResult) -> Unit) {
+        scope.launch {
+            val result = deletePlaylist(id)
+            withContext(Dispatchers.Main) { onResult(result) }
+        }
+    }
+
     /** Runs a delete the user confirmed in the app. */
     fun runConfirmed(result: DeleteResult.ConfirmThenRun) {
         scope.launch { result.run() }

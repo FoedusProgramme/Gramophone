@@ -86,7 +86,9 @@ object PlaylistDialogs {
             ).show()
             return
         }
-        env.scope.launch(Dispatchers.Default) {
+        // On the application scope, like the Activity's lifecycleScope before: the chooser still
+        // shows (on root-level dialogs) if the screen that asked goes away meanwhile.
+        env.appScope.launch(Dispatchers.Default) {
             val job = async(start = CoroutineStart.UNDISPATCHED) {
                 env.reader.playlistListFlow.first().filter { it.title != null }
             }

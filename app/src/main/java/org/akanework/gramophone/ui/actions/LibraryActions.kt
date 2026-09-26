@@ -23,7 +23,6 @@ import androidx.core.app.ShareCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
-import kotlinx.coroutines.launch
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.getFile
 import org.akanework.gramophone.logic.library.DeleteResult
@@ -43,6 +42,9 @@ import uk.akane.libphonograph.items.Album
 import uk.akane.libphonograph.items.Playlist
 import uk.akane.libphonograph.items.albumId
 import uk.akane.libphonograph.items.artistId
+
+/** Id of the "shuffle all" launcher shortcut (res/xml/shortcuts.xml). */
+internal const val SHORTCUT_SHUFFLE_ALL = "shuffle_all"
 
 /** Item and header actions of the library lists. */
 object LibraryActions {
@@ -74,7 +76,7 @@ object LibraryActions {
     }
 
     fun shuffleAll(env: AppActionEnv, songs: List<MediaItem>, title: String) {
-        ShortcutManagerCompat.reportShortcutUsed(env.context, "shuffle_all")
+        ShortcutManagerCompat.reportShortcutUsed(env.context, SHORTCUT_SHUFFLE_ALL)
         env.player?.apply {
             setMediaItemsWithTitle(songs, title = title, shuffleEnabled = true)
             if (songs.isNotEmpty()) {
@@ -98,7 +100,7 @@ object LibraryActions {
     }
 
     fun shuffleAllAlbums(env: AppActionEnv, albums: List<Album>, title: String) {
-        ShortcutManagerCompat.reportShortcutUsed(env.context, "shuffle_all")
+        ShortcutManagerCompat.reportShortcutUsed(env.context, SHORTCUT_SHUFFLE_ALL)
         env.player?.apply {
             albums.takeIf { it.isNotEmpty() }?.also { list ->
                 setMediaItemsWithTitle(
@@ -143,10 +145,8 @@ object LibraryActions {
         env: AppActionEnv, songs: List<MediaItem>, @StringRes message: Int, name: CharSequence?
     ) {
         val writes = env.writes
-        env.scope.launch {
-            val result = writes.deleteSongs(
-                songs.map { it.getFile()!! to it.requireMediaStoreId() }
-            )
+        // On the application scope, so leaving the screen doesn't cancel the delete.
+        writes.deleteSongs(songs.map { it.getFile()!! to it.requireMediaStoreId() }) { result ->
             confirmDelete(env, writes, result, env.getString(message, name))
         }
     }
@@ -161,8 +161,7 @@ object LibraryActions {
             return
         }
         val writes = env.writes
-        env.scope.launch {
-            val result = writes.deletePlaylist(id)
+        writes.deletePlaylist(id) { result ->
             confirmDelete(env, writes, result, env.getString(
                 R.string.delete_really,
                 if (item is Favorite) env.getString(R.string.playlist_favourite)

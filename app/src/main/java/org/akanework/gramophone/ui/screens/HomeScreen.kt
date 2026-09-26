@@ -56,8 +56,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import kotlinx.coroutines.launch
-import org.akanework.gramophone.logic.ApplicationScope
-import org.akanework.gramophone.logic.library.LibraryRefresher
 import org.akanework.gramophone.ui.HomeTab
 import org.akanework.gramophone.ui.actions.HomeActions
 import org.akanework.gramophone.ui.actions.rememberAppActionEnv
@@ -81,7 +79,6 @@ import org.akanework.gramophone.ui.nav.NAV_TRANSITION_MS
 import org.akanework.gramophone.ui.nav.NavAxisEasing
 import org.akanework.gramophone.ui.state.HomeViewModel
 import org.akanework.gramophone.ui.MediaControllerViewModel
-import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinActivityViewModel
 import org.akanework.gramophone.ui.state.LibraryTabSpec
 import org.akanework.gramophone.ui.visibleHomeTabs
@@ -111,8 +108,6 @@ private val SHEET_BOTTOM_GAP = 16.dp
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier) {
     val env = rememberAppActionEnv()
-    val refresher = koinInject<LibraryRefresher>()
-    val appScope = koinInject<ApplicationScope>()
     val equalizer = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
     val viewModel = koinActivityViewModel<HomeViewModel>()
     val controllerViewModel = koinActivityViewModel<MediaControllerViewModel>()
@@ -152,7 +147,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
         val currentSpec = tabs.getOrNull(pagerState.currentPage)?.let { LibraryTabSpec.forTab(it) }
         HomeAppBar(
             onSearch = { HomeActions.search(env) },
-            onMenuAction = { HomeActions.run(env, refresher, appScope, equalizer, it) },
+            onMenuAction = { HomeActions.run(env, equalizer, it) },
             sortMenu = currentSpec?.let { spec ->
                 { expanded, onDismiss ->
                     LibrarySortMenu(viewModel.tabState(spec), expanded, onDismiss)

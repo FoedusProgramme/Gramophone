@@ -37,8 +37,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.akanework.gramophone.R
-import org.akanework.gramophone.logic.ApplicationScope
-import org.akanework.gramophone.logic.library.LibraryRefresher
 import org.akanework.gramophone.logic.utils.SdScanner
 import org.akanework.gramophone.ui.components.compose.AppDialog
 import org.akanework.gramophone.ui.nav.MainSettingsKey
@@ -61,16 +59,16 @@ object HomeActions {
     }
 
     /**
-     * Runs [action]. [equalizer] launches the system equalizer; [refresher] and [appScope] run the
-     * library scans, which must outlive the screen.
+     * Runs [action]. [equalizer] launches the system equalizer; the library scans run on
+     * [AppActionEnv.appScope], as they must outlive the screen.
      */
     fun run(
         env: AppActionEnv,
-        refresher: LibraryRefresher,
-        appScope: ApplicationScope,
         equalizer: ActivityResultLauncher<Intent>,
         action: HomeMenuAction,
     ) {
+        val refresher = env.refresher
+        val appScope = env.appScope
         when (action) {
             HomeMenuAction.Equalizer -> {
                 val context = env.context

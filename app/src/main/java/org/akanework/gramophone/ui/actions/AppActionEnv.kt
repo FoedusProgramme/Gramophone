@@ -25,6 +25,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.media3.session.MediaBrowser
 import kotlinx.coroutines.CoroutineScope
+import org.akanework.gramophone.logic.ApplicationScope
+import org.akanework.gramophone.logic.library.LibraryRefresher
 import org.akanework.gramophone.logic.library.LibraryWriteRepository
 import org.akanework.gramophone.ui.MediaControllerViewModel
 import org.akanework.gramophone.ui.components.compose.AppDialogHostState
@@ -50,6 +52,9 @@ class AppActionEnv(
     val playerSheet: PlayerSheetHandle,
     val writes: LibraryWriteRepository,
     val reader: FlowReader,
+    val refresher: LibraryRefresher,
+    /** Process-wide scope, for work that must outlive the screen. */
+    val appScope: ApplicationScope,
     /** Scope of the calling composition, for UI work that may stop with it. */
     val scope: CoroutineScope,
 ) {
@@ -69,11 +74,16 @@ fun rememberAppActionEnv(): AppActionEnv {
     val playerSheet = LocalPlayerSheet.current
     val writes = koinInject<LibraryWriteRepository>()
     val reader = koinInject<FlowReader>()
+    val refresher = koinInject<LibraryRefresher>()
+    val appScope = koinInject<ApplicationScope>()
     val scope = rememberCoroutineScope()
-    return remember(context, controller, navViewModel, dialogs, playerSheet, writes, reader, scope) {
+    return remember(
+        context, controller, navViewModel, dialogs, playerSheet, writes, reader, refresher,
+        appScope, scope,
+    ) {
         AppActionEnv(
             context, controller, navViewModel::navigateTo, dialogs, playerSheet, writes, reader,
-            scope,
+            refresher, appScope, scope,
         )
     }
 }

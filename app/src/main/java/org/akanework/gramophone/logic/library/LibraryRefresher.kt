@@ -18,12 +18,12 @@
 package org.akanework.gramophone.logic.library
 
 import android.content.Context
-import android.os.Build
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.akanework.gramophone.logic.hasScopedStorageV2
 import org.nift4.mediastorecompat.MediaStoreCompat
 import uk.akane.libphonograph.reader.FlowReader
 
@@ -48,7 +48,7 @@ class LibraryRefresher internal constructor(
      * tolerate that.
      */
     fun refresh(
-        smartScanFirst: Boolean = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R,
+        smartScanFirst: Boolean = hasScopedStorageV2(),
         onDone: (() -> Unit)? = null,
     ) {
         scope.launch {

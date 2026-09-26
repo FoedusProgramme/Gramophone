@@ -17,7 +17,6 @@
 
 package org.akanework.gramophone.ui
 
-import android.os.Build
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -54,7 +53,6 @@ internal fun MainRoot(
         val dialogs = remember { AppDialogHostState() }
         MediaConsentHost()
         LibraryGate(
-            smartScanFirst = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R,
             onDenied = onLibraryPermissionDenied,
             startSplashTimeout = startSplashTimeout,
         )

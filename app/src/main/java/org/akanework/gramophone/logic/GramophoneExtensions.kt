@@ -519,8 +519,8 @@ inline fun hasImprovedMediaStore(): Boolean =
     Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
 
 @Suppress("NOTHING_TO_INLINE")
-inline fun hasScopedStorageV2(): Boolean =
-    Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
+inline fun hasScopedStorageV2(sdkInt: Int = Build.VERSION.SDK_INT): Boolean =
+    sdkInt >= Build.VERSION_CODES.R
 
 @Suppress("NOTHING_TO_INLINE")
 inline fun hasScopedStorageV1(): Boolean =
@@ -531,8 +531,8 @@ inline fun hasRenderNodes(): Boolean =
     Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
 
 @Suppress("NOTHING_TO_INLINE")
-inline fun hasScopedStorageWithMediaTypes(): Boolean =
-    Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+inline fun hasScopedStorageWithMediaTypes(sdkInt: Int = Build.VERSION.SDK_INT): Boolean =
+    sdkInt >= Build.VERSION_CODES.TIRAMISU
 
 @Suppress("NOTHING_TO_INLINE")
 inline fun mayThrowForegroundServiceStartNotAllowed(): Boolean =

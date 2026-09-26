@@ -33,6 +33,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import org.akanework.gramophone.logic.hasAudioPermission
+import org.akanework.gramophone.logic.hasScopedStorageV2
+import org.akanework.gramophone.logic.hasScopedStorageWithMediaTypes
 import org.akanework.gramophone.logic.library.LibraryReadiness
 import org.akanework.gramophone.logic.library.LibraryRefresher
 import org.koin.compose.koinInject
@@ -40,8 +42,8 @@ import uk.akane.libphonograph.reader.FlowReader
 
 /** The permissions to ask for so the library can be read on API level [sdkInt]. */
 internal fun requiredLibraryPermissions(sdkInt: Int): Array<String> = when {
-    sdkInt >= Build.VERSION_CODES.TIRAMISU -> arrayOf(Manifest.permission.READ_MEDIA_AUDIO)
-    sdkInt >= Build.VERSION_CODES.R -> arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
+    hasScopedStorageWithMediaTypes(sdkInt) -> arrayOf(Manifest.permission.READ_MEDIA_AUDIO)
+    hasScopedStorageV2(sdkInt) -> arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
     else -> arrayOf(
         Manifest.permission.READ_EXTERNAL_STORAGE,
         Manifest.permission.WRITE_EXTERNAL_STORAGE
@@ -63,7 +65,7 @@ internal fun requiredLibraryPermissions(sdkInt: Int): Array<String> = when {
  */
 @Composable
 fun LibraryGate(
-    smartScanFirst: Boolean,
+    smartScanFirst: Boolean = hasScopedStorageV2(),
     onDenied: () -> Unit,
     startSplashTimeout: () -> Unit = {},
 ) {
