@@ -168,6 +168,14 @@ class PlayerSheetController internal constructor(
     private val instance: MediaController?
         get() = controller.get()
     private val queueOpen = mutableStateOf(false)
+    private val coversScreenCheck = mutableStateOf<() -> Boolean>({ false })
+
+    /**
+     * Whether the sheet covers the whole screen, so the pages under it needn't be drawn. Reads
+     * snapshot state: read it in the draw phase to be redrawn when the sheet starts to move.
+     */
+    val coversScreen: Boolean
+        get() = coversScreenCheck.value()
     private var pendingExpanded = false
     private val positionSmoother = PositionSmoother()
 
@@ -377,6 +385,7 @@ class PlayerSheetController internal constructor(
             onExpandedTargetChanged = { expanded ->
                 bottomSheetBackCallback?.isEnabled = expanded
             },
+            onCoversScreen = { coversScreenCheck.value = it },
             actions = fullPlayerActions,
             dialogCallbacks = dialogCallbacks,
         )

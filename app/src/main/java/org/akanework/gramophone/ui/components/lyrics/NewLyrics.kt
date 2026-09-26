@@ -945,6 +945,10 @@ internal class NewLyricsRenderer(
                 }
                 if (highlight || !alignmentNormal)
                     canvas.restore()
+            } else if (!hasValidCachedNode) {
+                // The spans changed while the line is off screen: don't draw the old recording
+                // once it's back
+                node?.discardDisplayList()
             }
             canvas.translate(0f, (it.layout.height.toFloat()) / hlScaleFactor -
                     (it.layout.height.toFloat() / hlScaleFactor - it.layout.height.toFloat()) / 2

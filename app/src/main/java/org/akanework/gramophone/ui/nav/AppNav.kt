@@ -26,6 +26,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -157,7 +158,13 @@ fun AppRoot(
             LocalPlayerSheet provides playerSheet,
         ) {
             CompositionLocalProvider(LocalPlayerBottomPadding provides playerBottomPadding) {
-                AppNavHost(backStack)
+                // Not drawn while the expanded player covers them: the lyrics redraw every frame
+                // while they scroll, and would have the pages (and their blurred bars) redrawn
+                // underneath each time.
+                AppNavHost(
+                    backStack,
+                    Modifier.drawWithContent { if (!playerSheet.coversScreen) drawContent() },
+                )
             }
         }
         // A page themed from a cover shows its dialogs in its own colors.
@@ -194,7 +201,7 @@ fun AppRoot(
  * shared-axis transition of a real entry when pages are pushed or popped.
  */
 @Composable
-private fun AppNavHost(backStack: SnapshotStateList<AppNavKey>) {
+private fun AppNavHost(backStack: SnapshotStateList<AppNavKey>, modifier: Modifier = Modifier) {
     val density = LocalDensity.current
     val offset = with(density) { NAV_TRANSITION_DISTANCE.roundToPx() } *
         if (LocalLayoutDirection.current == LayoutDirection.Ltr) 1 else -1
@@ -257,7 +264,7 @@ private fun AppNavHost(backStack: SnapshotStateList<AppNavKey>) {
     }
     // What the preview reveals around the two containers. Left to the window, it would be the
     // XML theme's surface, resolved once from the system palette and brightness.
-    Box(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surfaceContainer)) {
+    Box(modifier.fillMaxSize().background(MaterialTheme.colorScheme.surfaceContainer)) {
         Box(
             Modifier
                 .fillMaxSize()

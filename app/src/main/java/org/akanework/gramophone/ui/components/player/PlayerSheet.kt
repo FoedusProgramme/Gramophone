@@ -183,6 +183,11 @@ fun PlayerSheet(
     onNext: () -> Unit,
     onCoverClick: () -> Unit,
     onExpandedTargetChanged: (Boolean) -> Unit,
+    /**
+     * Receives a draw-phase check of whether the sheet covers the whole screen (fully expanded
+     * and slid in), so the host can skip drawing the pages under it.
+     */
+    onCoversScreen: (() -> Boolean) -> Unit,
     actions: FullPlayerActions,
     dialogCallbacks: PlayerDialogCallbacks,
 ) {
@@ -204,11 +209,18 @@ fun PlayerSheet(
     // Slide the whole sheet down by its collapsed height when there is nothing to show. Uses the
     // page transition's duration and easing, so the bar does not disappear faster than the page
     // when entering or leaving settings.
-    val showFraction by animateFloatAsState(
+    val showFraction = animateFloatAsState(
         targetValue = if (c.shown && hasMedia) 1f else 0f,
         animationSpec = tween(NAV_TRANSITION_MS, easing = NavAxisEasing),
         label = "sheet show",
     )
+    // The expanded sheet's surface is opaque and square-cornered at full progress. Read in the
+    // draw phase: the frame the sheet starts to move (drag, back gesture, collapse) draws what's
+    // under it again.
+    val coversScreen = remember(state, showFraction) {
+        { state.progress >= 1f && showFraction.value >= 1f }
+    }
+    SideEffect { onCoversScreen(coversScreen) }
 
     // How far the bar leans towards the app's hue: fully, except on a page themed from a cover,
     // which shows the cover's own colours. Animated with the page transition. Only read in the
@@ -253,21 +265,23 @@ fun PlayerSheet(
         )
         state.travelPx = metrics.travelPx
 
-        // Scrim behind the sheet (only meaningful mid/late morph; fully covered at progress = 1).
+        // Scrim behind the sheet (only meaningful mid/late morph; fully covered at progress = 1,
+        // where it isn't drawn).
+        val scrimAlpha = (metrics.eased * SCRIM_MAX_ALPHA).coerceIn(0f, 1f)
         Box(
             Modifier
                 .fillMaxSize()
-                .alpha((metrics.eased * SCRIM_MAX_ALPHA).coerceIn(0f, 1f))
-                .background(Color.Black),
+                .drawBehind { if (scrimAlpha > 0f && !coversScreen()) drawRect(Color.Black, alpha = scrimAlpha) },
         )
 
         Box(
             Modifier
                 .fillMaxSize()
                 // Slide the whole floating sheet fully below the screen when there's nothing to show.
-                .graphicsLayer { translationY = (1f - showFraction) * metrics.collapsedFootprint },
+                .graphicsLayer { translationY = (1f - showFraction.value) * metrics.collapsedFootprint },
         ) {
-            SheetSurface(metrics) { barColors.value.bar }
+            // Under the lyrics while they cover the whole screen, the surface isn't drawn
+            SheetSurface(metrics, hidden = { coversScreen() && lyrics.covering }) { barColors.value.bar }
             ProgressFill(player, metrics) { barColors.value.fill }
             FullPlayerContent(
                 state, metrics, player, actions, coverScheme, lyrics,
@@ -290,13 +304,14 @@ private data class MiniBarColors(val content: Color, val playButton: Color, val 
 
 /** Sheet background: [collapsedColor] when collapsed, the surface color when expanded. */
 @Composable
-private fun SheetSurface(metrics: PlayerSheetMetrics, collapsedColor: () -> Color) {
+private fun SheetSurface(metrics: PlayerSheetMetrics, hidden: () -> Boolean, collapsedColor: () -> Color) {
     val expanded = MaterialTheme.colorScheme.surface
     Box(
         Modifier
             .absolute(metrics.sheetLeft, metrics.sheetTop, metrics.sheetWidth, metrics.sheetHeight)
             .clip(RoundedCornerShape(metrics.cornerDp))
             .drawBehind {
+                if (hidden()) return@drawBehind
                 drawRect(lerp(collapsedColor(), expanded, metrics.eased.coerceIn(0f, 1f)))
             },
     )
