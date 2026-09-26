@@ -141,8 +141,6 @@
     <string name="play">再生</string>
     <string name="more">詳細</string>
     <string name="tab_order_summary">起動時に表示するタブを設定します。区切り線以降のタブは非表示になります。</string>
-    <string name="settings_lyrics_ui">新しい歌詞 UI を有効化する</string>
-    <string name="settings_lyrics_ui_summary">高度な機能を備えた歌詞を単語ごとに表示する試験的な UI です</string>
     <string name="settings_status_bar_lyrics_title">ステータスバーの歌詞</string>
     <string name="settings_status_bar_lyrics_summary">MeiZu 方式のステータスバーの歌詞表示を有効化します (一部のデバイスでのみ対応)</string>
     <string name="lyric_widget_description">現在再生中の音楽の歌詞を表示するウィジェットです</string>

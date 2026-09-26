@@ -38,6 +38,8 @@
     </plurals>
     <!-- A list's song count and its total length, as "12 Songs, 48:10" -->
     <string name="songs_total_duration">%1$s, %2$s</string>
+    <!-- A list's total length on its own, when the song count is shown elsewhere, as "Total length 1 hour, 12 minutes" -->
+    <string name="songs_total_length">Total length %s</string>
     <!-- Counting how many albums are in an album list -->
     <plurals name="albums">
         <item quantity="one">%d Album</item>
@@ -349,9 +351,7 @@
     <!-- Tooltip for three dots button opening context menu -->
     <string name="more">More</string>
     <!-- Settings toggle to enable newer lyrics rendering code. Title -->
-    <string name="settings_lyrics_ui">Enable new lyric UI</string>
     <!-- Settings toggle to enable newer lyrics rendering code. Subtext -->
-    <string name="settings_lyrics_ui_summary">Experimental UI to display word-by-word lyric with advanced features</string>
     <!-- Settings toggle to enable showing lyrics in status bar (requires meizu phone). Title -->
     <string name="settings_status_bar_lyrics_title">Status bar lyrics</string>
     <!-- Settings toggle to enable showing lyrics in status bar (requires meizu phone). Subtext -->

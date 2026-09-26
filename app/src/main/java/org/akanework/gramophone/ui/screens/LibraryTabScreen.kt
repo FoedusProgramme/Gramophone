@@ -355,6 +355,10 @@ fun libraryGridRowHeightPx(isGrid: Boolean, columns: Int): Int {
     }
 }
 
+/** Whether [libraryItemSubtitle] shows the song count for items of [state]'s kind. */
+internal fun libraryItemSubtitleIsCount(state: LibraryTabState<*>): Boolean =
+    !state.spec.helper.canGetArtist() && state.spec.helper.canGetSize()
+
 /**
  * Subtitle of a library item: its artist if the kind has one, otherwise its song count. Used by
  * the tabs, their sheets and the detail page carousel.
@@ -364,7 +368,7 @@ internal fun <T : Any> libraryItemSubtitle(state: LibraryTabState<T>, item: T): 
     val helper = state.spec.helper
     return if (helper.canGetArtist())
         helper.getArtist(item) ?: stringResource(R.string.unknown_artist)
-    else if (helper.canGetSize()) {
+    else if (libraryItemSubtitleIsCount(state)) {
         val s = helper.getSize(item)
         pluralStringResource(R.plurals.songs, s, s)
     } else "null"

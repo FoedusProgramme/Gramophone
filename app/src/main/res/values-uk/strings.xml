@@ -152,11 +152,9 @@
     <string name="tab_order_summary">Програма відобразить першу вкладку під час запуску. Вкладки після роздільника будуть приховані.</string>
     <string name="lyric_widget_description">Віджет, який показує тексти медіафайлів, які зараз відтворюються</string>
     <string name="settings_status_bar_lyrics_summary">Увімкнути метод MeiZu для відображення текстів пісень у рядку стану (доступно лише на деяких пристроях)</string>
-    <string name="settings_lyrics_ui">Увімкнути новий інтерфейс користувача з текстами</string>
     <string name="shuffle_all">Перемішайте все</string>
     <string name="play">Грати</string>
     <string name="more">Більше</string>
-    <string name="settings_lyrics_ui_summary">Експериментальний інтерфейс користувача для відображення слова за словом лірики з розширеними функціями</string>
     <string name="settings_status_bar_lyrics_title">Тексти пісень у рядку стану</string>
     <string name="delete">Видалити</string>
     <string name="yes">Так</string>

@@ -17,6 +17,7 @@
 
 package org.akanework.gramophone.ui.screens
 
+import androidx.compose.animation.core.animateDpAsState
 import android.content.SharedPreferences
 import android.net.Uri
 import androidx.compose.foundation.clickable
@@ -96,9 +97,9 @@ internal val CAROUSEL_ROW_PADDING = 8.dp
 private val CAROUSEL_ITEM_GAP = 8.dp
 private val CAROUSEL_ITEM_CORNER = 28.dp
 
-/** Side margins. The start margin matches the page's 24dp content margin. */
+/** Side margins, matching the page's 24dp content margin on both sides. */
 private val CAROUSEL_START_PADDING = 24.dp
-private val CAROUSEL_END_PADDING = 16.dp
+private val CAROUSEL_END_PADDING = 24.dp
 
 /** Gap between the status bar and the cards, and the scroll distance over which the toolbar
  *  blur fades in. */
@@ -147,7 +148,7 @@ fun subCarouselHeight(): Dp = carouselCardHeight() + CAROUSEL_ROW_PADDING * 2
 @Composable
 private fun CarouselButton(
     icon: ImageVector,
-    restX: Dp,
+    restX: () -> Dp,
     dockX: Dp,
     restY: Dp,
     travelPx: Float,
@@ -165,7 +166,7 @@ private fun CarouselButton(
                 // the toolbar position.
                 val ridden = scrolled().coerceAtMost(travelPx)
                 IntOffset(
-                    x = with(density) { lerp(restX, dockX, fraction()).roundToPx() },
+                    x = with(density) { lerp(restX(), dockX, fraction()).roundToPx() },
                     y = with(density) { (restY - ridden.toDp()).roundToPx() },
                 )
             }
@@ -185,12 +186,15 @@ private fun CarouselButton(
  * The back and edit buttons. At rest they sit on the corners of the focused card and follow it
  * when overscrolled. As the card scrolls under the toolbar they move to the toolbar button
  * positions and their background fades out. [scrolled] is the card's scroll offset from rest in
- * px (negative when overscrolled) and [topInset] the status bar height.
+ * px (negative when overscrolled) and [topInset] the status bar height. [atLastEntry] tells
+ * whether the carousel is on its last entry, where the focused card sits at the end of the row
+ * instead of the start.
  */
 @Composable
 internal fun CarouselButtons(
     scrolled: () -> Float,
     topInset: Dp,
+    atLastEntry: Boolean,
     onBack: () -> Unit,
     onEdit: (() -> Unit)? = null,
 ) {
@@ -206,10 +210,17 @@ internal fun CarouselButtons(
     val restY = topInset + CAROUSEL_TOP_GAP + CAROUSEL_ROW_PADDING + CAROUSEL_BUTTON_INSET
     val dockY = topInset + (GLASS_BAR_HEIGHT - CAROUSEL_BUTTON_SIZE) / 2
     val travelPx = with(density) { (restY - dockY).toPx() }
+    // Start of the focused card. On the last entry the carousel shifts it to the end of the row,
+    // past the collapsed card.
+    val cardStart = animateDpAsState(
+        targetValue = if (atLastEntry) windowWidth - CAROUSEL_END_PADDING - cardWidth
+        else CAROUSEL_START_PADDING,
+        label = "carousel card start",
+    )
     Box(Modifier.fillMaxSize()) {
         CarouselButton(
             icon = Icons.AutoMirrored.Outlined.ArrowBack,
-            restX = CAROUSEL_START_PADDING + CAROUSEL_BUTTON_INSET,
+            restX = { cardStart.value + CAROUSEL_BUTTON_INSET },
             dockX = insetStart + TOOLBAR_BUTTON_PADDING_START,
             restY = restY,
             travelPx = travelPx,
@@ -219,8 +230,7 @@ internal fun CarouselButtons(
         if (onEdit != null) {
             CarouselButton(
                 icon = Icons.Outlined.Edit,
-                restX = CAROUSEL_START_PADDING + cardWidth - CAROUSEL_BUTTON_INSET -
-                        CAROUSEL_BUTTON_SIZE,
+                restX = { cardStart.value + cardWidth - CAROUSEL_BUTTON_INSET - CAROUSEL_BUTTON_SIZE },
                 dockX = windowWidth - insetEnd - TOOLBAR_BUTTON_PADDING_END - CAROUSEL_BUTTON_SIZE,
                 restY = restY,
                 travelPx = travelPx,

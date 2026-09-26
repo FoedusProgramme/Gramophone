@@ -143,8 +143,6 @@
     <string name="settings_status_bar_lyrics_summary">Ativar o método MeiZu para mostrar letras na barra de status (disponível apenas em alguns dispositivos)</string>
     <string name="lyric_widget_description">Widget que mostra as letras da mídia que está sendo reproduzida</string>
     <string name="settings_preference_category_home">Tela inicial</string>
-    <string name="settings_lyrics_ui">Ativar nova UI de letras</string>
-    <string name="settings_lyrics_ui_summary">Interface de usuário experimental para exibir letras palavra por palavra com recursos avançados</string>
     <string name="shuffle_all">Reproduzir no modo aleatório</string>
     <string name="play">Reproduzir</string>
     <string name="more">Mais</string>

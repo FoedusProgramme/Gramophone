@@ -88,6 +88,13 @@ import uk.akane.libphonograph.items.EXTRA_FILE
 import java.io.File
 import java.util.Locale
 
+/**
+ * Whether a play/pause button should show pause: playback is requested ([Player.getPlayWhenReady])
+ * and has not ended. Unlike [Player.isPlaying] it stays put while buffering or seeking.
+ */
+val Player.showsPause: Boolean
+    get() = playWhenReady && playbackState != Player.STATE_ENDED
+
 fun Player.playOrPause() {
     if (playWhenReady) {
         if (playbackState == Player.STATE_ENDED)

@@ -1,5 +1,8 @@
 package org.akanework.gramophone.ui.components.player
 
+import kotlin.math.abs
+import android.os.SystemClock
+import org.akanework.gramophone.logic.showsPause
 import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.BackEventCompat
@@ -77,6 +80,7 @@ class PlayerSheetController(private val activity: MainActivity) :
         get() = activity.getPlayer()
     private val queueOpen = mutableStateOf(false)
     private var pendingExpanded = false
+    private val positionSmoother = PositionSmoother()
 
     var visible = false
         set(value) {
@@ -92,7 +96,15 @@ class PlayerSheetController(private val activity: MainActivity) :
         next = { instance?.seekToNext() },
         seekBack = { instance?.seekBack() },
         seekForward = { instance?.seekForward() },
-        seekTo = { ms -> instance?.seekTo(ms) },
+        seekTo = { ms ->
+            instance?.seekTo(ms)
+            // Show the new position now, not on the next poll
+            positionSmoother.reset(ms)
+            playerState.positionMs.value = ms
+            playerState.durationMs.value.takeIf { it > 0 }?.let {
+                playerState.positionFraction.value = (ms.toFloat() / it).coerceIn(0f, 1f)
+            }
+        },
         minimize = { sheetState.collapse() },
         cycleRepeat = {
             instance?.let { c ->
@@ -174,7 +186,11 @@ class PlayerSheetController(private val activity: MainActivity) :
                     val duration = inst?.duration?.takeIf { it > 0 }
                         ?: inst?.currentMediaItem?.mediaMetadata?.durationMs
                     if (inst != null && duration != null && duration > 0) {
-                        val position = inst.currentPosition
+                        val raw = inst.currentPosition
+                        val position = positionSmoother.update(
+                            raw, inst.isPlaying, inst.playbackParameters.speed,
+                            inst.currentMediaItem?.mediaId,
+                        )
                         playerState.positionMs.value = position
                         playerState.durationMs.value = duration
                         playerState.positionFraction.value =
@@ -286,6 +302,7 @@ class PlayerSheetController(private val activity: MainActivity) :
     private fun syncPlayerState() {
         val item = instance?.currentMediaItem
         playerState.isPlaying.value = instance?.isPlaying == true
+        playerState.showPause.value = instance?.showsPause == true
         playerState.title.value = item?.mediaMetadata?.title
         playerState.artist.value =
             item?.mediaMetadata?.artist ?: activity.getString(R.string.unknown_artist)
@@ -330,6 +347,11 @@ class PlayerSheetController(private val activity: MainActivity) :
 
     override fun onPlaybackStateChanged(playbackState: Int) {
         playerState.isPlaying.value = instance?.isPlaying == true
+        playerState.showPause.value = instance?.showsPause == true
+    }
+
+    override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
+        playerState.showPause.value = instance?.showsPause == true
     }
 
     /**
@@ -361,5 +383,44 @@ class PlayerSheetController(private val activity: MainActivity) :
     override fun onStop(owner: LifecycleOwner) {
         super.onStop(owner)
         nowPlaying.onStop()
+    }
+}
+
+/**
+ * Smooths the position shown by the progress bars. Around a resume the reported position runs
+ * ahead by up to ~150 ms and is corrected back about a second later, once the audio output
+ * reports its real playback position. Shown as is, the bar jumps forward and back on every
+ * pause/resume. Instead the shown position advances at playback speed while playing and eases
+ * towards the reported one. Large differences (seeks, song changes) are shown at once.
+ */
+private class PositionSmoother {
+    private var shown = -1L
+    private var shownAt = 0L
+    private var mediaId: String? = null
+
+    fun update(raw: Long, playing: Boolean, speed: Float, mediaId: String?): Long {
+        val now = SystemClock.uptimeMillis()
+        shown = if (shown < 0 || mediaId != this.mediaId) raw else {
+            val predicted = if (playing) shown + ((now - shownAt) * speed).toLong() else shown
+            val error = raw - predicted
+            if (abs(error) > SNAP_MS || abs(error) < EASE_DIVISOR) raw
+            else predicted + error / EASE_DIVISOR
+        }
+        shownAt = now
+        this.mediaId = mediaId
+        return shown
+    }
+
+    /** Shows [position] from now on, as after a seek. */
+    fun reset(position: Long) {
+        shown = position
+        shownAt = SystemClock.uptimeMillis()
+    }
+
+    private companion object {
+        /** Differences beyond this are real jumps, shown at once. */
+        const val SNAP_MS = 500L
+        /** Share of the remaining difference taken per poll. */
+        const val EASE_DIVISOR = 8
     }
 }

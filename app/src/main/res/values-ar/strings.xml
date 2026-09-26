@@ -166,8 +166,6 @@
     <string name="tab_order">عدّل ترتيب التبوِيبات</string>
     <string name="settings_preference_category_home">الرئيسية</string>
     <string name="shuffle_all">اخلط الكل</string>
-    <string name="settings_lyrics_ui">فعّل واجهة الكلمات الجديدة</string>
-    <string name="settings_lyrics_ui_summary">واجهة مستخدم تجريبيّة لعرض الكلمات المزمَّنة كلمةً كلمة مع ميزات متقدّمة</string>
     <string name="lyric_widget_description">وِدجِت يعرض كلمات الوسائط الجاري تشغيلها</string>
     <string name="delete">احذف</string>
     <string name="yes">نعم</string>

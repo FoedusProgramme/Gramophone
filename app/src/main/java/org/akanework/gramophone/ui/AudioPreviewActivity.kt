@@ -16,6 +16,7 @@
  */
 package org.akanework.gramophone.ui
 
+import org.akanework.gramophone.logic.showsPause
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -127,6 +128,7 @@ private class PreviewState {
     var positionMs by mutableLongStateOf(0L)
     var durationMs by mutableLongStateOf(0L)
     var isPlaying by mutableStateOf(false)
+    var showPause by mutableStateOf(false)
     var canOpen by mutableStateOf(false)
 }
 
@@ -186,6 +188,14 @@ class AudioPreviewActivity : BaseActivity() {
         player.addListener(object : Player.Listener {
             override fun onIsPlayingChanged(isPlaying: Boolean) {
                 state.isPlaying = isPlaying
+            }
+
+            override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
+                state.showPause = player.showsPause
+            }
+
+            override fun onPlaybackStateChanged(playbackState: Int) {
+                state.showPause = player.showsPause
             }
 
             override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
@@ -478,7 +488,7 @@ private fun PreviewContent(
                 Modifier.size(48.dp).clickable(onClick = onPlayPause),
                 contentAlignment = Alignment.Center,
             ) {
-                PlayPauseIcon(playing = state.isPlaying, tint = scheme.onSurface, modifier = Modifier.size(28.dp))
+                PlayPauseIcon(playing = state.showPause, tint = scheme.onSurface, modifier = Modifier.size(28.dp))
             }
         }
         Spacer(Modifier.height(8.dp))
@@ -510,6 +520,7 @@ private fun PreviewContent(
                     onSeek((it * duration).toLong())
                     scrub = null
                 },
+                onScrubCancel = { scrub = null },
             )
         }
         Row(Modifier.fillMaxWidth()) {

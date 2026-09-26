@@ -158,8 +158,6 @@
     <string name="shuffle_all">ສຸ່ມທັງໝົດ</string>
     <string name="play">ຫຼິ້ນ</string>
     <string name="more">ເພີ່ມເຕີມ</string>
-    <string name="settings_lyrics_ui">ເປີດໃຊ້ UI ເນື້ອເພງໃໝ່</string>
-    <string name="settings_lyrics_ui_summary">UI ທົດລອງເພື່ອສະແດງເນື້ອເພງແບບຄຳຕໍ່ຄຳພ້ອມຟີເຈີຂັ້ນສູງ</string>
     <string name="settings_status_bar_lyrics_title">ເນື້ອເພງເທິງແຖບສະຖານະ</string>
     <string name="settings_status_bar_lyrics_summary">ເປີດໃຊ້ວິທີການຂອງ MeiZu ໃນການສະແດງເນື້ອເພງເທິງແຖບສະຖານະ (ມີສະເພາະບາງອຸປະກອນ)</string>
     <string name="settings_notification_lyrics_title">ເນື້ອເພງໃນການແຈ້ງເຕືອນ</string>

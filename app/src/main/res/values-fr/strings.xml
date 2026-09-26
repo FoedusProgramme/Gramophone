@@ -149,7 +149,6 @@
     <string name="tab_order_summary">L\'application affichera le premier onglet au démarrage. Les onglets après le séparateur seront cachés.</string>
     <string name="shuffle_all">Jouer aléatoirement</string>
     <string name="play">Jouer</string>
-    <string name="settings_lyrics_ui">Activer la nouvelle interface paroles</string>
     <string name="settings_status_bar_lyrics_title">Barre d\'état des paroles</string>
     <string name="settings_status_bar_lyrics_summary">Activer la méthode MeiZu d\'affichage des paroles dans la barre d\'état (seulement disponible sur certains appareils)</string>
     <string name="delete">Supprimer</string>
@@ -157,7 +156,6 @@
     <string name="no">Non</string>
     <string name="grant_audio"><![CDATA[Veuillez accorder l\'autorisation \"Music and audio\"]]></string>
     <string name="more">Plus</string>
-    <string name="settings_lyrics_ui_summary">Interface utilisateur expérimentale pour afficher le mot par mot des paroles avec des fonctionnalités avancées</string>
     <string name="spk_channel_out_7point1point2">7.1.2</string>
     <string name="spk_channel_out_front_center">Avant centre</string>
     <string name="spk_channel_out_front_right_of_center">Avant droit du centre</string>

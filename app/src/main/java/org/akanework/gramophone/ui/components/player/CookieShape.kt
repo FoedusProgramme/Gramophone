@@ -18,6 +18,8 @@
 package org.akanework.gramophone.ui.components.player
 
 import android.graphics.Matrix
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.MaterialShapes
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.graphics.Shape
@@ -62,14 +64,31 @@ private val COOKIE = RoundedPolygon.star(
 
 private val MINI_TO_COOKIE = Morph(MINI_SQUARE, COOKIE)
 
-/** The cover's shape [progress] of the way from the mini bar's rounded square to the cookie. */
-class CookieMorphShape(private val progress: Float) : Shape {
+/*
+ * The play button's backdrop: Material's circle while paused, blooming into its twelve-sided
+ * cookie while playing.
+ */
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+private val CIRCLE_TO_FLOWER = Morph(MaterialShapes.Circle, MaterialShapes.Cookie12Sided)
+
+/** [morph] at [progress], stretched from its unit square to the shape's bounds. */
+private class UnitMorphShape(private val morph: Morph, private val progress: Float) : Shape {
     override fun createOutline(size: Size, layoutDirection: LayoutDirection, density: Density): Outline {
-        val path = MINI_TO_COOKIE.toPath(progress.coerceIn(0f, 1f))
+        val path = morph.toPath(progress)
         path.transform(Matrix().apply { setScale(size.width, size.height) })
         return Outline.Generic(path.asComposePath())
     }
 
-    override fun equals(other: Any?): Boolean = other is CookieMorphShape && other.progress == progress
-    override fun hashCode(): Int = progress.hashCode()
+    override fun equals(other: Any?): Boolean =
+        other is UnitMorphShape && other.morph === morph && other.progress == progress
+    override fun hashCode(): Int = 31 * morph.hashCode() + progress.hashCode()
 }
+
+/** The cover's shape [progress] of the way from the mini bar's rounded square to the cookie. */
+fun CookieMorphShape(progress: Float): Shape = UnitMorphShape(MINI_TO_COOKIE, progress.coerceIn(0f, 1f))
+
+/**
+ * The play button's backdrop [progress] of the way from the paused circle to the playing cookie.
+ * Left unclamped so a springy [progress] overshoots into the shape instead of stopping dead.
+ */
+fun PlayButtonMorphShape(progress: Float): Shape = UnitMorphShape(CIRCLE_TO_FLOWER, progress)

@@ -32,6 +32,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.grid.LazyGridLayoutInfo
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -90,6 +91,94 @@ private const val POPUP_SCALE = 0.7f
 private val FAB_HIDE_LEAD = 56.dp
 
 /**
+ * Estimates the list's scroll position and range in pixels, so the thumb spans the whole track:
+ * top at the very start, bottom exactly at the end, and the header and footer rows (carousel,
+ * title, albums, folders, song count) take their real share of the travel.
+ *
+ * The [itemCount] scrollable items after [headerCount] header items are rows of [columns] items
+ * [rowHeightPx] apart. The other rows' pitches are remembered as they are laid out, with
+ * [headerHeightPx] standing in for the header until all of it has been seen.
+ */
+private class ScrollModel(
+    private val headerCount: Int,
+    private val itemCount: Int,
+    private val columns: Int,
+    rowHeightPx: Int,
+    private val headerHeightPx: Int,
+) {
+    private val rowHeightPx = rowHeightPx.coerceAtLeast(1)
+
+    /** Pitch (height plus spacing) of the header and footer rows seen so far, by grid row. */
+    private val otherRows = HashMap<Int, Int>()
+    /** Grid row of the first scrollable item, once it has been laid out. */
+    private var firstItemRow = -1
+    /** Grid row of the last scrollable item, once it has been laid out. */
+    private var lastItemRow = -1
+
+    private val itemRows get() = (itemCount + columns - 1) / columns
+
+    fun record(info: LazyGridLayoutInfo) {
+        val end = headerCount + itemCount
+        for (item in info.visibleItemsInfo) {
+            when {
+                item.index == headerCount -> firstItemRow = item.row
+                item.index == end - 1 -> lastItemRow = item.row
+            }
+            if (item.index < headerCount || item.index >= end) {
+                val pitch = item.size.height + info.mainAxisItemSpacing
+                otherRows[item.row] = maxOf(otherRows[item.row] ?: 0, pitch)
+            }
+        }
+    }
+
+    /** Height of the header rows, measured if all of them have been seen. */
+    private fun headerPx(): Int {
+        if (headerCount == 0) return 0
+        if (firstItemRow < 0) return headerHeightPx
+        var sum = 0
+        for (row in 0 until firstItemRow) sum += otherRows[row] ?: return headerHeightPx
+        return sum
+    }
+
+    /** Height of the footer rows seen so far. */
+    private fun footerPx(): Int {
+        if (lastItemRow < 0) return 0
+        return otherRows.entries.sumOf { (row, pitch) -> if (row > lastItemRow) pitch else 0 }
+    }
+
+    fun scrollPx(state: LazyGridState): Int {
+        val index = state.firstVisibleItemIndex
+        val offset = state.firstVisibleItemScrollOffset
+        if (index >= headerCount) {
+            val row = ((index - headerCount) / columns).coerceAtMost(itemRows)
+            return headerPx() + row * rowHeightPx + offset
+        }
+        val row = state.layoutInfo.visibleItemsInfo.firstOrNull { it.index == index }?.row ?: 0
+        var sum = 0
+        for (r in 0 until row) sum += otherRows[r] ?: 0
+        return sum + offset
+    }
+
+    fun maxScrollPx(info: LazyGridLayoutInfo): Int =
+        (headerPx() + itemRows * rowHeightPx + footerPx() +
+                info.beforeContentPadding + info.afterContentPadding - info.viewportSize.height)
+            .coerceAtLeast(1)
+
+    /** Scrolls [state] to [target] pixels from the top, as measured by [scrollPx]. */
+    suspend fun scrollTo(state: LazyGridState, target: Int) {
+        val header = headerPx()
+        if (target < header || itemCount == 0) {
+            // The grid skips whole lines the offset scrolls past.
+            state.scrollToItem(0, target.coerceAtLeast(0))
+        } else {
+            val row = ((target - header) / rowHeightPx).coerceAtMost(itemRows - 1)
+            val into = target - header - row * rowHeightPx
+            state.scrollToItem(headerCount + row * columns, into)
+        }
+    }
+}
+
+/**
  * Whether a list's fast scroller is at the end of the list. The home FAB hides on it, since the
  * thumb and popup overlap the FAB's corner there.
  */
@@ -127,23 +216,31 @@ fun LibraryFastScroller(
     val popupShape = MaterialShapes.Arrow.toShape()
     var trackHeight by remember { mutableIntStateOf(0) }
     val thumbHeightPx = with(density) { THUMB_HEIGHT.roundToPx() }
-    // Scroll position in items, computed from the visible items. The thumb, hint and drag all use
-    // this unit so they stay consistent. Deriving it from [rowHeightPx] alone would drift on pages
-    // with rows of other heights, and the first drag would make the list jump.
-    val scrolledItems by remember {
+    val model = remember(headerCount, itemCount, columns, rowHeightPx, headerHeightPx) {
+        ScrollModel(headerCount, itemCount, columns, rowHeightPx, headerHeightPx)
+    }
+    // Position along the track. Pinned to the ends when the list can't scroll further, so the
+    // thumb always reaches them even where the estimate is off.
+    val scrollProgress by remember(model) {
         derivedStateOf {
-            val first = (gridState.firstVisibleItemIndex - headerCount).coerceAtLeast(0)
-            val info = gridState.layoutInfo.visibleItemsInfo.firstOrNull()
-            val within = if (info != null && info.size.height > 0) {
-                (gridState.firstVisibleItemScrollOffset.toFloat() / info.size.height)
+            val info = gridState.layoutInfo
+            model.record(info)
+            when {
+                !gridState.canScrollBackward -> 0f
+                !gridState.canScrollForward -> 1f
+                else -> (model.scrollPx(gridState).toFloat() / model.maxScrollPx(info))
                     .coerceIn(0f, 1f)
-            } else 0f
-            first + within
+            }
         }
     }
+    // The track ends above the list's bottom padding, clear of the mini player.
+    val bottomPaddingPx by remember { derivedStateOf { gridState.layoutInfo.afterContentPadding } }
     var dragging by remember { mutableStateOf(false) }
     var visible by remember { mutableStateOf(false) }
     var dragProgress by remember { mutableFloatStateOf(0f) }
+    // The scroll range when the drag started. Fixed for the drag, since it is pinned to the
+    // current position once the list reaches its end.
+    var dragMaxPx by remember { mutableIntStateOf(1) }
     val scrolling = gridState.isScrollInProgress
     LaunchedEffect(scrolling, dragging) {
         if (scrolling || dragging) visible = true
@@ -152,8 +249,7 @@ fun LibraryFastScroller(
             visible = false
         }
     }
-    val progress = if (dragging) dragProgress
-    else if (itemCount > 0) (scrolledItems / itemCount).coerceIn(0f, 1f) else 0f
+    val progress = if (dragging) dragProgress else scrollProgress
     val thumbTop = ((trackHeight - thumbHeightPx) * progress).roundToInt()
     val hintIndex = (progress * itemCount).toInt().coerceIn(0, itemCount - 1)
     val canScroll = gridState.canScrollForward || gridState.canScrollBackward
@@ -176,6 +272,7 @@ fun LibraryFastScroller(
     Box(
         modifier
             .fillMaxSize()
+            .padding(bottom = with(density) { bottomPaddingPx.toDp() })
             .onSizeChanged { trackHeight = it.height },
     ) {
         AnimatedVisibility(
@@ -225,23 +322,23 @@ fun LibraryFastScroller(
                         .padding(end = THUMB_MARGIN_END)
                         .width(THUMB_TOUCH_WIDTH)
                         .height(THUMB_TOUCH_HEIGHT)
-                        .pointerInput(trackHeight, itemCount) {
+                        .pointerInput(trackHeight, model) {
                             detectDragGestures(
-                                onDragStart = { dragging = true; dragProgress = progress },
+                                onDragStart = {
+                                    dragging = true
+                                    dragProgress = progress
+                                    dragMaxPx = if (gridState.canScrollForward) {
+                                        model.maxScrollPx(gridState.layoutInfo)
+                                    } else model.scrollPx(gridState).coerceAtLeast(1)
+                                },
                                 onDragEnd = { dragging = false },
                                 onDragCancel = { dragging = false },
                             ) { change, drag ->
                                 change.consume()
                                 val range = (trackHeight - thumbHeightPx).coerceAtLeast(1)
                                 dragProgress = (dragProgress + drag.y / range).coerceIn(0f, 1f)
-                                // Target item and offset into it, in the same unit as the thumb
-                                // position.
-                                val target = dragProgress * itemCount
-                                val index = target.toInt().coerceIn(0, itemCount - 1)
-                                val into = ((target - index) * rowHeightPx).roundToInt()
-                                scope.launch {
-                                    gridState.scrollToItem(headerCount + index, into)
-                                }
+                                val target = (dragProgress * dragMaxPx).roundToInt()
+                                scope.launch { model.scrollTo(gridState, target) }
                             }
                         },
                     contentAlignment = Alignment.CenterEnd,

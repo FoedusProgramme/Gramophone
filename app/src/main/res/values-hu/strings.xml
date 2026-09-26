@@ -265,14 +265,12 @@
     <string name="settings_export_logs">Applikáció naplók exportálása</string>
     <string name="lyric_widget_description">Olyan widget, amely mutatja a jelenleg játszott zene szövegét</string>
     <string name="settings_preference_category_home">Fő képernyő</string>
-    <string name="settings_lyrics_ui_summary">Kísérleti szóról-szóra dalszöveg felhasználói felület haladó szintű funkciókkal</string>
     <string name="album_covers_enhance">Feljavított album borító beöltése</string>
     <string name="share">Megosztás</string>
     <string name="timer">Elalvás időzítő</string>
     <string name="tab_order">Fülek sorrendjének beállítása</string>
     <string name="tab_order_summary">Az applikáció az első fület mutatja elinduláskor. Az elválasztó után levő fülek elrejtésre kerülnek.</string>
     <string name="shuffle_all">Mindegyik véletlen sorrendben</string>
-    <string name="settings_lyrics_ui">Új dalszöveg felület bekapcsolása</string>
     <string name="delete">Törlés</string>
     <string name="device_type_builtin_speaker">Beépített hangszóró</string>
     <string name="device_type_usb_device">USB eszköz</string>

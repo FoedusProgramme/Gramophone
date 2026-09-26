@@ -1,5 +1,6 @@
 package org.akanework.gramophone.ui.fragments.compose
 
+import org.akanework.gramophone.logic.showsPause
 import android.os.SystemClock
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
@@ -477,7 +478,7 @@ fun ActionBar(
     mqState: MqState,
     modifier: Modifier = Modifier
 ) {
-    val isPlaying by mqState.isPlaying.collectAsState()
+    val showPause by mqState.showPause.collectAsState()
     val repeatMode by mqState.repeatMode.collectAsState()
     val shuffleModeEnabled by mqState.shuffleModeEnabled.collectAsState()
 
@@ -555,7 +556,7 @@ fun ActionBar(
                 enabled = !mqState.isDetached(),
             ) {
                 Icon(
-                    painter = painterResource(if (isPlaying) R.drawable.ic_pause_filled else R.drawable.ic_play_arrow),
+                    painter = painterResource(if (showPause) R.drawable.ic_pause_filled else R.drawable.ic_play_arrow),
                     contentDescription = null,
                 )
             }
@@ -832,6 +833,7 @@ class MqState(
 
     private val instance = activity.getPlayer()!!
     val isPlaying = MutableStateFlow(instance.isPlaying)
+    val showPause = MutableStateFlow(instance.showsPause)
 
     // shuffle and repeat modes do not need to be manually set for queue loads, they will be set automatically
     val shuffleModeEnabled = MutableStateFlow(instance.shuffleModeEnabled)
@@ -866,6 +868,14 @@ class MqState(
     val playerListener = object : Player.Listener {
         override fun onIsPlayingChanged(isPlaying: Boolean) {
             this@MqState.isPlaying.value = isPlaying
+        }
+
+        override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
+            showPause.value = instance.showsPause
+        }
+
+        override fun onPlaybackStateChanged(playbackState: Int) {
+            showPause.value = instance.showsPause
         }
 
         override fun onRepeatModeChanged(repeatMode: @Player.RepeatMode Int) {

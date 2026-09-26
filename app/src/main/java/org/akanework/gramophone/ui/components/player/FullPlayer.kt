@@ -19,10 +19,6 @@ package org.akanework.gramophone.ui.components.player
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.graphics.ExperimentalAnimationGraphicsApi
-import androidx.compose.animation.graphics.res.animatedVectorResource
-import androidx.compose.animation.graphics.res.rememberAnimatedVectorPainter
-import androidx.compose.animation.graphics.vector.AnimatedImageVector
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
@@ -62,7 +58,9 @@ import androidx.compose.material.icons.outlined.SkipNext
 import androidx.compose.material.icons.outlined.SkipPrevious
 import androidx.compose.material.icons.outlined.Speed
 import androidx.compose.material3.ColorScheme
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MotionScheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
@@ -86,7 +84,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.utils.CalculationUtils
 import org.akanework.gramophone.ui.components.lyrics.LyricsOverlay
 import org.akanework.gramophone.ui.components.lyrics.LyricsOverlayState
@@ -419,7 +416,7 @@ private fun ProgressSection(
             onSeek = {
                 actions.seekTo((it * duration).toLong())
                 scrub = null
-            },
+            },            onScrubCancel = { scrub = null },
         )
     }
     Row(
@@ -465,10 +462,16 @@ private fun ProgressSection(
     }
 }
 
-@OptIn(ExperimentalAnimationGraphicsApi::class)
+/** How far the play button's backdrop turns as it blooms into the cookie. */
+private const val PLAY_MORPH_ROTATION = 30f
+
+/** The expressive scheme's quick, slightly bouncy spring, for the play button's morph. */
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+private val PLAY_MORPH_SPEC = MotionScheme.expressive().fastSpatialSpec<Float>()
+
 @Composable
 private fun TransportRow(player: PlayerSheetPlayerState, actions: FullPlayerActions, scheme: ColorScheme) {
-    val isPlaying by player.isPlaying.collectAsState()
+    val showPause by player.showPause.collectAsState()
     Row(
         Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center,
@@ -479,21 +482,24 @@ private fun TransportRow(player: PlayerSheetPlayerState, actions: FullPlayerActi
             onClick = actions.previous, onLongClick = actions.seekBack,
         )
         Spacer(Modifier.width(8.dp))
-        val bg = AnimatedImageVector.animatedVectorResource(R.drawable.bg_play_anim)
-        val bgPainter = rememberAnimatedVectorPainter(bg, atEnd = isPlaying)
+        val morph by animateFloatAsState(
+            targetValue = if (showPause) 1f else 0f,
+            animationSpec = PLAY_MORPH_SPEC,
+            label = "play button morph",
+        )
         Box(
             Modifier
                 .size(90.dp)
                 .noRippleClickable(actions.playPause),
             contentAlignment = Alignment.Center,
         ) {
-            Icon(
-                painter = bgPainter,
-                contentDescription = null,
-                tint = scheme.secondaryContainer,
-                modifier = Modifier.size(90.dp),
+            Box(
+                Modifier
+                    .matchParentSize()
+                    .graphicsLayer { rotationZ = PLAY_MORPH_ROTATION * morph }
+                    .background(scheme.secondaryContainer, PlayButtonMorphShape(morph)),
             )
-            PlayPauseIcon(playing = isPlaying, tint = scheme.onSecondaryContainer, modifier = Modifier.size(42.dp))
+            PlayPauseIcon(playing = showPause, tint = scheme.onSecondaryContainer, modifier = Modifier.size(42.dp))
         }
         Spacer(Modifier.width(8.dp))
         TransportButton(

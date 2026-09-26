@@ -146,8 +146,6 @@
     <string name="tab_order">پیکربندی چینش زبانه‌ها</string>
     <string name="tab_order_summary">برنامه هنگام شروع اولین زبانه را نشان خواهد داد. زبانه‌های پس از جداگر مخفی خواهند شد.</string>
     <string name="settings_preference_category_home">صفحه اصلی</string>
-    <string name="settings_lyrics_ui">به کار انداختن رابط کاربری جدید ترانه</string>
-    <string name="settings_lyrics_ui_summary">رابط کاربری آزمایشی برای نمایش ترانۀ کلمه‌به‌کلمه با قابلیت‌های پیشرفته</string>
     <string name="home_menu_shuffle">بُر زدن همه</string>
     <string name="settings_status_bar_lyrics_title">ترانۀ نوار وضعیت</string>
     <string name="settings_status_bar_lyrics_summary">به کار انداختن روش نمایشی ترانۀ MeiZu در نوار وضعیت (فقط در بعضی دستگاه‌ها در دسترس است)</string>

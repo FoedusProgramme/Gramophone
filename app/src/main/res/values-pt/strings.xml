@@ -249,8 +249,6 @@
     <string name="grant_audio"><![CDATA[Conceda permissão para \"Música e Áudio\"]]></string>
     <string name="tab_order_summary">A app mostrará a primeira guia na inicialização. As guias após o divisor ficarão ocultas.</string>
     <string name="shuffle_all">Reproduzir no modo aleatório</string>
-    <string name="settings_lyrics_ui">Ativar nova UI de letras</string>
-    <string name="settings_lyrics_ui_summary">Interface de utilizador experimental para exibir letras palavra por palavra com recursos avançados</string>
     <string name="settings_status_bar_lyrics_title">Letra da música na barra de estado</string>
     <string name="delete">Apagar</string>
     <string name="sort_by_file_path">Caminho do ficheiro</string>

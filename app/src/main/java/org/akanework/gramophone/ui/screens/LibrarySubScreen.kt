@@ -33,6 +33,12 @@ import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.Spacer
 import android.content.Context
+import java.util.Locale
+import androidx.compose.ui.platform.LocalConfiguration
+import android.os.Build
+import android.icu.util.MeasureUnit
+import android.icu.util.Measure
+import android.icu.text.MeasureFormat
 import android.content.SharedPreferences
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
@@ -435,7 +441,7 @@ fun LibrarySubScreen(key: LibrarySubKey, onBack: () -> Unit, modifier: Modifier 
                         }
                         if (songs.items.isNotEmpty()) {
                             item(key = "songs-footer", span = { GridItemSpan(maxLineSpan) }) {
-                                SongsFooter(songs.items)
+                                SongsFooter(songs.items, showCount = !libraryItemSubtitleIsCount(siblings.state))
                             }
                         }
                     }
@@ -470,6 +476,8 @@ fun LibrarySubScreen(key: LibrarySubKey, onBack: () -> Unit, modifier: Modifier 
                 CarouselButtons(
                     scrolled = pageScroll,
                     topInset = topInset,
+                    atLastEntry = siblings.itemCount > 1 &&
+                            carouselState.currentItem == siblings.itemCount - 1,
                     onBack = onBack,
                     onEdit = page.editablePlaylistId?.let { id ->
                         { activity.navigateTo(PlaylistEditKey(id)) }
@@ -517,20 +525,45 @@ private fun DrawScope.drawListSheet(grid: LazyGridState, color: Color, corner: F
     )
 }
 
-/** Footer after the last song with the song count and total duration. */
+/**
+ * Footer after the last song with the total duration, and the song count unless the title's
+ * subtitle already shows it.
+ */
 @Composable
-private fun SongsFooter(songs: List<MediaItem>) {
+private fun SongsFooter(songs: List<MediaItem>, showCount: Boolean) {
     val count = songs.size
     val total = remember(songs) { songs.sumOf { it.mediaMetadata.durationMs ?: 0L } }
+    val locale = LocalConfiguration.current.locales[0]
+    val duration = remember(total, locale) { formatTotalDuration(total, locale) }
     SingleLineText(
-        stringResource(
+        if (showCount) stringResource(
             R.string.songs_total_duration,
             pluralStringResource(R.plurals.songs, count, count),
-            convertDurationToTimeStamp(total),
-        ),
+            duration,
+        ) else stringResource(R.string.songs_total_length, duration),
         14.sp, 400, MaterialTheme.colorScheme.onSurfaceVariant,
         Modifier.fillMaxWidth().padding(horizontal = 24.dp, vertical = 16.dp),
     )
+}
+
+/**
+ * A list's total length in words, as "1 hour, 12 minutes" or "38 minutes". Leftover seconds are
+ * dropped, and only shown for lists under a minute. Falls back to "1:12:05" before API 24.
+ */
+private fun formatTotalDuration(ms: Long, locale: Locale): String {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) return convertDurationToTimeStamp(ms)
+    val format = MeasureFormat.getInstance(locale, MeasureFormat.FormatWidth.WIDE)
+    val seconds = ms / 1000
+    if (seconds < 60) return format.format(Measure(seconds, MeasureUnit.SECOND))
+    val minutes = seconds / 60
+    val hours = minutes / 60
+    return when {
+        hours == 0L -> format.format(Measure(minutes, MeasureUnit.MINUTE))
+        minutes % 60 == 0L -> format.format(Measure(hours, MeasureUnit.HOUR))
+        else -> format.formatMeasures(
+            Measure(hours, MeasureUnit.HOUR), Measure(minutes % 60, MeasureUnit.MINUTE),
+        )
+    }
 }
 
 private val TITLE_BUTTON_SIZE = 56.dp

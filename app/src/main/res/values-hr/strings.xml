@@ -165,8 +165,6 @@
     <string name="shuffle_all">Promiješaj sve</string>
     <string name="play">Reproduciraj</string>
     <string name="more">Više</string>
-    <string name="settings_lyrics_ui">Uključi novi korisničko sučelje za tekstove pjesama</string>
-    <string name="settings_lyrics_ui_summary">Eksperimentalno sučelje za prikaz teksta pjesme riječ po riječ, s naprednim funkcijama</string>
     <string name="settings_status_bar_lyrics_title">Traka stanja za tekstove pjesama</string>
     <string name="settings_status_bar_lyrics_summary">Uključi MeiZu metodu prikaza tekstova pjesama u statusnoj traci (dostupna je samo na nekim uređajima)</string>
     <string name="lyric_widget_description">Widget koji prikazuje tekstove pjesama medija koji se trenutačno reproduciraju</string>

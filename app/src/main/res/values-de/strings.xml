@@ -145,8 +145,6 @@
     <string name="more">Mehr</string>
     <string name="settings_preference_category_home">Startbildschirm</string>
     <string name="shuffle_all">Alles zufällig abspielen</string>
-    <string name="settings_lyrics_ui">Neue Liedtext-Benutzeroberfläche benutzen</string>
-    <string name="settings_lyrics_ui_summary">Experimentelle Benutzeroberfläche, die Wort-für-Wort-Liedtexte mit erweiterten Funktionen anzeigen kann</string>
     <string name="settings_status_bar_lyrics_title">Liedtexte in der Statusleiste</string>
     <string name="settings_status_bar_lyrics_summary">MeiZu Methode aktivieren, die Liedtexte in der Statusleiste anzeigt (nur auf manchen Geräten verfügbar)</string>
     <string name="home_menu_shuffle">Alle zufällig abspielen</string>

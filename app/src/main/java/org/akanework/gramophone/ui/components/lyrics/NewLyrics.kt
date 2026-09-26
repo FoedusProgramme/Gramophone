@@ -36,8 +36,6 @@ import android.view.animation.AnimationUtils
 import android.view.animation.PathInterpolator
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.ScrollableState
-import androidx.compose.foundation.gestures.awaitEachGesture
-import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Spacer
@@ -55,7 +53,6 @@ import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
-import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.graphics.ColorUtils
@@ -91,14 +88,19 @@ private const val TAG = "NewLyrics"
 /** How long a user scroll keeps the lyrics from following playback again. */
 private const val USER_SCROLL_HOLD_MS = 5000L
 
+/** Follow-playback scroll: how long each line takes to move, and how its start is staggered. */
+private const val SCROLL_WAVE_DURATION_MS = 700.0
+private const val SCROLL_WAVE_DELAY_MIN_MS = 10.0
+private const val SCROLL_WAVE_DELAY_STEP_MS = 20.0
+private const val SCROLL_WAVE_DELAY_MAX_MS = 190.0
+
 /**
- * The v2 lyrics: every line is laid out as a StaticLayout and drawn directly onto the canvas, with
- * word-by-word gradients, per-line scale and colour fades, and a staggered "drop" of the lines
- * below when scrolling to the next line.
+ * The lyrics: every line is laid out as a StaticLayout and drawn directly onto the canvas, with
+ * word-by-word gradients and per-line scale and colour fades. Following playback, the list moves
+ * to the next line with a staggered wave, lines further below starting later.
  *
- * Scrolling is a [ScrollableState] over [NewLyricsRenderer.scrollY]. The renderer runs its own
- * follow-playback smooth scroll between frames and pauses it for [USER_SCROLL_HOLD_MS] after a
- * user scroll or fling.
+ * Scrolling is a [ScrollableState] over [NewLyricsRenderer.scrollY]. Following playback pauses
+ * for [USER_SCROLL_HOLD_MS] after a user scroll or fling.
  */
 @Composable
 internal fun NewLyrics(
@@ -170,13 +172,6 @@ internal fun NewLyrics(
             .then(
                 if (!visible) Modifier
                 else Modifier
-                    // A touch stops the follow-playback scroll
-                    .pointerInput(renderer) {
-                        awaitEachGesture {
-                            awaitFirstDown(requireUnconsumed = false, pass = PointerEventPass.Initial)
-                            renderer.abortSmoothScroll()
-                        }
-                    }
                     .scrollable(
                         scrollState,
                         Orientation.Vertical,
@@ -220,9 +215,7 @@ internal class NewLyricsRenderer(
     private val scaleInAnimTime
         get() = lyricAnimTime / 2f
     private val scaleColorInterpolator = PathInterpolator(0.4f, 0.2f, 0f, 1f)
-    private val scrollInterpolator = PathInterpolator(0.4f, 0.2f, 0f, 1f)
-    private val delayedInInterpolator = PathInterpolator(0.96f, 0.43f, 0.72f, 1f)
-    private val delayedOutInterpolator = PathInterpolator(0.17f, 0f, -0.15f, 1f)
+    private val scrollWaveInterpolator = PathInterpolator(0.6f, 0f, 0.2f, 1f)
     private var typeface: Typeface? = null
     private val grdWidth = context.resources.getDimension(R.dimen.lyric_gradient_size)
     private val defaultTextSize = context.resources.getDimension(R.dimen.lyric_text_size)
@@ -232,7 +225,6 @@ internal class NewLyricsRenderer(
     private var globalPaddingHorizontal = 28.5f.dpToPx(context)
     private var paddingVerticalTl = 2f
     private var paddingVerticalDefault = 18f
-    private var depth = 15f.dpToPx(context)
     private var colorSpanPool = mutableListOf<MyForegroundColorSpan>()
     private var spForRender: Pair<IntArray, List<SbItem>>? = null
     private var spForMeasure: Pair<IntArray, List<SbItem>>? = null
@@ -240,8 +232,7 @@ internal class NewLyricsRenderer(
     private var lyricsSet = false
     private var posForRender = 0uL
     private var currentScrollTarget: Int? = null
-    private var currentSmoothScroll: Pair<Pair<Double, Double>, Pair<Float, Float>>? = null
-    private var delayedScrollAnimation: Pair<Long, Pair<Int, Int>>? = null
+    private val scrollWaves = ArrayList<ScrollWave>()
     private var stateOverrides = hashMapOf<Int, Float>()
     private var stateTime = 0uL
     private var defaultTextColor = 0
@@ -395,7 +386,6 @@ internal class NewLyricsRenderer(
             context.resources.displayMetrics
         )
         globalPaddingHorizontal = 28.5f.dpToPx(context) * newTextSize / defaultTextSize
-        depth = 15f.dpToPx(context) * newTextSize / defaultTextSize
         paddingVerticalTl = 2f * newTextSize / defaultTextSize
         paddingVerticalDefault = 18f * newTextSize / defaultTextSize
         defaultTextPaint.textSize = newTextSize
@@ -431,31 +421,34 @@ internal class NewLyricsRenderer(
         return consumed
     }
 
-    fun abortSmoothScroll() {
-        currentSmoothScroll = null
-    }
+    /**
+     * A follow-playback scroll. The scroll position jumps by [delta] at once, and every line is
+     * drawn [delta] px lower and moves up to its new place. Lines from [targetIdx] down start
+     * later the further they are from it, so the list catches up line by line.
+     */
+    private class ScrollWave(val start: Double, val delta: Float, val targetIdx: Int)
 
-    private fun getScrollProgressAt(time: Double): Int {
-        val progress = lerpInv(currentSmoothScroll!!.first.first, currentSmoothScroll!!
-            .first.first + currentSmoothScroll!!.first.second, time).toFloat()
-        val interpolatedProgress = scrollInterpolator.getInterpolation(min(1f,
-            progress))
-        return lerp(currentSmoothScroll!!.second.first, currentSmoothScroll!!
-            .second.second, interpolatedProgress).toInt()
-    }
+    /** Delay before line [i] starts moving. [k] counts main lines between the target and it. */
+    private fun scrollWaveDelay(i: Int, targetIdx: Int, k: Int): Double =
+        if (i < targetIdx) 0.0
+        else min(SCROLL_WAVE_DELAY_MIN_MS + k * SCROLL_WAVE_DELAY_STEP_MS, SCROLL_WAVE_DELAY_MAX_MS)
 
-    /** Advances the follow-playback scroll by one frame. */
-    private fun computeScroll() {
-        if (currentSmoothScroll == null) return
-        val cat = AnimationUtils.currentAnimationTimeMillis().toDouble()
-        val q = getScrollProgressAt(cat)
-        if (cat >= currentSmoothScroll!!.first.first + currentSmoothScroll!!.first.second) {
-            currentSmoothScroll = null
+    /** Remaining offset of line [i] at [time], summed over the running waves. */
+    private fun scrollWaveOffset(i: Int, time: Double, k: IntArray): Float {
+        var offset = 0f
+        scrollWaves.forEachIndexed { w, wave ->
+            val begin = wave.start + scrollWaveDelay(i, wave.targetIdx, k[w])
+            val progress = ((time - begin) / SCROLL_WAVE_DURATION_MS).toFloat().coerceIn(0f, 1f)
+            offset += wave.delta * (1f - scrollWaveInterpolator.getInterpolation(progress))
         }
-        scrollTo(q)
-        // Stop once the scroll hits the end of the content
-        if (scrollY != q) currentSmoothScroll = null
-        if (currentSmoothScroll != null) invalidate()
+        return offset
+    }
+
+    /** Drops the waves every line has finished. */
+    private fun pruneScrollWaves(time: Double) {
+        scrollWaves.removeAll {
+            time >= it.start + SCROLL_WAVE_DELAY_MAX_MS + SCROLL_WAVE_DURATION_MS
+        }
     }
 
     private fun ensureLayout() {
@@ -491,7 +484,6 @@ internal class NewLyricsRenderer(
             this.height = height
         }
         if (width - paddingLeft - paddingRight <= 0 || typeface == null) return
-        computeScroll()
         ensureLayout()
         val sc = canvas.save()
         canvas.translate(paddingLeft.toFloat(), paddingTop.toFloat() - scrollYf)
@@ -510,7 +502,6 @@ internal class NewLyricsRenderer(
         val isPlaying = instance.isPlaying()
         val useRenderNodes = hasRenderNodes() && canvas.isHardwareAccelerated
         var animating = false
-        var delayedScrollDoneForFrame = false
         val globalPaddingTop = spForRender!!.first[2]
         var heightSoFar = globalPaddingTop.toDouble()
         var heightSoFarWithoutTranslated = heightSoFar
@@ -524,7 +515,15 @@ internal class NewLyricsRenderer(
         canvas.translate(globalPaddingHorizontal, globalPaddingTop.toFloat())
         val width = width - paddingLeft - paddingRight - globalPaddingHorizontal * 2
         val cat = AnimationUtils.currentAnimationTimeMillis().toDouble()
+        pruneScrollWaves(cat)
+        if (scrollWaves.isNotEmpty()) animating = true
+        // Per wave: main lines passed so far after its target line, for the line delays.
+        // Translation and background lines move with their main line.
+        val waveLineCounts = IntArray(scrollWaves.size)
         spForRender!!.second.forEachIndexed { i, it ->
+            if (it.line?.isTranslated != true && it.speaker?.isBackground != true) {
+                scrollWaves.forEachIndexed { w, wave -> if (i > wave.targetIdx) waveLineCounts[w]++ }
+            }
             var spanEnd = -1
             var spanStartGradient = -1
             var realGradientStart = -1
@@ -665,43 +664,11 @@ internal class NewLyricsRenderer(
                     determineTimeUntilNext = true
             }
             heightSoFar += it.paddingTop.toFloat()
-            val culledDown = heightSoFar > scrollY + height
-            var delayedScrollOffset = 0
-            // TODO: is this +1 find check valid for tl+bg? the idea is that tl lines stick to
-            //  their main line and are animated exactly the same.
-            if (delayedScrollAnimation != null && delayedScrollAnimation!!.second.first < i &&
-                !delayedScrollDoneForFrame && spForRender!!.second.subList(delayedScrollAnimation!!
-                    .second.first + 1, i + 1).find { it.line?.isTranslated != true } != null) {
-                val ii = spForRender!!.second.subList(delayedScrollAnimation!!.second.first + 1,
-                    i + 1).sumOf { if (it.line?.isTranslated == true) 0 else 1 }
-                val duration = lyricAnimTime * 0.278
-                val durationReturn = lyricAnimTime * 0.722
-                val durationStep = lyricAnimTime * 0.1
-                val start = delayedScrollAnimation!!.first.toDouble()
-                val end = start + duration + durationReturn + ii * durationStep
-                if (end > cat) { // animation is still ongoing
-                    if (!culledDown) {
-                        val middle = start + duration
-                        delayedScrollOffset += if (middle <= cat) {
-                            val progress = lerpInv(middle, end, cat).toFloat()
-                            val p = delayedOutInterpolator.getInterpolation(progress)
-                            lerp(depth, 0f, p)
-                        } else {
-                            val progress = lerpInv(start, middle, cat).toFloat()
-                            val p = delayedInInterpolator.getInterpolation(progress)
-                            lerp(0f, depth, p)
-                        }.toInt()
-                        animating = true
-                    } else {
-                        delayedScrollDoneForFrame = true
-                    }
-                } else if (culledDown) {
-                    delayedScrollAnimation = null
-                }
-            }
-            canvas.translate(0f, it.paddingTop.toFloat() + delayedScrollOffset -
+            val lineOffset = scrollWaveOffset(i, cat, waveLineCounts)
+            val culledDown = heightSoFar + lineOffset > scrollY + height
+            canvas.translate(0f, it.paddingTop.toFloat() + lineOffset -
                     (it.layout.height.toFloat() / hlScaleFactor - it.layout.height.toFloat()) / 2)
-            val culled = culledDown || scrollY - paddingTop > heightSoFar +
+            val culled = culledDown || scrollY - paddingTop > heightSoFar + lineOffset +
                     it.layout.height.toFloat() + it.paddingBottom
             if (!culled) {
                 if (highlight) {
@@ -882,7 +849,7 @@ internal class NewLyricsRenderer(
             }
             canvas.translate(0f, (it.layout.height.toFloat()) / hlScaleFactor -
                     (it.layout.height.toFloat() / hlScaleFactor - it.layout.height.toFloat()) / 2
-                    + it.paddingBottom.toFloat() - delayedScrollOffset)
+                    + it.paddingBottom.toFloat() - lineOffset)
             heightSoFar += it.layout.height + it.paddingBottom
         }
         canvas.restore()
@@ -894,7 +861,7 @@ internal class NewLyricsRenderer(
             resumeRequests.trySend(Unit)
             if (spForRender!!.first[3] == 1)
                 currentScrollTarget = null
-        } else if (!isCallbackQueued && currentSmoothScroll == null) {
+        } else if (!isCallbackQueued) {
             val scrollTarget = max(0, (firstScrollTarget ?: lastScrollTarget ?: 0) -
                     globalPaddingTop)
             val scrollTargetIndex = firstScrollTargetIdx ?: lastScrollTargetIdx
@@ -903,13 +870,14 @@ internal class NewLyricsRenderer(
                     scrollTo(scrollTarget)
                 } else {
                     currentScrollTarget = scrollTarget
-                    currentSmoothScroll = (AnimationUtils.currentAnimationTimeMillis().toDouble() to
-                            lyricAnimTime.toDouble()) to (scrollY.toFloat() to scrollTarget.toFloat())
-                    invalidate()
-                    if (scrollY < scrollTarget) {
-                        delayedScrollAnimation = if (scrollTargetIndex != null) AnimationUtils
-                            .currentAnimationTimeMillis() to (scrollTargetIndex to scrollY)
-                        else null
+                    // Jump there, then let each line move from where it was on screen.
+                    val from = scrollYf
+                    scrollTo(scrollTarget)
+                    val delta = scrollYf - from
+                    if (delta != 0f) {
+                        scrollWaves.add(ScrollWave(AnimationUtils.currentAnimationTimeMillis()
+                            .toDouble(), delta, scrollTargetIndex ?: 0))
+                        invalidate()
                     }
                 }
             }

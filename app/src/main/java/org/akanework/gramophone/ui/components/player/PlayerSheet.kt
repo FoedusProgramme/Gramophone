@@ -17,6 +17,7 @@
 
 package org.akanework.gramophone.ui.components.player
 
+import org.akanework.gramophone.logic.showsPause
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.runtime.Immutable
@@ -121,6 +122,8 @@ data class SheetChrome(
 class PlayerSheetPlayerState {
     val hasMedia = MutableStateFlow(false)
     val isPlaying = MutableStateFlow(false)
+    /** What the play/pause buttons show, see [showsPause]. */
+    val showPause = MutableStateFlow(false)
     val title: MutableStateFlow<CharSequence?> = MutableStateFlow(null)
     val artist: MutableStateFlow<CharSequence?> = MutableStateFlow(null)
     val artworkUri: MutableStateFlow<Uri?> = MutableStateFlow(null)
@@ -345,7 +348,7 @@ private fun SheetInteraction(
             val (contentColor, playButtonContainer, playButtonContent) = colors()
             val title by player.title.collectAsState()
             val artist by player.artist.collectAsState()
-            val isPlaying by player.isPlaying.collectAsState()
+            val showPause by player.showPause.collectAsState()
 
             // Leave room for the cover slot
             val startPadding = with(density) {
@@ -389,7 +392,7 @@ private fun SheetInteraction(
                         contentColor = playButtonContent,
                     ),
                 ) {
-                    PlayPauseIcon(playing = isPlaying, tint = playButtonContent, modifier = Modifier.size(MINI_ICON_SIZE))
+                    PlayPauseIcon(playing = showPause, tint = playButtonContent, modifier = Modifier.size(MINI_ICON_SIZE))
                 }
                 IconButton(onClick = onNext, modifier = Modifier.size(MINI_BUTTON_SIZE)) {
                     Icon(

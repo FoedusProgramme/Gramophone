@@ -1,5 +1,6 @@
 package org.akanework.gramophone.ui.components.player
 
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
@@ -47,7 +48,13 @@ fun SquigglyProgressBar(
     modifier: Modifier = Modifier,
     onScrub: (Float) -> Unit,
     onSeek: (Float) -> Unit,
+    /** A drag was cancelled: drop the scrub without seeking. */
+    onScrubCancel: () -> Unit,
 ) {
+    // The gesture handlers outlive recompositions, so they read the latest callbacks
+    val currentOnScrub by rememberUpdatedState(onScrub)
+    val currentOnSeek by rememberUpdatedState(onSeek)
+    val currentOnScrubCancel by rememberUpdatedState(onScrubCancel)
     val density = LocalDensity.current
     val waveLength = with(density) { SQUIGGLY_WAVELENGTH.toPx() }
     val amplitude = with(density) { SQUIGGLY_AMPLITUDE.toPx() }
@@ -75,20 +82,20 @@ fun SquigglyProgressBar(
     Canvas(
         modifier
             .pointerInput(Unit) {
-                detectTapGestures { off -> onSeek((off.x / size.width).coerceIn(0f, 1f)) }
+                detectTapGestures { off -> currentOnSeek((off.x / size.width).coerceIn(0f, 1f)) }
             }
             .pointerInput(Unit) {
                 detectHorizontalDragGestures(
                     onDragStart = { off ->
                         dragFraction = (off.x / size.width).coerceIn(0f, 1f)
-                        onScrub(dragFraction)
+                        currentOnScrub(dragFraction)
                     },
                     onHorizontalDrag = { change, _ ->
                         dragFraction = (change.position.x / size.width).coerceIn(0f, 1f)
-                        onScrub(dragFraction)
+                        currentOnScrub(dragFraction)
                     },
-                    onDragEnd = { onSeek(dragFraction) },
-                    onDragCancel = { onSeek(dragFraction) },
+                    onDragEnd = { currentOnSeek(dragFraction) },
+                    onDragCancel = { currentOnScrubCancel() },
                 )
             },
     ) {

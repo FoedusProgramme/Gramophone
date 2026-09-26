@@ -149,8 +149,6 @@
     <string name="settings_preference_category_home">Pantalla de inicio</string>
     <string name="shuffle_all">Mezclar todas</string>
     <string name="tab_order">Configurar el orden de las pestañas</string>
-    <string name="settings_lyrics_ui_summary">Interfaz de usuario experimental para mostrar la letra palabra por palabra con funciones avanzadas</string>
-    <string name="settings_lyrics_ui">Activar la nueva interfaz para las letras</string>
     <string name="home_menu_shuffle">Mezclar todo</string>
     <string name="settings_status_bar_lyrics_title">Letras en la barra de estado</string>
     <string name="settings_status_bar_lyrics_summary">Habilite el método MeiZu que muestra las letras de las canciones en la barra de estado (solo disponible en algunos dispositivos)</string>

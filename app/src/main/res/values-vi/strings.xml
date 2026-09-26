@@ -163,8 +163,6 @@
     <string name="shuffle_all">Trộn tất cả</string>
     <string name="play">Phát</string>
     <string name="more">Thêm</string>
-    <string name="settings_lyrics_ui">Bật UI lời bài hát mới</string>
-    <string name="settings_lyrics_ui_summary">UI thử nghiệm hiển thị lời bài hát từng từ với các tính năng nâng cao</string>
     <string name="settings_status_bar_lyrics_title">Lời bài hát trên thanh trạng thái</string>
     <string name="settings_status_bar_lyrics_summary">Bật hiển thị lời bài hát trên thanh trạng thái của MeiZu (chỉ khả dụng trên một số thiết bị)</string>
     <string name="lyric_widget_description">Widget hiển thị lời của bài hát đang phát</string>

@@ -51,7 +51,6 @@ import java.nio.charset.Charset
 fun ExperimentalSettingsScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
     val context = LocalContext.current
     val colorAccuracy = rememberBooleanPreference("color_accuracy", false)
-    val lyricUiV2 = rememberBooleanPreference("lyric_ui_v2", true)
     val offload = rememberStringPreference("offload", "0")
     val mqPreview = rememberBooleanPreference("mq_preview", false)
 
@@ -78,15 +77,6 @@ fun ExperimentalSettingsScreen(onBack: () -> Unit, modifier: Modifier = Modifier
                 shape,
                 title = stringResource(R.string.settings_export_logs),
                 onClick = { exportLogs(context.applicationContext) },
-            )
-        }
-        add { shape ->
-            SwitchPreferenceRow(
-                shape,
-                title = stringResource(R.string.settings_lyrics_ui),
-                subtitle = stringResource(R.string.settings_lyrics_ui_summary),
-                checked = lyricUiV2.value,
-                onCheckedChange = { lyricUiV2.set(it) },
             )
         }
         if (Flags.OFFLOAD) add { shape ->

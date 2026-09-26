@@ -141,8 +141,6 @@
     <string name="shuffle_all">Acak semua</string>
     <string name="play">Putar</string>
     <string name="more">Lainnya</string>
-    <string name="settings_lyrics_ui">Aktifkan antarmuka lirik baru</string>
-    <string name="settings_lyrics_ui_summary">Antarmuka eksperimental untuk menampilkan lirik kata per kata dengan fitur lanjutan</string>
     <string name="settings_status_bar_lyrics_title">Lirik bilah status</string>
     <string name="settings_status_bar_lyrics_summary">Aktifkan metode MeiZu untuk menampilkan lirik di bilah status (hanya tersedia di beberapa perangkat)</string>
     <string name="lyric_widget_description">Widget yang menampilkan lirik media yang sedang diputar</string>

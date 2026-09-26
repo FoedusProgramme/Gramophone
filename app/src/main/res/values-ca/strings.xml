@@ -149,8 +149,6 @@
     <string name="fgs_failed_channel">La reproducció ha fallat en reprendre</string>
     <string name="timer_expiry">El temporitzador per a adormir-se farà pausa de la música a les %s</string>
     <string name="tab_order">Configuració de l\'ordre de les pestanyes</string>
-    <string name="settings_lyrics_ui">Activa la interfície d\'usuari nova de lletres</string>
-    <string name="settings_lyrics_ui_summary">IU experimental per a mostrar la lletra paraula a paraula amb funcions avançades</string>
     <string name="settings_status_bar_lyrics_title">Lletres a la barra d\'estat</string>
     <string name="settings_status_bar_lyrics_summary">Activa el mètode MeiZu per a mostrar les lletres a la barra d\'estat (disponible només en alguns dispositius)</string>
     <string name="lyric_widget_description">Giny que mostra la lletra de l\'element multimèdia actualment en reproducció</string>

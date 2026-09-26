@@ -61,7 +61,7 @@ import androidx.compose.ui.unit.sp
 val LARGE_TITLE_TOP_GAP = 32.dp
 private val LARGE_TITLE_BOTTOM_GAP = 8.dp
 private val LARGE_TITLE_MARGIN_START = 24.dp
-private val LARGE_TITLE_MARGIN_END = 16.dp
+private val LARGE_TITLE_MARGIN_END = 24.dp
 private val LARGE_TITLE_SIZE = 32.sp // textAppearanceHeadlineLarge
 private val LARGE_TITLE_SUBTITLE_SIZE = 18.sp
 private val LARGE_TITLE_SUBTITLE_GAP = 2.dp

@@ -63,6 +63,7 @@
         <item quantity="other">%d 首歌曲</item>
     </plurals>
     <string name="songs_total_duration">%1$s，%2$s</string>
+    <string name="songs_total_length">总播放时间 %s</string>
     <plurals name="albums">
         <item quantity="other">%d 张专辑</item>
     </plurals>
@@ -152,9 +153,7 @@
     <string name="tab_order_summary">应用将在启动时显示第一个标签页。分隔线后的标签页将被隐藏。</string>
     <string name="settings_status_bar_lyrics_title">状态栏歌词</string>
     <string name="settings_status_bar_lyrics_summary">启用魅族状态栏歌词（仅适用于部分设备）</string>
-    <string name="settings_lyrics_ui">启用新歌词界面</string>
     <string name="lyric_widget_description">显示当前播放媒体歌词的小部件</string>
-    <string name="settings_lyrics_ui_summary">实验性界面，显示逐字歌词，具有高级功能</string>
     <string name="shuffle_all">全部随机播放</string>
     <string name="home_menu_shuffle">全部随机播放</string>
     <string name="grant_audio"><![CDATA[请授予“音乐和音频”权限]]></string>

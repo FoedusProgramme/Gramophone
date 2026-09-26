@@ -35,7 +35,6 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import org.akanework.gramophone.ui.MainActivity
-import org.akanework.gramophone.ui.components.compose.rememberBooleanPreference
 
 /** Alpha of the primary colour, over the surface, that lines which aren't sung are drawn in. */
 private const val LYRIC_DEFAULT_ALPHA = 0.30f
@@ -53,8 +52,7 @@ data class LyricsPadding(val left: Int, val top: Int, val right: Int, val bottom
 
 /**
  * The lyrics overlay: the current song's lyrics on the cover scheme's surface, following
- * playback. The `lyric_ui_v2` preference picks the v2 (canvas-drawn, word-synced) or the v1
- * (plain list) lyrics. [state] carries its visibility, fade and back-gesture scale.
+ * playback. [state] carries its visibility, fade and back-gesture scale.
  */
 @Composable
 fun LyricsOverlay(
@@ -73,7 +71,6 @@ fun LyricsOverlay(
             highlightTl = scheme.primary.copy(alpha = LYRIC_HIGHLIGHT_TL_ALPHA).compositeOver(scheme.surface).toArgb(),
         )
     }
-    val v2 = rememberBooleanPreference("lyric_ui_v2", true).value
     val visible = state.visible
 
     // Keep the screen on while the lyrics are visible
@@ -95,11 +92,7 @@ fun LyricsOverlay(
             .then(if (visible) Modifier.background(scheme.surface) else Modifier),
     ) {
         val positionTick = { state.positionTick }
-        if (v2) {
-            NewLyrics(state.lyrics, visible, positionTick, colors, padding, playback, Modifier.fillMaxSize())
-        } else {
-            LegacyLyrics(state.lyrics, visible, positionTick, colors, padding, playback, Modifier.fillMaxSize())
-        }
+        NewLyrics(state.lyrics, visible, positionTick, colors, padding, playback, Modifier.fillMaxSize())
     }
 }
 

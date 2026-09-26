@@ -242,8 +242,6 @@
     <string name="settings_category_misc">Ostatní</string>
     <string name="grant_images"><![CDATA[Prosím povolte \"Fotky a Videa\" povolení]]></string>
     <string name="tab_order_summary">Aplikace ukáže první lištu při spuštění aplikace. Lišta se za rozdělovačem skryje.</string>
-    <string name="settings_lyrics_ui">Povolit novou UI textu skladeb</string>
-    <string name="settings_lyrics_ui_summary">Experimentální UI pro zobrazení textu slovo po slově s pokročilými funkcemi</string>
     <string name="no">Ne</string>
     <string name="sort_by_file_path">Cesta k souboru</string>
     <string name="shuffle_all">Zamíchat vše</string>
