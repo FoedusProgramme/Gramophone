@@ -100,17 +100,64 @@ class BaselineProfileGenerator {
             device.waitForIdle(20L)
             device.swipe(200, 1000, 800, 1000, 20)
             device.waitForIdle(20L)
-            // 3. Play a song
-            device.findObject(By.text("Ending / Credits")).click()
+            // 3. Play a song. With a real library on the device the test songs may be off screen,
+            // so scroll to them, and skip any that can't be found instead of failing.
+            fun clickText(text: String) {
+                repeat(8) {
+                    device.findObject(By.text(text))?.let { it.click(); return }
+                    device.swipe(device.displayWidth / 2, device.displayHeight * 3 / 4,
+                        device.displayWidth / 2, device.displayHeight / 4, 20)
+                    device.waitForIdle(200L)
+                }
+            }
+            clickText("Ending / Credits")
             Thread.sleep(2000)
-            device.findObject(By.text("test3")).click()
+            clickText("test3")
             Thread.sleep(2000)
-            device.findObject(By.text("Level 1")).click()
+            clickText("Level 1")
             Thread.sleep(2000)
-            device.findObject(By.text("Level 2")).click()
+            clickText("Level 2")
             Thread.sleep(2000)
-            device.findObject(By.text("Level 3")).click()
+            clickText("Level 3")
             Thread.sleep(2000)
+
+            // 4. Open an album and an artist page (the covers and their color schemes), then scroll
+            // them and go back. Works in any language as it picks the tabs by position.
+            val w = device.displayWidth
+            val h = device.displayHeight
+            fun openFirstEntryOfTab(tabIndex: Int) {
+                val tabs = device.findObjects(By.clazz("android.view.View").clickable(true))
+                device.click(w / 2, h / 2) // dismiss anything focused
+                device.waitForIdle(200L)
+                tabs.getOrNull(tabIndex)?.click()
+                Thread.sleep(1000)
+                device.click(w / 4, h * 3 / 10)
+                Thread.sleep(1500)
+                device.swipe(w / 2, h * 3 / 4, w / 2, h / 4, 20)
+                Thread.sleep(800)
+                device.swipe(w / 2, h / 4, w / 2, h * 3 / 4, 20)
+                Thread.sleep(800)
+                device.pressBack()
+                Thread.sleep(1000)
+            }
+            openFirstEntryOfTab(1)
+            openFirstEntryOfTab(2)
+
+            // 5. Expand the player, open the lyrics, then the queue, and close it all again.
+            device.click(w / 2, h * 935 / 1000)
+            Thread.sleep(1500)
+            device.click(w * 145 / 1000, h * 944 / 1000)
+            Thread.sleep(3000)
+            device.pressBack()
+            Thread.sleep(1000)
+            device.click(w * 852 / 1000, h * 944 / 1000)
+            Thread.sleep(1500)
+            device.swipe(w / 2, h * 3 / 4, w / 2, h / 4, 20)
+            Thread.sleep(800)
+            device.pressBack()
+            Thread.sleep(1000)
+            device.pressBack()
+            Thread.sleep(1000)
 
 
             // Check UiAutomator documentation for more information how to interact with the app.
