@@ -57,11 +57,34 @@ class LyricsView(context: Context, attrs: AttributeSet?) : FrameLayout(context, 
     var highlightTlTextColor = 0
         private set
     private var lyrics: SemanticLyrics? = null
-    private val fullPlayer by lazy { (parent.parent as ViewGroup)
-        .findViewById<FullBottomSheet>(R.id.full_player)!! }
+    /**
+     * Optional callback notifying the host player sheet of visibility requests driven by lyric animations.
+     *
+     * @author SteveZMTstudios
+     */
+    var onFullPlayerVisibilityRequest: ((Int) -> Unit)? = null
+
+    var isCompactMode: Boolean = false
+        set(value) {
+            if (field != value) {
+                field = value
+                newView?.isCompactMode = value
+                adapter?.isCompactMode = value
+                // When switching to compact mode, clear system insets padding so lyrics fit album cover boundaries.
+                // Fullscreen instances never toggle back to compact, so resetting to zero is intentional.
+                if (value) {
+                    setPadding(0, 0, 0, 0)
+                }
+                recyclerView?.invalidateItemDecorations()
+            }
+        }
 
     init {
         ViewCompat.setOnApplyWindowInsetsListener(this) { v, insets ->
+            if (isCompactMode) {
+                v.setPadding(0, 0, 0, 0)
+                return@setOnApplyWindowInsetsListener insets
+            }
             val myInsets = insets.getInsets(
                 WindowInsetsCompat.Type.systemBars()
                         or WindowInsetsCompat.Type.displayCutout()
@@ -148,7 +171,12 @@ class LyricsView(context: Context, attrs: AttributeSet?) : FrameLayout(context, 
         if (prefs.getBooleanStrict("lyric_ui_v2", true)) {
             inflate(context, R.layout.lyric_view_v2, this)
             newView = findViewById(R.id.lyric_view)!!
-            newView!!.setPadding(oldPaddingLeft, oldPaddingTop, oldPaddingRight, oldPaddingBottom)
+            newView!!.isCompactMode = isCompactMode
+            if (isCompactMode) {
+                newView!!.setPadding(0, 0, 0, 0)
+            } else {
+                newView!!.setPadding(oldPaddingLeft, oldPaddingTop, oldPaddingRight, oldPaddingBottom)
+            }
             newView!!.instance = cb
             newView!!.updateTextColor(
                 defaultTextColor, highlightTextColor, highlightTlTextColor
@@ -157,25 +185,34 @@ class LyricsView(context: Context, attrs: AttributeSet?) : FrameLayout(context, 
         } else {
             inflate(context, R.layout.lyric_view, this)
             recyclerView = findViewById(R.id.recycler_view)
-            recyclerView?.setPadding(
-                oldPaddingLeft,
-                oldPaddingTop,
-                oldPaddingRight,
-                oldPaddingBottom
-            )
+            if (isCompactMode) {
+                recyclerView?.setPadding(0, 0, 0, 0)
+            } else {
+                recyclerView?.setPadding(
+                    oldPaddingLeft,
+                    oldPaddingTop,
+                    oldPaddingRight,
+                    oldPaddingBottom
+                )
+            }
             recyclerView!!.adapter = LegacyLyricsAdapter(context).also {
+                it.isCompactMode = isCompactMode
                 it.updateTextColor(defaultTextColor, highlightTextColor)
             }
-            recyclerView!!.addItemDecoration(LyricPaddingDecoration(context))
+            // Use lambda provider because the decoration is created during view inflation and persists,
+            // while isCompactMode may be configured subsequently by the host controller.
+            recyclerView!!.addItemDecoration(LyricPaddingDecoration(context) { isCompactMode })
             adapter!!.callback = cb
             adapter!!.updateLyrics(lyrics)
         }
     }
 
     private fun updateFullPlayerVisibility() {
-        fullPlayer.visibilityDueToLyrics = if (isVisible && alpha == 1f && scaleX == 1f &&
+        if (isCompactMode) return
+        val requestedVisibility = if (isVisible && alpha == 1f && scaleX == 1f &&
             scaleY == 1f && translationX == 0f && translationY == 0f && !hasTransientState())
                 GONE else VISIBLE
+        onFullPlayerVisibilityRequest?.invoke(requestedVisibility)
     }
 
     override fun setHasTransientState(hasTransientState: Boolean) {
@@ -247,9 +284,24 @@ class LyricsView(context: Context, attrs: AttributeSet?) : FrameLayout(context, 
         newView?.updateLyrics(lyrics)
     }
 
+    /**
+     * Definition of the "compact -> zero padding" rule: inside the album cover, window insets are
+     * meaningless, so padding must end at zero whatever the caller passes. [isCompactMode]'s
+     * setter and the window-insets listener only restate that value, and the two [createView]
+     * branches bypass it by padding the freshly inflated child directly - keep them in sync.
+     *
+     * `super` is intentionally called on the compact path only, matching upstream: this view was
+     * never padded itself, and padding it would inset the fullscreen lyrics, which fill it.
+     */
     override fun setPadding(left: Int, top: Int, right: Int, bottom: Int) {
-        recyclerView?.setPadding(left, top, right, bottom)
-        newView?.setPadding(left, top, right, bottom)
+        if (isCompactMode) {
+            super.setPadding(0, 0, 0, 0)
+            recyclerView?.setPadding(0, 0, 0, 0)
+            newView?.setPadding(0, 0, 0, 0)
+        } else {
+            recyclerView?.setPadding(left, top, right, bottom)
+            newView?.setPadding(left, top, right, bottom)
+        }
     }
 
     fun updateTextColor(
