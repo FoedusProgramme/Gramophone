@@ -60,7 +60,7 @@ import org.akanework.gramophone.logic.defaultPrefs
 import org.akanework.gramophone.logic.getBooleanStrict
 import org.akanework.gramophone.logic.utils.Flags
 import org.akanework.gramophone.logic.utils.convertDurationToTimeStamp
-import org.akanework.gramophone.ui.MainActivity
+import org.akanework.gramophone.ui.MediaControllerViewModel
 import org.akanework.gramophone.ui.components.compose.DismissibleRow
 import org.akanework.gramophone.ui.components.compose.rememberReorderableListState
 import org.akanework.gramophone.ui.components.compose.reorderHandle
@@ -180,7 +180,7 @@ private class QueueSheetState(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun QueueSheet(activity: MainActivity, onDismiss: () -> Unit) {
+fun QueueSheet(controller: MediaControllerViewModel, onDismiss: () -> Unit) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val host = remember { QueueSheetState(context, onDismiss) }
@@ -188,10 +188,15 @@ fun QueueSheet(activity: MainActivity, onDismiss: () -> Unit) {
         host.onShow()
         onDispose { host.onHide() }
     }
-    val mqState = rememberMqState(scope, activity, host)
+    val mqState = rememberMqState(scope, controller, host)
+    if (mqState == null) {
+        // Not connected to the player: nothing to show.
+        LaunchedEffect(Unit) { onDismiss() }
+        return
+    }
     val mqEnabled = remember { Flags.MQ_PREVIEW && context.defaultPrefs.getBooleanStrict("mq_preview", false) }
     val pagerState = rememberPagerState(initialPage = if (Flags.MQ_PREVIEW) 0 else 1) { 2 }
-    val instance = activity.getPlayer()
+    val instance = controller.get()
 
     DisposableEffect(host, mqState) {
         val listener = object : Player.Listener {
@@ -212,7 +217,7 @@ fun QueueSheet(activity: MainActivity, onDismiss: () -> Unit) {
                 mqState.updateTimer()
             }
         }
-        activity.controllerViewModel.addRecreationalPlayerListener(host.lifecycle, listener) {
+        controller.addRecreationalPlayerListener(host.lifecycle, listener) {
             listener.onMediaItemTransition(
                 instance?.currentMediaItem, Player.MEDIA_ITEM_TRANSITION_REASON_PLAYLIST_CHANGED
             )

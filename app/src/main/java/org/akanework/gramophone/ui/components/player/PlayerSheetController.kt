@@ -4,9 +4,10 @@ import kotlin.math.abs
 import android.os.SystemClock
 import org.akanework.gramophone.logic.showsPause
 import android.annotation.SuppressLint
-import android.os.Bundle
+import android.content.Context
 import androidx.activity.BackEventCompat
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.systemBars
@@ -14,14 +15,26 @@ import androidx.compose.foundation.layout.union
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.listSaver
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.platform.AndroidUiDispatcher
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.core.content.edit
 import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.media3.common.HeartRating
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
@@ -39,26 +52,102 @@ import org.akanework.gramophone.logic.getBooleanStrict
 import org.akanework.gramophone.logic.getTimer
 import org.akanework.gramophone.logic.playOrPause
 import org.akanework.gramophone.logic.setTimer
-import org.akanework.gramophone.ui.MainActivity
+import org.akanework.gramophone.ui.MediaControllerViewModel
 import org.akanework.gramophone.ui.components.NowPlayingController
 import org.akanework.gramophone.ui.components.lyrics.LyricsOverlayState
+import org.akanework.gramophone.ui.nav.NavViewModel
 import org.akanework.gramophone.ui.nav.SongDetailKey
+import org.koin.compose.viewmodel.koinActivityViewModel
 import uk.akane.libphonograph.manipulator.PlaylistSerializer
+
+/** What the pages may ask of the player sheet. */
+interface PlayerSheetHandle {
+    /** Expands the sheet, if the mini player is showing. */
+    fun open()
+}
+
+/** The player sheet of the screen. No-op outside the app root (previews). */
+val LocalPlayerSheet = staticCompositionLocalOf<PlayerSheetHandle> {
+    object : PlayerSheetHandle {
+        override fun open() {}
+    }
+}
+
+/** The sheet state kept across activity recreation and process death. */
+data class PlayerSheetSavedState(
+    val expanded: Boolean,
+    val fraction: Float,
+    val positionMs: Long,
+    val durationMs: Long,
+) {
+    companion object {
+        val Saver: Saver<PlayerSheetSavedState, Any> = listSaver(
+            save = { listOf(it.expanded, it.fraction, it.positionMs, it.durationMs) },
+            restore = {
+                PlayerSheetSavedState(it[0] as Boolean, it[1] as Float, it[2] as Long, it[3] as Long)
+            },
+        )
+    }
+}
+
+/**
+ * The player sheet controller of the screen, owned by the composition: its state survives
+ * recreation through rememberSaveable, and it is released when the composition goes away.
+ * [toggleFavorite] marks songs as favorite or not.
+ */
+@Composable
+fun rememberPlayerSheetController(
+    toggleFavorite: (List<PlaylistSerializer.Entry>, Boolean) -> Unit,
+): PlayerSheetController {
+    val context = LocalContext.current
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    val density = LocalDensity.current.density
+    val controllerViewModel = koinActivityViewModel<MediaControllerViewModel>()
+    val navViewModel = koinActivityViewModel<NavViewModel>()
+    val currentToggleFavorite by rememberUpdatedState(toggleFavorite)
+    val create = { restored: PlayerSheetSavedState? ->
+        PlayerSheetController(
+            context = context,
+            controller = controllerViewModel,
+            navViewModel = navViewModel,
+            lifecycle = lifecycle,
+            density = density,
+            toggleFavorite = { songs, on -> currentToggleFavorite(songs, on) },
+            restored = restored,
+        )
+    }
+    val sheet = rememberSaveable(saver = PlayerSheetController.saver(create)) { create(null) }
+    DisposableEffect(sheet) {
+        lifecycle.addObserver(sheet)
+        onDispose { sheet.release() }
+    }
+    return sheet
+}
 
 /**
  * Hosts the player sheet. Bridges the MediaController into the sheet state, owns the back callback
- * and the list padding for the mini bar, and draws the sheet in [Content], which the activity
- * composes above its pages. Created in the activity's onCreate, released in onDestroy.
+ * and the list padding for the mini bar, and draws the sheet in [Content], which the app root
+ * composes above its pages. Created by [rememberPlayerSheetController].
  */
-class PlayerSheetController(private val activity: MainActivity) :
-    Player.Listener, DefaultLifecycleObserver {
+@Stable
+class PlayerSheetController internal constructor(
+    private val context: Context,
+    private val controller: MediaControllerViewModel,
+    private val navViewModel: NavViewModel,
+    private val lifecycle: Lifecycle,
+    private var density: Float,
+    private val toggleFavorite: (List<PlaylistSerializer.Entry>, Boolean) -> Unit,
+    restored: PlayerSheetSavedState?,
+) : Player.Listener, DefaultLifecycleObserver, PlayerSheetHandle {
 
     companion object {
-        private const val STATE_KEY = "player_sheet"
-        private const val STATE_EXPANDED = "expanded"
-        private const val STATE_FRACTION = "fraction"
-        private const val STATE_POSITION = "position"
-        private const val STATE_DURATION = "duration"
+        /** Saves the sheet state, and restores it into a controller made by [create]. */
+        fun saver(
+            create: (PlayerSheetSavedState?) -> PlayerSheetController,
+        ): Saver<PlayerSheetController, Any> = Saver(
+            save = { with(PlayerSheetSavedState.Saver) { save(it.savedState()) } },
+            restore = { create(PlayerSheetSavedState.Saver.restore(it)) },
+        )
     }
 
     @SuppressLint("RestrictedApi")
@@ -77,7 +166,7 @@ class PlayerSheetController(private val activity: MainActivity) :
     private val nowPlaying: NowPlayingController
 
     private val instance: MediaController?
-        get() = activity.getPlayer()
+        get() = controller.get()
     private val queueOpen = mutableStateOf(false)
     private var pendingExpanded = false
     private val positionSmoother = PositionSmoother()
@@ -118,7 +207,7 @@ class PlayerSheetController(private val activity: MainActivity) :
         toggleShuffle = { on -> instance?.shuffleModeEnabled = on },
         toggleFavorite = { on ->
             instance?.currentMediaItem?.let { song ->
-                PlaylistSerializer.Entry.ofMediaItem(song)?.let { activity.markIsFavoriteStatus(listOf(it), on) }
+                PlaylistSerializer.Entry.ofMediaItem(song)?.let { toggleFavorite(listOf(it), on) }
             }
         },
         showQueue = { nowPlaying.showQueue() },
@@ -128,7 +217,11 @@ class PlayerSheetController(private val activity: MainActivity) :
     )
 
     // Callbacks for the timer and speed dialogs (MediaController and prefs)
-    private val prefs = activity.defaultPrefs
+    private val prefs = context.defaultPrefs
+
+    /** Bottom padding (px) lists need so the mini player does not cover them, 0 when hidden. */
+    var bottomPadding by mutableIntStateOf(0)
+        private set
     private val dialogCallbacks = PlayerDialogCallbacks(
         currentSpeed = { instance?.playbackParameters?.speed ?: 1f },
         currentPitch = { instance?.playbackParameters?.pitch ?: 1f },
@@ -142,26 +235,21 @@ class PlayerSheetController(private val activity: MainActivity) :
 
     init {
         // Restore the expanded state and playback position after activity recreation.
-        activity.savedStateRegistry.consumeRestoredStateForKey(STATE_KEY)?.let { state ->
-            pendingExpanded = state.getBoolean(STATE_EXPANDED, false)
-            playerState.positionFraction.value = state.getFloat(STATE_FRACTION, 0f)
-            playerState.positionMs.value = state.getLong(STATE_POSITION, 0L)
-            playerState.durationMs.value = state.getLong(STATE_DURATION, 0L)
-        }
-        activity.savedStateRegistry.registerSavedStateProvider(STATE_KEY) {
-            Bundle().apply {
-                putBoolean(STATE_EXPANDED, sheetState.expandedTarget)
-                putFloat(STATE_FRACTION, playerState.positionFraction.value)
-                putLong(STATE_POSITION, playerState.positionMs.value)
-                putLong(STATE_DURATION, playerState.durationMs.value)
-            }
+        restored?.let { state ->
+            pendingExpanded = state.expanded
+            playerState.positionFraction.value = state.fraction
+            playerState.positionMs.value = state.positionMs
+            playerState.durationMs.value = state.durationMs
         }
 
         sheetScope.launch {
             snapshotFlow { lyrics.covering }.collect { playerState.lyricsCovering.value = it }
         }
         nowPlaying = NowPlayingController(
-            activity = activity,
+            controller = controller,
+            lifecycle = lifecycle,
+            prefs = prefs,
+            navigate = navViewModel::navigateTo,
             updateLyrics = { lyrics.lyrics = it },
             minimize = { sheetState.collapse() },
             onQualityChanged = { icon, text ->
@@ -172,12 +260,11 @@ class PlayerSheetController(private val activity: MainActivity) :
             closeQueue = { queueOpen.value = false },
         )
 
-        activity.controllerViewModel.addRecreationalPlayerListener(activity.lifecycle, this) {
+        controller.addRecreationalPlayerListener(lifecycle, this) {
             syncPlayerState()
             refreshVisibility()
             nowPlaying.refreshLyrics()
         }
-        activity.lifecycle.addObserver(this)
 
         sheetScope.launch {
             while (isActive) {
@@ -205,9 +292,16 @@ class PlayerSheetController(private val activity: MainActivity) :
         }
     }
 
+    private fun savedState() = PlayerSheetSavedState(
+        expanded = sheetState.expandedTarget,
+        fraction = playerState.positionFraction.value,
+        positionMs = playerState.positionMs.value,
+        durationMs = playerState.durationMs.value,
+    )
+
     /**
      * The sheet, plus the queue when open. Composed after the pages so it draws over them and its
-     * back callback takes priority over theirs.
+     * back callback, added to the dispatcher after theirs, takes priority over them.
      */
     @Composable
     fun Content() {
@@ -225,8 +319,14 @@ class PlayerSheetController(private val activity: MainActivity) :
                 chromeState.value = chrome.copy(left = left, right = right, top = top, bottom = bottom)
                 dispatchBottomPadding()
             }
+            if (this.density != density.density) {
+                this.density = density.density
+                dispatchBottomPadding()
+            }
         }
-        DisposableEffect(Unit) {
+        val backDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
+        val lifecycleOwner = LocalLifecycleOwner.current
+        DisposableEffect(backDispatcher, lifecycleOwner) {
             val callback = object : OnBackPressedCallback(enabled = sheetState.expandedTarget) {
                 override fun handleOnBackStarted(backEvent: BackEventCompat) {
                     if (lyrics.visible) lyrics.onBackStarted()
@@ -257,7 +357,7 @@ class PlayerSheetController(private val activity: MainActivity) :
                 }
             }
             bottomSheetBackCallback = callback
-            activity.onBackPressedDispatcher.addCallback(activity, callback)
+            backDispatcher?.addCallback(lifecycleOwner, callback)
             onDispose {
                 callback.remove()
                 bottomSheetBackCallback = null
@@ -267,12 +367,12 @@ class PlayerSheetController(private val activity: MainActivity) :
             state = sheetState,
             player = playerState,
             chrome = chromeState,
-            pageAccent = { activity.navViewModel.topAccent },
+            pageAccent = { navViewModel.topAccent },
             lyrics = lyrics,
             onPlayPause = { instance?.playOrPause() },
             onNext = { instance?.seekToNext() },
             onCoverClick = {
-                instance?.currentMediaItem?.mediaId?.let { activity.navigateTo(SongDetailKey(it)) }
+                instance?.currentMediaItem?.mediaId?.let { navViewModel.navigateTo(SongDetailKey(it)) }
             },
             onExpandedTargetChanged = { expanded ->
                 bottomSheetBackCallback?.isEnabled = expanded
@@ -281,22 +381,22 @@ class PlayerSheetController(private val activity: MainActivity) :
             dialogCallbacks = dialogCallbacks,
         )
         if (queueOpen.value) {
-            QueueSheet(activity, onDismiss = { queueOpen.value = false })
+            QueueSheet(controller, onDismiss = { queueOpen.value = false })
         }
     }
 
-    fun open() {
+    override fun open() {
         if (chromeState.value.shown) {
             sheetState.expand()
         }
     }
 
-    /** Stops the sheet's work when the activity is destroyed. */
-    fun release() {
+    /** Stops the sheet's work when the composition that owns it goes away. */
+    internal fun release() {
         nowPlaying.release()
-        activity.lifecycle.removeObserver(this)
+        lifecycle.removeObserver(this)
         sheetScope.cancel()
-        onStop(activity)
+        nowPlaying.onStop()
     }
 
     private fun syncPlayerState() {
@@ -305,7 +405,7 @@ class PlayerSheetController(private val activity: MainActivity) :
         playerState.showPause.value = instance?.showsPause == true
         playerState.title.value = item?.mediaMetadata?.title
         playerState.artist.value =
-            item?.mediaMetadata?.artist ?: activity.getString(R.string.unknown_artist)
+            item?.mediaMetadata?.artist ?: context.getString(R.string.unknown_artist)
         playerState.artworkUri.value = item?.mediaMetadata?.artworkUri
         playerState.repeatMode.value = instance?.repeatMode ?: Player.REPEAT_MODE_OFF
         playerState.shuffleMode.value = instance?.shuffleModeEnabled == true
@@ -360,7 +460,7 @@ class PlayerSheetController(private val activity: MainActivity) :
      * PlayerSheetMetrics.collapsedFootprint (MINI_HEIGHT).
      */
     private fun collapsedHeightPx(): Int {
-        val d = activity.resources.displayMetrics.density
+        val d = density
         val nav = chromeState.value.bottom
         val platform = maxOf(nav + (8 * d).toInt(), (24 * d).toInt())
         return platform + (56 * d).toInt()
@@ -368,8 +468,7 @@ class PlayerSheetController(private val activity: MainActivity) :
 
     /** Publishes the bottom padding the mini bar needs, or 0 when it is hidden. */
     private fun dispatchBottomPadding() {
-        activity.playerBottomPadding.intValue =
-            if (chromeState.value.shown) collapsedHeightPx() else 0
+        bottomPadding = if (chromeState.value.shown) collapsedHeightPx() else 0
     }
 
     override fun onMediaItemTransition(

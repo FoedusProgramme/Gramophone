@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -38,6 +39,9 @@ import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import org.akanework.gramophone.ui.components.compose.AppDialogHost
 import org.akanework.gramophone.ui.components.compose.AppDialogHostState
+import org.akanework.gramophone.ui.components.compose.LocalAppDialogs
+import org.akanework.gramophone.ui.components.player.LocalPlayerSheet
+import org.akanework.gramophone.ui.components.player.PlayerSheetController
 import org.akanework.gramophone.ui.screens.HomeScreen
 import org.akanework.gramophone.ui.screens.LibrarySubScreen
 import org.akanework.gramophone.ui.screens.PlaylistEditScreen
@@ -120,23 +124,35 @@ val LocalListBottomPadding = compositionLocalOf<Dp?> { null }
 /** True while a page covers the always-composed home (so it can pause its animations). */
 val LocalHomeCovered = compositionLocalOf { false }
 
+/** Reports the app as fully drawn, which also ends the splash screen. No-op by default. */
+val LocalReportFullyDrawn = staticCompositionLocalOf<() -> Unit> { {} }
+
 private val HOME_CONTENT_KEY: Any = NavEntry<AppNavKey>(HomeKey, content = {}).contentKey
 
+/**
+ * The pages, the dialogs and snackbar, and above them all the player sheet. Provides [dialogs]
+ * and [playerSheet] to the pages.
+ */
 @Composable
 fun AppRoot(
     backStack: SnapshotStateList<AppNavKey>,
-    onPlayerVisibleChanged: (Boolean) -> Unit,
-    playerBottomPadding: Int,
+    playerSheet: PlayerSheetController,
     dialogs: AppDialogHostState,
     debug: Boolean,
 ) {
     val top = backStack.lastOrNull()
     LaunchedEffect(top) {
-        top?.let { onPlayerVisibleChanged(it.wantsPlayer) }
+        top?.let { playerSheet.visible = it.wantsPlayer }
     }
+    val playerBottomPadding = playerSheet.bottomPadding
     Box(Modifier.fillMaxSize()) {
-        CompositionLocalProvider(LocalPlayerBottomPadding provides playerBottomPadding) {
-            AppNavHost(backStack)
+        CompositionLocalProvider(
+            LocalAppDialogs provides dialogs,
+            LocalPlayerSheet provides playerSheet,
+        ) {
+            CompositionLocalProvider(LocalPlayerBottomPadding provides playerBottomPadding) {
+                AppNavHost(backStack)
+            }
         }
         AppDialogHost(dialogs)
         // Above the mini player when it shows, else above the navigation bar.
@@ -155,6 +171,9 @@ fun AppRoot(
                     .padding(start = 16.dp),
             )
         }
+        // Drawn above the pages, dialogs and snackbar. Composed after the pages so its back
+        // callback takes priority over theirs.
+        playerSheet.Content()
     }
 }
 

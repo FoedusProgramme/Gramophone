@@ -101,6 +101,7 @@ import org.akanework.gramophone.ui.library.LayoutType
 import org.akanework.gramophone.ui.nav.LocalAppBarTopPadding
 import org.akanework.gramophone.ui.nav.LocalListBottomPadding
 import org.akanework.gramophone.ui.nav.LocalPlayerBottomPadding
+import org.akanework.gramophone.ui.nav.LocalReportFullyDrawn
 import org.akanework.gramophone.ui.state.LibraryMenuAction
 import org.akanework.gramophone.ui.state.LibraryTabSpec
 import org.akanework.gramophone.ui.state.LibraryTabState
@@ -186,11 +187,11 @@ fun <T : Any> CollectLibraryItems(state: LibraryTabState<T>) {
 /** Ends the splash / reportFullyDrawn once the first list frame is on screen. */
 @Composable
 fun ReportFullyDrawnWhen(loaded: Boolean) {
-    val context = LocalContext.current
+    val reportFullyDrawn = LocalReportFullyDrawn.current
     LaunchedEffect(loaded) {
         if (loaded) {
             withFrameNanos { }
-            context.findMainActivity().maybeReportFullyDrawn()
+            reportFullyDrawn()
         }
     }
 }

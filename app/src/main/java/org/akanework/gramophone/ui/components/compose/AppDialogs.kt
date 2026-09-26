@@ -40,6 +40,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -95,6 +96,9 @@ sealed interface AppDialog {
         val onConfirm: (String) -> Unit,
     ) : AppDialog
 }
+
+/** The dialog host of the screen. Outside the app root (previews) a host nobody draws. */
+val LocalAppDialogs = staticCompositionLocalOf { AppDialogHostState() }
 
 @Stable
 class AppDialogHostState {

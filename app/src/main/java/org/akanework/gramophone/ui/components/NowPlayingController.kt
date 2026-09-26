@@ -21,12 +21,12 @@ import android.content.SharedPreferences
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import androidx.lifecycle.Lifecycle
 import androidx.media3.session.SessionError
 import androidx.media3.session.SessionResult
 import com.google.common.util.concurrent.Futures
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.GramophonePlaybackService
-import org.akanework.gramophone.logic.defaultPrefs
 import org.akanework.gramophone.logic.getAudioFormat
 import org.akanework.gramophone.logic.getBooleanStrict
 import org.akanework.gramophone.logic.getLyrics
@@ -35,8 +35,9 @@ import org.akanework.gramophone.logic.utils.AudioFormatDetector.AudioFormatInfo
 import org.akanework.gramophone.logic.utils.AudioFormatDetector.AudioQuality
 import org.akanework.gramophone.logic.utils.AudioFormatDetector.SpatialFormat
 import org.akanework.gramophone.logic.utils.SemanticLyrics
-import org.akanework.gramophone.ui.MainActivity
+import org.akanework.gramophone.ui.MediaControllerViewModel
 import org.akanework.gramophone.ui.nav.AlbumKey
+import org.akanework.gramophone.ui.nav.AppNavKey
 import org.akanework.gramophone.ui.nav.ArtistKey
 import uk.akane.libphonograph.items.albumId
 import uk.akane.libphonograph.items.artistId
@@ -44,7 +45,10 @@ import uk.akane.libphonograph.items.artistId
 // Temp class for view integration, should be deleted later
 // after integration finishes
 class NowPlayingController(
-    private val activity: MainActivity,
+    private val controller: MediaControllerViewModel,
+    lifecycle: Lifecycle,
+    private val prefs: SharedPreferences,
+    private val navigate: (AppNavKey) -> Unit,
     private val updateLyrics: (SemanticLyrics?) -> Unit,
     private val minimize: () -> Unit,
     private val onQualityChanged: (iconRes: Int?, text: String?) -> Unit,
@@ -52,8 +56,7 @@ class NowPlayingController(
     private val closeQueue: () -> Unit,
 ) : SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private val instance get() = activity.getPlayer()
-    private val prefs = activity.defaultPrefs
+    private val instance get() = controller.get()
     private val handler = Handler(Looper.getMainLooper())
     private var enableQualityInfo = prefs.getBooleanStrict("audio_quality_info", false)
     private var currentFormat: AudioFormatDetector.AudioFormats? = null
@@ -65,7 +68,7 @@ class NowPlayingController(
 
     init {
         prefs.registerOnSharedPreferenceChangeListener(this)
-        activity.controllerViewModel.customCommandListeners.addCallback(activity.lifecycle) { _, command, _ ->
+        controller.customCommandListeners.addCallback(lifecycle) { _, command, _ ->
             when (command.customAction) {
                 GramophonePlaybackService.SERVICE_TIMER_CHANGED -> { /* timer state is polled */ }
 
@@ -156,12 +159,12 @@ class NowPlayingController(
 
     fun openAlbumPage() {
         minimize()
-        activity.navigateTo(AlbumKey(instance?.currentMediaItem?.mediaMetadata?.albumId))
+        navigate(AlbumKey(instance?.currentMediaItem?.mediaMetadata?.albumId))
     }
 
     fun openArtistPage() {
         minimize()
-        activity.navigateTo(ArtistKey(instance?.currentMediaItem?.mediaMetadata?.artistId, false))
+        navigate(ArtistKey(instance?.currentMediaItem?.mediaMetadata?.artistId, false))
     }
 
     fun showQueue() {

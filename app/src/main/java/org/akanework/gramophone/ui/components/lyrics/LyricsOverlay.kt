@@ -17,8 +17,6 @@
 
 package org.akanework.gramophone.ui.components.lyrics
 
-import android.content.Context
-import android.content.ContextWrapper
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -32,9 +30,9 @@ import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
-import org.akanework.gramophone.ui.MainActivity
+import org.akanework.gramophone.ui.MediaControllerViewModel
+import org.koin.compose.viewmodel.koinActivityViewModel
 
 /** Alpha of the primary colour, over the surface, that lines which aren't sung are drawn in. */
 private const val LYRIC_DEFAULT_ALPHA = 0.30f
@@ -61,8 +59,8 @@ fun LyricsOverlay(
     padding: LyricsPadding,
     modifier: Modifier = Modifier,
 ) {
-    val context = LocalContext.current
-    val playback = remember(context) { LyricsPlayback(context.findMainActivity()) }
+    val controller = koinActivityViewModel<MediaControllerViewModel>()
+    val playback = remember(controller) { LyricsPlayback(controller) }
     DisposableEffect(playback) { onDispose { playback.destroy() } }
     val colors = remember(scheme) {
         LyricsColors(
@@ -94,10 +92,4 @@ fun LyricsOverlay(
         val positionTick = { state.positionTick }
         NewLyrics(state.lyrics, visible, positionTick, colors, padding, playback, Modifier.fillMaxSize())
     }
-}
-
-private tailrec fun Context.findMainActivity(): MainActivity = when (this) {
-    is MainActivity -> this
-    is ContextWrapper -> baseContext.findMainActivity()
-    else -> error("Lyrics hosted outside MainActivity")
 }

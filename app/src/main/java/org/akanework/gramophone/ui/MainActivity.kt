@@ -18,10 +18,8 @@
 package org.akanework.gramophone.ui
 
 import androidx.activity.compose.setContent
-import org.akanework.gramophone.ui.components.player.PlayerSheetController
-import androidx.compose.ui.Modifier
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.Box
+import org.akanework.gramophone.ui.components.player.PlayerSheetHandle
+import org.akanework.gramophone.ui.components.player.rememberPlayerSheetController
 import android.app.NotificationManager
 import android.app.SearchManager
 import android.app.assist.AssistContent
@@ -48,7 +46,9 @@ import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.PlaylistPlay
-import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.remember
 import androidx.core.app.ActivityCompat
 import androidx.core.content.IntentCompat
 import androidx.core.content.pm.ShortcutManagerCompat
@@ -89,6 +89,7 @@ import org.akanework.gramophone.ui.components.compose.AppDialogHostState
 import org.akanework.gramophone.ui.nav.AppNavKey
 import org.akanework.gramophone.ui.nav.AppRoot
 import org.akanework.gramophone.ui.nav.HomeKey
+import org.akanework.gramophone.ui.nav.LocalReportFullyDrawn
 import org.akanework.gramophone.ui.nav.NavViewModel
 import org.akanework.gramophone.ui.nav.PlaylistKey
 import org.akanework.gramophone.ui.nav.SearchKey
@@ -131,13 +132,14 @@ class MainActivity : BaseActivity() {
     private val handler = Handler(Looper.getMainLooper())
     private val reportFullyDrawnRunnable = Runnable { if (!ready) reportFullyDrawn() }
     private var ready = false
-    lateinit var playerSheet: PlayerSheetController
+    // TODO(U7): the actions still reach these through the activity. They are owned by the root
+    //  composition and set from it. Remove once the callers read LocalPlayerSheet / LocalAppDialogs.
+    lateinit var playerSheet: PlayerSheetHandle
         private set
 
     /** The dialogs and snackbars the actions ask for, drawn by the root composition. */
-    val dialogs = AppDialogHostState()
-    /** Bottom padding lists need so the mini player does not cover them (px). */
-    val playerBottomPadding = mutableIntStateOf(0)
+    lateinit var dialogs: AppDialogHostState
+        private set
     private lateinit var intentSenderDelete: ActivityResultLauncher<IntentSenderRequest>
     private lateinit var addToPlaylistIntentSender: ActivityResultLauncher<IntentSenderRequest>
     private lateinit var markIsFavoriteStatusIntentSender: ActivityResultLauncher<IntentSenderRequest>
@@ -222,19 +224,22 @@ class MainActivity : BaseActivity() {
         //  forward events to our session no matter whether it makes sense or not to currently
         //  handle volume there... but it's still better than not getting the key events I guess?
 
-        playerSheet = PlayerSheetController(this)
         setContent {
             GramophoneTheme {
-                Box(Modifier.fillMaxSize()) {
+                val dialogs = remember { AppDialogHostState() }
+                // TODO(U6): favorites go through LibraryWriteRepository.
+                val playerSheet = rememberPlayerSheetController(toggleFavorite = ::markIsFavoriteStatus)
+                SideEffect { // TODO(U7)
+                    this.dialogs = dialogs
+                    this.playerSheet = playerSheet
+                }
+                CompositionLocalProvider(LocalReportFullyDrawn provides ::maybeReportFullyDrawn) {
                     AppRoot(
                         backStack = navViewModel.backStack,
-                        onPlayerVisibleChanged = { playerSheet.visible = it },
-                        playerBottomPadding = playerBottomPadding.intValue,
+                        playerSheet = playerSheet,
                         dialogs = dialogs,
                         debug = BuildConfig.DEBUG,
                     )
-                    // Drawn above the pages, dialogs and snackbar.
-                    playerSheet.Content()
                 }
             }
         }
@@ -804,7 +809,6 @@ class MainActivity : BaseActivity() {
     fun navigateTo(key: AppNavKey) = navViewModel.navigateTo(key)
 
     override fun onDestroy() {
-        playerSheet.release()
         // https://github.com/androidx/media/issues/805
         if (needsMissingOnDestroyCallWorkarounds()
             && (getPlayer()?.playWhenReady != true || getPlayer()?.mediaItemCount == 0)

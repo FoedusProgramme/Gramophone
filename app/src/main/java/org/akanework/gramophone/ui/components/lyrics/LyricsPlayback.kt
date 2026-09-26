@@ -22,21 +22,21 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.media3.common.Player
 import org.akanework.gramophone.logic.GramophonePlaybackService
-import org.akanework.gramophone.ui.MainActivity
+import org.akanework.gramophone.ui.MediaControllerViewModel
 import kotlin.math.max
 
 /**
  * What the lyrics need from playback: a position precise enough to draw word highlights from,
  * and a way to seek. Listens to the controller until [destroy] is called.
  */
-internal class LyricsPlayback(private val activity: MainActivity) : Player.Listener, LifecycleOwner {
+internal class LyricsPlayback(private val controller: MediaControllerViewModel) : Player.Listener, LifecycleOwner {
     private var waitingForSeek = 0
     private var waitingForSeekPos = 0uL
     override val lifecycle = LifecycleRegistry(this)
 
     init {
         lifecycle.currentState = Lifecycle.State.CREATED
-        activity.controllerViewModel.addRecreationalPlayerListener(lifecycle, this) {}
+        controller.addRecreationalPlayerListener(lifecycle, this) {}
     }
 
     // TODO https://github.com/androidx/media/issues/1578
@@ -44,22 +44,22 @@ internal class LyricsPlayback(private val activity: MainActivity) : Player.Liste
         if (waitingForSeek > 0) waitingForSeekPos else
             GramophonePlaybackService.instanceForWidgetAndLyricsOnly
                 ?.endedWorkaroundPlayer?.currentPosition?.toULong()
-                ?: activity.getPlayer()?.currentPosition?.toULong() ?: 0uL
+                ?: controller.get()?.currentPosition?.toULong() ?: 0uL
 
-    fun isPlaying() = activity.getPlayer()?.isPlaying == true
+    fun isPlaying() = controller.get()?.isPlaying == true
 
     fun seekTo(position: ULong) {
         waitingForSeek = max(0, waitingForSeek) + 1
         waitingForSeekPos = position
         (GramophonePlaybackService.instanceForWidgetAndLyricsOnly?.endedWorkaroundPlayer
-            ?: activity.getPlayer())?.seekTo(position.toLong())
+            ?: controller.get())?.seekTo(position.toLong())
     }
 
     fun setPlayWhenReady(play: Boolean) {
-        activity.getPlayer()?.playWhenReady = play
+        controller.get()?.playWhenReady = play
     }
 
-    fun speed(): Float = activity.getPlayer()?.playbackParameters?.speed ?: 1f
+    fun speed(): Float = controller.get()?.playbackParameters?.speed ?: 1f
 
     override fun onPositionDiscontinuity(
         oldPosition: Player.PositionInfo,
