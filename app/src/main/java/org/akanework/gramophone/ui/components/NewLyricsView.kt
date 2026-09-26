@@ -112,6 +112,7 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
     private val translationBackgroundTextPaint = TextPaint().apply {
         color = Color.BLUE
     }
+    private val blankLineTextPaint = TextPaint()
     private var wordActiveSpan = MyForegroundColorSpan(Color.CYAN)
     private var wordActiveTlSpan = MyForegroundColorSpan(Color.CYAN)
     private var gradientSpanPool = mutableListOf<MyGradientSpan>()
@@ -251,19 +252,42 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
         requestLayout()
     }
 
+    var isCompactMode: Boolean = false
+        set(value) {
+            if (field != value) {
+                field = value
+                applySize()
+                spForRender = null
+                spForMeasure = null
+                requestLayout()
+                postInvalidateOnAnimation()
+            }
+        }
+
     private fun loadLyricAnimTime() {
         lyricAnimTime = if (prefs.getBooleanStrict("lyric_no_animation", false)) 0f else 650f
     }
 
     private fun applySize() {
+        val baseTextSizeSp = prefs.getIntStrict("lyric_text_size", 34).toFloat()
+        val effectiveTextSizeSp = if (isCompactMode) baseTextSizeSp * CompactLyricMetrics.TEXT_SIZE_SCALE else baseTextSizeSp
         val newTextSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
-            prefs.getIntStrict("lyric_text_size", 34).toFloat(),
+            effectiveTextSizeSp,
             context.resources.displayMetrics)
-        globalPaddingHorizontal = 28.5f.dpToPx(context) * newTextSize / defaultTextSize
-        depth = 15f.dpToPx(context) * newTextSize / defaultTextSize
-        paddingVerticalTl = 2f * newTextSize / defaultTextSize
-        paddingVerticalDefault = 18f * newTextSize / defaultTextSize
+        val baseTextSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
+            baseTextSizeSp,
+            context.resources.displayMetrics)
+        val horizontalPaddingDp = if (isCompactMode) CompactLyricMetrics.HORIZONTAL_PADDING_DP else 28.5f
+        val depthDp = if (isCompactMode) CompactLyricMetrics.DEPTH_DP else 15f
+        globalPaddingHorizontal = horizontalPaddingDp.dpToPx(context) * (baseTextSize / defaultTextSize)
+        depth = depthDp.dpToPx(context) * (baseTextSize / defaultTextSize)
+
+        val verticalScale = if (isCompactMode) CompactLyricMetrics.VERTICAL_SPACING_SCALE else 1.0f
+        paddingVerticalTl = 2f * verticalScale * (baseTextSize / defaultTextSize)
+        paddingVerticalDefault = 18f * verticalScale * (baseTextSize / defaultTextSize)
+
         defaultTextPaint.textSize = newTextSize
+        blankLineTextPaint.textSize = newTextSize * CompactLyricMetrics.BLANK_LINE_TEXT_SCALE
         translationTextPaint.textSize = newTextSize * translationTextSize / defaultTextSize
         translationBackgroundTextPaint.textSize =
             newTextSize * translationBackgroundTextSize / defaultTextSize
@@ -763,14 +787,18 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
                 else Layout.Alignment.ALIGN_NORMAL
             val tl = syncedLine?.isTranslated == true
             val bg = speaker?.isBackground == true
+            val isBlank = isCompactMode && it.first.isBlank()
             // TODO: width limiting to 85% if there is >1 singer
             //val widthLimit = speaker?.isWidthLimited == true
-            val paddingTop = if (tl) paddingVerticalTl else paddingVerticalDefault
-            val paddingBottom = if (i + 1 < (syncedLines?.size ?: -1) &&
+            val paddingTop = if (isBlank) paddingVerticalDefault * CompactLyricMetrics.BLANK_LINE_PADDING_SCALE
+                else if (tl) paddingVerticalTl else paddingVerticalDefault
+            val paddingBottom = if (isBlank) paddingVerticalDefault * CompactLyricMetrics.BLANK_LINE_PADDING_SCALE
+                else if (i + 1 < (syncedLines?.size ?: -1) &&
                 syncedLines?.get(i + 1)?.isTranslated == true
             ) paddingVerticalTl else paddingVerticalDefault
             val layout = StaticLayoutBuilderCompat.obtain(
                 sb, when {
+                    isBlank -> blankLineTextPaint
                     tl && bg -> translationBackgroundTextPaint
                     tl || bg -> translationTextPaint
                     else -> defaultTextPaint

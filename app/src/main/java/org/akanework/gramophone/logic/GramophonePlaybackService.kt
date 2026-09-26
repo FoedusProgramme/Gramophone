@@ -106,6 +106,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.first
@@ -139,6 +140,8 @@ import org.akanework.gramophone.logic.utils.exoplayer.GramophoneRenderFactory
 import org.akanework.gramophone.ui.AudioPreviewActivity
 import org.akanework.gramophone.ui.LyricWidgetProvider
 import org.akanework.gramophone.ui.MainActivity
+import org.akanework.gramophone.ui.widget.BaseWidgetProvider
+import org.akanework.gramophone.ui.widget.DesktopWidgetManager
 import org.akanework.gramophone.ui.fragments.compose.MqState.Companion.CLIENT_QB_REFRESH_ALL
 import org.akanework.gramophone.ui.fragments.compose.MqState.Companion.CLIENT_QB_REFRESH_CLEAR
 import org.akanework.gramophone.ui.fragments.compose.MqState.Companion.CLIENT_QB_REFRESH_ITEM
@@ -242,6 +245,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
     private val scope = CoroutineScope(Dispatchers.Main)
     private val lastPlaylistLoaded = CompletableDeferred<Unit>()
     private val lyricsFetcher = CoroutineScope(Dispatchers.IO.limitedParallelism(1))
+    private var lyricsJob: Job? = null
     private val bitrateFetcher = CoroutineScope(Dispatchers.IO.limitedParallelism(1))
 
     private fun getRepeatCommand() =
@@ -810,10 +814,17 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         return onSetRating(session, controller, mediaItemId, rating)
     }
 
+    fun toggleCurrentItemFavorite() {
+        val currentMediaItem = controller?.currentMediaItem ?: return
+        val isHeart = (currentMediaItem.mediaMetadata.userRating as? HeartRating)?.isHeart == true
+        controller?.setRating(HeartRating(!isHeart))
+    }
+
     // When destroying, we should release server side player
     // alongside with the mediaSession.
     override fun onDestroy() {
         Log.i(TAG, "+onDestroy()")
+        BaseWidgetProvider.savePlaybackSnapshot(this)
         instanceForWidgetAndLyricsOnly = null
         unregisterReceiver(seekReceiver)
         unregisterReceiver(btReceiver)
@@ -835,6 +846,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         mediaSession = null
         broadcastAudioSessionClose()
         LyricWidgetProvider.update(this)
+        DesktopWidgetManager.updateAllWidgets(this)
         internalPlaybackThread.quitSafely()
         super.onDestroy()
         Log.i(TAG, "-onDestroy()")
@@ -913,6 +925,9 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         if (key == null || key == "notification_lyrics" || key == "status_bar_lyrics") {
             scheduleSendingLyrics(false)
             endedWorkaroundPlayer?.updateLyricNow()
+        }
+        if (key == "lrc_bracket_word_sync" || key == "trim_lyrics") {
+            reloadLyrics()
         }
         if (key == null || key == "rg_mode") {
             rgMode = prefs.getStringStrict("rg_mode", "0")!!.toInt()
@@ -1415,18 +1430,17 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
     }
 
 
-    override fun onTracksChanged(tracks: Tracks) {
-        if (!tracks.isEmpty && !tracks.isTypeSelected(C.TRACK_TYPE_AUDIO)) {
-            Log.e(TAG, "No audio track selected: $tracks")
-            controller!!.stop()
-        }
-
+    private fun reloadLyrics(tracks: Tracks? = controller?.currentTracks) {
+        lyricsJob?.cancel()
+        if (tracks == null) return
         val mediaItem = controller?.currentMediaItem
-        lyricsFetcher.launch {
+        lyricsJob = lyricsFetcher.launch {
             val trim = prefs.getBoolean("trim_lyrics", true)
+            val bracketWordSync = prefs.getBooleanStrict("lrc_bracket_word_sync", false)
             val options = LrcParserOptions(
                 trim = trim, multiLine = true,
-                errorText = getString(R.string.failed_to_parse_lyric)
+                errorText = getString(R.string.failed_to_parse_lyric),
+                bracketWordSync = bracketWordSync
             )
             // TODO: allow multiple lyric files/tags combining them for translations...maybe?
             val format = tracks.getFirstSelectedTrackFormatByType(C.TRACK_TYPE_AUDIO)
@@ -1460,6 +1474,14 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                 }
             }
         }
+    }
+
+    override fun onTracksChanged(tracks: Tracks) {
+        if (!tracks.isEmpty && !tracks.isTypeSelected(C.TRACK_TYPE_AUDIO)) {
+            Log.e(TAG, "No audio track selected: $tracks")
+            controller!!.stop()
+        }
+        reloadLyrics(tracks)
     }
 
     override fun onAudioTrackInitialized(
@@ -1624,6 +1646,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
             }
         }
 
+        DesktopWidgetManager.refreshFromPlayback(this)
         lastPlayedManager.save()
     }
 
@@ -1639,10 +1662,12 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
 
     override fun onMediaMetadataChanged(mediaMetadata: MediaMetadata) {
         refreshMediaButtonCustomLayout()
+        DesktopWidgetManager.refreshFromPlayback(this)
     }
 
     override fun onIsPlayingChanged(isPlaying: Boolean) {
         scheduleSendingLyrics(false)
+        DesktopWidgetManager.updateAllWidgets(this)
         lastPlayedManager.save()
     }
 
@@ -1684,6 +1709,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
     }
     override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
         refreshMediaButtonCustomLayout()
+        DesktopWidgetManager.refreshFromPlayback(this)
         if (needsMissingOnDestroyCallWorkarounds()) {
             handler.post { lastPlayedManager.save() }
         }
@@ -1691,6 +1717,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
 
     override fun onRepeatModeChanged(repeatMode: Int) {
         refreshMediaButtonCustomLayout()
+        DesktopWidgetManager.refreshFromPlayback(this)
         if (needsMissingOnDestroyCallWorkarounds()) {
             handler.post { lastPlayedManager.save() }
         }
@@ -1795,8 +1822,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
             it.start <= cPos && !it.isTranslated
         }
         val currentLine = lines?.maxByOrNull { it.start } ?: return null
-        if (currentLine.text.isBlank()) return null
-        return currentLine.text
+        return currentLine.text.ifBlank { " " }
     }
 
     private fun scheduleSendingLyrics(new: Boolean) {
@@ -1861,18 +1887,17 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
     }
 
     fun getCurrentLyricIndex(withTranslation: Boolean): Int? {
-        val lines = syncedLyrics?.text?.mapIndexed { i, it -> i to it }?.filter {
+        val allLines = syncedLyrics?.text?.mapIndexed { i, it -> i to it }?.filter {
             it.second.start <= (controller?.currentPosition ?: 0).toULong()
-                    && (!it.second.isTranslated || withTranslation)
-        }
-        // return first non-blank line if there are are multiple lines, else the first blank like
-        val max = lines?.maxByOrNull { it.second.start }
-        if (max == null) {
-            return null
-        }
+        } ?: return null
+        val lines = if (withTranslation) allLines else allLines.filter { !it.second.isTranslated }
+        val max = lines.maxByOrNull { it.second.start } ?: return null
         val maxLines =
             lines.filter { it.second.start == max.second.start && it.second.text.isNotBlank() }
-        return maxLines.firstOrNull()?.first ?: max.first
+        if (maxLines.isNotEmpty()) {
+            return maxLines.first().first
+        }
+        return max.first
     }
 
     override fun onForegroundServiceStartNotAllowedException() {
