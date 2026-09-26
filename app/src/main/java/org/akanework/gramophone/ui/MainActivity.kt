@@ -17,13 +17,10 @@
 
 package org.akanework.gramophone.ui
 
-import androidx.activity.compose.setContent
-import org.akanework.gramophone.ui.components.player.rememberPlayerSheetController
 import android.app.NotificationManager
 import android.app.assist.AssistContent
 import android.content.ClipData
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -32,35 +29,22 @@ import android.provider.Settings
 import android.view.Choreographer
 import android.view.SearchEvent
 import android.widget.Toast
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.remember
+import androidx.activity.compose.setContent
 import androidx.core.net.toUri
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.util.Log
 import androidx.media3.session.DefaultMediaNotificationProvider
 import coil3.imageLoader
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import org.akanework.gramophone.BuildConfig
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.getBooleanStrict
-import org.akanework.gramophone.logic.library.LibraryWriteRepository
 import org.akanework.gramophone.logic.needsMissingOnDestroyCallWorkarounds
 import org.akanework.gramophone.logic.postAtFrontOfQueueAsync
 import org.akanework.gramophone.logic.ui.BaseActivity
-import org.akanework.gramophone.ui.components.compose.AppDialogHostState
-import org.akanework.gramophone.ui.components.compose.LibraryGate
-import org.akanework.gramophone.ui.components.compose.MediaConsentHost
 import org.akanework.gramophone.ui.intent.PlayIntentParser
 import org.akanework.gramophone.ui.intent.PlayIntentViewModel
-import org.akanework.gramophone.ui.nav.AppRoot
 import org.akanework.gramophone.ui.nav.HomeKey
-import org.akanework.gramophone.ui.nav.LocalReportFullyDrawn
 import org.akanework.gramophone.ui.nav.NavViewModel
 import org.akanework.gramophone.ui.nav.SearchKey
-import org.akanework.gramophone.ui.nav.warmUpNavAxisEasing
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
@@ -72,7 +56,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  */
 class MainActivity : BaseActivity() {
 
-    // Import our viewModels.
     private val controllerViewModel: MediaControllerViewModel by viewModel()
     private val navViewModel: NavViewModel by viewModel()
     private val playIntentViewModel: PlayIntentViewModel by viewModel()
@@ -81,9 +64,6 @@ class MainActivity : BaseActivity() {
     private val reportFullyDrawnRunnable = Runnable { if (!ready) reportFullyDrawn() }
     private var ready = false
 
-    /**
-     * onCreate - core of MainActivity.
-     */
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.i("MainActivity", "onCreate($intent)")
         installSplashScreen().setKeepOnScreenCondition { !ready }
@@ -92,36 +72,21 @@ class MainActivity : BaseActivity() {
         playIntentViewModel.bind(controllerViewModel, navViewModel)
         // A recreated activity (rotation, process death) already had its intent handled.
         if (savedInstanceState == null) enqueuePlayIntent(intent)
-        lifecycleScope.launch(Dispatchers.Default) { warmUpNavAxisEasing() }
         // TODO: should Activity.setMediaController() or Activity.setVolumeControlStream() be
         //  called? latter will probably not do particularly much, and former will
         //  forward events to our session no matter whether it makes sense or not to currently
         //  handle volume there... but it's still better than not getting the key events I guess?
 
         setContent {
-            GramophoneTheme {
-                val dialogs = remember { AppDialogHostState() }
-                MediaConsentHost()
-                LibraryGate(
-                    smartScanFirst = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R,
-                    onDenied = ::onLibraryPermissionDenied,
-                    // If library load takes more than 2s, exit splash to avoid ANR
-                    startSplashTimeout = {
-                        if (!ready) handler.postDelayed(reportFullyDrawnRunnable, 2000)
-                    },
-                )
-                val playerSheet = rememberPlayerSheetController(
-                    toggleFavorite = libraryWrites::markFavorite
-                )
-                CompositionLocalProvider(LocalReportFullyDrawn provides ::maybeReportFullyDrawn) {
-                    AppRoot(
-                        backStack = navViewModel.backStack,
-                        playerSheet = playerSheet,
-                        dialogs = dialogs,
-                        debug = BuildConfig.DEBUG,
-                    )
-                }
-            }
+            MainRoot(
+                backStack = navViewModel.backStack,
+                onLibraryPermissionDenied = ::onLibraryPermissionDenied,
+                // If library load takes more than 2s, exit splash to avoid ANR
+                startSplashTimeout = {
+                    if (!ready) handler.postDelayed(reportFullyDrawnRunnable, 2000)
+                },
+                reportFullyDrawn = ::maybeReportFullyDrawn,
+            )
         }
 
         if (navViewModel.backStack.lastOrNull() != HomeKey)
@@ -227,6 +192,4 @@ class MainActivity : BaseActivity() {
         // (this is placed after super.onDestroy() to make sure all ImageViews are dead)
         imageLoader.memoryCache?.clear()
     }
-
-    private val libraryWrites: LibraryWriteRepository by inject()
 }

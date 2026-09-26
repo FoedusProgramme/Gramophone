@@ -106,7 +106,7 @@ class PlayIntentViewModel(
     }
 }
 
-/** Runs actions the way MainActivity used to right after the library loaded. */
+/** Runs play intent actions against the loaded library, the controller and navigation. */
 class DefaultPlayIntentExecutor(
     private val context: Context,
     private val reader: FlowReader,

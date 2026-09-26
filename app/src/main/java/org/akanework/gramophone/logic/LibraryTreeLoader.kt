@@ -324,7 +324,7 @@ class LibraryTreeLoader(
         val text = query.trim()
         val list = reader.songListFlow.first()
         val sortedList = sortList(list, LibraryAdapterTypes.SEARCH, Sorter(MediaItemHelper, null))
-        // TODO support focus and sub queries (see MainActivity)
+        // TODO support focus and sub queries (see PlayIntentParser)
         if (text == "") return sortedList
         return sortedList.filter {
             // TODO sort results by match quality? (using raw=natural order)

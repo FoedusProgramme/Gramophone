@@ -99,7 +99,7 @@ class SearchSuggestionsProvider : ContentProvider() {
     private suspend fun searchForMediaItem(text: String): List<MediaItem> {
         val text = text.trim()
         val list = reader.songListFlow.first()
-        // TODO support focus and sub queries (see MainActivity)
+        // TODO support focus and sub queries (see PlayIntentParser)
         return if (text == "") list else list.filter {
             // TODO sort results by match quality? (using raw=natural order)
             // TODO this is copied directly from SearchFragment and GramophonePlaybackService,
