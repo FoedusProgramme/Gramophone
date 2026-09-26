@@ -17,54 +17,24 @@
 
 package org.akanework.gramophone.ui.actions
 
-import android.app.Activity
-import android.content.ContentUris
-import android.content.Context
-import android.os.Bundle
-import android.provider.MediaStore
 import android.widget.Toast
-import androidx.media3.common.util.Log
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.akanework.gramophone.R
+import org.akanework.gramophone.logic.library.LibraryWriteRepository
 import org.akanework.gramophone.ui.MainActivity
-import org.akanework.gramophone.ui.actions.PlaylistDialogs.rename
 import org.akanework.gramophone.ui.components.compose.AppDialog
-import org.nift4.mediastorecompat.MediaStoreCompat
+import org.koin.android.ext.android.get
 import uk.akane.libphonograph.items.Playlist
 import uk.akane.libphonograph.manipulator.ItemManipulator
-import uk.akane.libphonograph.manipulator.PlaylistSerializer
 import java.io.File
 
 /** The playlist create and rename dialogs. */
 object PlaylistDialogs {
-    private const val TAG = "PlaylistDialogs"
-
     fun create(activity: MainActivity) {
-        val context: Context = activity
         playlistNameDialog(activity, R.string.create_playlist, "",
             { ItemManipulator.getDefaultPlaylistFile(it) }) { path ->
-            CoroutineScope(Dispatchers.IO).launch {
-                try {
-                    val uri = ItemManipulator.createPlaylist(context, path)
-                    ItemManipulator.setPlaylistContent(
-                        context, uri, PlaylistSerializer.Playlist.create(), true
-                    )
-                } catch (e: Exception) {
-                    Log.e(TAG, Log.getThrowableString(e)!!)
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(
-                            context, context.getString(
-                                R.string.create_failed_playlist,
-                                e.javaClass.name + ": " + e.message
-                            ),
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-                }
-            }
+            activity.get<LibraryWriteRepository>().createPlaylist(path)
         }
     }
 
@@ -87,59 +57,7 @@ object PlaylistDialogs {
                 )
             }
         ) { path ->
-            val uri = ContentUris.withAppendedId(
-                @Suppress("deprecation") MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, id
-            )
-            val data = Bundle().apply {
-                putLong("Id", id)
-                putString("Path", path.absolutePath)
-            }
-            CoroutineScope(Dispatchers.Default).launch {
-                val token = MediaStoreCompat.needRequestEfficientMove(
-                    activity, uri, path.parent ?: ""
-                )
-                if (token != null) {
-                    val pendingIntent = MediaStoreCompat.createWriteRequest(activity, listOf(token))
-                    withContext(Dispatchers.Main) {
-                        activity.requestPlaylistRename(pendingIntent.intentSender, data)
-                    }
-                } else {
-                    withContext(Dispatchers.Main) {
-                        continueRename(activity, Activity.RESULT_OK, data)
-                    }
-                }
-            }
-        }
-    }
-
-    /** Second half of [rename], after the MediaStore write permission came back. */
-    fun continueRename(context: Context, resultCode: Int, data: Bundle) {
-        if (resultCode == Activity.RESULT_OK) {
-            val uri = ContentUris.withAppendedId(
-                @Suppress("deprecation") MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI,
-                data.getLong("Id")
-            )
-            val path = data.getString("Path")!!
-            CoroutineScope(Dispatchers.Default).launch {
-                try {
-                    MediaStoreCompat.efficientMove(context, uri, path)
-                } catch (e: Exception) {
-                    Log.e(TAG, Log.getThrowableString(e)!!)
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(
-                            context, context.getString(
-                                R.string.rename_failed_playlist, e.javaClass.name + ": " + e.message
-                            ),
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-                }
-            }
-        } else {
-            Toast.makeText(
-                context, context.getString(R.string.rename_failed_playlist, "$resultCode"),
-                Toast.LENGTH_LONG
-            ).show()
+            activity.get<LibraryWriteRepository>().renamePlaylist(id, path)
         }
     }
 

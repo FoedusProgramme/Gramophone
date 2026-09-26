@@ -25,12 +25,12 @@ import androidx.core.app.ShareCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.getFile
+import org.akanework.gramophone.logic.library.DeleteResult
+import org.akanework.gramophone.logic.library.LibraryWriteRepository
 import org.akanework.gramophone.logic.requireMediaStoreId
 import org.akanework.gramophone.logic.setMediaItemsSeamlessly
 import org.akanework.gramophone.logic.setMediaItemsWithTitle
@@ -42,12 +42,12 @@ import org.akanework.gramophone.ui.nav.DateKey
 import org.akanework.gramophone.ui.nav.GenreKey
 import org.akanework.gramophone.ui.nav.PlaylistKey
 import org.akanework.gramophone.ui.nav.SongDetailKey
+import org.koin.android.ext.android.get
 import uk.akane.libphonograph.dynamicitem.Favorite
 import uk.akane.libphonograph.items.Album
 import uk.akane.libphonograph.items.Playlist
 import uk.akane.libphonograph.items.albumId
 import uk.akane.libphonograph.items.artistId
-import uk.akane.libphonograph.manipulator.ItemManipulator
 
 /** The hosting [MainActivity] behind whatever context wrapper Compose hands out. */
 fun Context.findMainActivity(): MainActivity {
@@ -157,20 +157,12 @@ object LibraryActions {
     fun deleteSongs(
         activity: MainActivity, songs: List<MediaItem>, @StringRes message: Int, name: CharSequence?
     ) {
-        CoroutineScope(Dispatchers.Default).launch {
-            val res = ItemManipulator.deleteSongs(
-                activity, activity.reader, songs.map { it.getFile()!! to it.requireMediaStoreId() }
+        val writes = activity.get<LibraryWriteRepository>()
+        activity.lifecycleScope.launch {
+            val result = writes.deleteSongs(
+                songs.map { it.getFile()!! to it.requireMediaStoreId() }
             )
-            if (res != null) {
-                withContext(Dispatchers.Main) {
-                    activity.dialogs.show(AppDialog.Confirm(
-                        title = activity.getString(R.string.delete),
-                        message = activity.getString(message, name),
-                        confirmText = activity.getString(R.string.delete),
-                        onConfirm = { res.invoke() },
-                    ))
-                }
-            }
+            confirmDelete(activity, writes, result, activity.getString(message, name))
         }
     }
 
@@ -183,22 +175,36 @@ object LibraryActions {
             ).show()
             return
         }
-        CoroutineScope(Dispatchers.Default).launch {
-            val res = ItemManipulator.deletePlaylist(activity, id)
-            if (res != null) {
-                withContext(Dispatchers.Main) {
-                    activity.dialogs.show(AppDialog.Confirm(
-                        title = activity.getString(R.string.delete),
-                        message = activity.getString(
-                            R.string.delete_really,
-                            if (item is Favorite) activity.getString(R.string.playlist_favourite)
-                            else item.title
-                        ),
-                        confirmText = activity.getString(R.string.delete),
-                        onConfirm = { res.invoke() },
-                    ))
-                }
-            }
+        val writes = activity.get<LibraryWriteRepository>()
+        activity.lifecycleScope.launch {
+            val result = writes.deletePlaylist(id)
+            confirmDelete(activity, writes, result, activity.getString(
+                R.string.delete_really,
+                if (item is Favorite) activity.getString(R.string.playlist_favourite)
+                else item.title
+            ))
+        }
+    }
+
+    /** Asks in the app before a delete the system would not ask about itself. */
+    private fun confirmDelete(
+        activity: MainActivity, writes: LibraryWriteRepository, result: DeleteResult,
+        message: String,
+    ) {
+        when (result) {
+            // Already queued for the system dialog, which asks the user itself.
+            is DeleteResult.NeedsConsent -> Unit
+            is DeleteResult.ConfirmThenRun -> activity.dialogs.show(AppDialog.Confirm(
+                title = activity.getString(R.string.delete),
+                message = message,
+                confirmText = activity.getString(R.string.delete),
+                onConfirm = { writes.runConfirmed(result) },
+            ))
+            is DeleteResult.Failed -> Toast.makeText(
+                activity,
+                activity.getString(R.string.delete_failed, result.error.message ?: result.error.toString()),
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 

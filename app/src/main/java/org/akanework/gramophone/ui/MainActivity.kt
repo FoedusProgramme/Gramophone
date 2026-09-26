@@ -23,14 +23,11 @@ import org.akanework.gramophone.ui.components.player.rememberPlayerSheetControll
 import android.app.NotificationManager
 import android.app.SearchManager
 import android.app.assist.AssistContent
-import android.content.ActivityNotFoundException
 import android.content.ClipData
 import android.content.ContentResolver
 import android.content.ContentUris
 import android.content.Intent
-import android.content.IntentSender
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -41,8 +38,6 @@ import android.provider.Settings
 import android.view.Choreographer
 import android.view.SearchEvent
 import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.PlaylistPlay
@@ -53,7 +48,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.IntentCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.net.toUri
-import androidx.core.os.BundleCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.C
@@ -70,7 +64,6 @@ import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
@@ -80,12 +73,14 @@ import org.akanework.gramophone.logic.getBooleanStrict
 import org.akanework.gramophone.logic.hasAudioPermission
 import org.akanework.gramophone.logic.hasScopedStorageV2
 import org.akanework.gramophone.logic.hasScopedStorageWithMediaTypes
+import org.akanework.gramophone.logic.library.LibraryWriteRepository
 import org.akanework.gramophone.logic.needsMissingOnDestroyCallWorkarounds
 import org.akanework.gramophone.logic.postAtFrontOfQueueAsync
 import org.akanework.gramophone.logic.ui.BaseActivity
 import org.akanework.gramophone.ui.actions.PlaylistDialogs
 import org.akanework.gramophone.ui.components.compose.AppDialog
 import org.akanework.gramophone.ui.components.compose.AppDialogHostState
+import org.akanework.gramophone.ui.components.compose.MediaConsentHost
 import org.akanework.gramophone.ui.nav.AppNavKey
 import org.akanework.gramophone.ui.nav.AppRoot
 import org.akanework.gramophone.ui.nav.HomeKey
@@ -99,10 +94,8 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.nift4.mediastorecompat.MediaStoreCompat
 import uk.akane.libphonograph.dynamicitem.Favorite
 import uk.akane.libphonograph.manipulator.ItemManipulator
-import uk.akane.libphonograph.manipulator.PlaylistSerializer
 import uk.akane.libphonograph.manipulator.PlaylistSerializer.Entry
 import uk.akane.libphonograph.reader.FlowReader
-import java.io.File
 import kotlin.time.Duration.Companion.milliseconds
 
 /**
@@ -140,15 +133,6 @@ class MainActivity : BaseActivity() {
     /** The dialogs and snackbars the actions ask for, drawn by the root composition. */
     lateinit var dialogs: AppDialogHostState
         private set
-    private lateinit var intentSenderDelete: ActivityResultLauncher<IntentSenderRequest>
-    private lateinit var addToPlaylistIntentSender: ActivityResultLauncher<IntentSenderRequest>
-    private lateinit var markIsFavoriteStatusIntentSender: ActivityResultLauncher<IntentSenderRequest>
-    private var pendingPlaylistRequest: Bundle? = null
-    private lateinit var renamePlaylistIntentSender: ActivityResultLauncher<IntentSenderRequest>
-    private var pendingRenamePlaylistRequest: Bundle? = null
-    private var pendingDeleteRequest: Bundle? = null
-    private var pendingMarkIsFavoriteRequest: Bundle? = null
-
     fun updateLibrary(smartScanFirst: Boolean = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R,
                       then: (() -> Unit)? = null) {
         // If library load takes more than 2s, exit splash to avoid ANR
@@ -173,52 +157,6 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         lifecycle.addObserver(controllerViewModel)
         CoroutineScope(Dispatchers.Default).launch { warmUpNavAxisEasing() }
-        if (savedInstanceState?.containsKey("AddToPlaylistPendingRequest") == true) {
-            pendingPlaylistRequest = savedInstanceState.getBundle("AddToPlaylistPendingRequest")
-        }
-        if (savedInstanceState?.containsKey("DeletePendingRequest") == true) {
-            pendingDeleteRequest = savedInstanceState.getBundle("DeletePendingRequest")
-        }
-        if (savedInstanceState?.containsKey("pendingMarkIsFavoriteRequest") == true) {
-            pendingMarkIsFavoriteRequest = savedInstanceState.getBundle("pendingMarkIsFavoriteRequest")
-        }
-        if (savedInstanceState?.containsKey("pendingRenamePlaylistRequest") == true) {
-            pendingRenamePlaylistRequest = savedInstanceState.getBundle("pendingRenamePlaylistRequest")
-        }
-        intentSenderDelete =
-            registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {
-                val req = pendingDeleteRequest
-                    ?: throw IllegalStateException("pending delete request is null")
-                pendingDeleteRequest = null
-                CoroutineScope(Dispatchers.Default).launch {
-                    ItemManipulator.continueDeleteFromPendingIntent(this@MainActivity, it.resultCode, it.data, req)
-                }
-            }
-        addToPlaylistIntentSender =
-            registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {
-                val req = pendingPlaylistRequest
-                    ?: throw IllegalStateException("pending playlist add request is null")
-                pendingPlaylistRequest = null
-                CoroutineScope(Dispatchers.Default).launch {
-                    doAddToPlaylist(it.resultCode, req)
-                }
-            }
-        renamePlaylistIntentSender =
-            registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {
-                val req = pendingRenamePlaylistRequest
-                    ?: throw IllegalStateException("pending playlist rename request is null")
-                pendingRenamePlaylistRequest = null
-                PlaylistDialogs.continueRename(this, it.resultCode, req)
-            }
-        markIsFavoriteStatusIntentSender =
-            registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {
-                val req = pendingMarkIsFavoriteRequest
-                    ?: throw IllegalStateException("pending favorite request is null")
-                pendingMarkIsFavoriteRequest = null
-                CoroutineScope(Dispatchers.Default).launch {
-                    doMarkIsFavoriteStatus(it.resultCode, req)
-                }
-            }
         // TODO: should Activity.setMediaController() or Activity.setVolumeControlStream() be
         //  called? latter will probably not do particularly much, and former will
         //  forward events to our session no matter whether it makes sense or not to currently
@@ -227,8 +165,10 @@ class MainActivity : BaseActivity() {
         setContent {
             GramophoneTheme {
                 val dialogs = remember { AppDialogHostState() }
-                // TODO(U6): favorites go through LibraryWriteRepository.
-                val playerSheet = rememberPlayerSheetController(toggleFavorite = ::markIsFavoriteStatus)
+                MediaConsentHost()
+                val playerSheet = rememberPlayerSheetController(
+                    toggleFavorite = libraryWrites::markFavorite
+                )
                 SideEffect { // TODO(U7)
                     this.dialogs = dialogs
                     this.playerSheet = playerSheet
@@ -318,12 +258,12 @@ class MainActivity : BaseActivity() {
                         PlaylistDialogs.playlistNameDialog(this@MainActivity,
                             R.string.create_playlist, "",
                             { ItemManipulator.getDefaultPlaylistFile(it) }) { name ->
-                            addToPlaylist(null, name, listOf(song))
+                            libraryWrites.addToPlaylist(null, name, listOf(song))
                         }
                         return@Choice
                     }
                     val pl = playlists[item]
-                    addToPlaylist(
+                    libraryWrites.addToPlaylist(
                         ContentUris.withAppendedId(
                             @Suppress("deprecation") MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI,
                             pl.id!!
@@ -331,183 +271,6 @@ class MainActivity : BaseActivity() {
                     )
                 })
             }
-        }
-    }
-
-    fun addToPlaylist(uri: Uri?, name: File?, songs: List<Entry>) {
-        val data = Bundle().apply {
-            putParcelableArrayList("Songs", ArrayList(songs))
-            putParcelable("Uri", uri)
-            putString("Name", name?.path)
-        }
-        CoroutineScope(Dispatchers.Default).launch {
-            val token = if (uri != null) {
-                MediaStoreCompat.needRequestBytesWrite(this@MainActivity, uri)
-            } else {
-                MediaStoreCompat.needRequestCreate(this@MainActivity,
-                    name!!.path)
-            }
-            if (token != null) {
-                pendingPlaylistRequest = data
-                val pendingIntent = MediaStoreCompat.createWriteRequest(this@MainActivity,
-                    listOf(token))
-                addToPlaylistIntentSender.launch(
-                    IntentSenderRequest.Builder(pendingIntent.intentSender).build()
-                )
-            } else {
-                doAddToPlaylist(RESULT_OK, data)
-            }
-        }
-    }
-
-    fun markIsFavoriteStatus(songs: List<Entry>, favorite: Boolean) {
-        CoroutineScope(Dispatchers.Default).launch {
-            val uri = reader.playlistListFlow.map { it.find { p -> p is
-                    Favorite } }.first()?.id?.let {
-                    ContentUris.withAppendedId(@Suppress("deprecation")
-                    MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, it)
-                }
-            val data = Bundle().apply {
-                putParcelableArrayList("Songs", ArrayList(songs))
-                putParcelable("Uri", uri)
-                putBoolean("Favorite", favorite)
-            }
-            val token = if (uri != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                MediaStoreCompat.needRequestAdoption(this@MainActivity, uri)
-            } else if (uri != null) {
-                MediaStoreCompat.needRequestBytesWrite(this@MainActivity, uri)
-            } else {
-                MediaStoreCompat.needRequestCreate(this@MainActivity,
-                    ItemManipulator.getDefaultPlaylistFile(
-                        ItemManipulator.FAVORITES).path)
-            }
-            if (token != null) {
-                pendingMarkIsFavoriteRequest = data
-                val pendingIntent = MediaStoreCompat.createWriteRequest(this@MainActivity,
-                    listOf(token))
-                markIsFavoriteStatusIntentSender.launch(
-                    IntentSenderRequest.Builder(pendingIntent.intentSender).build()
-                )
-            } else {
-                doMarkIsFavoriteStatus(RESULT_OK, data)
-            }
-        }
-    }
-
-    fun runIntentForDelete(intent: IntentSender, bundle: Bundle) {
-        try {
-            intentSenderDelete.launch(IntentSenderRequest.Builder(intent).build())
-            pendingDeleteRequest = bundle
-        } catch (e: ActivityNotFoundException) {
-            Log.e("MainActivity", "error launching intent", e)
-            CoroutineScope(Dispatchers.Default).launch {
-                ItemManipulator.continueDeleteFromPendingIntent(
-                    this@MainActivity, RESULT_FIRST_USER,
-                    null, bundle
-                )
-            }
-        }
-    }
-
-    private suspend fun doMarkIsFavoriteStatus(resultCode: Int, data: Bundle) {
-        if (resultCode == RESULT_OK) {
-            var uriIn = BundleCompat.getParcelable(data, "Uri", Uri::class.java)
-            if (uriIn != null) {
-                uriIn = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    MediaStoreCompat.adoptFile(this@MainActivity, uriIn)
-                } else uriIn
-            }
-            val songs = BundleCompat.getParcelableArrayList(data, "Songs",
-                Entry::class.java)!!
-            val favorite = data.getBoolean("Favorite")
-            try {
-                val uri = uriIn ?: ItemManipulator.createPlaylist(this,
-                    ItemManipulator.getDefaultPlaylistFile(ItemManipulator.FAVORITES))
-                val readback = if (uriIn != null) ItemManipulator.readbackPlaylist(this,
-                    reader, uri) else PlaylistSerializer.Playlist.create()
-                val newSongs = readback.copy(entries = if (favorite) {
-                    readback.entries + songs
-                } else {
-                    readback.entries.filter { songs.find { candidate -> candidate.fuzzyEquals(it) } == null }
-                })
-                ItemManipulator.setPlaylistContent(this, uri, newSongs,
-                    uriIn == null)
-            } catch (e: Exception) {
-                Log.e("MainActivity", Log.getThrowableString(e)!!)
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(
-                        this@MainActivity,
-                        getString(
-                            R.string.edit_favorites_failed,
-                            e.javaClass.name + ": " + e.message
-                        ),
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            }
-        } else {
-            withContext(Dispatchers.Main) {
-                Toast.makeText(
-                    this@MainActivity,
-                    getString(R.string.edit_favorites_failed, "$resultCode"),
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-        }
-    }
-
-    private suspend fun doAddToPlaylist(resultCode: Int, data: Bundle) {
-        val uriIn = BundleCompat.getParcelable(data, "Uri", Uri::class.java)
-        val errorString = if (uriIn != null) R.string.edit_playlist_failed else
-            R.string.create_failed_playlist
-        if (resultCode == RESULT_OK) {
-            val name = if (uriIn == null) data.getString("Name")!! else null
-            val songs = BundleCompat.getParcelableArrayList(data, "Songs",
-                Entry::class.java)!!
-            try {
-                val readback = if (uriIn != null) ItemManipulator.readbackPlaylist(this,
-                    reader, uriIn) else PlaylistSerializer.Playlist.create()
-                val uri = uriIn ?: ItemManipulator.createPlaylist(this,
-                    File(name!!))
-                ItemManipulator.setPlaylistContent(this, uri, readback
-                    .copy(entries = readback.entries + songs), uriIn == null)
-            } catch (e: Exception) {
-                Log.e("MainActivity", Log.getThrowableString(e)!!)
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(
-                        this@MainActivity,
-                        getString(
-                            errorString,
-                            e.javaClass.name + ": " + e.message
-                        ),
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            }
-        } else {
-            withContext(Dispatchers.Main) {
-                Toast.makeText(
-                    this@MainActivity,
-                    getString(errorString, "$resultCode"),
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-        }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        if (pendingPlaylistRequest != null) {
-            outState.putBundle("AddToPlaylistPendingRequest", pendingPlaylistRequest)
-        }
-        if (pendingDeleteRequest != null) {
-            outState.putBundle("DeletePendingRequest", pendingDeleteRequest)
-        }
-        if (pendingRenamePlaylistRequest != null) {
-            outState.putBundle("pendingRenamePlaylistRequest", pendingRenamePlaylistRequest)
-        }
-        if (pendingMarkIsFavoriteRequest != null) {
-            outState.putBundle("pendingMarkIsFavoriteRequest", pendingMarkIsFavoriteRequest)
         }
     }
 
@@ -567,7 +330,7 @@ class MainActivity : BaseActivity() {
         IntentCompat.getParcelableExtra(intent, FAVORITE_ENTRY, Entry::class.java)
             ?.let {
                 val state = intent.getBooleanExtra(FAVORITE_STATE, false)
-                markIsFavoriteStatus(listOf(it), state)
+                libraryWrites.markFavorite(listOf(it), state)
             }
         if (intent.action == Intent.ACTION_VIEW) {
             val id = intent.getStringExtra("playlist")?.toLongOrNull()
@@ -826,13 +589,8 @@ class MainActivity : BaseActivity() {
      * getPlayer:
      *   Returns a media controller.
      */
-    /** Asks for MediaStore write access before a playlist rename (see [PlaylistDialogs]). */
-    fun requestPlaylistRename(sender: IntentSender, data: Bundle) {
-        pendingRenamePlaylistRequest = data
-        renamePlaylistIntentSender.launch(IntentSenderRequest.Builder(sender).build())
-    }
-
     fun getPlayer() = controllerViewModel.get()
 
     val reader: FlowReader by inject()
+    private val libraryWrites: LibraryWriteRepository by inject()
 }
