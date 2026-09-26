@@ -399,7 +399,9 @@ fun LibrarySubScreen(key: LibrarySubKey, onBack: () -> Unit, modifier: Modifier 
                         item(key = "title", span = { GridItemSpan(maxLineSpan) }) {
                             LargeTitle(
                                 title.value, titleState, scrolled,
-                                subtitle = subtitle, marquee = true,
+                                // Reserve the subtitle line until the siblings load, so the list
+                                // below doesn't jump down when it arrives a few frames later.
+                                subtitle = subtitle ?: "", marquee = true,
                                 style = textViewStyle(TITLE_SIZE, 400, MaterialTheme.colorScheme.onSurface)
                                     .copy(platformStyle = PlatformTextStyle(includeFontPadding = false)),
                                 contentKey = entryToken(currentKey),
