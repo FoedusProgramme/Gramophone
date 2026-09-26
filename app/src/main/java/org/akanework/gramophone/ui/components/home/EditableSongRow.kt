@@ -16,6 +16,8 @@
  */
 package org.akanework.gramophone.ui.components.home
 
+import android.net.Uri
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -35,8 +37,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import android.net.Uri
-import androidx.annotation.DrawableRes
 
 /*
  * A song row that can be dragged by its handle and removed by its button: the playlist editor's
@@ -55,8 +55,8 @@ fun EditableSongRow(
     @DrawableRes defaultCover: Int,
     onClick: () -> Unit,
     onRemove: () -> Unit,
-    handleModifier: Modifier,
     modifier: Modifier = Modifier,
+    handleModifier: Modifier = Modifier,
     showControls: Boolean = true,
     colors: LibraryRowColors = defaultLibraryRowColors(),
 ) {

@@ -19,7 +19,6 @@ package org.akanework.gramophone.logic
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.ContentResolver
 import android.content.Context
 import android.content.SharedPreferences
@@ -38,11 +37,6 @@ import android.os.Looper
 import android.os.Message
 import android.os.StrictMode
 import android.provider.MediaStore
-import android.view.View
-import android.view.ViewGroup.MarginLayoutParams
-import android.view.ViewPropertyAnimator
-import android.view.WindowInsets
-import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
@@ -52,14 +46,7 @@ import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.Insets
 import androidx.core.os.BundleCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
-import androidx.core.view.children
-import androidx.core.view.updateLayoutParams
-import androidx.core.view.updateMargins
 import androidx.media3.common.C
 import androidx.media3.common.Format
 import androidx.media3.common.MediaItem
@@ -90,19 +77,16 @@ import org.akanework.gramophone.logic.utils.AfFormatInfo
 import org.akanework.gramophone.logic.utils.AudioFormatDetector
 import org.akanework.gramophone.logic.utils.AudioTrackInfo
 import org.akanework.gramophone.logic.utils.BtCodecInfo
-import org.akanework.gramophone.logic.utils.CalculationUtils
 import org.akanework.gramophone.logic.utils.Flags
 import org.akanework.gramophone.logic.utils.MediaItemList
 import org.akanework.gramophone.logic.utils.ReplayGainUtil
 import org.akanework.gramophone.logic.utils.SemanticLyrics
-import org.akanework.gramophone.ui.MainActivity
 import org.jetbrains.annotations.Contract
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserException
 import uk.akane.libphonograph.items.EXTRA_FILE
 import java.io.File
 import java.util.Locale
-import kotlin.math.max
 
 fun Player.playOrPause() {
     if (playWhenReady) {
@@ -158,23 +142,6 @@ fun XmlPullParser.skipToEndOfTag() {
     }
 }
 
-fun Activity.closeKeyboard(view: View) {
-    if (ViewCompat.getRootWindowInsets(window.decorView)
-            ?.isVisible(WindowInsetsCompat.Type.ime()) == true
-    ) {
-        WindowInsetsControllerCompat(window, view).hide(WindowInsetsCompat.Type.ime())
-    }
-}
-
-fun Activity.showKeyboard(view: View) {
-    view.requestFocus()
-    if (ViewCompat.getRootWindowInsets(window.decorView)
-            ?.isVisible(WindowInsetsCompat.Type.ime()) == false
-    ) {
-        WindowInsetsControllerCompat(window, view).show(WindowInsetsCompat.Type.ime())
-    }
-}
-
 fun Drawable.startAnimation() {
     when (this) {
         is AnimatedVectorDrawable -> start()
@@ -185,85 +152,6 @@ fun Drawable.startAnimation() {
 fun <T> MutableSharedFlow<T>.emitOrDie(value: T) {
     if (!tryEmit(value))
         throw IllegalStateException("tryEmit should have succeeded")
-}
-
-fun TextView.setTextAnimation(
-    text: CharSequence,
-    duration: Long = 300,
-    completion: (() -> Unit)? = null,
-    skipAnimation: Boolean = false
-) {
-    val oldTargetText = (getTag(androidx.core.R.id.text) as String?)
-    if (oldTargetText == text)
-        return // effectively, correct text is/will be set soon.
-    // if still fading out, just replace target text. otherwise set target for new anim.
-    setTag(androidx.core.R.id.text, if (skipAnimation) null else text)
-    if (skipAnimation) {
-        (getTag(R.id.fade_in_animation) as ViewPropertyAnimator?)?.cancel()
-        (getTag(R.id.fade_out_animation) as ViewPropertyAnimator?)?.cancel()
-        this.text = text
-        this.alpha = 1f
-        this.visibility = View.VISIBLE
-        completion?.let { it() }
-    } else if (this.text != text) {
-        fadOutAnimation(duration) {
-            this.text = (getTag(androidx.core.R.id.text) as String?)
-            setTag(androidx.core.R.id.text, null)
-            fadInAnimation(duration) {
-                completion?.let {
-                    it()
-                }
-            }
-        }
-    } else {
-        completion?.let { it() }
-    }
-}
-
-// ViewExtensions
-
-fun View.fadOutAnimation(
-    duration: Long = 300,
-    visibility: Int = View.GONE,
-    completion: (() -> Unit)? = null
-) {
-    if (this.visibility != View.VISIBLE) {
-        this.visibility = visibility
-        completion?.let {
-            it()
-        }
-        return
-    }
-    (getTag(R.id.fade_in_animation) as ViewPropertyAnimator?)?.cancel()
-    (getTag(R.id.fade_out_animation) as ViewPropertyAnimator?)?.cancel()
-    setTag(
-        R.id.fade_out_animation, animate()
-            .alpha(0f)
-            .setDuration(CalculationUtils.lerp(0f, duration.toFloat(), this.alpha).toLong())
-            .withEndAction {
-                this.visibility = visibility
-                setTag(R.id.fade_out_animation, null)
-                completion?.let {
-                    it()
-                }
-            })
-}
-
-fun View.fadInAnimation(duration: Long = 300, completion: (() -> Unit)? = null) {
-    (getTag(R.id.fade_in_animation) as ViewPropertyAnimator?)?.cancel()
-    (getTag(R.id.fade_out_animation) as ViewPropertyAnimator?)?.cancel()
-    alpha = 0f
-    visibility = View.VISIBLE
-    setTag(
-        R.id.fade_in_animation, animate()
-            .alpha(1f)
-            .setDuration(CalculationUtils.lerp(duration.toFloat(), 0f, this.alpha).toLong())
-            .withEndAction {
-                setTag(R.id.fade_in_animation, null)
-                completion?.let {
-                    it()
-                }
-            })
 }
 
 @Suppress("NOTHING_TO_INLINE")
@@ -499,35 +387,6 @@ fun Handler.postAtFrontOfQueueAsync(callback: Runnable) {
     })
 }
 
-data class Margin(var left: Int, var top: Int, var right: Int, var bottom: Int) {
-    companion object {
-        @Suppress("NOTHING_TO_INLINE")
-        internal inline fun fromLayoutParams(marginLayoutParams: MarginLayoutParams): Margin {
-            return Margin(
-                marginLayoutParams.leftMargin, marginLayoutParams.topMargin,
-                marginLayoutParams.rightMargin, marginLayoutParams.bottomMargin
-            )
-        }
-    }
-
-    @Suppress("NOTHING_TO_INLINE")
-    internal inline fun apply(marginLayoutParams: MarginLayoutParams) {
-        marginLayoutParams.updateMargins(left, top, right, bottom)
-    }
-}
-
-fun View.updateMargin(
-    block: Margin.() -> Unit
-) {
-    val oldMargin = Margin.fromLayoutParams(layoutParams as MarginLayoutParams)
-    val newMargin = oldMargin.copy().also { it.block() }
-    if (oldMargin != newMargin) {
-        updateLayoutParams<MarginLayoutParams> {
-            newMargin.apply(this)
-        }
-    }
-}
-
 // enableEdgeToEdge() without enforcing contrast, magic based on androidx EdgeToEdge.kt
 fun ComponentActivity.enableEdgeToEdgeProperly(dark: Boolean) {
     if (dark) {
@@ -543,10 +402,6 @@ fun ComponentActivity.enableEdgeToEdgeProperly(dark: Boolean) {
         )
     }
 }
-
-// Pitfall: WindowInsetsCompat.Builder(insets) mutates the platform insets
-fun WindowInsetsCompat.clone(): WindowInsetsCompat =
-    WindowInsetsCompat.toWindowInsetsCompat(WindowInsets(toWindowInsets()))
 
 fun Context.supportsWideScreen() : Boolean {
     val config = resources.configuration

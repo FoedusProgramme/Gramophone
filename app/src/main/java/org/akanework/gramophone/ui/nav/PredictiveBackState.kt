@@ -11,6 +11,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -65,7 +66,7 @@ internal class AndroidPredictiveBackState {
     var suppressNextPopTransition by mutableStateOf(false)
         private set
 
-    var swipeEdge by mutableStateOf(NavigationEvent.EDGE_LEFT)
+    var swipeEdge by mutableIntStateOf(NavigationEvent.EDGE_LEFT)
         private set
 
     private var initialTouchY = 0f

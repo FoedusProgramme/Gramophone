@@ -12,7 +12,6 @@
     <string name="settings_crash_application">Shodit aplikaci</string>
     <string name="settings_crash_application_summary">Shazovač 3000</string>
     <string name="category_dates">Roky</string>
-    <string name="settings_customization">Přizpůsobení</string>
     <plurals name="albums">
         <item quantity="one">%d Album</item>
         <item quantity="few">%d Alba</item>
@@ -71,7 +70,6 @@
         <item quantity="other">%d Položek</item>
     </plurals>
     <string name="dialog_duration">Trvání</string>
-    <string name="dialog_edit_metadata">Upravit</string>
     <string name="settings_content_based_color_summary">Povolit generaci barev na základě alba</string>
     <string name="settings_default_progress_bar_summary">Povolit material stylizaci ukazatele průběhu</string>
     <string name="home_menu_equalizer">Ekvalizér</string>
@@ -104,18 +102,15 @@
     <string name="spk_encoding_aac_he_v1">HE-AAC v1</string>
     <string name="spk_encoding_aac_he_v2">HE-AAC v2</string>
     <string name="spk_encoding_aac_xhe">xHE-AAC</string>
-    <string name="home_menu_search">Vyhledat</string>
     <string name="home_menu_settings">Nastavení</string>
     <string name="category_genres">Žánry</string>
     <string name="sort_by_name">Jméno</string>
-    <string name="unknown_version">Neznává verze</string>
     <string name="natural_order">Přirozené pořadí</string>
     <string name="opensource_info">Otevřený zdroj pod licencí GPL-3.0\nCopyright %s</string>
     <string name="settings_category_links">Odkazy</string>
     <string name="settings_player_options_summary">Kvalita výstupu, chování přehrávání</string>
     <string name="settings_title_bold_summary">Použít tučný text pro plný přehrávač</string>
     <string name="settings_blacklist_folder_summary">Filtrovat skladby z určitých složek</string>
-    <string name="dialog_lyrics">Text skladby</string>
     <string name="home_menu_refresh">Aktualizovat</string>
     <string name="category_playlists">Playlisty</string>
     <string name="unknown_artist">Neznámý interpret</string>
@@ -134,8 +129,6 @@
     <string name="dialog_year">Rok</string>
     <string name="recently_added">Nedávno přidané</string>
     <string name="folders">Složky</string>
-    <string name="now_playing">Nyní se přehrává</string>
-    <string name="settings_customization_summary">Správa vlastních nastavení</string>
     <string name="sort_by_modified_date">Datum modifikace</string>
     <string name="settings_lyric">Lyric</string>
     <string name="album_covers_enhance_desc">Zobraz vysoce kvalitní obaly skladeb a možnost odlišit obal alba a skladby (vyžaduje přístup k fotografiím)</string>
@@ -143,7 +136,6 @@
     <string name="crash_clipboard">Byl zkopírován záznam o havárii do schránky</string>
     <string name="settings_trim_lyrics">Odstranit mezery kolem textu skladeb</string>
     <string name="more">Více</string>
-    <string name="skip_next">Přeskočit</string>
     <string name="settings_trim_lyrics_summary">Mezery před prvním písmenem v textovém řádku mohou mít uměleckou hodnotu. Pokud s tím nesouhlasíte, můžete zapnout tento přepínač, který tyto mezery automaticky odstraní.</string>
     <string name="dialog_bitrate">Bitrate</string>
     <string name="bitrate_format">%1$d kbps</string>
@@ -199,8 +191,6 @@
     <string name="settings_title_center_summary">Použít centralizovaný název pro přehrávač</string>
     <string name="lyric_widget_description">Widget který ukazuje text skladby která se teď přehrává</string>
     <string name="timer">Spánkový časovač</string>
-    <string name="current_playlist">Aktuální playlist</string>
-    <string name="back">Zpět</string>
     <string name="tab_order">Konfigurovat pořadí lišty</string>
     <string name="album_covers_enhance">Pokročilé načítání obálky alba</string>
     <string name="share">Sdílet</string>
@@ -209,8 +199,6 @@
     <string name="fgs_failed_channel">Pokračování poslechu se nezdrařilo</string>
     <string name="timer_expiry">Spánkový časovač pozastaví hudbu za %s</string>
     <string name="settings_preference_category_home">Domovská obrazovka</string>
-    <string name="seekbar">Seekbar</string>
-    <string name="scroll_to_songs">Přejít do skladeb</string>
     <string name="settings_play_on_launch_summary">Začít hrát hudbu při spuštění aplikace</string>
     <string name="settings_category_full_player">Plný přehrávač</string>
     <string name="deny_images"><![CDATA[Prosím odmítněte \"Fotky a Videa\" povolení]]></string>
@@ -249,32 +237,22 @@
     <string name="settings_package_type">Typ balíčku</string>
     <string name="settings_player_ui">UI přehrávač</string>
     <string name="settings_player_ui_summary">Plný přehrávač UI, text skladby</string>
-    <string name="settings_library">Knihovna</string>
-    <string name="settings_library_summary">Správa mediální knihovny</string>
     <string name="settings_color_accuracy_summary">Udělat barevný gradient přesný</string>
     <string name="settings_lyrics_configuration">Konfigurace textu skladby</string>
     <string name="settings_category_misc">Ostatní</string>
     <string name="grant_images"><![CDATA[Prosím povolte \"Fotky a Videa\" povolení]]></string>
     <string name="tab_order_summary">Aplikace ukáže první lištu při spuštění aplikace. Lišta se za rozdělovačem skryje.</string>
-    <string name="divider">Rozdělovač</string>
-    <string name="sort">Seřadit</string>
-    <string name="scroll_to_albums">Přejít do alb</string>
-    <string name="expand_less">Zavřít</string>
-    <string name="skip_previous">Předchozí</string>
-    <string name="position_slider">Pozice slideru</string>
     <string name="settings_lyrics_ui">Povolit novou UI textu skladeb</string>
     <string name="settings_lyrics_ui_summary">Experimentální UI pro zobrazení textu slovo po slově s pokročilými funkcemi</string>
     <string name="no">Ne</string>
     <string name="sort_by_file_path">Cesta k souboru</string>
     <string name="shuffle_all">Zamíchat vše</string>
-    <string name="play_all">Přehrát vše</string>
     <string name="home_menu_shuffle">Zamíchat vše</string>
     <string name="sort_by_album_artist">Název interpreta -&gt; Název</string>
     <string name="settings_experimental_settings_summary">Otestovat funkce a různé</string>
     <string name="settings_lyrics_bold_summary">Použít větší velikost fontu pro text skladby</string>
     <string name="play">Přehrát</string>
     <string name="settings_lyrics_center_summary">Použít centralizovaný text pro text skladby</string>
-    <string name="remove">Odstranit</string>
     <string name="settings_status_bar_lyrics_summary">Povolit MeiZu metodu zobrazování textu skladby ve stavovém řádku (možné pouze na nějakých zařízeních)</string>
     <string name="delete">Smazat</string>
     <string name="spk_encoding_pcm_32bit">32bitový (int) PCM</string>
@@ -359,11 +337,9 @@
     <string name="settings_translation_auto_word">Automatické animace překladů</string>
     <string name="settings_translation_auto_word_summary">Použít lineární přechod na překladové řádky v synchronizovaném přehrávání textů písní, pokud překlady nemají metadata synchronizace slov</string>
     <string name="cannot_find_file">Tento soubor nelze najít</string>
-    <string name="enter_msg_for_dev_here">Zde zadejte zprávu pro vývojáře</string>
     <string name="do_not_enter_email_enter_msg">Zadejte zprávu, ne e-mailovou adresu</string>
     <string name="settings_contributors_click">%s (Klikněte pro více!)</string>
     <string name="delete_failed_playlist">Odstranění seznamu skladeb se nezdařilo: %s</string>
-    <string name="timer_expiry_eos">Časovač spánku pozastaví přehrávání hudby, když skončí skladba přehrávaná v %s</string>
     <string name="send_email">Poslat email</string>
     <string name="failed_to_parse_lyric">Selhalo parsování textu písně</string>
 </resources>

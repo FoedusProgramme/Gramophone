@@ -44,7 +44,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.union
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -85,7 +84,6 @@ import kotlinx.coroutines.withTimeout
 import org.akanework.gramophone.BuildConfig
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.allowDiskAccessInStrictMode
-import org.akanework.gramophone.logic.getBooleanStrict
 import org.akanework.gramophone.logic.hasOsClipboardDialog
 import org.akanework.gramophone.ui.GramophoneTheme
 import org.akanework.gramophone.ui.LocalCardSurface

@@ -88,11 +88,11 @@ import org.akanework.gramophone.ui.theme.PREF_THEME_MODE
 import org.akanework.gramophone.ui.theme.PREF_WALLPAPER_COLOR
 import org.akanework.gramophone.ui.theme.PRESET_SEED_COLORS
 import org.akanework.gramophone.ui.theme.ThemeMode
-import org.akanework.gramophone.ui.theme.applyToSystem
-import org.akanework.gramophone.ui.theme.themeModeOf
 import org.akanework.gramophone.ui.theme.activeSeedColor
+import org.akanework.gramophone.ui.theme.applyToSystem
 import org.akanework.gramophone.ui.theme.rememberThemeSettings
 import org.akanework.gramophone.ui.theme.supportsWallpaperColor
+import org.akanework.gramophone.ui.theme.themeModeOf
 
 private val PAGE_MARGIN = 16.dp
 private val SWATCH_SIZE = 40.dp

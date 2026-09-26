@@ -17,6 +17,7 @@
 
 package org.akanework.gramophone.ui.components.home
 
+import androidx.compose.foundation.layout.width
 import android.net.Uri
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -41,10 +42,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -52,7 +50,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
@@ -80,6 +77,9 @@ val IconCenter = Alignment { size, space, _ ->
 val LIST_HEIGHT = 60.dp
 private val LIST_ROW_PADDING = 6.dp
 private val LIST_COVER_START = 18.dp
+
+/** Width of the track number shown instead of the cover. */
+private val LIST_NUMBER_WIDTH = 28.dp
 
 /** Between the screen's (inset) edge and the home's sheet of items. */
 val LIBRARY_SIDE_MARGIN = 12.dp
@@ -230,6 +230,10 @@ fun LibraryListRow(
     modifier: Modifier = Modifier,
     colors: LibraryRowColors = defaultLibraryRowColors(),
     menu: @Composable () -> Unit = {},
+    /** Shown in place of the cover, for lists whose covers would all be the same. */
+    number: Int? = null,
+    /** Shown before the menu button, such as a song's length. */
+    trailing: String? = null,
 ) {
     Row(
         modifier
@@ -245,14 +249,24 @@ fun LibraryListRow(
             .padding(start = LIST_ROW_PADDING, end = LIST_ROW_PADDING),
         verticalAlignment = FloorCenterVertically,
     ) {
-        LibraryCover(
-            uri = cover,
-            defaultCover = defaultCover,
-            cornerRadius = LIST_ROUND_CORNER_SIZE,
-            modifier = Modifier.padding(start = LIST_COVER_START).size(46.dp),
-        )
+        if (number != null) {
+            Box(
+                // Aligns with the 24dp start margin of the page title.
+                Modifier.padding(start = LIST_COVER_START).width(LIST_NUMBER_WIDTH),
+                contentAlignment = Alignment.CenterStart,
+            ) {
+                SingleLineText(number.toString(), 15.sp, 500, colors.subtitle)
+            }
+        } else {
+            LibraryCover(
+                uri = cover,
+                defaultCover = defaultCover,
+                cornerRadius = LIST_ROUND_CORNER_SIZE,
+                modifier = Modifier.padding(start = LIST_COVER_START).size(46.dp),
+            )
+        }
         Column(
-            Modifier.weight(1f).padding(start = 16.dp),
+            Modifier.weight(1f).padding(start = if (number != null) 4.dp else 16.dp),
         ) {
             SingleLineText(
                 title, 14.sp, 500, colors.title,
@@ -261,6 +275,12 @@ fun LibraryListRow(
             SingleLineText(
                 subtitle, 14.sp, 400, colors.subtitle,
                 Modifier.fillMaxWidth(),
+            )
+        }
+        if (trailing != null) {
+            SingleLineText(
+                trailing, 14.sp, 400, colors.subtitle,
+                Modifier.padding(start = 8.dp, end = if (hasMenu) 0.dp else 12.dp),
             )
         }
         if (hasMenu) {

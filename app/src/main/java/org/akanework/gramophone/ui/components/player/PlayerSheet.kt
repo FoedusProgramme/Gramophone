@@ -17,10 +17,14 @@
 
 package org.akanework.gramophone.ui.components.player
 
+import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.animation.animateColorAsState
 import android.net.Uri
 import android.os.Build
 import android.view.RoundedCorner
-import android.view.View
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.graphics.ExperimentalAnimationGraphicsApi
@@ -45,12 +49,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.SkipNext
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.SkipNext
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -70,11 +74,11 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.integerResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.res.integerResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
@@ -82,10 +86,12 @@ import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import coil3.size.Precision
 import com.materialkolor.ktx.animateColorScheme
+import com.materialkolor.ktx.harmonize
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.akanework.gramophone.R
 import org.akanework.gramophone.ui.components.compose.rememberBooleanPreference
 import org.akanework.gramophone.ui.components.compose.rememberIntPreference
+import org.akanework.gramophone.ui.components.lyrics.LyricsOverlayState
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.COVER_CLICK_MIN
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.FALLBACK_PAGE_CORNER
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.LYRIC_COVER_FADE_MS
@@ -96,11 +102,13 @@ import org.akanework.gramophone.ui.components.player.PlayerUtilities.SCRIM_MAX_A
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.SETTLED_EPS
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.TAP_EXPAND_LIMIT
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.WIDE_LANDSCAPE_MIN_WIDTH
-import org.akanework.gramophone.ui.components.player.PlayerUtilities.miniContentAlpha
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.absolute
+import org.akanework.gramophone.ui.components.player.PlayerUtilities.miniContentAlpha
+import org.akanework.gramophone.ui.nav.NAV_TRANSITION_MS
+import org.akanework.gramophone.ui.nav.NavAxisEasing
 import kotlin.math.roundToInt
 
-/** Chrome (insets + visibility) fed from the hosting [PlayerSheetViewImpl]. */
+/** Insets and visibility of the sheet, provided by [PlayerSheetController]. */
 data class SheetChrome(
     val shown: Boolean,
     val left: Int,
@@ -128,7 +136,7 @@ class PlayerSheetPlayerState {
     val qualityIcon: MutableStateFlow<Int?> = MutableStateFlow(null)
     val qualityText: MutableStateFlow<String?> = MutableStateFlow(null)
 
-    // TODO: Lyrics Leftover
+    /** Whether the lyrics overlay fully covers the player (see [LyricsOverlayState.covering]). */
     val lyricsCovering = MutableStateFlow(false)
 }
 
@@ -158,7 +166,9 @@ fun PlayerSheet(
     state: NowPlayingSheetState,
     player: PlayerSheetPlayerState,
     chrome: State<SheetChrome>,
-    fullPlayerView: View,
+    /** Color the current page wants the bar harmonized to, or null for the app's primary. */
+    pageAccent: () -> Color?,
+    lyrics: LyricsOverlayState,
     onPlayPause: () -> Unit,
     onNext: () -> Unit,
     onCoverClick: () -> Unit,
@@ -181,13 +191,35 @@ fun PlayerSheet(
     val expandedTarget = state.expandedTarget
     SideEffect { onExpandedTargetChanged(expandedTarget) }
 
-    // Slide the whole sheet down by its collapsed height when there's nothing to show.
+    // Slide the whole sheet down by its collapsed height when there is nothing to show. Uses the
+    // page transition's duration and easing, so the bar does not disappear faster than the page
+    // when entering or leaving settings.
     val showFraction by animateFloatAsState(
         targetValue = if (c.shown && hasMedia) 1f else 0f,
+        animationSpec = tween(NAV_TRANSITION_MS, easing = NavAxisEasing),
         label = "sheet show",
     )
 
-    val barColors = nowPlayingColors(coverScheme, MaterialTheme.colorScheme.primary)
+    // Accent the bar is harmonized to: the current page's cover color, or the app primary.
+    // Animated with the page transition. Only read in the draw phase and in the mini bar
+    // content, so the animation does not recompose the sheet on every frame.
+    val accent = animateColorAsState(
+        pageAccent() ?: MaterialTheme.colorScheme.primary,
+        tween(NAV_TRANSITION_MS, easing = NavAxisEasing),
+        label = "page accent",
+    )
+    val barColors = remember(coverScheme) {
+        derivedStateOf { nowPlayingColors(coverScheme, accent.value) }
+    }
+    val miniColors = remember(coverScheme) {
+        derivedStateOf {
+            MiniBarColors(
+                content = coverScheme.onSurface.harmonize(accent.value),
+                playButton = coverScheme.secondaryContainer.harmonize(accent.value),
+                onPlayButton = coverScheme.onSecondaryContainer.harmonize(accent.value),
+            )
+        }
+    }
     BoxWithConstraints(Modifier.fillMaxSize()) {
         val rootW = constraints.maxWidth.toFloat()
         val rootH = constraints.maxHeight.toFloat()
@@ -203,7 +235,6 @@ fun PlayerSheet(
             isWideLandscape = isWideLandscape,
             pageCorner = deviceScreenCornerRadius(),
             density = density,
-            collapsedContainerColor = barColors.bar,
             expandedArtCorner = expandedArtCorner,
         )
         state.travelPx = metrics.travelPx
@@ -222,18 +253,16 @@ fun PlayerSheet(
                 // Slide the whole floating sheet fully below the screen when there's nothing to show.
                 .graphicsLayer { translationY = (1f - showFraction) * metrics.collapsedFootprint },
         ) {
-            SheetSurface(metrics)
-            ProgressFill(player, metrics, barColors.fill)
+            SheetSurface(metrics) { barColors.value.bar }
+            ProgressFill(player, metrics) { barColors.value.fill }
             FullPlayerContent(
-                state, metrics, player, actions, coverScheme, fullPlayerView,
+                state, metrics, player, actions, coverScheme, lyrics,
                 onOpenDialog = { activeDialog = it },
             )
             val fullyExpanded = state.expandedTarget && metrics.eased > SETTLED_EPS
             if (!fullyExpanded) {
                 SheetInteraction(
-                    state, player, metrics,
-                    coverScheme.onSurface, coverScheme.secondaryContainer, coverScheme.onSecondaryContainer,
-                    onPlayPause, onNext,
+                    state, player, metrics, { miniColors.value }, onPlayPause, onNext,
                 )
             }
             SharedArtwork(state, player, metrics, cookie = cookieCover, onCoverClick = onCoverClick)
@@ -241,13 +270,21 @@ fun PlayerSheet(
     }
 }
 
+/** Mini bar text and play button colors. */
+@Immutable
+private data class MiniBarColors(val content: Color, val playButton: Color, val onPlayButton: Color)
+
+/** Sheet background: [collapsedColor] when collapsed, the surface color when expanded. */
 @Composable
-private fun SheetSurface(metrics: PlayerSheetMetrics) {
+private fun SheetSurface(metrics: PlayerSheetMetrics, collapsedColor: () -> Color) {
+    val expanded = MaterialTheme.colorScheme.surface
     Box(
         Modifier
             .absolute(metrics.sheetLeft, metrics.sheetTop, metrics.sheetWidth, metrics.sheetHeight)
             .clip(RoundedCornerShape(metrics.cornerDp))
-            .background(metrics.containerColor),
+            .drawBehind {
+                drawRect(lerp(collapsedColor(), expanded, metrics.eased.coerceIn(0f, 1f)))
+            },
     )
 }
 
@@ -256,7 +293,7 @@ private fun SheetSurface(metrics: PlayerSheetMetrics) {
 private fun ProgressFill(
     player: PlayerSheetPlayerState,
     metrics: PlayerSheetMetrics,
-    color: Color,
+    color: () -> Color,
 ) {
     val fraction by player.positionFraction.collectAsState()
     val alpha = miniContentAlpha(metrics.eased)
@@ -271,7 +308,7 @@ private fun ProgressFill(
             Modifier
                 .fillMaxHeight()
                 .fillMaxWidth(fraction.coerceIn(0f, 1f))
-                .background(color),
+                .drawBehind { drawRect(color()) },
         )
     }
 }
@@ -281,9 +318,7 @@ private fun SheetInteraction(
     state: NowPlayingSheetState,
     player: PlayerSheetPlayerState,
     metrics: PlayerSheetMetrics,
-    contentColor: Color,
-    playButtonContainer: Color,
-    playButtonContent: Color,
+    colors: () -> MiniBarColors,
     onPlayPause: () -> Unit,
     onNext: () -> Unit,
 ) {
@@ -307,6 +342,7 @@ private fun SheetInteraction(
             ),
     ) {
         if (contentAlpha > 0f) {
+            val (contentColor, playButtonContainer, playButtonContent) = colors()
             val title by player.title.collectAsState()
             val artist by player.artist.collectAsState()
             val isPlaying by player.isPlaying.collectAsState()
@@ -386,7 +422,6 @@ private fun SharedArtwork(
 ) {
     val artwork by player.artworkUri.collectAsState()
     // Fade the shared cover out of the way when the lyric overlay covers the player
-    // TODO: Delete this after lyric integration is done
     val lyricsCovering by player.lyricsCovering.collectAsState()
     val coverAlpha by animateFloatAsState(
         targetValue = if (lyricsCovering) 0f else 1f,

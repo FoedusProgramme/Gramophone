@@ -1,5 +1,9 @@
 package org.akanework.gramophone.ui
 
+import org.akanework.gramophone.ui.theme.rememberAppFontEnabled
+import org.akanework.gramophone.ui.theme.appTypography
+import org.akanework.gramophone.ui.theme.LocalAppFontEnabled
+import org.akanework.gramophone.ui.theme.AppFont
 import android.content.Context
 import android.content.ContextWrapper
 import androidx.activity.ComponentActivity
@@ -62,15 +66,18 @@ fun GramophoneTheme(content: @Composable () -> Unit) {
     val target = remember(context, settings, dark) { themeColorScheme(context, settings, dark) }
     val colorScheme = animateColorScheme(target, animationSpec = { tween(THEME_ANIMATION_MS) })
     val cardSurface by animateColorAsState(cardSurface(target, dark), tween(THEME_ANIMATION_MS))
+    val appFont = rememberAppFontEnabled()
+    val typography = remember(appFont) { appTypography(AppFont.fontFamily(appFont)) }
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect { view.context.findActivity()?.enableEdgeToEdgeProperly(dark) }
     }
-    MaterialTheme(colorScheme = colorScheme) {
+    MaterialTheme(colorScheme = colorScheme, typography = typography) {
         CompositionLocalProvider(
             LocalContentColor provides contentColorFor(MaterialTheme.colorScheme.surface),
             LocalCardSurface provides cardSurface,
             LocalDarkTheme provides dark,
+            LocalAppFontEnabled provides appFont,
         ) {
             content()
         }

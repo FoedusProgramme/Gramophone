@@ -21,10 +21,11 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -33,19 +34,26 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
@@ -56,13 +64,40 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
-/** The thumb as drawn, inside a touch target of its old width so it is no harder to grab. */
+/** Size of the drawn thumb. The touch target is larger, see [THUMB_TOUCH_WIDTH]. */
 private val THUMB_WIDTH = 4.dp
-private val THUMB_TOUCH_WIDTH = 8.dp
 private val THUMB_HEIGHT = 40.dp
+
+/** Touch target of the thumb, larger than the drawn thumb. */
+private val THUMB_TOUCH_WIDTH = 28.dp
+private val THUMB_TOUCH_HEIGHT = 64.dp
 private val THUMB_MARGIN_END = 4.dp
 private val POPUP_SIZE = 88.dp
 private const val AUTO_HIDE_DELAY_MS = 1500L
+
+/** Rotation of the popup shape. */
+private const val POPUP_BASE_DEGREES = 90f
+
+/** Popup enter/exit animation while dragging. */
+private const val POPUP_APPEAR_MS = 180
+private const val POPUP_FADE_MS = 150
+private const val POPUP_SCALE = 0.7f
+
+/**
+ * Thumb distance from the end of the track at which the FAB hides. At that point the popup,
+ * centred on the thumb, reaches the FAB's corner.
+ */
+private val FAB_HIDE_LEAD = 56.dp
+
+/**
+ * Whether a list's fast scroller is at the end of the list. The home FAB hides on it, since the
+ * thumb and popup overlap the FAB's corner there.
+ */
+@Stable
+class FastScrollerState {
+    var atBottom by mutableStateOf(false)
+        internal set
+}
 
 /**
  * A fast scroller in the MD2 style: a thumb on the trailing edge that appears while the list
@@ -72,6 +107,7 @@ private const val AUTO_HIDE_DELAY_MS = 1500L
  * [itemCount] is the number of scrollable items after [headerCount] header items, which the
  * thumb never points at. [rowHeightPx] is the height of one row of [columns] items.
  */
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun LibraryFastScroller(
     gridState: LazyGridState,
@@ -81,31 +117,33 @@ fun LibraryFastScroller(
     rowHeightPx: Int,
     headerHeightPx: Int,
     hintFor: (Int) -> String,
-    // Inset within the sheet's corners by default, so the thumb is never cut by them.
-    modifier: Modifier = Modifier.padding(vertical = LIBRARY_GROUP_CORNER),
+    modifier: Modifier = Modifier,
+    /** Updated with whether the list is scrolled to its end. Null if nothing needs it. */
+    state: FastScrollerState? = null,
 ) {
     if (itemCount == 0) return
     val density = LocalDensity.current
     val scope = rememberCoroutineScope()
-    var trackHeight by remember { mutableStateOf(0) }
+    val popupShape = MaterialShapes.Arrow.toShape()
+    var trackHeight by remember { mutableIntStateOf(0) }
     val thumbHeightPx = with(density) { THUMB_HEIGHT.roundToPx() }
-    val rows = (itemCount + columns - 1) / columns
-    val contentHeight = headerHeightPx + rows * rowHeightPx
-    val scrollRange by remember(contentHeight, trackHeight) {
-        derivedStateOf { (contentHeight - trackHeight).coerceAtLeast(1) }
-    }
-    val scrollOffset by remember {
+    // Scroll position in items, computed from the visible items. The thumb, hint and drag all use
+    // this unit so they stay consistent. Deriving it from [rowHeightPx] alone would drift on pages
+    // with rows of other heights, and the first drag would make the list jump.
+    val scrolledItems by remember {
         derivedStateOf {
-            val info = gridState.layoutInfo
-            val first = gridState.firstVisibleItemIndex
-            val itemsBefore = (first - headerCount).coerceAtLeast(0)
-            val headerBefore = if (first >= headerCount) headerHeightPx else 0
-            headerBefore + (itemsBefore / columns) * rowHeightPx + gridState.firstVisibleItemScrollOffset
+            val first = (gridState.firstVisibleItemIndex - headerCount).coerceAtLeast(0)
+            val info = gridState.layoutInfo.visibleItemsInfo.firstOrNull()
+            val within = if (info != null && info.size.height > 0) {
+                (gridState.firstVisibleItemScrollOffset.toFloat() / info.size.height)
+                    .coerceIn(0f, 1f)
+            } else 0f
+            first + within
         }
     }
     var dragging by remember { mutableStateOf(false) }
     var visible by remember { mutableStateOf(false) }
-    var dragProgress by remember { mutableStateOf(0f) }
+    var dragProgress by remember { mutableFloatStateOf(0f) }
     val scrolling = gridState.isScrollInProgress
     LaunchedEffect(scrolling, dragging) {
         if (scrolling || dragging) visible = true
@@ -115,10 +153,25 @@ fun LibraryFastScroller(
         }
     }
     val progress = if (dragging) dragProgress
-    else (scrollOffset.toFloat() / scrollRange).coerceIn(0f, 1f)
+    else if (itemCount > 0) (scrolledItems / itemCount).coerceIn(0f, 1f) else 0f
     val thumbTop = ((trackHeight - thumbHeightPx) * progress).roundToInt()
-    val hintIndex = ((rows * progress).toInt().coerceIn(0, rows - 1)) * columns
-    val canScroll = contentHeight > trackHeight
+    val hintIndex = (progress * itemCount).toInt().coerceIn(0, itemCount - 1)
+    val canScroll = gridState.canScrollForward || gridState.canScrollBackward
+    // Checks the last item is fully visible instead of using the estimated progress, which falls
+    // slightly short of the end and would leave the FAB shown at the last row.
+    val atEnd by remember {
+        derivedStateOf {
+            val info = gridState.layoutInfo
+            val last = info.visibleItemsInfo.lastOrNull()
+            last != null && last.index == info.totalItemsCount - 1 &&
+                last.offset.y + last.size.height <= info.viewportEndOffset
+        }
+    }
+    // Hide the FAB [FAB_HIDE_LEAD] before the thumb reaches the end, so it is gone before the
+    // popup overlaps it. [atEnd] still covers the case where the estimate falls short.
+    val thumbTravel = (trackHeight - thumbHeightPx).coerceAtLeast(1)
+    val nearEnd = progress >= 1f - with(density) { FAB_HIDE_LEAD.toPx() } / thumbTravel
+    if (state != null) SideEffect { state.atBottom = canScroll && (atEnd || nearEnd) }
 
     Box(
         modifier
@@ -132,28 +185,47 @@ fun LibraryFastScroller(
             modifier = Modifier.align(Alignment.TopEnd),
         ) {
             Box(Modifier.fillMaxSize()) {
-                if (dragging) {
+                AnimatedVisibility(
+                    visible = dragging,
+                    enter = fadeIn(tween(POPUP_APPEAR_MS)) +
+                            scaleIn(tween(POPUP_APPEAR_MS), initialScale = POPUP_SCALE),
+                    exit = fadeOut(tween(POPUP_FADE_MS)) +
+                            scaleOut(tween(POPUP_FADE_MS), targetScale = POPUP_SCALE),
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .offset { IntOffset(0, (thumbTop + thumbHeightPx / 2 - with(density) { POPUP_SIZE.roundToPx() } / 2).coerceAtLeast(0)) },
+                ) {
                     Box(
                         Modifier
-                            .align(Alignment.TopEnd)
-                            .offset { IntOffset(0, (thumbTop + thumbHeightPx / 2 - with(density) { POPUP_SIZE.roundToPx() } / 2).coerceAtLeast(0)) }
                             .padding(end = 24.dp)
-                            .size(POPUP_SIZE)
-                            .clip(RoundedCornerShape(topStart = 44.dp, topEnd = 44.dp, bottomStart = 44.dp))
-                            .background(MaterialTheme.colorScheme.primary),
+                            .size(POPUP_SIZE),
                         contentAlignment = Alignment.Center,
                     ) {
-                        SingleLineText(hintFor(hintIndex), 36.sp, 500, MaterialTheme.colorScheme.onPrimary)
+                        // Only the background shape is rotated, the hint text stays upright.
+                        Box(
+                            Modifier
+                                .fillMaxSize()
+                                .rotate(POPUP_BASE_DEGREES)
+                                .clip(popupShape)
+                                .background(MaterialTheme.colorScheme.primaryContainer),
+                        )
+                        SingleLineText(
+                            hintFor(hintIndex), 32.sp, 600,
+                            MaterialTheme.colorScheme.onPrimaryContainer,
+                        )
                     }
+                }
+                val touchOverhang = with(density) {
+                    ((THUMB_TOUCH_HEIGHT - THUMB_HEIGHT) / 2).roundToPx()
                 }
                 Box(
                     Modifier
                         .align(Alignment.TopEnd)
-                        .offset { IntOffset(0, thumbTop) }
+                        .offset { IntOffset(0, thumbTop - touchOverhang) }
                         .padding(end = THUMB_MARGIN_END)
                         .width(THUMB_TOUCH_WIDTH)
-                        .height(THUMB_HEIGHT)
-                        .pointerInput(trackHeight, contentHeight) {
+                        .height(THUMB_TOUCH_HEIGHT)
+                        .pointerInput(trackHeight, itemCount) {
                             detectDragGestures(
                                 onDragStart = { dragging = true; dragProgress = progress },
                                 onDragEnd = { dragging = false },
@@ -162,12 +234,14 @@ fun LibraryFastScroller(
                                 change.consume()
                                 val range = (trackHeight - thumbHeightPx).coerceAtLeast(1)
                                 dragProgress = (dragProgress + drag.y / range).coerceIn(0f, 1f)
-                                val target = (scrollRange * dragProgress).roundToInt()
-                                val (index, offset) = if (target < headerHeightPx) 0 to target else {
-                                    val rest = target - headerHeightPx
-                                    headerCount + (rest / rowHeightPx) * columns to rest % rowHeightPx
+                                // Target item and offset into it, in the same unit as the thumb
+                                // position.
+                                val target = dragProgress * itemCount
+                                val index = target.toInt().coerceIn(0, itemCount - 1)
+                                val into = ((target - index) * rowHeightPx).roundToInt()
+                                scope.launch {
+                                    gridState.scrollToItem(headerCount + index, into)
                                 }
-                                scope.launch { gridState.scrollToItem(index, offset) }
                             }
                         },
                     contentAlignment = Alignment.CenterEnd,
@@ -175,7 +249,7 @@ fun LibraryFastScroller(
                     Box(
                         Modifier
                             .width(THUMB_WIDTH)
-                            .fillMaxHeight()
+                            .height(THUMB_HEIGHT)
                             .clip(RoundedCornerShape(2.dp))
                             .background(MaterialTheme.colorScheme.outlineVariant),
                     )

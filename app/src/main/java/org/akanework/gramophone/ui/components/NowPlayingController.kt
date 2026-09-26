@@ -34,6 +34,7 @@ import org.akanework.gramophone.logic.utils.AudioFormatDetector
 import org.akanework.gramophone.logic.utils.AudioFormatDetector.AudioFormatInfo
 import org.akanework.gramophone.logic.utils.AudioFormatDetector.AudioQuality
 import org.akanework.gramophone.logic.utils.AudioFormatDetector.SpatialFormat
+import org.akanework.gramophone.logic.utils.SemanticLyrics
 import org.akanework.gramophone.ui.MainActivity
 import org.akanework.gramophone.ui.nav.AlbumKey
 import org.akanework.gramophone.ui.nav.ArtistKey
@@ -44,7 +45,7 @@ import uk.akane.libphonograph.items.artistId
 // after integration finishes
 class NowPlayingController(
     private val activity: MainActivity,
-    private val lyricsView: LyricsView,
+    private val updateLyrics: (SemanticLyrics?) -> Unit,
     private val minimize: () -> Unit,
     private val onQualityChanged: (iconRes: Int?, text: String?) -> Unit,
     private val openQueue: () -> Unit,
@@ -69,7 +70,7 @@ class NowPlayingController(
                 GramophonePlaybackService.SERVICE_TIMER_CHANGED -> { /* timer state is polled */ }
 
                 GramophonePlaybackService.SERVICE_GET_LYRICS ->
-                    lyricsView.updateLyrics(instance?.getLyrics())
+                    updateLyrics(instance?.getLyrics())
 
                 GramophonePlaybackService.SERVICE_GET_AUDIO_FORMAT -> {
                     currentFormat = instance?.getAudioFormat()
@@ -88,7 +89,7 @@ class NowPlayingController(
         }
     }
 
-    fun refreshLyrics() = lyricsView.updateLyrics(instance?.getLyrics())
+    fun refreshLyrics() = updateLyrics(instance?.getLyrics())
 
     fun onStop() {
         closeQueue()

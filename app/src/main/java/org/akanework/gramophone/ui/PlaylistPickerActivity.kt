@@ -26,8 +26,8 @@ import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.gramophoneApplication
 import org.akanework.gramophone.ui.screens.PickerEntry
 import org.nift4.mediastorecompat.MediaStoreCompat
-import uk.akane.libphonograph.toUriCompat
 import uk.akane.libphonograph.items.Playlist
+import uk.akane.libphonograph.toUriCompat
 
 class PlaylistPickerActivity : PickerActivity<Playlist>() {
     override fun itemsFlow(): Flow<List<Playlist>> =

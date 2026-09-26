@@ -7,7 +7,6 @@
     <string name="shuffle">Baralhar</string>
     <string name="repeat_mode">Modo repetição</string>
     <string name="unknown_playlist">Playlist desconhecida</string>
-    <string name="unknown_version">Versão desconhecida</string>
     <string name="settings_version">Versão</string>
     <string name="unknown_album">Álbum desconhecido</string>
     <string name="recently_added">Adicionadas recentemente</string>
@@ -15,7 +14,6 @@
     <string name="equalizer_not_found">Equalizador não encontrado!</string>
     <string name="check_for_updates">Confira o nosso canal para atualizações!</string>
     <string name="settings_default_progress_bar_summary">Ativar barra de progresso com material design</string>
-    <string name="now_playing">A reproduzir</string>
     <string name="settings_content_based_color_summary">Ativar esquema de cores baseado na arte do álbum</string>
     <string name="settings_content_based_color">Cores dinâmicas</string>
     <string name="settings_package_type">Tipo de pacote</string>
@@ -30,7 +28,6 @@
     <string name="settings_lyrics_center_summary">Fazer com que as letras sejam exibidas no centro</string>
     <string name="settings_play_on_launch">Reproduzir ao iniciar</string>
     <string name="settings_play_on_launch_summary">Reproduzir música ao iniciar (se houver alguma na playlist)</string>
-    <string name="home_menu_search">Pesquisar</string>
     <string name="home_menu_settings">Configurações</string>
     <string name="home_menu_refresh">Atualizar</string>
     <string name="category_playlists">Playlists</string>
@@ -107,12 +104,8 @@
     <string name="settings_about_gramophone">Sobre a aplicação</string>
     <string name="settings_behavior_summary">Filtros, comportamentos de lançamento</string>
     <string name="settings_category_links">Ligações</string>
-    <string name="settings_library">Biblioteca</string>
-    <string name="settings_library_summary">Gerir biblioteca de mídia</string>
     <string name="settings_player_options">Áudio</string>
     <string name="settings_player_options_summary">Gerir opções de saída de áudio</string>
-    <string name="settings_customization">Customização</string>
-    <string name="settings_customization_summary">Gerir opções de personalização</string>
     <string name="settings_album_round_corner">Cantos arredondados do álbum</string>
     <string name="settings_title_bold">Título em negrito</string>
     <string name="settings_title_bold_summary">Ponha o título completo do player em negrito</string>
@@ -127,8 +120,6 @@
     <string name="settings_blacklist">Ignorar</string>
     <string name="settings_blacklist_folder_summary">Filtre músicas de determinadas pastas (requer nova busca)</string>
     <string name="settings_blacklist_folder">Pastas ignoradas</string>
-    <string name="dialog_edit_metadata">Editar</string>
-    <string name="dialog_lyrics">Letras</string>
     <string name="fgs_failed_channel">A reprodução não foi retomada</string>
     <string name="album_cover">Capa do álbum</string>
     <string name="sort_by_release_date">Data de lançamento</string>
@@ -136,7 +127,6 @@
     <string name="share">Partilhar</string>
     <string name="album_covers_enhance_desc">Mostra capas de músicas de alta qualidade e permite que a capa do álbum e da música seja diferente (requer acesso às fotos)</string>
     <string name="timer">Despertador</string>
-    <string name="current_playlist">Lista de reprodução atual</string>
     <string name="fgs_failed_title">Falha ao retomar a reprodução da música</string>
     <string name="settings_crash_application">Travar a aplicação</string>
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
@@ -158,10 +148,6 @@
     <string name="spk_channel_invalid">Inválido</string>
     <string name="spk_channel_out_top_back_center">Fundo superior ao centro</string>
     <string name="home_menu_shuffle">Reproduzir no modo aleatório</string>
-    <string name="scroll_to_albums">Role para álbuns</string>
-    <string name="scroll_to_songs">Role para as músicas</string>
-    <string name="remove">Remover</string>
-    <string name="expand_less">Fechar</string>
     <string name="settings_status_bar_lyrics_summary">Ativar o método MeiZu para mostrar letras na barra de estado (disponível apenas em alguns dispositivos)</string>
     <string name="lyric_widget_description">Widget que mostra as letras da média que é reproduzida</string>
     <string name="no">Não</string>
@@ -250,7 +236,6 @@
     <string name="crash_report">Relatório de crash</string>
     <string name="email_clipboard">E-mail e texto copiados para a área de transferência</string>
     <string name="settings_export_logs">Exportar registo da app</string>
-    <string name="position_slider">Controle deslizante</string>
     <string name="play">Reproduzir</string>
     <string name="more">Mais</string>
     <string name="yes">Sim</string>
@@ -261,15 +246,9 @@
     <string name="device_type_ble_broadcast">Transmissão Bluetooth LE</string>
     <string name="sort_by_album_artist">Artista do álbum -&gt; título</string>
     <string name="tab_order">Configurar ordem das guias</string>
-    <string name="divider">Divisor</string>
-    <string name="back">Voltar</string>
-    <string name="play_all">Reproduzir tudo</string>
     <string name="grant_audio"><![CDATA[Conceda permissão para \"Música e Áudio\"]]></string>
     <string name="tab_order_summary">A app mostrará a primeira guia na inicialização. As guias após o divisor ficarão ocultas.</string>
-    <string name="seekbar">Barra de busca</string>
     <string name="shuffle_all">Reproduzir no modo aleatório</string>
-    <string name="sort">Organizar</string>
-    <string name="skip_previous">Pular para o anterior</string>
     <string name="settings_lyrics_ui">Ativar nova UI de letras</string>
     <string name="settings_lyrics_ui_summary">Interface de utilizador experimental para exibir letras palavra por palavra com recursos avançados</string>
     <string name="settings_status_bar_lyrics_title">Letra da música na barra de estado</string>
@@ -286,8 +265,6 @@
     <string name="settings_open_source_licenses">Licenças de código aberto</string>
     <string name="oh_no">Oh não!</string>
     <string name="send_email">Enviar email</string>
-    <string name="audio_signal_chain">Cadeia de sinal</string>
-    <string name="audio_not_initialized">O sistema de reprodução de áudio não foi inicializado. Tente reproduzir algo!</string>
     <string name="mix_port_flag_none">Nenhum</string>
     <string name="mix_port_flag_incall_music">Música durante chamada</string>
     <string name="mix_port_flag_direct_pcm">PCM Direto</string>
@@ -295,7 +272,6 @@
     <string name="failed_to_parse_lyric">Falha ao analisar a letra da música</string>
     <string name="settings_contributors_click">%s (clique para saber mais!)</string>
     <string name="settings_preference_category_home">Ecrã inicial</string>
-    <string name="skip_next">Pular para o próximo</string>
     <string name="spk_encoding_e_ac3">E-AC-3</string>
     <string name="device_type_line_analog">Linha analógica</string>
     <string name="cannot_play_file">Não é possível abrir este ficheiro</string>
@@ -311,7 +287,6 @@
     <string name="delete_failed_playlist">Falha ao apagar playlist: %s</string>
     <string name="tempo_pitch_value">%s: %.2fx</string>
     <string name="reset">Reiniciar</string>
-    <string name="timer_expiry_eos">Temporizador de sono irá pausar quando a música a reproduzir em %s acabar</string>
     <string name="timer_expiry_end_of_this_song">Temporizador de sono irá pausar a música no final desta canção</string>
     <string name="spk_encoding_pcm_16bit_big_endian">16-bit PCM (big endian)</string>
     <string name="spk_encoding_pcm_24bit">24-bit PCM</string>
@@ -395,7 +370,6 @@
     <string name="settings_translation_auto_word">Animar traduções automaticamente</string>
     <string name="settings_translation_auto_word_summary">Aplicar gradiente linear para linhas de tradução em letras com sincronização por palavra se as traduções não possuem metadados com sincronização por palavras</string>
     <string name="cannot_find_file">Não foi possível encontrar este ficheiro</string>
-    <string name="enter_msg_for_dev_here">Ponha uma mensagem para o programador aqui</string>
     <string name="do_not_enter_email_enter_msg">Digite uma mensagem, não um endereço de e-mail</string>
     <string name="log_will_auto_send">Os registos serão enviados automaticamente, em vez disso explique o problema</string>
     <string name="log_attachment">Os registos serão enviados como anexo automaticamente</string>
@@ -439,7 +413,6 @@
     <string name="compact_grid">Grade (compacta)</string>
     <string name="sort_by_album_year">Ano do álbum</string>
     <string name="forbidden_symbol_error">Caractere inválido no nome</string>
-    <string name="translators">Tradutores</string>
     <string name="settings_replaygain">Ganho de repetição</string>
     <string name="settings_replaygain_mode">Modo</string>
     <string name="settings_replaygain_preamp">Pré-amp</string>

@@ -31,8 +31,9 @@ import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.rememberBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -60,8 +61,8 @@ import org.akanework.gramophone.logic.getBooleanStrict
 import org.akanework.gramophone.logic.utils.Flags
 import org.akanework.gramophone.logic.utils.convertDurationToTimeStamp
 import org.akanework.gramophone.ui.MainActivity
-import org.akanework.gramophone.ui.components.compose.rememberReorderableListState
 import org.akanework.gramophone.ui.components.compose.DismissibleRow
+import org.akanework.gramophone.ui.components.compose.rememberReorderableListState
 import org.akanework.gramophone.ui.components.compose.reorderHandle
 import org.akanework.gramophone.ui.components.compose.reorderableRow
 import org.akanework.gramophone.ui.components.home.EditableSongRow
@@ -255,7 +256,11 @@ fun QueueSheet(activity: MainActivity, onDismiss: () -> Unit) {
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
-        sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+        sheetState = rememberBottomSheetState(
+            initialValue = SheetValue.Hidden,
+            // The queue sheet always opens fully, never half way.
+            enabledValues = setOf(SheetValue.Hidden, SheetValue.Expanded),
+        ),
         sheetMaxWidth = if (mqEnabled) WIDE_SHEET_MAX_WIDTH else BottomSheetDefaults.SheetMaxWidth,
         containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
     ) {
@@ -281,7 +286,7 @@ fun QueueSheet(activity: MainActivity, onDismiss: () -> Unit) {
                     val item = row.item
                     DismissibleRow(
                         onDismissed = { mqState.removeRow(index) },
-                        modifier = reorderableRow(reorder, index),
+                        modifier = Modifier.reorderableRow(this, reorder, index),
                         enabled = editable,
                     ) {
                         val duration = item.mediaMetadata.durationMs?.convertDurationToTimeStamp()

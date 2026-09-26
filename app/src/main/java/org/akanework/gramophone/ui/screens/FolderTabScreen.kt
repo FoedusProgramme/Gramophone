@@ -27,6 +27,7 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -43,35 +44,32 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.media3.common.MediaItem
 import kotlinx.coroutines.launch
 import org.akanework.gramophone.R
 import org.akanework.gramophone.ui.actions.LibraryActions
 import org.akanework.gramophone.ui.actions.findMainActivity
-import org.akanework.gramophone.ui.library.LayoutType
 import org.akanework.gramophone.ui.components.home.DECOR_HEIGHT
 import org.akanework.gramophone.ui.components.home.FOLDER_CARD_HEIGHT
-import org.akanework.gramophone.ui.components.home.GRID_CARD_SIDE_PADDING
 import org.akanework.gramophone.ui.components.home.IosOverscrollState
+import org.akanework.gramophone.ui.components.home.LIBRARY_GROUP_CORNER
+import org.akanework.gramophone.ui.components.home.LIBRARY_ITEM_GAP
 import org.akanework.gramophone.ui.components.home.LIST_HEIGHT
 import org.akanework.gramophone.ui.components.home.LibraryFastScroller
-import org.akanework.gramophone.ui.components.home.LIBRARY_ITEM_GAP
 import org.akanework.gramophone.ui.components.home.LibraryFolderRow
 import org.akanework.gramophone.ui.components.home.LibraryHeader
 import org.akanework.gramophone.ui.components.home.NowPlayingState
 import org.akanework.gramophone.ui.components.home.SortMenu
 import org.akanework.gramophone.ui.components.home.iosOverscroll
+import org.akanework.gramophone.ui.components.home.libraryCellShape
 import org.akanework.gramophone.ui.components.home.libraryItemCard
 import org.akanework.gramophone.ui.components.home.libraryItemShape
-import org.akanework.gramophone.ui.components.home.libraryCellShape
 import org.akanework.gramophone.ui.components.home.rememberIosFlingBehavior
+import org.akanework.gramophone.ui.library.LayoutType
 import org.akanework.gramophone.ui.state.FolderTabState
-import org.akanework.gramophone.ui.state.LibraryTabSpec
-import org.akanework.gramophone.ui.state.LibraryTabState
 import org.akanework.gramophone.ui.state.SortPrefState
-import kotlin.math.roundToInt
 
 /** The Folders / Filesystem tab, laid out like [LibraryTabScreen]: folders first, then songs. */
 @Composable
@@ -130,7 +128,10 @@ fun FolderTabScreen(
                 )
         },
         label = "folder",
-    ) { _ ->
+    ) { animatedPath ->
+        // Based on the animated path, so the outgoing page keeps its parent row during the
+        // transition.
+        val showParent = !animatedPath.isNullOrEmpty()
         Box(Modifier.fillMaxSize()) {
         LazyVerticalGrid(
             columns = GridCells.Fixed(columns),
@@ -146,7 +147,7 @@ fun FolderTabScreen(
                 val count = state.folders.size
                 LibraryHeader(
                     modifier = Modifier.libraryItemCard(libraryItemShape(topStart = true, topEnd = true)),
-                    counterText = context.resources.getQuantityString(R.plurals.folders_plural, count, count),
+                    counterText = pluralStringResource(R.plurals.folders_plural, count, count),
                     onSort = { folderSortOpen = true },
                     onJumpDown = { scrollTo(songsHeaderIndex) },
                     sortMenu = {
@@ -165,7 +166,7 @@ fun FolderTabScreen(
                     },
                 )
             }
-            if (showPop) {
+            if (showParent) {
                 item(key = "..", span = { GridItemSpan(maxLineSpan) }) {
                     LibraryFolderRow(
                         title = stringResource(R.string.upper_folder),
@@ -179,7 +180,7 @@ fun FolderTabScreen(
                 val n = node.folderList.size + node.songList.size
                 LibraryFolderRow(
                     title = node.folderName,
-                    subtitle = context.resources.getQuantityString(R.plurals.items, n, n),
+                    subtitle = pluralStringResource(R.plurals.items, n, n),
                     onClick = { state.enter(node.folderName) },
                     modifier = Modifier.animateItem().libraryItemCard(),
                 )
@@ -190,7 +191,7 @@ fun FolderTabScreen(
                     modifier = Modifier.libraryItemCard(
                         libraryItemShape(bottomStart = songs.items.isEmpty(), bottomEnd = songs.items.isEmpty())
                     ),
-                    counterText = context.resources.getQuantityString(R.plurals.songs, count, count),
+                    counterText = pluralStringResource(R.plurals.songs, count, count),
                     onCounterClick = goToPlayingSong,
                     onPlayAll = { LibraryActions.playAll(activity, songs.items, queueTitle) },
                     onShuffleAll = { LibraryActions.shuffleAll(activity, songs.items, queueTitle) },
@@ -231,6 +232,7 @@ fun FolderTabScreen(
             rowHeightPx = (if (isGrid) libraryGridRowHeightPx(true, columns) else rowHeightPx) + gapPx,
             headerHeightPx = decorPx * 2 + folderRowPx * (songsHeaderIndex - 1),
             hintFor = { i -> songs.items.getOrNull(i)?.let { songs.fastScrollHintFor(it, i) } ?: "-" },
+            modifier = Modifier.padding(vertical = LIBRARY_GROUP_CORNER),
         )
         }
     }

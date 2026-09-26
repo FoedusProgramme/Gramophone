@@ -1,13 +1,15 @@
 package org.akanework.gramophone.ui.nav
 
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHost
@@ -43,7 +45,6 @@ import org.akanework.gramophone.ui.screens.SearchScreen
 import org.akanework.gramophone.ui.screens.SongDetailScreen
 import org.akanework.gramophone.ui.screens.settings.AboutSettingsScreen
 import org.akanework.gramophone.ui.screens.settings.AppearanceSettingsScreen
-import org.akanework.gramophone.ui.screens.settings.ThemeSettingsScreen
 import org.akanework.gramophone.ui.screens.settings.AudioSettingsScreen
 import org.akanework.gramophone.ui.screens.settings.BehaviorSettingsScreen
 import org.akanework.gramophone.ui.screens.settings.BlacklistScreen
@@ -54,6 +55,7 @@ import org.akanework.gramophone.ui.screens.settings.MainSettingsScreen
 import org.akanework.gramophone.ui.screens.settings.OssLicensesScreen
 import org.akanework.gramophone.ui.screens.settings.PlayerSettingsScreen
 import org.akanework.gramophone.ui.screens.settings.ReplayGainSettingsScreen
+import org.akanework.gramophone.ui.screens.settings.ThemeSettingsScreen
 
 sealed interface AppNavKey : NavKey {
     val wantsPlayer: Boolean
@@ -91,6 +93,12 @@ class ArtistKey(val id: Long?, val albumArtist: Boolean) : LibrarySubKey
 
 class NavViewModel : ViewModel() {
     val backStack: SnapshotStateList<AppNavKey> = mutableStateListOf(HomeKey)
+
+    /** Accent color per back stack entry, used to harmonize the mini player. */
+    val pageAccents: SnapshotStateMap<AppNavKey, Color> = mutableStateMapOf()
+
+    /** Accent of the top page, or null if it uses the app colors. */
+    val topAccent: Color? get() = backStack.lastOrNull()?.let { pageAccents[it] }
 }
 
 /** Bottom padding (px) content should keep clear so the mini player does not cover it. */

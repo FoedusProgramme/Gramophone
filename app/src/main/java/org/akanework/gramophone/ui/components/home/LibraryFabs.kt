@@ -76,19 +76,20 @@ private fun fabWidth(count: Int): Dp = when (count) {
 @Composable
 fun LibraryFab(actions: List<LibraryFabAction>, modifier: Modifier = Modifier) {
     val width = remember { Animatable(fabWidth(actions.size).value) }
-    // What is laid out: the old actions stay while the pill squeezes them away.
-    var shown by remember { mutableStateOf(actions.map { it.icon }) }
+    // Actions currently laid out. The old ones stay while the pill shrinks.
+    var shown by remember { mutableStateOf(actions) }
     val icons = actions.map { it.icon }
     LaunchedEffect(icons) {
         val spec = tween<Float>(FAB_ANIMATION_MS, easing = FastOutSlowInEasing)
-        val sameStart = shown.firstOrNull() != null && shown.firstOrNull() == icons.firstOrNull()
+        val start = shown.firstOrNull()?.icon
+        val sameStart = start != null && start == icons.firstOrNull()
         if (!sameStart && shown.isNotEmpty() && width.value > 0f) {
             width.animateTo(0f, spec)
             shown = emptyList()
         }
-        if (icons.size >= shown.size) shown = icons
+        if (icons.size >= shown.size) shown = actions
         width.animateTo(fabWidth(icons.size).value, spec)
-        if (icons.isNotEmpty()) shown = icons
+        if (icons.isNotEmpty()) shown = actions
     }
     if (width.value <= 0f || shown.isEmpty()) return
     val cellWidth = if (shown.size == 1) LIBRARY_FAB_HEIGHT else FAB_WIDTH / shown.size
@@ -97,13 +98,13 @@ fun LibraryFab(actions: List<LibraryFabAction>, modifier: Modifier = Modifier) {
         shape = CircleShape,
         color = MaterialTheme.colorScheme.primaryContainer,
         contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-        shadowElevation = 1.dp,
     ) {
         Row(Modifier.wrapContentWidth(Alignment.Start, unbounded = true)) {
-            shown.forEachIndexed { index, icon ->
-                // The current action where it matches, so a page with the same icons acts on
-                // its own list.
-                val action = actions.getOrNull(index)?.takeIf { it.icon == icon }
+            shown.forEachIndexed { index, shownAction ->
+                // Use the current action when the icon matches, so the click acts on the current
+                // page's list. Layout still comes from the shown action.
+                val action = actions.getOrNull(index)
+                    ?.takeIf { it.icon == shownAction.icon }
                 Box(
                     Modifier
                         .width(cellWidth)
@@ -112,11 +113,11 @@ fun LibraryFab(actions: List<LibraryFabAction>, modifier: Modifier = Modifier) {
                     contentAlignment = Alignment.Center,
                 ) {
                     Icon(
-                        icon,
+                        shownAction.icon,
                         contentDescription = null,
                         modifier = Modifier
-                            .offset(x = action?.iconOffsetX ?: 0.dp)
-                            .size(action?.iconSize ?: 24.dp),
+                            .offset(x = shownAction.iconOffsetX)
+                            .size(shownAction.iconSize),
                     )
                 }
             }

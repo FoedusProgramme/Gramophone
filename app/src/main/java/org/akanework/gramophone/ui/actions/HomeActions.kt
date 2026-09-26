@@ -38,8 +38,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.akanework.gramophone.R
-import org.akanework.gramophone.logic.clone
-import org.akanework.gramophone.logic.setMediaItemsWithTitle
 import org.akanework.gramophone.logic.utils.SdScanner
 import org.akanework.gramophone.ui.MainActivity
 import org.akanework.gramophone.ui.components.compose.AppDialog

@@ -1,7 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
     <string name="app_name">ກຣາໂມໂຟນ</string>
-    <string name="home_menu_search">ຊອກຫາ</string>
     <string name="home_menu_settings">ການຕັ້ງຄ່າ</string>
     <string name="home_menu_shuffle">ສຸ່ມທັງໝົດ</string>
     <string name="home_menu_refresh">ໂຫຼດຄືນໃໝ່</string>
@@ -53,7 +52,6 @@
     <string name="unknown_playlist">ບໍ່ຮູ້ຈັກລາຍການຫຼິ້ນ</string>
     <string name="settings_category_appearance">ຮູບລັກສະນະ</string>
     <string name="album_artist">ສິລະປິນອັລບັມ</string>
-    <string name="unknown_version">ບໍ່ຮູ້ຈັກເວີຊັນ</string>
     <string name="settings_version">ເວີຊັນ</string>
     <string name="dialog_title">ຊື່ເພງ</string>
     <string name="dialog_artist">ສິລະປິນ</string>
@@ -83,7 +81,6 @@
     <string name="opensource_info">ໂອເພນຊອດພາຍໃຕ້ GPL-3.0\nສະຫງວນລິຂະສິດ %s</string>
     <string name="playlist_favourite">ທີ່ມັກ</string>
     <string name="settings_contributors_click">%s (ກົດເພື່ອເບິ່ງເພີ່ມເຕີມ!)</string>
-    <string name="now_playing">ກຳລັງຫຼິ້ນ</string>
     <string name="settings_content_based_color_summary">ເປີດໃຊ້ການສ້າງສີຕາມອັລບັມ</string>
     <string name="settings_content_based_color">ສີຕາມເນື້ອຫາ</string>
     <string name="settings_package_type">ປະເພດແພັກເກດ</string>
@@ -102,12 +99,8 @@
     <string name="settings_about_gramophone">ກ່ຽວກັບແອັບພລິເຄຊັນ</string>
     <string name="settings_behavior_summary">ການກັ່ນຕອງ, ພຶດຕິກຳຕອນເປີດແອັບ</string>
     <string name="settings_category_links">ລິ້ງ</string>
-    <string name="settings_library">ຄັງຂໍ້ມູນ</string>
-    <string name="settings_library_summary">ຈັດການຄັງສື່</string>
     <string name="settings_player_options">ສຽງ</string>
     <string name="settings_player_options_summary">ຄຸນນະພາບສຽງ, ພຶດຕິກຳການຫຼິ້ນ</string>
-    <string name="settings_customization">ການປັບແຕ່ງ</string>
-    <string name="settings_customization_summary">ຈັດການຕົວເລືອກການປັບແຕ່ງ</string>
     <string name="settings_album_round_corner">ມຸມມົນຂອງອັລບັມ</string>
     <string name="settings_title_bold">ຊື່ເພງໂຕເຂັ້ມ</string>
     <string name="settings_title_bold_summary">ໃຊ້ຊື່ເພງໂຕເຂັ້ມສຳລັບເຄື່ອງຫຼິ້ນເຕັມຈໍ</string>
@@ -137,8 +130,6 @@
     <string name="settings_crash_application">ເຮັດໃຫ້ແອັບຂັດຂ້ອງ</string>
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
     <string name="album_cover">ໜ້າປົກອັລບັມ</string>
-    <string name="dialog_edit_metadata">ແກ້ໄຂ</string>
-    <string name="dialog_lyrics">ເນື້ອເພງ</string>
     <string name="delete_failed">ການລຶບເພງລົ້ມເຫຼວ: %s</string>
     <string name="delete_failed_playlist">ການລຶບລາຍການຫຼິ້ນລົ້ມເຫຼວ: %s</string>
     <string name="album_covers_enhance">ປັບປຸງການໂຫຼດໜ້າປົກອັລບັມ</string>
@@ -155,32 +146,18 @@
     <string name="tempo_pitch_value">%s: %.2fx</string>
     <string name="lock_tempo_pitch">ລັອກຈັງຫວະ ແລະ ລະດັບສຽງ</string>
     <string name="reset">ຣີເຊັດ</string>
-    <string name="current_playlist">ລາຍການຫຼິ້ນປັດຈຸບັນ</string>
     <string name="fgs_failed_title">ບໍ່ສາມາດສືບຕໍ່ຫຼິ້ນເພງໄດ້</string>
     <string name="fgs_failed_text">ຄລິກທີ່ນີ້ເພື່ອເປີດແອັບ ແລະ ສືບຕໍ່ຫຼິ້ນ</string>
     <string name="fgs_failed_channel">ການຫຼິ້ນລົ້ມເຫຼວໃນການສືບຕໍ່</string>
     <string name="sort_by_release_date">ວັນທີປ່ອຍ</string>
     <string name="timer_expiry">ການຕັ້ງເວລາປິດຈະຢຸດເພງຊົ່ວຄາວໃນເວລາ %s</string>
-    <string name="timer_expiry_eos">ການຕັ້ງເວລາປິດຈະຢຸດເພງຊົ່ວຄາວເມື່ອເພງທີ່ຫຼິ້ນໃນເວລາ %s ຈົບລົງ</string>
     <string name="timer_expiry_end_of_this_song">ການຕັ້ງເວລາປິດຈະຢຸດເພງຊົ່ວຄາວເມື່ອຈົບເພງນີ້</string>
     <string name="settings_preference_category_home">ໜ້າຈໍຫຼັກ</string>
     <string name="tab_order">ຕັ້ງຄ່າລຳດັບແຖບ</string>
     <string name="tab_order_summary">ແອັບຈະສະແດງແຖບທຳອິດເມື່ອເປີດຂຶ້ນມາ. ແຖບທີ່ຢູ່ຫຼັງເສັ້ນແບ່ງຈະຖືກເຊື່ອງໄວ້.</string>
-    <string name="seekbar">ແຖບເລື່ອນ</string>
-    <string name="divider">ຕົວແບ່ງ</string>
-    <string name="back">ກັບຄືນ</string>
-    <string name="play_all">ຫຼິ້ນທັງໝົດ</string>
     <string name="shuffle_all">ສຸ່ມທັງໝົດ</string>
-    <string name="sort">ຈັດລຽງ</string>
-    <string name="scroll_to_albums">ເລື່ອນໄປຫາອັລບັມ</string>
-    <string name="scroll_to_songs">ເລື່ອນໄປຫາເພງ</string>
     <string name="play">ຫຼິ້ນ</string>
     <string name="more">ເພີ່ມເຕີມ</string>
-    <string name="remove">ລຶບອອກ</string>
-    <string name="skip_next">ຂ້າມໄປເພງຕໍ່ໄປ</string>
-    <string name="expand_less">ປິດ</string>
-    <string name="skip_previous">ຂ້າມໄປເພງກ່ອນໜ້າ</string>
-    <string name="position_slider">ແຖບເລື່ອນຕຳແໜ່ງ</string>
     <string name="settings_lyrics_ui">ເປີດໃຊ້ UI ເນື້ອເພງໃໝ່</string>
     <string name="settings_lyrics_ui_summary">UI ທົດລອງເພື່ອສະແດງເນື້ອເພງແບບຄຳຕໍ່ຄຳພ້ອມຟີເຈີຂັ້ນສູງ</string>
     <string name="settings_status_bar_lyrics_title">ເນື້ອເພງເທິງແຖບສະຖານະ</string>
@@ -297,8 +274,6 @@
     <string name="send_email">ສົ່ງອີເມວ</string>
     <string name="send_email_manually">ກະລຸນາສົ່ງບັນທຶກໄປທີ່ nift4@posteo.net - ບໍ່ພົບແອັບອີເມວ</string>
     <string name="failed_to_parse_lyric">ແຍກຂໍ້ມູນເນື້ອເພງບໍ່ສຳເລັດ</string>
-    <string name="audio_signal_chain">ເສັ້ນທາງສັນຍານສຽງ</string>
-    <string name="audio_not_initialized">ລະບົບການຫຼິ້ນສຽງຍັງບໍ່ເລີ່ມເຮັດວຽກ. ລອງຫຼິ້ນບາງຢ່າງເບິ່ງ!</string>
     <string name="mix_port_flag_none">ບໍ່ມີ</string>
     <string name="mix_port_flag_bit_perfect">Bit perfect</string>
     <string name="mix_port_flag_ultrasound">ອັລຕຣາຊາວ</string>
@@ -400,7 +375,6 @@
     <string name="settings_translation_auto_word">ອານິເມຊັນຄຳແປອັດຕະໂນມັດ</string>
     <string name="settings_translation_auto_word_summary">ນຳໃຊ້ການໄລ່ສີ (linear gradient) ກັບແຖວຄຳແປໃນການຫຼິ້ນເນື້ອເພງແບບຊິ້ງຄຳ (word-synced) ຖ້າຄຳແປບໍ່ມີຂໍ້ມູນການຊິ້ງຄຳ</string>
     <string name="cannot_find_file">ບໍ່ພົບໄຟລ໌ນີ້</string>
-    <string name="enter_msg_for_dev_here">ປ້ອນຂໍ້ຄວາມເຖິງນັກພັດທະນາຢູ່ບ່ອນນີ້</string>
     <string name="do_not_enter_email_enter_msg">ໃຫ້ປ້ອນຂໍ້ຄວາມ, ບໍ່ແມ່ນທີ່ຢູ່ອີເມວ</string>
     <string name="log_will_auto_send">ບັນທຶກຈະຖືກສົ່ງໄປແບບອັດຕະໂນມັດ, ກະລຸນາອະທິບາຍບັນຫາແທນ</string>
     <string name="log_attachment">ບັນທຶກຈະຖືກສົ່ງເປັນໄຟລ໌ແນບໂດຍອັດຕະໂນມັດ</string>
@@ -449,7 +423,6 @@
     <string name="sort_by_album_year">ປີຂອງອະລະບ້ຳ</string>
     <string name="sort_by_album_artist_year"><![CDATA[ສິລະປິນອະລະບ້ຳ -> ປີ]]></string>
     <string name="forbidden_symbol_error">ມີຕົວອັກສອນທີ່ບໍ່ຖືກຕ້ອງຢູ່ໃນຊື່</string>
-    <string name="translators">ຜູ້ແປພາສາ</string>
     <string name="settings_replaygain">ReplayGain</string>
     <string name="settings_replaygain_mode">ໂໝດ</string>
     <string name="settings_replaygain_preamp">Pre amp</string>
@@ -488,7 +461,6 @@
     <string name="save">ບັນທຶກ</string>
     <string name="discard">ຍົກເລີກ</string>
     <string name="discard_changes_msg">ທ່ານຕ້ອງການຍົກເລີກການປ່ຽນແປງຕໍ່ກັບລາຍການຫຼິ້ນ \"%s\" ແທ້ບໍ?</string>
-    <string name="apply">ນຳໃຊ້</string>
     <string name="restore_edits">ກູ້ຄືນການປ່ຽນແປງບໍ?</string>
     <string name="restore_edits_msg">ມີການປ່ຽນແປງທີ່ຍັງບໍ່ທັນບັນທຶກສຳລັບລາຍການຫຼິ້ນ \"%s\". ທ່ານຕ້ອງການກູ້ຄືນການປ່ຽນແປງເຫຼົ່ານີ້ ຫຼື ຖິ້ມມັນໄປ ແລ້ວເລີ່ມຕົ້ນໃໝ່ດ້ວຍເວີຊັນລ່າສຸດຂອງລາຍການຫຼິ້ນບໍ?</string>
     <string name="restore">ກູ້ຄືນ</string>

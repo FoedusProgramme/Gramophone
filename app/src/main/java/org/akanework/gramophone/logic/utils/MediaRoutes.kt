@@ -17,6 +17,7 @@
 
 package org.akanework.gramophone.logic.utils
 
+import android.media.MediaRouter
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Resources
@@ -29,7 +30,6 @@ import android.text.TextUtils
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.media3.common.util.Log
-import androidx.mediarouter.media.MediaRouter
 
 object MediaRoutes {
     private const val TAG = "MediaRoutes"
@@ -40,8 +40,13 @@ object MediaRoutes {
             val router = MediaRouter2.getInstance(context)
             val route = router.systemController.selectedRoutes.firstOrNull()
             route?.getAudioDeviceForRoute(context)
-        } else
-            MediaRouter.getInstance(context).selectedRoute.getAudioDeviceForRoute(context)
+        } else {
+            // Before R, read the platform MediaRouter directly, as androidx does. Its selected
+            // live audio route is the default route or, when connected, Bluetooth.
+            val router = ContextCompat.getSystemService(context, MediaRouter::class.java)!!
+            router.getSelectedRoute(MediaRouter.ROUTE_TYPE_LIVE_AUDIO)
+                .getAudioDeviceForRoute(context, router)
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.R)
@@ -290,9 +295,26 @@ object MediaRoutes {
     // Approximation of audio device based on best effort
     // Inspired by https://github.com/timschneeb/RootlessJamesDSP/blob/593c0dc/app/src/main/java/me/timschneeberger/rootlessjamesdsp/utils/RoutingObserver.kt
     @SuppressLint("DiscouragedApi")
-    fun MediaRouter.RouteInfo.getAudioDeviceForRoute(context: Context): AudioDeviceInfo? {
+    private fun MediaRouter.RouteInfo.getAudioDeviceForRoute(
+        context: Context,
+        router: MediaRouter,
+    ): AudioDeviceInfo? {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
             throw IllegalStateException("getAudioDeviceForRoute must not be called on R+")
+        // Same checks androidx's RouteInfo derives from the platform route.
+        val name = getName(context)
+        // System routes (the default route and Bluetooth) share the system category.
+        val isSystemRoute = category == router.defaultRoute.category
+        val isDefault = this == router.defaultRoute
+        // The only other system live audio route is Bluetooth. Remote display routes are video,
+        // and wired, USB and HDMI outputs replace the default route instead.
+        val isBluetooth = isSystemRoute && !isDefault &&
+                supportedTypes and MediaRouter.ROUTE_TYPE_LIVE_AUDIO != 0
+        val isDeviceSpeaker = isDefault && TextUtils.equals(
+            Resources.getSystem().getText(
+                Resources.getSystem().getIdentifier("default_audio_route_name", "string", "android")
+            ), name
+        )
         if (!isSystemRoute) { // MediaRouteProviderService, but shouldn't get selected by itself
             Log.e(
                 TAG,

@@ -17,6 +17,7 @@
 
 package org.akanework.gramophone.ui.screens.settings
 
+import org.akanework.gramophone.ui.theme.AppFont
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,17 +44,30 @@ fun AppearanceSettingsScreen(
 ) {
     val tabs = rememberStringPreference("tabs", "")
     val showFileNames = rememberBooleanPreference("show_file_names", true)
+    val appFont = rememberBooleanPreference(AppFont.PREF_KEY, AppFont.PREF_DEFAULT)
     var tabOrderOpen by remember { mutableStateOf(false) }
 
     PreferenceScreen(title = stringResource(R.string.settings_category_appearance), onBack = onBack, modifier = modifier) {
         PreferenceSectionHeader(stringResource(R.string.settings_preference_category_application))
-        PreferenceGroup({ shape ->
-            NavigationPreferenceRow(
-                shape,
-                title = stringResource(R.string.settings_theme_title),
-                subtitle = stringResource(R.string.settings_theme_summary),
-                onClick = { onNavigate(ThemeSettingsKey()) },
-            )
+        PreferenceGroup(buildList {
+            add { shape ->
+                NavigationPreferenceRow(
+                    shape,
+                    title = stringResource(R.string.settings_theme_title),
+                    subtitle = stringResource(R.string.settings_theme_summary),
+                    onClick = { onNavigate(ThemeSettingsKey()) },
+                )
+            }
+            // Only shown where the system has the font. Otherwise the platform font is used.
+            if (AppFont.isAvailable) add { shape ->
+                SwitchPreferenceRow(
+                    shape,
+                    title = stringResource(R.string.settings_app_font),
+                    subtitle = stringResource(R.string.settings_app_font_summary),
+                    checked = appFont.value,
+                    onCheckedChange = { appFont.set(it) },
+                )
+            }
         })
 
         PreferenceSectionHeader(stringResource(R.string.settings_preference_category_home))

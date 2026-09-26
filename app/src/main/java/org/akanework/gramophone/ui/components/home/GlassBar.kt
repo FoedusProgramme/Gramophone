@@ -39,7 +39,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -105,7 +104,9 @@ fun Modifier.topEdgeBlur(hazeState: HazeState, style: HazeStyle): Modifier =
 
 /**
  * The glass toolbar over a page's content: [navigationIcon], the small [title], then [actions].
- * The title fades in as the content's [LargeTitle] passes underneath, measured by [scrolled].
+ * The title fades in based on [scrolled] as the content's [LargeTitle] scrolls under the bar.
+ * [frost] controls the blur alpha, for pages whose content starts directly below the bar and
+ * should not be blurred at rest.
  */
 @Composable
 fun GlassTitleBar(
@@ -120,6 +121,8 @@ fun GlassTitleBar(
     actions: @Composable RowScope.() -> Unit = {},
     /** How far below the bar the content's large title starts at rest, see [barTitleAlpha]. */
     titleTopGap: Dp = LARGE_TITLE_TOP_GAP,
+    /** Blur alpha: 1 when content is under the bar, 0 when none is. */
+    frost: () -> Float = { 1f },
 ) {
     val insets = WindowInsets.systemBars.union(WindowInsets.displayCutout)
     val topInset = insets.asPaddingValues().calculateTopPadding()
@@ -130,6 +133,8 @@ fun GlassTitleBar(
             Modifier
                 .fillMaxWidth()
                 .height(topInset + GLASS_BAR_HEIGHT)
+                // Read in the draw phase to avoid recomposing on every scroll frame.
+                .graphicsLayer { alpha = frost() }
                 .topEdgeBlur(hazeState, style),
         )
         Row(

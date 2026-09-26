@@ -30,6 +30,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.akanework.gramophone.R
 import org.akanework.gramophone.ui.MainActivity
+import org.akanework.gramophone.ui.actions.PlaylistDialogs.rename
 import org.akanework.gramophone.ui.components.compose.AppDialog
 import org.nift4.mediastorecompat.MediaStoreCompat
 import uk.akane.libphonograph.items.Playlist

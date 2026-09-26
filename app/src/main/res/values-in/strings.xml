@@ -1,7 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
     <string name="settings_category_links">Tautan</string>
-    <string name="settings_customization_summary">Kelola opsi kustomisasi</string>
     <string name="settings_play_on_launch_summary">Putar musik saat diluncurkan</string>
     <string name="refreshed_songs">Disegarkan %1$d lagu</string>
     <string name="home_menu_settings">Pengaturan</string>
@@ -14,7 +13,6 @@
     <string name="category_genres">Genre</string>
     <string name="category_playlists">Daftar putar</string>
     <string name="home_menu_refresh">Segarkan</string>
-    <string name="home_menu_search">Cari</string>
     <string name="category_songs">Lagu</string>
     <string name="unknown_artist">Artis tidak diketahui</string>
     <plurals name="albums">
@@ -72,23 +70,19 @@
     <string name="dialog_disc_number">Nomor cakram</string>
     <string name="settings_content_based_color_summary">Aktifkan pembuatan warna berbasis album</string>
     <string name="no_lyric_found">Lirik tidak ditemukan</string>
-    <string name="now_playing">Sedang diputar</string>
     <string name="settings_package_type">Tipe paket</string>
     <string name="settings_title_center">Judul terpusat</string>
     <string name="settings_appearance_summary">Tampilan aplikasi, mode tema</string>
     <string name="settings_behavior_summary">Filter, perilaku peluncuran</string>
     <string name="dialog_duration">Durasi</string>
     <string name="filesystem">Sistem berkas</string>
-    <string name="settings_library">Pustaka</string>
     <string name="settings_title_center_summary">Gunakan judul terpusat untuk pemutar penuh</string>
     <string name="dialog_mime">Tipe MIME</string>
     <string name="settings_player_ui">Antarmuka pemutar</string>
     <string name="settings_player_ui_summary">Antarmuka pemutar penuh, lirik</string>
     <string name="unknown_title">Judul tidak diketahui</string>
     <string name="settings_player_options">Audio</string>
-    <string name="settings_customization">Kustomisasi</string>
     <string name="settings_player_options_summary">Kualitas keluaran, perilaku pemutaran</string>
-    <string name="settings_library_summary">Kelola pustaka media</string>
     <string name="settings_album_round_corner">Sudut melengkung album</string>
     <string name="settings_color_accuracy">Akurasi warna</string>
     <string name="settings_experimental_settings">Eksperimental</string>
@@ -107,7 +101,6 @@
     <string name="settings_blacklist">Daftar hitam</string>
     <string name="settings_blacklist_folder">Folder daftar hitam</string>
     <string name="settings_blacklist_folder_summary">Saring lagu dari folder tertentu</string>
-    <string name="unknown_version">Versi tidak diketahui</string>
     <string name="unknown_year">Tahun tidak diketahui</string>
     <string name="settings_about_gramophone">Tentang aplikasi</string>
     <string name="dialog_album_artist">Artis album</string>
@@ -130,7 +123,6 @@
     <string name="album_covers_enhance">Pemuatan sampul album yang ditingkatkan</string>
     <string name="album_covers_enhance_desc">Tampilkan sampul lagu berkualitas tinggi dan izinkan sampul album dan lagu berbeda (memerlukan akses foto)</string>
     <string name="timer">Pengatur waktu tidur</string>
-    <string name="current_playlist">Daftar putar saat ini</string>
     <string name="fgs_failed_title">Gagal melanjutkan pemutaran musik</string>
     <string name="fgs_failed_text">Klik di sini untuk membuka aplikasi dan melanjutkan pemutaran</string>
     <string name="fgs_failed_channel">Pemutaran gagal dilanjutkan</string>
@@ -143,26 +135,12 @@
     <string name="grant_audio"><![CDATA[Harap berikan izin \"Musik dan audio\"]]></string>
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
     <string name="album_cover">Sampul album</string>
-    <string name="dialog_edit_metadata">Ubah</string>
-    <string name="dialog_lyrics">Lirik</string>
     <string name="settings_preference_category_home">Layar beranda</string>
     <string name="tab_order">Atur urutan tab</string>
     <string name="tab_order_summary">Aplikasi akan menampilkan tab pertama saat mulai. Tab setelah pembatas akan disembunyikan.</string>
-    <string name="seekbar">Bilah pencari</string>
-    <string name="divider">Pembatas</string>
-    <string name="back">Kembali</string>
-    <string name="play_all">Putar semua</string>
     <string name="shuffle_all">Acak semua</string>
-    <string name="sort">Urutkan</string>
-    <string name="scroll_to_albums">Gulir ke album</string>
-    <string name="scroll_to_songs">Gulir ke lagu</string>
     <string name="play">Putar</string>
     <string name="more">Lainnya</string>
-    <string name="remove">Hapus</string>
-    <string name="skip_next">Lewati ke berikutnya</string>
-    <string name="expand_less">Tutup</string>
-    <string name="skip_previous">Lewati ke sebelumnya</string>
-    <string name="position_slider">Penggeser posisi</string>
     <string name="settings_lyrics_ui">Aktifkan antarmuka lirik baru</string>
     <string name="settings_lyrics_ui_summary">Antarmuka eksperimental untuk menampilkan lirik kata per kata dengan fitur lanjutan</string>
     <string name="settings_status_bar_lyrics_title">Lirik bilah status</string>
@@ -281,7 +259,6 @@
     <plurals name="folders_plural">
         <item quantity="other">%d Folder</item>
     </plurals>
-    <string name="timer_expiry_eos">Pengatur waktu tidur akan menjeda musik saat lagu yang diputar pada %s selesai</string>
     <string name="timer_expiry_end_of_this_song">Pengatur waktu tidur akan menjeda musik di akhir lagu ini</string>
     <string name="app_name">Gramophone</string>
     <string name="playback_speed">Kecepatan pemutaran</string>
@@ -290,8 +267,6 @@
     <string name="tempo_pitch_value">%s: %.2fx</string>
     <string name="lock_tempo_pitch">Kunci tempo dan nada</string>
     <string name="reset">Atur ulang</string>
-    <string name="audio_signal_chain">Rantai sinyal audio</string>
-    <string name="audio_not_initialized">Sistem pemutaran audio belum diinisialisasi. Coba putar sesuatu!</string>
     <string name="mix_port_flag_none">Tidak ada</string>
     <string name="mix_port_flag_bit_perfect">Bit sempurna</string>
     <string name="mix_port_flag_ultrasound">Ultrasonik</string>
@@ -393,7 +368,6 @@
     <string name="settings_translation_auto_word">Animasi terjemahan otomatis</string>
     <string name="settings_translation_auto_word_summary">Terapkan gradasi linier pada baris terjemahan dalam pemutaran lirik tersinkronisasi kata jika terjemahan tidak memiliki metadata sinkronisasi kata</string>
     <string name="cannot_find_file">Tidak dapat menemukan berkas ini</string>
-    <string name="enter_msg_for_dev_here">Masukkan pesan untuk pengembang di sini</string>
     <string name="do_not_enter_email_enter_msg">Masukkan pesan, bukan alamat email</string>
     <string name="log_will_auto_send">Log akan dikirim secara otomatis, jelaskan masalahnya</string>
     <string name="log_attachment">Log akan dikirim sebagai lampiran secara otomatis</string>
@@ -440,7 +414,6 @@
     <string name="sort_by_album_year">Tahun album</string>
     <string name="sort_by_album_artist_year"><![CDATA[Artis album -> tahun]]></string>
     <string name="forbidden_symbol_error">Karakter tidak valid dalam nama</string>
-    <string name="translators">Penerjemah</string>
     <string name="settings_replaygain">ReplayGain</string>
     <string name="settings_replaygain_mode">Mode</string>
     <string name="settings_replaygain_preamp">Pra-amplifier</string>
@@ -481,7 +454,6 @@
     <string name="save">Simpan</string>
     <string name="discard">Buang</string>
     <string name="discard_changes_msg">Apakah Anda benar-benar ingin membuang perubahan pada playlist \"%s\"?</string>
-    <string name="apply">Terapkan</string>
     <string name="restore_edits">Pulihkan perubahan?</string>
     <string name="restore_edits_msg">Ada perubahan yang belum disimpan untuk playlist \"%s\". Apakah Anda ingin memulihkan perubahan ini, atau membuangnya dan memulai lagi dengan versi playlist yang baru?</string>
     <string name="restore">Pulihkan</string>

@@ -17,13 +17,12 @@
 
 package org.akanework.gramophone.ui.screens.settings
 
+import android.os.Build
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.integerResource
 import androidx.compose.ui.res.stringResource
-import android.os.Build
 import org.akanework.gramophone.R
 import org.akanework.gramophone.ui.components.compose.rememberBooleanPreference
 import org.akanework.gramophone.ui.components.compose.rememberIntPreference

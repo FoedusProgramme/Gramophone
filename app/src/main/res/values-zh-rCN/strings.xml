@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-    <string name="home_menu_search">搜索</string>
     <string name="home_menu_settings">设置</string>
     <string name="home_menu_refresh">刷新</string>
     <string name="category_songs">歌曲</string>
@@ -33,7 +32,6 @@
     <string name="unknown_playlist">未知播放列表</string>
     <string name="settings_category_appearance">外观</string>
     <string name="album_artist">专辑音乐人</string>
-    <string name="unknown_version">未知版本</string>
     <string name="settings_version">版本</string>
     <string name="dialog_title">标题</string>
     <string name="dialog_artist">音乐人</string>
@@ -52,6 +50,7 @@
     <string name="settings_app_theme">应用主题</string>
     <string name="settings_theme_title">主题</string>
     <string name="settings_theme_summary">亮暗模式、颜色与主题样式</string>
+    <string name="settings_app_font_summary">应用内文字使用系统的 Google Sans Flex 字体</string>
     <string name="settings_theme_mode_section">亮暗模式</string>
     <string name="settings_theme_color_section">颜色</string>
     <string name="settings_theme_wallpaper_color">使用壁纸颜色</string>
@@ -63,6 +62,7 @@
     <plurals name="songs">
         <item quantity="other">%d 首歌曲</item>
     </plurals>
+    <string name="songs_total_duration">%1$s，%2$s</string>
     <plurals name="albums">
         <item quantity="other">%d 张专辑</item>
     </plurals>
@@ -82,7 +82,6 @@
     <string name="settings_default_progress_bar">默认进度条</string>
     <string name="settings_default_progress_bar_summary">启用 Material 样式的进度条</string>
     <string name="playlist_favourite">收藏</string>
-    <string name="now_playing">正在播放</string>
     <string name="settings_content_based_color">根据内容生成颜色</string>
     <string name="settings_content_based_color_summary">启用根据专辑封面生成界面颜色</string>
     <string name="settings_package_type">软件包类型</string>
@@ -101,12 +100,8 @@
     <string name="settings_about_gramophone">关于应用</string>
     <string name="settings_behavior_summary">过滤器、启动时行为</string>
     <string name="settings_category_links">链接</string>
-    <string name="settings_library">媒体库</string>
-    <string name="settings_library_summary">管理媒体库</string>
     <string name="settings_player_options">音频</string>
     <string name="settings_player_options_summary">音频输出质量、播放器行为</string>
-    <string name="settings_customization">自定义</string>
-    <string name="settings_customization_summary">管理自定义选项</string>
     <string name="settings_album_round_corner">专辑圆角</string>
     <string name="settings_title_bold">粗体标题</string>
     <string name="settings_title_bold_summary">在播放器的标题上使用粗体</string>
@@ -135,8 +130,6 @@
     <string name="settings_preference_category_application">应用</string>
     <string name="settings_crash_application">崩溃测试</string>
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
-    <string name="dialog_lyrics">歌词</string>
-    <string name="dialog_edit_metadata">编辑</string>
     <string name="album_cover">专辑封面</string>
     <string name="delete_failed">删除歌曲失败：%s</string>
     <string name="grant_images"><![CDATA[请授予“照片和视频”权限]]></string>
@@ -144,7 +137,6 @@
     <string name="crash_clipboard">已将崩溃日志复制到剪贴板</string>
     <string name="settings_trim_lyrics">删除歌词中的空行</string>
     <string name="timer">睡眠定时器</string>
-    <string name="current_playlist">当前播放列表</string>
     <string name="fgs_failed_text">点击此处以打开应用并继续播放</string>
     <string name="fgs_failed_title">无法恢复音乐播放</string>
     <string name="fgs_failed_channel">播放无法恢复</string>
@@ -153,11 +145,8 @@
     <string name="share">分享</string>
     <string name="sort_by_release_date">发布日期</string>
     <string name="timer_expiry">睡眠定时器将在 %s 暂停音乐</string>
-    <string name="remove">移除</string>
     <string name="more">更多</string>
     <string name="play">播放</string>
-    <string name="sort">排序</string>
-    <string name="play_all">全部播放</string>
     <string name="settings_preference_category_home">主屏幕</string>
     <string name="tab_order">配置标签页顺序</string>
     <string name="tab_order_summary">应用将在启动时显示第一个标签页。分隔线后的标签页将被隐藏。</string>
@@ -165,17 +154,8 @@
     <string name="settings_status_bar_lyrics_summary">启用魅族状态栏歌词（仅适用于部分设备）</string>
     <string name="settings_lyrics_ui">启用新歌词界面</string>
     <string name="lyric_widget_description">显示当前播放媒体歌词的小部件</string>
-    <string name="scroll_to_albums">滚动到专辑</string>
-    <string name="scroll_to_songs">滚动到歌曲</string>
-    <string name="expand_less">关闭</string>
-    <string name="skip_previous">跳到上一个</string>
-    <string name="position_slider">位置滑块</string>
     <string name="settings_lyrics_ui_summary">实验性界面，显示逐字歌词，具有高级功能</string>
-    <string name="back">返回</string>
-    <string name="divider">分隔线</string>
     <string name="shuffle_all">全部随机播放</string>
-    <string name="skip_next">跳到下一个</string>
-    <string name="seekbar">搜索栏</string>
     <string name="home_menu_shuffle">全部随机播放</string>
     <string name="grant_audio"><![CDATA[请授予“音乐和音频”权限]]></string>
     <string name="delete">删除</string>
@@ -238,11 +218,9 @@
     <string name="open_in_gramophone">在 Gramophone 打开</string>
     <string name="gramophone_crashed_explainer2">Gramophone 崩溃了 :(\n\n请给我们发送错误报告以便解决导致此崩溃的问题！\n\n每个情况因音乐而异，没有您的帮助这几乎永远<b>无法</b>修复！</string>
     <string name="email_clipboard">已复制邮件地址以及文本到剪贴板</string>
-    <string name="audio_signal_chain">音频信号链</string>
     <string name="delete_failed_playlist">删除播放列表失败：%s</string>
     <string name="settings_trim_lyrics_summary">歌词行首或行尾的空格可能具有艺术效果，若不需要可开启此开关自动移除。</string>
     <string name="failed_to_parse_lyric">无法解析歌词</string>
-    <string name="audio_not_initialized">音频播放系统尚未初始化。试着播放些什么吧！</string>
     <string name="package_type_explainer">Gramophone 的安装包可以被任何人创建，因为 Gramophone 是开源的。为了帮助记忆每个安装包来自哪里，Gramophone 提供了软件包类型。\n\n最常见的版本是 Release ，由 F-Droid、Google Play、GitHub 或 IzzyOnDroid 分发。\nCI（持续集成） 包类型指的是 GitHub 上每次提交时进行的自动构建。这些构建可能不稳定。\n对于其他软件包类型，这个名字会合理地提示软件包的来源。</string>
     <string name="what_were_you_doing">崩溃发生时，您正在使用 Gramophone 做什么？请尽可能详细地提供详细信息，以便我更有效地修复问题。\n\n请注意，错误报告最好使用英语，但如果您使用其他语言提交错误报告，我会尝试使用机器翻译。</string>
     <string name="settings_lyrics_no_animation">禁用动画</string>
@@ -332,7 +310,6 @@
     <string name="log_attachment">日志将会自动作为附件发送</string>
     <string name="log_will_auto_send">日志将自动发送，请说明问题</string>
     <string name="do_not_enter_email_enter_msg">输入消息，而不是电子邮件地址</string>
-    <string name="enter_msg_for_dev_here">在此处输入给开发者的消息</string>
     <string name="settings_translation_auto_word_summary">如果逐字歌词的翻译中没有逐字同步元数据，则在逐字歌词播放中对翻译行使用线性渐变动画</string>
     <string name="settings_translation_auto_word">自动翻译</string>
     <string name="spk_encoding_pcm_24bit_offload">24-bit (8.24) PCM offload</string>
@@ -380,7 +357,6 @@
     <plurals name="folders_plural">
         <item quantity="other">%d 个文件夹</item>
     </plurals>
-    <string name="timer_expiry_eos">睡眠定时器将在 %s 歌曲播放结束后暂停音乐</string>
     <string name="timer_expiry_end_of_this_song">睡眠定时器将在这首歌曲结束后暂停音乐</string>
     <string name="playback_speed">播放速度</string>
     <string name="tempo">速度</string>
@@ -440,7 +416,6 @@
     <string name="spk_encoding_pcm_20bit">20-bit PCM</string>
     <string name="spk_encoding_pcm_20bit_big_endian">20-bit PCM (big endian)</string>
     <string name="settings_telegram">Telegram</string>
-    <string name="translators">译者</string>
     <string name="settings_cookie_summary">将专辑封面设为饼干形状</string>
     <string name="settings_cookie_info">饼干样式封面</string>
     <string name="settings_pure_dark">深色主题下的纯黑主题</string>
@@ -488,7 +463,6 @@
     <string name="save">保存</string>
     <string name="discard">舍弃</string>
     <string name="discard_changes_msg">确定要舍弃对播放列表“%s”所做的更改吗？</string>
-    <string name="apply">应用</string>
     <string name="restore_edits">恢复更改？</string>
     <string name="restore_edits_msg">播放列表“%s”存在未保存的更改。您要恢复这些更改，还是舍弃更改并使用播放列表的全新版本重新开始？</string>
     <string name="restore">恢复</string>

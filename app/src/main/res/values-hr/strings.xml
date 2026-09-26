@@ -1,7 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
     <string name="app_name">Gramophone</string>
-    <string name="home_menu_search">Pretraga</string>
     <string name="home_menu_settings">Postavke</string>
     <string name="home_menu_shuffle">Promiješaj sve</string>
     <string name="home_menu_refresh">Osvježi</string>
@@ -62,7 +61,6 @@
     <string name="unknown_playlist">Nepoznata playlista</string>
     <string name="settings_category_appearance">Izgled</string>
     <string name="album_artist">Izvođač albuma</string>
-    <string name="unknown_version">Nepoznata verzija</string>
     <string name="settings_version">Verzija</string>
     <string name="dialog_title">Naslov</string>
     <string name="dialog_artist">Izvođač</string>
@@ -91,7 +89,6 @@
     <string name="opensource_info">Aplikacija otvorenog koda, licenca GPL-3.0\nAutorska prava %s</string>
     <string name="playlist_favourite">Favoriti</string>
     <string name="settings_contributors_click">%s (klikni za više!)</string>
-    <string name="now_playing">Sada se izvodi</string>
     <string name="settings_content_based_color_summary">Uključi generiranje boja na temelju albuma</string>
     <string name="settings_content_based_color">Boje na temelju sadržaja</string>
     <string name="settings_package_type">Vrsta paketa</string>
@@ -110,12 +107,8 @@
     <string name="settings_about_gramophone">O aplikaciji</string>
     <string name="settings_behavior_summary">Filtri, ponašanja pri pokretanju</string>
     <string name="settings_category_links">Poveznice</string>
-    <string name="settings_library">Biblioteka</string>
-    <string name="settings_library_summary">Upravljaj medijskom bibliotekom</string>
     <string name="settings_player_options">Audio</string>
     <string name="settings_player_options_summary">Kvaliteta izlaza, ponašanje reprodukcije</string>
-    <string name="settings_customization">Prilagođavanje</string>
-    <string name="settings_customization_summary">Upravljaj opcijama prilagođavanja</string>
     <string name="settings_album_round_corner">Albumi sa zaobljenim kutovima</string>
     <string name="settings_title_bold">Podebljani naslov</string>
     <string name="settings_title_bold_summary">Koristi podebljani naslov kada player zauzima cijeli ekran</string>
@@ -144,8 +137,6 @@
     <string name="settings_category_full_player">Player zauzima cijeli ekran</string>
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
     <string name="album_cover">Omot albuma</string>
-    <string name="dialog_edit_metadata">Uredi</string>
-    <string name="dialog_lyrics">Tekstovi pjesama</string>
     <string name="delete_failed">Brisanje pjesme nije uspjelo: %s</string>
     <string name="delete_failed_playlist">Brisanje playliste nije uspjelo: %s</string>
     <string name="album_covers_enhance">Poboljšano učitavanje omota albuma</string>
@@ -162,32 +153,18 @@
     <string name="tempo_pitch_value">%s: %.2fx</string>
     <string name="lock_tempo_pitch">Zaključaj tempo i visinu tona</string>
     <string name="reset">Resetiraj</string>
-    <string name="current_playlist">Trenutačna playlista</string>
     <string name="fgs_failed_title">Neuspjelo nastavljanje reproduckije glazbe</string>
     <string name="fgs_failed_text">Klikni ovdje za otvaranje aplikacije i nastavak reprodukcije</string>
     <string name="fgs_failed_channel">Neuspjelo nastavljanje reproduckije</string>
     <string name="sort_by_release_date">Datum izdanja</string>
     <string name="timer_expiry">Tajmer za spavanje će pauzirati glazbu u %s</string>
-    <string name="timer_expiry_eos">Tajmer za spavanje će pauzirati glazbu kada pjesma koja svira u %s završi</string>
     <string name="timer_expiry_end_of_this_song">Tajmer za spavanje će pauzirati glazbu nakon ove pjesme</string>
     <string name="settings_preference_category_home">Početna stranica</string>
     <string name="tab_order">Konfigurirajte redoslijed kartica</string>
     <string name="tab_order_summary">Aplikacija će nakon pokretanja prikazati prvu karticu. Kartice nakon znaka razdvajanja će se sakriti.</string>
-    <string name="seekbar">Traka za premještanje</string>
-    <string name="divider">Znak razdvajanja</string>
-    <string name="back">Natrag</string>
-    <string name="play_all">Reproduciraj sve</string>
     <string name="shuffle_all">Promiješaj sve</string>
-    <string name="sort">Razvrstaj</string>
-    <string name="scroll_to_albums">Pomakni se do albuma</string>
-    <string name="scroll_to_songs">Pomakni se do pjesmi</string>
     <string name="play">Reproduciraj</string>
     <string name="more">Više</string>
-    <string name="remove">Ukloni</string>
-    <string name="skip_next">Preskoči na sljedeću</string>
-    <string name="expand_less">Zatvori</string>
-    <string name="skip_previous">Preskoči na prethodnu</string>
-    <string name="position_slider">Klizač za pozicioniranje</string>
     <string name="settings_lyrics_ui">Uključi novi korisničko sučelje za tekstove pjesama</string>
     <string name="settings_lyrics_ui_summary">Eksperimentalno sučelje za prikaz teksta pjesme riječ po riječ, s naprednim funkcijama</string>
     <string name="settings_status_bar_lyrics_title">Traka stanja za tekstove pjesama</string>
@@ -299,8 +276,6 @@
     <string name="send_email">Pošalji e-mail</string>
     <string name="send_email_manually">Pošalji zapis na nift4@posteo.net – ne može se pronaći e-mail aplikacija</string>
     <string name="failed_to_parse_lyric">Neuspjela obrada tekstova pjesama</string>
-    <string name="audio_signal_chain">Lanac audio signala</string>
-    <string name="audio_not_initialized">Sustav za reprodukciju zvuka nije inicijaliziran. Pokušaj nešto reproducirati!</string>
     <string name="mix_port_flag_none">Bez</string>
     <string name="mix_port_flag_bit_perfect">Bit perfect (reprodukcija bez promjena)</string>
     <string name="mix_port_flag_ultrasound">Ultrasound</string>
@@ -399,7 +374,6 @@
     <string name="settings_translation_auto_word">Automatski animiraj prijevode</string>
     <string name="settings_translation_auto_word_summary">Primijeni linearni gradijent na retke prijevoda u sinkroniziranoj reprodukciji tekstova ako prijevodi nemaju metapodatke za sinkronizaciju riječi</string>
     <string name="cannot_find_file">Ova se datoteka ne može pronaći</string>
-    <string name="enter_msg_for_dev_here">Ovdje upiši poruku za programera</string>
     <string name="do_not_enter_email_enter_msg">Upiši poruku, ne e-mail adresu</string>
     <string name="log_will_auto_send">Dnevnici će se automatski slati, umjesto toga objasni problem</string>
     <string name="log_attachment">Dnevnici će se automatski slati kao privitak</string>
@@ -444,7 +418,6 @@
     <string name="sort_by_album_year">Godina albuma</string>
     <string name="sort_by_album_artist_year"><![CDATA[Izvođač albuma -> godina]]></string>
     <string name="forbidden_symbol_error">Nevaljani znak u imenu</string>
-    <string name="translators">Prevoditelji</string>
     <string name="settings_replaygain">Ujednačavanje glasnoće</string>
     <string name="settings_replaygain_mode">Modus</string>
     <string name="settings_replaygain_no_rg_amp">Prigušenje (bez RG kabla)</string>
@@ -488,7 +461,6 @@
     <string name="discard_changes_title">Odbaciti promjene?</string>
     <string name="save">Spremi</string>
     <string name="discard">Odbaci</string>
-    <string name="apply">Primijeni</string>
     <string name="failed_to_restore">Neuspjelo obnavljanje promjena: %s</string>
     <string name="playlist_empty">Playlista je prazna</string>
     <string name="playlist_empty_msg">Dodaj neke pjesme klikom na „Dodaj u playlistu” u izborniku s tri točke pjesme.</string>

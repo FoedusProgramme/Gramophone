@@ -15,7 +15,8 @@
   ~     along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 <animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:aapt="http://schemas.android.com/aapt">
+    xmlns:aapt="http://schemas.android.com/aapt"
+    xmlns:tools="http://schemas.android.com/tools">
     <aapt:attr name="android:drawable">
         <vector
             android:width="24dp"
@@ -27,6 +28,7 @@
                 android:name="shape"
                 android:fillColor="@android:color/white"
                 android:fillType="evenOdd"
+                tools:targetApi="24"
                 android:pathData="M320,200 L480,301.818 L480,658.182 L320,760 Z M400,346 L480,397.048 L480,562.952 L400,614 Z M480,301.818 L760,480 L760,480 L480,658.182 Z M480,397.048 L610,480 L610,480 L480,562.952 Z" />
         </vector>
     </aapt:attr>

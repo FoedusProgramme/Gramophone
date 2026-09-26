@@ -48,7 +48,6 @@
     <string name="playlist_favourite">Lemmikud</string>
     <string name="settings_content_based_color_summary">Kasuta albumipõhist värvimustrit</string>
     <string name="settings_content_based_color">Sisust lähtuvad värvid</string>
-    <string name="home_menu_search">Otsi</string>
     <string name="home_menu_refresh">Värskenda andmeid</string>
     <string name="category_albums">Albumid</string>
     <string name="category_songs">Palad</string>
@@ -68,7 +67,6 @@
     <string name="search">Otsi</string>
     <string name="go_to_artist">Mine esitaja juurde</string>
     <string name="details">Üksikasjad</string>
-    <string name="unknown_version">Teadmata versioon</string>
     <string name="settings_app_name">Rakenduse nimi</string>
     <string name="go_to_album">Mine albumi juurde</string>
     <string name="settings_contributors">Kaasautorid</string>
@@ -79,7 +77,6 @@
     <string name="natural_order">Loomulik järjekord</string>
     <string name="equalizer_not_found">Evalaiserit ei leidu!</string>
     <string name="opensource_info">Avatud lähtekoodiga tarkvara, avaldatud GPL-3.0 litsentsi alusel \nAutoriõigused %s</string>
-    <string name="now_playing">Hetkel esitamisel</string>
     <string name="settings_package_type">Tarkvarapaketi tüüp</string>
     <string name="unknown_title">Teadmata pealkiri</string>
     <string name="no_lyric_found">Laulusõnu ei leidu</string>
@@ -111,8 +108,6 @@
     <string name="settings_crash_application">Jooksuta rakendus kokku</string>
     <string name="settings_crash_application_summary">Võimas kokkujooksutaja 3000</string>
     <string name="album_cover">Albumi kaanepilt</string>
-    <string name="dialog_edit_metadata">Muuda</string>
-    <string name="dialog_lyrics">Laulusõnad</string>
     <string name="delete_failed">Pala kustutamine ei õnnestunud: %s</string>
     <string name="album_covers_enhance">Albumi tõhustatud kaanepiltide laadimine</string>
     <string name="album_covers_enhance_desc">Kasuta parema kvaliteediga kaanepilte ning luba albumi ja palade kaanepiltidel erineda (eeldab õigust avada fotosid ja pildifaile)</string>
@@ -122,7 +117,6 @@
     <string name="crash_clipboard">Krahhilogi on kopeeritud lõikelauale</string>
     <string name="settings_trim_lyrics">Eemalda laulusõnu ümbritsevad tühikud</string>
     <string name="timer">Unetaimer</string>
-    <string name="current_playlist">Praegune esitusloend</string>
     <string name="fgs_failed_title">Muusika esitamise jätkamine ei õnnestunud</string>
     <string name="fgs_failed_text">Rakenduse avamiseks ja taasesituse jätkamiseks klõpsi siin</string>
     <string name="sort_by_release_date">Avaldamise kuupäev</string>
@@ -130,15 +124,11 @@
     <string name="settings_category_filters">Filtrid</string>
     <string name="fgs_failed_channel">Taasesituse jätkamine ei õnnestunud</string>
     <string name="settings_behavior_summary">Filtreerimine ja käitumine käivitamisel</string>
-    <string name="settings_library">Sinu kogumik</string>
     <string name="settings_default_progress_bar_summary">Kasuta edenemisriba kujundamisel Material Designi põhimõtteid</string>
-    <string name="settings_library_summary">Halda meediafaile</string>
     <string name="settings_player_options">Heli seadistused</string>
     <string name="settings_player_options_summary">Heliväljundi kvaliteet ja taasesituse seadistused</string>
-    <string name="settings_customization_summary">Halda kohandamise valikuid</string>
     <string name="settings_title_center_summary">Täisekraanivaates joonda pealkiri keskele</string>
     <string name="settings_about_app">Rakenduse teave</string>
-    <string name="settings_customization">Kohandamine</string>
     <string name="settings_title_bold">Paksus kirjas pealkiri</string>
     <string name="settings_play_on_launch_summary">Rakenduse käivitamisel alusta muusika esitamist</string>
     <string name="settings_title_bold_summary">Meediamängija täisekraanivaates kuva pealkiri paksus kirjas</string>
@@ -152,21 +142,9 @@
     <string name="settings_preference_category_home">Avavaade</string>
     <string name="tab_order">Seadista vahekaartide järjekorda</string>
     <string name="tab_order_summary">Rakendus näitab käivitamisel esimest vahekaarti. Eraldaja taga olevad vahekaardid saavad olema peidetud.</string>
-    <string name="scroll_to_songs">Keri paladeni</string>
     <string name="more">Veel</string>
-    <string name="remove">Eemalda</string>
-    <string name="seekbar">Kerimisriba</string>
-    <string name="divider">Eraldaja</string>
-    <string name="back">Tagasi</string>
-    <string name="play_all">Esita kõik</string>
     <string name="shuffle_all">Sega kõik lood</string>
-    <string name="sort">Järjesta</string>
-    <string name="scroll_to_albums">Keri albumiteni</string>
     <string name="play">Esita</string>
-    <string name="skip_next">Hüppa järgmise juurde</string>
-    <string name="expand_less">Sulge</string>
-    <string name="skip_previous">Hüppa eelmise juurde</string>
-    <string name="position_slider">Asukoha liugur</string>
     <string name="settings_lyrics_ui">Võta kasutusele uus laulusõnade kasutajaliides</string>
     <string name="settings_lyrics_ui_summary">Testjärgus kasutajaliides oskab laulusõnu kuvada sõnahaaval ning muud olulist</string>
     <string name="settings_status_bar_lyrics_title">Laulusõnad olekuribal</string>
@@ -280,8 +258,6 @@
     <string name="send_email">Saada e-kiri</string>
     <string name="send_email_manually">E-posti rakendust ei õnnestu tuvastada - seega lihtsalt saada e-kiri nift4@posteo.net aadressile</string>
     <string name="failed_to_parse_lyric">Laulusõnade liigendamine ei õnnestunud</string>
-    <string name="audio_signal_chain">Helisignaali ahel</string>
-    <string name="audio_not_initialized">Heli taasesituse süsteem pole algolekusse viidud. Proovi midagi kuulata!</string>
     <string name="mix_port_flag_direct_pcm">Direct PCM</string>
     <string name="mix_port_flag_primary">Esmane väljund</string>
     <string name="spk_encoding_sbc">SBC</string>
@@ -384,7 +360,6 @@
     <string name="settings_translation_auto_word">Näita tõlgete puhul automaatset animatsiooni</string>
     <string name="settings_translation_auto_word_summary">Kui sõnakohases laulusõnade vaates puudub tõlgetel sõnakohase sünkroniseerimise teave, siis kasuta reakohast lineaarset gradienti</string>
     <string name="cannot_find_file">Seda faili ei õnnestu leida</string>
-    <string name="enter_msg_for_dev_here">Sisesta siia sõnum arendajale</string>
     <string name="do_not_enter_email_enter_msg">Palun sisesta sõnum, mitte e-posti aadress</string>
     <string name="log_will_auto_send">Logid saadame niikuinii automaatselt, pigem palun kirjelda probleemi olemust või vea tekkimist</string>
     <string name="log_attachment">Logid saadame automaatselt manusena</string>
@@ -420,7 +395,6 @@
     <string name="offload_enabled_if_gapless">Kasutusel, kui katkestusteta taasesitus on võimalik</string>
     <string name="settings_audio_offload">Heli töötlus protsessoriväliselt (säästab akukasutust)</string>
     <string name="settings_telegram">Telegram</string>
-    <string name="timer_expiry_eos">Unetaimer peatab esituse, kui lugude esitamine lõppeb %s</string>
     <string name="timer_expiry_end_of_this_song">Unetaimer peatab esituse selle loo esitamise lõppedes</string>
     <string name="spk_encoding_pcm_20bit">20-bitine PCM</string>
     <string name="spk_encoding_pcm_20bit_big_endian">20-bitine PCM (tavajärjestusega)</string>
@@ -438,7 +412,6 @@
     <string name="sort_by_album_year">Albumi aasta</string>
     <string name="sort_by_album_artist_year"><![CDATA[Albumi esitaja -> aasta]]></string>
     <string name="forbidden_symbol_error">Nimes on mittelubatud tähemärk</string>
-    <string name="translators">Tõlkijad</string>
     <string name="settings_replaygain">Esitusvaljuse tundlikkus</string>
     <string name="settings_replaygain_mode">Režiim</string>
     <string name="settings_replaygain_preamp">Eelvõimendus</string>
@@ -484,7 +457,6 @@
     <string name="save">Salvesta</string>
     <string name="discard">Loobu</string>
     <string name="discard_changes_msg">Kas kindlasti tahad loobuda muudatustest esitusloendis „%s“?</string>
-    <string name="apply">Rakenda</string>
     <string name="restore_edits">Kas taastad muudatused?</string>
     <string name="restore_edits_msg">Esitusloendis „%s“ on salvestamata muudatusi. Kas sa sooviksid need taastada või neist loobuda ja alustada esitusloendi värske versiooniga?</string>
     <string name="restore">Taasta</string>

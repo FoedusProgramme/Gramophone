@@ -17,9 +17,10 @@
 
 package org.akanework.gramophone.ui.screens
 
+import org.akanework.gramophone.logic.utils.CalculationUtils.convertDurationToTimeStamp
 import android.content.res.Configuration
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -27,17 +28,17 @@ import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.union
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material.icons.outlined.Shuffle
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.union
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.itemsIndexed
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -47,14 +48,18 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.platform.LocalWindowInfo
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.core.content.edit
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.media3.common.MediaItem
@@ -63,34 +68,36 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.akanework.gramophone.R
-import org.akanework.gramophone.ui.MainActivity
 import org.akanework.gramophone.logic.utils.flows.LifecyclePauseManager
+import org.akanework.gramophone.ui.MainActivity
 import org.akanework.gramophone.ui.actions.LibraryActions
 import org.akanework.gramophone.ui.actions.PlaylistDialogs
 import org.akanework.gramophone.ui.actions.findMainActivity
-import org.akanework.gramophone.ui.library.LayoutType
 import org.akanework.gramophone.ui.components.compose.rememberPreference
+import org.akanework.gramophone.ui.components.home.FastScrollerState
 import org.akanework.gramophone.ui.components.home.GRID_CARD_LABEL_HEIGHT
 import org.akanework.gramophone.ui.components.home.GRID_CARD_MARGIN_LABEL
 import org.akanework.gramophone.ui.components.home.GRID_CARD_MARGIN_TOP
 import org.akanework.gramophone.ui.components.home.GRID_CARD_PADDING_BOTTOM
 import org.akanework.gramophone.ui.components.home.GRID_CARD_SIDE_PADDING
 import org.akanework.gramophone.ui.components.home.IosOverscrollState
+import org.akanework.gramophone.ui.components.home.LIBRARY_GROUP_CORNER
+import org.akanework.gramophone.ui.components.home.LIBRARY_ITEM_GAP
 import org.akanework.gramophone.ui.components.home.LIST_HEIGHT
+import org.akanework.gramophone.ui.components.home.LibraryFabAction
 import org.akanework.gramophone.ui.components.home.LibraryFastScroller
 import org.akanework.gramophone.ui.components.home.LibraryGridCard
-import org.akanework.gramophone.ui.components.home.LibraryFabAction
-import org.akanework.gramophone.ui.components.home.libraryItemCard
-import org.akanework.gramophone.ui.components.home.libraryItemShape
-import org.akanework.gramophone.ui.components.home.libraryCellShape
-import org.akanework.gramophone.ui.components.home.LIBRARY_ITEM_GAP
 import org.akanework.gramophone.ui.components.home.LibraryItemSheet
 import org.akanework.gramophone.ui.components.home.LibraryListRow
-import org.akanework.gramophone.ui.components.home.nowPlayingRowColors
 import org.akanework.gramophone.ui.components.home.NowPlayingState
 import org.akanework.gramophone.ui.components.home.SortMenu
 import org.akanework.gramophone.ui.components.home.iosOverscroll
+import org.akanework.gramophone.ui.components.home.libraryCellShape
+import org.akanework.gramophone.ui.components.home.libraryItemCard
+import org.akanework.gramophone.ui.components.home.libraryItemShape
+import org.akanework.gramophone.ui.components.home.nowPlayingRowColors
 import org.akanework.gramophone.ui.components.home.rememberIosFlingBehavior
+import org.akanework.gramophone.ui.library.LayoutType
 import org.akanework.gramophone.ui.nav.LocalAppBarTopPadding
 import org.akanework.gramophone.ui.nav.LocalListBottomPadding
 import org.akanework.gramophone.ui.nav.LocalPlayerBottomPadding
@@ -115,9 +122,11 @@ private const val COMPACT_GRID_LANDSCAPE_SPAN_SIZE = 2
 @Composable
 fun libraryColumns(layoutType: LayoutType?): Int {
     val config = LocalConfiguration.current
+    val density = LocalDensity.current
+    val windowWidthDp = with(density) { LocalWindowInfo.current.containerSize.width.toDp() }
     val isList = layoutType != LayoutType.GRID && layoutType != LayoutType.COMPACT_GRID
     val lowWidth = config.orientation == Configuration.ORIENTATION_PORTRAIT ||
-            config.screenWidthDp < 600
+            windowWidthDp < 600.dp
     val spanSize = when {
         isList && lowWidth -> LIST_PORTRAIT_SPAN_SIZE
         isList -> LIST_LANDSCAPE_SPAN_SIZE
@@ -197,6 +206,8 @@ fun <T : Any> LibraryTabScreen(
     reselectTick: Int,
     overscroll: IosOverscrollState,
     modifier: Modifier = Modifier,
+    /** Updated when the list reaches its end, see [FastScrollerState]. */
+    fastScroller: FastScrollerState? = null,
 ) {
     val context = LocalContext.current
     val activity = remember(context) { context.findMainActivity() }
@@ -215,7 +226,7 @@ fun <T : Any> LibraryTabScreen(
     val rowHeightPx = with(density) {
         LIST_HEIGHT.roundToPx()
     }
-    val queueTitle = state.queueTitleOverride ?: context.getString(spec.queueTitle)
+    val queueTitle = state.queueTitleOverride ?: stringResource(spec.queueTitle)
     val goToPlayingSong: (() -> Unit)? = if (spec === LibraryTabSpec.Songs) {
         {
             val id = nowPlaying.currentMediaId
@@ -258,6 +269,8 @@ fun <T : Any> LibraryTabScreen(
         rowHeightPx = (if (isGrid) gridRowHeightPx else rowHeightPx) + gapPx,
         headerHeightPx = 0,
         hintFor = { i -> items.getOrNull(i)?.let { state.fastScrollHintFor(it, i) } ?: "-" },
+        modifier = Modifier.padding(vertical = LIBRARY_GROUP_CORNER),
+        state = fastScroller,
     )
     }
 }
@@ -281,7 +294,7 @@ fun <T : Any> libraryFabActions(state: LibraryTabState<T>, activity: MainActivit
                     LibraryActions.playAll(activity, state.items as List<MediaItem>, queueTitle)
             })
             @Suppress("UNCHECKED_CAST")
-            add(LibraryFabAction(Icons.Outlined.Shuffle, 22.dp, iconOffsetX = -2.dp) {
+            add(LibraryFabAction(Icons.Outlined.Shuffle, 22.dp, iconOffsetX = (-4).dp) {
                 if (spec === LibraryTabSpec.Albums)
                     LibraryActions.shuffleAllAlbums(activity, state.items as List<Album>, queueTitle)
                 else
@@ -299,7 +312,7 @@ fun <T : Any> LibrarySortMenu(state: LibraryTabState<T>, expanded: Boolean, onDi
         val albumArtist by rememberPreference(LibraryTabSpec.Artists.ALBUM_ARTIST_PREF) {
             it.getBoolean(LibraryTabSpec.Artists.ALBUM_ARTIST_PREF, false)
         }
-        context.getString(R.string.album_artist) to albumArtist
+        stringResource(R.string.album_artist) to albumArtist
     } else null
     SortMenu(
         expanded = expanded,
@@ -315,7 +328,7 @@ fun <T : Any> LibrarySortMenu(state: LibraryTabState<T>, expanded: Boolean, onDi
         extraCheckbox = extraCheckbox,
         onExtraCheckbox = {
             val key = LibraryTabSpec.Artists.ALBUM_ARTIST_PREF
-            state.prefs.edit().putBoolean(key, !state.prefs.getBoolean(key, false)).apply()
+            state.prefs.edit { putBoolean(key, !state.prefs.getBoolean(key, false)) }
         },
     )
 }
@@ -330,9 +343,9 @@ fun libraryGridRowHeightPx(isGrid: Boolean, columns: Int): Int {
     val density = LocalDensity.current
     val padding = libraryContentPadding()
     val direction = LocalLayoutDirection.current
-    val config = LocalConfiguration.current
+    val windowWidthPx = LocalWindowInfo.current.containerSize.width
     return with(density) {
-        val width = config.screenWidthDp.dp.toPx() -
+        val width = windowWidthPx -
                 padding.calculateStartPadding(direction).toPx() -
                 padding.calculateEndPadding(direction).toPx() -
                 LIBRARY_ITEM_GAP.toPx() * (columns - 1)
@@ -340,6 +353,21 @@ fun libraryGridRowHeightPx(isGrid: Boolean, columns: Int): Int {
         (cover + GRID_CARD_MARGIN_TOP.toPx() + GRID_CARD_LABEL_HEIGHT.toPx() +
                 GRID_CARD_MARGIN_LABEL.toPx() * 2 + GRID_CARD_PADDING_BOTTOM.toPx()).roundToInt()
     }
+}
+
+/**
+ * Subtitle of a library item: its artist if the kind has one, otherwise its song count. Used by
+ * the tabs, their sheets and the detail page carousel.
+ */
+@Composable
+internal fun <T : Any> libraryItemSubtitle(state: LibraryTabState<T>, item: T): String {
+    val helper = state.spec.helper
+    return if (helper.canGetArtist())
+        helper.getArtist(item) ?: stringResource(R.string.unknown_artist)
+    else if (helper.canGetSize()) {
+        val s = helper.getSize(item)
+        pluralStringResource(R.plurals.songs, s, s)
+    } else "null"
 }
 
 @Composable
@@ -351,17 +379,14 @@ internal fun <T : Any> LibraryItem(
     layoutType: LayoutType,
     modifier: Modifier = Modifier,
     cardShape: ((emphasis: Float) -> Shape)? = null,
+    /** Shown in place of the cover on a list row. */
+    number: Int? = null,
 ) {
     val context = LocalContext.current
     val spec = state.spec
     val helper = spec.helper
     val title = state.titleOf(item) ?: spec.virtualTitleOf(context, item)
-    val subtitle = if (helper.canGetArtist())
-        helper.getArtist(item) ?: context.getString(R.string.unknown_artist)
-    else if (helper.canGetSize()) {
-        val s = helper.getSize(item)
-        context.resources.getQuantityString(R.plurals.songs, s, s)
-    } else "null"
+    val subtitle = libraryItemSubtitle(state, item)
     val cover = spec.coverOf(context, item)
     val defaultCover = spec.defaultCoverOf(item)
     val actions = spec.menuActions(item)
@@ -376,7 +401,7 @@ internal fun <T : Any> LibraryItem(
             onDismiss = { menuOpen = false },
             title = title,
             subtitle = subtitle,
-            category = context.getString(spec.tab.label),
+            category = stringResource(spec.tab.label),
             cover = cover,
             defaultCover = defaultCover,
             actions = actions,
@@ -397,10 +422,10 @@ internal fun <T : Any> LibraryItem(
         val trackCount = if (helper.canGetSize()) {
             if (helper.canGetArtist()) {
                 val s = helper.getSize(item)
-                context.resources.getQuantityString(R.plurals.songs, s, s)
+                pluralStringResource(R.plurals.songs, s, s)
             } else if (helper.canGetAlbumSize()) {
                 val s = helper.getAlbumSize(item)
-                context.resources.getQuantityString(R.plurals.albums, s, s)
+                pluralStringResource(R.plurals.albums, s, s)
             } else ""
         } else if (helper.canGetAlbumTitle()) {
             helper.getAlbumTitle(item) ?: "null"
@@ -430,6 +455,10 @@ internal fun <T : Any> LibraryItem(
             modifier = rowModifier,
             colors = colors,
             menu = menu,
+            number = number,
+            // Numbered lists are album or artist song lists, which show each song's duration.
+            trailing = if (number != null && item is MediaItem)
+                item.mediaMetadata.durationMs?.let { convertDurationToTimeStamp(it) } else null,
         )
     }
 }

@@ -69,16 +69,12 @@ import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
-import okio.buffer
-import okio.sink
 import org.akanework.gramophone.BuildConfig
 import org.akanework.gramophone.logic.utils.CoilArtPipeline
-import org.nift4.mediastorecompat.MediaStoreCompat
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileDescriptor
 import java.io.IOException
-import java.io.OutputStream
 import kotlin.time.Duration.Companion.milliseconds
 
 /**

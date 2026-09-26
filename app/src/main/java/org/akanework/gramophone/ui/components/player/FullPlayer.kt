@@ -17,7 +17,6 @@
 
 package org.akanework.gramophone.ui.components.player
 
-import android.view.View
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.graphics.ExperimentalAnimationGraphicsApi
@@ -68,7 +67,6 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -78,9 +76,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
@@ -90,10 +86,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidView
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.utils.CalculationUtils
-import org.akanework.gramophone.ui.components.LyricsView
+import org.akanework.gramophone.ui.components.lyrics.LyricsOverlay
+import org.akanework.gramophone.ui.components.lyrics.LyricsOverlayState
+import org.akanework.gramophone.ui.components.lyrics.LyricsPadding
 import org.akanework.gramophone.ui.components.compose.rememberBooleanPreference
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.LANDSCAPE_MARGIN
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.LANDSCAPE_TOP_BUTTON_SIZE
@@ -110,38 +107,35 @@ internal fun FullPlayerContent(
     player: PlayerSheetPlayerState,
     actions: FullPlayerActions,
     scheme: ColorScheme,
-    lyricsHostView: View,
+    lyrics: LyricsOverlayState,
     onOpenDialog: (PlayerDialog) -> Unit,
 ) {
     val p = state.progress
     val contentAlpha = expandedContentAlpha(p)
 
-    // TODO: Delete this part after lyricsView is compose component
+    // Fade out the player content once the lyrics fully cover it
     val lyricsCovering by player.lyricsCovering.collectAsState()
     val playerVisibility by animateFloatAsState(
         targetValue = if (lyricsCovering) 0f else 1f,
         animationSpec = tween(PlayerUtilities.LYRIC_COVER_FADE_MS),
         label = "player lyrics fade",
     )
-    LaunchedEffect(scheme, lyricsHostView) {
-        lyricsHostView.findViewById<LyricsView>(R.id.lyric_frame)?.let { lv ->
-            lv.setBackgroundColor(scheme.surface.toArgb())
-            lv.updateTextColor(
-                scheme.primary.copy(alpha = 0.30f).compositeOver(scheme.surface).toArgb(),
-                scheme.primary.toArgb(),
-                scheme.primary.copy(alpha = 0.784f).compositeOver(scheme.surface).toArgb(),
-            )
-        }
-    }
 
     Box(
         Modifier
             .absolute(metrics.sheetLeft, metrics.sheetTop, metrics.sheetWidth, metrics.sheetHeight)
             .clip(RoundedCornerShape(metrics.cornerDp)),
     ) {
-        // TODO: Remove after lyrics view becomes compose
-        AndroidView(
-            factory = { lyricsHostView },
+        // The lyrics fill the whole screen under the player, padded for the system bars
+        LyricsOverlay(
+            state = lyrics,
+            scheme = scheme,
+            padding = LyricsPadding(
+                left = metrics.leftInset.toInt(),
+                top = metrics.statusTop.toInt(),
+                right = metrics.rightInset.toInt(),
+                bottom = metrics.bottomInset.toInt(),
+            ),
             modifier = Modifier
                 .absoluteUnbounded(-metrics.sheetLeft, 0f, metrics.rootWidth, metrics.rootHeight)
                 .graphicsLayer { translationY = metrics.contentFollowTop - metrics.sheetTop },

@@ -1,7 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
     <!-- Translatable -->
-    <string name="home_menu_search">Suche</string>
     <string name="home_menu_settings">Einstellungen</string>
     <string name="home_menu_refresh">Aktualisieren</string>
     <string name="category_songs">Titel</string>
@@ -31,7 +30,6 @@
     <string name="unknown_playlist">Unbekannte Wiedergabeliste</string>
     <string name="settings_category_appearance">Aussehen</string>
     <string name="album_artist">Interpret des Albums</string>
-    <string name="unknown_version">Unbekannte Version</string>
     <string name="settings_version">Version</string>
     <string name="settings_category_behavior">Verhalten</string>
     <string name="unknown_album">Unbekanntes Album</string>
@@ -90,15 +88,11 @@
     <string name="settings_default_progress_bar">Standard-Fortschrittsbalken</string>
     <string name="settings_default_progress_bar_summary">Fortschrittsbalken im MD3-Stil aktivieren</string>
     <string name="dialog_mime">MIME-Typ</string>
-    <string name="now_playing">Aktuelle Wiedergabe</string>
     <string name="playlist_favourite">Lieblingssongs</string>
     <string name="no_lyric_found">Kein Liedtext gefunden</string>
     <string name="settings_player_ui">Abspieloberfläche</string>
-    <string name="settings_customization_summary">Anpassungsoptionen verwalten</string>
     <string name="settings_about_app">Über</string>
-    <string name="settings_library">Mediathek</string>
     <string name="settings_category_links">Links</string>
-    <string name="settings_library_summary">Mediathek verwalten</string>
     <string name="settings_player_options_summary">Ausgabequalität, Wiedergabeverhalten</string>
     <string name="unknown_title">Unbekannter Titel</string>
     <string name="settings_lyrics_center">Zentriert</string>
@@ -114,8 +108,6 @@
     <string name="settings_content_based_color">Inhaltsbasierte Farben</string>
     <string name="settings_content_based_color_summary">Albumbasierte Farbgenerierung aktivieren</string>
     <string name="album_cover">Albumcover</string>
-    <string name="dialog_edit_metadata">Bearbeiten</string>
-    <string name="dialog_lyrics">Liedtexte</string>
     <string name="settings_blacklist">Schwarze Liste</string>
     <string name="settings_blacklist_folder">Ordner auf schwarze Liste setzen</string>
     <string name="settings_blacklist_folder_summary">Titel aus bestimmten Ordnern filtern</string>
@@ -123,7 +115,6 @@
     <string name="deny_images"><![CDATA[Bitte die Berechtigung „Fotos und Videos“ verweigern]]></string>
     <string name="grant_images"><![CDATA[Bitte die Berechtigung „Fotos und Videos“ erteilen]]></string>
     <string name="settings_package_type">Pakettyp</string>
-    <string name="settings_customization">Anpassung</string>
     <string name="settings_title_bold_summary">Fett gedruckte Titel für den Vollbildmodus verwenden</string>
     <string name="settings_experimental_settings">Experimentell</string>
     <string name="settings_lyrics_configuration">Liedtext-Konfiguration</string>
@@ -138,7 +129,6 @@
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
     <string name="settings_crash_application">Anwendung abstürzen lassen</string>
     <string name="opensource_info">Open-Source unter GPL-3.0\nCopyright %s</string>
-    <string name="current_playlist">Aktuelle Wiedergabeliste</string>
     <string name="fgs_failed_title">Fehler beim Fortsetzen der Musikwiedergabe</string>
     <string name="share">Teilen</string>
     <string name="timer_expiry">Einschlaftimer wird Musik bei %s pausieren</string>
@@ -148,25 +138,13 @@
     <string name="fgs_failed_text">Klicke hier, um die App zu öffnen und die Wiedergabe fortzusetzen</string>
     <string name="fgs_failed_channel">Wiedergabe konnte nicht fortgesetzt werden</string>
     <string name="timer">Einschlaftimer</string>
-    <string name="scroll_to_albums">Zu den Alben scrollen</string>
-    <string name="position_slider">Positionsschieberegler</string>
     <string name="grant_audio"><![CDATA[Bitte die Berechtigung „Musik und Audio“ erteilen]]></string>
     <string name="tab_order">Tab-Reihenfolge konfigurieren</string>
     <string name="tab_order_summary">Die App zeigt beim Starten den ersten Tab an. Tabs nach der Trennlinie werden ausgeblendet.</string>
-    <string name="seekbar">Fortschrittsbalken</string>
-    <string name="divider">Trennlinie</string>
-    <string name="back">Zurück</string>
-    <string name="play_all">Alles abspielen</string>
-    <string name="sort">Sortieren</string>
     <string name="play">Wiedergabe</string>
     <string name="more">Mehr</string>
-    <string name="remove">Entfernen</string>
-    <string name="expand_less">Schließen</string>
-    <string name="skip_next">Zum Nächsten springen</string>
-    <string name="skip_previous">Zum Vorherigen springen</string>
     <string name="settings_preference_category_home">Startbildschirm</string>
     <string name="shuffle_all">Alles zufällig abspielen</string>
-    <string name="scroll_to_songs">Zu den Titeln scrollen</string>
     <string name="settings_lyrics_ui">Neue Liedtext-Benutzeroberfläche benutzen</string>
     <string name="settings_lyrics_ui_summary">Experimentelle Benutzeroberfläche, die Wort-für-Wort-Liedtexte mit erweiterten Funktionen anzeigen kann</string>
     <string name="settings_status_bar_lyrics_title">Liedtexte in der Statusleiste</string>
@@ -363,8 +341,6 @@
     <string name="spk_encoding_mpegh_sub_bl_l4">MPEG-H Baseline Profile L4</string>
     <string name="spk_encoding_mpegh_sub_lc_l4">MPEG-H Low Complexity L4</string>
     <string name="mix_port_flag_tts">TTS</string>
-    <string name="audio_signal_chain">Weg des Audiosignals</string>
-    <string name="audio_not_initialized">Das Audiowiedergabesystem ist noch nicht initialisiert. Versuch mal, etwas abzuspielen!</string>
     <string name="crash_report">Absturzbericht</string>
     <string name="email_clipboard">E-Mail-Adresse und Text wurden in die Zwischenablage kopiert</string>
     <string name="settings_export_logs">App-Protokolle exportieren</string>
@@ -378,7 +354,6 @@
     <string name="settings_translation_auto_word">Übersetzungen automatisch animieren</string>
     <string name="settings_translation_auto_word_summary">Linearen Farbverlauf auf übersetzte Verse bei der Wiedergabe wortsynchroner Liedtexte anwenden wenn die Übersetzungen keine wortsynchronen Metadaten haben</string>
     <string name="cannot_find_file">Datei kann nicht gefunden werden</string>
-    <string name="enter_msg_for_dev_here">Nachricht an den Entwickler hier eingeben</string>
     <string name="do_not_enter_email_enter_msg">Nachricht eingeben, keine E-Mail-Adresse</string>
     <string name="log_will_auto_send">Protokolle werden automatisch gesendet, erkläre stattdessen das Problem</string>
     <string name="log_attachment">Protokolle werden automatisch als Anhang gesendet</string>
@@ -422,7 +397,6 @@
         <item quantity="one">%d Ordner</item>
         <item quantity="other">%d Ordner</item>
     </plurals>
-    <string name="timer_expiry_eos">Der Sleep-Timer pausiert die Musik, wenn der Titel, der gerade abgespielt wird, bei %s endet</string>
     <string name="timer_expiry_end_of_this_song">Der Einschlaftimer pausiert die Musik am Ende dieses Titels</string>
     <string name="spk_encoding_pcm_20bit">20-bit PCM</string>
     <string name="spk_encoding_pcm_20bit_big_endian">20-bit PCM (big endian)</string>
@@ -435,14 +409,12 @@
     <string name="tempo_pitch_value">%s: %.2fx</string>
     <string name="reset">Zurücksetzen</string>
     <string name="forbidden_symbol_error">Ungültiges Zeichen im Namen</string>
-    <string name="translators">Übersetzer</string>
     <string name="settings_replaygain">ReplayGain</string>
     <string name="settings_replaygain_mode">Modus</string>
     <string name="duration_queue">Noch %s, %s insgesamt</string>
     <string name="clear_queue">Warteschlange leeren</string>
     <string name="contributors_saladnoober">Qualitätssicherung</string>
     <string name="discard">Verwerfen</string>
-    <string name="apply">Anwenden</string>
     <string name="restore_edits">Änderungen wiederherstellen?</string>
     <string name="discard_changes_title">Änderungen verwerfen?</string>
     <string name="save">Speichern</string>

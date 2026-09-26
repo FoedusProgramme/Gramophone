@@ -54,16 +54,18 @@ import androidx.media3.exoplayer.audio.DefaultAudioSink.AudioOffloadSupportProvi
 import androidx.media3.exoplayer.audio.DefaultAudioSink.AudioTrackBufferSizeProvider;
 import androidx.media3.exoplayer.audio.DefaultAudioSink.OutputMode;
 import androidx.media3.extractor.DtsUtil;
+
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
-import java.util.Objects;
 
 import org.akanework.gramophone.logic.utils.AudioFormatDetector;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 import org.nift4.gramophone.hificore.NativeTrack;
+
+import java.util.Objects;
 
 /** A default implementation of {@link AudioOutputProvider}. */
 public final class NativeTrackAudioOutputProvider implements AudioOutputProvider {

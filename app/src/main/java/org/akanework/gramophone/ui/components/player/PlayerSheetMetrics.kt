@@ -17,9 +17,7 @@
 
 package org.akanework.gramophone.ui.components.player
 
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
@@ -55,7 +53,6 @@ class PlayerSheetMetrics(
     val sheetWidth: Float,
     val sheetHeight: Float,
     val cornerDp: Dp,
-    val containerColor: Color,
     val artSize: Float,
     val artLeftRoot: Float,
     val artTopRoot: Float,
@@ -90,7 +87,6 @@ fun playerSheetMetrics(
     isWideLandscape: Boolean,
     pageCorner: Dp,
     density: Density,
-    collapsedContainerColor: Color,
     expandedArtCorner: Dp = EXPANDED_ART_CORNER,
 ): PlayerSheetMetrics {
     val clamped = progress.coerceIn(0f, 1f) // Sanitize
@@ -164,7 +160,6 @@ fun playerSheetMetrics(
         sheetWidth = rootWidth - sheetLeftPx - sheetRightPx,
         sheetHeight = sheetBottom - sheetTop,
         cornerDp = cornerDp,
-        containerColor = lerp(collapsedContainerColor, MaterialTheme.colorScheme.surface, clamped),
         artSize = artSize,
         artLeftRoot = centerX - artSize / 2f,
         artTopRoot = centerY - artSize / 2f,

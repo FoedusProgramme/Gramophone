@@ -18,6 +18,7 @@
 package org.akanework.gramophone.logic.utils.exoplayer
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.media3.common.C
 import androidx.media3.common.DeviceInfo
@@ -27,19 +28,18 @@ import androidx.media3.common.PlaybackParameters
 import androidx.media3.common.Player
 import androidx.media3.common.util.Log
 import androidx.media3.exoplayer.ExoPlayer
-import android.content.SharedPreferences
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import org.akanework.gramophone.BuildConfig
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.MultiQueueObject
 import org.akanework.gramophone.logic.QueueBoard
+import org.akanework.gramophone.logic.getBooleanStrict
 import org.akanework.gramophone.logic.parseQueueTitle
 import org.akanework.gramophone.logic.utils.CircularShuffleOrder
 import org.akanework.gramophone.logic.utils.Flags
 import org.akanework.gramophone.logic.utils.SemanticLyrics
 import org.json.JSONObject
-import org.akanework.gramophone.logic.getBooleanStrict
 import uk.akane.libphonograph.items.EXTRA_HD_ARTWORK_URI
 import uk.akane.libphonograph.items.hdArtworkUri
 import java.util.Objects

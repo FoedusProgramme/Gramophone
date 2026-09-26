@@ -41,8 +41,6 @@
     <string name="home_menu_equalizer">Equalitzador</string>
     <string name="check_for_updates">Consulteu les actualitzacions al nostre canal!</string>
     <string name="playlist_favourite">Preferides</string>
-    <string name="now_playing">Ara s\'està reproduint</string>
-    <string name="home_menu_search">Cerca</string>
     <string name="home_menu_refresh">Actualitza</string>
     <string name="category_albums">Àlbums</string>
     <string name="unknown_artist">Artista desconegut</string>
@@ -68,7 +66,6 @@
     <string name="go_to_album">Ves a l\'àlbum</string>
     <string name="unknown_playlist">Llista de reproducció desconeguda</string>
     <string name="play_next">Reprodueix la següent</string>
-    <string name="unknown_version">Versió desconeguda</string>
     <string name="settings_category_behavior">Comportament</string>
     <string name="settings_mediastore_filter">Durada mínima de les cançons (segons)</string>
     <string name="settings_repository">Repositori</string>
@@ -101,7 +98,6 @@
     <string name="settings_about_gramophone">Quant a l\'aplicació</string>
     <string name="settings_behavior_summary">Filtres, comportaments de llançament</string>
     <string name="settings_category_links">Enllaços</string>
-    <string name="settings_library">Biblioteca</string>
     <string name="settings_title_bold">Títols en negreta</string>
     <string name="settings_color_accuracy_summary">Fes que la generació de color sigui precisa</string>
     <string name="settings_experimental_settings_summary">Funcionalitats de prova, miscel·lània</string>
@@ -119,7 +115,6 @@
     <string name="settings_play_on_launch_summary">Reprodueix música en el llançament</string>
     <string name="settings_crash_application">Aplicació de fallades</string>
     <string name="album_cover">Caràtules d\'àlbums</string>
-    <string name="dialog_edit_metadata">Edita</string>
     <string name="delete_failed">Ha fallat en suprimir la cançó: %s</string>
     <string name="album_covers_enhance">Càrrega millorada de les caràtules d\'àlbums</string>
     <string name="deny_images"><![CDATA[Denegueu el permís \"Fotos i vídeos\"]]></string>
@@ -129,22 +124,11 @@
     <string name="fgs_failed_title">Ha fallat en reprendre la reproducció de música</string>
     <string name="fgs_failed_text">Feu clic aquí per obrir l\'aplicació i continuar la reproducció</string>
     <string name="settings_preference_category_home">Pantalla d\'inici</string>
-    <string name="seekbar">Barra de cerca</string>
     <string name="tab_order_summary">L’aplicació mostrarà la primera pestanya en iniciar. Les pestanyes després del separador s\'amagaran.</string>
-    <string name="divider">Separador</string>
-    <string name="back">Enrere</string>
-    <string name="play_all">Reprodueix-ho tot</string>
     <string name="shuffle_all">Barreja-ho tot</string>
-    <string name="scroll_to_songs">Desplaça\'t a les cançons</string>
     <string name="play">Reprodueix</string>
     <string name="more">Més</string>
-    <string name="expand_less">Tanca</string>
-    <string name="skip_previous">Salta a l\'anterior</string>
-    <string name="position_slider">Posició del control lliscant</string>
-    <string name="settings_customization">Personalització</string>
     <string name="settings_player_options">Àudio</string>
-    <string name="settings_library_summary">Gestió de la biblioteca multimèdia</string>
-    <string name="settings_customization_summary">Gestió de les opcions de personalització</string>
     <string name="settings_player_options_summary">Qualitat de la sortida, comportament de la reproducció</string>
     <string name="settings_album_round_corner">Cantonades arrodonides dels àlbums</string>
     <string name="settings_title_bold_summary">Utilitza el títol en negreta al reproductor complet</string>
@@ -158,19 +142,13 @@
     <string name="settings_category_full_player">Reproductor complet</string>
     <string name="settings_category_filters">Filtres</string>
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
-    <string name="dialog_lyrics">Lletres</string>
     <string name="album_covers_enhance_desc">Mostra caràtules de cançons d\'alta qualitat i permet que l\'àlbum i la caràtula de la cançó difereixin (requereix accés a les fotos)</string>
     <string name="timer">Temporitzador per a adormir-se</string>
     <string name="grant_images"><![CDATA[Atorgueu el permís \"Fotos i vídeos\"]]></string>
-    <string name="current_playlist">Llista de reproducció actual</string>
     <string name="sort_by_release_date">Data de publicació</string>
     <string name="fgs_failed_channel">La reproducció ha fallat en reprendre</string>
     <string name="timer_expiry">El temporitzador per a adormir-se farà pausa de la música a les %s</string>
     <string name="tab_order">Configuració de l\'ordre de les pestanyes</string>
-    <string name="sort">Ordena</string>
-    <string name="scroll_to_albums">Desplaça\'t als àlbums</string>
-    <string name="remove">Elimina</string>
-    <string name="skip_next">Salta al següent</string>
     <string name="settings_lyrics_ui">Activa la interfície d\'usuari nova de lletres</string>
     <string name="settings_lyrics_ui_summary">IU experimental per a mostrar la lletra paraula a paraula amb funcions avançades</string>
     <string name="settings_status_bar_lyrics_title">Lletres a la barra d\'estat</string>
@@ -284,8 +262,6 @@
     <string name="send_email">Envia un correu electrònic</string>
     <string name="send_email_manually">Envieu el registre a nift4@posteo.net, no s\'ha pogut trobar cap aplicació de correu</string>
     <string name="failed_to_parse_lyric">Ha fallat en analitzar la lletra</string>
-    <string name="audio_not_initialized">El sistema de reproducció d\'àudio no està inicialitzat. Intenteu reproduir alguna cosa!</string>
-    <string name="audio_signal_chain">Cadena del senyal d\'àudio</string>
     <string name="mix_port_flag_ultrasound">Ultrasó</string>
     <string name="mix_port_flag_spatializer">Espaiador</string>
     <string name="mix_port_flag_gapless_offload">Descàrrega sense separacions</string>
@@ -388,7 +364,6 @@
     <string name="settings_translation_auto_word">Traduccions animades automàticament</string>
     <string name="settings_translation_auto_word_summary">Aplica un degradat lineal a les línies de traducció en la reproducció de lletres sincronitzada de paraules si les traduccions no tenen metadades de sincronització de paraules</string>
     <string name="cannot_find_file">No s\'ha pogut trobar aquest fitxer</string>
-    <string name="enter_msg_for_dev_here">Introduïu aquí un missatge per al desenvolupador</string>
     <string name="log_will_auto_send">Els registres s\'enviaran automàticament, expliqueu el problema</string>
     <string name="do_not_enter_email_enter_msg">Introduïu un missatge, no una adreça de correu</string>
     <string name="log_attachment">Els registres s\'enviaran automàticament com a adjunts</string>
@@ -426,7 +401,6 @@
     <string name="settings_telegram">Telegram</string>
     <string name="spk_encoding_pcm_20bit">PCM de 20 bits</string>
     <string name="spk_encoding_pcm_20bit_big_endian">PCM de 20 bits (endian gran)</string>
-    <string name="timer_expiry_eos">El temporitzador per a adormir-se farà pausa de la música quan acabi la reproducció de la cançó a les %s</string>
     <string name="timer_expiry_end_of_this_song">El temporitzador per a adormir-se farà pausa de la música al final d\'aquesta cançó</string>
     <plurals name="folders_plural">
         <item quantity="one">%d carpeta</item>
@@ -443,7 +417,6 @@
     <string name="sort_by_album_year">Any de l\'àlbum</string>
     <string name="sort_by_album_artist_year"><![CDATA[Artista de l\'àlbum -> any]]></string>
     <string name="forbidden_symbol_error">Caràcter no vàlid en el nom</string>
-    <string name="translators">Traductors</string>
     <string name="settings_replaygain">ReplayGain</string>
     <string name="settings_replaygain_mode">Mode</string>
     <string name="settings_replaygain_preamp">Preamplificador</string>
@@ -489,7 +462,6 @@
     <string name="save">Desa</string>
     <string name="discard">Descarta</string>
     <string name="discard_changes_msg">Voleu descartar els canvis a la llista de reproducció \"%s\"?</string>
-    <string name="apply">Aplica</string>
     <string name="restore_edits">Restauro els canvis?</string>
     <string name="restore_edits_msg">Hi ha canvis sense desar a la llista de reproducció «%s». Voleu restaurar aquests canvis o descartar-los i començar de nou amb una versió nova de la llista de reproducció?</string>
     <string name="restore">Restaura</string>

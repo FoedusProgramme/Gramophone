@@ -17,6 +17,17 @@
 
 package org.akanework.gramophone.ui.components.home
 
+import androidx.compose.foundation.basicMarquee
+import androidx.compose.foundation.layout.Box
+import androidx.compose.animation.togetherWith
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.LazyGridState
@@ -28,6 +39,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.onSizeChanged
@@ -51,6 +63,14 @@ private val LARGE_TITLE_BOTTOM_GAP = 8.dp
 private val LARGE_TITLE_MARGIN_START = 24.dp
 private val LARGE_TITLE_MARGIN_END = 16.dp
 private val LARGE_TITLE_SIZE = 32.sp // textAppearanceHeadlineLarge
+private val LARGE_TITLE_SUBTITLE_SIZE = 18.sp
+private val LARGE_TITLE_SUBTITLE_GAP = 2.dp
+
+/** Fade-through timings when the title changes to another entry. */
+private const val TITLE_FADE_OUT_MS = 90
+private const val TITLE_FADE_IN_MS = 210
+
+private data class LargeTitleText(val key: Any, val title: String, val subtitle: String?)
 
 /** How far the large title travels under the toolbar before the toolbar's own is fully in. */
 private val TITLE_FADE_SPAN = 48.dp
@@ -96,20 +116,26 @@ fun Density.barTitleAlpha(scrolled: Float, titleTopGap: Dp = LARGE_TITLE_TOP_GAP
     ((scrolled - titleTopGap.toPx()) / TITLE_FADE_SPAN.toPx()).coerceIn(0f, 1f)
 
 /**
- * How far a grid whose first item is the [LargeTitle] has moved from rest, in px: positive once
- * scrolled up, negative while the rubber band holds it pulled down. The grid only reports the
- * offset while the title item is in the viewport, which with [contentTopPx] of padding above it
- * is until it has travelled its own height plus that padding. The value is capped there, so it
- * stays continuous when the grid moves on to the next item.
+ * Scroll offset of the grid's [LargeTitle] item relative to the bottom of the toolbar, in px.
+ * Positive once the title is under the toolbar, negative while it is below it or overscrolled.
+ * The offset is only known while the title or the item above it is visible. Otherwise the capped
+ * value is returned, so the result stays continuous. [titleIndex] is the title's index in the
+ * grid and [leadingPx] the height of the content above it.
  */
 fun largeTitleScroll(
     grid: LazyGridState,
     overscroll: IosOverscrollState,
     state: LargeTitleState,
     contentTopPx: Float,
+    titleIndex: Int = 0,
+    leadingPx: Float = 0f,
 ): Float {
     val limit = state.itemHeight + contentTopPx
-    val scrolled = if (grid.firstVisibleItemIndex == 0) grid.firstVisibleItemScrollOffset.toFloat() else limit
+    val scrolled = when (grid.firstVisibleItemIndex) {
+        titleIndex -> grid.firstVisibleItemScrollOffset.toFloat()
+        titleIndex - 1 -> grid.firstVisibleItemScrollOffset.toFloat() - leadingPx
+        else -> limit
+    }
     return (scrolled - overscroll.offset).coerceAtMost(limit)
 }
 
@@ -117,7 +143,8 @@ fun largeTitleScroll(
  * The large title, as the first (full span) item of a page's grid. [gutter] is the grid's own
  * side padding, taken off the margin so the title stays on the 24dp line in grid layouts.
  * [bottomSpacer] leaves room below the title for a row drawn over the content, such as the
- * home's tab row, which then scrolls as if it were part of this item.
+ * home's tab row, which then scrolls as if it were part of this item. [subtitle] is an optional
+ * smaller second line. [trailing] is placed after the title and scrolls and fades with it.
  */
 @Composable
 fun LargeTitle(
@@ -128,18 +155,25 @@ fun LargeTitle(
     maxLines: Int = 1,
     gutter: Dp = 0.dp,
     bottomSpacer: Dp = 0.dp,
+    subtitle: String? = null,
     /** The text style. */
     style: TextStyle = textViewStyle(LARGE_TITLE_SIZE, 400, MaterialTheme.colorScheme.onSurface)
         .copy(platformStyle = PlatformTextStyle(includeFontPadding = false)),
     topGap: Dp = LARGE_TITLE_TOP_GAP,
     bottomGap: Dp = LARGE_TITLE_BOTTOM_GAP,
+    trailing: (@Composable RowScope.() -> Unit)? = null,
+    /**
+     * Key for the text. A new key cross-fades the text. Changes under the same key, or a null
+     * key, are applied without animation.
+     */
+    contentKey: Any? = null,
+    /** Single-line title and subtitle with a marquee when they overflow. */
+    marquee: Boolean = false,
 ) {
-    BasicText(
-        text = title,
-        style = style,
-        maxLines = maxLines,
-        overflow = TextOverflow.Ellipsis,
-        modifier = modifier
+    val lineModifier = if (marquee) Modifier.fillMaxWidth().basicMarquee() else Modifier.fillMaxWidth()
+    val overflow = if (marquee) TextOverflow.Clip else TextOverflow.Ellipsis
+    Row(
+        modifier
             .fillMaxWidth()
             .onSizeChanged { state.itemHeight = it.height.toFloat() }
             .padding(
@@ -149,5 +183,49 @@ fun LargeTitle(
                 bottom = bottomGap + bottomSpacer,
             )
             .graphicsLayer { alpha = 1f - barTitleAlpha(scrolled(), topGap) },
-    )
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        @Composable
+        fun Texts(title: String, subtitle: String?) = Column(Modifier.fillMaxWidth()) {
+            BasicText(
+                text = title,
+                style = style,
+                maxLines = if (marquee) 1 else maxLines,
+                overflow = overflow,
+                softWrap = !marquee,
+                modifier = lineModifier,
+            )
+            if (subtitle != null) {
+                BasicText(
+                    text = subtitle,
+                    style = textViewStyle(
+                        LARGE_TITLE_SUBTITLE_SIZE, 400, MaterialTheme.colorScheme.onSurfaceVariant
+                    ).copy(platformStyle = PlatformTextStyle(includeFontPadding = false)),
+                    maxLines = 1,
+                    overflow = overflow,
+                    softWrap = !marquee,
+                    modifier = Modifier
+                        .padding(top = LARGE_TITLE_SUBTITLE_GAP)
+                        .then(lineModifier),
+                )
+            }
+        }
+        if (contentKey == null) {
+            Box(Modifier.weight(1f)) { Texts(title, subtitle) }
+        } else {
+            AnimatedContent(
+                targetState = LargeTitleText(contentKey, title, subtitle),
+                contentKey = { it.key },
+                transitionSpec = {
+                    (fadeIn(tween(TITLE_FADE_IN_MS, delayMillis = TITLE_FADE_OUT_MS)) togetherWith
+                            fadeOut(tween(TITLE_FADE_OUT_MS)))
+                        .using(SizeTransform(clip = false))
+                },
+                contentAlignment = Alignment.CenterStart,
+                modifier = Modifier.weight(1f),
+                label = "large title",
+            ) { Texts(it.title, it.subtitle) }
+        }
+        trailing?.invoke(this)
+    }
 }

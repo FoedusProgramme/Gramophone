@@ -72,7 +72,7 @@ object LibraryActions {
         mediaController.prepare()
         mediaController.play()
         if (currentItem?.mediaId == songs[position].mediaId) {
-            activity.playerBottomSheet.open()
+            activity.playerSheet.open()
         }
     }
 

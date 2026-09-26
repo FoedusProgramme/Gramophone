@@ -58,7 +58,7 @@ import org.akanework.gramophone.ui.nav.OssLicensesKey
 
 private const val REPOSITORY_URL = "https://github.com/FoedusProgramme/Gramophone"
 private const val TELEGRAM_URL = "https://t.me/FoedusProgramme"
-private const val COPYRIGHT = "\u00A9 2023-2026 AkaneTan, nift4 and contributors"
+private const val COPYRIGHT = "\u00A9 2023-2026 United Software"
 
 private val LICENSE_NOTICE = """
     Copyright (C) 2023-2024 AkaneTan

@@ -85,11 +85,6 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.akanework.gramophone.R
-import org.akanework.gramophone.logic.utils.ReplayGainAudioProcessor
-import org.akanework.gramophone.logic.utils.exoplayer.GramophoneExtractorsFactory
-import org.akanework.gramophone.logic.utils.exoplayer.GramophoneMediaSourceFactory
-import org.akanework.gramophone.logic.utils.exoplayer.GramophoneRenderFactory
-import org.akanework.gramophone.logic.getBooleanStrict
 import org.akanework.gramophone.logic.getStringStrict
 import org.akanework.gramophone.logic.hasAudioPermission
 import org.akanework.gramophone.logic.hasScopedStorageV1
@@ -99,6 +94,10 @@ import org.akanework.gramophone.logic.playOrPause
 import org.akanework.gramophone.logic.ui.BaseActivity
 import org.akanework.gramophone.logic.utils.CalculationUtils.convertDurationToTimeStamp
 import org.akanework.gramophone.logic.utils.Flags
+import org.akanework.gramophone.logic.utils.ReplayGainAudioProcessor
+import org.akanework.gramophone.logic.utils.exoplayer.GramophoneExtractorsFactory
+import org.akanework.gramophone.logic.utils.exoplayer.GramophoneMediaSourceFactory
+import org.akanework.gramophone.logic.utils.exoplayer.GramophoneRenderFactory
 import org.akanework.gramophone.ui.components.compose.rememberBooleanPreference
 import org.akanework.gramophone.ui.components.home.LibraryCover
 import org.akanework.gramophone.ui.components.home.rememberDefaultCoverPainter

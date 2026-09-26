@@ -5,8 +5,6 @@
     <drawable name="artist_art">@drawable/ic_groups</drawable>
     <drawable name="genres_art">@drawable/ic_genres</drawable>
     <drawable name="dates_art">@drawable/ic_schedule</drawable>
-    <drawable name="pause_anim">@drawable/ic_media_pause_anim</drawable>
-    <drawable name="play_anim">@drawable/ic_media_play_anim</drawable>
 
     <!-- Media3 -->
     <drawable name="media3_notification_play" tools:keep="@drawable/media3_notification_play">

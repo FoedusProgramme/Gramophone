@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-    <string name="home_menu_search">検索</string>
     <string name="home_menu_settings">設定</string>
     <string name="home_menu_refresh">更新</string>
     <string name="home_menu_equalizer">イコライザー</string>
@@ -14,12 +13,12 @@
     <string name="unknown_album">不明なアルバム</string>
     <string name="unknown_genre">不明なジャンル</string>
     <string name="unknown_year">不明な年</string>
-    <string name="unknown_version">不明なバージョン</string>
     <string name="unknown_playlist">不明なプレイリスト</string>
     <string name="equalizer_not_found">イコライザーがありません！</string>
     <plurals name="songs">
         <item quantity="other">%d 個の曲</item>
     </plurals>
+    <string name="songs_total_duration">%1$s、%2$s</string>
     <plurals name="albums">
         <item quantity="other">%d 個のアルバム</item>
     </plurals>
@@ -72,7 +71,6 @@
     <string name="settings_default_progress_bar">プログレスバー</string>
     <string name="opensource_info">Open-sourced under GPL-3.0 \nCopyright %s</string>
     <string name="settings_default_progress_bar_summary">マテリアルスタイルのプログレスバーを有効化します</string>
-    <string name="now_playing">再生中</string>
     <string name="settings_content_based_color">コンテンツベースのカラー生成</string>
     <string name="settings_content_based_color_summary">アルバムアートをベースとしたカラー生成を有効化します</string>
     <string name="settings_package_type">パッケージのタイプ</string>
@@ -83,14 +81,10 @@
     <string name="dialog_mime">MIME タイプ</string>
     <string name="dialog_duration">再生時間</string>
     <string name="settings_category_links">リンク</string>
-    <string name="settings_library">ライブラリ</string>
-    <string name="settings_customization">カスタマイズ</string>
     <string name="settings_album_round_corner">アルバムの角の丸み</string>
-    <string name="settings_library_summary">メディアライブラリの管理</string>
     <string name="settings_player_ui">プレーヤーの UI</string>
     <string name="settings_behavior_summary">フィルターと起動時の動作を設定します</string>
     <string name="settings_about_gramophone">アプリについて</string>
-    <string name="settings_customization_summary">カスタマイズオプションの管理</string>
     <string name="settings_title_center">タイトルを中央揃えにする</string>
     <string name="settings_about_app">アプリの情報</string>
     <string name="settings_player_ui_summary">フルプレーヤーの UI と歌詞を設定します</string>
@@ -127,13 +121,10 @@
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
     <string name="settings_crash_application">アプリをクラッシュさせる</string>
     <string name="album_cover">アルバムカバー</string>
-    <string name="dialog_edit_metadata">編集</string>
-    <string name="dialog_lyrics">歌詞</string>
     <string name="deny_images"><![CDATA[「写真と動画」の権限を拒否してください]]></string>
     <string name="grant_images"><![CDATA[「写真と動画」の権限を許可してください]]></string>
     <string name="crash_clipboard">クラッシュログをクリップボードにコピー</string>
     <string name="settings_trim_lyrics">歌詞の空白を削除する</string>
-    <string name="current_playlist">現在のプレイリスト</string>
     <string name="timer">スリープタイマー</string>
     <string name="fgs_failed_title">音楽の再生を再開できませんでした</string>
     <string name="fgs_failed_text">アプリを開いて再生を続行するにはここをタップしてください</string>
@@ -146,21 +137,9 @@
     <string name="grant_audio"><![CDATA[「音楽とオーディオ」の権限を許可してください]]></string>
     <string name="settings_preference_category_home">ホーム画面</string>
     <string name="tab_order">タブの順序を設定する</string>
-    <string name="seekbar">シークバー</string>
-    <string name="divider">区切り線</string>
-    <string name="back">戻る</string>
-    <string name="play_all">すべて再生</string>
     <string name="shuffle_all">すべてシャッフル</string>
-    <string name="sort">ソート</string>
-    <string name="scroll_to_albums">アルバムへスクロール</string>
     <string name="play">再生</string>
     <string name="more">詳細</string>
-    <string name="remove">削除</string>
-    <string name="skip_next">次へスキップ</string>
-    <string name="expand_less">閉じる</string>
-    <string name="skip_previous">前へスキップ</string>
-    <string name="position_slider">スライダーの位置</string>
-    <string name="scroll_to_songs">曲までスクロール</string>
     <string name="tab_order_summary">起動時に表示するタブを設定します。区切り線以降のタブは非表示になります。</string>
     <string name="settings_lyrics_ui">新しい歌詞 UI を有効化する</string>
     <string name="settings_lyrics_ui_summary">高度な機能を備えた歌詞を単語ごとに表示する試験的な UI です</string>
@@ -286,7 +265,6 @@
     <string name="mix_port_flag_hw_av_sync">ハードウェア A/V 同期</string>
     <string name="mix_port_flag_deep_buffer">ディープバッファ</string>
     <string name="spk_encoding_pcm_8_24bit">24 ビット (8.24) PCM</string>
-    <string name="audio_signal_chain">オーディオ信号チェーン</string>
     <string name="mix_port_flag_ultrasound">超音波</string>
     <string name="mix_port_flag_spatializer">スペーシャライザー</string>
     <string name="mix_port_flag_incall_music">通話中の音楽</string>
@@ -365,7 +343,6 @@
     <string name="spk_encoding_amr_wb_plus">AMR-WB+</string>
     <string name="spk_encoding_dts_uhd">DTS-UHD</string>
     <string name="spk_encoding_aac_ld">AAC-LD</string>
-    <string name="audio_not_initialized">オーディオ再生システムが初期化されていません。何か音楽を再生してください！</string>
     <string name="crash_report">クラッシュレポート</string>
     <string name="email_clipboard">メールアドレスとテキストをクリップボードにコピーしました</string>
     <string name="settings_export_logs">アプリのログをエクスポート</string>
@@ -383,7 +360,6 @@
     <string name="do_not_enter_email_enter_msg">メールアドレスではなくメッセージを入力してください</string>
     <string name="create_playlist">プレイリストを作成…</string>
     <string name="rename">名前を変更</string>
-    <string name="enter_msg_for_dev_here">ここに開発者へのメッセージを入力してください</string>
     <string name="log_will_auto_send">ログは自動送信されます、問題の説明をお願いします</string>
     <string name="did_you_know">ご存じですか…</string>
     <string name="playlist_name">プレイリスト名</string>
@@ -414,7 +390,6 @@
     <string name="offload_enabled_if_gapless">ギャップレス再生が可能な場合に有効化されます</string>
     <string name="settings_audio_offload">オーディオオフロード (バッテリーを節約)</string>
     <string name="settings_telegram">Telegram</string>
-    <string name="timer_expiry_eos">スリープタイマーは %s で再生中の曲が終了すると音楽を一時停止します</string>
     <string name="timer_expiry_end_of_this_song">スリープタイマーは、この曲の再生を終了後に音楽を一時停止します</string>
     <string name="spk_encoding_pcm_20bit">20 ビット PCM</string>
     <string name="spk_encoding_pcm_20bit_big_endian">20 ビット PCM (ビッグエンディアン)</string>
@@ -430,7 +405,6 @@
     <string name="sort_by_album_year">アルバムの年</string>
     <string name="sort_by_album_artist_year"><![CDATA[アルバムアーティスト -> 年]]></string>
     <string name="forbidden_symbol_error">名前に無効な文字が含まれています</string>
-    <string name="translators">翻訳者</string>
     <string name="settings_replaygain">リプレイゲイン</string>
     <string name="settings_replaygain_mode">モード</string>
     <string name="settings_replaygain_preamp">プリアンプ</string>

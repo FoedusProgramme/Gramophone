@@ -78,23 +78,23 @@ import kotlinx.coroutines.withContext
 import org.akanework.gramophone.R
 import org.akanework.gramophone.ui.MainActivity
 import org.akanework.gramophone.ui.actions.findMainActivity
-import org.akanework.gramophone.ui.components.compose.rememberReorderableListState
 import org.akanework.gramophone.ui.components.compose.DismissibleRow
+import org.akanework.gramophone.ui.components.compose.rememberReorderableListState
 import org.akanework.gramophone.ui.components.compose.reorderHandle
 import org.akanework.gramophone.ui.components.compose.reorderableRow
 import org.akanework.gramophone.ui.components.home.EditableSongRow
 import org.akanework.gramophone.ui.components.home.GLASS_BAR_HEIGHT
 import org.akanework.gramophone.ui.components.home.GlassTitleBar
 import org.akanework.gramophone.ui.components.home.LibraryIconButton
-import org.akanework.gramophone.ui.components.home.libraryItemCard
 import org.akanework.gramophone.ui.components.home.libraryCellShape
+import org.akanework.gramophone.ui.components.home.libraryItemCard
 import org.nift4.mediastorecompat.MediaStoreCompat
 import uk.akane.libphonograph.dynamicitem.Favorite
-import uk.akane.libphonograph.toUriCompat
 import uk.akane.libphonograph.items.Playlist
 import uk.akane.libphonograph.manipulator.ItemManipulator
 import uk.akane.libphonograph.manipulator.PlaylistSerializer
 import uk.akane.libphonograph.reader.Reader
+import uk.akane.libphonograph.toUriCompat
 import java.io.File
 import java.io.IOException
 import java.nio.file.Files
@@ -475,7 +475,7 @@ fun PlaylistEditScreen(playlistId: Long, onBack: () -> Unit, modifier: Modifier 
                     val item = row.item
                     DismissibleRow(
                         onDismissed = { state.remove(index) },
-                        modifier = reorderableRow(reorder, index),
+                        modifier = Modifier.reorderableRow(this, reorder, index),
                     ) {
                         EditableSongRow(
                             title = item.mediaMetadata.title?.toString().orEmpty(),

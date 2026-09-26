@@ -65,7 +65,7 @@ fun BlacklistScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
                 stringResource(R.string.settings_whitelist),
             ),
             selectedTab = selectedTab,
-            offsetFraction = 0f,
+            offsetFraction = { 0f },
             onTabClick = { selectedTab = it },
         )
         Spacer(Modifier.height(8.dp))

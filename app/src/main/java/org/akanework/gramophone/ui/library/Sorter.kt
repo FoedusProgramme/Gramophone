@@ -443,7 +443,8 @@ class Sorter<T>(
             }
 
             Type.None -> null
-        }?.ifEmpty { null }?.uppercase()
+            // A blank hint (e.g. an artist name of only spaces) is treated as no hint.
+        }?.takeIf { it.isNotBlank() }?.uppercase()
     }
 
     abstract class HintedComparator<T>(val type: Type) : Comparator<T>

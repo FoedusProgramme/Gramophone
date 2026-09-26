@@ -64,7 +64,6 @@
     <string name="follow_system">Sistema</string>
     <string name="list">Lista</string>
     <string name="search">Buscar</string>
-    <string name="now_playing">Reproduciendo</string>
     <string name="grid">Cuadrícula</string>
     <plurals name="songs">
         <item quantity="one">%d Canción</item>
@@ -80,11 +79,9 @@
     <string name="settings_package_type">Tipo de paquete</string>
     <string name="go_to_artist">Ir al artista</string>
     <string name="unknown_year">Año desconocido</string>
-    <string name="home_menu_search">Buscar</string>
     <string name="no_lyric_found">Letra no encontrada</string>
     <string name="layout">Mostrar</string>
     <string name="play_next">Reproducir la siguiente</string>
-    <string name="unknown_version">Versión desconocida</string>
     <string name="unknown_artist">Artista desconocido</string>
     <string name="repeat_mode">Modo de repetición</string>
     <string name="unknown_title">Título desconocido</string>
@@ -108,12 +105,9 @@
     <string name="settings_behavior_summary">Filtros, comportamiento de inicio</string>
     <string name="settings_lyrics_configuration_summary">Configurar la apariencia de las letras</string>
     <string name="settings_experimental_settings_summary">Funciones de prueba, varios</string>
-    <string name="settings_customization">Personalización</string>
     <string name="settings_blacklist">Lista negra</string>
     <string name="settings_lyrics_configuration">Configuración de las letras</string>
-    <string name="settings_library_summary">Administrar la biblioteca multimedia</string>
     <string name="sort_by_modified_date">Fecha de modificación</string>
-    <string name="settings_customization_summary">Gestionar las opciones de personalización</string>
     <string name="settings_play_on_launch_summary">Reproducir la música al iniciar</string>
     <string name="settings_player_ui_summary">Interfaz del reproductor completo y letras</string>
     <string name="settings_lyrics_center_summary">Centrar las letras de las canciones</string>
@@ -123,7 +117,6 @@
     <string name="settings_category_links">Enlaces</string>
     <string name="settings_color_accuracy_summary">Generar colores precisos</string>
     <string name="settings_player_options_summary">Calidad de salida, comportamiento de reproducción</string>
-    <string name="settings_library">Biblioteca</string>
     <string name="settings_lyrics_bold_summary">Utilice un tipo de fuente más grueso para la letra</string>
     <string name="settings_blacklist_folder">Lista negra de carpetas</string>
     <string name="settings_blacklist_folder_summary">Filtrar canciones de determinadas carpetas</string>
@@ -133,8 +126,6 @@
     <string name="settings_crash_application">La aplicación falló</string>
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
     <string name="album_cover">Portada del álbum</string>
-    <string name="dialog_edit_metadata">Editar</string>
-    <string name="dialog_lyrics">Letras</string>
     <string name="settings_category_filters">Filtros</string>
     <string name="settings_category_misc">Varias</string>
     <string name="settings_category_full_player">Pantalla de reproducción</string>
@@ -143,7 +134,6 @@
     <string name="settings_trim_lyrics">Eliminar los espacios alrededor de las letras</string>
     <string name="crash_clipboard">Registro de fallos copiado al portapapeles</string>
     <string name="timer">Temporizador</string>
-    <string name="current_playlist">Lista de reproducción actual</string>
     <string name="fgs_failed_text">Haga clic aquí para abrir la aplicación y continuar la reproducción</string>
     <string name="fgs_failed_channel">No se puede reanudar la reproducción</string>
     <string name="fgs_failed_title">Error al reanudar la reproducción de música</string>
@@ -153,24 +143,12 @@
     <string name="sort_by_release_date">Fecha de lanzamiento</string>
     <string name="timer_expiry">El temporizador de apagado pausará la música en %s</string>
     <string name="grant_audio"><![CDATA[Por favor, permite los permisos Música y audio]]></string>
-    <string name="seekbar">Barra de búsqueda</string>
-    <string name="divider">Divisor</string>
-    <string name="back">Atrás</string>
-    <string name="play_all">Reproducir todo</string>
-    <string name="sort">Clasificar</string>
-    <string name="scroll_to_songs">Ir a las canciones</string>
-    <string name="scroll_to_albums">Ir a los álbumes</string>
     <string name="play">Reproducir</string>
     <string name="more">Más</string>
-    <string name="remove">Eliminar</string>
-    <string name="skip_next">Saltar a la siguiente</string>
-    <string name="expand_less">Cerrar</string>
-    <string name="position_slider">Control deslizante</string>
     <string name="tab_order_summary">La aplicación mostrará la primera pestaña al iniciarse. Las pestañas que estén después del divisor estarán ocultas.</string>
     <string name="settings_preference_category_home">Pantalla de inicio</string>
     <string name="shuffle_all">Mezclar todas</string>
     <string name="tab_order">Configurar el orden de las pestañas</string>
-    <string name="skip_previous">Ir a la anterior</string>
     <string name="settings_lyrics_ui_summary">Interfaz de usuario experimental para mostrar la letra palabra por palabra con funciones avanzadas</string>
     <string name="settings_lyrics_ui">Activar la nueva interfaz para las letras</string>
     <string name="home_menu_shuffle">Mezclar todo</string>
@@ -362,7 +340,6 @@
         <item quantity="many">%d Carpetas</item>
         <item quantity="other">%d Carpetas</item>
     </plurals>
-    <string name="timer_expiry_eos">El temporizador pausará la música cuando finalice la reproducción de la canción en %s</string>
     <string name="timer_expiry_end_of_this_song">El temporizador pausará la música al final de esta canción</string>
     <string name="what_were_you_doing">¿Qué estabas haciendo en Gramophone cuando ocurrió este fallo? Agrega tantos detalles como sea posible para que sea mas fácil solucionar el problema.\n\nTenga en cuenta que se prefiere el inglés para los informes de errores, pero intentaré utilizar la traducción automática si envía informes de errores en otro idioma.</string>
     <string name="settings_translation_auto_word_summary">Aplicar un degradado lineal a las líneas de traducción en las letras sincronizadas si las traducciones no tienen metadatos de sincronización de palabras</string>
@@ -397,7 +374,6 @@
     <string name="offload_enabled_if_gapless">Activado si la reproducción sin pausas es posible</string>
     <string name="settings_audio_offload">Audio offload (ahorra batería)</string>
     <string name="settings_telegram">Telegram</string>
-    <string name="translators">Traductores</string>
     <string name="settings_replaygain_mode">Modo</string>
     <string name="settings_replaygain_no_rg_amp">Atenuación (no RG)</string>
     <string name="settings_replaygain_drc">Habilita DRC</string>
@@ -410,10 +386,7 @@
     <string name="scroll_to_playing">Ir a la canción actual</string>
     <string name="gramophone_crashed_explainer2">Gramophone se detuvo :(\n\n¡Por favor, envía un informe de error para que los fallos como este puedan solucionarse!\n\nCada situación es tan única como la música; ¡sin tu ayuda, es probable que este error <b>NO</b> se solucione!</string>
     <string name="failed_to_parse_lyric">Error al analizar la letra</string>
-    <string name="audio_not_initialized">El sistema de reproducción de audio no está inicializado. ¡Intenta reproducir algo!</string>
-    <string name="enter_msg_for_dev_here">Escriba aquí el mensaje para el desarrollador</string>
     <string name="do_not_enter_email_enter_msg">Escriba un mensaje, no una dirección de correo electrónico</string>
-    <string name="audio_signal_chain">Cadena de audio</string>
     <string name="settings_replaygain">ReplayGain</string>
     <string name="duration_queue">%s restante, %s total</string>
     <string name="edit_playlist_failed">Error al editar la lista de reproducción: %s</string>
@@ -468,7 +441,6 @@
     <string name="save">Guardar</string>
     <string name="discard">Descartar</string>
     <string name="discard_changes_msg">¿Realmente desea descartar sus cambios al listado de reproducción «%s»?</string>
-    <string name="apply">Aplicar</string>
     <string name="restore_edits">¿Restaurar cambios?</string>
     <string name="restore_edits_msg">Hay cambios no guardados para el listado de reproducción «%s». ¿Desea restaurar estos cambios, o descartarlos y comenzar con una versión fresca del listado de reproducción?</string>
     <string name="restore">Restaurar</string>

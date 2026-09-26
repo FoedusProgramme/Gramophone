@@ -30,19 +30,19 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.layout.union
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.only
-import androidx.compose.foundation.layout.displayCutout
-import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.displayCutout
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -58,6 +58,7 @@ import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -81,8 +82,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.akanework.gramophone.R
-import org.akanework.gramophone.ui.LocalCardSurface
 import org.akanework.gramophone.ui.HomeTab
+import org.akanework.gramophone.ui.LocalCardSurface
 import org.akanework.gramophone.ui.actions.HomeMenuAction
 import kotlin.math.PI
 import kotlin.math.abs
@@ -132,8 +133,8 @@ private val BAR_PADDING_END = 16.dp
 fun HomeAppBar(
     onSearch: () -> Unit,
     onMenuAction: (HomeMenuAction) -> Unit,
-    sortMenu: (@Composable (expanded: Boolean, onDismiss: () -> Unit) -> Unit)? = null,
     modifier: Modifier = Modifier,
+    sortMenu: (@Composable (expanded: Boolean, onDismiss: () -> Unit) -> Unit)? = null,
 ) {
     val insets = WindowInsets.systemBars.union(WindowInsets.displayCutout)
     Row(
@@ -262,7 +263,7 @@ private fun HomeOverflowMenu(onMenuAction: (HomeMenuAction) -> Unit) {
 fun HomeTabRow(
     tabs: List<HomeTab>,
     selectedTab: Int,
-    offsetFraction: Float,
+    offsetFraction: () -> Float,
     onTabClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
@@ -282,7 +283,8 @@ fun HomeTabRow(
 fun LabelTabRow(
     labels: List<String>,
     selectedTab: Int,
-    offsetFraction: Float,
+    /** Read in the draw phase, since the pager offset changes every frame. */
+    offsetFraction: () -> Float,
     onTabClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
@@ -292,7 +294,7 @@ fun LabelTabRow(
     val tabBounds = remember(labels) {
         mutableStateListOf<Pair<Float, Float>>().apply { repeat(labels.size) { add(0f to 0f) } }
     }
-    var rowWidth by remember { mutableStateOf(0) }
+    var rowWidth by remember { mutableIntStateOf(0) }
     val indicatorColor = MaterialTheme.colorScheme.secondaryContainer
     val selectedColor = MaterialTheme.colorScheme.onSecondaryContainer
     val unselectedColor = MaterialTheme.colorScheme.onSurfaceVariant
@@ -315,10 +317,11 @@ fun LabelTabRow(
             .onSizeChanged { rowWidth = it.width }
             .horizontalScroll(scrollState, enabled = enabled)
             .drawBehind {
+                val fraction = offsetFraction()
                 val current = tabBounds.getOrNull(selectedTab) ?: return@drawBehind
-                val nextIndex = if (offsetFraction >= 0f) selectedTab + 1 else selectedTab - 1
+                val nextIndex = if (fraction >= 0f) selectedTab + 1 else selectedTab - 1
                 val next = tabBounds.getOrNull(nextIndex) ?: current
-                val f = abs(offsetFraction)
+                val f = abs(fraction)
                 val (l0, w0) = current
                 val (l1, w1) = next
                 // Elastic indicator: the leading edge accelerates, the trailing edge decelerates.

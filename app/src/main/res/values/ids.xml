@@ -8,7 +8,4 @@
     <item name="folders" type="id" />
     <item name="detailed_folders" type="id" />
     <item name="playlists" type="id" />
-    <item name="fade_out_animation" type="id" />
-    <item name="fade_in_animation" type="id" />
-    <item name="player_layout" type="id" />
 </resources>

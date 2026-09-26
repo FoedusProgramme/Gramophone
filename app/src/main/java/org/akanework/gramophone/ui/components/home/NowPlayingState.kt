@@ -23,8 +23,8 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -59,6 +59,8 @@ class NowPlayingState {
 fun rememberNowPlayingState(
     controllerViewModel: MediaControllerViewModel,
     lifecycle: Lifecycle,
+    /** Color the playing row is harmonized to. Uses the theme's primary when null. */
+    accent: Color? = null,
 ): NowPlayingState {
     val state = remember { NowPlayingState() }
     DisposableEffect(controllerViewModel, lifecycle) {
@@ -81,14 +83,14 @@ fun rememberNowPlayingState(
         onDispose { }
     }
     // Only this scope reads the scheme, so a new cover doesn't recompose the whole screen.
-    NowPlayingColorsEffect(state)
+    NowPlayingColorsEffect(state, accent)
     return state
 }
 
 @Composable
-private fun NowPlayingColorsEffect(state: NowPlayingState) {
+private fun NowPlayingColorsEffect(state: NowPlayingState, accent: Color?) {
     val cover = rememberArtworkColorScheme(state.artworkUri)
-    val colors = nowPlayingColors(cover, MaterialTheme.colorScheme.primary)
+    val colors = nowPlayingColors(cover, accent ?: MaterialTheme.colorScheme.primary)
     SideEffect { state.colors = colors }
 }
 

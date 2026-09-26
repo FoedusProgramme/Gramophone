@@ -27,8 +27,8 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.graphics.shapes.CornerRounding
 import androidx.graphics.shapes.Morph
 import androidx.graphics.shapes.RoundedPolygon
-import androidx.graphics.shapes.star
 import androidx.graphics.shapes.rectangle
+import androidx.graphics.shapes.star
 import androidx.graphics.shapes.toPath
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.MINI_ARTWORK
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.MINI_ARTWORK_CORNER

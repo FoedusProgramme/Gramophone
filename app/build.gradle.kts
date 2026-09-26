@@ -234,8 +234,10 @@ android {
     sourceSets {
         getByName("debug") {
             // This does NOT remove src/debug/ source sets, hence "debug" is a superset of "userdebug"
-            // TODO it seems this broke and that caused Reflections to crash
             java.directories += "src/userdebug/java"
+            // Kotlin only compiles its own source directories, and the userdebug Kotlin sources
+            // live under java/, so they have to be added here as well.
+            kotlin.directories += "src/userdebug/java"
             kotlin.directories += "src/userdebug/kotlin"
             resources.directories += "src/userdebug/resources"
             res.directories += "src/userdebug/res"
@@ -328,7 +330,6 @@ dependencies {
     implementation("androidx.navigation3:navigation3-runtime:1.1.7")
     implementation("androidx.navigation3:navigation3-ui:1.1.7")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.4")
-    implementation("androidx.mediarouter:mediarouter:1.8.1")
     implementation("com.materialkolor:material-kolor:5.0.1")
     implementation("io.github.nift4.mediastorecompat:mediastorecompat:1.0.0-alpha33")
     val media3Version = "1.10.1"
@@ -347,7 +348,6 @@ dependencies {
     //noinspection GradleDependency newer versions need java.nio which is api 26+
     //implementation("com.github.albfernandez:juniversalchardet:2.0.3") TODO
     implementation("androidx.profileinstaller:profileinstaller:1.4.1")
-    implementation("androidx.recyclerview:recyclerview:1.4.0")
     "baselineProfile"(project(":baselineprofile"))
     // --- below does not apply to release builds ---
     debugImplementation("com.squareup.leakcanary:leakcanary-android:2.14")

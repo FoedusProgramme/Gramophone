@@ -84,13 +84,19 @@ fun rememberReorderableListState(
     return remember(listState) { ReorderableListState(listState) { from, to -> currentOnMove(from, to) } }
 }
 
-/** On the row at [index]: it follows the finger while dragged and animates into place otherwise. */
-fun LazyItemScope.reorderableRow(state: ReorderableListState, index: Int): Modifier =
-    if (state.draggingIndex == index) {
-        Modifier.zIndex(1f).graphicsLayer { translationY = state.dragOffset }
-    } else {
-        Modifier.animateItem()
-    }
+/**
+ * Applied to the row at [index]: follows the pointer while dragged, otherwise animates into place.
+ * [scope] is the lazy list item scope, needed for `animateItem`.
+ */
+fun Modifier.reorderableRow(
+    scope: LazyItemScope,
+    state: ReorderableListState,
+    index: Int,
+): Modifier = if (state.draggingIndex == index) {
+    zIndex(1f).graphicsLayer { translationY = state.dragOffset }
+} else {
+    with(scope) { animateItem() }
+}
 
 /** On the row's handle: a drag here moves the row at [index]. */
 @Composable

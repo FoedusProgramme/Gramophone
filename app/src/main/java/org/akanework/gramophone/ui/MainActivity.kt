@@ -17,6 +17,11 @@
 
 package org.akanework.gramophone.ui
 
+import androidx.activity.compose.setContent
+import org.akanework.gramophone.ui.components.player.PlayerSheetController
+import androidx.compose.ui.Modifier
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Box
 import android.app.NotificationManager
 import android.app.SearchManager
 import android.app.assist.AssistContent
@@ -37,18 +42,14 @@ import android.provider.MediaStore
 import android.provider.Settings
 import android.view.Choreographer
 import android.view.SearchEvent
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.PlaylistPlay
-import androidx.compose.ui.platform.ComposeView
-import org.akanework.gramophone.ui.components.compose.AppDialog
-import org.akanework.gramophone.ui.components.compose.AppDialogHostState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.core.app.ActivityCompat
 import androidx.core.content.IntentCompat
 import androidx.core.content.pm.ShortcutManagerCompat
@@ -85,13 +86,14 @@ import org.akanework.gramophone.logic.needsMissingOnDestroyCallWorkarounds
 import org.akanework.gramophone.logic.postAtFrontOfQueueAsync
 import org.akanework.gramophone.logic.ui.BaseActivity
 import org.akanework.gramophone.ui.actions.PlaylistDialogs
-import org.akanework.gramophone.ui.components.player.PlayerSheetViewImpl
+import org.akanework.gramophone.ui.components.compose.AppDialog
+import org.akanework.gramophone.ui.components.compose.AppDialogHostState
 import org.akanework.gramophone.ui.nav.AppNavKey
 import org.akanework.gramophone.ui.nav.AppRoot
-import org.akanework.gramophone.ui.nav.SearchKey
 import org.akanework.gramophone.ui.nav.HomeKey
 import org.akanework.gramophone.ui.nav.NavViewModel
 import org.akanework.gramophone.ui.nav.PlaylistKey
+import org.akanework.gramophone.ui.nav.SearchKey
 import org.akanework.gramophone.ui.nav.popIfPossible
 import org.akanework.gramophone.ui.nav.warmUpNavAxisEasing
 import org.nift4.mediastorecompat.MediaStoreCompat
@@ -122,14 +124,14 @@ class MainActivity : BaseActivity() {
 
     // Import our viewModels.
     val controllerViewModel: MediaControllerViewModel by viewModels()
-    private val navViewModel: NavViewModel by viewModels()
+    val navViewModel: NavViewModel by viewModels()
     val startingActivity =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
 
     private val handler = Handler(Looper.getMainLooper())
     private val reportFullyDrawnRunnable = Runnable { if (!ready) reportFullyDrawn() }
     private var ready = false
-    lateinit var playerBottomSheet: PlayerSheetViewImpl
+    lateinit var playerSheet: PlayerSheetController
         private set
 
     /** The dialogs and snackbars the actions ask for, drawn by the root composition. */
@@ -220,30 +222,22 @@ class MainActivity : BaseActivity() {
         //  forward events to our session no matter whether it makes sense or not to currently
         //  handle volume there... but it's still better than not getting the key events I guess?
 
-        playerBottomSheet = PlayerSheetViewImpl(this, null).apply {
-            id = R.id.player_layout
-            clipChildren = false
-            clipToPadding = false
-        }
-        setContentView(ComposeView(this).apply {
-            setContent {
-                GramophoneTheme {
+        playerSheet = PlayerSheetController(this)
+        setContent {
+            GramophoneTheme {
+                Box(Modifier.fillMaxSize()) {
                     AppRoot(
                         backStack = navViewModel.backStack,
-                        onPlayerVisibleChanged = { playerBottomSheet.visible = it },
+                        onPlayerVisibleChanged = { playerSheet.visible = it },
                         playerBottomPadding = playerBottomPadding.intValue,
                         dialogs = dialogs,
                         debug = BuildConfig.DEBUG,
                     )
+                    // Drawn above the pages, dialogs and snackbar.
+                    playerSheet.Content()
                 }
             }
-        })
-        addContentView(
-            playerBottomSheet,
-            ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
-            )
-        )
+        }
 
         // Check all permissions.
         if (!hasAudioPermission()) {
@@ -816,6 +810,7 @@ class MainActivity : BaseActivity() {
     }
 
     override fun onDestroy() {
+        playerSheet.release()
         // https://github.com/androidx/media/issues/805
         if (needsMissingOnDestroyCallWorkarounds()
             && (getPlayer()?.playWhenReady != true || getPlayer()?.mediaItemCount == 0)

@@ -15,7 +15,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.akanework.gramophone.ui.components
+package org.akanework.gramophone.ui.components.lyrics
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -24,28 +24,48 @@ import android.graphics.Color
 import android.graphics.RenderNode
 import android.graphics.Typeface
 import android.os.Build
+import android.os.SystemClock
 import android.text.Layout
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.StaticLayout
 import android.text.TextPaint
-import android.util.AttributeSet
 import android.util.SparseArray
 import android.util.TypedValue
-import android.view.GestureDetector
-import android.view.MotionEvent
 import android.view.animation.AnimationUtils
 import android.view.animation.PathInterpolator
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.ScrollableState
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.overscroll
+import androidx.compose.foundation.rememberOverscrollEffect
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshotFlow
+import androidx.compose.runtime.withFrameNanos
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.graphics.ColorUtils
-import androidx.core.graphics.TypefaceCompat
 import androidx.core.text.getSpans
 import androidx.core.util.forEach
 import androidx.media3.common.util.Log
-import org.akanework.gramophone.logic.defaultPrefs
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.dpToPx
-import org.akanework.gramophone.logic.getBooleanStrict
-import org.akanework.gramophone.logic.getIntStrict
 import org.akanework.gramophone.logic.hasRenderNodes
 import org.akanework.gramophone.logic.ui.spans.MyForegroundColorSpan
 import org.akanework.gramophone.logic.ui.spans.MyGradientSpan
@@ -56,16 +76,144 @@ import org.akanework.gramophone.logic.utils.Flags
 import org.akanework.gramophone.logic.utils.SemanticLyrics
 import org.akanework.gramophone.logic.utils.SpeakerEntity
 import org.akanework.gramophone.logic.utils.findBidirectionalBarriers
+import org.akanework.gramophone.ui.components.compose.rememberBooleanPreference
+import org.akanework.gramophone.ui.components.compose.rememberIntPreference
+import org.akanework.gramophone.ui.theme.AppFont
+import org.akanework.gramophone.ui.theme.LocalAppFontEnabled
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
 import kotlin.properties.Delegates
 
-private const val TAG = "NewLyricsView"
+private const val TAG = "NewLyrics"
 
-class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(context, attrs),
-    GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
+/** How long a user scroll keeps the lyrics from following playback again. */
+private const val USER_SCROLL_HOLD_MS = 5000L
+
+/**
+ * The v2 lyrics: every line is laid out as a StaticLayout and drawn directly onto the canvas, with
+ * word-by-word gradients, per-line scale and colour fades, and a staggered "drop" of the lines
+ * below when scrolling to the next line.
+ *
+ * Scrolling is a [ScrollableState] over [NewLyricsRenderer.scrollY]. The renderer runs its own
+ * follow-playback smooth scroll between frames and pauses it for [USER_SCROLL_HOLD_MS] after a
+ * user scroll or fling.
+ */
+@Composable
+internal fun NewLyrics(
+    lyrics: SemanticLyrics?,
+    visible: Boolean,
+    positionTick: () -> Int,
+    colors: LyricsColors,
+    padding: LyricsPadding,
+    playback: LyricsPlayback,
+    modifier: Modifier = Modifier,
+) {
+    val context = LocalContext.current
+    val frame = remember { mutableIntStateOf(0) }
+    val frameRequests = remember { Channel<Unit>(Channel.CONFLATED) }
+    val renderer = remember(playback) {
+        NewLyricsRenderer(context, playback) { frameRequests.trySend(Unit) }
+    }
+
+    val center = rememberBooleanPreference("lyric_center", false).value
+    val bold = rememberBooleanPreference("lyric_bold", false).value
+    val noAnimation = rememberBooleanPreference("lyric_no_animation", false).value
+    val autoWord = rememberBooleanPreference("translation_auto_word", false).value
+    val textSize = rememberIntPreference("lyric_text_size", 34).value
+    // AppFont reads the setting itself. Keying on the theme's copy of it rebuilds on a change
+    val appFont = LocalAppFontEnabled.current
+    val typeface = remember(appFont, bold) {
+        AppFont.typeface(context, if (bold) 700 else 500)
+    }
+    SideEffect {
+        renderer.visible = visible
+        renderer.setPadding(padding.left, padding.top, padding.right, padding.bottom)
+        renderer.applyPrefs(center, autoWord, noAnimation, textSize, typeface)
+        renderer.updateTextColor(colors.default, colors.highlight, colors.highlightTl)
+        renderer.updateLyrics(lyrics)
+    }
+
+    // Each invalidate request triggers a redraw on the next frame
+    LaunchedEffect(renderer) {
+        for (request in frameRequests) {
+            withFrameNanos { frame.intValue++ }
+        }
+    }
+    LaunchedEffect(renderer) {
+        snapshotFlow { positionTick() }.collect { renderer.updateLyricPositionFromPlaybackPos() }
+    }
+    // User scroll hold: invalidate once it expires so the lyrics follow playback again
+    LaunchedEffect(renderer) {
+        for (request in renderer.resumeRequests) {
+            while (true) {
+                val wait = renderer.resumeAt - SystemClock.uptimeMillis()
+                if (wait <= 0) break
+                delay(wait)
+            }
+            if (renderer.isCallbackQueued) {
+                renderer.isCallbackQueued = false
+                renderer.invalidate()
+            }
+        }
+    }
+
+    val scrollState = remember(renderer) {
+        ScrollableState { delta -> renderer.scrollByUser(delta) }
+    }
+    renderer.isUserInteracting = { scrollState.isScrollInProgress }
+    val overscroll = rememberOverscrollEffect()
+    Spacer(
+        modifier
+            .clipToBounds()
+            .then(
+                if (!visible) Modifier
+                else Modifier
+                    // A touch stops the follow-playback scroll
+                    .pointerInput(renderer) {
+                        awaitEachGesture {
+                            awaitFirstDown(requireUnconsumed = false, pass = PointerEventPass.Initial)
+                            renderer.abortSmoothScroll()
+                        }
+                    }
+                    .scrollable(
+                        scrollState,
+                        Orientation.Vertical,
+                        reverseDirection = true,
+                        overscrollEffect = overscroll,
+                    )
+                    .pointerInput(renderer) {
+                        // A double tap listener delays single taps until it's clear there's no
+                        // second one, and swallows double taps
+                        detectTapGestures(
+                            onDoubleTap = {},
+                            onTap = { renderer.onSingleTapConfirmed(it.y) },
+                        )
+                    }
+            )
+            .overscroll(overscroll)
+            .drawBehind {
+                frame.intValue
+                // Read the parameter (not the renderer's copy) so a change of visibility triggers a redraw
+                if (!visible) return@drawBehind
+                drawIntoCanvas {
+                    renderer.draw(it.nativeCanvas, size.width.roundToInt(), size.height.roundToInt())
+                }
+            },
+    )
+}
+
+/**
+ * Drawing and follow-playback logic of the v2 lyrics. [draw] lays the lines out when needed,
+ * advances the follow-playback scroll, draws a frame and decides where to scroll next.
+ * [invalidate] requests another frame.
+ */
+internal class NewLyricsRenderer(
+    private val context: Context,
+    private val instance: LyricsPlayback,
+    private val requestFrame: () -> Unit,
+) {
     private val smallSizeFactor = 0.97f
     private var lyricAnimTime by Delegates.notNull<Float>()
 
@@ -75,8 +223,7 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
     private val scrollInterpolator = PathInterpolator(0.4f, 0.2f, 0f, 1f)
     private val delayedInInterpolator = PathInterpolator(0.96f, 0.43f, 0.72f, 1f)
     private val delayedOutInterpolator = PathInterpolator(0.17f, 0f, -0.15f, 1f)
-    private val prefs = context.defaultPrefs
-    private lateinit var typeface: Typeface
+    private var typeface: Typeface? = null
     private val grdWidth = context.resources.getDimension(R.dimen.lyric_gradient_size)
     private val defaultTextSize = context.resources.getDimension(R.dimen.lyric_text_size)
     private val translationTextSize = context.resources.getDimension(R.dimen.lyric_tl_text_size)
@@ -90,16 +237,13 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
     private var spForRender: Pair<IntArray, List<SbItem>>? = null
     private var spForMeasure: Pair<IntArray, List<SbItem>>? = null
     private var lyrics: SemanticLyrics? = null
+    private var lyricsSet = false
     private var posForRender = 0uL
-    lateinit var instance: Callbacks
-    private val gestureDetector = GestureDetector(context, this)
     private var currentScrollTarget: Int? = null
     private var currentSmoothScroll: Pair<Pair<Double, Double>, Pair<Float, Float>>? = null
     private var delayedScrollAnimation: Pair<Long, Pair<Int, Int>>? = null
     private var stateOverrides = hashMapOf<Int, Float>()
     private var stateTime = 0uL
-    private var isCallbackQueued = false
-    private val invalidateCallback = Runnable { isCallbackQueued = false; postInvalidateOnAnimation() }
     private var defaultTextColor = 0
     private var highlightTextColor = 0
     private var highlightTlTextColor = 0
@@ -123,19 +267,69 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
     private fun makeGradientTlSpan() =
         MyGradientSpan(grdWidth, defaultTextColor, highlightTlTextColor)
 
-    init {
-        applyTypefaces()
-        applySize()
-        loadLyricAnimTime()
+    // Preferences, pushed in by the composable
+    private var center = false
+    private var autoWord = false
+    private var noAnimation: Boolean? = null
+    private var textSizeSp = -1
+
+    // Size, scroll offset and padding of the drawing area
+    var visible = false
+    private var width = 0
+    private var height = 0
+    private var paddingLeft = 0
+    private var paddingTop = 0
+    private var paddingRight = 0
+    private var paddingBottom = 0
+    private var scrollYf = 0f
+    private val scrollY: Int
+        get() = scrollYf.toInt()
+    var isUserInteracting: () -> Boolean = { false }
+
+    // User scroll hold, waited out by the composable
+    val resumeRequests = Channel<Unit>(Channel.CONFLATED)
+    var resumeAt = 0L
+        private set
+    var isCallbackQueued = false
+
+    fun invalidate() {
+        if (visible) requestFrame()
     }
 
-    interface Callbacks {
-        fun getCurrentPosition(): ULong
-        fun isPlaying(): Boolean
-        fun seekTo(position: ULong)
-        fun setPlayWhenReady(play: Boolean)
-        fun speed(): Float
-        fun destroy()
+    fun setPadding(left: Int, top: Int, right: Int, bottom: Int) {
+        if (left != paddingLeft || top != paddingTop || right != paddingRight || bottom != paddingBottom) {
+            paddingLeft = left
+            paddingTop = top
+            paddingRight = right
+            paddingBottom = bottom
+            requestLayout()
+        }
+    }
+
+    fun applyPrefs(center: Boolean, autoWord: Boolean, noAnimation: Boolean, textSize: Int, typeface: Typeface) {
+        if (this.noAnimation != noAnimation) {
+            this.noAnimation = noAnimation
+            lyricAnimTime = if (noAnimation) 0f else 650f
+        }
+        var changed = false
+        if (this.typeface !== typeface) {
+            this.typeface = typeface
+            defaultTextPaint.typeface = typeface
+            translationTextPaint.typeface = typeface
+            translationBackgroundTextPaint.typeface = typeface
+            changed = true
+        }
+        if (textSizeSp != textSize) {
+            textSizeSp = textSize
+            applySize()
+            changed = true
+        }
+        if (this.center != center || this.autoWord != autoWord) {
+            this.center = center
+            this.autoWord = autoWord
+            changed = true
+        }
+        if (changed) requestLayout()
     }
 
     fun updateTextColor(
@@ -178,53 +372,10 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
         }
     }
 
-    fun updateTextColor(newColor: Int) {
-        if (defaultTextColor != newColor) {
-            defaultTextColor = newColor
-            defaultTextPaint.color = defaultTextColor
-            translationTextPaint.color = defaultTextColor
-            translationBackgroundTextPaint.color = defaultTextColor
-            gradientSpanPool.clear()
-            repeat(3) { gradientSpanPool.add(makeGradientSpan()) }
-            gradientTlSpanPool.clear()
-            repeat(2) { gradientTlSpanPool.add(makeGradientTlSpan()) }
-            spForRender?.second?.forEach {
-                it.text.getSpans<MyGradientSpan>()
-                    .forEach { s -> it.text.removeSpan(s) }
-            }
-            invalidateDeeply()
-        }
-    }
-
-    fun updateHighlightColor(newHighlightColor: Int) {
-        if (highlightTextColor != newHighlightColor) {
-            highlightTextColor = newHighlightColor
-            wordActiveSpan.color = highlightTextColor
-            gradientSpanPool.clear()
-            repeat(3) { gradientSpanPool.add(makeGradientSpan()) }
-            spForRender?.second?.forEach {
-                it.text.getSpans<MyGradientSpan>()
-                    .forEach { s -> it.text.removeSpan(s) }
-            }
-            invalidateDeeply()
-        }
-    }
-
-    fun updateHighlightTlColor(newHighlightTlColor: Int) {
-        if (highlightTlTextColor != newHighlightTlColor) {
-            highlightTlTextColor = newHighlightTlColor
-            wordActiveTlSpan.color = highlightTlTextColor
-            gradientTlSpanPool.clear()
-            repeat(2) { gradientTlSpanPool.add(makeGradientTlSpan()) }
-            spForRender?.second?.forEach {
-                it.text.getSpans<MyGradientSpan>()
-                    .forEach { s -> it.text.removeSpan(s) }
-            }
-            invalidateDeeply()
-        }
-    }
-
+    /** Takes [parsedLyrics] if it is a different object than the one shown. */
     fun updateLyrics(parsedLyrics: SemanticLyrics?) {
+        if (lyricsSet && lyrics === parsedLyrics) return
+        lyricsSet = true
         spForRender = null
         spForMeasure = null
         requestLayout()
@@ -234,31 +385,15 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
 
     fun updateLyricPositionFromPlaybackPos() {
         if (instance.getCurrentPosition() != posForRender && lyrics is SemanticLyrics.SyncedLyrics)
-            postInvalidateOnAnimation() // if not playing, might stay same
-    }
-
-    fun onPrefsChanged(key: String) {
-        if (key == "lyric_no_animation") {
-            loadLyricAnimTime()
-            return
-        }
-        if (key == "lyric_bold")
-            applyTypefaces()
-        if (key == "lyric_text_size")
-            applySize()
-        spForRender = null
-        spForMeasure = null
-        requestLayout()
-    }
-
-    private fun loadLyricAnimTime() {
-        lyricAnimTime = if (prefs.getBooleanStrict("lyric_no_animation", false)) 0f else 650f
+            invalidate() // if not playing, might stay same
     }
 
     private fun applySize() {
-        val newTextSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
-            prefs.getIntStrict("lyric_text_size", 34).toFloat(),
-            context.resources.displayMetrics)
+        val newTextSize = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_SP,
+            textSizeSp.toFloat(),
+            context.resources.displayMetrics
+        )
         globalPaddingHorizontal = 28.5f.dpToPx(context) * newTextSize / defaultTextSize
         depth = 15f.dpToPx(context) * newTextSize / defaultTextSize
         paddingVerticalTl = 2f * newTextSize / defaultTextSize
@@ -269,18 +404,102 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
             newTextSize * translationBackgroundTextSize / defaultTextSize
     }
 
-    private fun applyTypefaces() {
-        typeface = if (prefs.getBooleanStrict("lyric_bold", false)) {
-            TypefaceCompat.create(context, null, 700, false)
-        } else {
-            TypefaceCompat.create(context, null, 500, false)
-        }
-        defaultTextPaint.typeface = typeface
-        translationTextPaint.typeface = typeface
-        translationBackgroundTextPaint.typeface = typeface
+    private fun requestLayout() {
+        spForMeasure = null
+        invalidate()
     }
 
-    override fun onDrawForChild(canvas: Canvas) {
+    private val scrollRange: Int
+        get() = max(0, (spForRender?.first?.get(1) ?: 0) - (height - paddingTop - paddingBottom))
+
+    private fun scrollTo(y: Int) {
+        val clamped = y.coerceIn(0, scrollRange).toFloat()
+        if (clamped != scrollYf) {
+            scrollYf = clamped
+            invalidate()
+        }
+    }
+
+    /** Applies a drag or fling step of [delta] px and returns the consumed amount. */
+    fun scrollByUser(delta: Float): Float {
+        val new = (scrollYf + delta).coerceIn(0f, scrollRange.toFloat())
+        val consumed = new - scrollYf
+        if (consumed != 0f) {
+            scrollYf = new
+            invalidate()
+        }
+        return consumed
+    }
+
+    fun abortSmoothScroll() {
+        currentSmoothScroll = null
+    }
+
+    private fun getScrollProgressAt(time: Double): Int {
+        val progress = lerpInv(currentSmoothScroll!!.first.first, currentSmoothScroll!!
+            .first.first + currentSmoothScroll!!.first.second, time).toFloat()
+        val interpolatedProgress = scrollInterpolator.getInterpolation(min(1f,
+            progress))
+        return lerp(currentSmoothScroll!!.second.first, currentSmoothScroll!!
+            .second.second, interpolatedProgress).toInt()
+    }
+
+    /** Advances the follow-playback scroll by one frame. */
+    private fun computeScroll() {
+        if (currentSmoothScroll == null) return
+        val cat = AnimationUtils.currentAnimationTimeMillis().toDouble()
+        val q = getScrollProgressAt(cat)
+        if (cat >= currentSmoothScroll!!.first.first + currentSmoothScroll!!.first.second) {
+            currentSmoothScroll = null
+        }
+        scrollTo(q)
+        // Stop once the scroll hits the end of the content
+        if (scrollY != q) currentSmoothScroll = null
+        if (currentSmoothScroll != null) invalidate()
+    }
+
+    private fun ensureLayout() {
+        val myWidth = width - paddingLeft - paddingRight
+        val viewportHeight = height - paddingBottom - paddingTop
+        if (spForMeasure == null || spForMeasure!!.first[0] != myWidth ||
+            spForMeasure!!.first[4] != viewportHeight
+        ) {
+            spForMeasure = buildSpForMeasure(lyrics, myWidth, viewportHeight)
+            spForRender = null
+        }
+        if (spForRender !== spForMeasure) {
+            spForRender = spForMeasure
+            invalidateDeeply()
+            // Keep the scroll position in the (possibly smaller) new range
+            scrollTo(scrollY)
+        }
+    }
+
+    private fun invalidateDeeply() {
+        if (hasRenderNodes()) {
+            cachedNodes!!.forEach { _, it ->
+                it.discardDisplayList()
+            }
+            cachedNodes.clear()
+        }
+        invalidate()
+    }
+
+    fun draw(canvas: Canvas, width: Int, height: Int) {
+        if (this.width != width || this.height != height) {
+            this.width = width
+            this.height = height
+        }
+        if (width - paddingLeft - paddingRight <= 0 || typeface == null) return
+        computeScroll()
+        ensureLayout()
+        val sc = canvas.save()
+        canvas.translate(paddingLeft.toFloat(), paddingTop.toFloat() - scrollYf)
+        onDrawForChild(canvas)
+        canvas.restoreToCount(sc)
+    }
+
+    private fun onDrawForChild(canvas: Canvas) {
         posForRender = instance.getCurrentPosition().also {
             if (posForRender > it && posForRender - it < 1000uL)
                 Log.w(
@@ -289,10 +508,7 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
                 )
         }
         val isPlaying = instance.isPlaying()
-        if (spForRender == null) {
-            requestLayout()
-            return
-        }
+        val useRenderNodes = hasRenderNodes() && canvas.isHardwareAccelerated
         var animating = false
         var delayedScrollDoneForFrame = false
         val globalPaddingTop = spForRender!!.first[2]
@@ -411,20 +627,20 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
                     smallSizeFactor
                 else 1f
             }
-            val node = if (hasRenderNodes()) {
+            val node = if (useRenderNodes) {
                 val node = cachedNodes!![i]
                 if (node == null) {
-                    val newNode = RenderNode("NewLyricsView_$i")
+                    val newNode = RenderNode("NewLyrics_$i")
                     cachedNodes[i] = newNode
                     newNode
                 } else node
             } else null
-            var hasValidCachedNode = if (hasRenderNodes()) node!!.hasDisplayList() else false
+            var hasValidCachedNode = if (useRenderNodes) node!!.hasDisplayList() else false
             val isRtl = it.layout.getParagraphDirection(0) == Layout.DIR_RIGHT_TO_LEFT
             val alignmentNormal = if (isRtl) it.layout.alignment == Layout.Alignment.ALIGN_OPPOSITE
             else it.layout.alignment == Layout.Alignment.ALIGN_NORMAL
             if (((scaleInProgress >= -.1f && scaleInProgress <= 1f) ||
-                (scaleOutProgress >= -.1f && scaleOutProgress <= 1f)) &&
+                        (scaleOutProgress >= -.1f && scaleOutProgress <= 1f)) &&
                 timeOffsetForUse > 0f && it.line != null && isPlaying
             )
                 animating = true
@@ -649,12 +865,12 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
                         hasValidCachedNode = false
                     }
                 }
-                if (hasRenderNodes()) {
+                if (useRenderNodes) {
                     if (!hasValidCachedNode) {
                         node!!.setPosition(0, 0, width.toInt(),
                             it.layout.height)
-                        val canvas = node.beginRecording()
-                        it.layout.draw(canvas)
+                        val nodeCanvas = node.beginRecording()
+                        it.layout.draw(nodeCanvas)
                         node.endRecording()
                     }
                     canvas.drawRenderNode(node!!)
@@ -669,14 +885,13 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
                     + it.paddingBottom.toFloat() - delayedScrollOffset)
             heightSoFar += it.layout.height + it.paddingBottom
         }
-        //heightSoFar += globalPaddingBottom
         canvas.restore()
         if (animating)
-            postInvalidateOnAnimation()
-        if (isUserInteractingWithScrollView) {
-            handler.removeCallbacks(invalidateCallback)
-            handler.postDelayed(invalidateCallback, 5000)
+            invalidate()
+        if (isUserInteracting()) {
+            resumeAt = SystemClock.uptimeMillis() + USER_SCROLL_HOLD_MS
             isCallbackQueued = true
+            resumeRequests.trySend(Unit)
             if (spForRender!!.first[3] == 1)
                 currentScrollTarget = null
         } else if (!isCallbackQueued && currentSmoothScroll == null) {
@@ -685,12 +900,12 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
             val scrollTargetIndex = firstScrollTargetIdx ?: lastScrollTargetIdx
             if (scrollTarget != currentScrollTarget) {
                 if (lyricAnimTime == 0f) {
-                    scrollTo(0, scrollTarget)
+                    scrollTo(scrollTarget)
                 } else {
                     currentScrollTarget = scrollTarget
                     currentSmoothScroll = (AnimationUtils.currentAnimationTimeMillis().toDouble() to
                             lyricAnimTime.toDouble()) to (scrollY.toFloat() to scrollTarget.toFloat())
-                    runAnimatedScroll(false)
+                    invalidate()
                     if (scrollY < scrollTarget) {
                         delayedScrollAnimation = if (scrollTargetIndex != null) AnimationUtils
                             .currentAnimationTimeMillis() to (scrollTargetIndex to scrollY)
@@ -701,40 +916,9 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
         }
     }
 
-    override fun onTouchEventForChild(event: MotionEvent): Boolean {
-        return gestureDetector.onTouchEvent(event)
-    }
-
-    override fun onMeasureForChild(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val myWidth = getDefaultSize(minimumWidth, widthMeasureSpec)
-        if (spForMeasure == null || spForMeasure!!.first[0] != myWidth)
-            spForMeasure = buildSpForMeasure(lyrics, myWidth)
-        setChildMeasuredDimension(
-            myWidth,
-            getDefaultSize(spForMeasure!!.first[1], heightMeasureSpec)
-        )
-    }
-
-    override fun onLayoutForChild(left: Int, top: Int, right: Int, bottom: Int) {
-        if (spForMeasure == null || spForMeasure!!.first[0] != right - left
-            || spForMeasure!!.first[1] != bottom - top
-        )
-            spForMeasure = buildSpForMeasure(lyrics, right - left)
-        spForRender = spForMeasure!!
-        invalidateDeeply()
-    }
-
-    private fun invalidateDeeply() {
-        if (hasRenderNodes()) {
-            cachedNodes!!.forEach { _, it ->
-                it.discardDisplayList()
-            }
-            cachedNodes.clear()
-        }
-        invalidate()
-    }
-
-    fun buildSpForMeasure(lyrics: SemanticLyrics?, width: Int): Pair<IntArray, List<SbItem>> {
+    private fun buildSpForMeasure(
+        lyrics: SemanticLyrics?, width: Int, viewportHeight: Int
+    ): Pair<IntArray, List<SbItem>> {
         val lines =
             lyrics?.unsyncedText ?: listOf(context.getString(R.string.no_lyric_found) to null)
         val syncedLines = (lyrics as? SemanticLyrics.SyncedLyrics?)?.text
@@ -744,7 +928,7 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
             if (syncedLine?.isTranslated != true)
                 lastNonTranslated = syncedLine
             val words =
-                syncedLine?.words ?: if (prefs.getBooleanStrict("translation_auto_word", false) &&
+                syncedLine?.words ?: if (autoWord &&
                     syncedLine?.isTranslated == true && lastNonTranslated?.words != null
                 )
                     listOf(
@@ -756,7 +940,7 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
             val sb = SpannableStringBuilder(it.first)
             val speaker = syncedLine?.speaker ?: it.second
             val align =
-                if (prefs.getBooleanStrict("lyric_center", false) || speaker?.isGroup == true)
+                if (center || speaker?.isGroup == true)
                     Layout.Alignment.ALIGN_CENTER
                 else if (speaker?.isVoice2 == true)
                     Layout.Alignment.ALIGN_OPPOSITE
@@ -855,7 +1039,6 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
                 }, speaker, syncedLine
             )
         }
-        val viewportHeight = measuredHeight - paddingBottom - paddingTop
         val heights = spLines.map { it.layout.height + it.paddingTop + it.paddingBottom }
         val globalPaddingTop = if (lyrics is SemanticLyrics.SyncedLyrics) viewportHeight / 6 else
             context.resources.getDimensionPixelSize(R.dimen.lyric_top_padding)
@@ -870,17 +1053,20 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
                 width,
                 heights.sum() + globalPaddingTop + globalPaddingBottom,
                 globalPaddingTop,
-                if (lyrics is SemanticLyrics.SyncedLyrics) 1 else 0
+                if (lyrics is SemanticLyrics.SyncedLyrics) 1 else 0,
+                viewportHeight,
             ), spLines
         )
     }
 
-    override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+    /** A tap at [viewY] (px from the top of the lyrics): seek to the line under it. */
+    fun onSingleTapConfirmed(viewY: Float) {
         if (spForRender == null) {
             requestLayout()
-            return true
+            return
         }
-        val y = e.y
+        // Convert to content coordinates
+        val y = viewY + scrollY - paddingTop
         var foundItem: SemanticLyrics.LyricLine? = null
         if (lyrics is SemanticLyrics.SyncedLyrics) {
             var heightSoFar = spForRender!!.first[2]
@@ -891,17 +1077,20 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
                 heightSoFar += myHeight
             }
         }
-        handler.removeCallbacks(invalidateCallback)
+        resumeAt = 0L
         isCallbackQueued = false
         if (foundItem != null) {
+            // TODO: call handleSeek from onPositionDiscontinuity once there is a synchronized
+            //  way of getting position (ie not relying on ExoPlayer and MediaController both
+            //  anymore) - we can't call handleSeek a single frame too early or late from
+            //  changing getCurrentPosition() or there are visible glitches
+            handleSeek(instance.getCurrentPosition(), foundItem.start)
             instance.seekTo(foundItem.start)
             instance.setPlayWhenReady(true)
-            performClick()
         }
-        return true
     }
 
-    fun handleSeek(from: ULong, to: ULong) {
+    private fun handleSeek(from: ULong, to: ULong) {
         spForRender?.second?.forEachIndexed { i, it ->
             val firstTs = it.line?.start ?: ULong.MIN_VALUE
             var lastTs = min(it.line?.end ?: Int.MAX_VALUE.toULong(), Int.MAX_VALUE.toULong())
@@ -958,7 +1147,7 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
                 fadeInEnd.toFloat(), to.toFloat())
             if (animPosNow != animPosAfterSeek && it.theWords == null)
                 stateOverrides[i] =
-                    // Now we have to decide what behavior towards infinity we wish to have...
+                        // Now we have to decide what behavior towards infinity we wish to have...
                     when {
                         // If we are fading out or fully faded out at target, skip to fade out
                         // at current animation point
@@ -978,88 +1167,10 @@ class NewLyricsView(context: Context, attrs: AttributeSet?) : ScrollingView2(con
         stateTime = to
     }
 
-    private fun getScrollProgressAt(time: Double): Int {
-        val progress = lerpInv(currentSmoothScroll!!.first.first, currentSmoothScroll!!
-            .first.first + currentSmoothScroll!!.first.second, time).toFloat()
-        val interpolatedProgress = scrollInterpolator.getInterpolation(min(1f,
-            progress))
-        return lerp(currentSmoothScroll!!.second.first, currentSmoothScroll!!
-            .second.second, interpolatedProgress).toInt()
-    }
-
-    override fun computeScrollInner(): Long {
-        val cat = AnimationUtils.currentAnimationTimeMillis().toDouble()
-        val q = getScrollProgressAt(cat)
-        val q1 = getScrollProgressAt(cat - 1000f)
-        val distance = currentSmoothScroll!!.first.second
-        val velocity = (1000f * (q - q1) * distance).toFloat()
-        if (cat >= currentSmoothScroll!!.first.first + currentSmoothScroll!!.first.second) {
-            currentSmoothScroll = null
-        }
-        return q.toLong() or velocity.toBits().toLong().shl(32)
-    }
-
-    override fun shouldComputeScrollInner(): Boolean {
-        return currentSmoothScroll != null
-    }
-
-    override fun abortAnimatedScroll() {
-        currentSmoothScroll = null
-        super.abortAnimatedScroll()
-    }
-
-    override fun startNestedScroll(axes: Int, type: Int): Boolean {
-        currentSmoothScroll = null
-        return super.startNestedScroll(axes, type)
-    }
-
-    override fun onDoubleTap(e: MotionEvent): Boolean {
-        return false
-    }
-
-    override fun onDoubleTapEvent(e: MotionEvent): Boolean {
-        return false
-    }
-
-    override fun onDown(e: MotionEvent): Boolean {
-        return true
-    }
-
-    override fun onShowPress(e: MotionEvent) {
-        // do nothing
-    }
-
-    override fun onSingleTapUp(e: MotionEvent): Boolean {
-        return false
-    }
-
-    override fun onScroll(
-        e1: MotionEvent?,
-        e2: MotionEvent,
-        distanceX: Float,
-        distanceY: Float
-    ): Boolean {
-        return false // handled by parent
-    }
-
-    override fun onLongPress(e: MotionEvent) {
-        // do nothing
-    }
-
-    override fun onFling(
-        e1: MotionEvent?,
-        e2: MotionEvent,
-        velocityX: Float,
-        velocityY: Float
-    ): Boolean {
-        return false // handled by parent
-    }
-
-    data class SbItem(
+    private data class SbItem(
         val layout: StaticLayout, val text: SpannableStringBuilder,
         val paddingTop: Int, val paddingBottom: Int, val theWords: List<SemanticLyrics.Word>?,
         val words: List<List<Int>>?, val rlm: List<Int>?, val speaker: SpeakerEntity?,
         val line: SemanticLyrics.LyricLine?
     )
-
 }

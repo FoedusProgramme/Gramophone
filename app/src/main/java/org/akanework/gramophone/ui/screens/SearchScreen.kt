@@ -110,7 +110,8 @@ fun SearchScreen(initialQuery: String?, onBack: () -> Unit, modifier: Modifier =
             prefs, activity.reader, scope, flowOverride = songs,
         )
     }
-    LaunchedEffect(query) { state.queueTitleOverride = context.getString(R.string.search_query, query) }
+    val queueTitle = stringResource(R.string.search_query, query)
+    LaunchedEffect(queueTitle) { state.queueTitleOverride = queueTitle }
     val nowPlaying = rememberNowPlayingState(
         activity.controllerViewModel, LocalLifecycleOwner.current.lifecycle
     )

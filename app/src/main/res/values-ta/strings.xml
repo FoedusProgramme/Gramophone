@@ -4,14 +4,10 @@
     <string name="details">விவரங்கள்</string>
     <string name="shuffle">கலக்கு</string>
     <string name="repeat_mode">மீண்டும் பயன்முறை</string>
-    <string name="settings_library">நூலகம்</string>
     <string name="settings_play_on_launch_summary">துவக்கத்தில் இசையை வாசிக்கவும்</string>
     <string name="settings_blacklist">தடுப்புப்பட்டியல்</string>
-    <string name="play_all">அனைத்தையும் விளையாடுங்கள்</string>
     <string name="shuffle_all">அனைத்தையும் மாற்றவும்</string>
-    <string name="sort">வரிசைப்படுத்து</string>
     <string name="delete">நீக்கு</string>
-    <string name="home_menu_search">தேடல்</string>
     <string name="home_menu_settings">அமைப்புகள்</string>
     <string name="home_menu_shuffle">அனைத்தையும் மாற்றவும்</string>
     <string name="home_menu_refresh">புதுப்பிப்பு</string>
@@ -58,7 +54,6 @@
     <string name="unknown_playlist">தெரியாத பிளேலிச்ட்</string>
     <string name="settings_category_appearance">தோற்றம்</string>
     <string name="album_artist">ஆல்பம் கலைஞர்</string>
-    <string name="unknown_version">அறியப்படாத பதிப்பு</string>
     <string name="settings_version">பதிப்பு</string>
     <string name="dialog_title">தலைப்பு</string>
     <string name="dialog_artist">கலைஞர்</string>
@@ -85,7 +80,6 @@
     <string name="settings_default_progress_bar_summary">பொருள் பாணியிலான முன்னேற்றப் பட்டியை இயக்கவும்</string>
     <string name="opensource_info">சிபிஎல் -3.0 இன் கீழ் திறந்த மூல\n பதிப்புரிமை %s</string>
     <string name="settings_default_progress_bar">இயல்புநிலை முன்னேற்றப் பட்டி</string>
-    <string name="now_playing">இப்போது விளையாடுகிறது</string>
     <string name="settings_content_based_color_summary">ஆல்பம் அடிப்படையிலான வண்ண தலைமுறையை இயக்கவும்</string>
     <string name="settings_content_based_color">உள்ளடக்க அடிப்படையிலான வண்ணங்கள்</string>
     <string name="settings_package_type">தொகுப்பு வகை</string>
@@ -104,12 +98,9 @@
     <string name="settings_about_gramophone">பயன்பாடு பற்றி</string>
     <string name="settings_behavior_summary">வடிப்பான்கள், துவக்க நடத்தைகள்</string>
     <string name="settings_category_links">இணைப்புகள்</string>
-    <string name="settings_library_summary">மீடியா நூலகத்தை நிர்வகிக்கவும்</string>
     <string name="settings_player_options">ஆடியோ</string>
     <string name="settings_player_options_summary">வெளியீட்டு தகுதி, பின்னணி நடத்தை</string>
     <string name="settings_album_round_corner">ஆல்பம் சுற்று மூலையில்</string>
-    <string name="settings_customization">தனிப்பயனாக்கம்</string>
-    <string name="settings_customization_summary">தனிப்பயனாக்குதல் விருப்பங்களை நிர்வகிக்கவும்</string>
     <string name="settings_title_bold">தைரியமான தலைப்பு</string>
     <string name="settings_title_bold_summary">முழு பிளேயருக்கு தைரியமான தலைப்பைப் பயன்படுத்தவும்</string>
     <string name="settings_experimental_settings">சோதனை</string>
@@ -136,8 +127,6 @@
     <string name="settings_crash_application">செயலிழப்பு பயன்பாடு</string>
     <string name="settings_crash_application_summary">க்ராச்-ஓ-மேடிக் 3000</string>
     <string name="album_cover">ஆல்பம் கவர்</string>
-    <string name="dialog_edit_metadata">தொகு</string>
-    <string name="dialog_lyrics">பாடல்</string>
     <string name="delete_failed">பாடலை நீக்குவதில் தோல்வி: %s</string>
     <string name="album_covers_enhance">மேம்படுத்தப்பட்ட ஆல்பம் கவர் ஏற்றுதல்</string>
     <string name="album_covers_enhance_desc">உயர் தரமான பாடல் கவர்களைக் காண்பி, ஆல்பம் மற்றும் பாடல் அட்டையை வேறுபடுத்த அனுமதிக்கவும் (புகைப்படங்கள் அணுகல் தேவை)</string>
@@ -147,7 +136,6 @@
     <string name="crash_clipboard">இடைநிலைப்பலகைக்கு க்ராச் பதிவை நகலெடுத்தது</string>
     <string name="settings_trim_lyrics">பாடல் வரிகளைச் சுற்றியுள்ள இடங்களை அகற்று</string>
     <string name="timer">தூக்க நேரங்குறிகருவி</string>
-    <string name="current_playlist">தற்போதைய பிளேலிச்ட்</string>
     <string name="fgs_failed_title">மியூசிக் பிளேபேக்கை மீண்டும் தொடங்குவதில் தோல்வி</string>
     <string name="fgs_failed_text">பயன்பாட்டைத் திறந்து பிளேபேக்கைத் தொடர இங்கே சொடுக்கு செய்க</string>
     <string name="fgs_failed_channel">பின்னணி மீண்டும் தொடங்கத் தவறிவிட்டது</string>
@@ -156,18 +144,8 @@
     <string name="settings_preference_category_home">முகப்புத் திரை</string>
     <string name="tab_order">தாவல் வரிசையை உள்ளமைக்கவும்</string>
     <string name="tab_order_summary">பயன்பாடு தொடக்கத்தில் முதல் தாவலைக் காண்பிக்கும். வகுப்பாளருக்குப் பிறகு தாவல்கள் மறைக்கப்படும்.</string>
-    <string name="seekbar">சீக்பார்</string>
-    <string name="divider">பிரிப்பான்</string>
-    <string name="back">பின்</string>
-    <string name="scroll_to_albums">ஆல்பங்களுக்கு உருட்டவும்</string>
-    <string name="scroll_to_songs">பாடல்களுக்கு உருட்டவும்</string>
-    <string name="remove">அகற்று</string>
     <string name="play">விளையாடுங்கள்</string>
-    <string name="skip_next">அடுத்து செல்லவும்</string>
     <string name="more">மேலும்</string>
-    <string name="expand_less">மூடு</string>
-    <string name="skip_previous">முந்தையதைத் தவிர்க்கவும்</string>
-    <string name="position_slider">நிலை ச்லைடர்</string>
     <string name="settings_lyrics_ui">புதிய பாடல் இடைமுகம் ஐ இயக்கவும்</string>
     <string name="settings_lyrics_ui_summary">மேம்பட்ட அம்சங்களுடன் சொல்-மூலம்-வார்த்தை பாடலைக் காண்பிக்க சோதனை இடைமுகம்</string>
     <string name="settings_status_bar_lyrics_title">நிலை பட்டை பாடல்</string>
@@ -280,8 +258,6 @@
     <string name="gramophone_crashed_explainer2">கிராமபோன் செயலிழந்தது :( \n\nதயவுசெய்து எனக்கு ஒரு பிழை அறிக்கையை அனுப்புங்கள், எனவே இந்த விபத்துக்கு என்ன வழிவகுக்கும் என்பது போன்ற சிக்கல்களைச் சரிசெய்ய முடியும்! \n\nஒவ்வொரு சூழ்நிலையும் இசையைப் போலத் தனித்துவமானது, உங்கள் உதவி இல்லாமல் இந்தப் பிழை <b>சரி செய்யப்படாது</b>!</string>
     <string name="send_email">மின்னஞ்சல் அனுப்புங்கள்</string>
     <string name="failed_to_parse_lyric">பாடல் வரிகளை அலசத் தவறிவிட்டது</string>
-    <string name="audio_signal_chain">ஆடியோ சிக்னல் சங்கிலி</string>
-    <string name="audio_not_initialized">ஆடியோ பிளேபேக் அமைப்பு துவக்கப்படவில்லை. ஏதாவது விளையாட முயற்சிக்கவும்!</string>
     <string name="mix_port_flag_none">எதுவுமில்லை</string>
     <string name="mix_port_flag_bit_perfect">பிட் சரியானது</string>
     <string name="mix_port_flag_ultrasound">ஊடொலி</string>
@@ -383,7 +359,6 @@
     <string name="settings_translation_auto_word">ஆட்டோ-மோச்ட் மொழிபெயர்ப்புகள்</string>
     <string name="settings_translation_auto_word_summary">மொழிபெயர்ப்பு சொற்கள்-ஒத்திசைவு மேனிலை தரவு இல்லையென்றால் சொல்-ஒத்திசைக்கப்பட்ட பாடல் பின்னணியில் மொழிபெயர்ப்பு வரிகளுக்கு நேரியல் சாய்வைப் பயன்படுத்துங்கள்</string>
     <string name="cannot_find_file">இந்த கோப்பைக் கண்டுபிடிக்க முடியவில்லை</string>
-    <string name="enter_msg_for_dev_here">டெவலப்பருக்கான செய்தியை இங்கே உள்ளிடவும்</string>
     <string name="do_not_enter_email_enter_msg">செய்தியை உள்ளிடவும், மின்னஞ்சல் முகவரி அல்ல</string>
     <string name="log_will_auto_send">பதிவுகள் தானாக அனுப்பப்படும், அதற்கு பதிலாக சிக்கலை விளக்குங்கள்</string>
     <string name="log_attachment">பதிவுகள் தானாக இணைப்பாக அனுப்பப்படும்</string>
@@ -421,7 +396,6 @@
     <string name="tempo_pitch_value">%s: %.2fx</string>
     <string name="lock_tempo_pitch">லாக் டெம்போ மற்றும் பிட்ச்</string>
     <string name="reset">மீட்டமை</string>
-    <string name="timer_expiry_eos">%s இல் பாடல் ஒலிக்கும் போது ச்லீப் நேரங்குறிகருவி இசையை இடைநிறுத்தும்</string>
     <string name="timer_expiry_end_of_this_song">இந்த பாடலின் முடிவில் ச்லீப் நேரங்குறிகருவி இசையை இடைநிறுத்தும்</string>
     <string name="contributors_saladnoober">தர பொறுப்பு</string>
     <string name="home_menu_quick_refresh">விரைவான புதுப்பிப்பு</string>
@@ -442,7 +416,6 @@
     <string name="sort_by_album_year">ஆல்பம் ஆண்டு</string>
     <string name="sort_by_album_artist_year"><![CDATA[ஆல்பம் கலைஞர் -> ஆண்டு]]></string>
     <string name="forbidden_symbol_error">பெயரில் தவறான எழுத்து</string>
-    <string name="translators">மொழிபெயர்ப்பாளர்கள்</string>
     <string name="settings_replaygain">மீண்டும் விளையாடு</string>
     <string name="settings_replaygain_mode">பயன்முறை</string>
     <string name="settings_replaygain_preamp">முன் ஆம்ப்</string>
