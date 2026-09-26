@@ -18,10 +18,12 @@
 package org.akanework.gramophone.ui.state
 
 import android.content.SharedPreferences
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.media3.common.MediaItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -30,7 +32,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.combineTransform
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 import org.akanework.gramophone.logic.comparators.SupportComparator
 import org.akanework.gramophone.logic.emitOrDie
 import org.akanework.gramophone.logic.utils.flows.PauseManagingSharedFlow.Companion.sharePauseableIn
@@ -40,9 +41,16 @@ import uk.akane.libphonograph.items.FileNode
 import uk.akane.libphonograph.reader.FlowReader
 
 /**
+ * One folder as the tab shows it: its [path], its subfolders sorted by the tab's sort preference
+ * and its songs sorted by the song list's. All three always come from the same folder, so a page
+ * never shows one folder's subfolders with another's songs.
+ */
+@Immutable
+class FolderPage(val path: List<String>, val folders: List<FileNode>, val songs: List<MediaItem>)
+
+/**
  * State of the Folders (shallow) or Filesystem (detailed) tab: the current folder path, the
- * folder list sorted by the tab's sort preference, and the folder's songs as a nested
- * [LibraryTabState].
+ * folder shown as a [FolderPage], and the folder's songs as a nested [LibraryTabState].
  */
 @Stable
 class FolderTabState(
@@ -58,8 +66,6 @@ class FolderTabState(
 
     /** `null` until the default location was chosen. */
     private val fileNodePath = MutableStateFlow<List<String>?>(null)
-    var path: List<String>? by mutableStateOf(null)
-        private set
 
     private val liveData = if (isDetailed) reader.folderStructureFlow else reader.shallowFolderFlow
 
@@ -87,13 +93,32 @@ class FolderTabState(
             fileNodePath.emitOrDie(newPath)
             return@combineTransform // we will run again with new path soon
         }
-        emit(item)
+        emit(path!! to item)
     }.sharePauseableIn(
         CoroutineScope(scope.coroutineContext + Dispatchers.Default),
         SharingStarted.WhileSubscribed(), replay = 1
     )
 
-    val folderFlow: Flow<List<FileNode>> = dataFlow.combine(sort.sortTypeFlow) { item, sortType ->
+    val songs = LibraryTabState(
+        LibraryTabSpec.FolderSongs, prefs, reader, scope,
+        flowOverride = dataFlow.map { it.second.songList },
+    )
+
+    /** The current folder, with its subfolders and songs sorted. */
+    val pageFlow: Flow<FolderPage> = combine(
+        dataFlow, sort.sortTypeFlow, songs.sort.sortTypeFlow,
+    ) { (path, item), sortType, songSortType ->
+        FolderPage(path, sortFolders(item, sortType), songs.sortList(item.songList, songSortType))
+    }.sharePauseableIn(
+        CoroutineScope(scope.coroutineContext + Dispatchers.Default),
+        SharingStarted.WhileSubscribed(5000), replay = 1
+    )
+
+    /** The folder shown, `null` until the first one was loaded. Set by the screen from [pageFlow]. */
+    var page: FolderPage? by mutableStateOf(null)
+        internal set
+
+    private fun sortFolders(item: FileNode, sortType: Sorter.Type): List<FileNode> =
         when (sortType) {
             Sorter.Type.BySizeDescending -> item.folderList.values.sortedByDescending {
                 it.folderList.size + it.songList.size
@@ -120,39 +145,12 @@ class FolderTabState(
                 SupportComparator.createAlphanumericComparator(cnv = { it.folderName })
             )
         }
-    }.sharePauseableIn(
-        CoroutineScope(scope.coroutineContext + Dispatchers.Default),
-        SharingStarted.WhileSubscribed(5000), replay = 1
-    )
-
-    var folders: List<FileNode> by mutableStateOf(emptyList())
-        internal set
-
-    val songs = LibraryTabState(
-        LibraryTabSpec.FolderSongs, prefs, reader, scope,
-        flowOverride = dataFlow.map { it.songList },
-    )
-
-    /** Which way the last [enter] went, for the slide animation. */
-    var lastNavigationWasUp: Boolean by mutableStateOf(false)
-        private set
-
-    init {
-        scope.launch {
-            fileNodePath.collect {
-                path = it
-                songs.queueTitleOverride = it?.lastOrNull() ?: "/"
-            }
-        }
-    }
 
     fun enter(folder: String?) {
         val currentPath = fileNodePath.value ?: return
         if (folder != null) {
-            lastNavigationWasUp = false
             fileNodePath.value = currentPath + folder
         } else if (currentPath.isNotEmpty()) {
-            lastNavigationWasUp = true
             fileNodePath.value = currentPath.subList(0, currentPath.size - 1)
         }
     }

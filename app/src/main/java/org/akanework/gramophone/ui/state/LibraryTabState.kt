@@ -155,7 +155,7 @@ class LibraryTabState<T : Any>(
 
     fun isPinned(item: T) = titleOf(item) == null
 
-    private fun sortList(list: List<T>, type: Sorter.Type): List<T> =
+    internal fun sortList(list: List<T>, type: Sorter.Type): List<T> =
         ArrayList(list).apply {
             val (cmp, reverseFirst) = sorter.getComparator(type)
             if (reverseFirst) reverse()

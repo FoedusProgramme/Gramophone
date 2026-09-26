@@ -18,6 +18,9 @@
 package org.akanework.gramophone.ui.screens
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -30,10 +33,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.itemsIndexed
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -67,8 +70,14 @@ import org.akanework.gramophone.ui.components.home.libraryItemCard
 import org.akanework.gramophone.ui.components.home.libraryItemShape
 import org.akanework.gramophone.ui.components.home.rememberIosFlingBehavior
 import org.akanework.gramophone.ui.library.LayoutType
+import org.akanework.gramophone.ui.state.FolderPage
 import org.akanework.gramophone.ui.state.FolderTabState
 import org.akanework.gramophone.ui.state.SortPrefState
+
+/** Folder page transition: the slide, and the outgoing page's fade-out before the incoming fade-in. */
+private const val FOLDER_SLIDE_MS = 200
+private const val FOLDER_FADE_OUT_MS = 70
+private const val FOLDER_FADE_IN_MS = 130
 
 /** The Folders / Filesystem tab, laid out like [LibraryTabScreen]: folders first, then songs. */
 @Composable
@@ -81,13 +90,17 @@ fun FolderTabScreen(
 ) {
     val env = rememberAppActionEnv()
     val scope = rememberCoroutineScope()
-    CollectLibraryItems(state.songs)
-    ReportFullyDrawnWhen(state.songs.loaded)
-    LaunchedEffect(state) {
-        state.folderFlow.collect { state.folders = it }
-    }
     val songs = state.songs
-    val path = state.path
+    ReportFullyDrawnWhen(songs.loaded)
+    LaunchedEffect(state) {
+        state.pageFlow.collect {
+            state.page = it
+            songs.items = it.songs
+            songs.loaded = true
+            songs.queueTitleOverride = it.path.lastOrNull() ?: "/"
+        }
+    }
+    val page = state.page
     val layoutType = songs.layoutType
     val isGrid = layoutType == LayoutType.GRID || layoutType == LayoutType.COMPACT_GRID
     val columns = libraryColumns(layoutType)
@@ -95,41 +108,66 @@ fun FolderTabScreen(
     val rowHeightPx = with(density) {
         LIST_HEIGHT.roundToPx()
     }
-    val gridState = rememberLazyGridState()
-    val queueTitle = songs.queueTitleOverride ?: "/"
+    // One scroll state per folder, so the outgoing and incoming pages never share a grid state.
+    // The current folder's ancestors keep theirs, so going up returns to where the parent was.
+    val gridStates = remember(state) { HashMap<List<String>, LazyGridState>() }
+    fun gridStateFor(path: List<String>) = gridStates.getOrPut(path) { LazyGridState() }
+    LaunchedEffect(page?.path) {
+        val path = page?.path ?: return@LaunchedEffect
+        gridStates.keys.removeAll { it.size > path.size || it != path.subList(0, it.size) }
+    }
     var folderSortOpen by remember { mutableStateOf(false) }
     var songSortOpen by remember { mutableStateOf(false) }
-    val showPop = !path.isNullOrEmpty()
-    // The folders header, the parent folder row if any, the folders, then the songs header.
-    val songsHeaderIndex = 1 + (if (showPop) 1 else 0) + state.folders.size
 
-    fun scrollTo(index: Int) {
+    // The folders header, the parent folder row if any, the folders, then the songs header.
+    fun songsHeaderIndex(page: FolderPage) =
+        1 + (if (page.path.isNotEmpty()) 1 else 0) + page.folders.size
+
+    fun scrollTo(gridState: LazyGridState, index: Int) {
         scope.launch { gridState.animateScrollToItem(index, -rowHeightPx / 2) }
     }
 
-    val goToPlayingSong = {
+    fun goToPlayingSong(page: FolderPage) {
         val id = nowPlaying.currentMediaId
-        val index = if (id != null) songs.items.indexOfFirst { it.mediaId == id } else -1
-        if (index >= 0) scrollTo(songsHeaderIndex + 1 + index)
+        val index = if (id != null) page.songs.indexOfFirst { it.mediaId == id } else -1
+        if (index >= 0) scrollTo(gridStateFor(page.path), songsHeaderIndex(page) + 1 + index)
     }
-    LaunchedEffect(reselectTick) { if (reselectTick > 0) goToPlayingSong() }
+    LaunchedEffect(reselectTick) { if (reselectTick > 0) state.page?.let { goToPlayingSong(it) } }
 
     AnimatedContent(
-        targetState = path,
+        targetState = page,
         modifier = modifier.fillMaxSize(),
+        // A new page only for another folder. A resort or rescan of the same folder updates it
+        contentKey = { it?.path },
         transitionSpec = {
-            // A quarter-width slide with a fade, 150ms, the way the folder pages used to move.
-            val up = state.lastNavigationWasUp
-            (slideInHorizontally(tween(150)) { if (up) -it / 4 else it / 4 } + fadeIn(tween(150)))
-                .togetherWith(
-                    slideOutHorizontally(tween(150)) { if (up) it / 4 else -it / 4 } + fadeOut(tween(150))
-                )
+            val from = initialState?.path
+            val to = targetState?.path
+            if (from == null || to == null) {
+                EnterTransition.None togetherWith ExitTransition.None
+            } else {
+                // Shared axis: a quarter-width slide, the outgoing page fading out before the
+                // incoming one fades in, so the two never show on top of each other.
+                val up = to.size < from.size
+                (slideInHorizontally(tween(FOLDER_SLIDE_MS, easing = FastOutSlowInEasing)) {
+                    if (up) -it / 4 else it / 4
+                } + fadeIn(tween(FOLDER_FADE_IN_MS, delayMillis = FOLDER_FADE_OUT_MS)))
+                    .togetherWith(
+                        slideOutHorizontally(tween(FOLDER_SLIDE_MS, easing = FastOutSlowInEasing)) {
+                            if (up) it / 4 else -it / 4
+                        } + fadeOut(tween(FOLDER_FADE_OUT_MS))
+                    )
+            }
         },
         label = "folder",
-    ) { animatedPath ->
-        // Based on the animated path, so the outgoing page keeps its parent row during the
-        // transition.
-        val showParent = !animatedPath.isNullOrEmpty()
+    ) { animatedPage ->
+        if (animatedPage == null) return@AnimatedContent
+        // Everything below comes from this page's own folder, so the outgoing page keeps showing
+        // its folder (and parent row) while the incoming one shows the new folder
+        val gridState = remember { gridStateFor(animatedPage.path) }
+        val showParent = animatedPage.path.isNotEmpty()
+        val folders = animatedPage.folders
+        val items = animatedPage.songs
+        val songsHeaderIndex = songsHeaderIndex(animatedPage)
         Box(Modifier.fillMaxSize()) {
         LazyVerticalGrid(
             columns = GridCells.Fixed(columns),
@@ -142,12 +180,12 @@ fun FolderTabScreen(
             overscrollEffect = null,
         ) {
             item(key = "folders-header", span = { GridItemSpan(maxLineSpan) }) {
-                val count = state.folders.size
+                val count = folders.size
                 LibraryHeader(
                     modifier = Modifier.libraryItemCard(libraryItemShape(topStart = true, topEnd = true)),
                     counterText = pluralStringResource(R.plurals.folders_plural, count, count),
                     onSort = { folderSortOpen = true },
-                    onJumpDown = { scrollTo(songsHeaderIndex) },
+                    onJumpDown = { scrollTo(gridState, songsHeaderIndex) },
                     sortMenu = {
                         SortMenu(
                             expanded = folderSortOpen,
@@ -174,7 +212,7 @@ fun FolderTabScreen(
                     )
                 }
             }
-            items(state.folders, key = { "folder:" + it.folderName }, span = { GridItemSpan(maxLineSpan) }) { node ->
+            items(folders, key = { "folder:" + it.folderName }, span = { GridItemSpan(maxLineSpan) }) { node ->
                 val n = node.folderList.size + node.songList.size
                 LibraryFolderRow(
                     title = node.folderName,
@@ -184,17 +222,18 @@ fun FolderTabScreen(
                 )
             }
             item(key = "songs-header", span = { GridItemSpan(maxLineSpan) }) {
-                val count = songs.items.size
+                val count = items.size
+                val queueTitle = animatedPage.path.lastOrNull() ?: "/"
                 LibraryHeader(
                     modifier = Modifier.libraryItemCard(
-                        libraryItemShape(bottomStart = songs.items.isEmpty(), bottomEnd = songs.items.isEmpty())
+                        libraryItemShape(bottomStart = items.isEmpty(), bottomEnd = items.isEmpty())
                     ),
                     counterText = pluralStringResource(R.plurals.songs, count, count),
-                    onCounterClick = goToPlayingSong,
-                    onPlayAll = { LibraryActions.playAll(env, songs.items, queueTitle) },
-                    onShuffleAll = { LibraryActions.shuffleAll(env, songs.items, queueTitle) },
+                    onCounterClick = { goToPlayingSong(animatedPage) },
+                    onPlayAll = { LibraryActions.playAll(env, items, queueTitle) },
+                    onShuffleAll = { LibraryActions.shuffleAll(env, items, queueTitle) },
                     onSort = { songSortOpen = true },
-                    onJumpUp = { scrollTo(0) },
+                    onJumpUp = { scrollTo(gridState, 0) },
                     sortMenu = {
                         SortMenu(
                             expanded = songSortOpen,
@@ -211,11 +250,11 @@ fun FolderTabScreen(
                     },
                 )
             }
-            itemsIndexed(songs.items, key = { _, it -> "song:" + it.mediaId }) { index, item: MediaItem ->
+            itemsIndexed(items, key = { _, it -> "song:" + it.mediaId }) { index, item: MediaItem ->
                 LibraryItem(
                     songs, item, nowPlaying, env, layoutType,
                     Modifier.animateItem(),
-                    cardShape = { libraryCellShape(index, songs.items.size, columns, it) },
+                    cardShape = { libraryCellShape(index, items.size, columns, it) },
                 )
             }
         }
@@ -224,12 +263,12 @@ fun FolderTabScreen(
         val decorPx = with(LocalDensity.current) { DECOR_HEIGHT.roundToPx() } + gapPx
         LibraryFastScroller(
             gridState = gridState,
-            itemCount = songs.items.size,
+            itemCount = items.size,
             headerCount = songsHeaderIndex + 1,
             columns = columns,
             rowHeightPx = (if (isGrid) libraryGridRowHeightPx(true, columns) else rowHeightPx) + gapPx,
             headerHeightPx = decorPx * 2 + folderRowPx * (songsHeaderIndex - 1),
-            hintFor = { i -> songs.items.getOrNull(i)?.let { songs.fastScrollHintFor(it, i) } ?: "-" },
+            hintFor = { i -> items.getOrNull(i)?.let { songs.fastScrollHintFor(it, i) } ?: "-" },
             modifier = Modifier.padding(vertical = LIBRARY_GROUP_CORNER),
         )
         }
