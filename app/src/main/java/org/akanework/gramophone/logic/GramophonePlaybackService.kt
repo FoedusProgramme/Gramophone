@@ -139,6 +139,8 @@ import org.akanework.gramophone.logic.utils.exoplayer.GramophoneRenderFactory
 import org.akanework.gramophone.ui.AudioPreviewActivity
 import org.akanework.gramophone.ui.LyricWidgetProvider
 import org.akanework.gramophone.ui.MainActivity
+import org.akanework.gramophone.ui.widget.BaseWidgetProvider
+import org.akanework.gramophone.ui.widget.DesktopWidgetManager
 import org.akanework.gramophone.ui.fragments.compose.MqState.Companion.CLIENT_QB_REFRESH_ALL
 import org.akanework.gramophone.ui.fragments.compose.MqState.Companion.CLIENT_QB_REFRESH_CLEAR
 import org.akanework.gramophone.ui.fragments.compose.MqState.Companion.CLIENT_QB_REFRESH_ITEM
@@ -810,10 +812,17 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         return onSetRating(session, controller, mediaItemId, rating)
     }
 
+    fun toggleCurrentItemFavorite() {
+        val currentMediaItem = controller?.currentMediaItem ?: return
+        val isHeart = (currentMediaItem.mediaMetadata.userRating as? HeartRating)?.isHeart == true
+        controller?.setRating(HeartRating(!isHeart))
+    }
+
     // When destroying, we should release server side player
     // alongside with the mediaSession.
     override fun onDestroy() {
         Log.i(TAG, "+onDestroy()")
+        BaseWidgetProvider.savePlaybackSnapshot(this)
         instanceForWidgetAndLyricsOnly = null
         unregisterReceiver(seekReceiver)
         unregisterReceiver(btReceiver)
@@ -835,6 +844,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
         mediaSession = null
         broadcastAudioSessionClose()
         LyricWidgetProvider.update(this)
+        DesktopWidgetManager.updateAllWidgets(this)
         internalPlaybackThread.quitSafely()
         super.onDestroy()
         Log.i(TAG, "-onDestroy()")
@@ -1624,6 +1634,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
             }
         }
 
+        DesktopWidgetManager.refreshFromPlayback(this)
         lastPlayedManager.save()
     }
 
@@ -1639,10 +1650,12 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
 
     override fun onMediaMetadataChanged(mediaMetadata: MediaMetadata) {
         refreshMediaButtonCustomLayout()
+        DesktopWidgetManager.refreshFromPlayback(this)
     }
 
     override fun onIsPlayingChanged(isPlaying: Boolean) {
         scheduleSendingLyrics(false)
+        DesktopWidgetManager.updateAllWidgets(this)
         lastPlayedManager.save()
     }
 
@@ -1684,6 +1697,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
     }
     override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
         refreshMediaButtonCustomLayout()
+        DesktopWidgetManager.refreshFromPlayback(this)
         if (needsMissingOnDestroyCallWorkarounds()) {
             handler.post { lastPlayedManager.save() }
         }
@@ -1691,6 +1705,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
 
     override fun onRepeatModeChanged(repeatMode: Int) {
         refreshMediaButtonCustomLayout()
+        DesktopWidgetManager.refreshFromPlayback(this)
         if (needsMissingOnDestroyCallWorkarounds()) {
             handler.post { lastPlayedManager.save() }
         }

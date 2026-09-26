@@ -25,6 +25,8 @@ import org.akanework.gramophone.R
 import org.akanework.gramophone.ui.components.TabOrderPreference
 import org.akanework.gramophone.ui.fragments.BasePreferenceFragment
 import org.akanework.gramophone.ui.fragments.BaseSettingsActivity
+import org.akanework.gramophone.ui.widget.CardWidgetColorResolver
+import org.akanework.gramophone.ui.widget.DesktopWidgetManager
 
 class AppearanceSettingsActivity : BaseSettingsActivity(
     R.string.settings_category_appearance,
@@ -51,6 +53,11 @@ class AppearanceSettingsFragment : BasePreferenceFragment() {
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                     }
                 }
+            }
+
+            CardWidgetColorResolver.PREF_WIDGET_THEME -> {
+                CardWidgetColorResolver.clearCache()
+                context?.let { DesktopWidgetManager.updateAllWidgets(it) }
             }
         }
     }

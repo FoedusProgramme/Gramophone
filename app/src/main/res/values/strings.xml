@@ -400,6 +400,11 @@
     <string name="settings_notification_lyrics_summary">Display lyrics as the notification title and artist - title as subtitle</string>
     <!-- Description shown about lyric widget in Android launcher / home screen's widget selector on Android 12+ -->
     <string name="lyric_widget_description">Widget that shows lyrics of currently playing media</string>
+    <string name="card_widget_title">Card widget</string>
+    <string name="card_widget_description">Widget that provides music playback controls and track details</string>
+    <string name="circle_widget_title">Circle &amp; pill widget</string>
+    <string name="circle_widget_description">Compact circular and pill-shaped widget with playback controls</string>
+    <string name="pause">Pause</string>
     <!-- Settings toggle in behavior settings to always skip to previous track on previous button press. Title -->
     <string name="settings_always_skip_previous">Always skip to previous track</string>
     <!-- Settings toggle in behavior settings to always skip to previous track on previous button press. Subtext -->
@@ -1305,4 +1310,12 @@ supporting local search. This string is displayed in the search bar when using G
     <string name="loading_playlists">Loading playlists...</string>
     <!-- Option to enable reordering mode for items in a list -->
     <string name="edit_mode">Enter edit mode</string>
+    <string name="settings_preference_category_desktop_widgets">Desktop widgets</string>
+    <string name="settings_widget_theme">Widget theme</string>
+    <string name="widget_theme_wallpaper_follow_system">Wallpaper · Follow system</string>
+    <string name="widget_theme_wallpaper_dark">Wallpaper · Dark</string>
+    <string name="widget_theme_wallpaper_light">Wallpaper · Light</string>
+    <string name="widget_theme_album_art_follow_system">Album art · Follow system</string>
+    <string name="widget_theme_album_art_dark">Album art · Dark</string>
+    <string name="widget_theme_album_art_light">Album art · Light</string>
 </resources>
