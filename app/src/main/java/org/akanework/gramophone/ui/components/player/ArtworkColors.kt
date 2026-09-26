@@ -46,6 +46,11 @@ import com.materialkolor.rememberDynamicColorScheme
 import com.materialkolor.score.Score
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import org.akanework.gramophone.logic.ApplicationScope
+import org.koin.compose.koinInject
+import kotlinx.coroutines.async
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.withContext
 import org.akanework.gramophone.ui.components.compose.rememberBooleanPreference
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.ARTWORK_QUANTIZE_MAX
@@ -116,29 +121,62 @@ fun nowPlayingColors(cover: ColorScheme, appPrimary: Color): NowPlayingColors {
 private val artworkSeedCache = LruCache<Uri, Color>(64)
 private val accurateArtworkSeedCache = LruCache<Uri, Color>(64)
 
+/**
+ * Seed extractions still running, so the list row, player and queue asking for the same cover at
+ * once share one decode. Only touched on the main thread.
+ */
+private val inFlightSeeds = HashMap<Pair<Uri, Boolean>, Deferred<Color?>>()
+
+/**
+ * The cache key for a cover: its URI without the `hd` flag. The seed comes from a tiny decode,
+ * so the full and HD artwork give the same colour, and the player's switch from one to the other
+ * mid-song must not start a second extraction.
+ */
+internal fun seedKey(uri: Uri): Uri {
+    if (uri.getQueryParameter("hd") == null) return uri
+    return uri.buildUpon().clearQuery().apply {
+        for (name in uri.queryParameterNames) {
+            if (name == "hd") continue
+            for (value in uri.getQueryParameters(name)) appendQueryParameter(name, value)
+        }
+    }.build()
+}
+
 @Composable
 private fun rememberArtworkSeed(artworkUri: Uri?, accurate: Boolean): Color? {
     val context = LocalPlatformContext.current
+    val appScope = koinInject<ApplicationScope>()
     val cache = if (accurate) accurateArtworkSeedCache else artworkSeedCache
-    var seed by remember { mutableStateOf(artworkUri?.let { cache[it] }) }
-    LaunchedEffect(artworkUri, accurate) {
-        if (artworkUri == null) {
+    val key = artworkUri?.let(::seedKey)
+    var seed by remember { mutableStateOf(key?.let { cache[it] }) }
+    LaunchedEffect(key, accurate) {
+        if (artworkUri == null || key == null) {
             seed = null
             return@LaunchedEffect
         }
-        cache[artworkUri]?.let {
+        cache[key]?.let {
             seed = it
             return@LaunchedEffect
         }
-        // Rethrow cancellation instead of treating it as a failed decode: a superseded effect
-        // (the cover URI changed mid-decode) must not overwrite the newer effect's seed.
-        seed = try {
-            extractArtworkSeed(context, artworkUri, accurate)
-        } catch (e: CancellationException) {
-            throw e
-        } catch (_: Throwable) {
-            null
-        }?.also { cache.put(artworkUri, it) }
+        // The decode runs on the app scope, not this effect: a superseded or disposed caller
+        // only stops waiting, while the shared result still lands in the cache for the others.
+        val flight = key to accurate
+        val job = inFlightSeeds.getOrPut(flight) {
+            val appContext = context.applicationContext
+            appScope.async {
+                try {
+                    extractArtworkSeed(appContext, artworkUri, accurate)
+                        ?.also { cache.put(key, it) }
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (_: Throwable) {
+                    null
+                } finally {
+                    withContext(NonCancellable + Dispatchers.Main) { inFlightSeeds.remove(flight) }
+                }
+            }
+        }
+        seed = job.await()
     }
     return seed
 }
