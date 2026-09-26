@@ -26,11 +26,12 @@ import org.akanework.gramophone.ui.state.HomeViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
+import uk.akane.libphonograph.reader.FlowReader
 
 val viewModelModule = module {
     viewModelOf(::MediaControllerViewModel)
     viewModelOf(::NavViewModel)
     viewModelOf(::HomeViewModel)
-    factory<PlayIntentExecutor> { DefaultPlayIntentExecutor(androidContext(), get(), get()) }
+    factory<PlayIntentExecutor> { DefaultPlayIntentExecutor(androidContext(), get<FlowReader>(), get()) }
     viewModelOf(::PlayIntentViewModel)
 }

@@ -27,6 +27,7 @@ import androidx.media3.common.Player
 import androidx.media3.common.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
@@ -108,17 +109,24 @@ class PlayIntentViewModel(
 }
 
 /** Runs play intent actions against the loaded library, the controller and navigation. */
-class DefaultPlayIntentExecutor(
+class DefaultPlayIntentExecutor internal constructor(
     private val context: Context,
-    private val reader: FlowReader,
+    /** The library's songs by id; [FlowReader.idMapFlow] outside tests. */
+    private val idMapFlow: Flow<Map<Long, MediaItem>>,
     private val libraryWrites: LibraryWriteRepository,
 ) : PlayIntentExecutor {
+    constructor(
+        context: Context,
+        reader: FlowReader,
+        libraryWrites: LibraryWriteRepository,
+    ) : this(context, reader.idMapFlow, libraryWrites)
+
     override suspend fun execute(action: PlayIntentAction, host: PlayIntentHost) {
         Log.i(TAG, "execute($action)")
         when (action) {
             is PlayIntentAction.PlayById -> {
                 val mediaItem = withContext(Dispatchers.Default) {
-                    val col = reader.idMapFlow.firstOrNull()
+                    val col = idMapFlow.firstOrNull()
                     val item = action.id.toLongOrNull()?.let { col?.let { it2 -> it2[it] } }
                     if (item == null) {
                         Log.e(TAG, "can't find file with ID ${action.id} in library with" +
