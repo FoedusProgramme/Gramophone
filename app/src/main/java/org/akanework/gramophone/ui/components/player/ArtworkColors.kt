@@ -44,6 +44,7 @@ import com.materialkolor.ktx.quantize
 import com.materialkolor.quantize.QuantizerCelebi
 import com.materialkolor.rememberDynamicColorScheme
 import com.materialkolor.score.Score
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.akanework.gramophone.ui.components.compose.rememberBooleanPreference
@@ -129,8 +130,15 @@ private fun rememberArtworkSeed(artworkUri: Uri?, accurate: Boolean): Color? {
             seed = it
             return@LaunchedEffect
         }
-        seed = runCatching { extractArtworkSeed(context, artworkUri, accurate) }.getOrNull()
-            ?.also { cache.put(artworkUri, it) }
+        // Rethrow cancellation instead of treating it as a failed decode: a superseded effect
+        // (the cover URI changed mid-decode) must not overwrite the newer effect's seed.
+        seed = try {
+            extractArtworkSeed(context, artworkUri, accurate)
+        } catch (e: CancellationException) {
+            throw e
+        } catch (_: Throwable) {
+            null
+        }?.also { cache.put(artworkUri, it) }
     }
     return seed
 }
