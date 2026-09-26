@@ -93,6 +93,9 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.LineHeightStyle
+import androidx.compose.ui.text.PlatformTextStyle
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
@@ -362,6 +365,7 @@ private fun TitleArtist(
             text = title?.toString().orEmpty(),
             color = scheme.primary,
             fontSize = 24.sp,
+            lineHeight = 32.sp,
             fontWeight = if (bold) FontWeight.W600 else FontWeight.W400,
             align = align,
             onClick = actions.openAlbum,
@@ -371,6 +375,7 @@ private fun TitleArtist(
             text = artist?.toString().orEmpty(),
             color = scheme.secondary,
             fontSize = 19.sp,
+            lineHeight = 25.sp,
             fontWeight = FontWeight.W500,
             align = align,
             onClick = actions.openArtist,
@@ -388,6 +393,9 @@ private fun FadingMarqueeText(
     text: String,
     color: Color,
     fontSize: TextUnit,
+    // A fixed line height, so a title falling back to a taller font (CJK after Latin, say) keeps
+    // the same height and the controls below don't jump when the song changes.
+    lineHeight: TextUnit,
     fontWeight: FontWeight,
     align: TextAlign,
     onClick: () -> Unit,
@@ -411,6 +419,13 @@ private fun FadingMarqueeText(
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             textAlign = align,
+            style = LocalTextStyle.current.copy(
+                lineHeight = lineHeight,
+                lineHeightStyle = LineHeightStyle(
+                    LineHeightStyle.Alignment.Center, LineHeightStyle.Trim.None,
+                ),
+                platformStyle = PlatformTextStyle(includeFontPadding = false),
+            ),
             onTextLayout = { lineWidth = it.size.width },
             modifier = Modifier
                 .fillMaxWidth()
