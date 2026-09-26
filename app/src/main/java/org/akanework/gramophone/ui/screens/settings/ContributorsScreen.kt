@@ -21,25 +21,18 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.widget.Toast
-import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.animate
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.displayCutout
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.union
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
-import androidx.compose.material3.Text
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.text.style.TextOverflow
 import org.akanework.gramophone.ui.components.home.GLASS_BAR_HEIGHT
 import org.akanework.gramophone.ui.components.home.LibraryIconButton
 import androidx.compose.foundation.gestures.awaitEachGesture
@@ -51,14 +44,13 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -72,7 +64,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.geometry.center
 import androidx.compose.ui.geometry.isSpecified
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.drawscope.translate
@@ -82,13 +73,19 @@ import androidx.compose.ui.input.pointer.positionChanged
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalFontFamilyResolver
+import androidx.compose.ui.unit.LayoutDirection
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.hazeSource
+import org.akanework.gramophone.ui.components.home.GlassTitleBar
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextMeasurer
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
-import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
@@ -145,8 +142,8 @@ private const val DOUBLE_TAP_ZOOM = 2.5f
  *
  * Unlike the other settings pages this is not a scrolling [PreferenceScreen][org.akanework
  * .gramophone.ui.components.settings.PreferenceScreen]: the names fill the whole window, edge to
- * edge, so pinching and panning never scroll the page by accident. Only a small back button and
- * title float over them.
+ * edge, so pinching and panning never scroll the page by accident. Only the shared glass bar,
+ * with its back button and small title, floats over them.
  *
  * The logo is rasterized and scanned line by line, and the filled runs of each line are filled
  * with whole names.
@@ -160,37 +157,30 @@ fun ContributorsScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
             Contributors.TRANSLATORS.filterNotNull().forEach { add(it) }
         }.shuffled(Random(1712))
     }
+    val hazeState = remember { HazeState() }
     Box(
         modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.surfaceContainerLow),
     ) {
-        NameMark(names, Modifier.fillMaxSize())
-        Row(
-            Modifier
-                .windowInsetsPadding(
-                    WindowInsets.systemBars.union(WindowInsets.displayCutout)
-                        .only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal),
+        NameMark(names, Modifier.fillMaxSize().hazeSource(hazeState))
+        // Nothing scrolls under the bar, so it keeps its small title all the time, as on the
+        // licenses page. Its frost stays on for the names a zoom moves under it.
+        GlassTitleBar(
+            hazeState = hazeState,
+            title = stringResource(R.string.settings_contributors),
+            scrolled = { Float.MAX_VALUE },
+            toolbarPaddingStart = BACK_BUTTON_INSET,
+            titlePaddingStart = BAR_TITLE_INSET,
+            navigationIcon = {
+                LibraryIconButton(
+                    icon = Icons.AutoMirrored.Outlined.ArrowBack,
+                    iconSize = 24.dp,
+                    tint = MaterialTheme.colorScheme.onSurface,
+                    onClick = onBack,
                 )
-                .height(GLASS_BAR_HEIGHT)
-                .padding(start = BACK_BUTTON_INSET),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            LibraryIconButton(
-                icon = Icons.AutoMirrored.Outlined.ArrowBack,
-                iconSize = 24.dp,
-                tint = MaterialTheme.colorScheme.onSurface,
-                onClick = onBack,
-            )
-            Text(
-                text = stringResource(R.string.settings_contributors),
-                modifier = Modifier.padding(start = BAR_TITLE_INSET, end = 16.dp),
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurface,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-        }
+            },
+        )
     }
 }
 
@@ -199,16 +189,18 @@ fun ContributorsScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
  * no zoom the logo is fitted inside the safe area, clear of the bars and the back button.
  * Tapping opens the contributors page on GitHub, pinching zooms into the small names and a
  * double tap toggles the zoom.
+ *
+ * Planning the layout rasterizes the logo and measures every name many times, which takes far
+ * longer than a frame, so it runs on a background thread and the names fade in once it is done.
+ * The last plans are cached, so coming back to the page shows them at once.
  */
 @Composable
 private fun NameMark(names: List<String>, modifier: Modifier = Modifier) {
     if (names.isEmpty()) return
     val context = LocalContext.current
-    val measurer = rememberTextMeasurer()
+    val appContext = context.applicationContext
+    val fontFamilyResolver = LocalFontFamilyResolver.current
     val color = MaterialTheme.colorScheme.primary
-    var arrived by remember { mutableStateOf(false) }
-    LaunchedEffect(Unit) { arrived = true }
-    val fade by animateFloatAsState(if (arrived) 1f else 0f, tween(700), label = "credits")
     val zoom = remember { MarkZoom() }
     val scope = rememberCoroutineScope()
     val density = LocalDensity.current
@@ -216,7 +208,7 @@ private fun NameMark(names: List<String>, modifier: Modifier = Modifier) {
     val safe = WindowInsets.systemBars.union(WindowInsets.displayCutout).asPaddingValues()
     val padLeft = with(density) { (safe.calculateLeftPadding(direction) + MARK_MARGIN).roundToPx() }
     val padRight = with(density) { (safe.calculateRightPadding(direction) + MARK_MARGIN).roundToPx() }
-    // Under the back button's bar at the top, and a gap above the navigation bar at the bottom.
+    // Under the glass bar at the top, and a gap above the navigation bar at the bottom.
     val padTop = with(density) { (safe.calculateTopPadding() + GLASS_BAR_HEIGHT).roundToPx() }
     val padBottom = with(density) { (safe.calculateBottomPadding() + MARK_BOTTOM_GAP).roundToPx() }
     BoxWithConstraints(
@@ -232,11 +224,21 @@ private fun NameMark(names: List<String>, modifier: Modifier = Modifier) {
         // The safe area the logo is fitted into at no zoom.
         val width = (constraints.maxWidth - padLeft - padRight).coerceAtLeast(0)
         val height = (constraints.maxHeight - padTop - padBottom).coerceAtLeast(0)
-        val plan = remember(names, width, height, color) {
-            planMark(context, measurer, names, width, height, color)
+        val key = PlanKey(names, width, height, density.density, density.fontScale, direction)
+        val plan by produceState(MarkPlanCache[key], key) {
+            value = MarkPlanCache[key] ?: withContext(Dispatchers.Default) {
+                // A measurer of its own: the composition's one is not meant to be shared across
+                // threads.
+                val measurer = TextMeasurer(fontFamilyResolver, density, direction)
+                planMark(appContext, measurer, names, width, height)
+            }.also { MarkPlanCache[key] = it }
         }
+        // Shown at once when the plan was cached, faded in when it had to be made.
+        val fade = remember { Animatable(if (plan != null) 1f else 0f) }
+        val ready = plan != null
+        LaunchedEffect(ready) { if (ready) fade.animateTo(1f, tween(200)) }
         Canvas(Modifier.fillMaxSize()) {
-            val mark = plan.mark
+            val mark = plan ?: return@Canvas
             // Scale the logo's pixel bounds up to the safe area. Otherwise the empty space around
             // the vector would shrink every name.
             val grow = minOf(
@@ -245,17 +247,18 @@ private fun NameMark(names: List<String>, modifier: Modifier = Modifier) {
             )
             val shiftX = padLeft + (width - mark.width * grow) / 2f - mark.left * grow
             val shiftY = padTop + (height - mark.height * grow) / 2f - mark.top * grow
+            val alpha = fade.value
             // Zoomed in the draw pass rather than a layer, so the names are drawn sharp.
             translate(zoom.offset.x, zoom.offset.y) {
                 scale(zoom.scale, zoom.scale, pivot = center) {
                     translate(shiftX, shiftY) {
                         scale(grow, grow, pivot = Offset.Zero) {
-                            plan.names.forEach { name ->
+                            mark.names.forEach { name ->
                                 drawText(
                                     textLayoutResult = name.layout,
                                     color = color,
                                     topLeft = Offset(name.x, name.y),
-                                    alpha = fade,
+                                    alpha = alpha,
                                 )
                             }
                         }
@@ -263,6 +266,31 @@ private fun NameMark(names: List<String>, modifier: Modifier = Modifier) {
                 }
             }
         }
+    }
+}
+
+/** Everything a [MarkPlan] depends on. The colour is not: it is applied when drawing. */
+private data class PlanKey(
+    val names: List<String>,
+    val width: Int,
+    val height: Int,
+    val density: Float,
+    val fontScale: Float,
+    val direction: LayoutDirection,
+)
+
+/** The last few plans, so returning to the page or rotating back does not plan again. */
+private object MarkPlanCache {
+    private const val SIZE = 2
+    private val plans = LinkedHashMap<PlanKey, MarkPlan>(SIZE + 1, 1f, true)
+
+    @Synchronized
+    operator fun get(key: PlanKey): MarkPlan? = plans[key]
+
+    @Synchronized
+    operator fun set(key: PlanKey, plan: MarkPlan) {
+        plans[key] = plan
+        while (plans.size > SIZE) plans.remove(plans.keys.first())
     }
 }
 
@@ -394,8 +422,20 @@ private class Mark(
 
 private val EMPTY_MARK = Mark(IntArray(0), 1, 0, 0, 1, 1)
 
-/** The placed names and the [Mark] they were placed in. */
-private class MarkPlan(val names: List<Placed>, val mark: Mark)
+/**
+ * The placed names and the bounding box of the [Mark] they were placed in. The mark's pixels are
+ * not kept, so a cached plan stays small.
+ */
+private class MarkPlan(
+    val names: List<Placed>,
+    val left: Int,
+    val top: Int,
+    val width: Int,
+    val height: Int,
+) {
+    constructor(names: List<Placed>, mark: Mark) :
+        this(names, mark.left, mark.top, mark.width, mark.height)
+}
 
 /** One line of the logo: its top, and its filled horizontal runs. */
 private class MarkLine(val top: Float, val runs: List<IntRange>)
@@ -410,7 +450,6 @@ private fun planMark(
     names: List<String>,
     width: Int,
     height: Int,
-    color: Color,
 ): MarkPlan {
     if (width <= 0 || height <= 0) return MarkPlan(emptyList(), EMPTY_MARK)
     val mark = markPixels(context, width, height)
@@ -418,7 +457,7 @@ private fun planMark(
 
     /** Places every name at [sizeSp], or returns null if some names do not fit. */
     fun attempt(sizeSp: Float): List<Placed>? {
-        val style = TextStyle(color = color, fontSize = sizeSp.sp)
+        val style = TextStyle(fontSize = sizeSp.sp)
         val layouts = names.map {
             measurer.measure(AnnotatedString(it), style, maxLines = 1, softWrap = false)
         }
