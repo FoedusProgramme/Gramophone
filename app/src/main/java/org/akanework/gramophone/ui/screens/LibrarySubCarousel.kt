@@ -101,9 +101,6 @@ internal val CAROUSEL_ROW_PADDING = 8.dp
 private val CAROUSEL_ITEM_GAP = 8.dp
 private val CAROUSEL_ITEM_CORNER = 28.dp
 
-/** Default cover glyph size as a share of the card height, a little under a list row's. */
-private const val CAROUSEL_DEFAULT_GLYPH_SHARE = 0.4f
-
 /** Side margins, matching the page's 24dp content margin on both sides. */
 private val CAROUSEL_START_PADDING = 24.dp
 private val CAROUSEL_END_PADDING = 24.dp
@@ -298,8 +295,6 @@ private fun <T : Any> CarouselCard(
         uri = state.spec.coverOf(context, item),
         defaultCover = state.spec.defaultCoverOf(item),
         cornerRadius = CAROUSEL_ITEM_CORNER,
-        // The default cover's fixed insets would stretch its glyph across the whole card.
-        defaultGlyphShare = CAROUSEL_DEFAULT_GLYPH_SHARE,
         modifier = modifier
             .fillMaxSize()
             // The library's rows and cards are clickable without a ripple.

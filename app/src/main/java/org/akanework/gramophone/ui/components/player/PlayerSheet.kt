@@ -98,6 +98,7 @@ import kotlinx.coroutines.launch
 import org.akanework.gramophone.R
 import org.akanework.gramophone.ui.components.compose.rememberBooleanPreference
 import org.akanework.gramophone.ui.components.compose.rememberIntPreference
+import org.akanework.gramophone.ui.components.home.rememberDefaultCoverPainter
 import org.akanework.gramophone.ui.components.lyrics.LyricsOverlayState
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.COVER_CLICK_MIN
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.FALLBACK_PAGE_CORNER
@@ -441,13 +442,12 @@ private fun SharedArtwork(
     val shape = if (cookie) CookieMorphShape(metrics.eased) else RoundedCornerShape(metrics.artCornerDp)
     val context = LocalPlatformContext.current
     val requestSizePx = metrics.rootWidth.roundToInt().coerceAtLeast(1)
-    val model: Any = artwork ?: R.drawable.ic_default_cover
-    val request = remember(model, requestSizePx) {
+    // No artwork loads as a null request, which shows the default cover through the fallback.
+    val request = remember(artwork, requestSizePx) {
         ImageRequest.Builder(context)
-            .data(model)
+            .data(artwork)
             .size(requestSizePx)
             .precision(Precision.INEXACT)
-            .error(R.drawable.ic_default_cover)
             .build()
     }
 
@@ -500,6 +500,8 @@ private class ArtworkLayer(val request: ImageRequest, initialAlpha: Float) {
 @Composable
 private fun CrossfadeArtwork(request: ImageRequest, modifier: Modifier) {
     val scope = rememberCoroutineScope()
+    // Drawn with its glyph at the shared share, like every other default cover.
+    val defaultCover = rememberDefaultCoverPainter(R.drawable.ic_default_cover)
     val layers = remember { mutableStateListOf<ArtworkLayer>() }
     if (layers.lastOrNull()?.request != request) {
         // The very first cover shows as soon as it loads, later ones fade in over the last.
@@ -521,6 +523,8 @@ private fun CrossfadeArtwork(request: ImageRequest, modifier: Modifier) {
                     model = layer.request,
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
+                    error = defaultCover,
+                    fallback = defaultCover,
                     onSuccess = { onLoaded() },
                     onError = { onLoaded() },
                     modifier = Modifier

@@ -23,8 +23,15 @@ import android.content.Intent
 import android.widget.Toast
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.animate
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.calculateCentroid
+import androidx.compose.foundation.gestures.calculatePan
+import androidx.compose.foundation.gestures.calculateZoom
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -34,16 +41,24 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.geometry.center
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.input.pointer.positionChanged
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -54,11 +69,13 @@ import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.toSize
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.utils.data.Contributors
 import org.akanework.gramophone.ui.components.settings.PreferenceScreen
+import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 private const val CONTRIBUTORS_URL =
@@ -89,6 +106,11 @@ private const val MIN_RUN_PX = 24f
 /** Padding at both ends of a run, so no name touches the edge of the logo. */
 private const val EDGE_PX = 1.5f
 
+/** Zoom range of the pinch, and the zoom a double tap goes to. */
+private const val MIN_ZOOM = 1f
+private const val MAX_ZOOM = 4f
+private const val DOUBLE_TAP_ZOOM = 2.5f
+
 /**
  * Shows all developers and translators as one block of names laid out inside the app logo. All
  * names use the same size and are never cut off by the shape.
@@ -114,7 +136,11 @@ fun ContributorsScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
     }
 }
 
-/** The names laid out in the app logo. Tapping it opens the contributors page on GitHub. */
+/**
+ * The names laid out in the app logo. Tapping it opens the contributors page on GitHub, pinching
+ * zooms into the small names and a double tap toggles the zoom.
+ */
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun NameMark(names: List<String>, modifier: Modifier = Modifier) {
     if (names.isEmpty()) return
@@ -124,12 +150,20 @@ private fun NameMark(names: List<String>, modifier: Modifier = Modifier) {
     var arrived by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) { arrived = true }
     val fade by animateFloatAsState(if (arrived) 1f else 0f, tween(700), label = "credits")
+    val zoom = remember { MarkZoom() }
+    val scope = rememberCoroutineScope()
     BoxWithConstraints(
         modifier
             .fillMaxWidth()
             .padding(horizontal = MARK_MARGIN)
             .aspectRatio(1f)
-            .clickable { open(context, CONTRIBUTORS_URL) },
+            // The zoomed names stay inside the square instead of covering the title.
+            .clipToBounds()
+            .markZoomGestures(zoom)
+            .combinedClickable(
+                onClick = { open(context, CONTRIBUTORS_URL) },
+                onDoubleClick = { scope.launch { zoom.toggle() } },
+            ),
     ) {
         val width = constraints.maxWidth
         val height = constraints.maxHeight
@@ -146,21 +180,92 @@ private fun NameMark(names: List<String>, modifier: Modifier = Modifier) {
             )
             val shiftX = (width - mark.width * grow) / 2f - mark.left * grow
             val shiftY = (height - mark.height * grow) / 2f - mark.top * grow
-            translate(shiftX, shiftY) {
-                scale(grow, grow, pivot = Offset.Zero) {
-                    plan.names.forEach { name ->
-                        drawText(
-                            textLayoutResult = name.layout,
-                            color = color,
-                            topLeft = Offset(name.x, name.y),
-                            alpha = fade,
-                        )
+            // Zoomed in the draw pass rather than a layer, so the names are drawn sharp.
+            translate(zoom.offset.x, zoom.offset.y) {
+                scale(zoom.scale, zoom.scale, pivot = center) {
+                    translate(shiftX, shiftY) {
+                        scale(grow, grow, pivot = Offset.Zero) {
+                            plan.names.forEach { name ->
+                                drawText(
+                                    textLayoutResult = name.layout,
+                                    color = color,
+                                    topLeft = Offset(name.x, name.y),
+                                    alpha = fade,
+                                )
+                            }
+                        }
                     }
                 }
             }
         }
     }
 }
+
+/**
+ * Zoom of the [NameMark], scaled about the centre of the box and then moved by [offset]. The
+ * offset is kept within the zoomed overhang, so the names always cover the whole box.
+ */
+private class MarkZoom {
+    var scale by mutableFloatStateOf(MIN_ZOOM)
+        private set
+    var offset by mutableStateOf(Offset.Zero)
+        private set
+    var size = Size.Zero
+
+    /** Zooms by [zoomChange] around [centroid] and pans by [pan], all in box pixels. */
+    fun transform(centroid: Offset, pan: Offset, zoomChange: Float) {
+        val newScale = (scale * zoomChange).coerceIn(MIN_ZOOM, MAX_ZOOM)
+        // Keep the point under the fingers in place while the scale changes.
+        val fromCenter = centroid - size.center
+        val moved = fromCenter - (fromCenter - offset) * (newScale / scale) + pan
+        scale = newScale
+        offset = clamp(moved, newScale)
+    }
+
+    /** Goes back to no zoom when zoomed, or zooms into the centre. */
+    suspend fun toggle() {
+        val fromScale = scale
+        val fromOffset = offset
+        val toScale = if (scale > MIN_ZOOM) MIN_ZOOM else DOUBLE_TAP_ZOOM
+        animate(0f, 1f, animationSpec = tween(300)) { fraction, _ ->
+            scale = fromScale + (toScale - fromScale) * fraction
+            offset = clamp(fromOffset * (1f - fraction), scale)
+        }
+    }
+
+    private fun clamp(offset: Offset, scale: Float): Offset {
+        val maxX = size.width * (scale - 1f) / 2f
+        val maxY = size.height * (scale - 1f) / 2f
+        return Offset(offset.x.coerceIn(-maxX, maxX), offset.y.coerceIn(-maxY, maxY))
+    }
+}
+
+/**
+ * Pinch to zoom and, once zoomed, drag to pan. Single finger drags are left alone at no zoom so
+ * the page still scrolls, and taps are only consumed once they move past the touch slop.
+ */
+private fun Modifier.markZoomGestures(zoom: MarkZoom): Modifier =
+    onSizeChanged { zoom.size = it.toSize() }.pointerInput(zoom) {
+        awaitEachGesture {
+            awaitFirstDown(requireUnconsumed = false)
+            var panned = Offset.Zero
+            var dragging = false
+            do {
+                val event = awaitPointerEvent()
+                if (event.changes.any { it.isConsumed }) break
+                val pinching = event.changes.count { it.pressed } > 1
+                if (!pinching && zoom.scale <= MIN_ZOOM) continue
+                val pan = event.calculatePan()
+                if (!pinching && !dragging) {
+                    panned += pan
+                    if (panned.getDistance() < viewConfiguration.touchSlop) continue
+                }
+                dragging = true
+                zoom.transform(event.calculateCentroid(), pan, event.calculateZoom())
+                event.changes.forEach { if (it.positionChanged()) it.consume() }
+            } while (event.changes.any { it.pressed })
+        }
+    }
 
 /** A placed name, in the pixel space of the [Mark]. */
 private class Placed(val layout: TextLayoutResult, val x: Float, val y: Float)

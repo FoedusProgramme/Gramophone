@@ -125,6 +125,13 @@ class DrawablePainter(val drawable: Drawable) : Painter(), RememberObserver {
 }
 
 /**
+ * Size of a default cover's glyph as a share of the cover's shorter side. The drawables' fixed
+ * 12dp insets only suit list sized covers and stretch the glyph across bigger ones, so every
+ * default cover draws its glyph at this share instead, whatever its size.
+ */
+const val DEFAULT_COVER_GLYPH_SHARE = 0.4f
+
+/**
  * A [Painter] for a default cover. Those covers carry their colours as `?attr/...` tints, which
  * resolve against the Android XML theme; that theme is fixed, so the palette chosen in the
  * settings never reaches them and a themed app would keep showing them in the colours it
@@ -132,7 +139,10 @@ class DrawablePainter(val drawable: Drawable) : Painter(), RememberObserver {
  * `surfaceVariant` and the glyph over it `onSurface`.
  */
 @Composable
-fun rememberDefaultCoverPainter(@DrawableRes id: Int, glyphShare: Float? = null): Painter {
+fun rememberDefaultCoverPainter(
+    @DrawableRes id: Int,
+    glyphShare: Float? = DEFAULT_COVER_GLYPH_SHARE,
+): Painter {
     val context = LocalContext.current
     val background = MaterialTheme.colorScheme.surfaceVariant
     val glyph = MaterialTheme.colorScheme.onSurface

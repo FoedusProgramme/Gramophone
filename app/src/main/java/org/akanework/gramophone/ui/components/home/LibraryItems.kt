@@ -207,10 +207,10 @@ fun LibraryCover(
     cornerRadius: Dp,
     modifier: Modifier = Modifier,
     /**
-     * Size of [defaultCover]'s glyph as a share of the cover's shorter side, for covers much
-     * larger than the drawable's fixed insets suit. Null keeps the drawable's own insets.
+     * Size of [defaultCover]'s glyph as a share of the cover's shorter side. Null keeps the
+     * drawable's own fixed insets.
      */
-    defaultGlyphShare: Float? = null,
+    defaultGlyphShare: Float? = DEFAULT_COVER_GLYPH_SHARE,
 ) {
     val fallback = rememberDefaultCoverPainter(defaultCover, defaultGlyphShare)
     AsyncImage(

@@ -141,6 +141,7 @@ import uk.akane.libphonograph.dynamicitem.Favorite
 import uk.akane.libphonograph.dynamicitem.RecentlyAdded
 import uk.akane.libphonograph.items.Album
 import uk.akane.libphonograph.items.Playlist
+import uk.akane.libphonograph.items.albumId
 import uk.akane.libphonograph.reader.FlowReader
 import kotlin.math.roundToInt
 
@@ -151,8 +152,11 @@ private class LibrarySubPage(
     val albums: LibraryTabState<Album>? = null,
     /** Id of the playlist the edit button opens, when this is an editable playlist. */
     val editablePlaylistId: Long? = null,
-    /** Whether song rows show their cover next to the number, for songs of different albums. */
-    val numberedCovers: Boolean = false,
+    /**
+     * Whether song rows show their cover next to the number, for songs of different albums. Only
+     * an album page leaves it off, and shows covers only when its songs span several albums.
+     */
+    val numberedCovers: Boolean = true,
 ) {
     companion object {
         fun create(
@@ -173,6 +177,7 @@ private class LibrarySubPage(
                             LibraryTabSpec.SubSongs(LibraryAdapterTypes.ALBUM_SONGS, Sorter.Type.ByAlbumTitleAscending),
                             item.map { it?.songList ?: emptyList() },
                         ),
+                        numberedCovers = false,
                     )
                 }
                 is GenreKey -> {
@@ -218,7 +223,6 @@ private class LibrarySubPage(
                             item.map { it?.songList ?: emptyList() },
                         ),
                         editablePlaylistId = key.id?.takeIf { key.className == Playlist::class.java.name },
-                        numberedCovers = true,
                     )
                 }
                 is ArtistKey -> {
@@ -239,6 +243,20 @@ private class LibrarySubPage(
             }
         }
     }
+}
+
+/**
+ * Whether [songs] come from more than one album, going by the album ids in their extras. Songs
+ * without an id are skipped, so a list without ids counts as one album.
+ */
+internal fun songsSpanAlbums(songs: List<MediaItem>): Boolean {
+    var first: Long? = null
+    for (song in songs) {
+        val id = song.mediaMetadata.albumId ?: continue
+        if (first == null) first = id
+        else if (id != first) return true
+    }
+    return false
 }
 
 private fun gcd(a: Int, b: Int): Int = if (b == 0) a else gcd(b, a % b)
@@ -343,6 +361,10 @@ fun LibrarySubScreen(key: LibrarySubKey, onBack: () -> Unit, modifier: Modifier 
     val songs = page.songs
     val albums = page.albums
     val songLayout = songs.layoutType
+    // An album's rows only need covers when its songs come from different albums, e.g. an
+    // album title shared by several albums. Read from the songs' extras, so no IO.
+    val numberedCovers = page.numberedCovers ||
+        remember(songs.items) { songsSpanAlbums(songs.items) }
     val songCols = libraryColumns(songLayout)
     val albumLayout = albums?.layoutType
     val albumCols = if (albums != null) libraryColumns(albumLayout) else 1
@@ -448,7 +470,7 @@ fun LibrarySubScreen(key: LibrarySubKey, onBack: () -> Unit, modifier: Modifier 
                             LibraryItem(
                                 songs, item, nowPlaying, env, songLayout, Modifier.animateItem(),
                                 number = index + 1,
-                                numberedCover = page.numberedCovers,
+                                numberedCover = numberedCovers,
                                 // The playing song's container keeps clear of the sheet's edges.
                                 containerInset = PLAYING_ROW_INSET,
                             )
