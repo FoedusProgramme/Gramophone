@@ -69,10 +69,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.utils.flows.LifecyclePauseManager
-import org.akanework.gramophone.ui.MainActivity
 import org.akanework.gramophone.ui.actions.LibraryActions
 import org.akanework.gramophone.ui.actions.PlaylistDialogs
-import org.akanework.gramophone.ui.actions.findMainActivity
+import org.akanework.gramophone.ui.actions.AppActionEnv
+import org.akanework.gramophone.ui.actions.rememberAppActionEnv
 import org.akanework.gramophone.ui.components.compose.rememberPreference
 import org.akanework.gramophone.ui.components.home.FastScrollerState
 import org.akanework.gramophone.ui.components.home.GRID_CARD_LABEL_HEIGHT
@@ -210,8 +210,7 @@ fun <T : Any> LibraryTabScreen(
     /** Updated when the list reaches its end, see [FastScrollerState]. */
     fastScroller: FastScrollerState? = null,
 ) {
-    val context = LocalContext.current
-    val activity = remember(context) { context.findMainActivity() }
+    val env = rememberAppActionEnv()
     val scope = rememberCoroutineScope()
     // Owned by the composition, not the view model: a LazyGridState holds on to its layout
     // node and through it the activity, which a view model would keep across recreation.
@@ -256,7 +255,7 @@ fun <T : Any> LibraryTabScreen(
     ) {
         itemsIndexed(items, key = { _, it -> spec.helper.getId(it) }) { index, item ->
             LibraryItem(
-                state, item, nowPlaying, activity, layoutType,
+                state, item, nowPlaying, env, layoutType,
                 Modifier.animateItem(),
                 cardShape = { libraryCellShape(index, items.size, columns, it, opensGroup = true) },
             )
@@ -279,27 +278,27 @@ fun <T : Any> LibraryTabScreen(
 /**
  * The home's FABs for a tab: a new playlist, or play and shuffle all. Empty when it has none.
  */
-fun <T : Any> libraryFabActions(state: LibraryTabState<T>, activity: MainActivity): List<LibraryFabAction> {
+fun <T : Any> libraryFabActions(state: LibraryTabState<T>, env: AppActionEnv): List<LibraryFabAction> {
     val spec = state.spec
-    val queueTitle = state.queueTitleOverride ?: activity.getString(spec.queueTitle)
+    val queueTitle = state.queueTitleOverride ?: env.getString(spec.queueTitle)
     return buildList {
         if (spec === LibraryTabSpec.Playlists) {
-            add(LibraryFabAction(Icons.Outlined.Add) { PlaylistDialogs.create(activity) })
+            add(LibraryFabAction(Icons.Outlined.Add) { PlaylistDialogs.create(env) })
         }
         if (spec.hasPlayButtons) {
             @Suppress("UNCHECKED_CAST")
             add(LibraryFabAction(Icons.Outlined.PlayArrow, iconOffsetX = 2.dp) {
                 if (spec === LibraryTabSpec.Albums)
-                    LibraryActions.playAllAlbums(activity, state.items as List<Album>, queueTitle)
+                    LibraryActions.playAllAlbums(env, state.items as List<Album>, queueTitle)
                 else
-                    LibraryActions.playAll(activity, state.items as List<MediaItem>, queueTitle)
+                    LibraryActions.playAll(env, state.items as List<MediaItem>, queueTitle)
             })
             @Suppress("UNCHECKED_CAST")
             add(LibraryFabAction(Icons.Outlined.Shuffle, 22.dp, iconOffsetX = (-4).dp) {
                 if (spec === LibraryTabSpec.Albums)
-                    LibraryActions.shuffleAllAlbums(activity, state.items as List<Album>, queueTitle)
+                    LibraryActions.shuffleAllAlbums(env, state.items as List<Album>, queueTitle)
                 else
-                    LibraryActions.shuffleAll(activity, state.items as List<MediaItem>, queueTitle)
+                    LibraryActions.shuffleAll(env, state.items as List<MediaItem>, queueTitle)
             })
         }
     }
@@ -380,7 +379,7 @@ internal fun <T : Any> LibraryItem(
     state: LibraryTabState<T>,
     item: T,
     nowPlaying: NowPlayingState,
-    activity: org.akanework.gramophone.ui.MainActivity,
+    env: AppActionEnv,
     layoutType: LayoutType,
     modifier: Modifier = Modifier,
     cardShape: ((emphasis: Float) -> Shape)? = null,
@@ -399,7 +398,7 @@ internal fun <T : Any> LibraryItem(
     val menu: @Composable () -> Unit = {
         // The sheet's play button is its header, not one of the listed actions.
         val onMenuAction = { action: LibraryMenuAction ->
-            spec.onMenuAction(activity, state, item, state.items.indexOf(item), action)
+            spec.onMenuAction(env, state, item, state.items.indexOf(item), action)
         }
         LibraryItemSheet(
             expanded = menuOpen,
@@ -422,7 +421,7 @@ internal fun <T : Any> LibraryItem(
     // The playing song's card takes its own corners, see libraryItemShape.
     val rowModifier = if (cardShape == null) modifier
         else modifier.libraryItemCard(cardShape(colors.emphasis))
-    val onClick = { spec.onClick(activity, state, item, state.items.indexOf(item)) }
+    val onClick = { spec.onClick(env, state, item, state.items.indexOf(item)) }
     if (layoutType == LayoutType.GRID || layoutType == LayoutType.COMPACT_GRID) {
         val trackCount = if (helper.canGetSize()) {
             if (helper.canGetArtist()) {

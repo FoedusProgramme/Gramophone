@@ -17,15 +17,12 @@
 
 package org.akanework.gramophone.ui.actions
 
-import android.content.Context
-import android.content.ContextWrapper
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.core.app.ShareCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
-import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.getFile
@@ -34,7 +31,6 @@ import org.akanework.gramophone.logic.library.LibraryWriteRepository
 import org.akanework.gramophone.logic.requireMediaStoreId
 import org.akanework.gramophone.logic.setMediaItemsSeamlessly
 import org.akanework.gramophone.logic.setMediaItemsWithTitle
-import org.akanework.gramophone.ui.MainActivity
 import org.akanework.gramophone.ui.components.compose.AppDialog
 import org.akanework.gramophone.ui.nav.AlbumKey
 import org.akanework.gramophone.ui.nav.ArtistKey
@@ -42,27 +38,16 @@ import org.akanework.gramophone.ui.nav.DateKey
 import org.akanework.gramophone.ui.nav.GenreKey
 import org.akanework.gramophone.ui.nav.PlaylistKey
 import org.akanework.gramophone.ui.nav.SongDetailKey
-import org.koin.android.ext.android.get
 import uk.akane.libphonograph.dynamicitem.Favorite
 import uk.akane.libphonograph.items.Album
 import uk.akane.libphonograph.items.Playlist
 import uk.akane.libphonograph.items.albumId
 import uk.akane.libphonograph.items.artistId
 
-/** The hosting [MainActivity] behind whatever context wrapper Compose hands out. */
-fun Context.findMainActivity(): MainActivity {
-    var c: Context = this
-    while (c !is MainActivity) {
-        c = (c as? ContextWrapper)?.baseContext
-            ?: throw IllegalStateException("not hosted by MainActivity")
-    }
-    return c
-}
-
 /** Item and header actions of the library lists. */
 object LibraryActions {
-    fun playSong(activity: MainActivity, songs: List<MediaItem>, position: Int, title: String) {
-        val mediaController = activity.getPlayer() ?: return
+    fun playSong(env: AppActionEnv, songs: List<MediaItem>, position: Int, title: String) {
+        val mediaController = env.player ?: return
         // If the currently playing song is also the clicked song, then we continue playing the
         // song and open full player, but we still replace the list. This is intended to copy
         // UX of Chinese players that open full player when clicking song, and we don't want
@@ -72,12 +57,12 @@ object LibraryActions {
         mediaController.prepare()
         mediaController.play()
         if (currentItem?.mediaId == songs[position].mediaId) {
-            activity.playerSheet.open()
+            env.playerSheet.open()
         }
     }
 
-    fun playAll(activity: MainActivity, songs: List<MediaItem>, title: String) {
-        activity.getPlayer()?.apply {
+    fun playAll(env: AppActionEnv, songs: List<MediaItem>, title: String) {
+        env.player?.apply {
             setMediaItemsWithTitle(
                 songs, title = title, shuffleEnabled = false, repeatMode = Player.REPEAT_MODE_OFF,
             )
@@ -88,9 +73,9 @@ object LibraryActions {
         }
     }
 
-    fun shuffleAll(activity: MainActivity, songs: List<MediaItem>, title: String) {
-        ShortcutManagerCompat.reportShortcutUsed(activity, "shuffle_all")
-        activity.getPlayer()?.apply {
+    fun shuffleAll(env: AppActionEnv, songs: List<MediaItem>, title: String) {
+        ShortcutManagerCompat.reportShortcutUsed(env.context, "shuffle_all")
+        env.player?.apply {
             setMediaItemsWithTitle(songs, title = title, shuffleEnabled = true)
             if (songs.isNotEmpty()) {
                 prepare()
@@ -99,8 +84,8 @@ object LibraryActions {
         }
     }
 
-    fun playAllAlbums(activity: MainActivity, albums: List<Album>, title: String) {
-        activity.getPlayer()?.apply {
+    fun playAllAlbums(env: AppActionEnv, albums: List<Album>, title: String) {
+        env.player?.apply {
             albums.takeIf { it.isNotEmpty() }?.also { list ->
                 setMediaItemsWithTitle(
                     list.flatMap { it.songList },
@@ -112,13 +97,13 @@ object LibraryActions {
         }
     }
 
-    fun shuffleAllAlbums(activity: MainActivity, albums: List<Album>, title: String) {
-        ShortcutManagerCompat.reportShortcutUsed(activity, "shuffle_all")
-        activity.getPlayer()?.apply {
+    fun shuffleAllAlbums(env: AppActionEnv, albums: List<Album>, title: String) {
+        ShortcutManagerCompat.reportShortcutUsed(env.context, "shuffle_all")
+        env.player?.apply {
             albums.takeIf { it.isNotEmpty() }?.also { list ->
                 setMediaItemsWithTitle(
                     list.shuffled().flatMap { it.songList },
-                    title = activity.getString(R.string.shuffled, title),
+                    title = env.getString(R.string.shuffled, title),
                     shuffleEnabled = false, repeatMode = Player.REPEAT_MODE_OFF,
                 )
                 prepare()
@@ -127,60 +112,60 @@ object LibraryActions {
         }
     }
 
-    fun playNext(activity: MainActivity, items: List<MediaItem>) {
-        val mediaController = activity.getPlayer() ?: return
+    fun playNext(env: AppActionEnv, items: List<MediaItem>) {
+        val mediaController = env.player ?: return
         mediaController.addMediaItems(mediaController.currentMediaItemIndex + 1, items)
     }
 
-    fun addToQueue(activity: MainActivity, items: List<MediaItem>) {
-        activity.getPlayer()?.addMediaItems(items)
+    fun addToQueue(env: AppActionEnv, items: List<MediaItem>) {
+        env.player?.addMediaItems(items)
     }
 
-    fun openAlbum(activity: MainActivity, id: Long?) = activity.navigateTo(AlbumKey(id))
-    fun openGenre(activity: MainActivity, id: Long?) = activity.navigateTo(GenreKey(id))
-    fun openDate(activity: MainActivity, id: Long?) = activity.navigateTo(DateKey(id))
-    fun openArtist(activity: MainActivity, id: Long?, albumArtist: Boolean) =
-        activity.navigateTo(ArtistKey(id, albumArtist))
+    fun openAlbum(env: AppActionEnv, id: Long?) = env.navigate(AlbumKey(id))
+    fun openGenre(env: AppActionEnv, id: Long?) = env.navigate(GenreKey(id))
+    fun openDate(env: AppActionEnv, id: Long?) = env.navigate(DateKey(id))
+    fun openArtist(env: AppActionEnv, id: Long?, albumArtist: Boolean) =
+        env.navigate(ArtistKey(id, albumArtist))
 
-    fun openPlaylist(activity: MainActivity, item: Playlist) =
-        activity.navigateTo(PlaylistKey(item.id, item.javaClass.name))
+    fun openPlaylist(env: AppActionEnv, item: Playlist) =
+        env.navigate(PlaylistKey(item.id, item.javaClass.name))
 
-    fun goToAlbum(activity: MainActivity, item: MediaItem) =
-        openAlbum(activity, item.mediaMetadata.albumId)
+    fun goToAlbum(env: AppActionEnv, item: MediaItem) =
+        openAlbum(env, item.mediaMetadata.albumId)
 
-    fun goToArtist(activity: MainActivity, item: MediaItem) =
-        openArtist(activity, item.mediaMetadata.artistId, albumArtist = false)
+    fun goToArtist(env: AppActionEnv, item: MediaItem) =
+        openArtist(env, item.mediaMetadata.artistId, albumArtist = false)
 
-    fun showDetails(activity: MainActivity, item: MediaItem) =
-        activity.navigateTo(SongDetailKey(item.mediaId))
+    fun showDetails(env: AppActionEnv, item: MediaItem) =
+        env.navigate(SongDetailKey(item.mediaId))
 
     fun deleteSongs(
-        activity: MainActivity, songs: List<MediaItem>, @StringRes message: Int, name: CharSequence?
+        env: AppActionEnv, songs: List<MediaItem>, @StringRes message: Int, name: CharSequence?
     ) {
-        val writes = activity.get<LibraryWriteRepository>()
-        activity.lifecycleScope.launch {
+        val writes = env.writes
+        env.scope.launch {
             val result = writes.deleteSongs(
                 songs.map { it.getFile()!! to it.requireMediaStoreId() }
             )
-            confirmDelete(activity, writes, result, activity.getString(message, name))
+            confirmDelete(env, writes, result, env.getString(message, name))
         }
     }
 
-    fun deletePlaylist(activity: MainActivity, item: Playlist) {
+    fun deletePlaylist(env: AppActionEnv, item: Playlist) {
         val id = item.id
         if (id == null) {
             Toast.makeText(
-                activity, activity.getString(R.string.delete_failed_playlist, "item.id == null"),
+                env.context, env.getString(R.string.delete_failed_playlist, "item.id == null"),
                 Toast.LENGTH_LONG
             ).show()
             return
         }
-        val writes = activity.get<LibraryWriteRepository>()
-        activity.lifecycleScope.launch {
+        val writes = env.writes
+        env.scope.launch {
             val result = writes.deletePlaylist(id)
-            confirmDelete(activity, writes, result, activity.getString(
+            confirmDelete(env, writes, result, env.getString(
                 R.string.delete_really,
-                if (item is Favorite) activity.getString(R.string.playlist_favourite)
+                if (item is Favorite) env.getString(R.string.playlist_favourite)
                 else item.title
             ))
         }
@@ -188,41 +173,41 @@ object LibraryActions {
 
     /** Asks in the app before a delete the system would not ask about itself. */
     private fun confirmDelete(
-        activity: MainActivity, writes: LibraryWriteRepository, result: DeleteResult,
+        env: AppActionEnv, writes: LibraryWriteRepository, result: DeleteResult,
         message: String,
     ) {
         when (result) {
             // Already queued for the system dialog, which asks the user itself.
             is DeleteResult.NeedsConsent -> Unit
-            is DeleteResult.ConfirmThenRun -> activity.dialogs.show(AppDialog.Confirm(
-                title = activity.getString(R.string.delete),
+            is DeleteResult.ConfirmThenRun -> env.dialogs.show(AppDialog.Confirm(
+                title = env.getString(R.string.delete),
                 message = message,
-                confirmText = activity.getString(R.string.delete),
+                confirmText = env.getString(R.string.delete),
                 onConfirm = { writes.runConfirmed(result) },
             ))
             is DeleteResult.Failed -> Toast.makeText(
-                activity,
-                activity.getString(R.string.delete_failed, result.error.message ?: result.error.toString()),
+                env.context,
+                env.getString(R.string.delete_failed, result.error.message ?: result.error.toString()),
                 Toast.LENGTH_LONG
             ).show()
         }
     }
 
-    fun renamePlaylist(activity: MainActivity, item: Playlist) {
-        PlaylistDialogs.rename(activity, item)
+    fun renamePlaylist(env: AppActionEnv, item: Playlist) {
+        PlaylistDialogs.rename(env, item)
     }
 
-    fun share(activity: MainActivity, item: MediaItem) {
+    fun share(env: AppActionEnv, item: MediaItem) {
         val uri = item.requestMetadata.mediaUri ?: item.localConfiguration?.uri ?: return
         val mimeType = item.localConfiguration?.mimeType ?: "audio/*"
         try {
-            ShareCompat.IntentBuilder(activity)
+            ShareCompat.IntentBuilder(env.context)
                 .setType(mimeType)
                 .setStream(uri)
                 .setChooserTitle("Share audio file")
                 .startChooser()
         } catch (e: Exception) {
-            Toast.makeText(activity, "Unable to share: ${e.message}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(env.context, "Unable to share: ${e.message}", Toast.LENGTH_SHORT).show()
         }
     }
 }

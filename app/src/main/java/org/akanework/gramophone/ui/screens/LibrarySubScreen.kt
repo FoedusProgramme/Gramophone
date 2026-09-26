@@ -109,7 +109,7 @@ import org.akanework.gramophone.logic.utils.flows.PauseManagingSharedFlow.Compan
 import org.akanework.gramophone.logic.utils.flows.provideReplayCacheInvalidationManager
 import org.akanework.gramophone.ui.LibraryAdapterTypes
 import org.akanework.gramophone.ui.actions.LibraryActions
-import org.akanework.gramophone.ui.actions.findMainActivity
+import org.akanework.gramophone.ui.actions.rememberAppActionEnv
 import org.akanework.gramophone.ui.MediaControllerViewModel
 import org.akanework.gramophone.ui.nav.NavViewModel
 import org.koin.compose.viewmodel.koinActivityViewModel
@@ -248,7 +248,7 @@ private fun lcm(a: Int, b: Int): Int = a / gcd(a, b) * b
 @Composable
 fun LibrarySubScreen(key: LibrarySubKey, onBack: () -> Unit, modifier: Modifier = Modifier) {
     val context = LocalContext.current
-    val activity = remember(context) { context.findMainActivity() }
+    val env = rememberAppActionEnv()
     val reader = koinInject<FlowReader>()
     val prefs = rememberDefaultPreferences()
     val scope = rememberCoroutineScope()
@@ -406,8 +406,8 @@ fun LibrarySubScreen(key: LibrarySubKey, onBack: () -> Unit, modifier: Modifier 
                                 bottomGap = TITLE_GAP,
                                 trailing = {
                                     TitleButtons(
-                                        onPlay = { LibraryActions.playAll(activity, songs.items, title.value) },
-                                        onShuffle = { LibraryActions.shuffleAll(activity, songs.items, title.value) },
+                                        onPlay = { LibraryActions.playAll(env, songs.items, title.value) },
+                                        onShuffle = { LibraryActions.shuffleAll(env, songs.items, title.value) },
                                     )
                                 },
                             )
@@ -431,7 +431,7 @@ fun LibrarySubScreen(key: LibrarySubKey, onBack: () -> Unit, modifier: Modifier 
                                         end = if (albumIsGrid && column == albumCols - 1) GRID_CARD_SIDE_PADDING else 0.dp,
                                     )
                                 ) {
-                                    LibraryItem(albums, item, nowPlaying, activity, albums.layoutType)
+                                    LibraryItem(albums, item, nowPlaying, env, albums.layoutType)
                                 }
                             }
                         }
@@ -441,7 +441,7 @@ fun LibrarySubScreen(key: LibrarySubKey, onBack: () -> Unit, modifier: Modifier 
                             span = { _, _ -> GridItemSpan(cols / songCols) },
                         ) { index, item ->
                             LibraryItem(
-                                songs, item, nowPlaying, activity, songLayout, Modifier.animateItem(),
+                                songs, item, nowPlaying, env, songLayout, Modifier.animateItem(),
                                 number = index + 1,
                             )
                         }

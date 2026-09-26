@@ -42,7 +42,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -50,7 +49,7 @@ import androidx.media3.common.MediaItem
 import kotlinx.coroutines.launch
 import org.akanework.gramophone.R
 import org.akanework.gramophone.ui.actions.LibraryActions
-import org.akanework.gramophone.ui.actions.findMainActivity
+import org.akanework.gramophone.ui.actions.rememberAppActionEnv
 import org.akanework.gramophone.ui.components.home.DECOR_HEIGHT
 import org.akanework.gramophone.ui.components.home.FOLDER_CARD_HEIGHT
 import org.akanework.gramophone.ui.components.home.IosOverscrollState
@@ -80,8 +79,7 @@ fun FolderTabScreen(
     overscroll: IosOverscrollState,
     modifier: Modifier = Modifier,
 ) {
-    val context = LocalContext.current
-    val activity = remember(context) { context.findMainActivity() }
+    val env = rememberAppActionEnv()
     val scope = rememberCoroutineScope()
     CollectLibraryItems(state.songs)
     ReportFullyDrawnWhen(state.songs.loaded)
@@ -193,8 +191,8 @@ fun FolderTabScreen(
                     ),
                     counterText = pluralStringResource(R.plurals.songs, count, count),
                     onCounterClick = goToPlayingSong,
-                    onPlayAll = { LibraryActions.playAll(activity, songs.items, queueTitle) },
-                    onShuffleAll = { LibraryActions.shuffleAll(activity, songs.items, queueTitle) },
+                    onPlayAll = { LibraryActions.playAll(env, songs.items, queueTitle) },
+                    onShuffleAll = { LibraryActions.shuffleAll(env, songs.items, queueTitle) },
                     onSort = { songSortOpen = true },
                     onJumpUp = { scrollTo(0) },
                     sortMenu = {
@@ -215,7 +213,7 @@ fun FolderTabScreen(
             }
             itemsIndexed(songs.items, key = { _, it -> "song:" + it.mediaId }) { index, item: MediaItem ->
                 LibraryItem(
-                    songs, item, nowPlaying, activity, layoutType,
+                    songs, item, nowPlaying, env, layoutType,
                     Modifier.animateItem(),
                     cardShape = { libraryCellShape(index, songs.items.size, columns, it) },
                 )

@@ -20,6 +20,7 @@ package org.akanework.gramophone.di
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.akanework.gramophone.BuildConfig
 import org.akanework.gramophone.logic.ApplicationScope
+import org.akanework.gramophone.logic.library.LibraryRefresher
 import org.akanework.gramophone.logic.library.LibraryWriteRepository
 import org.akanework.gramophone.logic.library.MediaConsentRequester
 import org.akanework.gramophone.logic.settings.SettingsRepository
@@ -46,4 +47,5 @@ val appModule = module {
     }
     single { MediaConsentRequester() }
     single { LibraryWriteRepository(androidContext(), get(), get<ApplicationScope>(), get()) }
+    single { LibraryRefresher(androidContext(), get(), get<ApplicationScope>()) }
 }

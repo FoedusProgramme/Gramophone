@@ -17,6 +17,8 @@
 
 package org.akanework.gramophone.ui.screens
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -49,15 +51,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.layout
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import kotlinx.coroutines.launch
+import org.akanework.gramophone.logic.ApplicationScope
+import org.akanework.gramophone.logic.library.LibraryRefresher
 import org.akanework.gramophone.ui.HomeTab
 import org.akanework.gramophone.ui.actions.HomeActions
-import org.akanework.gramophone.ui.actions.findMainActivity
+import org.akanework.gramophone.ui.actions.rememberAppActionEnv
 import org.akanework.gramophone.ui.components.compose.rememberPreference
 import org.akanework.gramophone.ui.components.home.ACTION_BUTTON_HEIGHT
 import org.akanework.gramophone.ui.components.home.FastScrollerState
@@ -78,6 +81,7 @@ import org.akanework.gramophone.ui.nav.NAV_TRANSITION_MS
 import org.akanework.gramophone.ui.nav.NavAxisEasing
 import org.akanework.gramophone.ui.state.HomeViewModel
 import org.akanework.gramophone.ui.MediaControllerViewModel
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinActivityViewModel
 import org.akanework.gramophone.ui.state.LibraryTabSpec
 import org.akanework.gramophone.ui.visibleHomeTabs
@@ -106,8 +110,10 @@ private val SHEET_BOTTOM_GAP = 16.dp
 
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier) {
-    val context = LocalContext.current
-    val activity = remember(context) { context.findMainActivity() }
+    val env = rememberAppActionEnv()
+    val refresher = koinInject<LibraryRefresher>()
+    val appScope = koinInject<ApplicationScope>()
+    val equalizer = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
     val viewModel = koinActivityViewModel<HomeViewModel>()
     val controllerViewModel = koinActivityViewModel<MediaControllerViewModel>()
     val tabsSetting by rememberPreference("tabs") { it.getString("tabs", "") ?: "" }
@@ -145,8 +151,8 @@ fun HomeScreen(modifier: Modifier = Modifier) {
         // The folder tabs sort their two lists from their own headers.
         val currentSpec = tabs.getOrNull(pagerState.currentPage)?.let { LibraryTabSpec.forTab(it) }
         HomeAppBar(
-            onSearch = { HomeActions.search(activity) },
-            onMenuAction = { HomeActions.run(activity, it) },
+            onSearch = { HomeActions.search(env) },
+            onMenuAction = { HomeActions.run(env, refresher, appScope, equalizer, it) },
             sortMenu = currentSpec?.let { spec ->
                 { expanded, onDismiss ->
                     LibrarySortMenu(viewModel.tabState(spec), expanded, onDismiss)
@@ -225,7 +231,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
             }
             // One FAB shared by all tabs, resized to the current tab's actions. It hides when the
             // list is scrolled to its end, where the fast scroller's thumb and popup overlap it.
-            val fabs = currentSpec?.let { libraryFabActions(viewModel.tabState(it), activity) }.orEmpty()
+            val fabs = currentSpec?.let { libraryFabActions(viewModel.tabState(it), env) }.orEmpty()
             val fastScrollerAtBottom =
                 tabs.getOrNull(pagerState.currentPage)?.let { fastScrollers[it]?.atBottom } == true
             LibraryFab(

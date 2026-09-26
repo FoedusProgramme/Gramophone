@@ -22,6 +22,7 @@ import android.content.Intent
 import android.media.audiofx.AudioEffect
 import android.os.Build
 import android.provider.Settings
+import androidx.activity.result.ActivityResultLauncher
 import android.widget.Toast
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Equalizer
@@ -29,17 +30,16 @@ import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Shuffle
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.lifecycle.lifecycleScope
 import coil3.SingletonImageLoader
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.akanework.gramophone.R
+import org.akanework.gramophone.logic.ApplicationScope
+import org.akanework.gramophone.logic.library.LibraryRefresher
 import org.akanework.gramophone.logic.utils.SdScanner
-import org.akanework.gramophone.ui.MainActivity
 import org.akanework.gramophone.ui.components.compose.AppDialog
 import org.akanework.gramophone.ui.nav.MainSettingsKey
 import org.akanework.gramophone.ui.nav.SearchKey
@@ -56,51 +56,63 @@ enum class HomeMenuAction(val title: Int, val icon: ImageVector) {
 
 /** The home toolbar actions. */
 object HomeActions {
-    fun search(activity: MainActivity) {
-        activity.navigateTo(SearchKey(null))
+    fun search(env: AppActionEnv) {
+        env.navigate(SearchKey(null))
     }
 
-    fun run(activity: MainActivity, action: HomeMenuAction) {
+    /**
+     * Runs [action]. [equalizer] launches the system equalizer; [refresher] and [appScope] run the
+     * library scans, which must outlive the screen.
+     */
+    fun run(
+        env: AppActionEnv,
+        refresher: LibraryRefresher,
+        appScope: ApplicationScope,
+        equalizer: ActivityResultLauncher<Intent>,
+        action: HomeMenuAction,
+    ) {
         when (action) {
             HomeMenuAction.Equalizer -> {
+                val context = env.context
                 val intent =
                     Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL).apply {
                         // EXTRA_PACKAGE_NAME is probably not needed but might as well add for good measure
-                        putExtra(AudioEffect.EXTRA_PACKAGE_NAME, activity.packageName)
-                        putExtra(AudioEffect.EXTRA_AUDIO_SESSION, activity.getPlayer()?.audioSessionId)
+                        putExtra(AudioEffect.EXTRA_PACKAGE_NAME, context.packageName)
+                        putExtra(AudioEffect.EXTRA_AUDIO_SESSION, env.player?.audioSessionId)
                         putExtra(AudioEffect.EXTRA_CONTENT_TYPE, AudioEffect.CONTENT_TYPE_MUSIC)
                     }
                 try {
-                    if (Settings.System.getString(activity.contentResolver, "firebase.test.lab") != "true") {
-                        activity.startingActivity.launch(intent)
+                    if (Settings.System.getString(context.contentResolver, "firebase.test.lab") != "true") {
+                        equalizer.launch(intent)
                     }
                 } catch (_: ActivityNotFoundException) {
                     // Let's show a toast here if no system inbuilt EQ was found.
-                    Toast.makeText(activity, R.string.equalizer_not_found, Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, R.string.equalizer_not_found, Toast.LENGTH_LONG).show()
                 }
             }
 
             HomeMenuAction.QuickRefresh -> {
-                val imageLoader = SingletonImageLoader.get(activity)
+                val imageLoader = SingletonImageLoader.get(env.context)
                 imageLoader.memoryCache?.clear()
-                activity.updateLibrary {
+                refresher.refresh {
                     showRefreshDoneSnackBar(
-                        activity, runBlocking { activity.reader.songListFlow.first().size }
+                        env, runBlocking { env.reader.songListFlow.first().size }
                     )
                 }
             }
 
             HomeMenuAction.Refresh -> {
-                val context = activity
-                val imageLoader = SingletonImageLoader.get(context)
+                val imageLoader = SingletonImageLoader.get(env.context)
                 imageLoader.memoryCache?.clear()
-                activity.dialogs.show(AppDialog.Message(
-                    title = context.getString(R.string.did_you_know),
-                    message = context.getString(R.string.refresh_did_you_know),
+                env.dialogs.show(AppDialog.Message(
+                    title = env.getString(R.string.did_you_know),
+                    message = env.getString(R.string.refresh_did_you_know),
                     icon = Icons.Outlined.Refresh,
                 ))
-                Toast.makeText(context, R.string.refreshing_wait, Toast.LENGTH_LONG).show()
-                CoroutineScope(Dispatchers.Default).launch {
+                Toast.makeText(env.context, R.string.refreshing_wait, Toast.LENGTH_LONG).show()
+                // The scan outlives the screen, so it only holds on to the application.
+                val context = env.context.applicationContext
+                appScope.launch {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                         SdScanner.scanEverything(context, 5000) { progress ->
                             if (progress.step != SdScanner.SimpleProgress.Step.DONE) {
@@ -112,14 +124,14 @@ object HomeActions {
                                     SdScanner.SimpleProgress.Step.DONE.ordinal - 1,
                                     "${progress.percentage}%"
                                 )
-                                CoroutineScope(Dispatchers.Main).launch {
+                                appScope.launch(Dispatchers.Main) {
                                     Toast.makeText(context, str, Toast.LENGTH_SHORT).show()
                                 }
                                 return@scanEverything
                             }
-                            activity.updateLibrary(false) {
+                            refresher.refresh(smartScanFirst = false) {
                                 showRefreshDoneSnackBar(
-                                    activity, runBlocking { activity.reader.songListFlow.first().size }
+                                    env, runBlocking { env.reader.songListFlow.first().size }
                                 )
                             }
                         }
@@ -129,7 +141,7 @@ object HomeActions {
                         }
                         while (!job.isCompleted) {
                             delay(5000)
-                            CoroutineScope(Dispatchers.Main).launch {
+                            appScope.launch(Dispatchers.Main) {
                                 Toast.makeText(
                                     context, context.getString(R.string.refreshing_wait),
                                     Toast.LENGTH_SHORT
@@ -140,23 +152,24 @@ object HomeActions {
                 }
             }
 
-            HomeMenuAction.Settings -> activity.navigateTo(MainSettingsKey())
+            HomeMenuAction.Settings -> env.navigate(MainSettingsKey())
 
             HomeMenuAction.Shuffle -> {
-                val controller = activity.getPlayer()
-                runBlocking { activity.reader.songListFlow.first() }.takeIf { it.isNotEmpty() }
+                val controller = env.player
+                runBlocking { env.reader.songListFlow.first() }.takeIf { it.isNotEmpty() }
                     ?.also {
-                        LibraryActions.shuffleAll(activity, it, activity.getString(R.string.category_songs))
+                        LibraryActions.shuffleAll(env, it, env.getString(R.string.category_songs))
                     } ?: controller?.setMediaItems(listOf())
             }
         }
     }
 
-    private fun showRefreshDoneSnackBar(activity: MainActivity, count: Int) {
-        activity.lifecycleScope.launch {
-            activity.dialogs.snackbar(
-                activity.getString(R.string.refreshed_songs, count),
-                activity.getString(R.string.dismiss),
+    /** No-op once the screen that asked is gone: [AppActionEnv.scope] is cancelled with it. */
+    private fun showRefreshDoneSnackBar(env: AppActionEnv, count: Int) {
+        env.scope.launch {
+            env.dialogs.snackbar(
+                env.getString(R.string.refreshed_songs, count),
+                env.getString(R.string.dismiss),
             )
         }
     }

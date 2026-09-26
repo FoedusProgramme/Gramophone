@@ -76,8 +76,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.akanework.gramophone.R
-import org.akanework.gramophone.ui.MainActivity
-import org.akanework.gramophone.ui.actions.findMainActivity
 import org.akanework.gramophone.ui.components.compose.DismissibleRow
 import org.akanework.gramophone.ui.components.compose.rememberReorderableListState
 import org.akanework.gramophone.ui.components.compose.reorderHandle
@@ -89,10 +87,12 @@ import org.akanework.gramophone.ui.components.home.LibraryIconButton
 import org.akanework.gramophone.ui.components.home.libraryCellShape
 import org.akanework.gramophone.ui.components.home.libraryItemCard
 import org.nift4.mediastorecompat.MediaStoreCompat
+import org.koin.compose.koinInject
 import uk.akane.libphonograph.dynamicitem.Favorite
 import uk.akane.libphonograph.items.Playlist
 import uk.akane.libphonograph.manipulator.ItemManipulator
 import uk.akane.libphonograph.manipulator.PlaylistSerializer
+import uk.akane.libphonograph.reader.FlowReader
 import uk.akane.libphonograph.reader.Reader
 import uk.akane.libphonograph.toUriCompat
 import java.io.File
@@ -114,13 +114,14 @@ private class EditRow(val key: Long, val item: MediaItem)
 
 @Stable
 private class PlaylistEditState(
-    private val activity: MainActivity,
+    context: Context,
+    private val reader: FlowReader,
     id: Long,
     private val scope: CoroutineScope,
     private val requestWrite: (IntentSenderRequest) -> Unit,
     private val onBack: () -> Unit,
 ) {
-    private val context: Context = activity.applicationContext
+    private val context: Context = context.applicationContext
     private val uri: Uri = ContentUris.withAppendedId(
         @Suppress("deprecation") MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, id
     )
@@ -158,7 +159,7 @@ private class PlaylistEditState(
     fun start() {
         scope.launch(Dispatchers.Default) {
             val id = ContentUris.parseId(uri)
-            val found = activity.reader.playlistListFlow.map { it.find { p -> p.id == id } }.first()
+            val found = reader.playlistListFlow.map { it.find { p -> p.id == id } }.first()
             if (found == null || found.path == null) {
                 toast(R.string.unknown_playlist)
                 leave()
@@ -214,7 +215,7 @@ private class PlaylistEditState(
     }
 
     private suspend fun CoroutineScope.load(restore: Boolean) {
-        val pathMap = activity.reader.pathMapFlow.first()
+        val pathMap = reader.pathMapFlow.first()
         val readback = try {
             if (restore) {
                 (try {
@@ -248,7 +249,7 @@ private class PlaylistEditState(
             loaded = true
         }
         launch {
-            activity.reader.pathMapFlow.drop(1).collectLatest { pathMap ->
+            reader.pathMapFlow.drop(1).collectLatest { pathMap ->
                 // Keep using the old readback set because it will be a superset of current
                 // entries, because there's no way to add new songs.
                 readback.entries.forEach {
@@ -438,14 +439,14 @@ private class PlaylistEditState(
 @Composable
 fun PlaylistEditScreen(playlistId: Long, onBack: () -> Unit, modifier: Modifier = Modifier) {
     val context = LocalContext.current
-    val activity = remember(context) { context.findMainActivity() }
+    val reader = koinInject<FlowReader>()
     val scope = rememberCoroutineScope()
     var stateHolder by remember { mutableStateOf<PlaylistEditState?>(null) }
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {
         stateHolder?.onWriteRequestResult(it.resultCode)
     }
     val state = remember(playlistId) {
-        PlaylistEditState(activity, playlistId, scope, requestWrite = { launcher.launch(it) }, onBack = onBack)
+        PlaylistEditState(context, reader, playlistId, scope, requestWrite = { launcher.launch(it) }, onBack = onBack)
             .also { stateHolder = it }
     }
     LaunchedEffect(state) { state.start() }
