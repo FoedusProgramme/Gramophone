@@ -28,8 +28,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.luminance
 import coil3.BitmapImage
 import coil3.PlatformContext
@@ -103,19 +105,36 @@ private const val DARK_BAR_FILL_CHROMA = 32.0
 private const val DARK_BAR_FILL_TONE = 35.0
 private const val ON_FILL_VARIANT_ALPHA = 0.8f
 
-fun nowPlayingColors(cover: ColorScheme, appPrimary: Color): NowPlayingColors {
+/**
+ * [harmony] is how far the colours lean towards [appPrimary], from 0 (the cover's own, on a page
+ * already themed from a cover) to 1 (fully harmonized, among the app's own surfaces).
+ */
+fun nowPlayingColors(cover: ColorScheme, appPrimary: Color, harmony: Float = 1f): NowPlayingColors {
     val isDark = cover.surface.luminance() < 0.5f
-    val primary = cover.primary.harmonize(appPrimary)
-    val onFill = cover.onPrimaryContainer.harmonize(appPrimary)
+    val primary = cover.primary.harmonizeBy(appPrimary, harmony)
+    val onFill = cover.onPrimaryContainer.harmonizeBy(appPrimary, harmony)
     return NowPlayingColors(
         bar = if (isDark) primary.tonal(DARK_BAR_CHROMA, DARK_BAR_TONE)
-            else cover.surface.harmonize(appPrimary),
+            else cover.surface.harmonizeBy(appPrimary, harmony),
         fill = if (isDark) primary.tonal(DARK_BAR_FILL_CHROMA, DARK_BAR_FILL_TONE)
-            else cover.primaryContainer.harmonize(appPrimary),
+            else cover.primaryContainer.harmonizeBy(appPrimary, harmony),
         onFill = onFill,
         onFillVariant = onFill.copy(alpha = ON_FILL_VARIANT_ALPHA),
     )
 }
+
+/** This colour leant towards [target] by [fraction]: unchanged at 0, harmonized at 1. */
+fun Color.harmonizeBy(target: Color, fraction: Float): Color = when {
+    fraction <= 0f -> this
+    fraction >= 1f -> harmonize(target)
+    else -> lerp(this, harmonize(target), fraction)
+}
+
+/**
+ * Whether cover colours shown here lean towards the theme's hue. Off on a page already themed
+ * from a cover, where they are shown as they are.
+ */
+val LocalHarmonizeCovers = staticCompositionLocalOf { true }
 
 /** Seeds by cover, one cache per accuracy since the two decodes can score differently. */
 private val artworkSeedCache = LruCache<Uri, Color>(64)

@@ -367,7 +367,7 @@ class PlayerSheetController internal constructor(
             state = sheetState,
             player = playerState,
             chrome = chromeState,
-            pageAccent = { navViewModel.topAccent },
+            pageTinted = { navViewModel.topScheme != null },
             lyrics = lyrics,
             onPlayPause = { instance?.playOrPause() },
             onNext = { instance?.seekToNext() },

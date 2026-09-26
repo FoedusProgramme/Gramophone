@@ -69,6 +69,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -92,7 +93,6 @@ import coil3.request.ImageRequest
 import coil3.request.error
 import coil3.size.Precision
 import com.materialkolor.ktx.animateColorScheme
-import com.materialkolor.ktx.harmonize
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import org.akanework.gramophone.R
@@ -176,8 +176,8 @@ fun PlayerSheet(
     state: NowPlayingSheetState,
     player: PlayerSheetPlayerState,
     chrome: State<SheetChrome>,
-    /** Color the current page wants the bar harmonized to, or null for the app's primary. */
-    pageAccent: () -> Color?,
+    /** Whether the current page is themed from a cover, where the bar isn't harmonized. */
+    pageTinted: () -> Boolean,
     lyrics: LyricsOverlayState,
     onPlayPause: () -> Unit,
     onNext: () -> Unit,
@@ -210,23 +210,27 @@ fun PlayerSheet(
         label = "sheet show",
     )
 
-    // Accent the bar is harmonized to: the current page's cover color, or the app primary.
-    // Animated with the page transition. Only read in the draw phase and in the mini bar
-    // content, so the animation does not recompose the sheet on every frame.
-    val accent = animateColorAsState(
-        pageAccent() ?: MaterialTheme.colorScheme.primary,
+    // How far the bar leans towards the app's hue: fully, except on a page themed from a cover,
+    // which shows the cover's own colours. Animated with the page transition. Only read in the
+    // draw phase and in the mini bar content, so the animation does not recompose the sheet on
+    // every frame.
+    val harmony = animateFloatAsState(
+        if (pageTinted()) 0f else 1f,
         tween(NAV_TRANSITION_MS, easing = NavAxisEasing),
-        label = "page accent",
+        label = "page harmony",
     )
+    val appPrimary = rememberUpdatedState(MaterialTheme.colorScheme.primary)
     val barColors = remember(coverScheme) {
-        derivedStateOf { nowPlayingColors(coverScheme, accent.value) }
+        derivedStateOf { nowPlayingColors(coverScheme, appPrimary.value, harmony.value) }
     }
     val miniColors = remember(coverScheme) {
         derivedStateOf {
+            val primary = appPrimary.value
+            val f = harmony.value
             MiniBarColors(
-                content = coverScheme.onSurface.harmonize(accent.value),
-                playButton = coverScheme.secondaryContainer.harmonize(accent.value),
-                onPlayButton = coverScheme.onSecondaryContainer.harmonize(accent.value),
+                content = coverScheme.onSurface.harmonizeBy(primary, f),
+                playButton = coverScheme.secondaryContainer.harmonizeBy(primary, f),
+                onPlayButton = coverScheme.onSecondaryContainer.harmonizeBy(primary, f),
             )
         }
     }

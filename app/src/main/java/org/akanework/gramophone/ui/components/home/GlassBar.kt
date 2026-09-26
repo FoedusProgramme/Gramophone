@@ -37,6 +37,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.PlatformTextStyle
@@ -63,7 +65,10 @@ private val TOOLBAR_PADDING_START = 24.dp
 private val TOOLBAR_PADDING_END = 8.dp
 private val BAR_TITLE_SIZE = 22.sp // textAppearanceTitleLarge
 
-/** Blur only, no tint: a tint would read as a solid band laid across the blurred content. */
+/**
+ * Blur only, no flat tint: a tint would read as a solid band laid across the blurred content.
+ * The colour over the blur is a gradient instead, see [topEdgeBlur].
+ */
 @Composable
 fun glassHazeStyle(): HazeStyle = HazeStyle(
     backgroundColor = Color.Transparent,
@@ -91,13 +96,35 @@ private val TopEdgeProgressive = HazeProgressive.verticalGradient(
     preferPerformance = false,
 )
 
+/** How much of the page's colour covers the blur against the top edge of the screen. */
+private const val TOP_EDGE_SCRIM_ALPHA = 0.65f
+
 /**
- * Blurs whatever [hazeState] recorded, strongest against the top edge of the screen. Haze
- * redraws the whole node from its half resolution copy of the content whatever the intensity,
- * so the node must be exactly the bar and never extend over content that should stay sharp.
+ * The page's colour over the blur, fading out along the same easing as the blur itself, so text
+ * and icons on the bar stay readable over busy content without a band where the bar ends.
  */
-fun Modifier.topEdgeBlur(hazeState: HazeState, style: HazeStyle): Modifier =
-    hazeEffect(hazeState, style) {
+private val TopEdgeScrimStops: List<Pair<Float, Float>> = (0..8).map { i ->
+    val y = i / 8f
+    y to TOP_EDGE_SCRIM_ALPHA * (1f - EaseInOut.transform(y))
+}
+
+/**
+ * Blurs whatever [hazeState] recorded, strongest against the top edge of the screen, and lays
+ * [scrim] (the page's background) over it the same way. Haze redraws the whole node from its
+ * half resolution copy of the content whatever the intensity, so the node must be exactly the
+ * bar and never extend over content that should stay sharp.
+ */
+fun Modifier.topEdgeBlur(hazeState: HazeState, style: HazeStyle, scrim: Color): Modifier =
+    drawWithCache {
+        val brush = Brush.verticalGradient(
+            *TopEdgeScrimStops.map { (y, a) -> y to scrim.copy(alpha = scrim.alpha * a) }
+                .toTypedArray()
+        )
+        onDrawWithContent {
+            drawContent()
+            drawRect(brush)
+        }
+    }.hazeEffect(hazeState, style) {
         inputScale = HazeInputScale.Fixed(0.5f)
         progressive = TopEdgeProgressive
     }
@@ -135,9 +162,10 @@ fun GlassTitleBar(
             Modifier
                 .fillMaxWidth()
                 .height(topInset + GLASS_BAR_HEIGHT)
-                // Read in the draw phase to avoid recomposing on every scroll frame.
+                // Read in the draw phase to avoid recomposing on every scroll frame. Fades the
+                // colour over the blur along with it.
                 .graphicsLayer { alpha = frost() }
-                .topEdgeBlur(hazeState, style),
+                .topEdgeBlur(hazeState, style, MaterialTheme.colorScheme.surfaceContainerLow),
         )
         Row(
             Modifier

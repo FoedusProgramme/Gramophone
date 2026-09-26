@@ -59,8 +59,8 @@ class NowPlayingState {
 fun rememberNowPlayingState(
     controllerViewModel: MediaControllerViewModel,
     lifecycle: Lifecycle,
-    /** Color the playing row is harmonized to. Uses the theme's primary when null. */
-    accent: Color? = null,
+    /** Whether the playing row leans towards the theme's hue, off on a page themed from a cover. */
+    harmonize: Boolean = true,
 ): NowPlayingState {
     val state = remember { NowPlayingState() }
     DisposableEffect(controllerViewModel, lifecycle) {
@@ -83,14 +83,14 @@ fun rememberNowPlayingState(
         onDispose { }
     }
     // Only this scope reads the scheme, so a new cover doesn't recompose the whole screen.
-    NowPlayingColorsEffect(state, accent)
+    NowPlayingColorsEffect(state, harmonize)
     return state
 }
 
 @Composable
-private fun NowPlayingColorsEffect(state: NowPlayingState, accent: Color?) {
+private fun NowPlayingColorsEffect(state: NowPlayingState, harmonize: Boolean) {
     val cover = rememberArtworkColorScheme(state.artworkUri)
-    val colors = nowPlayingColors(cover, accent ?: MaterialTheme.colorScheme.primary)
+    val colors = nowPlayingColors(cover, MaterialTheme.colorScheme.primary, if (harmonize) 1f else 0f)
     SideEffect { state.colors = colors }
 }
 

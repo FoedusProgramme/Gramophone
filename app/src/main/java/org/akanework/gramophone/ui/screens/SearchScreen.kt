@@ -143,7 +143,7 @@ fun SearchScreen(initialQuery: String?, onBack: () -> Unit, modifier: Modifier =
                 Modifier
                     .fillMaxWidth()
                     .height(barTopPadding)
-                    .topEdgeBlur(hazeState, glassHazeStyle()),
+                    .topEdgeBlur(hazeState, glassHazeStyle(), background),
             )
             Row(
                 Modifier

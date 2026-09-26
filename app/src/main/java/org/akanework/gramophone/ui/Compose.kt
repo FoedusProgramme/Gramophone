@@ -45,7 +45,7 @@ private const val DARK_CARD_TONE = 10.0
 /** How far a dark card sits above the page, which differs between colour spec versions. */
 private const val DARK_CARD_TONE_LIFT = 4.0
 
-private fun cardSurface(scheme: ColorScheme, dark: Boolean): Color =
+internal fun cardSurface(scheme: ColorScheme, dark: Boolean): Color =
     if (dark) {
         val pageTone = scheme.surfaceContainerLow.toHct().tone
         scheme.primary.tonal(DARK_CARD_CHROMA, maxOf(DARK_CARD_TONE, pageTone + DARK_CARD_TONE_LIFT))

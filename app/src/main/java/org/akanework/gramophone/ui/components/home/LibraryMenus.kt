@@ -81,10 +81,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.materialkolor.ktx.harmonize
 import kotlinx.coroutines.launch
 import org.akanework.gramophone.R
 import org.akanework.gramophone.ui.THEME_ANIMATION_MS
+import org.akanework.gramophone.ui.components.player.LocalHarmonizeCovers
+import org.akanework.gramophone.ui.components.player.harmonizeBy
 import org.akanework.gramophone.ui.components.player.rememberArtworkColorScheme
 import org.akanework.gramophone.ui.library.LayoutType
 import org.akanework.gramophone.ui.library.Sorter
@@ -220,16 +221,18 @@ private fun LibraryItemSheetHeader(
     val onSurface = MaterialTheme.colorScheme.onSurface
     val onSurfaceVariant = MaterialTheme.colorScheme.onSurfaceVariant
     // The play button wears the cover's own container colours, leant towards the theme's hue
-    // the way the mini player's bar and the playing row do. Both fall back to the theme's own
-    // when content based colour is off or the cover holds no usable colour.
+    // the way the mini player's bar and the playing row do (not on a page themed from a cover).
+    // Both fall back to the theme's own when content based colour is off or the cover holds no
+    // usable colour.
     val coverScheme = rememberArtworkColorScheme(cover)
     val appPrimary = MaterialTheme.colorScheme.primary
+    val harmony = if (LocalHarmonizeCovers.current) 1f else 0f
     val playFill by animateColorAsState(
-        coverScheme.primaryContainer.harmonize(appPrimary), tween(THEME_ANIMATION_MS),
+        coverScheme.primaryContainer.harmonizeBy(appPrimary, harmony), tween(THEME_ANIMATION_MS),
         label = "play fill",
     )
     val onPlayFill by animateColorAsState(
-        coverScheme.onPrimaryContainer.harmonize(appPrimary), tween(THEME_ANIMATION_MS),
+        coverScheme.onPrimaryContainer.harmonizeBy(appPrimary, harmony), tween(THEME_ANIMATION_MS),
         label = "play icon",
     )
     Row(

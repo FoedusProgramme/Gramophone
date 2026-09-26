@@ -33,9 +33,12 @@ import androidx.compose.foundation.gestures.calculateCentroid
 import androidx.compose.foundation.gestures.calculatePan
 import androidx.compose.foundation.gestures.calculateZoom
 import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -51,6 +54,7 @@ import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.geometry.center
+import androidx.compose.ui.geometry.isSpecified
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.drawscope.scale
@@ -58,8 +62,12 @@ import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChanged
+import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextLayoutResult
@@ -83,6 +91,12 @@ private const val CONTRIBUTORS_URL =
 
 /** Horizontal margin between the logo and the screen edges. */
 private val MARK_MARGIN = 24.dp
+
+/** Room under the names, above the navigation bar: the page's own bottom spacer. */
+private val MARK_BOTTOM_GAP = 24.dp
+
+/** The least height the names get when little of the screen is left, as in landscape. */
+private val MARK_MIN_HEIGHT = 240.dp
 
 /**
  * Range of name text sizes to search, in sp. The floor is below 5sp because names in scripts
@@ -152,12 +166,24 @@ private fun NameMark(names: List<String>, modifier: Modifier = Modifier) {
     val fade by animateFloatAsState(if (arrived) 1f else 0f, tween(700), label = "credits")
     val zoom = remember { MarkZoom() }
     val scope = rememberCoroutineScope()
+    // The names take the rest of the screen below the title. The page scrolls, so its column
+    // doesn't bound the height: it is the window's, less where the names start in the column
+    // (which the scroll doesn't move) and the room kept for the navigation bar.
+    val density = LocalDensity.current
+    val windowHeight = LocalWindowInfo.current.containerSize.height
+    val bottomInset = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+    var top by remember { mutableStateOf<Float?>(null) }
+    val height = top?.let {
+        with(density) { (windowHeight - it).toDp() } - bottomInset - MARK_BOTTOM_GAP
+    }
     BoxWithConstraints(
         modifier
             .fillMaxWidth()
+            .onPlaced { top = it.positionInParent().y }
             .padding(horizontal = MARK_MARGIN)
-            .aspectRatio(1f)
-            // The zoomed names stay inside the square instead of covering the title.
+            // Nothing is planned until the height is known, so the names are laid out once.
+            .height(height?.coerceAtLeast(MARK_MIN_HEIGHT) ?: 0.dp)
+            // The zoomed names stay inside their box instead of covering the title.
             .clipToBounds()
             .markZoomGestures(zoom)
             .combinedClickable(
@@ -255,13 +281,17 @@ private fun Modifier.markZoomGestures(zoom: MarkZoom): Modifier =
                 if (event.changes.any { it.isConsumed }) break
                 val pinching = event.changes.count { it.pressed } > 1
                 if (!pinching && zoom.scale <= MIN_ZOOM) continue
+                // Unspecified (NaN) on the event that lifts the last finger, when no pointer is
+                // down on both sides of it, and a NaN offset would move the names out of sight.
+                val centroid = event.calculateCentroid()
+                if (!centroid.isSpecified) continue
                 val pan = event.calculatePan()
                 if (!pinching && !dragging) {
                     panned += pan
                     if (panned.getDistance() < viewConfiguration.touchSlop) continue
                 }
                 dragging = true
-                zoom.transform(event.calculateCentroid(), pan, event.calculateZoom())
+                zoom.transform(centroid, pan, event.calculateZoom())
                 event.changes.forEach { if (it.positionChanged()) it.consume() }
             } while (event.changes.any { it.pressed })
         }
@@ -442,27 +472,31 @@ private fun markPixels(context: Context, width: Int, height: Int): Mark {
     val bitmap = ImageBitmap(width, height)
     val canvas = androidx.compose.ui.graphics.Canvas(bitmap)
     val drawable = ContextCompat.getDrawable(context, R.drawable.ic_gramophone_monochrome)!!
-    drawable.setBounds(0, 0, width, height)
+    // The logo is square: fitted and centred in the box rather than stretched to it.
+    val side = minOf(width, height)
+    val left = (width - side) / 2
+    val top = (height - side) / 2
+    drawable.setBounds(left, top, left + side, top + side)
     drawable.draw(canvas.nativeCanvas)
     val pixels = IntArray(width * height)
     bitmap.readPixels(pixels, 0, 0, width, height)
-    var left = width
-    var top = height
+    var minX = width
+    var minY = height
     var right = -1
     var bottom = -1
     for (y in 0 until height) {
         val row = y * width
         for (x in 0 until width) {
             if ((pixels[row + x] ushr 24) != 0) {
-                if (x < left) left = x
+                if (x < minX) minX = x
                 if (x > right) right = x
-                if (y < top) top = y
+                if (y < minY) minY = y
                 if (y > bottom) bottom = y
             }
         }
     }
-    if (right < left || bottom < top) return EMPTY_MARK
-    return Mark(pixels, width, left, top, right - left + 1, bottom - top + 1)
+    if (right < minX || bottom < minY) return EMPTY_MARK
+    return Mark(pixels, width, minX, minY, right - minX + 1, bottom - minY + 1)
 }
 
 private fun open(context: Context, url: String) {

@@ -64,7 +64,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import org.akanework.gramophone.ui.LocalCardSurface
 import org.akanework.gramophone.ui.THEME_ANIMATION_MS
+import org.akanework.gramophone.ui.cardSurface
+import org.akanework.gramophone.ui.components.player.LocalHarmonizeCovers
 import org.akanework.gramophone.ui.components.player.rememberArtworkColorScheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
@@ -87,6 +90,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -340,16 +344,24 @@ fun LibrarySubScreen(key: LibrarySubKey, onBack: () -> Unit, modifier: Modifier 
         targetScheme.surfaceContainerLow, tween(THEME_ANIMATION_MS), label = "background",
     )
     val sheet = animateColorAsState(targetScheme.surface, tween(THEME_ANIMATION_MS), label = "sheet")
-    // The mini player and the playing row are harmonized to the page's accent. The mini player
-    // uses the accent of the top page, so it reverts when this page is popped.
-    val accent = if (tinted) targetScheme.primary else null
+    // Only a page that really took the cover's colours counts as tinted from here on: without
+    // a usable cover it keeps the app theme, and everything is harmonized as usual.
+    val colored = tinted && targetScheme !== MaterialTheme.colorScheme
+    // The dialogs shown from the top page take its scheme, and the mini player and the playing
+    // row stop leaning towards the app's hue on it. The mini player follows the top page, so it
+    // reverts when this page is popped.
     val navViewModel = koinActivityViewModel<NavViewModel>()
-    val pageAccents = navViewModel.pageAccents
-    SideEffect { if (accent != null) pageAccents[key] = accent else pageAccents.remove(key) }
-    DisposableEffect(key) { onDispose { pageAccents.remove(key) } }
+    val pageSchemes = navViewModel.pageSchemes
+    SideEffect { if (colored) pageSchemes[key] = targetScheme else pageSchemes.remove(key) }
+    DisposableEffect(key) { onDispose { pageSchemes.remove(key) } }
     val nowPlaying = rememberNowPlayingState(
-        koinActivityViewModel<MediaControllerViewModel>(), LocalLifecycleOwner.current.lifecycle, accent,
+        koinActivityViewModel<MediaControllerViewModel>(), LocalLifecycleOwner.current.lifecycle,
+        harmonize = !colored,
     )
+    // The cards (the item sheet's actions, the artist's album cards) sit on the page's surfaces.
+    val cardSurface = remember(targetScheme) {
+        if (colored) cardSurface(targetScheme, targetScheme.surface.luminance() < 0.5f) else null
+    }
     CollectLibraryItems(page.songs)
     page.albums?.let { CollectLibraryItems(it) }
     val density = LocalDensity.current
@@ -398,7 +410,11 @@ fun LibrarySubScreen(key: LibrarySubKey, onBack: () -> Unit, modifier: Modifier 
     val hazeState = remember { HazeState() }
     val barTopPadding = contentTop
     MaterialTheme(colorScheme = targetScheme) {
-        CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurface) {
+        CompositionLocalProvider(
+            LocalContentColor provides MaterialTheme.colorScheme.onSurface,
+            LocalCardSurface provides (cardSurface ?: LocalCardSurface.current),
+            LocalHarmonizeCovers provides !colored,
+        ) {
             Box(modifier.drawBehind { drawRect(background.value) }) {
                 // The list sits behind the frosted bar as its blur source, padded clear of it at the top.
                 // The background is painted inside the source so the recorded layer is opaque.

@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.Text
@@ -60,6 +61,7 @@ import org.akanework.gramophone.ui.screens.settings.OssLicensesScreen
 import org.akanework.gramophone.ui.screens.settings.PlayerSettingsScreen
 import org.akanework.gramophone.ui.screens.settings.ReplayGainSettingsScreen
 import org.akanework.gramophone.ui.screens.settings.ThemeSettingsScreen
+import org.koin.compose.viewmodel.koinActivityViewModel
 
 sealed interface AppNavKey : NavKey {
     val wantsPlayer: Boolean
@@ -98,11 +100,14 @@ class ArtistKey(val id: Long?, val albumArtist: Boolean) : LibrarySubKey
 class NavViewModel : ViewModel() {
     val backStack: SnapshotStateList<AppNavKey> = mutableStateListOf(HomeKey)
 
-    /** Accent color per back stack entry, used to harmonize the mini player. */
-    val pageAccents: SnapshotStateMap<AppNavKey, Color> = mutableStateMapOf()
+    /**
+     * Color scheme per back stack entry that is themed from a cover. The dialogs take the top
+     * page's, and the mini player stops harmonizing to the app's hue on top of one.
+     */
+    val pageSchemes: SnapshotStateMap<AppNavKey, ColorScheme> = mutableStateMapOf()
 
-    /** Accent of the top page, or null if it uses the app colors. */
-    val topAccent: Color? get() = backStack.lastOrNull()?.let { pageAccents[it] }
+    /** Scheme of the top page, or null if it uses the app colors. */
+    val topScheme: ColorScheme? get() = backStack.lastOrNull()?.let { pageSchemes[it] }
 
     fun navigateTo(key: AppNavKey) {
         backStack.add(key)
@@ -141,6 +146,7 @@ fun AppRoot(
     debug: Boolean,
 ) {
     val top = backStack.lastOrNull()
+    val navViewModel = koinActivityViewModel<NavViewModel>()
     LaunchedEffect(top) {
         top?.let { playerSheet.visible = it.wantsPlayer }
     }
@@ -154,7 +160,10 @@ fun AppRoot(
                 AppNavHost(backStack)
             }
         }
-        AppDialogHost(dialogs)
+        // A page themed from a cover shows its dialogs in its own colors.
+        MaterialTheme(colorScheme = navViewModel.topScheme ?: MaterialTheme.colorScheme) {
+            AppDialogHost(dialogs)
+        }
         // Above the mini player when it shows, else above the navigation bar.
         val snackbarBottom = if (playerBottomPadding > 0) with(LocalDensity.current) { playerBottomPadding.toDp() }
             else WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
