@@ -18,7 +18,6 @@
 package org.akanework.gramophone.logic.library
 
 import android.content.Context
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -33,14 +32,12 @@ import uk.akane.libphonograph.reader.FlowReader
  *
  * Refreshes are not serialized: two calls run side by side, as they always have.
  */
-class LibraryRefresher internal constructor(
+class LibraryRefresher(
+    context: Context,
+    private val reader: FlowReader,
     private val scope: CoroutineScope,
-    private val steps: LibraryRefreshSteps,
-    private val main: CoroutineDispatcher,
 ) {
-    constructor(context: Context, reader: FlowReader, scope: CoroutineScope) : this(
-        scope, MediaStoreRefreshSteps(context.applicationContext, reader), Dispatchers.Main
-    )
+    private val context = context.applicationContext
 
     /**
      * Refreshes the library, smart-scanning first if [smartScanFirst], then calls [onDone] on the
@@ -52,28 +49,9 @@ class LibraryRefresher internal constructor(
         onDone: (() -> Unit)? = null,
     ) {
         scope.launch {
-            if (smartScanFirst) steps.smartScan()
-            steps.refresh()
-            if (onDone != null) withContext(main) { onDone() }
+            if (smartScanFirst) MediaStoreCompat.smartScan(context)
+            reader.refresh()
+            if (onDone != null) withContext(Dispatchers.Main) { onDone() }
         }
-    }
-}
-
-/** The MediaStore side of [LibraryRefresher]; a seam for tests. */
-internal interface LibraryRefreshSteps {
-    suspend fun smartScan()
-    suspend fun refresh()
-}
-
-private class MediaStoreRefreshSteps(
-    private val context: Context,
-    private val reader: FlowReader,
-) : LibraryRefreshSteps {
-    override suspend fun smartScan() {
-        MediaStoreCompat.smartScan(context)
-    }
-
-    override suspend fun refresh() {
-        reader.refresh()
     }
 }

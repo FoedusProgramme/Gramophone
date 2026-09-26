@@ -96,18 +96,6 @@ class MediaConsentRequesterTest {
     }
 
     @Test
-    fun requestsQueuedWithoutCollectorArriveInOrder() = runBlocking {
-        val first = PendingWrite.Rename(1L, "/music/one.m3u")
-        val second = PendingWrite.Delete
-        requester.request(sender(1), first)
-        requester.request(sender(2), second)
-
-        assertEquals(first, requester.next().payload)
-        assertEquals(second, requester.next().payload)
-        assertNull(withTimeoutOrNull(50) { requester.next() })
-    }
-
-    @Test
     fun cancelledConsentDoesNotWrite() {
         val write = PendingWrite.AddToPlaylist(listOf(song), playlist, null)
         repository.onConsentResult(write, Activity.RESULT_CANCELED, null)

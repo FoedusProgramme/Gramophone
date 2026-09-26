@@ -249,7 +249,7 @@ private class LibrarySubPage(
  * Whether [songs] come from more than one album, going by the album ids in their extras. Songs
  * without an id are skipped, so a list without ids counts as one album.
  */
-internal fun songsSpanAlbums(songs: List<MediaItem>): Boolean {
+private fun songsSpanAlbums(songs: List<MediaItem>): Boolean {
     var first: Long? = null
     for (song in songs) {
         val id = song.mediaMetadata.albumId ?: continue

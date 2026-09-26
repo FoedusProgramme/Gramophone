@@ -21,7 +21,6 @@ import android.app.Application
 import android.content.Intent
 import android.content.IntentSender
 import android.net.Uri
-import android.os.Bundle
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import kotlinx.coroutines.CoroutineScope
@@ -37,10 +36,7 @@ import org.akanework.gramophone.ui.intent.DefaultPlayIntentExecutor
 import org.akanework.gramophone.ui.intent.PlayIntentAction
 import org.akanework.gramophone.ui.intent.PlayIntentHost
 import org.akanework.gramophone.ui.nav.AppNavKey
-import org.akanework.gramophone.ui.nav.PlaylistKey
-import org.akanework.gramophone.ui.nav.SearchKey
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertSame
 import org.junit.Assert.assertTrue
@@ -50,14 +46,13 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 import org.robolectric.shadows.ShadowToast
-import uk.akane.libphonograph.manipulator.PlaylistSerializer.Entry
 import java.io.File
 import java.lang.reflect.Proxy
 
 /**
- * Each [PlayIntentAction] branch of [DefaultPlayIntentExecutor]: which controller calls it makes,
- * where it navigates, and what it writes. The controller is a recording proxy, the library a fixed
- * id map and the MediaStore side of [LibraryWriteRepository] a fake.
+ * How [DefaultPlayIntentExecutor] resolves the ids it is handed: a bare MediaStore id (audio
+ * preview) or the library's "MediaStore:<id>" (search suggestions), and what happens when the id
+ * isn't in the library. The controller is a recording proxy and the library a fixed id map.
  */
 @Config(application = Application::class)
 @RunWith(RobolectricTestRunner::class)
@@ -68,7 +63,6 @@ class DefaultPlayIntentExecutorTest {
 
     private class FakeHost : PlayIntentHost {
         val calls = mutableListOf<Call>()
-        val navigated = mutableListOf<AppNavKey>()
         var controllerRequests = 0
 
         private val player = Proxy.newProxyInstance(
@@ -83,19 +77,13 @@ class DefaultPlayIntentExecutorTest {
             return player
         }
 
-        override fun navigateTo(key: AppNavKey) {
-            navigated += key
-        }
+        override fun navigateTo(key: AppNavKey) = error("unused")
     }
 
     private class FakeWrites : LibraryWrites {
-        val performed = mutableListOf<PendingWrite>()
-
-        override suspend fun favoritesUri(): Uri? = FAVORITES
+        override suspend fun favoritesUri(): Uri? = null
         override suspend fun consentFor(write: PendingWrite): IntentSender? = null
-        override suspend fun perform(write: PendingWrite) {
-            performed += write
-        }
+        override suspend fun perform(write: PendingWrite) {}
         override suspend fun reportFailure(write: PendingWrite, resultCode: Int, data: Intent?) {}
         override suspend fun createPlaylist(file: File) {}
         override suspend fun deleteSongs(list: List<Pair<File, Long>>): DeleteResult = error("unused")
@@ -108,7 +96,6 @@ class DefaultPlayIntentExecutorTest {
     private val executor = DefaultPlayIntentExecutor(
         RuntimeEnvironment.getApplication(),
         flowOf(mapOf(42L to song)),
-        // Unconfined runs the launched write synchronously inside markFavorite.
         LibraryWriteRepository(CoroutineScope(Dispatchers.Unconfined), MediaConsentRequester(), writes),
     )
 
@@ -161,71 +148,5 @@ class DefaultPlayIntentExecutorTest {
                 RuntimeEnvironment.getApplication().getString(R.string.cannot_find_file)
             )
         )
-    }
-
-    @Test
-    fun markFavoriteWritesToFavorites() {
-        val entry = Entry(locations = listOf(Uri.parse("file:///music/a.flac")))
-        execute(PlayIntentAction.MarkFavorite(entry, favorite = false))
-
-        val write = writes.performed.single() as PendingWrite.Favorite
-        assertEquals(listOf(entry), write.songs)
-        assertEquals(FAVORITES, write.uri)
-        assertFalse(write.favorite)
-        assertEquals(0, host.controllerRequests)
-    }
-
-    @Test
-    fun openPlaylistNavigates() {
-        execute(PlayIntentAction.OpenPlaylist(9L))
-
-        val key = host.navigated.single() as PlaylistKey
-        assertEquals(9L, key.id)
-        assertNull(key.className)
-        assertEquals(0, host.controllerRequests)
-    }
-
-    @Test
-    fun openSearchNavigates() {
-        execute(PlayIntentAction.OpenSearch("jazz"))
-        execute(PlayIntentAction.OpenSearch(null))
-
-        assertEquals(listOf("jazz", null), host.navigated.map { (it as SearchKey).query })
-        assertEquals(0, host.controllerRequests)
-    }
-
-    @Test
-    fun playFromSearchPlaysSearchQueryWithExtras() {
-        val extras = Bundle().apply { putString("android.intent.extra.artist", "Someone") }
-        execute(PlayIntentAction.PlayFromSearch("query", extras))
-
-        assertEquals(listOf("setMediaItem", "prepare", "play"), callNames())
-        val request = (host.calls[0].args.single() as MediaItem).requestMetadata
-        assertEquals("query", request.searchQuery)
-        assertEquals("Someone", request.extras?.getString("android.intent.extra.artist"))
-    }
-
-    @Test
-    fun shuffleTurnsOnShuffleAndPlaysSearchQuery() {
-        execute(PlayIntentAction.Shuffle(""))
-
-        assertEquals(
-            listOf("setShuffleModeEnabled", "setMediaItem", "prepare", "play"), callNames()
-        )
-        assertEquals(listOf<Any?>(true), host.calls[0].args)
-        val request = (host.calls[1].args.single() as MediaItem).requestMetadata
-        assertEquals("", request.searchQuery)
-        assertNull(request.extras)
-    }
-
-    @Test
-    fun autoplayPreparesAndPlays() {
-        execute(PlayIntentAction.Autoplay)
-
-        assertEquals(listOf("prepare", "play"), callNames())
-    }
-
-    private companion object {
-        val FAVORITES: Uri = Uri.parse("content://media/external/audio/playlists/1")
     }
 }

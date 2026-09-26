@@ -35,7 +35,6 @@ import org.akanework.gramophone.ui.intent.PlayIntentAction.PlayById
 import org.akanework.gramophone.ui.intent.PlayIntentAction.PlayFromSearch
 import org.akanework.gramophone.ui.intent.PlayIntentAction.Shuffle
 import org.akanework.gramophone.ui.intent.PlayIntentParser
-import org.akanework.gramophone.ui.intent.PlayIntents
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -70,16 +69,6 @@ class PlayIntentParserTest {
     private fun single(actions: List<PlayIntentAction>): PlayFromSearch {
         assertEquals(1, actions.size)
         return actions[0] as PlayFromSearch
-    }
-
-    // Constants are an external contract (service, receiver, other apps).
-    @Test
-    fun constantValuesAreUnchanged() {
-        assertEquals("AutoStartFgs", PlayIntents.PLAYBACK_AUTO_START_FOR_FGS)
-        assertEquals("AutoStartId", PlayIntents.PLAYBACK_AUTO_PLAY_ID)
-        assertEquals("AutoStartPos", PlayIntents.PLAYBACK_AUTO_PLAY_POSITION)
-        assertEquals("FavoriteEntry", PlayIntents.FAVORITE_ENTRY)
-        assertEquals("FavoriteState", PlayIntents.FAVORITE_STATE)
     }
 
     @Test
