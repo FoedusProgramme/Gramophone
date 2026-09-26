@@ -385,6 +385,10 @@ internal fun <T : Any> LibraryItem(
     cardShape: ((emphasis: Float) -> Shape)? = null,
     /** Shown in place of the cover on a list row. */
     number: Int? = null,
+    /** Shows the cover after the [number] too. */
+    numberedCover: Boolean = false,
+    /** Horizontal inset of the playing song's container on a list row without a [cardShape]. */
+    containerInset: Dp = 0.dp,
 ) {
     val context = LocalContext.current
     val spec = state.spec
@@ -460,7 +464,9 @@ internal fun <T : Any> LibraryItem(
             colors = colors,
             menu = menu,
             number = number,
-            // Numbered lists are album or artist song lists, which show each song's duration.
+            numberedCover = numberedCover,
+            containerInset = containerInset,
+            // Numbered lists are the detail pages' song lists, which show each song's duration.
             trailing = if (number != null && item is MediaItem)
                 item.mediaMetadata.durationMs?.let { convertDurationToTimeStamp(it) } else null,
         )

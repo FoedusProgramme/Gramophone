@@ -46,6 +46,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.drawOutline
+import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -95,9 +99,12 @@ val LIST_ROUND_CORNER_SIZE = 6.dp
 val GRID_ROUND_CORNER_SIZE = 10.dp
 val GRID_CARD_SIDE_PADDING = 12.dp
 val GRID_CARD_MARGIN_TOP = 8.dp
-val GRID_CARD_MARGIN_LABEL = 12.5.dp
+/** Above and below the label block, about as much as the cover keeps at its sides. */
+val GRID_CARD_MARGIN_LABEL = 10.dp
 val GRID_CARD_PADDING_BOTTOM = 0.dp
-val GRID_CARD_LABEL_HEIGHT = 85.sp
+
+/** Room for the label's three lines, which are centred in it. */
+val GRID_CARD_LABEL_HEIGHT = 60.sp
 val DECOR_HEIGHT = 48.dp
 
 /** Between the home's items, where the sheet's surface-container-low shows through. */
@@ -199,8 +206,13 @@ fun LibraryCover(
     @DrawableRes defaultCover: Int,
     cornerRadius: Dp,
     modifier: Modifier = Modifier,
+    /**
+     * Size of [defaultCover]'s glyph as a share of the cover's shorter side, for covers much
+     * larger than the drawable's fixed insets suit. Null keeps the drawable's own insets.
+     */
+    defaultGlyphShare: Float? = null,
 ) {
-    val fallback = rememberDefaultCoverPainter(defaultCover)
+    val fallback = rememberDefaultCoverPainter(defaultCover, defaultGlyphShare)
     AsyncImage(
         model = ImageRequest.Builder(LocalPlatformContext.current)
             .data(uri)
@@ -217,6 +229,21 @@ fun LibraryCover(
     )
 }
 
+/**
+ * A background of [shape] inset by [inset] on both sides, so it sits clear of the screen edges
+ * while the row's content keeps its place.
+ */
+private fun Modifier.insetBackground(color: Color, shape: Shape, inset: Dp): Modifier =
+    if (inset == 0.dp) background(color, shape)
+    else drawBehind {
+        if (color.alpha == 0f) return@drawBehind
+        val insetPx = inset.toPx()
+        val outline = shape.createOutline(
+            Size(size.width - insetPx * 2, size.height), layoutDirection, this,
+        )
+        translate(left = insetPx) { drawOutline(outline, color) }
+    }
+
 /** `adapter_list_card_larger` (LIST). */
 @Composable
 fun LibraryListRow(
@@ -232,12 +259,16 @@ fun LibraryListRow(
     menu: @Composable () -> Unit = {},
     /** Shown in place of the cover, for lists whose covers would all be the same. */
     number: Int? = null,
+    /** Shows the cover after the [number] too, for numbered lists of different covers. */
+    numberedCover: Boolean = false,
+    /** Horizontal inset of the playing song's container from the row's edges. */
+    containerInset: Dp = 0.dp,
     /** Shown before the menu button, such as a song's length. */
     trailing: String? = null,
 ) {
     Row(
         modifier
-            .background(colors.container, colors.containerShape)
+            .insetBackground(colors.container, colors.containerShape, containerInset)
             .fillMaxWidth()
             .height(LIST_HEIGHT)
             // The View row is clickable but has no selectable background: no ripple.
@@ -257,16 +288,19 @@ fun LibraryListRow(
             ) {
                 SingleLineText(number.toString(), 15.sp, 500, colors.subtitle)
             }
-        } else {
+        }
+        if (number == null || numberedCover) {
             LibraryCover(
                 uri = cover,
                 defaultCover = defaultCover,
                 cornerRadius = LIST_ROUND_CORNER_SIZE,
-                modifier = Modifier.padding(start = LIST_COVER_START).size(46.dp),
+                // After a number, the number's box already holds the gap.
+                modifier = Modifier.padding(start = if (number != null) 0.dp else LIST_COVER_START)
+                    .size(46.dp),
             )
         }
         Column(
-            Modifier.weight(1f).padding(start = if (number != null) 4.dp else 16.dp),
+            Modifier.weight(1f).padding(start = if (number != null && !numberedCover) 4.dp else 16.dp),
         ) {
             SingleLineText(
                 title, 14.sp, 500, colors.title,
@@ -339,11 +373,11 @@ fun LibraryGridCard(
             Modifier.fillMaxWidth().height(labelHeight + GRID_CARD_MARGIN_LABEL * 2),
             verticalAlignment = FloorCenterVertically,
         ) {
+            // Not given the block's height, so a taller fallback font centres instead of clipping.
             Column(
                 Modifier
                     .weight(1f)
-                    .padding(start = GRID_CARD_SIDE_PADDING)
-                    .height(labelHeight),
+                    .padding(start = GRID_CARD_SIDE_PADDING),
             ) {
                 SingleLineText(
                     title, 15.sp, 500, colors.title,
@@ -358,7 +392,7 @@ fun LibraryGridCard(
                     Modifier.fillMaxWidth(),
                 )
             }
-            }
+        }
         menu()
     }
 }

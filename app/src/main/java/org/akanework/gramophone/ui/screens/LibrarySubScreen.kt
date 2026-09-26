@@ -151,6 +151,8 @@ private class LibrarySubPage(
     val albums: LibraryTabState<Album>? = null,
     /** Id of the playlist the edit button opens, when this is an editable playlist. */
     val editablePlaylistId: Long? = null,
+    /** Whether song rows show their cover next to the number, for songs of different albums. */
+    val numberedCovers: Boolean = false,
 ) {
     companion object {
         fun create(
@@ -216,6 +218,7 @@ private class LibrarySubPage(
                             item.map { it?.songList ?: emptyList() },
                         ),
                         editablePlaylistId = key.id?.takeIf { key.className == Playlist::class.java.name },
+                        numberedCovers = true,
                     )
                 }
                 is ArtistKey -> {
@@ -443,6 +446,9 @@ fun LibrarySubScreen(key: LibrarySubKey, onBack: () -> Unit, modifier: Modifier 
                             LibraryItem(
                                 songs, item, nowPlaying, env, songLayout, Modifier.animateItem(),
                                 number = index + 1,
+                                numberedCover = page.numberedCovers,
+                                // The playing song's container keeps clear of the sheet's edges.
+                                containerInset = PLAYING_ROW_INSET,
                             )
                         }
                         if (songs.items.isNotEmpty()) {
@@ -472,8 +478,10 @@ fun LibrarySubScreen(key: LibrarySubKey, onBack: () -> Unit, modifier: Modifier 
                     scrolled = scrolled,
                     toolbarPaddingStart = TOOLBAR_BUTTON_PADDING_START,
                     toolbarPaddingEnd = TOOLBAR_BUTTON_PADDING_END,
-                    // Leaves room for the back button docked in the toolbar.
+                    // Leaves room for the buttons docked in the toolbar.
                     titlePaddingStart = TOOLBAR_TITLE_PADDING,
+                    // Sort, and edit for an editable playlist.
+                    titlePaddingEnd = toolbarTitlePaddingEnd(if (page.editablePlaylistId != null) 2 else 1),
                     // No blur at rest, since no content is under the bar yet.
                     frost = { (pageScroll() / frostSpanPx).coerceIn(0f, 1f) },
                 )
@@ -488,6 +496,7 @@ fun LibrarySubScreen(key: LibrarySubKey, onBack: () -> Unit, modifier: Modifier 
                     onEdit = page.editablePlaylistId?.let { id ->
                         { navViewModel.navigateTo(PlaylistEditKey(id)) }
                     },
+                    sortMenu = { expanded, onDismiss -> LibrarySortMenu(songs, expanded, onDismiss) },
                 )
             }
         }
@@ -496,6 +505,9 @@ fun LibrarySubScreen(key: LibrarySubKey, onBack: () -> Unit, modifier: Modifier 
 
 /** Title size, smaller than the library's large title to fit next to the buttons. */
 private val TITLE_SIZE = 28.sp
+
+/** Inset of the playing song's rounded container from the sheet's sides. */
+private val PLAYING_ROW_INSET = 8.dp
 
 /** Gap between the title and the carousel above and the sheet below. */
 private val TITLE_GAP = 24.dp

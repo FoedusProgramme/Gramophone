@@ -40,13 +40,17 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.Sort
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.carousel.CarouselDefaults
 import androidx.compose.material3.carousel.CarouselState
 import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -97,6 +101,9 @@ internal val CAROUSEL_ROW_PADDING = 8.dp
 private val CAROUSEL_ITEM_GAP = 8.dp
 private val CAROUSEL_ITEM_CORNER = 28.dp
 
+/** Default cover glyph size as a share of the card height, a little under a list row's. */
+private const val CAROUSEL_DEFAULT_GLYPH_SHARE = 0.4f
+
 /** Side margins, matching the page's 24dp content margin on both sides. */
 private val CAROUSEL_START_PADDING = 24.dp
 private val CAROUSEL_END_PADDING = 24.dp
@@ -116,6 +123,16 @@ internal val TOOLBAR_BUTTON_PADDING_END = 8.dp
 
 /** Start padding of the toolbar title, leaving room for the docked back button. */
 internal val TOOLBAR_TITLE_PADDING = TOOLBAR_BUTTON_PADDING_START + CAROUSEL_BUTTON_SIZE + 4.dp
+
+/** Gap between two buttons at the card's corner. Docked in the toolbar they touch. */
+private val CAROUSEL_BUTTON_GAP = 8.dp
+
+/**
+ * End padding of the toolbar title, leaving room for [count] buttons docked at the end, with the
+ * same gap as [TOOLBAR_TITLE_PADDING] leaves before the title.
+ */
+internal fun toolbarTitlePaddingEnd(count: Int): Dp =
+    TOOLBAR_BUTTON_PADDING_START + CAROUSEL_BUTTON_SIZE * count + 4.dp
 
 /** Card height: a fraction of the screen height, clamped for very short or tall screens. */
 @Composable
@@ -154,6 +171,8 @@ private fun CarouselButton(
     travelPx: Float,
     scrolled: () -> Float,
     onClick: () -> Unit,
+    /** Anchored to the button, such as its menu. */
+    content: @Composable () -> Unit = {},
 ) {
     val density = LocalDensity.current
     val surface = MaterialTheme.colorScheme.surface
@@ -179,11 +198,12 @@ private fun CarouselButton(
             tint = MaterialTheme.colorScheme.onSurface,
             onClick = onClick,
         )
+        content()
     }
 }
 
 /**
- * The back and edit buttons. At rest they sit on the corners of the focused card and follow it
+ * The back, edit and sort buttons. At rest they sit on the corners of the focused card and follow it
  * when overscrolled. As the card scrolls under the toolbar they move to the toolbar button
  * positions and their background fades out. [scrolled] is the card's scroll offset from rest in
  * px (negative when overscrolled) and [topInset] the status bar height. [atLastEntry] tells
@@ -197,6 +217,8 @@ internal fun CarouselButtons(
     atLastEntry: Boolean,
     onBack: () -> Unit,
     onEdit: (() -> Unit)? = null,
+    /** The sort menu, opened from the sort button at the end. */
+    sortMenu: (@Composable (expanded: Boolean, onDismiss: () -> Unit) -> Unit)? = null,
 ) {
     val density = LocalDensity.current
     val cardWidth = carouselCardWidth()
@@ -227,11 +249,33 @@ internal fun CarouselButtons(
             scrolled = scrolled,
             onClick = onBack,
         )
+        // The end buttons, counted from the end: sort, then edit before it.
+        fun endRestX(slot: Int) = cardStart.value + cardWidth - CAROUSEL_BUTTON_INSET -
+                CAROUSEL_BUTTON_SIZE - (CAROUSEL_BUTTON_SIZE + CAROUSEL_BUTTON_GAP) * slot
+        fun endDockX(slot: Int) = windowWidth - insetEnd - TOOLBAR_BUTTON_PADDING_END -
+                CAROUSEL_BUTTON_SIZE * (slot + 1)
+        var slot = 0
+        if (sortMenu != null) {
+            val sortSlot = slot++
+            var sortOpen by remember { mutableStateOf(false) }
+            CarouselButton(
+                icon = Icons.AutoMirrored.Outlined.Sort,
+                restX = { endRestX(sortSlot) },
+                dockX = endDockX(sortSlot),
+                restY = restY,
+                travelPx = travelPx,
+                scrolled = scrolled,
+                onClick = { sortOpen = true },
+            ) {
+                sortMenu(sortOpen) { sortOpen = false }
+            }
+        }
         if (onEdit != null) {
+            val editSlot = slot++
             CarouselButton(
                 icon = Icons.Outlined.Edit,
-                restX = { cardStart.value + cardWidth - CAROUSEL_BUTTON_INSET - CAROUSEL_BUTTON_SIZE },
-                dockX = windowWidth - insetEnd - TOOLBAR_BUTTON_PADDING_END - CAROUSEL_BUTTON_SIZE,
+                restX = { endRestX(editSlot) },
+                dockX = endDockX(editSlot),
                 restY = restY,
                 travelPx = travelPx,
                 scrolled = scrolled,
@@ -254,6 +298,8 @@ private fun <T : Any> CarouselCard(
         uri = state.spec.coverOf(context, item),
         defaultCover = state.spec.defaultCoverOf(item),
         cornerRadius = CAROUSEL_ITEM_CORNER,
+        // The default cover's fixed insets would stretch its glyph across the whole card.
+        defaultGlyphShare = CAROUSEL_DEFAULT_GLYPH_SHARE,
         modifier = modifier
             .fillMaxSize()
             // The library's rows and cards are clickable without a ripple.

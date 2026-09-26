@@ -17,6 +17,8 @@
 
 package org.akanework.gramophone.ui.screens.settings
 
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -25,6 +27,7 @@ import org.akanework.gramophone.ui.components.compose.rememberBooleanPreference
 import org.akanework.gramophone.ui.components.compose.rememberIntPreference
 import org.akanework.gramophone.ui.components.settings.PreferenceGroup
 import org.akanework.gramophone.ui.components.settings.PreferenceScreen
+import org.akanework.gramophone.ui.components.settings.SECTION_HEADER_TOP_GAP
 import org.akanework.gramophone.ui.components.settings.SliderPreferenceRow
 import org.akanework.gramophone.ui.components.settings.SwitchPreferenceRow
 
@@ -40,6 +43,8 @@ fun LyricSettingsScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
     val autoWordTranslation = rememberBooleanPreference("translation_auto_word", false)
 
     PreferenceScreen(title = stringResource(R.string.settings_lyric), onBack = onBack, modifier = modifier) {
+        // No header here: keep its gap so the first row sits where a header's text would.
+        Spacer(Modifier.height(SECTION_HEADER_TOP_GAP))
         PreferenceGroup(
             { shape ->
                 SwitchPreferenceRow(

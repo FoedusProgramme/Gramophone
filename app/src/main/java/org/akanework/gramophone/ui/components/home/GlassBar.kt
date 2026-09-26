@@ -117,6 +117,8 @@ fun GlassTitleBar(
     toolbarPaddingStart: Dp = TOOLBAR_PADDING_START,
     toolbarPaddingEnd: Dp = TOOLBAR_PADDING_END,
     titlePaddingStart: Dp = 0.dp,
+    /** Room after the title, for buttons laid over the bar rather than passed as [actions]. */
+    titlePaddingEnd: Dp = 8.dp,
     navigationIcon: (@Composable () -> Unit)? = null,
     actions: @Composable RowScope.() -> Unit = {},
     /** How far below the bar the content's large title starts at rest, see [barTitleAlpha]. */
@@ -154,7 +156,7 @@ fun GlassTitleBar(
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier
                     .weight(1f)
-                    .padding(start = titlePaddingStart, end = 8.dp)
+                    .padding(start = titlePaddingStart, end = titlePaddingEnd)
                     .graphicsLayer { alpha = barTitleAlpha(scrolled(), titleTopGap) },
             )
             actions()
