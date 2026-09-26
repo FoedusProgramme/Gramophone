@@ -30,18 +30,23 @@ import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.Eagerly
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onEach
@@ -67,6 +72,7 @@ import uk.akane.libphonograph.items.Date
 import uk.akane.libphonograph.items.FileNode
 import uk.akane.libphonograph.items.Genre
 import uk.akane.libphonograph.versioningCallbackFlow
+import uk.akane.libphonograph.utils.TagSplitter
 import kotlin.time.Duration.Companion.milliseconds
 
 /**
@@ -80,6 +86,7 @@ class FlowReader(
     whiteListSetFlow: SharedFlow<Set<String>>,
     shouldUseEnhancedCoverReadingFlow: SharedFlow<Boolean?>, // null means load if permission is granted
     recentlyAddedFilterSecondFlow: SharedFlow<Long?>, // null means don't generate recently added
+    tagSplitConfigFlow: SharedFlow<TagSplitter.TagSplitConfig>,
 ) {
     // IMPORTANT: Do not use distinctUntilChanged() or StateFlow here because equals() on thousands
     // of MediaItems is very, very expensive!
@@ -224,7 +231,8 @@ class FlowReader(
         minSongLengthSeconds: Long,
         blackListSet: Set<String>,
         whiteListSet: Set<String>,
-        shouldUseEnhancedCoverReading: Boolean?
+        shouldUseEnhancedCoverReading: Boolean?,
+        tagSplitConfig: TagSplitter.TagSplitConfig
     ) =
         // TODO repeatUntilDoneWhenUnpaused makes no sense with non-cancelable
         //  function, make it cancelable
@@ -235,7 +243,8 @@ class FlowReader(
                     minSongLengthSeconds,
                     blackListSet,
                     whiteListSet,
-                    shouldUseEnhancedCoverReading
+                    shouldUseEnhancedCoverReading,
+                    tagSplitConfig = tagSplitConfig
                 )
             else ReaderResult.emptyReaderResult()
         } catch (e: IllegalArgumentException) {
@@ -275,32 +284,37 @@ class FlowReader(
         .provideReplayCacheInvalidationManager(copyDownstream = Invalidation.Optional)
         .sharePauseableIn(scope, WhileSubscribed(20000), WhileSubscribed(2000), replay = 1)
     private val readerFlow: Flow<ReaderResult> =
-        shouldUseEnhancedCoverReadingFlow.distinctUntilChanged()
-            .flatMapLatest { shouldUseEnhancedCoverReading ->
-                minSongLengthSecondsFlow.distinctUntilChanged()
-                    .flatMapLatest { minSongLengthSeconds ->
-                        blackListSetFlow.distinctUntilChanged()
-                            .flatMapLatest { blackListSet ->
-                                whiteListSetFlow.distinctUntilChanged()
-                                    .flatMapLatest { whiteListSet ->
-                                        mediaVersionFlow
-                                            .onEach { requireReplayCacheInvalidationManager().invalidate() }
-                                            .conflateAndBlockWhenPaused()
-                                            .flatMapLatest {
-                                                // manual refresh may for whatever reason
-                                                // run in background, but all others
-                                                // shouldn't trigger background runs
-                                                manualRefreshTrigger.mapLatest { _ ->
-                                                    repeatUntilDoneWhenUnpaused {
-                                                        maybeDoRead(
-                                                            context,
-                                                            minSongLengthSeconds,
-                                                            blackListSet,
-                                                            whiteListSet,
-                                                            shouldUseEnhancedCoverReading
-                                                        )
+        tagSplitConfigFlow.distinctUntilChanged()
+            .debounceSubsequent(300.milliseconds)
+            .flatMapLatest { tagSplitConfig ->
+                shouldUseEnhancedCoverReadingFlow.distinctUntilChanged()
+                    .flatMapLatest { shouldUseEnhancedCoverReading ->
+                        minSongLengthSecondsFlow.distinctUntilChanged()
+                            .flatMapLatest { minSongLengthSeconds ->
+                                blackListSetFlow.distinctUntilChanged()
+                                    .flatMapLatest { blackListSet ->
+                                        whiteListSetFlow.distinctUntilChanged()
+                                            .flatMapLatest { whiteListSet ->
+                                                mediaVersionFlow
+                                                    .onEach { requireReplayCacheInvalidationManager().invalidate() }
+                                                    .conflateAndBlockWhenPaused()
+                                                    .flatMapLatest {
+                                                        // manual refresh may for whatever reason
+                                                        // run in background, but all others
+                                                        // shouldn't trigger background runs
+                                                        manualRefreshTrigger.mapLatest { _ ->
+                                                            repeatUntilDoneWhenUnpaused {
+                                                                maybeDoRead(
+                                                                    context,
+                                                                    minSongLengthSeconds,
+                                                                    blackListSet,
+                                                                    whiteListSet,
+                                                                    shouldUseEnhancedCoverReading,
+                                                                    tagSplitConfig
+                                                                )
+                                                            }
+                                                        }
                                                     }
-                                                }
                                             }
                                     }
                             }
@@ -366,4 +380,23 @@ class FlowReader(
             waiter.join()
         }
     }
+}
+
+/**
+ * Emits the first element immediately without delay, but debounces any subsequent emissions.
+ * Prevents cold-boot startup penalties while smoothly debouncing rapid preference changes.
+ *
+ * @author SteveZMTstudios
+ */
+@OptIn(FlowPreview::class)
+private fun <T> Flow<T>.debounceSubsequent(timeout: kotlin.time.Duration): Flow<T> = flow {
+    var isInitial = true
+    emitAll(this@debounceSubsequent.debounce {
+        if (isInitial) {
+            isInitial = false
+            0L
+        } else {
+            timeout.inWholeMilliseconds
+        }
+    })
 }
