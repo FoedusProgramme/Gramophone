@@ -50,8 +50,8 @@ internal fun requiredLibraryPermissions(sdkInt: Int): Array<String> = when {
 
 /**
  * Asks for audio permission if needed, then runs the first library scan of the process unless one
- * already happened, and calls [onReady] (also marking [LibraryReadiness] ready). Must sit at an
- * always-composed spot of the root.
+ * already happened, and marks [LibraryReadiness] ready. Must sit at an always-composed spot of the
+ * root.
  *
  * Permission is asked at most once per screen (kept across recreation); a denial calls [onDenied]
  * and is never re-asked automatically. The grant is checked again on every resume, so coming back
@@ -65,20 +65,18 @@ internal fun requiredLibraryPermissions(sdkInt: Int): Array<String> = when {
 fun LibraryGate(
     smartScanFirst: Boolean,
     onDenied: () -> Unit,
-    onReady: () -> Unit = {},
     startSplashTimeout: () -> Unit = {},
 ) {
     val context = LocalContext.current
     val reader = koinInject<FlowReader>()
     val refresher = koinInject<LibraryRefresher>()
     val readiness = koinInject<LibraryReadiness>()
-    val currentOnReady by rememberUpdatedState(onReady)
     val currentOnDenied by rememberUpdatedState(onDenied)
     val currentStartSplashTimeout by rememberUpdatedState(startSplashTimeout)
     // Saved so a recreated screen doesn't ask again while the system dialog is still up; its
     // result is delivered to the launcher below.
     var requested by rememberSaveable { mutableStateOf(false) }
-    // Not saved: a recreated screen goes through onReady again, as the activity always did.
+    // Not saved: a recreated screen goes through this again (marking ready is idempotent).
     var proceeded by remember { mutableStateOf(false) }
 
     val proceed = remember(reader, refresher, readiness, smartScanFirst) {
@@ -87,13 +85,9 @@ fun LibraryGate(
                 proceeded = true
                 if (!reader.hadFirstRefresh) {
                     currentStartSplashTimeout()
-                    refresher.refresh(smartScanFirst) {
-                        readiness.markReady()
-                        currentOnReady()
-                    }
+                    refresher.refresh(smartScanFirst) { readiness.markReady() }
                 } else {
                     readiness.markReady()
-                    currentOnReady()
                 }
             }
         }

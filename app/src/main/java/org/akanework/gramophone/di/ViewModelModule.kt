@@ -18,8 +18,12 @@
 package org.akanework.gramophone.di
 
 import org.akanework.gramophone.ui.MediaControllerViewModel
+import org.akanework.gramophone.ui.intent.DefaultPlayIntentExecutor
+import org.akanework.gramophone.ui.intent.PlayIntentExecutor
+import org.akanework.gramophone.ui.intent.PlayIntentViewModel
 import org.akanework.gramophone.ui.nav.NavViewModel
 import org.akanework.gramophone.ui.state.HomeViewModel
+import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
@@ -27,4 +31,6 @@ val viewModelModule = module {
     viewModelOf(::MediaControllerViewModel)
     viewModelOf(::NavViewModel)
     viewModelOf(::HomeViewModel)
+    factory<PlayIntentExecutor> { DefaultPlayIntentExecutor(androidContext(), get(), get()) }
+    viewModelOf(::PlayIntentViewModel)
 }

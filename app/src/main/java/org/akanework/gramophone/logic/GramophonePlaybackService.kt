@@ -137,6 +137,7 @@ import org.akanework.gramophone.logic.utils.exoplayer.GramophoneRenderFactory
 import org.akanework.gramophone.ui.AudioPreviewActivity
 import org.akanework.gramophone.ui.LyricWidgetProvider
 import org.akanework.gramophone.ui.MainActivity
+import org.akanework.gramophone.ui.intent.PlayIntents
 import org.akanework.gramophone.ui.fragments.compose.MqState.Companion.CLIENT_QB_REFRESH_ALL
 import org.akanework.gramophone.ui.fragments.compose.MqState.Companion.CLIENT_QB_REFRESH_CLEAR
 import org.akanework.gramophone.ui.fragments.compose.MqState.Companion.CLIENT_QB_REFRESH_ITEM
@@ -778,8 +779,8 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                                 this@GramophonePlaybackService,
                                 PENDING_INTENT_FAVE_ID,
                                 Intent(this@GramophonePlaybackService, MainActivity::class.java)
-                                    .putExtra(MainActivity.FAVORITE_ENTRY, song)
-                                    .putExtra(MainActivity.FAVORITE_STATE, rating.isHeart),
+                                    .putExtra(PlayIntents.FAVORITE_ENTRY, song)
+                                    .putExtra(PlayIntents.FAVORITE_STATE, rating.isHeart),
                                 PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
                             )
                         )
@@ -1901,7 +1902,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                         this@GramophonePlaybackService,
                         PENDING_INTENT_NOTIFY_ID,
                         Intent(this@GramophonePlaybackService, MainActivity::class.java)
-                            .putExtra(MainActivity.PLAYBACK_AUTO_START_FOR_FGS, true),
+                            .putExtra(PlayIntents.PLAYBACK_AUTO_START_FOR_FGS, true),
                         PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
                     )
                 )

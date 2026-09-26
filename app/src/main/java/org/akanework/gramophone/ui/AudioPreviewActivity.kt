@@ -100,6 +100,7 @@ import org.akanework.gramophone.logic.utils.exoplayer.GramophoneExtractorsFactor
 import org.akanework.gramophone.logic.utils.exoplayer.GramophoneMediaSourceFactory
 import org.akanework.gramophone.logic.utils.exoplayer.GramophoneRenderFactory
 import org.akanework.gramophone.ui.components.compose.rememberBooleanPreference
+import org.akanework.gramophone.ui.intent.PlayIntents
 import org.akanework.gramophone.ui.components.home.LibraryCover
 import org.akanework.gramophone.ui.components.home.rememberDefaultCoverPainter
 import org.akanework.gramophone.ui.components.home.textViewStyle
@@ -272,10 +273,10 @@ class AudioPreviewActivity : BaseActivity() {
         }?.let { id ->
             startActivity(Intent(this, MainActivity::class.java).also {
                 it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                it.putExtra(MainActivity.PLAYBACK_AUTO_PLAY_ID, id)
+                it.putExtra(PlayIntents.PLAYBACK_AUTO_PLAY_ID, id)
                 player.contentPosition.let { pos ->
                     if (pos != C.TIME_UNSET)
-                        it.putExtra(MainActivity.PLAYBACK_AUTO_PLAY_POSITION, pos)
+                        it.putExtra(PlayIntents.PLAYBACK_AUTO_PLAY_POSITION, pos)
                 }
             })
         }
