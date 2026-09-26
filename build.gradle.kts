@@ -6,7 +6,7 @@ plugins {
 	id("com.android.library") version agpVersion apply false
 	id("com.android.test") version agpVersion apply false
 	id("androidx.baselineprofile") version "1.5.0-alpha07" apply false
-    val kotlinVersion = "2.3.0"
+    val kotlinVersion = "2.3.20"
 	kotlin("android") version kotlinVersion apply false
     kotlin("plugin.parcelize") version kotlinVersion apply false
     kotlin("plugin.compose") version kotlinVersion apply false

@@ -50,11 +50,17 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.akanework.gramophone.BuildConfig
 import org.akanework.gramophone.R
+import org.akanework.gramophone.di.appModule
 import org.akanework.gramophone.logic.ui.BugHandlerActivity
 import org.akanework.gramophone.logic.utils.CoilArtPipeline
 import org.akanework.gramophone.ui.LyricWidgetProvider
 import org.akanework.gramophone.ui.theme.applyToSystem
 import org.akanework.gramophone.ui.theme.themeModeOf
+import org.koin.android.ext.android.get
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.startKoin
+import org.koin.core.logger.Level
 import org.lsposed.hiddenapibypass.HiddenApiBypass
 import org.lsposed.hiddenapibypass.LSPass
 import org.nift4.gramophone.hificore.UacManager
@@ -106,13 +112,19 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
             Environment.DIRECTORY_RECORDINGS else "Recordings"
     )
-    lateinit var reader: FlowReader
-        private set
-    lateinit var uacManager: UacManager
-        private set
+    // TODO(U2/U3): transitional delegates to Koin, remove once callers inject directly.
+    val reader: FlowReader
+        get() = get()
+    val uacManager: UacManager
+        get() = get()
 
     override fun onCreate() {
         super.onCreate()
+        startKoin {
+            androidLogger(if (BuildConfig.DEBUG) Level.INFO else Level.ERROR)
+            androidContext(this@GramophoneApplication)
+            modules(appModule)
+        }
         // disk read and write on first launch, but unavoidable as the night mode has to be known
         // before any activity starts
         val prefs = defaultPrefs
@@ -223,17 +235,10 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
                 }
             })
         }
-        uacManager = UacManager(this)
-        reader = FlowReader(
-            this,
-            if (BuildConfig.DISABLE_MEDIA_STORE_FILTER) MutableStateFlow(0) else
-                minSongLengthSecondsFlow,
-            blackListSetFlow,
-            whiteListSetFlow,
-            if (hasScopedStorageWithMediaTypes()) MutableStateFlow(null) else
-                shouldUseEnhancedCoverReadingFlow!!,
-            recentlyAddedFilterSecondFlow
-        )
+        // Resolve eagerly where they used to be constructed: both register observers/receivers in
+        // their constructors, so keep the same start-up timing as before the Koin migration.
+        get<UacManager>()
+        get<FlowReader>()
         // Set application theme when launching.
         themeModeOf(themeMode).applyToSystem(this)
         // This is a separate thread to avoid disk read on main thread and improve startup time

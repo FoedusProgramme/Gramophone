@@ -6,7 +6,7 @@ import org.jetbrains.kotlin.util.removeSuffixIfPresent
 import java.util.Properties
 
 val aboutLibsVersion = "13.1.0" // keep in sync with plugin version
-val kotlinVersion = "2.3.0"
+val kotlinVersion = "2.3.20"
 
 plugins {
     id("com.android.application")
@@ -257,6 +257,10 @@ android {
         includeInBundle = false
     }
     testOptions.unitTests.isIncludeAndroidResources = true
+    testOptions.unitTests.all {
+        // Robolectric's FileDescriptor interceptor reflects into jdk.internal.access on JDK 21.
+        it.jvmArgs("--add-opens=java.base/jdk.internal.access=ALL-UNNAMED")
+    }
 }
 
 resourcePlaceholders {
@@ -331,6 +335,9 @@ dependencies {
     implementation("androidx.navigation3:navigation3-ui:1.1.7")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.4")
     implementation("com.materialkolor:material-kolor:5.0.1")
+    implementation(platform("io.insert-koin:koin-bom:4.2.2"))
+    implementation("io.insert-koin:koin-android")
+    implementation("io.insert-koin:koin-androidx-compose")
     implementation("io.github.nift4.mediastorecompat:mediastorecompat:1.0.0-alpha33")
     val media3Version = "1.10.1"
     implementation("androidx.media3:media3-common-ktx:$media3Version")
@@ -352,7 +359,9 @@ dependencies {
     // --- below does not apply to release builds ---
     debugImplementation("com.squareup.leakcanary:leakcanary-android:2.14")
     testImplementation("junit:junit:4.13.2")
-    testImplementation("org.robolectric:robolectric:4.17-beta-2")
+    testImplementation("org.robolectric:robolectric:4.17")
+    testImplementation("io.insert-koin:koin-test-junit4")
+    testImplementation("io.insert-koin:koin-android-test")
     "userdebugImplementation"(kotlin("reflect", kotlinVersion)) // who thought String.invoke() is a good idea?????
     debugImplementation(kotlin("reflect", kotlinVersion))
 }
