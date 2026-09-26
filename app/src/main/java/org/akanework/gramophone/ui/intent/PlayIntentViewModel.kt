@@ -35,6 +35,7 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.akanework.gramophone.R
+import org.akanework.gramophone.logic.toMediaStoreId
 import org.akanework.gramophone.logic.library.LibraryReadiness
 import org.akanework.gramophone.logic.library.LibraryWriteRepository
 import org.akanework.gramophone.ui.MediaControllerViewModel
@@ -127,7 +128,9 @@ class DefaultPlayIntentExecutor internal constructor(
             is PlayIntentAction.PlayById -> {
                 val mediaItem = withContext(Dispatchers.Default) {
                     val col = idMapFlow.firstOrNull()
-                    val item = action.id.toLongOrNull()?.let { col?.let { it2 -> it2[it] } }
+                    // Search suggestions send "MediaStore:<id>", audio preview a bare id.
+                    val id = action.id.toMediaStoreId() ?: action.id.toLongOrNull()
+                    val item = id?.let { col?.let { it2 -> it2[it] } }
                     if (item == null) {
                         Log.e(TAG, "can't find file with ID ${action.id} in library with" +
                                 " ${col?.size} items")

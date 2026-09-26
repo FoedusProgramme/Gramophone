@@ -127,6 +127,28 @@ class DefaultPlayIntentExecutorTest {
     }
 
     @Test
+    fun playByIdFromSuggestionResolvesMediaStorePrefix() {
+        // Search suggestions send the library's own media id format.
+        execute(PlayIntentAction.PlayById("MediaStore:42", 0L))
+
+        assertEquals(listOf("setMediaItem", "prepare", "play"), callNames())
+        assertSame(song, host.calls[0].args[0])
+        assertNull(ShadowToast.getLatestToast())
+    }
+
+    @Test
+    fun playByIdMissingMediaStoreIdToasts() {
+        execute(PlayIntentAction.PlayById("MediaStore:7", 0L))
+
+        assertTrue(host.calls.isEmpty())
+        assertTrue(
+            ShadowToast.showedToast(
+                RuntimeEnvironment.getApplication().getString(R.string.cannot_find_file)
+            )
+        )
+    }
+
+    @Test
     fun playByIdMissingToastsAndDoesNotPlay() {
         execute(PlayIntentAction.PlayById("7", 0L))
         execute(PlayIntentAction.PlayById("not a number", 0L))
