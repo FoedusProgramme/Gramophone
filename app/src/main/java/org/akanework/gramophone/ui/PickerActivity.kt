@@ -17,7 +17,6 @@
 package org.akanework.gramophone.ui
 
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.Settings
 import android.widget.Toast
@@ -25,17 +24,11 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.core.app.ActivityCompat
 import androidx.core.net.toUri
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
 import org.akanework.gramophone.R
-import org.akanework.gramophone.logic.hasAudioPermission
-import org.akanework.gramophone.logic.hasScopedStorageV2
-import org.akanework.gramophone.logic.hasScopedStorageWithMediaTypes
 import org.akanework.gramophone.logic.ui.BaseActivity
+import org.akanework.gramophone.ui.components.compose.LibraryGate
 import org.akanework.gramophone.ui.screens.PickerEntry
 import org.akanework.gramophone.ui.screens.PickerScreen
 import org.koin.android.ext.android.inject
@@ -46,16 +39,14 @@ import uk.akane.libphonograph.reader.FlowReader
  * returning its item as the result.
  */
 abstract class PickerActivity<T : Any> : BaseActivity() {
-    companion object {
-        private const val PERMISSION_READ_MEDIA_AUDIO = 100
-    }
-
     protected val reader: FlowReader by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             GramophoneTheme {
+                // No smart scan and no splash here, as before.
+                LibraryGate(smartScanFirst = false, onDenied = ::onLibraryPermissionDenied)
                 val items by remember { itemsFlow() }.collectAsState(emptyList())
                 val entries = remember(items) {
                     items.map { entryOf(it) }.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.title })
@@ -68,25 +59,6 @@ abstract class PickerActivity<T : Any> : BaseActivity() {
                 )
             }
         }
-        if (!hasAudioPermission()) {
-            ActivityCompat.requestPermissions(
-                this,
-                if (hasScopedStorageWithMediaTypes())
-                    arrayOf(android.Manifest.permission.READ_MEDIA_AUDIO)
-                else if (hasScopedStorageV2())
-                    arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE)
-                else
-                    arrayOf(
-                        android.Manifest.permission.READ_EXTERNAL_STORAGE,
-                        android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    ),
-                PERMISSION_READ_MEDIA_AUDIO,
-            )
-        } else if (!reader.hadFirstRefresh) {
-            CoroutineScope(Dispatchers.Default).launch {
-                reader.refresh()
-            }
-        }
     }
 
     protected abstract fun itemsFlow(): Flow<List<T>>
@@ -94,26 +66,11 @@ abstract class PickerActivity<T : Any> : BaseActivity() {
     protected abstract fun getTitleStr(): String
     protected abstract fun onSelected(item: T)
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray,
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == PERMISSION_READ_MEDIA_AUDIO) {
-            if (grantResults.isNotEmpty() &&
-                grantResults[0] == PackageManager.PERMISSION_GRANTED
-            ) {
-                CoroutineScope(Dispatchers.Default).launch {
-                    reader.refresh()
-                }
-            } else {
-                Toast.makeText(this, getString(R.string.grant_audio), Toast.LENGTH_LONG).show()
-                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                intent.setData("package:$packageName".toUri())
-                startActivity(intent)
-                finish()
-            }
-        }
+    private fun onLibraryPermissionDenied() {
+        Toast.makeText(this, getString(R.string.grant_audio), Toast.LENGTH_LONG).show()
+        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+        intent.setData("package:$packageName".toUri())
+        startActivity(intent)
+        finish()
     }
 }

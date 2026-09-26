@@ -26,7 +26,6 @@ import android.content.ClipData
 import android.content.ContentResolver
 import android.content.ContentUris
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -39,7 +38,6 @@ import android.view.SearchEvent
 import android.widget.Toast
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
-import androidx.core.app.ActivityCompat
 import androidx.core.content.IntentCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.net.toUri
@@ -58,15 +56,12 @@ import kotlinx.coroutines.withContext
 import org.akanework.gramophone.BuildConfig
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.getBooleanStrict
-import org.akanework.gramophone.logic.hasAudioPermission
-import org.akanework.gramophone.logic.hasScopedStorageV2
-import org.akanework.gramophone.logic.hasScopedStorageWithMediaTypes
-import org.akanework.gramophone.logic.library.LibraryRefresher
 import org.akanework.gramophone.logic.library.LibraryWriteRepository
 import org.akanework.gramophone.logic.needsMissingOnDestroyCallWorkarounds
 import org.akanework.gramophone.logic.postAtFrontOfQueueAsync
 import org.akanework.gramophone.logic.ui.BaseActivity
 import org.akanework.gramophone.ui.components.compose.AppDialogHostState
+import org.akanework.gramophone.ui.components.compose.LibraryGate
 import org.akanework.gramophone.ui.components.compose.MediaConsentHost
 import org.akanework.gramophone.ui.nav.AppRoot
 import org.akanework.gramophone.ui.nav.HomeKey
@@ -90,7 +85,6 @@ import uk.akane.libphonograph.reader.FlowReader
 class MainActivity : BaseActivity() {
 
     companion object {
-        private const val PERMISSION_READ_MEDIA_AUDIO = 100
         const val PLAYBACK_AUTO_START_FOR_FGS = "AutoStartFgs"
         const val PLAYBACK_AUTO_PLAY_ID = "AutoStartId"
         const val PLAYBACK_AUTO_PLAY_POSITION = "AutoStartPos"
@@ -105,14 +99,6 @@ class MainActivity : BaseActivity() {
     private val handler = Handler(Looper.getMainLooper())
     private val reportFullyDrawnRunnable = Runnable { if (!ready) reportFullyDrawn() }
     private var ready = false
-
-    /** The first library load, after which the intent that started us is handled. */
-    private fun loadLibrary() {
-        // If library load takes more than 2s, exit splash to avoid ANR
-        if (!ready) handler.postDelayed(reportFullyDrawnRunnable, 2000)
-        // TODO(U9): intent handling moves off this callback.
-        refresher.refresh { onLibraryLoaded() }
-    }
 
     /**
      * onCreate - core of MainActivity.
@@ -132,6 +118,16 @@ class MainActivity : BaseActivity() {
             GramophoneTheme {
                 val dialogs = remember { AppDialogHostState() }
                 MediaConsentHost()
+                LibraryGate(
+                    smartScanFirst = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R,
+                    onDenied = ::onLibraryPermissionDenied,
+                    // TODO(U9): intent handling moves off this callback.
+                    onReady = ::onLibraryLoaded,
+                    // If library load takes more than 2s, exit splash to avoid ANR
+                    startSplashTimeout = {
+                        if (!ready) handler.postDelayed(reportFullyDrawnRunnable, 2000)
+                    },
+                )
                 val playerSheet = rememberPlayerSheetController(
                     toggleFavorite = libraryWrites::markFavorite
                 )
@@ -146,28 +142,6 @@ class MainActivity : BaseActivity() {
             }
         }
 
-        // Check all permissions.
-        if (!hasAudioPermission()) {
-            // Ask if was denied.
-            ActivityCompat.requestPermissions(
-                this,
-                if (hasScopedStorageWithMediaTypes())
-                    arrayOf(android.Manifest.permission.READ_MEDIA_AUDIO)
-                else if (hasScopedStorageV2())
-                    arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE)
-                else
-                    arrayOf(
-                        android.Manifest.permission.READ_EXTERNAL_STORAGE,
-                        android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    ),
-                PERMISSION_READ_MEDIA_AUDIO,
-            )
-        } else {
-            // If all permissions are granted, we can update library now.
-            if (!reader.hadFirstRefresh) {
-                loadLibrary()
-            } else onLibraryLoaded() // <-- when recreating activity due to rotation
-        }
         if (navViewModel.backStack.lastOrNull() != HomeKey)
             handler.post { maybeReportFullyDrawn() }
     }
@@ -440,31 +414,13 @@ class MainActivity : BaseActivity() {
         if (!ready) reportFullyDrawn()
     }
 
-    /**
-     * onRequestPermissionResult:
-     *   Update library after permission is granted.
-     */
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray,
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        if (requestCode == PERMISSION_READ_MEDIA_AUDIO) {
-            if (grantResults.isNotEmpty() &&
-                grantResults[0] == PackageManager.PERMISSION_GRANTED
-            ) {
-                loadLibrary()
-            } else {
-                maybeReportFullyDrawn() // TODO: is this still needed?
-                Toast.makeText(this, getString(R.string.grant_audio), Toast.LENGTH_LONG).show()
-                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                intent.setData("package:$packageName".toUri())
-                startActivity(intent)
-                finish()
-            }
-        }
+    private fun onLibraryPermissionDenied() {
+        maybeReportFullyDrawn() // TODO: is this still needed?
+        Toast.makeText(this, getString(R.string.grant_audio), Toast.LENGTH_LONG).show()
+        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+        intent.setData("package:$packageName".toUri())
+        startActivity(intent)
+        finish()
     }
 
     override fun onDestroy() {
@@ -482,6 +438,5 @@ class MainActivity : BaseActivity() {
     }
 
     private val reader: FlowReader by inject()
-    private val refresher: LibraryRefresher by inject()
     private val libraryWrites: LibraryWriteRepository by inject()
 }
