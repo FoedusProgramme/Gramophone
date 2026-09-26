@@ -2193,15 +2193,6 @@ object LrcTestData {
             endIsImplicit = true
         ),
         LyricLine(
-            start = 24300uL,
-            text = """""",
-            words = null,
-            speaker = null,
-            end = 26299uL,
-            isTranslated = true,
-            endIsImplicit = true
-        ),
-        LyricLine(
             start = 26300uL,
             text = """You're brain gets smart but your head gets dumb""",
             words = null,
