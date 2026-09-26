@@ -46,13 +46,14 @@ import org.akanework.gramophone.logic.hasImprovedMediaStore
 import org.akanework.gramophone.logic.toLocaleString
 import org.akanework.gramophone.logic.toMediaStoreId
 import org.akanework.gramophone.logic.utils.CalculationUtils.convertDurationToTimeStamp
-import org.akanework.gramophone.ui.actions.findMainActivity
 import org.akanework.gramophone.ui.components.home.LibraryCover
 import org.akanework.gramophone.ui.components.settings.PreferenceGroup
 import org.akanework.gramophone.ui.components.settings.PreferenceLabels
 import org.akanework.gramophone.ui.components.settings.PreferenceRow
 import org.akanework.gramophone.ui.components.settings.PreferenceScreen
 import org.akanework.gramophone.ui.components.settings.PreferenceSectionHeader
+import org.koin.compose.koinInject
+import uk.akane.libphonograph.reader.FlowReader
 
 /* One song's tags and file facts, as a page of rows under its cover. */
 
@@ -62,11 +63,11 @@ private val COVER_CORNER = 28.dp
 @Composable
 fun SongDetailScreen(mediaId: String, onBack: () -> Unit, modifier: Modifier = Modifier) {
     val context = LocalContext.current
-    val activity = remember(context) { context.findMainActivity() }
+    val reader = koinInject<FlowReader>()
     var looked by remember { mutableStateOf(false) }
     val item by produceState<MediaItem?>(null, mediaId) {
         val id = mediaId.toMediaStoreId()
-        value = if (id == null) null else activity.reader.idMapFlow.map { it[id] }.first()
+        value = if (id == null) null else reader.idMapFlow.map { it[id] }.first()
         looked = true
     }
     // Gone from the library while its page was open: nothing to show.

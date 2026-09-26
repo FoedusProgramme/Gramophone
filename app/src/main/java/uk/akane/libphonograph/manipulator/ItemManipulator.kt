@@ -36,7 +36,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.getFile
-import org.akanework.gramophone.logic.gramophoneApplication
 import org.akanework.gramophone.logic.hasImprovedMediaStore
 import org.akanework.gramophone.logic.queryWithPending
 import org.akanework.gramophone.logic.utils.Flags
@@ -46,6 +45,7 @@ import org.nift4.mediastorecompat.StorageManagerCompat
 import uk.akane.libphonograph.dynamicitem.Favorite
 import uk.akane.libphonograph.getIntOrNullIfThrow
 import uk.akane.libphonograph.getLongOrNullIfThrow
+import uk.akane.libphonograph.reader.FlowReader
 import uk.akane.libphonograph.reader.Reader
 import uk.akane.libphonograph.toUriCompat
 import java.io.File
@@ -55,8 +55,8 @@ object ItemManipulator {
     const val FAVORITES = "gramophone_favourite"
     const val DEFAULT_FORMAT = "m3u"
 
-    suspend fun deleteSongs(context: MainActivity, list: List<Pair<File, Long>>): (() -> Unit)? {
-        val faves = context.gramophoneApplication.reader.playlistListFlow.map { it.find { p ->
+    suspend fun deleteSongs(context: MainActivity, reader: FlowReader, list: List<Pair<File, Long>>): (() -> Unit)? {
+        val faves = reader.playlistListFlow.map { it.find { p ->
             p is Favorite } }.first()
         val songsToUnfave = faves?.let { _ -> list.filter { faves.songList.find { song ->
             song.getFile() == it.first } != null }.map { it.first.toUriCompat() } }
@@ -68,7 +68,7 @@ object ItemManipulator {
             val token = MediaStoreCompat.needRequestBytesWrite(context, uri)
             if (token == null) {
                 try {
-                    val readback = readbackPlaylist(context, uri)
+                    val readback = readbackPlaylist(context, reader, uri)
                     val newSongs = readback.copy(entries = readback.entries.filter {
                         it.locations.find { songsToUnfave.contains(it) } == null })
                     setPlaylistContent(context, uri, newSongs, false)
@@ -218,8 +218,8 @@ object ItemManipulator {
         return File(parent, Util.escapeFileName("$name.$DEFAULT_FORMAT"))
     }
 
-    suspend fun readbackPlaylist(context: Context, uri: Uri): PlaylistSerializer.Playlist {
-        val pathMap = context.gramophoneApplication.reader.pathMapFlow.first()
+    suspend fun readbackPlaylist(context: Context, reader: FlowReader, uri: Uri): PlaylistSerializer.Playlist {
+        val pathMap = reader.pathMapFlow.first()
         return Reader.readPlaylist(context, uri).let {
             it.copy(entries = it.entries.map {
                 it.updateFromMediaItem(pathMap)

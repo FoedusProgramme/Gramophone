@@ -17,6 +17,7 @@
 
 package org.akanework.gramophone
 
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharedFlow
 import org.akanework.gramophone.di.appModule
 import org.junit.Test
@@ -28,9 +29,12 @@ class KoinGraphTest {
     fun appModuleResolves() {
         appModule.androidVerify(
             extraTypes = listOf(
-                // FlowReader's filter-flow parameters are built inside the module lambda from
-                // settings state, not provided as Koin definitions.
+                // FlowReader's filter-flow parameters come from SettingsRepository inside the
+                // module lambda, not from Koin definitions.
                 SharedFlow::class,
+                // SettingsRepository takes its scope as CoroutineScope (ApplicationScope in the
+                // module, a direct scope in tests).
+                CoroutineScope::class,
             )
         )
     }

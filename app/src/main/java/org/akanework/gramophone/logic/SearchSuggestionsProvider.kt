@@ -32,8 +32,14 @@ import androidx.media3.common.MediaItem
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.akanework.gramophone.R
+import org.koin.android.ext.android.inject
+import uk.akane.libphonograph.reader.FlowReader
 
 class SearchSuggestionsProvider : ContentProvider() {
+    // Lazy: ContentProvider.onCreate runs before Application.onCreate starts Koin, so this must
+    // only be touched from query/getType.
+    private val reader: FlowReader by inject()
+
     override fun delete(
         uri: Uri,
         selection: String?,
@@ -92,7 +98,7 @@ class SearchSuggestionsProvider : ContentProvider() {
 
     private suspend fun searchForMediaItem(text: String): List<MediaItem> {
         val text = text.trim()
-        val list = context!!.gramophoneApplication.reader.songListFlow.first()
+        val list = reader.songListFlow.first()
         // TODO support focus and sub queries (see MainActivity)
         return if (text == "") list else list.filter {
             // TODO sort results by match quality? (using raw=natural order)
@@ -109,7 +115,7 @@ class SearchSuggestionsProvider : ContentProvider() {
     }
 
     private fun queryCachedShortcut(id: Long): Cursor {
-        val idMap = runBlocking { context!!.gramophoneApplication.reader.idMapFlow.first() }
+        val idMap = runBlocking { reader.idMapFlow.first() }
         return songsToCursor(idMap[id]?.let { listOf(it) } ?: emptyList())
     }
 

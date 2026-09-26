@@ -1,15 +1,14 @@
 package org.akanework.gramophone.logic.utils
 
-import android.content.Context
 import android.media.AudioFormat
 import androidx.media3.common.C
 import androidx.media3.common.MimeTypes
 import androidx.media3.exoplayer.audio.AudioOutput
 import androidx.media3.exoplayer.audio.AudioOutputProvider
-import org.akanework.gramophone.logic.gramophoneApplication
 import org.nift4.gramophone.hificore.BufferedLibusbAudioOutput
+import org.nift4.gramophone.hificore.UacManager
 
-class LibusbAudioOutputProvider(private val context: Context) : AudioOutputProvider {
+class LibusbAudioOutputProvider(private val uacManager: UacManager) : AudioOutputProvider {
     override fun getFormatSupport(formatConfig: AudioOutputProvider.FormatConfig): AudioOutputProvider.FormatSupport {
         return if (formatConfig.format.pcmEncoding == C.ENCODING_PCM_16BIT && formatConfig.format.sampleMimeType == MimeTypes.AUDIO_RAW &&
             formatConfig.format.sampleRate == 44100 && formatConfig.format.channelCount == 2)
@@ -33,8 +32,8 @@ class LibusbAudioOutputProvider(private val context: Context) : AudioOutputProvi
     }
 
     override fun getAudioOutput(config: AudioOutputProvider.OutputConfig): AudioOutput {
-        context.gramophoneApplication.uacManager.interfaces?.let {
-            return BufferedLibusbAudioOutput.new(context.gramophoneApplication.uacManager.openDevices.first().second, it.second)
+        uacManager.interfaces?.let {
+            return BufferedLibusbAudioOutput.new(uacManager.openDevices.first().second, it.second)
         }
         throw IllegalStateException("pls grant usb dac perm")
     }

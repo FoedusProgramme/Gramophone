@@ -29,12 +29,15 @@ import kotlin.coroutines.CoroutineContext
  * writes after a consent prompt, preference migrations). UI-bound work belongs in
  * lifecycleScope / viewModelScope / rememberCoroutineScope instead.
  *
- * A failing child is logged and does not cancel its siblings.
+ * A failing child does not cancel its siblings. Its exception is logged and then handed to the
+ * thread's default uncaught-exception handler, so crashes still reach the bug report screen.
  */
 class ApplicationScope : CoroutineScope {
     override val coroutineContext: CoroutineContext =
         SupervisorJob() + Dispatchers.Default + CoroutineExceptionHandler { _, e ->
             Log.e(TAG, "Uncaught exception in application scope", e)
+            val thread = Thread.currentThread()
+            Thread.getDefaultUncaughtExceptionHandler()?.uncaughtException(thread, e)
         }
 
     private companion object {

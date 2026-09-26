@@ -22,12 +22,11 @@ import android.provider.MediaStore
 import androidx.media3.common.MediaItem
 import kotlinx.coroutines.flow.Flow
 import org.akanework.gramophone.R
-import org.akanework.gramophone.logic.gramophoneApplication
 import org.akanework.gramophone.logic.requireMediaStoreId
 import org.akanework.gramophone.ui.screens.PickerEntry
 
 class SongPickerActivity : PickerActivity<MediaItem>() {
-    override fun itemsFlow(): Flow<List<MediaItem>> = gramophoneApplication.reader.songListFlow
+    override fun itemsFlow(): Flow<List<MediaItem>> = reader.songListFlow
 
     override fun entryOf(item: MediaItem) = PickerEntry(
         item = item,

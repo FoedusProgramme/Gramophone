@@ -21,13 +21,15 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import org.akanework.gramophone.logic.defaultPrefs
-import org.akanework.gramophone.logic.gramophoneApplication
 import org.akanework.gramophone.ui.HomeTab
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import uk.akane.libphonograph.reader.FlowReader
 
 /** Activity-scoped holder of the home tab states, so they outlive the home screen composition. */
-class HomeViewModel(application: Application) : AndroidViewModel(application) {
+class HomeViewModel(application: Application) : AndroidViewModel(application), KoinComponent {
     private val prefs = application.defaultPrefs
-    private val reader get() = getApplication<Application>().gramophoneApplication.reader
+    private val reader: FlowReader by inject()
     private val states = HashMap<HomeTab, LibraryTabState<*>>()
 
     @Suppress("UNCHECKED_CAST")

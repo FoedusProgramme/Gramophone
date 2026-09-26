@@ -415,9 +415,6 @@ fun Context.supportsWideScreen() : Boolean {
     return config.screenWidthDp >= 780
 }
 
-val Context.gramophoneApplication
-    get() = this.applicationContext as GramophoneApplication
-
 /** The app's default SharedPreferences: `<package>_preferences`, PreferenceManager's default file. */
 val Context.defaultPrefs: SharedPreferences
     get() = applicationContext.getSharedPreferences("${packageName}_preferences", Context.MODE_PRIVATE)

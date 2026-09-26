@@ -78,7 +78,6 @@ import kotlinx.coroutines.withTimeoutOrNull
 import org.akanework.gramophone.BuildConfig
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.getBooleanStrict
-import org.akanework.gramophone.logic.gramophoneApplication
 import org.akanework.gramophone.logic.hasAudioPermission
 import org.akanework.gramophone.logic.hasScopedStorageV2
 import org.akanework.gramophone.logic.hasScopedStorageWithMediaTypes
@@ -96,11 +95,13 @@ import org.akanework.gramophone.ui.nav.PlaylistKey
 import org.akanework.gramophone.ui.nav.SearchKey
 import org.akanework.gramophone.ui.nav.popIfPossible
 import org.akanework.gramophone.ui.nav.warmUpNavAxisEasing
+import org.koin.android.ext.android.inject
 import org.nift4.mediastorecompat.MediaStoreCompat
 import uk.akane.libphonograph.dynamicitem.Favorite
 import uk.akane.libphonograph.manipulator.ItemManipulator
 import uk.akane.libphonograph.manipulator.PlaylistSerializer
 import uk.akane.libphonograph.manipulator.PlaylistSerializer.Entry
+import uk.akane.libphonograph.reader.FlowReader
 import java.io.File
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -153,8 +154,8 @@ class MainActivity : BaseActivity() {
         if (!ready) handler.postDelayed(reportFullyDrawnRunnable, 2000)
         CoroutineScope(Dispatchers.Default).launch {
             if (smartScanFirst)
-                MediaStoreCompat.smartScan(this@MainActivity.gramophoneApplication)
-            this@MainActivity.gramophoneApplication.reader.refresh()
+                MediaStoreCompat.smartScan(this@MainActivity.applicationContext)
+            this@MainActivity.reader.refresh()
             withContext(Dispatchers.Main) {
                 onLibraryLoaded()
                 then?.let { it() }
@@ -357,7 +358,7 @@ class MainActivity : BaseActivity() {
 
     fun markIsFavoriteStatus(songs: List<Entry>, favorite: Boolean) {
         CoroutineScope(Dispatchers.Default).launch {
-            val uri = gramophoneApplication.reader.playlistListFlow.map { it.find { p -> p is
+            val uri = reader.playlistListFlow.map { it.find { p -> p is
                     Favorite } }.first()?.id?.let {
                     ContentUris.withAppendedId(@Suppress("deprecation")
                     MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, it)
@@ -419,7 +420,7 @@ class MainActivity : BaseActivity() {
                 val uri = uriIn ?: ItemManipulator.createPlaylist(this,
                     ItemManipulator.getDefaultPlaylistFile(ItemManipulator.FAVORITES))
                 val readback = if (uriIn != null) ItemManipulator.readbackPlaylist(this,
-                    uri) else PlaylistSerializer.Playlist.create()
+                    reader, uri) else PlaylistSerializer.Playlist.create()
                 val newSongs = readback.copy(entries = if (favorite) {
                     readback.entries + songs
                 } else {
@@ -461,7 +462,7 @@ class MainActivity : BaseActivity() {
                 Entry::class.java)!!
             try {
                 val readback = if (uriIn != null) ItemManipulator.readbackPlaylist(this,
-                    uriIn) else PlaylistSerializer.Playlist.create()
+                    reader, uriIn) else PlaylistSerializer.Playlist.create()
                 val uri = uriIn ?: ItemManipulator.createPlaylist(this,
                     File(name!!))
                 ItemManipulator.setPlaylistContent(this, uri, readback
@@ -836,6 +837,5 @@ class MainActivity : BaseActivity() {
 
     fun getPlayer() = controllerViewModel.get()
 
-    inline val reader
-        get() = gramophoneApplication.reader
+    val reader: FlowReader by inject()
 }

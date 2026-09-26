@@ -21,16 +21,13 @@ import android.annotation.SuppressLint
 import android.app.Application
 import android.app.NotificationManager
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Build
 import android.os.Debug
-import android.os.Environment
 import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy
 import android.os.StrictMode.VmPolicy
 import androidx.compose.runtime.Composer
 import androidx.compose.runtime.ExperimentalComposeRuntimeApi
-import androidx.core.content.edit
 import androidx.media3.common.util.Log
 import androidx.media3.session.DefaultMediaNotificationProvider
 import coil3.ImageLoader
@@ -41,15 +38,10 @@ import coil3.request.NullRequestDataException
 import coil3.util.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.akanework.gramophone.BuildConfig
-import org.akanework.gramophone.R
 import org.akanework.gramophone.di.appModule
 import org.akanework.gramophone.logic.ui.BugHandlerActivity
 import org.akanework.gramophone.logic.utils.CoilArtPipeline
@@ -71,7 +63,7 @@ import kotlin.system.exitProcess
 import kotlin.time.Duration.Companion.milliseconds
 
 class GramophoneApplication : Application(), SingletonImageLoader.Factory,
-    Thread.UncaughtExceptionHandler, SharedPreferences.OnSharedPreferenceChangeListener {
+    Thread.UncaughtExceptionHandler {
 
     companion object {
         private const val TAG = "GramophoneApplication"
@@ -91,32 +83,6 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
             Composer.setDiagnosticStackTraceEnabled(true)
         }
     }
-
-    val minSongLengthSecondsFlow = MutableSharedFlow<Long>(replay = 1,
-        onBufferOverflow = BufferOverflow.DROP_OLDEST)
-    val blackListSetFlow = MutableSharedFlow<Set<String>>(replay = 1,
-        onBufferOverflow = BufferOverflow.DROP_OLDEST)
-    val whiteListSetFlow = MutableSharedFlow<Set<String>>(replay = 1,
-        onBufferOverflow = BufferOverflow.DROP_OLDEST)
-    val shouldUseEnhancedCoverReadingFlow = if (hasScopedStorageWithMediaTypes()) null else
-        MutableSharedFlow<Boolean?>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
-    val recentlyAddedFilterSecondFlow = MutableStateFlow(1_209_600L)
-    val extraDisallowedFolders = setOf(
-        Environment.DIRECTORY_RINGTONES,
-        Environment.DIRECTORY_NOTIFICATIONS,
-        Environment.DIRECTORY_ALARMS,
-        Environment.DIRECTORY_PODCASTS,
-        "Android/media",
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
-            Environment.DIRECTORY_AUDIOBOOKS else "Audiobooks",
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-            Environment.DIRECTORY_RECORDINGS else "Recordings"
-    )
-    // TODO(U2/U3): transitional delegates to Koin, remove once callers inject directly.
-    val reader: FlowReader
-        get() = get()
-    val uacManager: UacManager
-        get() = get()
 
     override fun onCreate() {
         super.onCreate()
@@ -237,31 +203,14 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
         }
         // Resolve eagerly where they used to be constructed: both register observers/receivers in
         // their constructors, so keep the same start-up timing as before the Koin migration.
+        // FlowReader pulls in SettingsRepository, which migrates and loads the filter preferences
+        // on ApplicationScope.
         get<UacManager>()
         get<FlowReader>()
         // Set application theme when launching.
         themeModeOf(themeMode).applyToSystem(this)
         // This is a separate thread to avoid disk read on main thread and improve startup time
         CoroutineScope(Dispatchers.Default).launch {
-            if (prefs.getBoolean("needToAdd_isMusicBlacklist", true)) {
-                prefs.edit(true) {
-                    putBoolean("needToAdd_isMusicBlacklist", false)
-                    if (prefs.contains("folderFilter")) {
-                        putStringSet(
-                            "folderFilter", (prefs.getStringSet(
-                                "folderFilter", setOf()
-                            ) ?: setOf()) + extraDisallowedFolders
-                        )
-                    }
-                    if (prefs.getInt("mediastore_filter", 0) == 60) {
-                        putInt("mediastore_filter",
-                            resources.getInteger(R.integer.filter_default_sec))
-                    }
-                }
-            }
-            onSharedPreferenceChanged(prefs, null) // reload all values
-            prefs.registerOnSharedPreferenceChangeListener(this@GramophoneApplication)
-
             // https://github.com/androidx/media/issues/805
             if (needsMissingOnDestroyCallWorkarounds()) {
                 val nm = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
@@ -275,29 +224,6 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
                 // Clean up old logs
                 val selfLogDir = File(cacheDir, "SelfLog")
                 selfLogDir.listFiles()?.forEach(File::delete)
-            }
-        }
-    }
-
-    override fun onSharedPreferenceChanged(prefs: SharedPreferences, key: String?) {
-        runBlocking {
-            if (key == null || key == "mediastore_filter") {
-                minSongLengthSecondsFlow.emit(
-                    prefs.getInt(
-                        "mediastore_filter",
-                        resources.getInteger(R.integer.filter_default_sec)
-                    ).toLong()
-                )
-            }
-            if (key == null || key == "folderFilter") {
-                blackListSetFlow.emit(prefs.getStringSet("folderFilter",
-                    extraDisallowedFolders) ?: extraDisallowedFolders)
-            }
-            if (key == null || key == "folderAllow") {
-                whiteListSetFlow.emit(prefs.getStringSet("folderAllow", setOf()) ?: setOf())
-            }
-            if ((key == null || key == "album_covers") && !hasScopedStorageWithMediaTypes()) {
-                shouldUseEnhancedCoverReadingFlow!!.emit(prefs.getBoolean("album_covers", true))
             }
         }
     }

@@ -20,9 +20,7 @@ package org.akanework.gramophone.di
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.akanework.gramophone.BuildConfig
 import org.akanework.gramophone.logic.ApplicationScope
-import org.akanework.gramophone.logic.GramophoneApplication
-import org.akanework.gramophone.logic.hasScopedStorageWithMediaTypes
-import org.koin.android.ext.koin.androidApplication
+import org.akanework.gramophone.logic.settings.SettingsRepository
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import org.nift4.gramophone.hificore.UacManager
@@ -31,18 +29,17 @@ import uk.akane.libphonograph.reader.FlowReader
 val appModule = module {
     single { ApplicationScope() }
     single { UacManager(androidContext()) }
+    single { SettingsRepository(androidContext(), get<ApplicationScope>()) }
     single {
-        // TODO(U2): take the filter flows from SettingsRepository instead of the Application.
-        val app = androidApplication() as GramophoneApplication
+        val settings = get<SettingsRepository>()
         FlowReader(
             androidContext(),
             if (BuildConfig.DISABLE_MEDIA_STORE_FILTER) MutableStateFlow(0) else
-                app.minSongLengthSecondsFlow,
-            app.blackListSetFlow,
-            app.whiteListSetFlow,
-            if (hasScopedStorageWithMediaTypes()) MutableStateFlow(null) else
-                app.shouldUseEnhancedCoverReadingFlow!!,
-            app.recentlyAddedFilterSecondFlow
+                settings.minSongLengthSecondsFlow,
+            settings.blackListSetFlow,
+            settings.whiteListSetFlow,
+            settings.shouldUseEnhancedCoverReadingFlow,
+            settings.recentlyAddedFilterSecondFlow
         )
     }
 }

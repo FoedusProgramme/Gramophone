@@ -133,6 +133,7 @@ import org.akanework.gramophone.ui.nav.PlaylistEditKey
 import org.akanework.gramophone.ui.nav.PlaylistKey
 import org.akanework.gramophone.ui.state.LibraryTabSpec
 import org.akanework.gramophone.ui.state.LibraryTabState
+import org.koin.compose.koinInject
 import uk.akane.libphonograph.dynamicitem.Favorite
 import uk.akane.libphonograph.dynamicitem.RecentlyAdded
 import uk.akane.libphonograph.items.Album
@@ -245,11 +246,12 @@ private fun lcm(a: Int, b: Int): Int = a / gcd(a, b) * b
 fun LibrarySubScreen(key: LibrarySubKey, onBack: () -> Unit, modifier: Modifier = Modifier) {
     val context = LocalContext.current
     val activity = remember(context) { context.findMainActivity() }
+    val reader = koinInject<FlowReader>()
     val prefs = rememberDefaultPreferences()
     val scope = rememberCoroutineScope()
     // Entries of this page's kind, shown in the carousel. Keyed on the initial key only, so
     // switching entries does not rebuild the list and reset the carousel position.
-    val siblings = remember(key) { siblingEntries(key, activity.reader, prefs, scope) }
+    val siblings = remember(key) { siblingEntries(key, reader, prefs, scope) }
     siblings.Collect()
     // Index of the shown entry, or -1 until the list has loaded (then the initial key is shown).
     // Saved so the selected entry survives recreation.
@@ -291,7 +293,7 @@ fun LibrarySubScreen(key: LibrarySubKey, onBack: () -> Unit, modifier: Modifier 
     // Subtitle under the title, e.g. an album's artist or the song count.
     val subtitle = siblings.subtitleAt(currentIndex)
     val page = remember(entryToken(currentKey)) {
-        LibrarySubPage.create(currentKey, context, activity.reader, prefs, scope)
+        LibrarySubPage.create(currentKey, context, reader, prefs, scope)
     }
     // Keeps the previous title until the new one loads, so the large title never becomes empty.
     val title = remember { mutableStateOf("") }

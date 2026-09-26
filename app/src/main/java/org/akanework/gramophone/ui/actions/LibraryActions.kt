@@ -159,7 +159,7 @@ object LibraryActions {
     ) {
         CoroutineScope(Dispatchers.Default).launch {
             val res = ItemManipulator.deleteSongs(
-                activity, songs.map { it.getFile()!! to it.requireMediaStoreId() }
+                activity, activity.reader, songs.map { it.getFile()!! to it.requireMediaStoreId() }
             )
             if (res != null) {
                 withContext(Dispatchers.Main) {

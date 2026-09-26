@@ -32,13 +32,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.akanework.gramophone.R
-import org.akanework.gramophone.logic.gramophoneApplication
 import org.akanework.gramophone.logic.hasAudioPermission
 import org.akanework.gramophone.logic.hasScopedStorageV2
 import org.akanework.gramophone.logic.hasScopedStorageWithMediaTypes
 import org.akanework.gramophone.logic.ui.BaseActivity
 import org.akanework.gramophone.ui.screens.PickerEntry
 import org.akanework.gramophone.ui.screens.PickerScreen
+import org.koin.android.ext.android.inject
+import uk.akane.libphonograph.reader.FlowReader
 
 /**
  * The activities other apps call to pick a song or a playlist: the library's list, each row
@@ -48,6 +49,8 @@ abstract class PickerActivity<T : Any> : BaseActivity() {
     companion object {
         private const val PERMISSION_READ_MEDIA_AUDIO = 100
     }
+
+    protected val reader: FlowReader by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,9 +82,9 @@ abstract class PickerActivity<T : Any> : BaseActivity() {
                     ),
                 PERMISSION_READ_MEDIA_AUDIO,
             )
-        } else if (!gramophoneApplication.reader.hadFirstRefresh) {
+        } else if (!reader.hadFirstRefresh) {
             CoroutineScope(Dispatchers.Default).launch {
-                gramophoneApplication.reader.refresh()
+                reader.refresh()
             }
         }
     }
@@ -102,7 +105,7 @@ abstract class PickerActivity<T : Any> : BaseActivity() {
                 grantResults[0] == PackageManager.PERMISSION_GRANTED
             ) {
                 CoroutineScope(Dispatchers.Default).launch {
-                    gramophoneApplication.reader.refresh()
+                    reader.refresh()
                 }
             } else {
                 Toast.makeText(this, getString(R.string.grant_audio), Toast.LENGTH_LONG).show()

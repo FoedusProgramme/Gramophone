@@ -79,6 +79,8 @@ import org.akanework.gramophone.ui.library.Sorter
 import org.akanework.gramophone.ui.nav.LocalAppBarTopPadding
 import org.akanework.gramophone.ui.state.LibraryTabSpec
 import org.akanework.gramophone.ui.state.LibraryTabState
+import org.koin.compose.koinInject
+import uk.akane.libphonograph.reader.FlowReader
 
 /*
  * The search page: a text field in the glass bar, and under it the song list filtered by what
@@ -91,13 +93,14 @@ private val FIELD_TEXT_SIZE = 18.sp
 fun SearchScreen(initialQuery: String?, onBack: () -> Unit, modifier: Modifier = Modifier) {
     val context = LocalContext.current
     val activity = remember(context) { context.findMainActivity() }
+    val reader = koinInject<FlowReader>()
     val prefs = rememberDefaultPreferences()
     val scope = rememberCoroutineScope()
     var query by rememberSaveable { mutableStateOf(initialQuery ?: "") }
     val queryFlow = remember { MutableStateFlow(query) }
     LaunchedEffect(query) { queryFlow.value = query }
     val state = remember {
-        val songs = activity.reader.songListFlow.combine(queryFlow) { list, raw ->
+        val songs = reader.songListFlow.combine(queryFlow) { list, raw ->
             val text = raw.trim()
             list.filter {
                 it.mediaMetadata.title?.contains(text, true) == true ||
@@ -107,7 +110,7 @@ fun SearchScreen(initialQuery: String?, onBack: () -> Unit, modifier: Modifier =
         }
         LibraryTabState(
             LibraryTabSpec.SubSongs(LibraryAdapterTypes.SEARCH, Sorter.Type.ByTitleAscending),
-            prefs, activity.reader, scope, flowOverride = songs,
+            prefs, reader, scope, flowOverride = songs,
         )
     }
     val queueTitle = stringResource(R.string.search_query, query)

@@ -27,27 +27,26 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import org.akanework.gramophone.R
-import org.akanework.gramophone.logic.gramophoneApplication
 import org.akanework.gramophone.ui.components.compose.rememberStringSetPreference
 import org.akanework.gramophone.ui.components.home.LabelTabRow
 import org.akanework.gramophone.ui.components.settings.CheckboxPreferenceRow
 import org.akanework.gramophone.ui.components.settings.InfoPreferenceRow
 import org.akanework.gramophone.ui.components.settings.PreferenceGroup
 import org.akanework.gramophone.ui.components.settings.PreferenceScreen
+import org.koin.compose.koinInject
+import uk.akane.libphonograph.reader.FlowReader
 
 /**
  * The folder filters: which folders the library leaves out (the blacklist), and, on its own tab,
  * which ones it is limited to (the whitelist). Each is a set of paths in the preferences, which
- * the application turns into the flows the library reader filters by.
+ * SettingsRepository turns into the flows the library reader filters by.
  */
 @Composable
 fun BlacklistScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
-    val context = LocalContext.current
-    val reader = remember(context) { context.gramophoneApplication.reader }
+    val reader = koinInject<FlowReader>()
     var selectedTab by rememberSaveable { mutableIntStateOf(0) }
     val isWhitelist = selectedTab == 1
     val blacklist = rememberStringSetPreference("folderFilter")

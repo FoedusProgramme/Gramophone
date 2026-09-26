@@ -28,11 +28,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.akanework.gramophone.logic.gramophoneApplication
 import org.akanework.gramophone.logic.ui.BaseActivity
 import org.akanework.gramophone.ui.GramophoneTheme
+import org.koin.android.ext.android.inject
+import uk.akane.libphonograph.reader.FlowReader
 
 class Reflections : BaseActivity() {
+    private val reader: FlowReader by inject()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -41,8 +44,8 @@ class Reflections : BaseActivity() {
                 var node by remember { mutableStateOf<ReflectionNode?>(null) }
                 LaunchedEffect(Unit) {
                     node = withContext(Dispatchers.Default) {
-                        gramophoneApplication.reader.refresh()
-                        ReflectionNode(gramophoneApplication.reader, null, false)
+                        reader.refresh()
+                        ReflectionNode(reader, null, false)
                     }
                 }
                 // Back goes to the parent page before leaving the screen.
