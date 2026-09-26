@@ -25,8 +25,23 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.animate
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.displayCutout
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.union
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material3.Text
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.text.style.TextOverflow
+import org.akanework.gramophone.ui.components.home.GLASS_BAR_HEIGHT
+import org.akanework.gramophone.ui.components.home.LibraryIconButton
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.calculateCentroid
@@ -36,9 +51,7 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -50,6 +63,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.input.pointer.AwaitPointerEventScope
+import androidx.compose.ui.input.pointer.PointerInputChange
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -62,12 +79,9 @@ import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChanged
-import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextLayoutResult
@@ -82,21 +96,21 @@ import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.utils.data.Contributors
-import org.akanework.gramophone.ui.components.settings.PreferenceScreen
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 private const val CONTRIBUTORS_URL =
     "https://github.com/FoedusProgramme/Gramophone/graphs/contributors"
 
-/** Horizontal margin between the logo and the screen edges. */
+/** Margin between the logo and the safe area's sides. */
 private val MARK_MARGIN = 24.dp
 
-/** Room under the names, above the navigation bar: the page's own bottom spacer. */
+/** Room under the names, above the navigation bar. */
 private val MARK_BOTTOM_GAP = 24.dp
 
-/** The least height the names get when little of the screen is left, as in landscape. */
-private val MARK_MIN_HEIGHT = 240.dp
+/** The back button sits at the bar's own 4dp plus 6dp, as on the settings pages. */
+private val BACK_BUTTON_INSET = 4.dp + 6.dp
+private val BAR_TITLE_INSET = 4.dp
 
 /**
  * Range of name text sizes to search, in sp. The floor is below 5sp because names in scripts
@@ -129,6 +143,11 @@ private const val DOUBLE_TAP_ZOOM = 2.5f
  * Shows all developers and translators as one block of names laid out inside the app logo. All
  * names use the same size and are never cut off by the shape.
  *
+ * Unlike the other settings pages this is not a scrolling [PreferenceScreen][org.akanework
+ * .gramophone.ui.components.settings.PreferenceScreen]: the names fill the whole window, edge to
+ * edge, so pinching and panning never scroll the page by accident. Only a small back button and
+ * title float over them.
+ *
  * The logo is rasterized and scanned line by line, and the filled runs of each line are filled
  * with whole names.
  */
@@ -141,20 +160,46 @@ fun ContributorsScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
             Contributors.TRANSLATORS.filterNotNull().forEach { add(it) }
         }.shuffled(Random(1712))
     }
-    PreferenceScreen(
-        title = stringResource(R.string.settings_contributors),
-        onBack = onBack,
-        modifier = modifier,
+    Box(
+        modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surfaceContainerLow),
     ) {
-        NameMark(names)
+        NameMark(names, Modifier.fillMaxSize())
+        Row(
+            Modifier
+                .windowInsetsPadding(
+                    WindowInsets.systemBars.union(WindowInsets.displayCutout)
+                        .only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal),
+                )
+                .height(GLASS_BAR_HEIGHT)
+                .padding(start = BACK_BUTTON_INSET),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            LibraryIconButton(
+                icon = Icons.AutoMirrored.Outlined.ArrowBack,
+                iconSize = 24.dp,
+                tint = MaterialTheme.colorScheme.onSurface,
+                onClick = onBack,
+            )
+            Text(
+                text = stringResource(R.string.settings_contributors),
+                modifier = Modifier.padding(start = BAR_TITLE_INSET, end = 16.dp),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        }
     }
 }
 
 /**
- * The names laid out in the app logo. Tapping it opens the contributors page on GitHub, pinching
- * zooms into the small names and a double tap toggles the zoom.
+ * The names laid out in the app logo. The gestures and the zoom cover the whole window, while at
+ * no zoom the logo is fitted inside the safe area, clear of the bars and the back button.
+ * Tapping opens the contributors page on GitHub, pinching zooms into the small names and a
+ * double tap toggles the zoom.
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun NameMark(names: List<String>, modifier: Modifier = Modifier) {
     if (names.isEmpty()) return
@@ -166,46 +211,40 @@ private fun NameMark(names: List<String>, modifier: Modifier = Modifier) {
     val fade by animateFloatAsState(if (arrived) 1f else 0f, tween(700), label = "credits")
     val zoom = remember { MarkZoom() }
     val scope = rememberCoroutineScope()
-    // The names take the rest of the screen below the title. The page scrolls, so its column
-    // doesn't bound the height: it is the window's, less where the names start in the column
-    // (which the scroll doesn't move) and the room kept for the navigation bar.
     val density = LocalDensity.current
-    val windowHeight = LocalWindowInfo.current.containerSize.height
-    val bottomInset = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
-    var top by remember { mutableStateOf<Float?>(null) }
-    val height = top?.let {
-        with(density) { (windowHeight - it).toDp() } - bottomInset - MARK_BOTTOM_GAP
-    }
+    val direction = LocalLayoutDirection.current
+    val safe = WindowInsets.systemBars.union(WindowInsets.displayCutout).asPaddingValues()
+    val padLeft = with(density) { (safe.calculateLeftPadding(direction) + MARK_MARGIN).roundToPx() }
+    val padRight = with(density) { (safe.calculateRightPadding(direction) + MARK_MARGIN).roundToPx() }
+    // Under the back button's bar at the top, and a gap above the navigation bar at the bottom.
+    val padTop = with(density) { (safe.calculateTopPadding() + GLASS_BAR_HEIGHT).roundToPx() }
+    val padBottom = with(density) { (safe.calculateBottomPadding() + MARK_BOTTOM_GAP).roundToPx() }
     BoxWithConstraints(
         modifier
-            .fillMaxWidth()
-            .onPlaced { top = it.positionInParent().y }
-            .padding(horizontal = MARK_MARGIN)
-            // Nothing is planned until the height is known, so the names are laid out once.
-            .height(height?.coerceAtLeast(MARK_MIN_HEIGHT) ?: 0.dp)
-            // The zoomed names stay inside their box instead of covering the title.
+            .fillMaxSize()
             .clipToBounds()
-            .markZoomGestures(zoom)
-            .combinedClickable(
-                onClick = { open(context, CONTRIBUTORS_URL) },
-                onDoubleClick = { scope.launch { zoom.toggle() } },
+            .markZoomGestures(
+                zoom,
+                onTap = { open(context, CONTRIBUTORS_URL) },
+                onDoubleTap = { scope.launch { zoom.toggle() } },
             ),
     ) {
-        val width = constraints.maxWidth
-        val height = constraints.maxHeight
+        // The safe area the logo is fitted into at no zoom.
+        val width = (constraints.maxWidth - padLeft - padRight).coerceAtLeast(0)
+        val height = (constraints.maxHeight - padTop - padBottom).coerceAtLeast(0)
         val plan = remember(names, width, height, color) {
             planMark(context, measurer, names, width, height, color)
         }
         Canvas(Modifier.fillMaxSize()) {
             val mark = plan.mark
-            // Scale the logo's pixel bounds up to the box. Otherwise the empty space around the
-            // vector would shrink every name.
+            // Scale the logo's pixel bounds up to the safe area. Otherwise the empty space around
+            // the vector would shrink every name.
             val grow = minOf(
                 width.toFloat() / mark.width.coerceAtLeast(1),
                 height.toFloat() / mark.height.coerceAtLeast(1),
             )
-            val shiftX = (width - mark.width * grow) / 2f - mark.left * grow
-            val shiftY = (height - mark.height * grow) / 2f - mark.top * grow
+            val shiftX = padLeft + (width - mark.width * grow) / 2f - mark.left * grow
+            val shiftY = padTop + (height - mark.height * grow) / 2f - mark.top * grow
             // Zoomed in the draw pass rather than a layer, so the names are drawn sharp.
             translate(zoom.offset.x, zoom.offset.y) {
                 scale(zoom.scale, zoom.scale, pivot = center) {
@@ -267,35 +306,78 @@ private class MarkZoom {
 }
 
 /**
- * Pinch to zoom and, once zoomed, drag to pan. Single finger drags are left alone at no zoom so
- * the page still scrolls, and taps are only consumed once they move past the touch slop.
+ * Pinch to zoom and, once zoomed, drag to pan; single finger drags do nothing at no zoom. Taps
+ * are detected here too rather than with a clickable, which on a full-window box would fire on
+ * the lift of any swipe: a gesture only counts as a tap if one finger went down, stayed within
+ * the touch slop, lifted before a long press and nothing else consumed it. A second such tap
+ * within the double tap timeout makes a double tap instead of two single taps.
  */
-private fun Modifier.markZoomGestures(zoom: MarkZoom): Modifier =
+private fun Modifier.markZoomGestures(
+    zoom: MarkZoom,
+    onTap: () -> Unit,
+    onDoubleTap: () -> Unit,
+): Modifier = composed {
+    val tap by rememberUpdatedState(onTap)
+    val doubleTap by rememberUpdatedState(onDoubleTap)
     onSizeChanged { zoom.size = it.toSize() }.pointerInput(zoom) {
         awaitEachGesture {
-            awaitFirstDown(requireUnconsumed = false)
-            var panned = Offset.Zero
-            var dragging = false
-            do {
-                val event = awaitPointerEvent()
-                if (event.changes.any { it.isConsumed }) break
-                val pinching = event.changes.count { it.pressed } > 1
-                if (!pinching && zoom.scale <= MIN_ZOOM) continue
-                // Unspecified (NaN) on the event that lifts the last finger, when no pointer is
-                // down on both sides of it, and a NaN offset would move the names out of sight.
-                val centroid = event.calculateCentroid()
-                if (!centroid.isSpecified) continue
-                val pan = event.calculatePan()
-                if (!pinching && !dragging) {
-                    panned += pan
-                    if (panned.getDistance() < viewConfiguration.touchSlop) continue
-                }
-                dragging = true
-                zoom.transform(centroid, pan, event.calculateZoom())
-                event.changes.forEach { if (it.positionChanged()) it.consume() }
-            } while (event.changes.any { it.pressed })
+            val first = awaitFirstDown(requireUnconsumed = false)
+            if (!trackGesture(zoom, first)) return@awaitEachGesture
+            val second = withTimeoutOrNull(viewConfiguration.doubleTapTimeoutMillis) {
+                awaitFirstDown(requireUnconsumed = false)
+            }
+            if (second == null) {
+                tap()
+            } else if (trackGesture(zoom, second)) {
+                doubleTap()
+            }
         }
     }
+}
+
+/**
+ * Follows one gesture from [down] until every finger is up, zooming and panning [zoom] as it
+ * goes. Returns whether the gesture was a clean tap.
+ */
+private suspend fun AwaitPointerEventScope.trackGesture(
+    zoom: MarkZoom,
+    down: PointerInputChange,
+): Boolean {
+    val slop = viewConfiguration.touchSlop
+    var panned = Offset.Zero
+    var dragging = false
+    var isTap = true
+    do {
+        val event = awaitPointerEvent()
+        if (event.changes.any { it.isConsumed }) {
+            isTap = false
+            break
+        }
+        val pinching = event.changes.count { it.pressed } > 1
+        if (pinching) isTap = false
+        val finger = event.changes.firstOrNull { it.id == down.id }
+        if (finger == null ||
+            (finger.position - down.position).getDistance() > slop ||
+            finger.uptimeMillis - down.uptimeMillis > viewConfiguration.longPressTimeoutMillis
+        ) {
+            isTap = false
+        }
+        if (!pinching && zoom.scale <= MIN_ZOOM) continue
+        // Unspecified (NaN) on the event that lifts the last finger, when no pointer is down on
+        // both sides of it, and a NaN offset would move the names out of sight.
+        val centroid = event.calculateCentroid()
+        if (!centroid.isSpecified) continue
+        val pan = event.calculatePan()
+        if (!pinching && !dragging) {
+            panned += pan
+            if (panned.getDistance() < slop) continue
+        }
+        dragging = true
+        zoom.transform(centroid, pan, event.calculateZoom())
+        event.changes.forEach { if (it.positionChanged()) it.consume() }
+    } while (event.changes.any { it.pressed })
+    return isTap && !dragging
+}
 
 /** A placed name, in the pixel space of the [Mark]. */
 private class Placed(val layout: TextLayoutResult, val x: Float, val y: Float)
