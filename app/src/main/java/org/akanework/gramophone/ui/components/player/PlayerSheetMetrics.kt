@@ -27,10 +27,14 @@ import org.akanework.gramophone.logic.utils.CalculationUtils.lerp
 import org.akanework.gramophone.ui.components.home.LIBRARY_COVER_START
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.ARC_HORIZONTAL_EASING
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.CORNER_SQUARE_START
+import org.akanework.gramophone.ui.components.player.PlayerUtilities.EXPANDED_ACTION_BAR
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.EXPANDED_ART_CORNER
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.EXPANDED_ART_MAX_HEIGHT_FRACTION
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.EXPANDED_ART_SIDE_INSET
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.EXPANDED_ART_TOP_OFFSET
+import org.akanework.gramophone.ui.components.player.PlayerUtilities.EXPANDED_CONTROLS_FIXED
+import org.akanework.gramophone.ui.components.player.PlayerUtilities.EXPANDED_CONTROLS_MIN_GAP
+import org.akanework.gramophone.ui.components.player.PlayerUtilities.EXPANDED_CONTROLS_TEXT
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.LAND_ART_BOTTOM
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.LAND_ART_START
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.LAND_ART_TOP
@@ -120,11 +124,17 @@ fun playerSheetMetrics(
         expandedArtLeft = leftInset + LAND_ART_START.px()
     } else {
         expandedArtTop = statusTop + EXPANDED_ART_TOP_OFFSET.px()
+        // Whatever height the controls below the cover leave over, so short screens shrink the
+        // cover rather than the controls.
+        val controlsHeight = EXPANDED_CONTROLS_MIN_GAP.px() + EXPANDED_CONTROLS_FIXED.px() +
+            with(density) { EXPANDED_CONTROLS_TEXT.toPx() } + EXPANDED_ACTION_BAR.px()
         expandedArtSize =
             minOf(
                 safeWidth - EXPANDED_ART_SIDE_INSET.px() * 2f,
                 (rootHeight - expandedArtTop) * EXPANDED_ART_MAX_HEIGHT_FRACTION,
+                rootHeight - bottomInset - expandedArtTop - controlsHeight,
             ).coerceAtLeast(0f)
+        // Full width it lines up with the top buttons, smaller it is centered.
         expandedArtLeft = leftInset + (safeWidth - expandedArtSize) / 2f
     }
 

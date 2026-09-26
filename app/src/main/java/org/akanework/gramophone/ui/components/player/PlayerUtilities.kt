@@ -14,6 +14,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import org.akanework.gramophone.logic.utils.CalculationUtils.lerp
 import kotlin.math.roundToInt
 
@@ -65,6 +66,14 @@ object PlayerUtilities {
     val EXPANDED_ART_TOP_OFFSET = 68.dp // 52dp top-button row + 16dp gap
     val EXPANDED_ART_CORNER = 22.dp
     const val EXPANDED_ART_MAX_HEIGHT_FRACTION = 0.5f
+    // What the portrait player keeps below the cover, so the cover shrinks on short screens
+    // instead of squashing the controls: 3dp + 12dp + 48dp slider + 18dp + 90dp transport row,
+    // the title, artist and time lines (24sp each), the bottom button row, and the least room
+    // around the controls (split above and below).
+    val EXPANDED_CONTROLS_FIXED = 171.dp
+    val EXPANDED_CONTROLS_TEXT = 72.sp
+    val EXPANDED_ACTION_BAR = 56.dp
+    val EXPANDED_CONTROLS_MIN_GAP = 20.dp
 
     const val WIDE_LANDSCAPE_MIN_WIDTH = 600
     val LAND_ART_START = 24.dp

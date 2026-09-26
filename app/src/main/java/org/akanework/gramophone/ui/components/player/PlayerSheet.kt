@@ -26,6 +26,7 @@ import androidx.compose.animation.animateColorAsState
 import android.net.Uri
 import android.os.Build
 import android.view.RoundedCorner
+import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.graphics.ExperimentalAnimationGraphicsApi
@@ -63,6 +64,9 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -85,10 +89,12 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
+import coil3.request.error
 import coil3.size.Precision
 import com.materialkolor.ktx.animateColorScheme
 import com.materialkolor.ktx.harmonize
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 import org.akanework.gramophone.R
 import org.akanework.gramophone.ui.components.compose.rememberBooleanPreference
 import org.akanework.gramophone.ui.components.compose.rememberIntPreference
@@ -441,6 +447,7 @@ private fun SharedArtwork(
             .data(model)
             .size(requestSizePx)
             .precision(Precision.INEXACT)
+            .error(R.drawable.ic_default_cover)
             .build()
     }
 
@@ -461,10 +468,8 @@ private fun SharedArtwork(
             .absolute(metrics.sheetLeft, metrics.sheetTop, metrics.sheetWidth, metrics.sheetHeight)
             .clip(RoundedCornerShape(metrics.cornerDp)),
     ) {
-        AsyncImage(
-            model = request,
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
+        CrossfadeArtwork(
+            request = request,
             modifier = Modifier
                 .absolute(
                     metrics.artLeftRoot - metrics.sheetLeft,
@@ -477,6 +482,53 @@ private fun SharedArtwork(
                 .background(MaterialTheme.colorScheme.surfaceContainerHighest)
                 .then(gestures),
         )
+    }
+}
+
+/** How long a new cover takes to fade in over the previous one. */
+private const val ART_CROSSFADE_MS = 300
+
+/** One cover in [CrossfadeArtwork]'s stack. */
+private class ArtworkLayer(val request: ImageRequest, initialAlpha: Float) {
+    val alpha = Animatable(initialAlpha)
+}
+
+/**
+ * The cover, which keeps showing the previous song's cover until the new one has loaded (like the
+ * View player's loadNoPlaceholder) and then fades the new one in over it.
+ */
+@Composable
+private fun CrossfadeArtwork(request: ImageRequest, modifier: Modifier) {
+    val scope = rememberCoroutineScope()
+    val layers = remember { mutableStateListOf<ArtworkLayer>() }
+    if (layers.lastOrNull()?.request != request) {
+        // The very first cover shows as soon as it loads, later ones fade in over the last.
+        layers += ArtworkLayer(request, initialAlpha = if (layers.isEmpty()) 1f else 0f)
+    }
+    Box(modifier) {
+        for (layer in layers) {
+            key(layer) {
+                val onLoaded = {
+                    scope.launch {
+                        layer.alpha.animateTo(1f, tween(ART_CROSSFADE_MS))
+                        // Now opaque: drop the covers under it.
+                        val index = layers.indexOf(layer)
+                        if (index > 0) layers.removeRange(0, index)
+                    }
+                    Unit
+                }
+                AsyncImage(
+                    model = layer.request,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    onSuccess = { onLoaded() },
+                    onError = { onLoaded() },
+                    modifier = Modifier
+                        .matchParentSize()
+                        .graphicsLayer { alpha = layer.alpha.value },
+                )
+            }
+        }
     }
 }
 
