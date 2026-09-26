@@ -110,6 +110,9 @@ import org.akanework.gramophone.logic.utils.flows.provideReplayCacheInvalidation
 import org.akanework.gramophone.ui.LibraryAdapterTypes
 import org.akanework.gramophone.ui.actions.LibraryActions
 import org.akanework.gramophone.ui.actions.findMainActivity
+import org.akanework.gramophone.ui.MediaControllerViewModel
+import org.akanework.gramophone.ui.nav.NavViewModel
+import org.koin.compose.viewmodel.koinActivityViewModel
 import org.akanework.gramophone.ui.components.compose.rememberDefaultPreferences
 import org.akanework.gramophone.ui.components.home.GRID_CARD_SIDE_PADDING
 import org.akanework.gramophone.ui.components.home.LIST_HEIGHT
@@ -319,11 +322,12 @@ fun LibrarySubScreen(key: LibrarySubKey, onBack: () -> Unit, modifier: Modifier 
     // The mini player and the playing row are harmonized to the page's accent. The mini player
     // uses the accent of the top page, so it reverts when this page is popped.
     val accent = if (tinted) targetScheme.primary else null
-    val pageAccents = activity.navViewModel.pageAccents
+    val navViewModel = koinActivityViewModel<NavViewModel>()
+    val pageAccents = navViewModel.pageAccents
     SideEffect { if (accent != null) pageAccents[key] = accent else pageAccents.remove(key) }
     DisposableEffect(key) { onDispose { pageAccents.remove(key) } }
     val nowPlaying = rememberNowPlayingState(
-        activity.controllerViewModel, LocalLifecycleOwner.current.lifecycle, accent,
+        koinActivityViewModel<MediaControllerViewModel>(), LocalLifecycleOwner.current.lifecycle, accent,
     )
     CollectLibraryItems(page.songs)
     page.albums?.let { CollectLibraryItems(it) }
@@ -482,7 +486,7 @@ fun LibrarySubScreen(key: LibrarySubKey, onBack: () -> Unit, modifier: Modifier 
                             carouselState.currentItem == siblings.itemCount - 1,
                     onBack = onBack,
                     onEdit = page.editablePlaylistId?.let { id ->
-                        { activity.navigateTo(PlaylistEditKey(id)) }
+                        { navViewModel.navigateTo(PlaylistEditKey(id)) }
                     },
                 )
             }

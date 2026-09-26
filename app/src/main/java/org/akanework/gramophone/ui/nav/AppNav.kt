@@ -99,6 +99,10 @@ class NavViewModel : ViewModel() {
 
     /** Accent of the top page, or null if it uses the app colors. */
     val topAccent: Color? get() = backStack.lastOrNull()?.let { pageAccents[it] }
+
+    fun navigateTo(key: AppNavKey) {
+        backStack.add(key)
+    }
 }
 
 /** Bottom padding (px) content should keep clear so the mini player does not cover it. */
@@ -112,10 +116,6 @@ val LocalAppBarTopPadding = compositionLocalOf { 0.dp }
  * mini player, whichever is taller. The home's sheet ends above both, so its lists get 0.
  */
 val LocalListBottomPadding = compositionLocalOf<Dp?> { null }
-
-fun SnapshotStateList<AppNavKey>.popIfPossible() {
-    if (size > 1) removeAt(size - 1)
-}
 
 /** True while a page covers the always-composed home (so it can pause its animations). */
 val LocalHomeCovered = compositionLocalOf { false }

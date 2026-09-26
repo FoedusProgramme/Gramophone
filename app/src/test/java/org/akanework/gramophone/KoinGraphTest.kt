@@ -20,8 +20,10 @@ package org.akanework.gramophone
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharedFlow
 import org.akanework.gramophone.di.appModule
+import org.akanework.gramophone.di.viewModelModule
 import org.junit.Test
 import org.koin.android.test.verify.androidVerify
+import org.koin.dsl.module
 
 class KoinGraphTest {
 
@@ -36,6 +38,15 @@ class KoinGraphTest {
                 // module, a direct scope in tests).
                 CoroutineScope::class,
             )
+        )
+    }
+
+    @Test
+    fun viewModelModuleResolves() {
+        // Application (and SavedStateHandle) are whitelisted by androidVerify; FlowReader for
+        // HomeViewModel comes from appModule, so verify the two modules together.
+        module { includes(appModule, viewModelModule) }.androidVerify(
+            extraTypes = listOf(SharedFlow::class, CoroutineScope::class)
         )
     }
 }

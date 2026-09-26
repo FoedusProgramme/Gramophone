@@ -54,7 +54,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
 import org.akanework.gramophone.ui.HomeTab
 import org.akanework.gramophone.ui.actions.HomeActions
@@ -78,6 +77,8 @@ import org.akanework.gramophone.ui.nav.LocalPlayerBottomPadding
 import org.akanework.gramophone.ui.nav.NAV_TRANSITION_MS
 import org.akanework.gramophone.ui.nav.NavAxisEasing
 import org.akanework.gramophone.ui.state.HomeViewModel
+import org.akanework.gramophone.ui.MediaControllerViewModel
+import org.koin.compose.viewmodel.koinActivityViewModel
 import org.akanework.gramophone.ui.state.LibraryTabSpec
 import org.akanework.gramophone.ui.visibleHomeTabs
 
@@ -107,7 +108,8 @@ private val SHEET_BOTTOM_GAP = 16.dp
 fun HomeScreen(modifier: Modifier = Modifier) {
     val context = LocalContext.current
     val activity = remember(context) { context.findMainActivity() }
-    val viewModel: HomeViewModel = viewModel(activity)
+    val viewModel = koinActivityViewModel<HomeViewModel>()
+    val controllerViewModel = koinActivityViewModel<MediaControllerViewModel>()
     val tabsSetting by rememberPreference("tabs") { it.getString("tabs", "") ?: "" }
     val tabs = remember(tabsSetting) { visibleHomeTabs(tabsSetting) }
     val showTabs = tabs.size >= 2
@@ -115,7 +117,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
     val scope = rememberCoroutineScope()
     val density = LocalDensity.current
     val nowPlaying = rememberNowPlayingState(
-        activity.controllerViewModel, LocalLifecycleOwner.current.lifecycle
+        controllerViewModel, LocalLifecycleOwner.current.lifecycle
     )
     // Incremented when the current tab is tapped again ("scroll to the playing song").
     val reselectTicks = remember { mutableStateMapOf<HomeTab, Int>() }

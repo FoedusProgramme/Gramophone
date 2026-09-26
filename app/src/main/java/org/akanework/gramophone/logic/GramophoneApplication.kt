@@ -33,6 +33,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.akanework.gramophone.BuildConfig
 import org.akanework.gramophone.di.appModule
+import org.akanework.gramophone.di.viewModelModule
 import org.akanework.gramophone.logic.init.CrashHandler
 import org.akanework.gramophone.logic.init.ImageLoaderFactory
 import org.akanework.gramophone.logic.init.LoggingInitializer
@@ -78,7 +79,7 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory {
         startKoin {
             androidLogger(if (BuildConfig.DEBUG) Level.INFO else Level.ERROR)
             androidContext(this@GramophoneApplication)
-            modules(appModule)
+            modules(appModule, viewModelModule)
         }
         // disk read and write on first launch, but unavoidable as the night mode has to be known
         // before any activity starts

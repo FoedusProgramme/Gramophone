@@ -53,7 +53,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -66,7 +65,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import org.akanework.gramophone.R
 import org.akanework.gramophone.ui.LibraryAdapterTypes
-import org.akanework.gramophone.ui.actions.findMainActivity
+import org.akanework.gramophone.ui.MediaControllerViewModel
+import org.koin.compose.viewmodel.koinActivityViewModel
 import org.akanework.gramophone.ui.components.compose.rememberDefaultPreferences
 import org.akanework.gramophone.ui.components.home.GLASS_BAR_HEIGHT
 import org.akanework.gramophone.ui.components.home.LibraryIconButton
@@ -91,8 +91,6 @@ private val FIELD_TEXT_SIZE = 18.sp
 
 @Composable
 fun SearchScreen(initialQuery: String?, onBack: () -> Unit, modifier: Modifier = Modifier) {
-    val context = LocalContext.current
-    val activity = remember(context) { context.findMainActivity() }
     val reader = koinInject<FlowReader>()
     val prefs = rememberDefaultPreferences()
     val scope = rememberCoroutineScope()
@@ -116,7 +114,7 @@ fun SearchScreen(initialQuery: String?, onBack: () -> Unit, modifier: Modifier =
     val queueTitle = stringResource(R.string.search_query, query)
     LaunchedEffect(queueTitle) { state.queueTitleOverride = queueTitle }
     val nowPlaying = rememberNowPlayingState(
-        activity.controllerViewModel, LocalLifecycleOwner.current.lifecycle
+        koinActivityViewModel<MediaControllerViewModel>(), LocalLifecycleOwner.current.lifecycle
     )
     val overscroll = rememberIosOverscrollState()
     val hazeState = remember { HazeState() }

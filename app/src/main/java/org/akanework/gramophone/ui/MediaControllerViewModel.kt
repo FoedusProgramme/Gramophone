@@ -35,7 +35,6 @@ import androidx.media3.session.SessionCommand
 import androidx.media3.session.SessionResult
 import androidx.media3.session.SessionToken
 import com.google.common.util.concurrent.ListenableFuture
-import org.akanework.gramophone.logic.GramophoneApplication
 import org.akanework.gramophone.logic.GramophonePlaybackService
 import org.akanework.gramophone.logic.utils.LifecycleCallbackListImpl
 import java.util.concurrent.ExecutionException
@@ -43,7 +42,7 @@ import java.util.concurrent.ExecutionException
 class MediaControllerViewModel(application: Application) : AndroidViewModel(application),
     DefaultLifecycleObserver, MediaBrowser.Listener {
 
-    private val context: GramophoneApplication
+    private val context: Application
         get() = getApplication()
     private val mainExecutor = ContextCompat.getMainExecutor(application)
     private var controllerLifecycle: LifecycleHost? = null
