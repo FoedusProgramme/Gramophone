@@ -144,4 +144,11 @@
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
     <string name="settings_trim_lyrics">Sözlərin ətrafında olan boşluqları sil</string>
     <string name="timer_expiry">Yuxu taymeri musiqini %s dayandıracaq</string>
+    <plurals name="folders_plural">
+        <item quantity="one">%d qovluq</item>
+        <item quantity="other">%d qovluq</item>
+    </plurals>
+    <string name="app_name">Gramophone</string>
+    <string name="sort_by_album_artist">Albomun ifaçısı -&gt; Adı</string>
+    <string name="search_query">Axtarış: %s</string>
 </resources>
