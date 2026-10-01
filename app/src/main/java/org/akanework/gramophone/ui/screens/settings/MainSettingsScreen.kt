@@ -55,16 +55,16 @@ private class SettingsPage(
 /** The pages in their groups: how it looks, how it behaves, what it is. */
 private val PAGE_GROUPS = listOf(
     listOf(
-        SettingsPage(Icons.Filled.Palette, R.string.settings_category_appearance, R.string.settings_appearance_summary) { AppearanceSettingsKey() },
-        SettingsPage(Icons.Filled.PlayArrow, R.string.settings_player_ui, R.string.settings_player_ui_summary) { PlayerSettingsKey() },
+        SettingsPage(Icons.Filled.Palette, R.string.settings_category_appearance, R.string.settings_appearance_summary) { AppearanceSettingsKey },
+        SettingsPage(Icons.Filled.PlayArrow, R.string.settings_player_ui, R.string.settings_player_ui_summary) { PlayerSettingsKey },
     ),
     listOf(
-        SettingsPage(Icons.Filled.PrecisionManufacturing, R.string.settings_category_behavior, R.string.settings_behavior_summary) { BehaviorSettingsKey() },
-        SettingsPage(Icons.Filled.Headphones, R.string.settings_player_options, R.string.settings_player_options_summary) { AudioSettingsKey() },
-        SettingsPage(Icons.Filled.Science, R.string.settings_experimental_settings, R.string.settings_experimental_settings_summary) { ExperimentalSettingsKey() },
+        SettingsPage(Icons.Filled.PrecisionManufacturing, R.string.settings_category_behavior, R.string.settings_behavior_summary) { BehaviorSettingsKey },
+        SettingsPage(Icons.Filled.Headphones, R.string.settings_player_options, R.string.settings_player_options_summary) { AudioSettingsKey },
+        SettingsPage(Icons.Filled.Science, R.string.settings_experimental_settings, R.string.settings_experimental_settings_summary) { ExperimentalSettingsKey },
     ),
     listOf(
-        SettingsPage(Icons.Filled.Info, R.string.settings_about_app, R.string.settings_about_gramophone) { AboutSettingsKey() },
+        SettingsPage(Icons.Filled.Info, R.string.settings_about_app, R.string.settings_about_gramophone) { AboutSettingsKey },
     ),
 )
 

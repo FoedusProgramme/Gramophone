@@ -150,7 +150,7 @@ object HomeActions {
                 }
             }
 
-            HomeMenuAction.Settings -> env.navigate(MainSettingsKey())
+            HomeMenuAction.Settings -> env.navigate(MainSettingsKey)
 
             HomeMenuAction.Shuffle -> {
                 val controller = env.player

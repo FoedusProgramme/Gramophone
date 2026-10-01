@@ -51,7 +51,7 @@ fun AudioSettingsScreen(
             NavigationPreferenceRow(
                 shape,
                 title = stringResource(R.string.settings_replaygain),
-                onClick = { onNavigate(ReplayGainSettingsKey()) },
+                onClick = { onNavigate(ReplayGainSettingsKey) },
             )
         })
 

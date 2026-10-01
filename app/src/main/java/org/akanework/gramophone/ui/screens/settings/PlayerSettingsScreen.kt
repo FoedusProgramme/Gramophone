@@ -128,7 +128,7 @@ fun PlayerSettingsScreen(
                 shape,
                 title = stringResource(R.string.settings_lyrics_configuration),
                 subtitle = stringResource(R.string.settings_lyrics_configuration_summary),
-                onClick = { onNavigate(LyricSettingsKey()) },
+                onClick = { onNavigate(LyricSettingsKey) },
             )
         })
     }

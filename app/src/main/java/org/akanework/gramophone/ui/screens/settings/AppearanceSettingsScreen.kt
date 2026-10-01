@@ -55,7 +55,7 @@ fun AppearanceSettingsScreen(
                     shape,
                     title = stringResource(R.string.settings_theme_title),
                     subtitle = stringResource(R.string.settings_theme_summary),
-                    onClick = { onNavigate(ThemeSettingsKey()) },
+                    onClick = { onNavigate(ThemeSettingsKey) },
                 )
             }
             // Only shown where the system has the font. Otherwise the platform font is used.

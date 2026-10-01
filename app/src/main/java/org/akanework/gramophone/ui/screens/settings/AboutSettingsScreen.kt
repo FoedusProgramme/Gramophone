@@ -123,7 +123,7 @@ fun AboutSettingsScreen(
                     shape,
                     title = stringResource(R.string.settings_contributors),
                     subtitle = stringResource(R.string.settings_contributors_click, contributors),
-                    onClick = { onNavigate(ContributorsKey()) },
+                    onClick = { onNavigate(ContributorsKey) },
                 )
             },
             { shape ->
@@ -182,7 +182,7 @@ fun AboutSettingsScreen(
                         dialog = null
                         // Not under Firebase Test Lab.
                         if (Settings.System.getString(context.contentResolver, "firebase.test.lab") != "true") {
-                            onNavigate(OssLicensesKey())
+                            onNavigate(OssLicensesKey)
                         }
                     },
                 ) { Text(stringResource(android.R.string.ok)) }

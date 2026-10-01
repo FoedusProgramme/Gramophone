@@ -141,7 +141,7 @@ fun BehaviorSettingsScreen(
                     shape,
                     title = stringResource(R.string.settings_blacklist_folder),
                     subtitle = stringResource(R.string.settings_blacklist_folder_summary),
-                    onClick = { onNavigate(BlacklistKey()) },
+                    onClick = { onNavigate(BlacklistKey) },
                 )
             },
         )

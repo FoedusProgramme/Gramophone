@@ -17,21 +17,49 @@
 
 package org.akanework.gramophone.ui.nav
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
 /** A settings page. Plain classes like the library keys, so nav3 never conflates two pushes. */
 sealed interface SettingsKey : AppNavKey {
     override val wantsPlayer: Boolean get() = false
 }
 
-class MainSettingsKey : SettingsKey
-class AppearanceSettingsKey : SettingsKey
-class ThemeSettingsKey : SettingsKey
-class PlayerSettingsKey : SettingsKey
-class LyricSettingsKey : SettingsKey
-class BehaviorSettingsKey : SettingsKey
-class AudioSettingsKey : SettingsKey
-class ReplayGainSettingsKey : SettingsKey
-class ExperimentalSettingsKey : SettingsKey
-class AboutSettingsKey : SettingsKey
-class BlacklistKey : SettingsKey
-class ContributorsKey : SettingsKey
-class OssLicensesKey : SettingsKey
+@Parcelize
+data object MainSettingsKey : SettingsKey, Parcelable
+
+@Parcelize
+data object AppearanceSettingsKey : SettingsKey, Parcelable
+
+@Parcelize
+data object ThemeSettingsKey : SettingsKey, Parcelable
+
+@Parcelize
+data object PlayerSettingsKey : SettingsKey, Parcelable
+
+@Parcelize
+data object LyricSettingsKey : SettingsKey, Parcelable
+
+@Parcelize
+data object BehaviorSettingsKey : SettingsKey, Parcelable
+
+@Parcelize
+data object AudioSettingsKey : SettingsKey, Parcelable
+
+@Parcelize
+data object ReplayGainSettingsKey : SettingsKey, Parcelable
+
+@Parcelize
+data object ExperimentalSettingsKey : SettingsKey, Parcelable
+
+@Parcelize
+data object AboutSettingsKey : SettingsKey, Parcelable
+
+@Parcelize
+data object BlacklistKey : SettingsKey, Parcelable
+
+@Parcelize
+data object ContributorsKey : SettingsKey, Parcelable
+
+@Parcelize
+data object OssLicensesKey : SettingsKey, Parcelable

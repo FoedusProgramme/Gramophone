@@ -1,7 +1,6 @@
 package org.akanework.gramophone.ui.nav
 
-import androidx.compose.runtime.mutableStateMapOf
-import androidx.compose.runtime.snapshots.SnapshotStateMap
+import android.os.Parcelable
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -19,10 +18,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.compositionLocalOf
-import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.snapshots.SnapshotStateMap
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,12 +34,15 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
+import kotlinx.parcelize.IgnoredOnParcel
+import kotlinx.parcelize.Parcelize
 import org.akanework.gramophone.ui.components.compose.AppDialogHost
 import org.akanework.gramophone.ui.components.compose.AppDialogHostState
 import org.akanework.gramophone.ui.components.compose.LocalAppDialogs
@@ -68,22 +72,30 @@ sealed interface AppNavKey : NavKey {
     val wantsPlayer: Boolean
 }
 
-data object HomeKey : AppNavKey {
+@Parcelize
+data object HomeKey : AppNavKey, Parcelable {
+    @IgnoredOnParcel
     override val wantsPlayer = true
 }
 
 /** The search page, opened with [query] typed in already when it comes from an intent. */
-class SearchKey(val query: String?) : AppNavKey {
+@Parcelize
+data class SearchKey(val query: String?) : AppNavKey, Parcelable {
+    @IgnoredOnParcel
     override val wantsPlayer = true
 }
 
 /** The details of one song. */
-class SongDetailKey(val mediaId: String) : AppNavKey {
+@Parcelize
+data class SongDetailKey(val mediaId: String) : AppNavKey, Parcelable {
+    @IgnoredOnParcel
     override val wantsPlayer = false
 }
 
 /** Editing the playlist with MediaStore id [id]. */
-class PlaylistEditKey(val id: Long) : AppNavKey {
+@Parcelize
+data class PlaylistEditKey(val id: Long) : AppNavKey, Parcelable {
+    @IgnoredOnParcel
     override val wantsPlayer = false
 }
 
@@ -92,14 +104,28 @@ sealed interface LibrarySubKey : AppNavKey {
     override val wantsPlayer: Boolean get() = true
 }
 
-class AlbumKey(val id: Long?) : LibrarySubKey
-class GenreKey(val id: Long?) : LibrarySubKey
-class DateKey(val id: Long?) : LibrarySubKey
-class PlaylistKey(val id: Long?, val className: String?) : LibrarySubKey
-class ArtistKey(val id: Long?, val albumArtist: Boolean) : LibrarySubKey
+@Parcelize
+data class AlbumKey(val id: Long?) : LibrarySubKey, Parcelable
 
-class NavViewModel : ViewModel() {
-    val backStack: SnapshotStateList<AppNavKey> = mutableStateListOf(HomeKey)
+@Parcelize
+data class GenreKey(val id: Long?) : LibrarySubKey, Parcelable
+
+@Parcelize
+data class DateKey(val id: Long?) : LibrarySubKey, Parcelable
+
+@Parcelize
+data class PlaylistKey(val id: Long?, val className: String?) : LibrarySubKey, Parcelable
+
+@Parcelize
+data class ArtistKey(val id: Long?, val albumArtist: Boolean) : LibrarySubKey, Parcelable
+
+class NavViewModel(
+    private val handle: SavedStateHandle
+) : ViewModel() {
+
+    val backStack: SnapshotStateList<AppNavKey> =
+        handle.get<SnapshotStateList<AppNavKey>>("backStack")?.takeIf { it.isNotEmpty() }
+            ?: mutableStateListOf<AppNavKey>(HomeKey).also { handle["backStack"] = it }
 
     /**
      * Color scheme per back stack entry that is themed from a cover. The dialogs take the top
