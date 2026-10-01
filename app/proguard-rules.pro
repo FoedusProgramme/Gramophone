@@ -23,6 +23,9 @@
 # enabling obfuscation would break some self-reflection in the app
 -dontobfuscate
 
+# strip Kotlin null checks inserted by the compiler to reduce method count and overhead
+-processkotlinnullchecks remove
+
 # reflection by androidx via theme attr viewInflaterClass
 -keep class org.akanework.gramophone.logic.ui.ViewCompatInflater { *; }
 

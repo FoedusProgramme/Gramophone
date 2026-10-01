@@ -21,9 +21,6 @@ android {
 		compilerOptions {
 			jvmTarget = JvmTarget.JVM_21
 			freeCompilerArgs = listOf(
-				"-Xno-param-assertions",
-				"-Xno-call-assertions",
-				"-Xno-receiver-assertions",
 				"-Xannotation-default-target=param-property", // can remove later
 			)
 		}
