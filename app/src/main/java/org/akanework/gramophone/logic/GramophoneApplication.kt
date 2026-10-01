@@ -22,7 +22,7 @@ import android.app.Application
 import android.app.NotificationManager
 import android.os.Build
 import androidx.compose.runtime.Composer
-import androidx.compose.runtime.ExperimentalComposeRuntimeApi
+import androidx.compose.runtime.tooling.ComposeStackTraceMode
 import androidx.media3.session.DefaultMediaNotificationProvider
 import coil3.ImageLoader
 import coil3.PlatformContext
@@ -69,8 +69,7 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory {
         }
         if (BuildConfig.DEBUG) {
             System.setProperty("kotlinx.coroutines.debug", "on")
-            @OptIn(ExperimentalComposeRuntimeApi::class)
-            Composer.setDiagnosticStackTraceEnabled(true)
+            Composer.setDiagnosticStackTraceMode(ComposeStackTraceMode.SourceInformation)
         }
     }
 

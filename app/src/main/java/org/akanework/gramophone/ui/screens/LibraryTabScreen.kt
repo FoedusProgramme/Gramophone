@@ -109,6 +109,7 @@ import org.akanework.gramophone.ui.state.SortPrefState
 import uk.akane.libphonograph.items.Album
 import kotlin.math.max
 import kotlin.math.roundToInt
+import kotlin.time.Duration.Companion.seconds
 
 /* The grid is twelve spans wide, and each layout takes a share of them per item. */
 private const val FULL_SPAN_COUNT = 12
@@ -170,7 +171,7 @@ fun <T : Any> CollectLibraryItems(state: LibraryTabState<T>) {
     LaunchedEffect(state, lifecycleOwner) {
         val bypass = flow {
             emit(true)
-            delay(2000)
+            delay(2.seconds)
             emit(false)
         }
         withContext(
@@ -307,7 +308,6 @@ fun <T : Any> libraryFabActions(state: LibraryTabState<T>, env: AppActionEnv): L
 /** The sort and layout menu of a home tab, opened from the home bar's sort button. */
 @Composable
 fun <T : Any> LibrarySortMenu(state: LibraryTabState<T>, expanded: Boolean, onDismiss: () -> Unit) {
-    val context = LocalContext.current
     val extraCheckbox = if (state.spec === LibraryTabSpec.Artists) {
         val albumArtist by rememberPreference(LibraryTabSpec.Artists.ALBUM_ARTIST_PREF) {
             it.getBoolean(LibraryTabSpec.Artists.ALBUM_ARTIST_PREF, false)
@@ -472,4 +472,3 @@ internal fun <T : Any> LibraryItem(
         )
     }
 }
-

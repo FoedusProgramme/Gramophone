@@ -24,7 +24,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Handler
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.ProducerScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -32,7 +31,6 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
 import java.io.File
 import java.util.concurrent.atomic.AtomicLong
-import kotlin.experimental.ExperimentalTypeInference
 
 internal inline fun <reified T, reified U> HashMap<T, U>.putIfAbsentSupport(key: T, value: U) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -64,15 +62,13 @@ abstract class ContentObserverCompat(handler: Handler?) : ContentObserver(handle
     abstract override fun deliverSelfNotifications(): Boolean
 }
 
-@OptIn(ExperimentalTypeInference::class)
 internal fun versioningCallbackFlow(
-    @BuilderInference block: suspend ProducerScope<Long>.(() -> Long) -> Unit
+    block: suspend ProducerScope<Long>.(() -> Long) -> Unit
 ): Flow<Long> {
     val versionTracker = AtomicLong()
     return callbackFlow { block(versionTracker::incrementAndGet) }
 }
 
-@OptIn(ExperimentalCoroutinesApi::class)
 internal fun contentObserverVersioningFlow(
     context: Context, scope: CoroutineScope, uri: Uri,
     notifyForDescendants: Boolean

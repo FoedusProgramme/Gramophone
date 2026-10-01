@@ -118,7 +118,7 @@ fun SongDetailScreen(mediaId: String, onBack: () -> Unit, modifier: Modifier = M
                 (metadata.durationMs?.let { convertDurationToTimeStamp(it) } ?: ""),
             stringResource(R.string.dialog_bitrate) to when {
                 bitrate != null -> stringResource(R.string.bitrate_format, bitrate!! / 1000)
-                looked && item != null && bitrate == null -> stringResource(R.string.bitrate_unknown)
+                looked && bitrate == null -> stringResource(R.string.bitrate_unknown)
                 else -> ""
             },
             stringResource(R.string.dialog_mime) to (current.localConfiguration?.mimeType ?: "(null)"),

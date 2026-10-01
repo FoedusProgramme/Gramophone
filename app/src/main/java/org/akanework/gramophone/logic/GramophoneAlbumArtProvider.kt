@@ -123,7 +123,6 @@ class GramophoneAlbumArtProvider : ContentProvider() {
 
     override fun onCreate() = true
 
-    @OptIn(InternalCoroutinesApi::class)
     private suspend fun openFileCommon(uri: Uri, size: Point?, allowPartial: Boolean): AssetFileDescriptor? {
         val context = context!!
         val cfd = CompletableDeferred<AssetFileDescriptor?>()

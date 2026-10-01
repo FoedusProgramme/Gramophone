@@ -41,7 +41,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.OpenInNew
+import androidx.compose.material.icons.automirrored.outlined.OpenInNew
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
@@ -109,6 +109,7 @@ import org.akanework.gramophone.ui.components.player.PlayerUtilities
 import org.akanework.gramophone.ui.components.player.SquigglyProgressBar
 import uk.akane.libphonograph.toUriCompat
 import java.io.File
+import kotlin.time.Duration.Companion.milliseconds
 
 /*
  * The audio preview: a small player in a dialog over whatever app handed us a file, with a way
@@ -443,7 +444,7 @@ private fun PreviewContent(
     LaunchedEffect(Unit) {
         while (isActive) {
             poll()
-            delay(POSITION_POLL_MS)
+            delay(POSITION_POLL_MS.milliseconds)
         }
     }
     var scrub by remember { mutableStateOf<Float?>(null) }
@@ -527,7 +528,7 @@ private fun PreviewContent(
                 Modifier.fillMaxWidth().clickable(onClick = onOpen).padding(vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Icon(Icons.Outlined.OpenInNew, contentDescription = null, tint = scheme.primary, modifier = Modifier.size(20.dp))
+                Icon(Icons.AutoMirrored.Outlined.OpenInNew, contentDescription = null, tint = scheme.primary, modifier = Modifier.size(20.dp))
                 Spacer(Modifier.width(12.dp))
                 Text(stringResourceCompat(R.string.open_in_gramophone), color = scheme.primary, fontSize = 14.sp)
             }

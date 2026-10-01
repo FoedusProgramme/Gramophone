@@ -46,6 +46,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.chrisbanes.haze.ExperimentalHazeApi
 import dev.chrisbanes.haze.HazeInputScale
 import dev.chrisbanes.haze.HazeProgressive
 import dev.chrisbanes.haze.HazeState
@@ -114,6 +115,7 @@ private val TopEdgeScrimStops: List<Pair<Float, Float>> = (0..8).map { i ->
  * half resolution copy of the content whatever the intensity, so the node must be exactly the
  * bar and never extend over content that should stay sharp.
  */
+@OptIn(ExperimentalHazeApi::class)
 fun Modifier.topEdgeBlur(hazeState: HazeState, style: HazeStyle, scrim: Color): Modifier =
     drawWithCache {
         val brush = Brush.verticalGradient(

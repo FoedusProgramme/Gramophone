@@ -42,7 +42,6 @@ import org.akanework.gramophone.ui.library.StoreArtistHelper
 import org.akanework.gramophone.ui.library.StoreDateHelper
 import org.akanework.gramophone.ui.library.StoreGenreHelper
 import org.akanework.gramophone.ui.library.StorePlaylistHelper
-import org.akanework.gramophone.ui.state.LibraryTabSpec.Playlists.defaultCoverOf
 import uk.akane.libphonograph.dynamicitem.Favorite
 import uk.akane.libphonograph.dynamicitem.RecentlyAdded
 import uk.akane.libphonograph.items.Album

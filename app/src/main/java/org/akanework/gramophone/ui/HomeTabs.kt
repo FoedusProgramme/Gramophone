@@ -40,7 +40,7 @@ enum class HomeTab(val id: Int, val label: Int) {
  * visible tabs (before it) from the hidden ones (after it).
  */
 fun mapSettingToTabList(setting: String): List<HomeTab?> {
-    val stList = if (!setting.isEmpty())
+    val stList = if (setting.isNotEmpty())
         setting.split(",").flatMap {
             if (it.isEmpty())
                 listOf(null)

@@ -160,7 +160,7 @@ private class PlaylistEditState(
         scope.launch(Dispatchers.Default) {
             val id = ContentUris.parseId(uri)
             val found = reader.playlistListFlow.map { it.find { p -> p.id == id } }.first()
-            if (found == null || found.path == null) {
+            if (found?.path == null) {
                 toast(R.string.unknown_playlist)
                 leave()
                 return@launch

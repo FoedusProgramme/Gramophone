@@ -1160,7 +1160,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                             val binder = MultiQueueList(listOf(queue))
                             res.extras.putBinder("allQueues", binder)
                         }
-                    } catch (e: IllegalStateException) {
+                    } catch (_: IllegalStateException) {
                         SessionResult(SessionResult.RESULT_ERROR_BAD_VALUE)
                     }
                 }
@@ -1864,7 +1864,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
             it.second.start <= (controller?.currentPosition ?: 0).toULong()
                     && (!it.second.isTranslated || withTranslation)
         }
-        // return first non-blank line if there are are multiple lines, else the first blank like
+        // return first non-blank line if there are multiple lines, else the first blank like
         val max = lines?.maxByOrNull { it.second.start }
         if (max == null) {
             return null
