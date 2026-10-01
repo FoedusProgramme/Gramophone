@@ -1,12 +1,7 @@
 package org.akanework.gramophone.ui
 
-import org.akanework.gramophone.ui.theme.rememberAppFontEnabled
-import org.akanework.gramophone.ui.theme.appTypography
-import org.akanework.gramophone.ui.theme.LocalAppFontEnabled
-import org.akanework.gramophone.ui.theme.AppFont
-import android.content.Context
-import android.content.ContextWrapper
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -28,7 +23,11 @@ import com.materialkolor.ktx.animateColorScheme
 import com.materialkolor.ktx.toColor
 import com.materialkolor.ktx.toHct
 import org.akanework.gramophone.logic.enableEdgeToEdgeProperly
+import org.akanework.gramophone.ui.theme.AppFont
+import org.akanework.gramophone.ui.theme.LocalAppFontEnabled
+import org.akanework.gramophone.ui.theme.appTypography
 import org.akanework.gramophone.ui.theme.isDark
+import org.akanework.gramophone.ui.theme.rememberAppFontEnabled
 import org.akanework.gramophone.ui.theme.rememberThemeSettings
 import org.akanework.gramophone.ui.theme.themeColorScheme
 
@@ -69,8 +68,9 @@ fun GramophoneTheme(content: @Composable () -> Unit) {
     val appFont = rememberAppFontEnabled()
     val typography = remember(appFont) { appTypography(AppFont.fontFamily(appFont)) }
     val view = LocalView.current
+    val activity = LocalActivity.current
     if (!view.isInEditMode) {
-        SideEffect { view.context.findActivity()?.enableEdgeToEdgeProperly(dark) }
+        SideEffect { (activity as? ComponentActivity)?.enableEdgeToEdgeProperly(dark) }
     }
     MaterialTheme(colorScheme = colorScheme, typography = typography) {
         CompositionLocalProvider(
@@ -82,10 +82,4 @@ fun GramophoneTheme(content: @Composable () -> Unit) {
             content()
         }
     }
-}
-
-tailrec fun Context.findActivity(): ComponentActivity? = when (this) {
-    is ComponentActivity -> this
-    is ContextWrapper -> baseContext.findActivity()
-    else -> null
 }

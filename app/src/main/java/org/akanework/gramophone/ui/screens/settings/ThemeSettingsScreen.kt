@@ -17,6 +17,8 @@
 package org.akanework.gramophone.ui.screens.settings
 
 import android.os.Build
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -79,7 +81,6 @@ import org.akanework.gramophone.ui.components.settings.PreferenceRow
 import org.akanework.gramophone.ui.components.settings.PreferenceScreen
 import org.akanework.gramophone.ui.components.settings.PreferenceSectionHeader
 import org.akanework.gramophone.ui.components.settings.SwitchPreferenceRow
-import org.akanework.gramophone.ui.findActivity
 import org.akanework.gramophone.ui.theme.DEFAULT_SEED_COLOR
 import org.akanework.gramophone.ui.theme.PREF_PALETTE_STYLE
 import org.akanework.gramophone.ui.theme.PREF_PURE_DARK
@@ -116,6 +117,7 @@ private val STYLE_ROW_BOTTOM_GAP = 24.dp
 @Composable
 fun ThemeSettingsScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
     val context = LocalContext.current
+    val activity = LocalActivity.current
     val themeMode = rememberStringPreference(PREF_THEME_MODE, ThemeMode.System.code)
     val pureDark = rememberBooleanPreference(PREF_PURE_DARK, false)
     val wallpaperColor = rememberBooleanPreference(PREF_WALLPAPER_COLOR, true)
@@ -138,7 +140,7 @@ fun ThemeSettingsScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
                         themeMode.set(code)
                         themeModeOf(code).applyToSystem(context)
                         // Before Android 12 the activity carries the night override itself.
-                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) context.findActivity()?.recreate()
+                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) (activity as? ComponentActivity)?.recreate()
                     },
                 )
             },
