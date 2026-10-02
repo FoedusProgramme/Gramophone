@@ -218,7 +218,7 @@ internal fun QueueDrawer(
                         .graphicsLayer { alpha = rowAlpha(queue.progress) },
                 )
             }
-            if (queue.shown) {
+            if (queue.shown && !geometry.isWideLandscape) {
                 QueuePreview(
                     player, actions, scheme, queue, drag, geometry, sides,
                     Modifier.absolute { geometry.queuePreviewBounds },

@@ -48,6 +48,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.withFrameNanos
+import androidx.compose.ui.FrameRateCategory
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.drawBehind
@@ -55,6 +56,7 @@ import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.preferredFrameRate
 import androidx.core.graphics.ColorUtils
 import androidx.core.text.getSpans
 import androidx.core.util.forEach
@@ -203,6 +205,10 @@ internal fun LyricsList(
                     }
             )
             .overscroll(overscroll)
+            // With adaptive refresh rates (Android 15), a redraw nothing asks a rate for runs at
+            // the normal one until a touch boosts it, and the lyrics' scrolling and highlights
+            // look slow. Ask for the high one in the frames they're drawn in.
+            .preferredFrameRate(FrameRateCategory.High)
             .drawBehind {
                 frame.intValue
                 // Read the parameter (not the renderer's copy) so a change of visibility triggers a redraw

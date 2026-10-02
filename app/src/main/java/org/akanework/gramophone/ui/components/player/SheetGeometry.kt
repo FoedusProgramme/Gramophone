@@ -112,13 +112,16 @@ class SheetGeometry(
     /**
      * The queue, its handle over its songs, from the player's bottom row ([queueRowBounds]) down
      * below the screen, under the row. The two come up [queueTravel] together, the queue to fill
-     * the screen under the [queuePreviewBounds].
+     * the screen under the [queuePreviewBounds], or in landscape under the status bar.
      */
     val queuePanelBounds: Rect
     val queueRowBounds: Rect
     val queueTravel: Float
 
-    /** The song playing, at the top of the player (under the status bar) once the queue is up. */
+    /**
+     * The song playing, at the top of the player (under the status bar) once the queue is up.
+     * Portrait only: in landscape, the cover beside the queue shows it.
+     */
     val queuePreviewBounds: Rect
 
     init {
@@ -153,7 +156,9 @@ class SheetGeometry(
             if (isWideLandscape) rootWidth - rightInset - TOP_BUTTON_SIZE.px() else rootWidth
         val rowHeight = EXPANDED_ACTION_BAR.px()
         val rowTop = rootHeight - bottomInset - rowHeight
-        val previewBottom = statusTop + QUEUE_PREVIEW_HEIGHT.px()
+        // In landscape the cover stays beside the queue, which comes up to the top: no preview
+        val previewBottom =
+            if (isWideLandscape) statusTop else statusTop + QUEUE_PREVIEW_HEIGHT.px()
         queueTravel = (rowTop - previewBottom).coerceAtLeast(1f)
         queueRowBounds = Rect(queueLeft, rowTop, queueRight, rowTop + rowHeight)
         queuePanelBounds = Rect(queueLeft, rowTop, queueRight, rowTop + rootHeight - previewBottom)

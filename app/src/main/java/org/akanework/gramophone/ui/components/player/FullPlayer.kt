@@ -331,9 +331,10 @@ private fun TopButtonColumn(
     onOpenDialog: (PlayerDialog) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    // Bare icons in landscape, beside the controls rather than over the cover
     Column(modifier) {
-        MinimizeButton(scheme, actions.minimize)
-        OverflowButton(player, scheme, onOpenDialog)
+        MinimizeButton(scheme, actions.minimize, filled = false)
+        OverflowButton(player, scheme, onOpenDialog, filled = false)
     }
 }
 
@@ -360,10 +361,15 @@ private fun TopButtonRow(
 }
 
 @Composable
-private fun MinimizeButton(scheme: AnimatedColorScheme, onClick: () -> Unit) {
+private fun MinimizeButton(
+    scheme: AnimatedColorScheme,
+    onClick: () -> Unit,
+    filled: Boolean = true,
+) {
     IconSlot(
         Icons.Outlined.ExpandMore, R.string.expand_less, scheme.colorProducer { onSurface },
-        scheme.colorProducer { surfaceBright }, icon = 28.dp, onClick = onClick,
+        if (filled) scheme.colorProducer { surfaceBright } else null, icon = 28.dp,
+        onClick = onClick,
     )
 }
 
@@ -373,6 +379,7 @@ private fun OverflowButton(
     player: PlayerSheetPlayerState,
     scheme: AnimatedColorScheme,
     onOpenDialog: (PlayerDialog) -> Unit,
+    filled: Boolean = true,
 ) {
     var menuOpen by remember { mutableStateOf(false) }
     val open = { dialog: PlayerDialog ->
@@ -382,7 +389,8 @@ private fun OverflowButton(
     Box {
         IconSlot(
             Icons.Outlined.MoreVert, R.string.more, scheme.colorProducer { onSurface },
-            scheme.colorProducer { surfaceBright }, icon = 24.dp, onClick = { menuOpen = true },
+            if (filled) scheme.colorProducer { surfaceBright } else null, icon = 24.dp,
+            onClick = { menuOpen = true },
         )
         MaterialTheme(colorScheme = scheme.target) {
             AppDropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
@@ -407,15 +415,16 @@ private fun OverflowItem(image: ImageVector, @StringRes title: Int, onClick: () 
 }
 
 /**
- * A top button: its icon on a circle of [background], as tall as the bottom row's buttons, in a
- * [TOP_BUTTON_SIZE] slot. The colours are read where they're drawn, as the cover's scheme changes.
+ * A top button: its icon on a circle of [background], or bare without one, as tall as the bottom
+ * row's buttons, in a [TOP_BUTTON_SIZE] slot. The colours are read where they're drawn, as the
+ * cover's scheme changes.
  */
 @Composable
 private fun IconSlot(
     image: ImageVector,
     @StringRes description: Int,
     tint: ColorProducer,
-    background: ColorProducer,
+    background: ColorProducer?,
     icon: Dp,
     onClick: () -> Unit,
 ) {
@@ -424,7 +433,7 @@ private fun IconSlot(
             .size(TOP_BUTTON_SIZE)
             .padding((TOP_BUTTON_SIZE - ACTION_BUTTON_SIZE) / 2)
             .clip(CircleShape)
-            .drawBehind { drawRect(background()) }
+            .drawBehind { background?.let { drawRect(it()) } }
             .clickable(onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {
