@@ -1,0 +1,72 @@
+package org.akanework.gramophone.ui.theme
+
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ColorScheme
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.contentColorFor
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
+import com.materialkolor.ktx.animateColorScheme
+import org.akanework.gramophone.logic.enableEdgeToEdgeProperly
+
+val LocalCardSurface = staticCompositionLocalOf { Color.Unspecified }
+
+/** Whether the app draws its dark theme, whatever the system is set to. */
+val LocalDarkTheme = staticCompositionLocalOf { false }
+
+/** How long a change of palette, seed or brightness takes to cross over. */
+const val THEME_ANIMATION_MS = 400
+
+private const val DARK_CARD_CHROMA = 8.0
+private const val DARK_CARD_TONE = 10.0
+/** How far a dark card sits above the page, which differs between colour spec versions. */
+private const val DARK_CARD_TONE_LIFT = 4.0
+
+internal fun cardSurface(scheme: ColorScheme, dark: Boolean): Color =
+    if (dark) {
+        val pageTone = scheme.surfaceContainerLow.tone
+        scheme.primary.tonal(DARK_CARD_CHROMA, maxOf(DARK_CARD_TONE, pageTone + DARK_CARD_TONE_LIFT))
+    } else scheme.surfaceBright
+
+/**
+ * The app theme from the stored theme settings. Colours cross over when the settings change,
+ * and the system bars are kept matched to the brightness.
+ */
+@Composable
+fun GramophoneTheme(content: @Composable () -> Unit) {
+    val context = LocalContext.current
+    val settings = rememberThemeSettings()
+    val dark = settings.mode.isDark(isSystemInDarkTheme())
+    val target = remember(context, settings, dark) { themeColorScheme(context, settings, dark) }
+    val colorScheme = animateColorScheme(target, animationSpec = { tween(THEME_ANIMATION_MS) })
+    val cardSurface by animateColorAsState(cardSurface(target, dark), tween(THEME_ANIMATION_MS))
+    val appFont = rememberAppFontEnabled()
+    val typography = remember(appFont) { appTypography(AppFont.fontFamily(appFont)) }
+    val view = LocalView.current
+    val activity = LocalActivity.current
+    if (!view.isInEditMode) {
+        SideEffect { (activity as? ComponentActivity)?.enableEdgeToEdgeProperly(dark) }
+    }
+    MaterialTheme(colorScheme = colorScheme, typography = typography) {
+        CompositionLocalProvider(
+            LocalContentColor provides contentColorFor(MaterialTheme.colorScheme.surface),
+            LocalCardSurface provides cardSurface,
+            LocalDarkTheme provides dark,
+            LocalAppFontEnabled provides appFont,
+        ) {
+            content()
+        }
+    }
+}

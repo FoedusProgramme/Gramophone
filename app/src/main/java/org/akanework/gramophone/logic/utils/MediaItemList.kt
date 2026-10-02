@@ -22,9 +22,15 @@ import android.os.IBinder
 import android.os.Parcel
 import androidx.media3.common.BundleListRetriever
 import androidx.media3.common.MediaItem
+import androidx.media3.common.MediaLibraryInfo
 
 class MediaItemList(val list: List<MediaItem>) : Binder() {
-    private val blr by lazy { BundleListRetriever(list.map { it.toBundleIncludeLocalConfiguration() }) }
+    private val blr by lazy {
+        BundleListRetriever(list.map {
+            it.toBundleIncludeLocalConfiguration(MediaLibraryInfo.INTERFACE_VERSION)
+        })
+    }
+
     override fun onTransact(code: Int, data: Parcel, reply: Parcel?, flags: Int): Boolean {
         if (code == FIRST_CALL_TRANSACTION) {
             return blr.transact(code, data, reply, flags)
@@ -37,7 +43,8 @@ class MediaItemList(val list: List<MediaItem>) : Binder() {
             if (binder is MediaItemList) {
                 return binder.list
             }
-            return BundleListRetriever.getList(binder).map { MediaItem.fromBundle(it) }
+            return BundleListRetriever.getList(binder)
+                .map { MediaItem.fromBundle(it, MediaLibraryInfo.INTERFACE_VERSION) }
         }
     }
 }

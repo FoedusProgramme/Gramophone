@@ -29,8 +29,6 @@ import android.os.CancellationSignal
 import android.os.Environment
 import android.os.OperationCanceledException
 import android.provider.MediaStore
-import androidx.core.net.toUri
-import androidx.media3.common.util.Log
 import coil3.ImageLoader
 import coil3.Uri
 import coil3.decode.ContentMetadata
@@ -61,7 +59,6 @@ import org.akanework.gramophone.logic.hasScopedStorageV1
 import org.akanework.gramophone.logic.hasScopedStorageWithMediaTypes
 import org.akanework.gramophone.logic.queryWithPending
 import org.nift4.mediastorecompat.MediaStoreCompat
-import org.nift4.mediastorecompat.StorageManagerCompat
 import uk.akane.libphonograph.utils.MiscUtils
 import java.io.File
 import java.io.IOException

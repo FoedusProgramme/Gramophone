@@ -1,13 +1,13 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+// Top-level build file where you can add configuration options common to all subprojects/modules.
 plugins {
     val agpVersion = "9.2.1"
     id("com.android.application") version agpVersion apply false
     id("com.android.built-in-kotlin") version agpVersion apply false
-	id("com.android.library") version agpVersion apply false
-	id("com.android.test") version agpVersion apply false
-	id("androidx.baselineprofile") version "1.5.0-alpha07" apply false
-    val kotlinVersion = "2.3.0"
-	kotlin("android") version kotlinVersion apply false
+    id("com.android.library") version agpVersion apply false
+    id("com.android.test") version agpVersion apply false
+    id("androidx.baselineprofile") version "1.5.0" apply false
+    val kotlinVersion = "2.4.20"
+    kotlin("android") version kotlinVersion apply false
     kotlin("plugin.parcelize") version kotlinVersion apply false
     kotlin("plugin.compose") version kotlinVersion apply false
     val aboutLibsVersion = "14.0.0-b02"
@@ -19,11 +19,11 @@ plugins {
 
 doctor {
     javaHome {
-        ensureJavaHomeMatches.set(false)
-        ensureJavaHomeIsSet.set(false)
+        ensureJavaHomeMatches = false
+        ensureJavaHomeIsSet = false
     }
 }
 
-tasks.withType(JavaCompile::class.java) {
+tasks.withType<JavaCompile>().configureEach {
     options.compilerArgs.add("-Xlint:all")
 }

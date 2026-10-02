@@ -17,35 +17,32 @@
 
 package uk.akane.libphonograph.manipulator
 
-import android.app.Activity
 import android.content.ContentUris
 import android.content.Context
-import android.content.Intent
+import android.content.IntentSender
 import android.net.Uri
-import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.widget.Toast
 import androidx.media3.common.util.Log
 import androidx.media3.common.util.Util
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.getFile
-import org.akanework.gramophone.logic.gramophoneApplication
 import org.akanework.gramophone.logic.hasImprovedMediaStore
 import org.akanework.gramophone.logic.queryWithPending
 import org.akanework.gramophone.logic.utils.Flags
-import org.akanework.gramophone.ui.MainActivity
+import org.akanework.gramophone.logic.library.DeleteResult
+import org.akanework.gramophone.logic.library.PendingWrite
 import org.nift4.mediastorecompat.MediaStoreCompat
 import org.nift4.mediastorecompat.StorageManagerCompat
 import uk.akane.libphonograph.dynamicitem.Favorite
 import uk.akane.libphonograph.getIntOrNullIfThrow
 import uk.akane.libphonograph.getLongOrNullIfThrow
+import uk.akane.libphonograph.reader.FlowReader
 import uk.akane.libphonograph.reader.Reader
 import uk.akane.libphonograph.toUriCompat
 import java.io.File
@@ -55,8 +52,8 @@ object ItemManipulator {
     const val FAVORITES = "gramophone_favourite"
     const val DEFAULT_FORMAT = "m3u"
 
-    suspend fun deleteSongs(context: MainActivity, list: List<Pair<File, Long>>): (() -> Unit)? {
-        val faves = context.gramophoneApplication.reader.playlistListFlow.map { it.find { p ->
+    suspend fun deleteSongs(context: Context, reader: FlowReader, list: List<Pair<File, Long>>): DeleteResult {
+        val faves = reader.playlistListFlow.map { it.find { p ->
             p is Favorite } }.first()
         val songsToUnfave = faves?.let { _ -> list.filter { faves.songList.find { song ->
             song.getFile() == it.first } != null }.map { it.first.toUriCompat() } }
@@ -68,7 +65,7 @@ object ItemManipulator {
             val token = MediaStoreCompat.needRequestBytesWrite(context, uri)
             if (token == null) {
                 try {
-                    val readback = readbackPlaylist(context, uri)
+                    val readback = readbackPlaylist(context, reader, uri)
                     val newSongs = readback.copy(entries = readback.entries.filter {
                         it.locations.find { songsToUnfave.contains(it) } == null })
                     setPlaylistContent(context, uri, newSongs, false)
@@ -123,62 +120,51 @@ object ItemManipulator {
         return delete(context, uris)
     }
 
-    suspend fun deletePlaylist(context: MainActivity, id: Long): (() -> Unit)? {
+    fun deletePlaylist(context: Context, id: Long): DeleteResult {
         val uri = ContentUris.withAppendedId(
             @Suppress("deprecation") MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, id
         )
         return delete(context, setOf(uri))
     }
 
-    private suspend fun delete(context: MainActivity, uris: Collection<Uri>): (() -> Unit)? {
-        if (uris.find { MediaStoreCompat.needRequestDelete(context, it) != null } != null) {
-            val pendingIntent = MediaStoreCompat.createDeleteRequest(context, uris.toList())
-            val req = Bundle().apply {
-                putString("UiError", context.getString(
-                    androidx.media3.session.R.string.error_message_info_cancelled))
-            }
-            withContext(Dispatchers.Main) {
-                context.runIntentForDelete(pendingIntent.intentSender, req)
-            }
-            return null
-        } else {
-            return {
-                CoroutineScope(Dispatchers.IO).launch {
-                    val urisWithStatus = uris.map {
-                        try {
-                            MediaStoreCompat.delete(context, it)
-                            it to (null)
-                        } catch (e: SecurityException) {
-                            Log.e("ItemManipulator", "failed to delete $it", e)
-                            it to e
-                        }
+    private fun delete(context: Context, uris: Collection<Uri>): DeleteResult {
+        val consent = try {
+            if (uris.any { MediaStoreCompat.needRequestDelete(context, it) != null })
+                MediaStoreCompat.createDeleteRequest(context, uris.toList()).intentSender
+            else null
+        } catch (e: Exception) {
+            Log.e(TAG, "failed to prepare deleting $uris", e)
+            return DeleteResult.Failed(e)
+        }
+        return deleteResult(consent) {
+            withContext(Dispatchers.IO) {
+                val notOk = uris.mapNotNull {
+                    try {
+                        MediaStoreCompat.delete(context, it)
+                        null
+                    } catch (e: SecurityException) {
+                        Log.e(TAG, "failed to delete $it", e)
+                        it
                     }
-                    val notOk = urisWithStatus.filter { it.second != null }
-                    val ok = notOk.isEmpty()
-                    if (!ok) {
-                        withContext(Dispatchers.Main) {
-                            Toast.makeText(context,
-                                context.getString(R.string.delete_failed,
-                                    notOk.first().toString()
-                                ),
-                                Toast.LENGTH_LONG).show()
-                        }
+                }
+                if (notOk.isNotEmpty()) {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(context,
+                            context.getString(R.string.delete_failed, notOk.first().toString()),
+                            Toast.LENGTH_LONG).show()
                     }
                 }
             }
         }
     }
 
-    suspend fun continueDeleteFromPendingIntent(context: Context, resultCode: Int, data: Intent?, req: Bundle) {
-        // this is the callback of createDeleteRequest(), and the delete was already done if
-        // resultCode is RESULT_OK. if it's not, then we just show a toast or something.
-        if (resultCode == Activity.RESULT_OK || resultCode == Activity.RESULT_CANCELED) return
-        withContext(Dispatchers.Main) {
-            Toast.makeText(context, context.getString(R.string.delete_failed,
-                data?.getStringExtra("ErrorMsg") ?:
-                req.getString("UiError")), Toast.LENGTH_LONG).show()
-        }
-    }
+    /**
+     * With a [consent] dialog, the system deletes once the user agrees; without one, [deleteNow]
+     * waits for the caller's own confirmation.
+     */
+    internal fun deleteResult(consent: IntentSender?, deleteNow: suspend () -> Unit): DeleteResult =
+        if (consent != null) DeleteResult.NeedsConsent(consent, PendingWrite.Delete)
+        else DeleteResult.ConfirmThenRun(deleteNow)
 
     fun createPlaylist(context: Context, out: File): Uri {
         if (out.exists())
@@ -218,8 +204,8 @@ object ItemManipulator {
         return File(parent, Util.escapeFileName("$name.$DEFAULT_FORMAT"))
     }
 
-    suspend fun readbackPlaylist(context: Context, uri: Uri): PlaylistSerializer.Playlist {
-        val pathMap = context.gramophoneApplication.reader.pathMapFlow.first()
+    suspend fun readbackPlaylist(context: Context, reader: FlowReader, uri: Uri): PlaylistSerializer.Playlist {
+        val pathMap = reader.pathMapFlow.first()
         return Reader.readPlaylist(context, uri).let {
             it.copy(entries = it.entries.map {
                 it.updateFromMediaItem(pathMap)

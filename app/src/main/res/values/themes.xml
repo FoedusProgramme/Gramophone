@@ -1,169 +1,35 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.Gramophone" parent="Theme.Material3.DynamicColors.DayNight.NoActionBar">
-        <item name="viewInflaterClass">org.akanework.gramophone.logic.ui.ViewCompatInflater</item>
-        <item name="bottomSheetDialogTheme">@style/ThemeOverlay.App.BottomSheetDialog</item>
-        <item name="textAppearanceLargePopupMenu">@style/TextAppearance.App.BodyLarge</item>
-        <item name="textAppearanceSmallPopupMenu">@style/TextAppearance.App.BodyLarge</item>
-        <item name="collapsingToolbarLayoutLargeStyle">@style/CollapsingToolbarLarge</item>
-        <item name="popupMenuBackground">@drawable/popup_background</item>
-        <item name="alertDialogTheme">@style/AppTheme.AlertDialog</item>
+<resources>
+    <style name="Base.Theme.Gramophone" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Common.Theme.Gramophone" parent="Base.Theme.Gramophone">
+        <item name="android:windowBackground">?android:attr/colorBackground</item>
+        <item name="android:colorPrimary">@color/theme_primary</item>
+        <item name="android:colorBackground">@color/theme_surface</item>
+        <item name="colorSurface">@color/theme_surface</item>
+        <item name="colorOnSurface">@color/theme_on_surface</item>
+        <item name="colorSurfaceVariant">@color/theme_surface_variant</item>
         <item name="system_app_widget_background_radius">28dp</item>
         <item name="system_app_widget_inner_radius">20dp</item>
-        <item name="previewPlayerElevation">1dp</item>
     </style>
-
-    <style name="PreV31.Theme.Gramophone" parent="Base.Theme.Gramophone">
-        <!-- Material theme -->
-        <item name="colorPrimary">@color/md_theme_primary</item>
-        <item name="colorOnPrimary">@color/md_theme_onPrimary</item>
-        <item name="colorPrimaryContainer">@color/md_theme_primaryContainer</item>
-        <item name="colorOnPrimaryContainer">@color/md_theme_onPrimaryContainer</item>
-        <item name="colorSecondary">@color/md_theme_secondary</item>
-        <item name="colorOnSecondary">@color/md_theme_onSecondary</item>
-        <item name="colorSecondaryContainer">@color/md_theme_secondaryContainer</item>
-        <item name="colorOnSecondaryContainer">@color/md_theme_onSecondaryContainer</item>
-        <item name="colorTertiary">@color/md_theme_tertiary</item>
-        <item name="colorOnTertiary">@color/md_theme_onTertiary</item>
-        <item name="colorTertiaryContainer">@color/md_theme_tertiaryContainer</item>
-        <item name="colorOnTertiaryContainer">@color/md_theme_onTertiaryContainer</item>
-        <item name="colorError">@color/md_theme_error</item>
-        <item name="colorOnError">@color/md_theme_onError</item>
-        <item name="colorErrorContainer">@color/md_theme_errorContainer</item>
-        <item name="colorOnErrorContainer">@color/md_theme_onErrorContainer</item>
-        <item name="android:colorBackground">@color/md_theme_background</item>
-        <item name="colorOnBackground">@color/md_theme_onBackground</item>
-        <item name="colorSurface">@color/md_theme_surface</item>
-        <item name="colorOnSurface">@color/md_theme_onSurface</item>
-        <item name="colorSurfaceVariant">@color/md_theme_surfaceVariant</item>
-        <item name="colorOnSurfaceVariant">@color/md_theme_onSurfaceVariant</item>
-        <item name="colorOutline">@color/md_theme_outline</item>
-        <item name="colorOutlineVariant">@color/md_theme_outlineVariant</item>
-        <item name="colorSurfaceInverse">@color/md_theme_inverseSurface</item>
-        <item name="colorOnSurfaceInverse">@color/md_theme_inverseOnSurface</item>
-        <item name="colorPrimaryInverse">@color/md_theme_inversePrimary</item>
-        <item name="colorPrimaryFixed">@color/md_theme_primaryFixed</item>
-        <item name="colorOnPrimaryFixed">@color/md_theme_onPrimaryFixed</item>
-        <item name="colorPrimaryFixedDim">@color/md_theme_primaryFixedDim</item>
-        <item name="colorOnPrimaryFixedVariant">@color/md_theme_onPrimaryFixedVariant</item>
-        <item name="colorSecondaryFixed">@color/md_theme_secondaryFixed</item>
-        <item name="colorOnSecondaryFixed">@color/md_theme_onSecondaryFixed</item>
-        <item name="colorSecondaryFixedDim">@color/md_theme_secondaryFixedDim</item>
-        <item name="colorOnSecondaryFixedVariant">@color/md_theme_onSecondaryFixedVariant</item>
-        <item name="colorTertiaryFixed">@color/md_theme_tertiaryFixed</item>
-        <item name="colorOnTertiaryFixed">@color/md_theme_onTertiaryFixed</item>
-        <item name="colorTertiaryFixedDim">@color/md_theme_tertiaryFixedDim</item>
-        <item name="colorOnTertiaryFixedVariant">@color/md_theme_onTertiaryFixedVariant</item>
-        <item name="colorSurfaceDim">@color/md_theme_surfaceDim</item>
-        <item name="colorSurfaceBright">@color/md_theme_surfaceBright</item>
-        <item name="colorSurfaceContainerLowest">@color/md_theme_surfaceContainerLowest</item>
-        <item name="colorSurfaceContainerLow">@color/md_theme_surfaceContainerLow</item>
-        <item name="colorSurfaceContainer">@color/md_theme_surfaceContainer</item>
-        <item name="colorSurfaceContainerHigh">@color/md_theme_surfaceContainerHigh</item>
-        <item name="colorSurfaceContainerHighest">@color/md_theme_surfaceContainerHighest</item>
-    </style>
-
-    <style name="Theme.Gramophone" parent="PreV31.Theme.Gramophone" />
-
-    <style name="Theme.Gramophone.PureDark" parent="Theme.Gramophone">
-        <item name="android:colorBackground">@android:color/black</item>
-        <item name="colorSurface">@android:color/black</item>
-        <item name="colorSurfaceVariant">@android:color/black</item>
-        <item name="colorSurfaceContainerLowest">@android:color/black</item>
-        <item name="colorSurfaceContainerLow">@android:color/black</item>
-        <item name="colorSurfaceContainer">@android:color/black</item>
-        <item name="colorSurfaceContainerHigh">@android:color/black</item>
-        <item name="colorSurfaceContainerHighest">@android:color/black</item>
-        <item name="previewPlayerElevation">0dp</item>
-    </style>
-
-    <style name="ThemeOverlay.PureDark" parent="">
-        <item name="android:colorBackground">@android:color/black</item>
-        <item name="colorSurface">@android:color/black</item>
-        <item name="colorSurfaceVariant">@android:color/black</item>
-        <item name="colorSurfaceContainerLowest">@android:color/black</item>
-        <item name="colorSurfaceContainerLow">@android:color/black</item>
-        <item name="colorSurfaceContainer">@android:color/black</item>
-        <item name="colorSurfaceContainerHigh">@android:color/black</item>
-        <item name="colorSurfaceContainerHighest">@android:color/black</item>
-        <item name="previewPlayerElevation">0dp</item>
-    </style>
-
-    <style name="TextAppearance.App.BodyLarge" parent="TextAppearance.Material3.BodyLarge">
-        <item name="android:textColor">?attr/colorOnSurface</item>
-    </style>
-
-    <style name="ThemeOverlay.App.BottomSheetDialog" parent="ThemeOverlay.Material3.BottomSheetDialog">
-        <item name="bottomSheetStyle">@style/ModalBottomSheetDialog</item>
-        <item name="enableEdgeToEdge">true</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@android:color/transparent</item>
-    </style>
-
-    <style name="ModalBottomSheetDialog" parent="Widget.Material3.BottomSheet.Modal">
-        <item name="shapeAppearance">@style/BottomPlayerCornerShape</item>
-        <item name="marginLeftSystemWindowInsets">false</item>
-        <item name="marginRightSystemWindowInsets">false</item>
-        <item name="paddingBottomSystemWindowInsets">false</item>
-    </style>
-
-    <style name="Base.TabTextAppearance" parent="TextAppearance.Design.Tab">
-        <item name="textAllCaps">false</item>
-        <item name="android:textAllCaps">false</item>
-        <item name="android:textSize">15sp</item>
-        <item name="android:fontFamily">sans-serif</item>
-        <item name="textFontWeight">500</item>
-    </style>
-
-    <style name="TabTextAppearance" parent="Base.TabTextAppearance" />
-
-    <style name="BottomPlayerCornerShape">
-        <item name="cornerSize">0dp</item>
-    </style>
-
-    <style name="CollapsingToolbarLarge" parent="Widget.Material3.CollapsingToolbar.Large">
-        <item name="titleCollapseMode">scale</item>
-        <item name="contentScrim">?attr/colorSurfaceContainer</item>
-    </style>
-
-    <style name="MediaPlayer.ProgressBar" parent="@style/Widget.AppCompat.ProgressBar.Horizontal">
-        <item name="android:thumb">@drawable/media_seekbar_thumb</item>
-        <item name="android:thumbTint">?android:attr/textColorPrimary</item>
-        <item name="android:progressTint">?android:attr/textColorPrimary</item>
-        <item name="android:progressBackgroundTint">?android:attr/textColorTertiary</item>
-        <item name="android:clickable">true</item>
-        <item name="android:splitTrack">false</item>
-    </style>
-
+    <style name="Theme.Gramophone" parent="Common.Theme.Gramophone" />
     <style name="Base.Night.Theme.Splash" parent="Theme.SplashScreen">
-        <item name="viewInflaterClass">org.akanework.gramophone.logic.ui.ViewCompatInflater</item>
         <item name="postSplashScreenTheme">@style/Theme.Gramophone</item>
     </style>
-
     <style name="Base.Day.Theme.Splash" parent="Base.Night.Theme.Splash">
         <item name="android:windowLightStatusBar">true</item>
     </style>
-
     <style name="Impl.Day.Theme.Splash" parent="Base.Day.Theme.Splash" />
-
     <style name="Impl.Night.Theme.Splash" parent="Base.Night.Theme.Splash" />
-
     <style name="PreV31Day.Theme.Splash" parent="Impl.Day.Theme.Splash">
         <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_foreground</item>
         <item name="windowSplashScreenIconBackgroundColor">@color/ic_launcher_background</item>
     </style>
-
     <style name="PreV31Night.Theme.Splash" parent="Impl.Night.Theme.Splash">
         <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_foreground</item>
         <item name="windowSplashScreenIconBackgroundColor">@color/ic_launcher_background</item>
     </style>
-
     <style name="Day.Theme.Splash" parent="PreV31Day.Theme.Splash" />
-
     <style name="Night.Theme.Splash" parent="PreV31Night.Theme.Splash" />
-
     <style name="Theme.Splash" parent="Day.Theme.Splash" />
-
     <style name="Theme.AudioPreviewDialogTheme" parent="Theme.Gramophone">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowFrame">@null</item>
@@ -173,12 +39,5 @@
         <item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>
         <item name="android:colorBackgroundCacheHint">@null</item>
         <item name="android:windowActionModeOverlay">true</item>
-    </style>
-
-    <style name="AppTheme.AlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
-        <item name="dialogCornerRadius">28dp</item>
-        <item name="cornerFamily">rounded</item>
-        <item name="android:colorBackground">?attr/colorSurface</item>
-        <item name="android:layout" tools:ignore="PrivateResource">@layout/m3_alert_dialog</item>
     </style>
 </resources>

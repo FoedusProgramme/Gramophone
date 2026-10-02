@@ -11,7 +11,7 @@ plugins {
 
 android {
 	namespace = "org.nift4.baselineprofile"
-	compileSdk = 36
+	compileSdk = 37
 
 	compileOptions {
 		sourceCompatibility = JavaVersion.VERSION_21
@@ -21,9 +21,6 @@ android {
 		compilerOptions {
 			jvmTarget = JvmTarget.JVM_21
 			freeCompilerArgs = listOf(
-				"-Xno-param-assertions",
-				"-Xno-call-assertions",
-				"-Xno-receiver-assertions",
 				"-Xannotation-default-target=param-property", // can remove later
 			)
 		}
@@ -31,7 +28,7 @@ android {
 
 	defaultConfig {
 		minSdk = 28
-		targetSdk = 35
+		targetSdk = 37
 
 		testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 	}
@@ -60,8 +57,8 @@ baselineProfile {
 dependencies {
 	implementation("androidx.test.ext:junit:1.3.0")
 	implementation("androidx.test.espresso:espresso-core:3.7.0")
-	implementation("androidx.test.uiautomator:uiautomator:2.3.0")
-	implementation("androidx.benchmark:benchmark-macro-junit4:1.4.1")
+	implementation("androidx.test.uiautomator:uiautomator:2.4.0")
+	implementation("androidx.benchmark:benchmark-macro-junit4:1.5.0")
 }
 
 androidComponents {

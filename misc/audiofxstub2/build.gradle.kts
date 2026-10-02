@@ -4,9 +4,7 @@ plugins {
 
 android {
     namespace = "org.nift4.audiofxstub2"
-    compileSdk {
-        version = release(36)
-    }
+    compileSdk = 37
     defaultConfig {
         minSdk = 21
     }

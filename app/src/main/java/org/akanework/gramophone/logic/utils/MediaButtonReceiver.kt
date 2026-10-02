@@ -39,6 +39,7 @@ import org.akanework.gramophone.logic.mayThrowForegroundServiceStartNotAllowed
 import org.akanework.gramophone.logic.mayThrowForegroundServiceStartNotAllowedMiui
 import org.akanework.gramophone.logic.supportsNotificationPermission
 import org.akanework.gramophone.ui.MainActivity
+import org.akanework.gramophone.ui.intent.PlayIntents
 
 class MediaButtonReceiver : MediaButtonReceiver() {
 
@@ -93,7 +94,7 @@ class MediaButtonReceiver : MediaButtonReceiver() {
                         context,
                         PENDING_INTENT_NOTIFY_ID,
                         Intent(context, MainActivity::class.java)
-                            .putExtra(MainActivity.PLAYBACK_AUTO_START_FOR_FGS, true),
+                            .putExtra(PlayIntents.PLAYBACK_AUTO_START_FOR_FGS, true),
                         PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
                     )
                 )

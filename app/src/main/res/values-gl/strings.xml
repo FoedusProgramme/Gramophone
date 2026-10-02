@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-    <string name="home_menu_search">Buscar</string>
     <string name="home_menu_shuffle">Barallar todo</string>
     <string name="home_menu_refresh">Actualizar</string>
     <string name="category_songs">Cancións</string>
@@ -51,7 +50,6 @@
     <string name="unknown_playlist">Lista descoñecida</string>
     <string name="settings_category_appearance">Aparencia</string>
     <string name="album_artist">Artista do álbum</string>
-    <string name="unknown_version">Versión descoñecida</string>
     <string name="settings_version">Versión</string>
     <string name="dialog_title">Título</string>
     <string name="dialog_artist">Artista</string>
@@ -73,7 +71,6 @@
     <string name="layout">Disposición</string>
     <string name="home_menu_equalizer">Ecualizador</string>
     <string name="equalizer_not_found">Non hai ecualizador!</string>
-    <string name="compact_list">Lista (compacta)</string>
     <string name="check_for_updates">Accede á nosa canle de actualizacións!</string>
     <string name="settings_default_progress_bar">Barra de progreso predeterminada</string>
     <string name="settings_default_progress_bar_summary">Activar a barra de progreso co estilo de Material</string>
@@ -82,7 +79,6 @@
     <string name="settings_contributors_click">%s (ler máis)</string>
     <string name="home_menu_settings">Axustes</string>
     <string name="dialog_year">Ano</string>
-    <string name="now_playing">En reprodución</string>
     <string name="lyric_widget_description">Trebello que mostra a letra da reprodución actual</string>
     <string name="spk_channel_out_top_back_left">Arriba atrás á esquerda</string>
     <string name="spk_encoding_aac_lc">AAC-LC</string>
@@ -105,12 +101,8 @@
     <string name="settings_about_gramophone">Sobre a aplicación</string>
     <string name="settings_behavior_summary">Filtros, comportamentos</string>
     <string name="settings_category_links">Ligazóns</string>
-    <string name="settings_library">Biblioteca</string>
-    <string name="settings_library_summary">Xestionar biblioteca multimedia</string>
     <string name="settings_player_options">Audio</string>
     <string name="settings_player_options_summary">Calidade da saída, reprodución</string>
-    <string name="settings_customization">Personalización</string>
-    <string name="settings_customization_summary">Xestionar opcións de personalización</string>
     <string name="settings_album_round_corner">Canto redondeado do álbum</string>
     <string name="settings_title_bold">Título resaltado</string>
     <string name="settings_title_bold_summary">Usar letra grosa no reprodutor completo</string>
@@ -140,7 +132,6 @@
     <string name="settings_crash_application">Fallo na aplicación</string>
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
     <string name="album_cover">Portado do álbum</string>
-    <string name="dialog_edit_metadata">Editar</string>
     <string name="dialog_lyrics">Letras</string>
     <string name="delete_failed">Fallou o borrado da canción: %s</string>
     <string name="album_covers_enhance">Carga de portada mellorada</string>
@@ -160,23 +151,13 @@
     <string name="settings_preference_category_home">Inicio</string>
     <string name="tab_order">Establecer orde das pestanas</string>
     <string name="tab_order_summary">A app mostrará a primeira pestana no inicio. As pestanas após o divisor estarán ocultas.</string>
-    <string name="seekbar">Buscador</string>
-    <string name="divider">División</string>
-    <string name="back">Volver</string>
-    <string name="play_all">Reproducir todo</string>
     <string name="shuffle_all">Barallar todo</string>
-    <string name="sort">Orde</string>
-    <string name="scroll_to_albums">Desprazar ata álbums</string>
-    <string name="scroll_to_songs">Desprazar ata cancións</string>
     <string name="play">Reproducir</string>
     <string name="more">Máis</string>
-    <string name="remove">Eliminar</string>
     <string name="skip_next">Ir á seguinte</string>
     <string name="expand_less">Pechar</string>
     <string name="skip_previous">Ir á anterior</string>
     <string name="position_slider">Marcador de posición</string>
-    <string name="settings_lyrics_ui">Activar IU nova letra</string>
-    <string name="settings_lyrics_ui_summary">Interface experimental para mostrar a letra palabra a palabra con características avanzadas</string>
     <string name="settings_status_bar_lyrics_title">Letras na barra de estado</string>
     <string name="delete">Eliminar</string>
     <string name="settings_status_bar_lyrics_summary">Activar o método MeiZu para mostrar a letra na barra de estado (dispoñible só nalgúns dispositivos)</string>
@@ -290,8 +271,6 @@
     <string name="package_type_explainer">Calquera pode crear APKs de Gramophone, porque Gramophone é código aberto. Para axudar a lembrar de onde procede o APK, Gramophone proporciona o tipo de paquete. \n\nO tipo máis común é Release, que se obtén directamente desde F-Droid, Google Play, GitHub ou IzzyOnDroid.\nO tipo de paquete CI refírese ás versións automatizadas que se crean tras cada commit en GitHub. Estas versións poderían ser inestables.\nPara outros tipos de paquete o nome debería abondar para dar unha idea de onde procede o APK.</string>
     <string name="settings_open_source_licenses">Licenzas de Código aberto</string>
     <string name="failed_to_parse_lyric">Fallou o procesado da letra</string>
-    <string name="audio_signal_chain">Cadea do sinal de audio</string>
-    <string name="audio_not_initialized">O sistema de reprodución de audio non está iniciado. Intenta reproducir algo!</string>
     <string name="mix_port_flag_none">Nada</string>
     <string name="mix_port_flag_bit_perfect">Bit perfect</string>
     <string name="mix_port_flag_ultrasound">Ultrasound</string>
@@ -385,7 +364,6 @@
     <string name="settings_translation_auto_word">Tradución automática</string>
     <string name="settings_translation_auto_word_summary">Aplicar un gradiente lineal ás liñas traducidas na reprodución con letra sincronizada se a tradución non ten metadatos sincronizados por palabras</string>
     <string name="cannot_find_file">Non se atopa o ficheiro</string>
-    <string name="enter_msg_for_dev_here">Escribe aquí a mensaxe para o desenvolvedor</string>
     <string name="do_not_enter_email_enter_msg">Escribe a mensaxe, non un enderezo de correo</string>
     <string name="log_attachment">O rexistros vanse enviar automaticamente como un anexo</string>
     <string name="log_will_auto_send">O rexistros vanse enviar automaticamente, só tes que explicar o problema</string>
@@ -403,16 +381,6 @@
     <string name="refreshing_wait">Actualizando, agarda…</string>
     <string name="refresh_did_you_know">Gramophone mira se hai actualizacións nas listas cada vez que se inicia, e mentras está a funcionar, tamén detectará se hai novas cancións. Este botón «Actualizar» non volve a cargar o multimedia en Gramophone, se non que lle pide ao sistema volver a escanear todos os ficheiros das almacenaxes permanentes (por iso lle leva un pouco de tempo). Isto significa que, a non ser que o sistema ou outras apps non estean a funcionar correctamente, non precisarás usar nunca esta característica.\n\nFaltan algunhas cancións? Comproba o filtro de lonxitude mínima e os cartafoles ignorados en Axustes &gt; Comportamento, e confirma que teñen os valores agardados. Para outras posibles razóns mira as nósas PMF.</string>
     <string name="no_app_found">Non atopamos unha app para iso</string>
-    <string name="contributors_nift4">Mantemento / Desenvolvedora principal</string>
-    <string name="contributors_123duo3">Deseñadora principal</string>
-    <string name="contributors_akanetan">Creadora orixinal, fóra do proxecto</string>
-    <string name="contributors_developer">Desenvolvedora</string>
-    <string name="contributors_wstxda">deseñou unha versión da icona da app</string>
-    <string name="contributors_pxeemo">Axuda e proba o novo formato das letras</string>
-    <string name="contributors_lambada10">proporciona exemplos de letra e SongSync</string>
-    <string name="contributors_code_contributions">Colaboración no código</string>
-    <string name="contributors_yuyuko1024">A barra de progreso con ondas</string>
-    <string name="contributors_ghhccghk">Letras na barra de estado e outras melloras</string>
     <string name="home_menu_quick_refresh">Actualización rápida</string>
     <string name="add_to_queue">Engadir á cola</string>
     <string name="app_name">Gramophone</string>
@@ -423,7 +391,6 @@
     <string name="settings_audio_offload">Audio offload (para aforrar batería)</string>
     <string name="spk_encoding_pcm_20bit">20-bit PCM</string>
     <string name="spk_encoding_pcm_20bit_big_endian">20-bit PCM (big endian)</string>
-    <string name="timer_expiry_eos">O temporizador deterá a música cando finalice a canción en reprodución en %s</string>
     <string name="timer_expiry_end_of_this_song">O temporizador deterá a música cando finalice esta canción</string>
     <plurals name="folders_plural">
         <item quantity="one">%d Cartafol</item>
@@ -437,9 +404,8 @@
     <string name="settings_stop_on_dismiss_summary">Detén a reprodución cando a tarefa da app se desbota das recentes</string>
     <string name="compact_grid">Grella (compacta)</string>
     <string name="sort_by_album_year">Ano do álbum</string>
-    <string name="sort_by_album_artist_year"><![CDATA[Artista do album -&gt; ano]]></string>
+    <string name="sort_by_album_artist_year"><![CDATA[Artista do album -> ano]]></string>
     <string name="forbidden_symbol_error">Carácter non válido no nome</string>
-    <string name="translators">Traducións</string>
     <string name="settings_replaygain">ReplayGain</string>
     <string name="settings_replaygain_mode">Modo</string>
     <string name="settings_replaygain_preamp">Pre amp</string>
@@ -463,9 +429,8 @@
     <string name="settings_replaygain_no_rg_amp_desc">Reducir o volume para cancións que soan moi alto e que non teñen etiquetas ReplayGain</string>
     <string name="settings_replaygain_preamp_desc">Aumentar ou diminuír o volume das cancións con etiquetas ReplayGain. Os valores máis altos poderían causar perdas no rango dináminco para evitar solapamentos.</string>
     <string name="settings_replaygain_mode_desc">«Intelixente» conserva automáticamente a dinámica do álbum so cando se reproducen cancións de xeito consecutivo dun álbum.</string>
-    <string name="sort_by_artist_year"><![CDATA[Artist -&gt; ano]]></string>
+    <string name="sort_by_artist_year"><![CDATA[Artist -> ano]]></string>
     <string name="clear_queue">Limpar cola</string>
-    <string name="contributors_saladnoober">Control da calidade</string>
     <string name="actions_query_shuffle_all_songs">barallar todas as cancións</string>
     <string name="actions_query_shuffle_everything">barallar todo</string>
     <string name="actions_query_play_random_songs">reproducir cancións ao chou</string>
@@ -484,7 +449,6 @@
     <string name="save">Gardar</string>
     <string name="discard">Desbotar</string>
     <string name="discard_changes_msg">Queres desbotar os cambios realizados á lista «%s»?</string>
-    <string name="apply">Aplicar</string>
     <string name="restore_edits">Restablecer cambios?</string>
     <string name="restore_edits_msg">Hai cambios sen gardar para a lista «%s». Queres restablecer estes cambios, ou desbotalos e volver a comezar unha nova versión da lista de reprodución?</string>
     <string name="restore">Restablecer</string>
@@ -519,7 +483,6 @@
     <string name="mq_pin_queue">Fixar a cola</string>
     <string name="shuffled">%s (barallado)</string>
     <string name="loading_playlists">Cargando as listas…</string>
-    <string name="contributors_banksio">Android Auto</string>
     <string name="unfavorite">Retirar favorita</string>
     <string name="edit_mode">Entrar no modo edición</string>
     <string name="reverse_order">Orde inversa</string>

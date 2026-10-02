@@ -1,7 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <!-- Translatable -->
-    <string name="home_menu_search">Поиск</string>
     <string name="home_menu_settings">Настройки</string>
     <string name="home_menu_refresh">Обновить</string>
     <string name="category_songs">Треки</string>
@@ -58,7 +57,6 @@
     <string name="unknown_playlist">Неизвестный плейлист</string>
     <string name="settings_category_appearance">Оформление</string>
     <string name="album_artist">Исполнитель альбома</string>
-    <string name="unknown_version">Неизвестная версия</string>
     <string name="settings_version">Версия</string>
     <string name="dialog_title">Название</string>
     <string name="dialog_artist">Исполнитель</string>
@@ -82,14 +80,12 @@
     <string name="layout">Отображение</string>
     <string name="home_menu_equalizer">Эквалайзер</string>
     <string name="equalizer_not_found">Эквалайзер не найден!</string>
-    <string name="compact_list">Список (компактный)</string>
     <string name="settings_content_based_color">Цвета на основе контента</string>
     <string name="settings_default_progress_bar">Полоса прогресса по умолчанию</string>
     <string name="check_for_updates">Следите за обновлениями в нашем канале!</string>
     <string name="settings_content_based_color_summary">Включает генерацию цветов на основе обложки альбома</string>
     <string name="opensource_info">С открытым исходным кодом под лицензией GPL-3.0 \nАвторские права %s</string>
     <string name="playlist_favourite">Избранные</string>
-    <string name="now_playing">Сейчас играет</string>
     <string name="settings_default_progress_bar_summary">Включает полосу прогресса в стиле Material</string>
     <string name="settings_package_type">Тип пакета</string>
     <string name="no_lyric_found">Текст песни не найден</string>
@@ -101,19 +97,15 @@
     <string name="settings_title_center">Название по центру</string>
     <string name="settings_title_center_summary">Использует центрирование заголовка для плеера</string>
     <string name="settings_album_round_corner">Скругление углов обложки альбома</string>
-    <string name="settings_library_summary">Управление медиатекой</string>
     <string name="settings_player_ui">Интерфейс плеера</string>
     <string name="settings_behavior_summary">Фильтры, поведение при запуске</string>
     <string name="settings_about_gramophone">О приложении</string>
-    <string name="settings_customization_summary">Управление параметрами персонализации</string>
     <string name="settings_about_app">О приложении</string>
     <string name="settings_player_ui_summary">Интерфейс плеера и тексты песен</string>
     <string name="settings_player_options">Звук</string>
     <string name="settings_category_links">Ссылки</string>
     <string name="settings_appearance_summary">Внешний вид приложения</string>
     <string name="settings_player_options_summary">Качество вывода, поведение при воспроизведении</string>
-    <string name="settings_library">Библиотека</string>
-    <string name="settings_customization">Персонализация</string>
     <string name="settings_title_bold">Жирный заголовок</string>
     <string name="settings_title_bold_summary">Использует жирный заголовок для плеера</string>
     <string name="settings_experimental_settings">Экспериментальные</string>
@@ -136,7 +128,6 @@
     <string name="settings_blacklist_folder_summary">Фильтровать песни из определённых папок</string>
     <string name="settings_crash_application">Сбой приложения</string>
     <string name="delete_failed">Не удалось удалить песню: %s</string>
-    <string name="dialog_edit_metadata">Редактировать</string>
     <string name="album_cover">Обложка альбома</string>
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
     <string name="dialog_lyrics">Текст песни</string>
@@ -163,24 +154,14 @@
     <string name="settings_preference_category_home">Главный экран</string>
     <string name="tab_order">Настроить порядок вкладок</string>
     <string name="tab_order_summary">Приложение покажет первую вкладку при запуске. Вкладки после разделителя будут скрыты.</string>
-    <string name="seekbar">Панель поиска</string>
-    <string name="divider">Разделитель</string>
-    <string name="back">Назад</string>
-    <string name="play_all">Играть все</string>
     <string name="shuffle_all">Перемешать все</string>
-    <string name="sort">Сортировка</string>
-    <string name="scroll_to_albums">Перейти к альбомам</string>
-    <string name="scroll_to_songs">Перейти к песням</string>
     <string name="play">Играть</string>
     <string name="more">Больше</string>
-    <string name="remove">Убрать</string>
     <string name="skip_next">Перейти к следующему</string>
     <string name="expand_less">Закрыть</string>
     <string name="skip_previous">Перейти к предыдущему</string>
     <string name="position_slider">Ползунок положения</string>
-    <string name="settings_lyrics_ui">Включить новый дизайн текста песни</string>
     <string name="settings_status_bar_lyrics_title">Текст песни в строке состояния</string>
-    <string name="settings_lyrics_ui_summary">Экспериментальный дизайн с текстом песни по словам и расширенными возможностями</string>
     <string name="settings_status_bar_lyrics_summary">Включает метод показа текста песни MeiZu в строке состояния (доступно только на некоторых устройствах)</string>
     <string name="lyric_widget_description">Виджет, показывающий текст текущей песни</string>
     <string name="home_menu_shuffle">Перемешать всё</string>
@@ -189,7 +170,6 @@
     <string name="no">Нет</string>
     <string name="spk_channel_out_back_center">Задний Центральный</string>
     <string name="spk_channel_out_side_left">Левая сторона</string>
-    <string name="audio_not_initialized">Система аудио воспроизведение не запущена. Попробуйте воспроизвести что-нибудь!</string>
     <string name="spk_channel_out_7point1point2">7.1.2</string>
     <string name="spk_channel_out_low_frequency">Низкая частота</string>
     <string name="spk_channel_out_top_front_left">Верхний Передний Левый</string>
@@ -303,7 +283,6 @@
     <string name="crash_report">Отчёт о сбое</string>
     <string name="email_clipboard">Адрес электронной почты скопирован в буфер обмена</string>
     <string name="settings_export_logs">Экспорт логов программы</string>
-    <string name="audio_signal_chain">Звуковой тракт</string>
     <string name="settings_audio_quality_info_summary">Показать информацию о качестве/формате звука на экране плеера</string>
     <string name="device_type_wired_headphones">Проводные наушники</string>
     <string name="device_type_builtin_speaker">Встроенный динамик</string>
@@ -403,7 +382,6 @@
     <string name="rename_playlist">Переименовать плейлист</string>
     <string name="edit_playlist_failed">Не удалось отредактировать плейлист: %s</string>
     <string name="add_to_playlist">Добавить в плейлист</string>
-    <string name="enter_msg_for_dev_here">Введите сообщение для разработчика здесь</string>
     <string name="log_attachment">Журналы будут отправлены в виде вложения автоматически</string>
     <string name="did_you_know">Вы знали…</string>
     <string name="create_playlist">Создать плейлист…</string>
@@ -413,16 +391,6 @@
     <string name="rename">Переименовать</string>
     <string name="refresh_did_you_know">Gramophone обновляет список песен при каждом запуске приложения, а также автоматически обнаруживает новые медиафайлы во время своей работы. Кнопка «Обновить» не просто перезагружает медиатеку в Gramophone, а запрашивает у вашей системы полное повторное сканирование всех файлов на всех подключенных постоянных накопителях (именно поэтому процесс занимает некоторое время). Это означает, что если ваша система и другие приложения работают исправно, вам никогда не понадобится использовать эту функцию.\n\nНе хватает каких-то песен? Обязательно проверьте раздел «Настройки» &gt; «Поведение» на предмет фильтра по минимальной длительности и чёрного списка папок и убедитесь, что для этих параметров установлены ожидаемые значения. Чтобы узнать о других возможных причинах, пожалуйста, ознакомьтесь с нашим разделом FAQ.</string>
     <string name="no_app_found">Не найдено ни одного приложения, которое могло бы это сделать</string>
-    <string name="contributors_nift4">Ведущий разработчик</string>
-    <string name="contributors_123duo3">Ведущий дизайнер</string>
-    <string name="contributors_akanetan">Первоначальный создатель, разработчик, отошедший от дел</string>
-    <string name="contributors_developer">Разработчик</string>
-    <string name="contributors_wstxda">Разработал один вариант иконки приложения</string>
-    <string name="contributors_pxeemo">Помощь и тестирование новых текстов песен</string>
-    <string name="contributors_lambada10">Предоставление образцов текстов песен и данных SongSync</string>
-    <string name="contributors_code_contributions">Вклад в разработку</string>
-    <string name="contributors_yuyuko1024">Волнистая полоса прогресса</string>
-    <string name="contributors_ghhccghk">Текст песни в строке состояния и другие улучшения</string>
     <string name="home_menu_quick_refresh">Быстрое обновление</string>
     <string name="add_to_queue">Добавить в очередь</string>
     <string name="app_name">Gramophоne</string>
@@ -431,7 +399,6 @@
     <string name="offload_enabled_if_gapless">Включено, если возможно воспроизведение без пауз</string>
     <string name="settings_audio_offload">Аппаратная разгрузка аудио (экономит заряд батареи)</string>
     <string name="settings_telegram">Telegram</string>
-    <string name="timer_expiry_eos">Таймер сна приостановит воспроизведение, когда завершится композиция, которая будет играть в %s</string>
     <string name="timer_expiry_end_of_this_song">Таймер сна приостановит музыку по окончании этой композиции</string>
     <string name="spk_encoding_pcm_20bit">20-битный PCM</string>
     <string name="spk_encoding_pcm_20bit_big_endian">20-битный PCM (с прямым порядком байтов)</string>
@@ -449,9 +416,8 @@
     <string name="settings_cookie_info">Обложка-печенье</string>
     <string name="compact_grid">Сетка (компактная)</string>
     <string name="sort_by_album_year">Год альбома</string>
-    <string name="sort_by_album_artist_year"><![CDATA[Исполнитель альбома -&gt; Год]]></string>
+    <string name="sort_by_album_artist_year"><![CDATA[Исполнитель альбома -> Год]]></string>
     <string name="forbidden_symbol_error">Недопустимый символ в названии</string>
-    <string name="translators">Переводчики</string>
     <string name="settings_replaygain_drc_desc">Использовать \"Компрессию динамического диапазона\" для защиты от клиппинга (рекомендуется). Если отключено, громкость будет просто понижена (из-за чего она не будет оставаться на одном уровне, что сведёт на нет эффект нормализации).</string>
     <string name="settings_replaygain">ReplayGain</string>
     <string name="settings_replaygain_mode">Режим</string>
@@ -469,14 +435,13 @@
     <string name="tempo_pitch_value">%s: %.2fx</string>
     <string name="lock_tempo_pitch">Зафиксировать темп и высоту тона</string>
     <string name="reset">Сброс</string>
-    <string name="contributors_saladnoober">Контроль качества</string>
     <string name="settings_replaygain_boost">Усиление</string>
     <string name="d_db">%d дБ</string>
     <string name="settings_replaygain_boost_desc">"«Усиление» повышает громкость как для треков с ReplayGain, так и для обычной музыки, превышая стандартный уровень громкости устройства. (Если громкость устройства уже близка к 100%, «Усиление» не сработает). С этой функцией музыка будет звучать на одном уровне с другими приложениями, например, играми. Обратите внимание: функция экспериментальная и может конфликтовать со сторонними эквалайзерами. «Усиление» не работает с Bluetooth-наушниками. Если возникнут проблемы со звуком, отключите эту функцию, установив значение 0 дБ. "</string>
     <string name="settings_replaygain_no_rg_amp_desc">Снижать громкость для громких треков без тегов ReplayGain</string>
     <string name="settings_replaygain_preamp_desc">Увеличение или уменьшение громкости треков с тегами ReplayGain. Слишком высокие значения могут привести к потере динамики из-за защиты от клиппинга.</string>
     <string name="settings_replaygain_mode_desc">Режим «Умный» автоматически сохраняет динамику альбома только при последовательном прослушивании треков из него.</string>
-    <string name="sort_by_artist_year"><![CDATA[Исполнитель -&gt; год]]></string>
+    <string name="sort_by_artist_year"><![CDATA[Исполнитель -> год]]></string>
     <string name="clear_queue">Очистить очередь</string>
     <string name="actions_query_shuffle_all_songs">Перемешать все песни</string>
     <string name="actions_query_shuffle_everything">Перемешать всё</string>
@@ -497,7 +462,6 @@
     <string name="save">Сохранить</string>
     <string name="discard">Отменить</string>
     <string name="discard_changes_msg">Вы точно хотите отменить изменения в плейлисте \"%s\"?</string>
-    <string name="apply">Применить</string>
     <string name="restore_edits">Восстановить изменения?</string>
     <string name="restore_edits_msg">В плейлисте \"%s\" остались несохранённые изменения. Хотите восстановить эти изменения или удалить их и открыть первоначальную версию плейлиста?</string>
     <string name="restore">Восстановить</string>
@@ -533,7 +497,6 @@
     <string name="mq_pin_queue">Закрепить очередь</string>
     <string name="shuffled">%s (вперемешку)</string>
     <string name="loading_playlists">Загрузка плейлистов…</string>
-    <string name="contributors_banksio">Android Auto</string>
     <string name="unfavorite">Удалить из избранного</string>
     <string name="edit_mode">Изменить порядок</string>
     <string name="settings_notification_lyrics_title">Текст песни в уведомлении</string>

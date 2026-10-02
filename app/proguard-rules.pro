@@ -23,8 +23,8 @@
 # enabling obfuscation would break some self-reflection in the app
 -dontobfuscate
 
-# reflection by androidx via theme attr viewInflaterClass
--keep class org.akanework.gramophone.logic.ui.ViewCompatInflater { *; }
+# strip Kotlin null checks inserted by the compiler to reduce method count and overhead
+-processkotlinnullchecks remove
 
 # reflection by lyric getter xposed
 -keep class androidx.media3.common.util.Util {
