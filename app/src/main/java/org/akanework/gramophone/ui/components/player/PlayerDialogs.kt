@@ -51,6 +51,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.materialkolor.ktx.animateColorScheme
 import org.akanework.gramophone.R
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.SPEED_MAX
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.SPEED_MIN
@@ -82,7 +83,7 @@ fun PlayerDialogs(
 ) {
     if (dialog == null) return
     MaterialTheme(
-        colorScheme = scheme,
+        colorScheme = animateColorScheme(scheme),
         typography = MaterialTheme.typography,
         shapes = MaterialTheme.shapes,
     ) {

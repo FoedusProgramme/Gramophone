@@ -17,27 +17,13 @@
 
 package org.akanework.gramophone.ui.components.player
 
-import org.akanework.gramophone.logic.showsPause
-import androidx.compose.ui.graphics.lerp
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.animation.animateColorAsState
 import android.net.Uri
 import android.os.Build
 import android.view.RoundedCorner
-import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.graphics.ExperimentalAnimationGraphicsApi
-import androidx.compose.animation.graphics.res.animatedVectorResource
-import androidx.compose.animation.graphics.res.rememberAnimatedVectorPainter
-import androidx.compose.animation.graphics.vector.AnimatedImageVector
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.draggable
-import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -46,8 +32,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -60,42 +44,50 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.State
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.integerResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.hideFromAccessibility
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.media3.common.Player
 import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import coil3.request.error
 import coil3.size.Precision
-import com.materialkolor.ktx.animateColorScheme
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import org.akanework.gramophone.R
+import org.akanework.gramophone.logic.showsPause
 import org.akanework.gramophone.ui.components.compose.rememberBooleanPreference
 import org.akanework.gramophone.ui.components.compose.rememberIntPreference
 import org.akanework.gramophone.ui.components.home.rememberDefaultCoverPainter
@@ -116,44 +108,48 @@ import org.akanework.gramophone.ui.nav.NAV_TRANSITION_MS
 import org.akanework.gramophone.ui.nav.NavAxisEasing
 import kotlin.math.roundToInt
 
-/** Insets and visibility of the sheet, provided by [PlayerSheetController]. */
-data class SheetChrome(
-    val shown: Boolean,
+/** The system bar and cutout insets (px) the sheet spans, which its content keeps clear of. */
+@Immutable
+data class SheetInsets(
     val left: Int,
-    val right: Int,
     val top: Int,
+    val right: Int,
     val bottom: Int,
 )
 
-/** Playback state the mini bar + full player render, bridged from the MediaController by the host. */
-class PlayerSheetPlayerState {
-    val hasMedia = MutableStateFlow(false)
-    val isPlaying = MutableStateFlow(false)
+/**
+ * Playback state the mini bar and the full player render, written from the MediaController and
+ * the service by the sheet's host. Snapshot state, only written on the main thread.
+ */
+@Stable
+class PlayerSheetPlayerState(
+    /** Where playback is, shared with the lyrics. */
+    val clock: PlaybackClock,
+) {
+    var isPlaying by mutableStateOf(false)
+
     /** What the play/pause buttons show, see [showsPause]. */
-    val showPause = MutableStateFlow(false)
-    val title: MutableStateFlow<CharSequence?> = MutableStateFlow(null)
-    val artist: MutableStateFlow<CharSequence?> = MutableStateFlow(null)
-    val artworkUri: MutableStateFlow<Uri?> = MutableStateFlow(null)
-    val positionFraction = MutableStateFlow(0f)
+    var showPause by mutableStateOf(false)
+    var title by mutableStateOf<CharSequence?>(null)
+    var artist by mutableStateOf<CharSequence?>(null)
+    var artworkUri by mutableStateOf<Uri?>(null)
+    val positionFraction: Float
+        get() = clock.fraction
 
     // Full player
-    val positionMs = MutableStateFlow(0L)
-    val durationMs = MutableStateFlow(0L)
-    val repeatMode = MutableStateFlow(0) // Player.REPEAT_MODE_OFF/ONE/ALL
-    val shuffleMode = MutableStateFlow(false)
-    val isFavorite = MutableStateFlow(false)
-    val timerActive = MutableStateFlow(false)
-    val qualityIcon: MutableStateFlow<Int?> = MutableStateFlow(null)
-    val qualityText: MutableStateFlow<String?> = MutableStateFlow(null)
-
-    /** Whether the lyrics overlay fully covers the player (see [LyricsOverlayState.covering]). */
-    val lyricsCovering = MutableStateFlow(false)
+    val positionMs: Long
+        get() = clock.positionMs
+    val durationMs: Long
+        get() = clock.durationMs
+    var repeatMode by mutableIntStateOf(Player.REPEAT_MODE_OFF)
+    var shuffleMode by mutableStateOf(false)
+    var isFavorite by mutableStateOf(false)
+    var timerActive by mutableStateOf(false)
+    var qualityIcon by mutableStateOf<Int?>(null)
+    var qualityText by mutableStateOf<String?>(null)
 }
 
-/**
- * Actions the full player triggers on the MediaController / host. Wired in the host. The not-yet-
- * migrated ones (dialogs, toggles) are filled in over the incremental steps.
- */
+/** Actions the mini bar and the full player trigger on the MediaController / host. */
 class FullPlayerActions(
     val playPause: () -> Unit,
     val previous: () -> Unit,
@@ -169,150 +165,162 @@ class FullPlayerActions(
     val showLyrics: () -> Unit,
     val openAlbum: () -> Unit,
     val openArtist: () -> Unit,
+    /** The expanded cover was tapped: open the song's details. */
+    val openSongDetails: () -> Unit,
 )
 
+/**
+ * The floating mini bar, which [state] expands into the full screen player, over a scrim. It
+ * spans the system bars and cutouts, [insets], and keeps its content clear of them.
+ */
 @Composable
 fun PlayerSheet(
     state: NowPlayingSheetState,
     player: PlayerSheetPlayerState,
-    chrome: State<SheetChrome>,
+    insets: SheetInsets,
     /** Whether the current page is themed from a cover, where the bar isn't harmonized. */
-    pageTinted: () -> Boolean,
+    pageTinted: Boolean,
     lyrics: LyricsOverlayState,
-    onPlayPause: () -> Unit,
-    onNext: () -> Unit,
-    onCoverClick: () -> Unit,
-    onExpandedTargetChanged: (Boolean) -> Unit,
-    /**
-     * Receives a draw-phase check of whether the sheet covers the whole screen (fully expanded
-     * and slid in), so the host can skip drawing the pages under it.
-     */
-    onCoversScreen: (() -> Boolean) -> Unit,
     actions: FullPlayerActions,
     dialogCallbacks: PlayerDialogCallbacks,
+    modifier: Modifier = Modifier,
 ) {
     val density = LocalDensity.current
-    val c = chrome.value
-    val hasMedia by player.hasMedia.collectAsState()
-    val artworkUri by player.artworkUri.collectAsState()
     val cookieCover = rememberBooleanPreference("cookie_cover", false).value
     val expandedArtCorner = rememberIntPreference(
         "album_round_corner", integerResource(R.integer.round_corner_radius)
     ).value.dp
-    val coverScheme = animateColorScheme(rememberArtworkColorScheme(artworkUri))
-    var activeDialog by remember { mutableStateOf<PlayerDialog?>(null) }
-    PlayerDialogs(activeDialog, coverScheme, dialogCallbacks, onDismiss = { activeDialog = null })
-
-    val expandedTarget = state.expandedTarget
-    SideEffect { onExpandedTargetChanged(expandedTarget) }
-
-    // Slide the whole sheet down by its collapsed height when there is nothing to show. Uses the
-    // page transition's duration and easing, so the bar does not disappear faster than the page
-    // when entering or leaving settings.
-    val showFraction = animateFloatAsState(
-        targetValue = if (c.shown && hasMedia) 1f else 0f,
-        animationSpec = tween(NAV_TRANSITION_MS, easing = NavAxisEasing),
-        label = "sheet show",
+    // Its colours are read in the draw phase where they can be, so a song change's colour
+    // animation mostly redraws instead of recomposing the player every frame.
+    val targetScheme = rememberArtworkColorScheme(player.artworkUri)
+    // Without a cover it's the app theme, which animates by itself when the theme changes
+    val coverScheme = rememberAnimatedColorScheme(
+        targetScheme, live = targetScheme === MaterialTheme.colorScheme,
     )
-    // The expanded sheet's surface is opaque and square-cornered at full progress. Read in the
-    // draw phase: the frame the sheet starts to move (drag, back gesture, collapse) draws what's
-    // under it again.
-    val coversScreen = remember(state, showFraction) {
-        { state.progress >= 1f && showFraction.value >= 1f }
-    }
-    SideEffect { onCoversScreen(coversScreen) }
+    var activeDialog by remember { mutableStateOf<PlayerDialog?>(null) }
+    PlayerDialogs(
+        activeDialog, coverScheme.target, dialogCallbacks, onDismiss = { activeDialog = null },
+    )
 
     // How far the bar leans towards the app's hue: fully, except on a page themed from a cover,
     // which shows the cover's own colours. Animated with the page transition. Only read in the
     // draw phase and in the mini bar content, so the animation does not recompose the sheet on
     // every frame.
     val harmony = animateFloatAsState(
-        if (pageTinted()) 0f else 1f,
+        if (pageTinted) 0f else 1f,
         tween(NAV_TRANSITION_MS, easing = NavAxisEasing),
         label = "page harmony",
     )
     val appPrimary = rememberUpdatedState(MaterialTheme.colorScheme.primary)
     val barColors = remember(coverScheme) {
-        derivedStateOf { nowPlayingColors(coverScheme, appPrimary.value, harmony.value) }
+        derivedStateOf { nowPlayingColors(appPrimary.value, harmony.value, coverScheme::color) }
     }
     val miniColors = remember(coverScheme) {
         derivedStateOf {
             val primary = appPrimary.value
             val f = harmony.value
             MiniBarColors(
-                content = coverScheme.onSurface.harmonizeBy(primary, f),
-                playButton = coverScheme.secondaryContainer.harmonizeBy(primary, f),
-                onPlayButton = coverScheme.onSecondaryContainer.harmonizeBy(primary, f),
+                content = coverScheme.color { onSurface }.harmonizeBy(primary, f),
+                playButton = coverScheme.color { secondaryContainer }.harmonizeBy(primary, f),
+                onPlayButton = coverScheme.color { onSecondaryContainer }.harmonizeBy(primary, f),
             )
         }
     }
-    BoxWithConstraints(Modifier.fillMaxSize()) {
+    BoxWithConstraints(modifier.fillMaxSize()) {
         val rootW = constraints.maxWidth.toFloat()
         val rootH = constraints.maxHeight.toFloat()
         val isWideLandscape = maxWidth >= WIDE_LANDSCAPE_MIN_WIDTH.dp && maxWidth > maxHeight
-        val metrics = playerSheetMetrics(
-            progress = state.progress,
-            rootWidth = rootW,
-            rootHeight = rootH,
-            statusTop = c.top.toFloat(),
-            bottomInset = c.bottom.toFloat(),
-            leftInset = c.left.toFloat(),
-            rightInset = c.right.toFloat(),
-            isWideLandscape = isWideLandscape,
-            pageCorner = deviceScreenCornerRadius(),
-            density = density,
-            expandedArtCorner = expandedArtCorner,
-        )
-        state.travelPx = metrics.travelPx
+        val pageCorner = deviceScreenCornerRadius()
+        val geometry = remember(
+            rootW, rootH, insets, isWideLandscape, pageCorner, density, expandedArtCorner,
+        ) {
+            SheetGeometry(
+                rootWidth = rootW,
+                rootHeight = rootH,
+                statusTop = insets.top.toFloat(),
+                bottomInset = insets.bottom.toFloat(),
+                leftInset = insets.left.toFloat(),
+                rightInset = insets.right.toFloat(),
+                isWideLandscape = isWideLandscape,
+                pageCorner = pageCorner,
+                expandedArtCorner = expandedArtCorner,
+                density = density,
+            )
+        }
+        // The sheet at the current progress. Only read in the layout and draw phases, so a moving
+        // sheet lays out and draws again without recomposing every frame.
+        val current = remember(geometry) { derivedStateOf { geometry.frameAt(state.progress) } }
+        val frame = remember(current) { { current.value } }
+        state.travelPx = geometry.travelPx
 
         // Scrim behind the sheet (only meaningful mid/late morph; fully covered at progress = 1,
         // where it isn't drawn).
-        val scrimAlpha = (metrics.eased * SCRIM_MAX_ALPHA).coerceIn(0f, 1f)
+        // Faded in its own layer, so it doesn't redraw what's around it every frame.
         Box(
             Modifier
                 .fillMaxSize()
-                .drawBehind { if (scrimAlpha > 0f && !coversScreen()) drawRect(Color.Black, alpha = scrimAlpha) },
+                .graphicsLayer {
+                    alpha = (frame().progress * SCRIM_MAX_ALPHA).coerceIn(0f, 1f)
+                    // A single rect: no offscreen buffer needed to fade it
+                    compositingStrategy = CompositingStrategy.ModulateAlpha
+                }
+                .drawBehind { if (!state.coversScreen) drawRect(Color.Black) },
         )
 
         Box(
             Modifier
                 .fillMaxSize()
-                // Slide the whole floating sheet fully below the screen when there's nothing to show.
-                .graphicsLayer { translationY = (1f - showFraction.value) * metrics.collapsedFootprint },
+                // Slide the whole floating sheet fully below the screen when there's nothing to
+                // show.
+                .graphicsLayer {
+                    translationY = (1f - state.shownFraction) * geometry.collapsedFootprint
+                },
         ) {
             // Under the lyrics while they cover the whole screen, the surface isn't drawn
-            SheetSurface(metrics, hidden = { coversScreen() && lyrics.covering }) { barColors.value.bar }
-            ProgressFill(player, metrics) { barColors.value.fill }
+            SheetSurface(frame, hidden = { state.coversScreen && lyrics.covering }) {
+                barColors.value.bar
+            }
+            ProgressFill(player, frame) { barColors.value.fill }
             FullPlayerContent(
-                state, metrics, player, actions, coverScheme, lyrics,
+                state, frame, geometry, player, actions, coverScheme, lyrics,
                 onOpenDialog = { activeDialog = it },
             )
-            val fullyExpanded = state.expandedTarget && metrics.eased > SETTLED_EPS
-            if (!fullyExpanded) {
-                SheetInteraction(
-                    state, player, metrics, { miniColors.value }, onPlayPause, onNext,
-                )
+            val fullyExpanded by remember(state) {
+                derivedStateOf { state.expandedTarget && state.progress > SETTLED_EPS }
             }
-            SharedArtwork(state, player, metrics, cookie = cookieCover, onCoverClick = onCoverClick)
+            if (!fullyExpanded) {
+                SheetInteraction(state, player, geometry, frame, { miniColors.value }, actions)
+            }
+            SharedArtwork(
+                state, player, lyrics, frame, geometry.rootWidth, cookie = cookieCover,
+                onClick = actions.openSongDetails,
+            )
         }
     }
 }
 
 /** Mini bar text and play button colors. */
 @Immutable
-private data class MiniBarColors(val content: Color, val playButton: Color, val onPlayButton: Color)
+private data class MiniBarColors(
+    val content: Color,
+    val playButton: Color,
+    val onPlayButton: Color,
+)
 
 /** Sheet background: [collapsedColor] when collapsed, the surface color when expanded. */
 @Composable
-private fun SheetSurface(metrics: PlayerSheetMetrics, hidden: () -> Boolean, collapsedColor: () -> Color) {
+private fun SheetSurface(
+    frame: () -> SheetFrame,
+    hidden: () -> Boolean,
+    collapsedColor: () -> Color,
+) {
     val expanded = MaterialTheme.colorScheme.surface
     Box(
         Modifier
-            .absolute(metrics.sheetLeft, metrics.sheetTop, metrics.sheetWidth, metrics.sheetHeight)
-            .clip(RoundedCornerShape(metrics.cornerDp))
+            .onSheet(frame)
             .drawBehind {
                 if (hidden()) return@drawBehind
-                drawRect(lerp(collapsedColor(), expanded, metrics.eased.coerceIn(0f, 1f)))
+                drawRect(lerp(collapsedColor(), expanded, frame().progress.coerceIn(0f, 1f)))
             },
     )
 }
@@ -321,22 +329,20 @@ private fun SheetSurface(metrics: PlayerSheetMetrics, hidden: () -> Boolean, col
 @Composable
 private fun ProgressFill(
     player: PlayerSheetPlayerState,
-    metrics: PlayerSheetMetrics,
+    frame: () -> SheetFrame,
     color: () -> Color,
 ) {
-    val fraction by player.positionFraction.collectAsState()
-    val alpha = miniContentAlpha(metrics.eased)
-    if (alpha <= 0f) return
+    val shown by remember(frame) { derivedStateOf { miniContentAlpha(frame().progress) > 0f } }
+    if (!shown) return
     Box(
         Modifier
-            .absolute(metrics.sheetLeft, metrics.sheetTop, metrics.sheetWidth, metrics.sheetHeight)
-            .alpha(alpha)
-            .clip(RoundedCornerShape(metrics.cornerDp)),
+            .onSheet(frame)
+            .graphicsLayer { alpha = miniContentAlpha(frame().progress) },
     ) {
         Box(
             Modifier
                 .fillMaxHeight()
-                .fillMaxWidth(fraction.coerceIn(0f, 1f))
+                .fillMaxWidth(player.positionFraction.coerceIn(0f, 1f))
                 .drawBehind { drawRect(color()) },
         )
     }
@@ -346,47 +352,47 @@ private fun ProgressFill(
 private fun SheetInteraction(
     state: NowPlayingSheetState,
     player: PlayerSheetPlayerState,
-    metrics: PlayerSheetMetrics,
+    geometry: SheetGeometry,
+    frame: () -> SheetFrame,
     colors: () -> MiniBarColors,
-    onPlayPause: () -> Unit,
-    onNext: () -> Unit,
+    actions: FullPlayerActions,
 ) {
-    val density = LocalDensity.current
     val interaction = remember { MutableInteractionSource() }
-    val contentAlpha = miniContentAlpha(metrics.eased)
+    val contentShown by remember(frame) {
+        derivedStateOf { miniContentAlpha(frame().progress) > 0f }
+    }
+    val tapExpands by remember(frame) { derivedStateOf { frame().progress < TAP_EXPAND_LIMIT } }
 
     Box(
         Modifier
-            .absolute(metrics.sheetLeft, metrics.sheetTop, metrics.sheetWidth, metrics.sheetHeight)
-            .draggable(
-                state = rememberDraggableState { delta -> state.onDrag(delta) },
-                orientation = Orientation.Vertical,
-                onDragStopped = { velocity -> state.settle(velocity) },
-            )
+            .absolute { frame().sheetBounds }
+            .sheetDrag(state)
             .clickable(
                 interactionSource = interaction,
                 indication = null,
-                enabled = metrics.eased < TAP_EXPAND_LIMIT,
+                enabled = tapExpands,
                 onClick = state::expand,
             ),
     ) {
-        if (contentAlpha > 0f) {
+        if (contentShown) {
             val (contentColor, playButtonContainer, playButtonContent) = colors()
-            val title by player.title.collectAsState()
-            val artist by player.artist.collectAsState()
-            val showPause by player.showPause.collectAsState()
+            val title = player.title
+            val artist = player.artist
 
-            // Leave room for the cover slot
-            val startPadding = with(density) {
-                (metrics.collapsedArtLeft - metrics.sheetLeft + metrics.collapsedArtSize +
-                    MINI_ART_TO_TEXT_GAP.toPx()).toDp()
-            }
             Row(
                 Modifier
-                    .fillMaxWidth()
-                    .height(with(density) { metrics.collapsedHeight.toDp() })
-                    .alpha(contentAlpha)
-                    .padding(start = startPadding, end = 8.dp),
+                    // The mini bar's height across the sheet, leaving room for the cover slot
+                    .layout { measurable, constraints ->
+                        val sheetLeft = frame().sheetBounds.left
+                        val start = (geometry.collapsedArtLeft - sheetLeft +
+                            geometry.collapsedArtSize + MINI_ART_TO_TEXT_GAP.toPx()).roundToInt()
+                        val width =
+                            (constraints.maxWidth - start - 8.dp.roundToPx()).coerceAtLeast(0)
+                        val height = geometry.collapsedHeight.roundToInt()
+                        val placeable = measurable.measure(Constraints.fixed(width, height))
+                        layout(constraints.maxWidth, height) { placeable.placeRelative(start, 0) }
+                    }
+                    .graphicsLayer { alpha = miniContentAlpha(frame().progress) },
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
@@ -397,7 +403,9 @@ private fun SheetInteraction(
                         val a = artist?.toString().orEmpty()
                         if (a.isNotEmpty()) {
                             append("  ·  ")
-                            withStyle(SpanStyle(color = contentColor.copy(alpha = 0.7f))) { append(a) }
+                            withStyle(SpanStyle(color = contentColor.copy(alpha = 0.7f))) {
+                                append(a)
+                            }
                         }
                     }
                 }
@@ -410,7 +418,7 @@ private fun SheetInteraction(
                     overflow = TextOverflow.Ellipsis,
                 )
                 FilledIconButton(
-                    onClick = onPlayPause,
+                    onClick = actions.playPause,
                     modifier = Modifier.size(MINI_BUTTON_SIZE),
                     shape = CircleShape,
                     colors = IconButtonDefaults.filledIconButtonColors(
@@ -418,9 +426,13 @@ private fun SheetInteraction(
                         contentColor = playButtonContent,
                     ),
                 ) {
-                    PlayPauseIcon(playing = showPause, tint = playButtonContent, modifier = Modifier.size(MINI_ICON_SIZE))
+                    PlayPauseIcon(
+                        playing = player.showPause,
+                        tint = playButtonContent,
+                        modifier = Modifier.size(MINI_ICON_SIZE),
+                    )
                 }
-                IconButton(onClick = onNext, modifier = Modifier.size(MINI_BUTTON_SIZE)) {
+                IconButton(onClick = actions.next, modifier = Modifier.size(MINI_BUTTON_SIZE)) {
                     Icon(
                         imageVector = Icons.Outlined.SkipNext,
                         contentDescription = null,
@@ -433,34 +445,29 @@ private fun SheetInteraction(
     }
 }
 
-@OptIn(ExperimentalAnimationGraphicsApi::class)
-@Composable
-internal fun PlayPauseIcon(playing: Boolean, tint: Color, modifier: Modifier = Modifier) {
-    val image = AnimatedImageVector.animatedVectorResource(R.drawable.ic_play_to_pause_anim)
-    val painter = rememberAnimatedVectorPainter(image, atEnd = playing)
-    Icon(painter = painter, contentDescription = null, tint = tint, modifier = modifier)
-}
-
 @Composable
 private fun SharedArtwork(
     state: NowPlayingSheetState,
     player: PlayerSheetPlayerState,
-    metrics: PlayerSheetMetrics,
+    lyrics: LyricsOverlayState,
+    frame: () -> SheetFrame,
+    rootWidth: Float,
     cookie: Boolean,
-    onCoverClick: () -> Unit,
+    onClick: () -> Unit,
 ) {
-    val artwork by player.artworkUri.collectAsState()
-    // Fade the shared cover out of the way when the lyric overlay covers the player
-    val lyricsCovering by player.lyricsCovering.collectAsState()
+    val artwork = player.artworkUri
+    // Fade the shared cover out of the way when the lyric overlay covers the player. Derived, so
+    // the lyrics' fade and back gesture don't recompose the cover every frame.
+    val lyricsCovering by remember(lyrics) { derivedStateOf { lyrics.covering } }
     val coverAlpha by animateFloatAsState(
         targetValue = if (lyricsCovering) 0f else 1f,
         animationSpec = tween(LYRIC_COVER_FADE_MS),
         label = "cover lyrics fade",
     )
 
-    val shape = if (cookie) CookieMorphShape(metrics.eased) else RoundedCornerShape(metrics.artCornerDp)
     val context = LocalPlatformContext.current
-    val requestSizePx = metrics.rootWidth.roundToInt().coerceAtLeast(1)
+    val coverDescription = stringResource(R.string.dialog_album)
+    val requestSizePx = rootWidth.roundToInt().coerceAtLeast(1)
     // No artwork loads as a null request, which shows the default cover through the fallback.
     val request = remember(artwork, requestSizePx) {
         ImageRequest.Builder(context)
@@ -470,35 +477,31 @@ private fun SharedArtwork(
             .build()
     }
 
-    val clickModifier =
-        if (metrics.eased > COVER_CLICK_MIN) Modifier.clickable(onClick = onCoverClick) else Modifier
-    val dragState = rememberDraggableState { delta -> state.onDrag(delta) }
-    val gestures =
-        if (lyricsCovering) Modifier
-        else Modifier
-            .draggable(
-                state = dragState,
-                orientation = Orientation.Vertical,
-                onDragStopped = { velocity -> state.settle(velocity) },
-            )
-            .then(clickModifier)
-    Box(
-        Modifier
-            .absolute(metrics.sheetLeft, metrics.sheetTop, metrics.sheetWidth, metrics.sheetHeight)
-            .clip(RoundedCornerShape(metrics.cornerDp)),
-    ) {
+    val coverClickable by remember(frame) {
+        derivedStateOf { frame().progress > COVER_CLICK_MIN }
+    }
+    val clickModifier = if (coverClickable) Modifier.clickable(onClick = onClick) else Modifier
+    val gestures = if (lyricsCovering) Modifier else Modifier.sheetDrag(state).then(clickModifier)
+    Box(Modifier.onSheet(frame)) {
         CrossfadeArtwork(
             request = request,
             modifier = Modifier
-                .absolute(
-                    metrics.artLeftRoot - metrics.sheetLeft,
-                    metrics.artTopRoot - metrics.sheetTop,
-                    metrics.artSize,
-                    metrics.artSize,
-                )
-                .alpha(coverAlpha)
-                .clip(shape)
+                .absolute { frame().artBounds }
+                .graphicsLayer {
+                    val f = frame()
+                    alpha = coverAlpha
+                    shape = if (cookie) {
+                        CookieMorphShape(f.progress)
+                    } else {
+                        RoundedCornerShape(f.artCorner)
+                    }
+                    clip = true
+                }
                 .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                .semantics {
+                    contentDescription = coverDescription
+                    if (lyricsCovering) hideFromAccessibility()
+                }
                 .then(gestures),
         )
     }
@@ -507,11 +510,6 @@ private fun SharedArtwork(
 /** How long a new cover takes to fade in over the previous one. */
 private const val ART_CROSSFADE_MS = 300
 
-/** One cover in [CrossfadeArtwork]'s stack. */
-private class ArtworkLayer(val request: ImageRequest, initialAlpha: Float) {
-    val alpha = Animatable(initialAlpha)
-}
-
 /**
  * The cover, which keeps showing the previous song's cover until the new one has loaded (like the
  * View player's loadNoPlaceholder) and then fades the new one in over it.
@@ -519,27 +517,23 @@ private class ArtworkLayer(val request: ImageRequest, initialAlpha: Float) {
 @Composable
 private fun CrossfadeArtwork(request: ImageRequest, modifier: Modifier) {
     val scope = rememberCoroutineScope()
-    // Drawn with its glyph at the shared share, like every other default cover.
+    // Drawn with its glyph at DEFAULT_COVER_GLYPH_SHARE, like every other default cover.
     val defaultCover = rememberDefaultCoverPainter(R.drawable.ic_default_cover)
-    val layers = remember { mutableStateListOf<ArtworkLayer>() }
-    if (layers.lastOrNull()?.request != request) {
-        // The very first cover shows as soon as it loads, later ones fade in over the last.
-        layers += ArtworkLayer(request, initialAlpha = if (layers.isEmpty()) 1f else 0f)
+    // The very first cover shows as soon as it loads, later ones fade in over the last. A new one
+    // is stacked after the composition that sees it, not by writing the stack while reading it.
+    val covers = remember { CrossfadeStack(request) }
+    SideEffect {
+        if (covers.top != request) covers.push(request)
     }
     Box(modifier) {
-        for (layer in layers) {
+        for (layer in covers.layers) {
             key(layer) {
                 val onLoaded = {
-                    scope.launch {
-                        layer.alpha.animateTo(1f, tween(ART_CROSSFADE_MS))
-                        // Now opaque: drop the covers under it.
-                        val index = layers.indexOf(layer)
-                        if (index > 0) layers.removeRange(0, index)
-                    }
+                    scope.launch { covers.fadeIn(layer, tween(ART_CROSSFADE_MS)) }
                     Unit
                 }
                 AsyncImage(
-                    model = layer.request,
+                    model = layer.value,
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     error = defaultCover,
@@ -548,7 +542,7 @@ private fun CrossfadeArtwork(request: ImageRequest, modifier: Modifier) {
                     onError = { onLoaded() },
                     modifier = Modifier
                         .matchParentSize()
-                        .graphicsLayer { alpha = layer.alpha.value },
+                        .graphicsLayer { alpha = layer.fraction.value },
                 )
             }
         }

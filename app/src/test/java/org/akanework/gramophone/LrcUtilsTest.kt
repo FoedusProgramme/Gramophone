@@ -17,7 +17,6 @@
 
 package org.akanework.gramophone
 
-import android.app.Application
 import androidx.media3.common.MimeTypes
 import org.akanework.gramophone.logic.utils.LrcUtils
 import org.akanework.gramophone.logic.utils.SemanticLyrics
@@ -31,11 +30,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import org.robolectric.annotation.Config
 
-// Plain Application: these tests don't need the Koin graph, and GramophoneApplication would
-// start Koin's static global context once per test.
-@Config(application = Application::class)
 @RunWith(RobolectricTestRunner::class)
 class LrcUtilsTest {
 

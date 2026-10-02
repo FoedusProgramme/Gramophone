@@ -21,7 +21,6 @@ import android.content.ContentUris
 import android.content.Context
 import android.net.Uri
 import android.os.Build
-import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
@@ -76,6 +75,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.akanework.gramophone.R
+import org.akanework.gramophone.logic.playlistUri
 import org.akanework.gramophone.ui.components.compose.DismissibleRow
 import org.akanework.gramophone.ui.components.compose.rememberReorderableListState
 import org.akanework.gramophone.ui.components.compose.reorderHandle
@@ -86,8 +86,8 @@ import org.akanework.gramophone.ui.components.home.GlassTitleBar
 import org.akanework.gramophone.ui.components.home.LibraryIconButton
 import org.akanework.gramophone.ui.components.home.libraryCellShape
 import org.akanework.gramophone.ui.components.home.libraryItemCard
-import org.nift4.mediastorecompat.MediaStoreCompat
 import org.koin.compose.koinInject
+import org.nift4.mediastorecompat.MediaStoreCompat
 import uk.akane.libphonograph.dynamicitem.Favorite
 import uk.akane.libphonograph.items.Playlist
 import uk.akane.libphonograph.manipulator.ItemManipulator
@@ -122,9 +122,7 @@ private class PlaylistEditState(
     private val onBack: () -> Unit,
 ) {
     private val context: Context = context.applicationContext
-    private val uri: Uri = ContentUris.withAppendedId(
-        @Suppress("deprecation") MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, id
-    )
+    private val uri: Uri = playlistUri(id)
     var title by mutableStateOf("")
         private set
     var loaded by mutableStateOf(false)
@@ -293,16 +291,19 @@ private class PlaylistEditState(
         }
     }
 
-    private fun missingItem(entry: PlaylistSerializer.Entry): MediaItem =
-        MediaItem.Builder().setMediaId("Missing:${entry.locations.firstOrNull()}")
-            .setUri(entry.locations.firstOrNull())
+    private fun missingItem(entry: PlaylistSerializer.Entry): MediaItem {
+        // Shown by where the song was; an entry without a location shows the usual unknowns
+        val location = entry.locations.firstOrNull()
+        return MediaItem.Builder().setMediaId("Missing:$location")
+            .setUri(location)
             .setMediaMetadata(
                 MediaMetadata.Builder()
-                    .setTitle("${entry.locations.firstOrNull()?.lastPathSegment}")
-                    .setArtist("${entry.locations.firstOrNull()}")
+                    .setTitle(location?.lastPathSegment ?: location?.toString())
+                    .setArtist(location?.toString())
                     .build()
             )
             .build()
+    }
 
     fun move(from: Int, to: Int) {
         if (from == to) return

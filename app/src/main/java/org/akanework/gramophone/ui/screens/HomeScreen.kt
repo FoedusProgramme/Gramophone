@@ -47,29 +47,27 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.constrainHeight
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.compose.ui.unit.offset
 import kotlinx.coroutines.launch
+import org.akanework.gramophone.logic.library.LibraryRefresher
 import org.akanework.gramophone.ui.HomeTab
 import org.akanework.gramophone.ui.actions.HomeActions
 import org.akanework.gramophone.ui.actions.rememberAppActionEnv
 import org.akanework.gramophone.ui.components.compose.rememberPreference
 import org.akanework.gramophone.ui.components.home.ACTION_BUTTON_HEIGHT
-import org.akanework.gramophone.ui.components.home.FastScrollerState
 import org.akanework.gramophone.ui.components.home.GLASS_BAR_HEIGHT
 import org.akanework.gramophone.ui.components.home.HomeAppBar
 import org.akanework.gramophone.ui.components.home.HomeTabRow
 import org.akanework.gramophone.ui.components.home.IosOverscrollState
-import org.akanework.gramophone.ui.components.home.LIBRARY_FAB_MARGIN
 import org.akanework.gramophone.ui.components.home.LIBRARY_GROUP_CORNER
 import org.akanework.gramophone.ui.components.home.LIBRARY_SIDE_MARGIN
-import org.akanework.gramophone.ui.components.home.LibraryFab
 import org.akanework.gramophone.ui.components.home.TAB_INDICATOR_INSET
 import org.akanework.gramophone.ui.components.home.rememberNowPlayingState
 import org.akanework.gramophone.ui.nav.LocalAppBarTopPadding
@@ -78,10 +76,10 @@ import org.akanework.gramophone.ui.nav.LocalPlayerBottomPadding
 import org.akanework.gramophone.ui.nav.NAV_TRANSITION_MS
 import org.akanework.gramophone.ui.nav.NavAxisEasing
 import org.akanework.gramophone.ui.state.HomeViewModel
-import org.akanework.gramophone.ui.MediaControllerViewModel
-import org.koin.compose.viewmodel.koinActivityViewModel
 import org.akanework.gramophone.ui.state.LibraryTabSpec
 import org.akanework.gramophone.ui.visibleHomeTabs
+import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinActivityViewModel
 
 /*
  * The home as two containers: the bar and the tab row sit still on the surface-container-low
@@ -102,24 +100,25 @@ private val TABS_OVERLAP_BAR = BUTTON_TO_BAR_BOTTOM + TAB_INDICATOR_INSET - HEAD
 private val TABS_TO_SHEET_GAP = HEADER_GAP - TAB_INDICATOR_INSET
 private val BAR_TO_SHEET_GAP = 16.dp
 
-/** Between the sheet and what is under it: the mini player, or else the navigation bar. */
-private val SHEET_BOTTOM_GAP = 16.dp
+/**
+ * Between the sheet and what is under it: the mini player, or else the navigation bar. The same
+ * as above the sheet, under the tab row's chips.
+ */
+private val SHEET_BOTTOM_GAP = HEADER_GAP
 
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier) {
     val env = rememberAppActionEnv()
+    val refresher = koinInject<LibraryRefresher>()
     val equalizer = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
     val viewModel = koinActivityViewModel<HomeViewModel>()
-    val controllerViewModel = koinActivityViewModel<MediaControllerViewModel>()
     val tabsSetting by rememberPreference("tabs") { it.getString("tabs", "") ?: "" }
     val tabs = remember(tabsSetting) { visibleHomeTabs(tabsSetting) }
     val showTabs = tabs.size >= 2
     val pagerState = rememberPagerState { tabs.size }
     val scope = rememberCoroutineScope()
     val density = LocalDensity.current
-    val nowPlaying = rememberNowPlayingState(
-        controllerViewModel, LocalLifecycleOwner.current.lifecycle
-    )
+    val nowPlaying = rememberNowPlayingState()
     // Incremented when the current tab is tapped again ("scroll to the playing song").
     val reselectTicks = remember { mutableStateMapOf<HomeTab, Int>() }
     // Height (px) from the screen bottom to the collapsed mini player's top, 0 when it is hidden.
@@ -127,12 +126,11 @@ fun HomeScreen(modifier: Modifier = Modifier) {
     val insets = WindowInsets.systemBars.union(WindowInsets.displayCutout)
     val overscrolls = remember { HashMap<HomeTab, IosOverscrollState>() }
     fun overscrollOf(tab: HomeTab) = overscrolls.getOrPut(tab) { IosOverscrollState() }
-    val fastScrollers = remember { HashMap<HomeTab, FastScrollerState>() }
-    fun fastScrollerOf(tab: HomeTab) = fastScrollers.getOrPut(tab) { FastScrollerState() }
     // The sheet ends above the mini player. The mini player animates with the page transition,
     // so the inset uses the same curve. Otherwise the sheet's bottom edge would jump when
-    // navigating away from or back to home.
-    val sheetBottomInset by animateDpAsState(
+    // navigating away from or back to home. Read in the layout phase, so the animation doesn't
+    // recompose the home every frame.
+    val sheetBottomInset = animateDpAsState(
         targetValue = if (playerBottomPadding > 0) {
             with(density) { playerBottomPadding.toDp() }
         } else {
@@ -143,16 +141,10 @@ fun HomeScreen(modifier: Modifier = Modifier) {
     )
 
     Column(modifier.fillMaxSize().background(MaterialTheme.colorScheme.surfaceContainerLow)) {
-        // The folder tabs sort their two lists from their own headers.
-        val currentSpec = tabs.getOrNull(pagerState.currentPage)?.let { LibraryTabSpec.forTab(it) }
+        // Each tab sorts its lists from their own headers.
         HomeAppBar(
             onSearch = { HomeActions.search(env) },
-            onMenuAction = { HomeActions.run(env, equalizer, it) },
-            sortMenu = currentSpec?.let { spec ->
-                { expanded, onDismiss ->
-                    LibrarySortMenu(viewModel.tabState(spec), expanded, onDismiss)
-                }
-            },
+            onMenuAction = { HomeActions.run(env, equalizer, refresher, it) },
         )
         if (showTabs) {
             HomeTabRow(
@@ -181,11 +173,14 @@ fun HomeScreen(modifier: Modifier = Modifier) {
             Modifier
                 .fillMaxWidth()
                 .weight(1f)
-                .padding(
-                    start = LIBRARY_SIDE_MARGIN,
-                    end = LIBRARY_SIDE_MARGIN,
-                    bottom = sheetBottomInset + SHEET_BOTTOM_GAP,
-                )
+                .layout { measurable, constraints ->
+                    val bottom = (sheetBottomInset.value + SHEET_BOTTOM_GAP).roundToPx()
+                    val placeable = measurable.measure(constraints.offset(vertical = -bottom))
+                    layout(placeable.width, constraints.constrainHeight(placeable.height + bottom)) {
+                        placeable.place(0, 0)
+                    }
+                }
+                .padding(start = LIBRARY_SIDE_MARGIN, end = LIBRARY_SIDE_MARGIN)
                 .clip(RoundedCornerShape(LIBRARY_GROUP_CORNER))
                 .background(MaterialTheme.colorScheme.surfaceContainerLow),
         ) {
@@ -210,7 +205,6 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                             nowPlaying = nowPlaying,
                             reselectTick = reselectTicks[tab] ?: 0,
                             overscroll = overscrollOf(tab),
-                            fastScroller = fastScrollerOf(tab),
                             modifier = Modifier.fillMaxSize(),
                         )
                     } else {
@@ -224,18 +218,6 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                     }
                 }
             }
-            // One FAB shared by all tabs, resized to the current tab's actions. It hides when the
-            // list is scrolled to its end, where the fast scroller's thumb and popup overlap it.
-            val fabs = currentSpec?.let { libraryFabActions(viewModel.tabState(it), env) }.orEmpty()
-            val fastScrollerAtBottom =
-                tabs.getOrNull(pagerState.currentPage)?.let { fastScrollers[it]?.atBottom } == true
-            LibraryFab(
-                actions = if (fastScrollerAtBottom) emptyList() else fabs,
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .windowInsetsPadding(insets.only(WindowInsetsSides.Horizontal))
-                    .padding(LIBRARY_FAB_MARGIN),
-            )
         }
     }
 }

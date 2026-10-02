@@ -16,21 +16,17 @@
  */
 package org.akanework.gramophone.ui
 
-import android.content.Intent
 import android.os.Bundle
-import android.provider.Settings
-import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.core.net.toUri
 import kotlinx.coroutines.flow.Flow
-import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.ui.BaseActivity
 import org.akanework.gramophone.ui.components.compose.LibraryGate
 import org.akanework.gramophone.ui.screens.PickerEntry
 import org.akanework.gramophone.ui.screens.PickerScreen
+import org.akanework.gramophone.ui.theme.GramophoneTheme
 import org.koin.android.ext.android.inject
 import uk.akane.libphonograph.reader.FlowReader
 
@@ -45,7 +41,7 @@ abstract class PickerActivity<T : Any> : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             GramophoneTheme {
-                // No smart scan and no splash here, as before.
+                // A picker shows no splash and doesn't smart-scan before its first load.
                 LibraryGate(smartScanFirst = false, onDenied = ::onLibraryPermissionDenied)
                 val items by remember { itemsFlow() }.collectAsState(emptyList())
                 val entries = remember(items) {
@@ -65,12 +61,4 @@ abstract class PickerActivity<T : Any> : BaseActivity() {
     protected abstract fun entryOf(item: T): PickerEntry<T>
     protected abstract fun getTitleStr(): String
     protected abstract fun onSelected(item: T)
-
-    private fun onLibraryPermissionDenied() {
-        Toast.makeText(this, getString(R.string.grant_audio), Toast.LENGTH_LONG).show()
-        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-        intent.setData("package:$packageName".toUri())
-        startActivity(intent)
-        finish()
-    }
 }

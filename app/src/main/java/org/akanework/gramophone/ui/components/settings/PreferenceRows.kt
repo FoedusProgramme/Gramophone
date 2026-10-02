@@ -28,7 +28,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -48,6 +47,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import org.akanework.gramophone.R
+import org.akanework.gramophone.ui.components.compose.AppDropdownMenu
 import kotlin.math.roundToInt
 
 /* The kinds of row a settings page is made of. */
@@ -147,7 +147,7 @@ fun DropdownPreferenceRow(
         PreferenceRow(shape, onClick = { expanded = true }) {
             PreferenceLabels(title, Modifier.weight(1f), entries.getOrNull(selected))
         }
-        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+        AppDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
             entries.forEachIndexed { index, entry ->
                 DropdownMenuItem(
                     text = { Text(entry) },

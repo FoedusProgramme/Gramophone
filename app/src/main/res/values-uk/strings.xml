@@ -124,6 +124,7 @@
     <string name="settings_lyric">Текст пісня</string>
     <string name="settings_lyrics_configuration">Налаштування текстів пісень</string>
     <string name="settings_category_full_player">Програвач</string>
+    <string name="dialog_lyrics">Текст пісні</string>
     <string name="settings_blacklist_folder_summary">Фільтрувати пісні з певних папок</string>
     <string name="settings_lyrics_bold_summary">Використовуйте більший шрифт для текстів</string>
     <string name="settings_play_on_launch_summary">Відтворення музики під час запуску</string>
@@ -136,6 +137,7 @@
     <string name="sort_by_modified_date">Дата зміни</string>
     <string name="settings_lyrics_center_summary">Використовувати вирівнювання центром для текстів пісень</string>
     <string name="settings_title_bold_summary">Використовуйте жирний заголовок для гравця програвача</string>
+    <string name="current_playlist">Поточний список відтворення</string>
     <string name="timer">Таймер сну</string>
     <string name="grant_audio"><![CDATA[Надайте дозвіл \"Музика та аудіо\"]]></string>
     <string name="album_covers_enhance">Поліпшене завантаження обкладинок альбомів</string>
@@ -151,7 +153,11 @@
     <string name="tab_order">Налаштувати порядок вкладок</string>
     <string name="tab_order_summary">Програма відобразить першу вкладку під час запуску. Вкладки після роздільника будуть приховані.</string>
     <string name="lyric_widget_description">Віджет, який показує тексти медіафайлів, які зараз відтворюються</string>
+    <string name="skip_next">Перейти до наступного</string>
+    <string name="skip_previous">Перейти до попереднього</string>
+    <string name="position_slider">Повзунок положення</string>
     <string name="settings_status_bar_lyrics_summary">Увімкнути метод MeiZu для відображення текстів пісень у рядку стану (доступно лише на деяких пристроях)</string>
+    <string name="expand_less">Закрити</string>
     <string name="shuffle_all">Перемішайте все</string>
     <string name="play">Грати</string>
     <string name="more">Більше</string>
@@ -381,16 +387,6 @@
     <string name="still_refreshing">Освіжаючий, крок %1$d/%2$d: %3$s</string>
     <string name="refresh_did_you_know">Gramophone запитує оновлений список пісень під час кожного запуску програми, і поки Gramophone працює, він також автоматично виявляє нові медіафайли. Кнопка \"Оновити\" не перезавантажить медіафайли у Gramophone, натомість вона попросить вашу систему повторно відсканувати всі файли з усіх під\'єднаних постійних накопичувачів (саме тому це займе деякий час). Це означає, що якщо ваша система або інші програми не працюють несправно, вам ніколи не доведеться користуватися цією функцією.\n\nНе вистачає деяких пісень? Переконайтеся, що в Налаштуваннях &gt; Поведінка ввімкнено фільтр мінімальної довжини та чорний список папок, і переконайтеся, що ці параметри встановлено на очікувані значення. Щоб дізнатися більше про можливі причини, перегляньте наш список поширених запитань.</string>
     <string name="no_app_found">Не знайдено жодної програми, яка може це зробити</string>
-    <string name="contributors_nift4">Розробник / Провідний розробник</string>
-    <string name="contributors_123duo3">Свинцевий дизайнер</string>
-    <string name="contributors_akanetan">Оригінальний творець, пенсіонер</string>
-    <string name="contributors_developer">Розробник</string>
-    <string name="contributors_wstxda">Розроблена одна варіація значка додатків</string>
-    <string name="contributors_pxeemo">Довідка та тестування нових текстів</string>
-    <string name="contributors_lambada10">Забезпечення ліричних зразків та пісні</string>
-    <string name="contributors_code_contributions">Внески коду</string>
-    <string name="contributors_yuyuko1024">Бруски прогресу</string>
-    <string name="contributors_ghhccghk">Текст пісень у рядку стану та інші покращення</string>
     <string name="home_menu_quick_refresh">Швидке оновлення</string>
     <string name="add_to_queue">Додати до черги</string>
     <string name="app_name">Gramophone</string>
@@ -442,7 +438,6 @@
     <string name="settings_replaygain_mode_desc">«Smart» автоматично зберігає динаміку альбому лише під час послідовного відтворення пісень з альбому.</string>
     <string name="sort_by_artist_year"><![CDATA[Виконавець -> рік]]></string>
     <string name="clear_queue">Очистити чергу</string>
-    <string name="contributors_saladnoober">Гарантія якості</string>
     <string name="actions_query_shuffle_all_songs">перемішати всі пісні</string>
     <string name="actions_query_shuffle_everything">перетасувати все</string>
     <string name="actions_query_play_random_songs">відтворювати випадкові пісні</string>

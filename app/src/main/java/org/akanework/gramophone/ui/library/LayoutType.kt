@@ -20,3 +20,7 @@ package org.akanework.gramophone.ui.library
 enum class LayoutType {
     NONE, LIST, GRID, COMPACT_GRID
 }
+
+/** Whether items are laid out as grid cards rather than list rows. */
+val LayoutType?.isGrid: Boolean
+    get() = this == LayoutType.GRID || this == LayoutType.COMPACT_GRID

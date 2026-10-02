@@ -25,17 +25,13 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.StrictMode
-import android.provider.Settings
 import android.view.Choreographer
 import android.view.SearchEvent
-import android.widget.Toast
 import androidx.activity.compose.setContent
-import androidx.core.net.toUri
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.media3.common.util.Log
 import androidx.media3.session.DefaultMediaNotificationProvider
 import coil3.imageLoader
-import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.getBooleanStrict
 import org.akanework.gramophone.logic.needsMissingOnDestroyCallWorkarounds
 import org.akanework.gramophone.logic.postAtFrontOfQueueAsync
@@ -61,8 +57,9 @@ class MainActivity : BaseActivity() {
     private val playIntentViewModel: PlayIntentViewModel by viewModel()
 
     private val handler = Handler(Looper.getMainLooper())
-    private val reportFullyDrawnRunnable = Runnable { if (!ready) reportFullyDrawn() }
+    /** Whether the app was reported fully drawn, which also ends the splash screen. */
     private var ready = false
+    private val reportFullyDrawnRunnable = Runnable(::maybeReportFullyDrawn)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.i("MainActivity", "onCreate($intent)")
@@ -70,8 +67,9 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         lifecycle.addObserver(controllerViewModel)
         playIntentViewModel.bind(controllerViewModel, navViewModel)
-        // A recreated activity (rotation, process death) already had its intent handled.
-        if (savedInstanceState == null) enqueuePlayIntent(intent)
+        // Taken once per view model: not again after rotation, and after process death only
+        // what had not run yet.
+        playIntentViewModel.enqueueLaunchIntent(parsePlayIntent(intent))
         // TODO: should Activity.setMediaController() or Activity.setVolumeControlStream() be
         //  called? latter will probably not do particularly much, and former will
         //  forward events to our session no matter whether it makes sense or not to currently
@@ -79,32 +77,27 @@ class MainActivity : BaseActivity() {
 
         setContent {
             MainRoot(
-                backStack = navViewModel.backStack,
                 onLibraryPermissionDenied = ::onLibraryPermissionDenied,
-                // If library load takes more than 2s, exit splash to avoid ANR
-                startSplashTimeout = {
-                    if (!ready) handler.postDelayed(reportFullyDrawnRunnable, 2000)
-                },
+                startSplashTimeout = ::startSplashTimeout,
                 reportFullyDrawn = ::maybeReportFullyDrawn,
             )
         }
 
+        // The home's lists report fully drawn once loaded; don't wait for them when a recreated
+        // activity comes back with another page on top.
         if (navViewModel.backStack.lastOrNull() != HomeKey)
-            handler.post { maybeReportFullyDrawn() }
+            handler.post(reportFullyDrawnRunnable)
     }
 
     override fun onNewIntent(intent: Intent) {
         Log.i("MainActivity", "onNewIntent($intent)")
         super.onNewIntent(intent)
         setIntent(intent)
-        enqueuePlayIntent(intent)
+        playIntentViewModel.enqueue(parsePlayIntent(intent))
     }
 
-    private fun enqueuePlayIntent(intent: Intent) {
-        playIntentViewModel.enqueue(
-            PlayIntentParser.parse(intent, prefs.getBooleanStrict("autoplay", false))
-        )
-    }
+    private fun parsePlayIntent(intent: Intent) =
+        PlayIntentParser.parse(intent, prefs.getBooleanStrict("autoplay", false))
 
     override fun onSearchRequested(): Boolean {
         navViewModel.navigateTo(SearchKey(null))
@@ -170,13 +163,15 @@ class MainActivity : BaseActivity() {
         if (!ready) reportFullyDrawn()
     }
 
-    private fun onLibraryPermissionDenied() {
+    /** If the library takes longer than [SPLASH_TIMEOUT_MS] to load, ends the splash anyway. */
+    private fun startSplashTimeout() {
+        // Avoids an ANR from keeping the splash up for too long.
+        if (!ready) handler.postDelayed(reportFullyDrawnRunnable, SPLASH_TIMEOUT_MS)
+    }
+
+    override fun onLibraryPermissionDenied() {
         maybeReportFullyDrawn() // TODO: is this still needed?
-        Toast.makeText(this, getString(R.string.grant_audio), Toast.LENGTH_LONG).show()
-        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-        intent.setData("package:$packageName".toUri())
-        startActivity(intent)
-        finish()
+        super.onLibraryPermissionDenied()
     }
 
     override fun onDestroy() {
@@ -191,5 +186,9 @@ class MainActivity : BaseActivity() {
         // we don't ever want covers to be the cause of service being killed by too high mem usage
         // (this is placed after super.onDestroy() to make sure all ImageViews are dead)
         imageLoader.memoryCache?.clear()
+    }
+
+    private companion object {
+        const val SPLASH_TIMEOUT_MS = 2000L
     }
 }

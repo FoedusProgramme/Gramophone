@@ -17,61 +17,30 @@
 
 package org.akanework.gramophone.ui.components.lyrics
 
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
-import androidx.media3.common.Player
-import org.akanework.gramophone.logic.GramophonePlaybackService
 import org.akanework.gramophone.ui.MediaControllerViewModel
-import kotlin.math.max
+import org.akanework.gramophone.ui.components.player.PlaybackClock
 
 /**
- * What the lyrics need from playback: a position precise enough to draw word highlights from,
- * and a way to seek. Listens to the controller until [destroy] is called.
+ * What the lyrics need from playback: the position to draw each frame at and seeking, both from
+ * the player sheet's [clock] so the lyrics and the progress bar agree, and pausing.
  */
-internal class LyricsPlayback(private val controller: MediaControllerViewModel) : Player.Listener, LifecycleOwner {
-    private var waitingForSeek = 0
-    private var waitingForSeekPos = 0uL
-    override val lifecycle = LifecycleRegistry(this)
+internal class LyricsPlayback(
+    private val clock: PlaybackClock,
+    private val controller: MediaControllerViewModel,
+) {
+    /** The position as last polled. Snapshot state: it changes as the poll moves it on. */
+    val polledPosition: Long
+        get() = clock.positionMs
 
-    init {
-        lifecycle.currentState = Lifecycle.State.CREATED
-        controller.addRecreationalPlayerListener(lifecycle, this) {}
-    }
+    fun getCurrentPosition(): ULong = clock.positionNow().coerceAtLeast(0L).toULong()
 
-    // TODO https://github.com/androidx/media/issues/1578
-    fun getCurrentPosition(): ULong =
-        if (waitingForSeek > 0) waitingForSeekPos else
-            GramophonePlaybackService.instanceForWidgetAndLyricsOnly
-                ?.endedWorkaroundPlayer?.currentPosition?.toULong()
-                ?: controller.get()?.currentPosition?.toULong() ?: 0uL
+    fun isPlaying() = clock.isPlaying
 
-    fun isPlaying() = controller.get()?.isPlaying == true
-
-    fun seekTo(position: ULong) {
-        waitingForSeek = max(0, waitingForSeek) + 1
-        waitingForSeekPos = position
-        (GramophonePlaybackService.instanceForWidgetAndLyricsOnly?.endedWorkaroundPlayer
-            ?: controller.get())?.seekTo(position.toLong())
-    }
+    fun seekTo(position: ULong) = clock.seekTo(position.toLong())
 
     fun setPlayWhenReady(play: Boolean) {
         controller.get()?.playWhenReady = play
     }
 
-    fun speed(): Float = controller.get()?.playbackParameters?.speed ?: 1f
-
-    override fun onPositionDiscontinuity(
-        oldPosition: Player.PositionInfo,
-        newPosition: Player.PositionInfo,
-        reason: @Player.DiscontinuityReason Int
-    ) {
-        if (reason == Player.DISCONTINUITY_REASON_SEEK) {
-            waitingForSeek--
-        }
-    }
-
-    fun destroy() {
-        lifecycle.currentState = Lifecycle.State.DESTROYED
-    }
+    fun speed(): Float = clock.speed
 }

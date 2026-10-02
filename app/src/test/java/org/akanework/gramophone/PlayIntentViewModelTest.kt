@@ -17,6 +17,7 @@
 
 package org.akanework.gramophone
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.viewmodel.initializer
@@ -32,6 +33,7 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.akanework.gramophone.logic.library.LibraryReadiness
 import org.akanework.gramophone.ui.intent.PlayIntentAction
+import org.akanework.gramophone.ui.intent.PlayIntentAction.Autoplay
 import org.akanework.gramophone.ui.intent.PlayIntentAction.OpenPlaylist
 import org.akanework.gramophone.ui.intent.PlayIntentExecutor
 import org.akanework.gramophone.ui.intent.PlayIntentHost
@@ -44,8 +46,9 @@ import org.junit.Test
 
 /**
  * The queue of [PlayIntentViewModel]: each action runs once, only after the library is ready, keeps
- * running across a recreated activity, and dies with the view model. The executor is faked; which
- * controller calls each action makes is the old code moved as is.
+ * running across a recreated activity, and dies with the view model, except for the rest of the
+ * launch intent after process death. The executor is faked; what each action does is covered by
+ * DefaultPlayIntentExecutorTest.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 class PlayIntentViewModelTest {
@@ -74,11 +77,21 @@ class PlayIntentViewModelTest {
     private val executor = FakeExecutor()
     private val store = ViewModelStore()
 
-    /** What `by viewModel()` gives an activity: the one instance kept in its store. */
-    private fun viewModel(store: ViewModelStore = this.store): PlayIntentViewModel =
+    /**
+     * What `by viewModel()` gives an activity: the one instance kept in its store. [savedState] is
+     * what a new instance starts from.
+     */
+    private fun viewModel(
+        store: ViewModelStore = this.store,
+        savedState: SavedStateHandle = SavedStateHandle(),
+    ): PlayIntentViewModel =
         ViewModelProvider.create(store, viewModelFactory {
-            initializer { PlayIntentViewModel(readiness, executor) }
+            initializer { PlayIntentViewModel(readiness, executor, savedState) }
         })[PlayIntentViewModel::class]
+
+    /** What a view model recreated after process death gets back of [savedState]. */
+    private fun restored(savedState: SavedStateHandle) =
+        SavedStateHandle(savedState.keys().associateWith { savedState.get<Any>(it) })
 
     private fun actions() = executor.started.map { it.first }
 
@@ -171,6 +184,59 @@ class PlayIntentViewModelTest {
         advanceUntilIdle()
         assertEquals(listOf(OpenPlaylist(1), OpenPlaylist(2), OpenPlaylist(3)), actions())
         assertEquals(listOf(OpenPlaylist(1), OpenPlaylist(2), OpenPlaylist(3)), executor.finished)
+    }
+
+    @Test
+    fun launchIntentIsNotTakenAgainOnRotation() = runTest(dispatcher) {
+        readiness.markReady()
+        val vm = viewModel()
+        vm.bind(FakeHost())
+        vm.enqueueLaunchIntent(listOf(OpenPlaylist(1), Autoplay))
+        advanceUntilIdle()
+
+        // Rotation: the recreated activity hands its launch intent to the same view model.
+        val again = viewModel()
+        again.bind(FakeHost())
+        again.enqueueLaunchIntent(listOf(OpenPlaylist(1), Autoplay))
+        advanceUntilIdle()
+        assertEquals(listOf(OpenPlaylist(1), Autoplay), actions())
+    }
+
+    @Test
+    fun launchIntentRunsOnlyWhatWasLeftAfterProcessDeath() = runTest(dispatcher) {
+        readiness.markReady()
+        val launchIntent = listOf(OpenPlaylist(1), OpenPlaylist(2), Autoplay)
+        executor.gates[OpenPlaylist(2)] = CompletableDeferred()
+        val savedState = SavedStateHandle()
+        val vm = viewModel(savedState = savedState)
+        vm.bind(FakeHost())
+        vm.enqueueLaunchIntent(launchIntent)
+        advanceUntilIdle()
+        assertEquals(listOf(OpenPlaylist(1), OpenPlaylist(2)), actions())
+
+        // Process death while the second action still runs: the restored activity hands its
+        // launch intent to a new view model that starts from the saved state.
+        store.clear()
+        executor.gates.clear()
+        executor.started.clear()
+        val restoredState = restored(savedState)
+        val restoredStore = ViewModelStore()
+        val next = viewModel(restoredStore, restoredState)
+        next.bind(FakeHost())
+        next.enqueueLaunchIntent(launchIntent)
+        advanceUntilIdle()
+        assertEquals(listOf(OpenPlaylist(2), Autoplay), actions())
+        restoredStore.clear()
+
+        // Once all of it ran, autoplay included, another process death runs nothing again.
+        executor.started.clear()
+        val lastStore = ViewModelStore()
+        val last = viewModel(lastStore, restored(restoredState))
+        last.bind(FakeHost())
+        last.enqueueLaunchIntent(launchIntent)
+        advanceUntilIdle()
+        assertEquals(emptyList<PlayIntentAction>(), actions())
+        lastStore.clear()
     }
 
     @Test

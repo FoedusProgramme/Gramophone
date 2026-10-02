@@ -21,24 +21,25 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Build
 import android.os.Environment
+import androidx.annotation.VisibleForTesting
 import androidx.core.content.edit
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.defaultPrefs
 import org.akanework.gramophone.logic.hasScopedStorageWithMediaTypes
+import kotlin.time.Duration.Companion.days
 
 /**
  * Owns the preferences that drive the media library filters and turns them into the flows
  * [uk.akane.libphonograph.reader.FlowReader] consumes. Runs the one-time preference migration and
  * the initial load on [scope], then follows preference changes.
  */
-class SettingsRepository(
+class LibraryFilterSettings(
     private val context: Context,
     scope: CoroutineScope,
 ) : SharedPreferences.OnSharedPreferenceChangeListener {
@@ -61,9 +62,13 @@ class SettingsRepository(
     val blackListSetFlow: SharedFlow<Set<String>> = _blackListSetFlow
     val whiteListSetFlow: SharedFlow<Set<String>> = _whiteListSetFlow
     val shouldUseEnhancedCoverReadingFlow: SharedFlow<Boolean?> = _shouldUseEnhancedCoverReadingFlow
-    val recentlyAddedFilterSecondFlow: StateFlow<Long> = MutableStateFlow(1_209_600L)
 
-    val extraDisallowedFolders = setOf(
+    /**
+     * Folders filtered out by default: the folder filter until the user sets one, and added to
+     * theirs by the one-time migration.
+     */
+    @VisibleForTesting
+    internal val extraDisallowedFolders = setOf(
         Environment.DIRECTORY_RINGTONES,
         Environment.DIRECTORY_NOTIFICATIONS,
         Environment.DIRECTORY_ALARMS,
@@ -81,7 +86,7 @@ class SettingsRepository(
             migrateIfNeeded()
             onSharedPreferenceChanged(prefs, null) // reload all values
             // SharedPreferences holds listeners weakly; this singleton is the strong reference.
-            prefs.registerOnSharedPreferenceChangeListener(this@SettingsRepository)
+            prefs.registerOnSharedPreferenceChangeListener(this@LibraryFilterSettings)
         }
     }
 
@@ -124,5 +129,10 @@ class SettingsRepository(
         if ((key == null || key == "album_covers") && !hasScopedStorageWithMediaTypes()) {
             _shouldUseEnhancedCoverReadingFlow.tryEmit(prefs.getBoolean("album_covers", true))
         }
+    }
+
+    companion object {
+        /** How far back, in seconds, a song counts as recently added. Not a preference. */
+        val RECENTLY_ADDED_WINDOW_SECONDS: Long = 14.days.inWholeSeconds
     }
 }

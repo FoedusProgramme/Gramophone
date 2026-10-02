@@ -28,8 +28,6 @@ import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.union
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -37,7 +35,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.mikepenz.aboutlibraries.ui.compose.android.produceLibraries
 import com.mikepenz.aboutlibraries.ui.compose.m3.LibrariesContainer
 import dev.chrisbanes.haze.HazeState
@@ -45,7 +42,6 @@ import dev.chrisbanes.haze.hazeSource
 import org.akanework.gramophone.R
 import org.akanework.gramophone.ui.components.home.GLASS_BAR_HEIGHT
 import org.akanework.gramophone.ui.components.home.GlassTitleBar
-import org.akanework.gramophone.ui.components.home.LibraryIconButton
 
 /**
  * The library list from AboutLibraries under the glass bar. The list is its own lazy column,
@@ -75,16 +71,7 @@ fun OssLicensesScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
             hazeState = hazeState,
             title = stringResource(R.string.settings_open_source_licenses),
             scrolled = { Float.MAX_VALUE },
-            toolbarPaddingStart = 10.dp,
-            titlePaddingStart = 4.dp,
-            navigationIcon = {
-                LibraryIconButton(
-                    icon = Icons.AutoMirrored.Outlined.ArrowBack,
-                    iconSize = 24.dp,
-                    tint = MaterialTheme.colorScheme.onSurface,
-                    onClick = onBack,
-                )
-            },
+            onBack = onBack,
         )
     }
 }

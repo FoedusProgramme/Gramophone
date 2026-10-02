@@ -17,7 +17,6 @@
 
 package org.akanework.gramophone
 
-import android.app.Application
 import android.app.SearchManager
 import android.content.ContentResolver
 import android.content.Intent
@@ -40,14 +39,12 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import org.robolectric.annotation.Config
 import uk.akane.libphonograph.manipulator.PlaylistSerializer.Entry
 
 /**
- * Locks in what the old `MainActivity.doPlayFromIntent` did for each kind of intent: which
- * actions come out, in which order, and when the fallback autoplay is added.
+ * What [PlayIntentParser] makes of each kind of intent: which actions come out, in which order,
+ * and when the fallback autoplay is added.
  */
-@Config(application = Application::class)
 @RunWith(RobolectricTestRunner::class)
 class PlayIntentParserTest {
 
@@ -303,7 +300,7 @@ class PlayIntentParserTest {
     }
 
     @Test
-    fun actionsKeepTheOldOrder() {
+    fun actionsComeInAFixedOrder() {
         val entry = Entry(listOf(Uri.parse("file:///sdcard/Music/a.mp3")))
         val intent = Intent(Intent.ACTION_VIEW)
             .putExtra("AutoStartId", "3")

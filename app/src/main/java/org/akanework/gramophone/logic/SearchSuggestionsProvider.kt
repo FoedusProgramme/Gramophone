@@ -32,13 +32,14 @@ import androidx.media3.common.MediaItem
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.akanework.gramophone.R
-import org.koin.android.ext.android.inject
+import org.koin.core.context.GlobalContext
 import uk.akane.libphonograph.reader.FlowReader
 
 class SearchSuggestionsProvider : ContentProvider() {
-    // Lazy: ContentProvider.onCreate runs before Application.onCreate starts Koin, so this must
-    // only be touched from query/getType.
-    private val reader: FlowReader by inject()
+    // The system publishes providers before Application.onCreate starts Koin, so on a cold start
+    // another process can call query/getType first. Until Koin has the reader, answer nothing.
+    private val reader: FlowReader?
+        get() = GlobalContext.getOrNull()?.getOrNull()
 
     override fun delete(
         uri: Uri,
@@ -53,7 +54,8 @@ class SearchSuggestionsProvider : ContentProvider() {
             return SearchManager.SUGGEST_MIME_TYPE
         }
         if (uri.path?.startsWith(SearchManager.SUGGEST_URI_PATH_SHORTCUT) == true) {
-            if (uri.lastPathSegment?.toLong() == null || queryCachedShortcut(ContentUris
+            val reader = reader ?: return null
+            if (uri.lastPathSegment?.toLong() == null || queryCachedShortcut(reader, ContentUris
                 .parseId(uri)).moveToFirst()) {
                 return SearchManager.SHORTCUT_MIME_TYPE
             }
@@ -79,24 +81,25 @@ class SearchSuggestionsProvider : ContentProvider() {
         selectionArgs: Array<out String?>?,
         sortOrder: String?
     ): Cursor? {
+        val reader = reader ?: return null
         if (uri.path!!.startsWith(SearchManager.SUGGEST_URI_PATH_SHORTCUT)) {
-            return queryCachedShortcut(ContentUris.parseId(uri))
+            return queryCachedShortcut(reader, ContentUris.parseId(uri))
         }
         if (uri.path!!.startsWith(SearchManager.SUGGEST_URI_PATH_QUERY)) {
             val limit = uri.getQueryParameter(SearchManager.SUGGEST_PARAMETER_LIMIT)?.toInt()
-            return querySuggestions(selectionArgs!!.first()!!, limit)
+            return querySuggestions(reader, selectionArgs!!.first()!!, limit)
         }
         return null
     }
 
-    private fun querySuggestions(query: String, limit: Int?): Cursor {
+    private fun querySuggestions(reader: FlowReader, query: String, limit: Int?): Cursor {
         // TODO: artists, albums, etc should be searchable too
-        return songsToCursor(runBlocking { searchForMediaItem(query) }.let {
+        return songsToCursor(runBlocking { searchForMediaItem(reader, query) }.let {
             if (limit != null) it.take(limit) else it
         })
     }
 
-    private suspend fun searchForMediaItem(text: String): List<MediaItem> {
+    private suspend fun searchForMediaItem(reader: FlowReader, text: String): List<MediaItem> {
         val text = text.trim()
         val list = reader.songListFlow.first()
         // TODO support focus and sub queries (see PlayIntentParser)
@@ -114,7 +117,7 @@ class SearchSuggestionsProvider : ContentProvider() {
         }
     }
 
-    private fun queryCachedShortcut(id: Long): Cursor {
+    private fun queryCachedShortcut(reader: FlowReader, id: Long): Cursor {
         val idMap = runBlocking { reader.idMapFlow.first() }
         return songsToCursor(idMap[id]?.let { listOf(it) } ?: emptyList())
     }

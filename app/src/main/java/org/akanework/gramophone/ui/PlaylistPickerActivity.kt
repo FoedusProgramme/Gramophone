@@ -18,11 +18,11 @@ package org.akanework.gramophone.ui
 
 import android.content.ContentUris
 import android.content.Intent
-import android.provider.MediaStore
 import android.webkit.MimeTypeMap
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import org.akanework.gramophone.R
+import org.akanework.gramophone.logic.playlistUri
 import org.akanework.gramophone.ui.screens.PickerEntry
 import org.nift4.mediastorecompat.MediaStoreCompat
 import uk.akane.libphonograph.items.Playlist
@@ -50,9 +50,8 @@ class PlaylistPickerActivity : PickerActivity<Playlist>() {
     override fun onSelected(item: Playlist) {
         setResult(RESULT_OK, Intent().apply {
             setDataAndType(
-                if (action == Intent.ACTION_PICK) ContentUris.withAppendedId(
-                    @Suppress("deprecation") MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, item.id!!
-                ) else ContentUris.withAppendedId(MediaStoreCompat.FILES_EXTERNAL_CONTENT_URI, item.id!!),
+                if (action == Intent.ACTION_PICK) playlistUri(item.id!!)
+                else ContentUris.withAppendedId(MediaStoreCompat.FILES_EXTERNAL_CONTENT_URI, item.id!!),
                 MimeTypeMap.getSingleton().getMimeTypeFromExtension(item.path!!.extension),
             )
             setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)

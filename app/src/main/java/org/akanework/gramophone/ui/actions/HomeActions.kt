@@ -20,10 +20,9 @@ package org.akanework.gramophone.ui.actions
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.media.audiofx.AudioEffect
-import android.os.Build
 import android.provider.Settings
-import androidx.activity.result.ActivityResultLauncher
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Equalizer
 import androidx.compose.material.icons.outlined.Refresh
@@ -31,17 +30,13 @@ import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Shuffle
 import androidx.compose.ui.graphics.vector.ImageVector
 import coil3.SingletonImageLoader
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import org.akanework.gramophone.R
-import org.akanework.gramophone.logic.utils.SdScanner
+import org.akanework.gramophone.logic.library.LibraryRefresher
 import org.akanework.gramophone.ui.components.compose.AppDialog
 import org.akanework.gramophone.ui.nav.MainSettingsKey
 import org.akanework.gramophone.ui.nav.SearchKey
-import org.nift4.mediastorecompat.MediaStoreCompat
 
 /** The home toolbar menu entries (search is an action button). */
 enum class HomeMenuAction(val title: Int, val icon: ImageVector) {
@@ -60,15 +55,14 @@ object HomeActions {
 
     /**
      * Runs [action]. [equalizer] launches the system equalizer; the library scans run on
-     * [AppActionEnv.appScope], as they must outlive the screen.
+     * [refresher], which outlives the screen and reports the result to the user by itself.
      */
     fun run(
         env: AppActionEnv,
         equalizer: ActivityResultLauncher<Intent>,
+        refresher: LibraryRefresher,
         action: HomeMenuAction,
     ) {
-        val refresher = env.refresher
-        val appScope = env.appScope
         when (action) {
             HomeMenuAction.Equalizer -> {
                 val context = env.context
@@ -90,85 +84,31 @@ object HomeActions {
             }
 
             HomeMenuAction.QuickRefresh -> {
-                val imageLoader = SingletonImageLoader.get(env.context)
-                imageLoader.memoryCache?.clear()
-                refresher.refresh {
-                    showRefreshDoneSnackBar(
-                        env, runBlocking { env.reader.songListFlow.first().size }
-                    )
-                }
+                SingletonImageLoader.get(env.context).memoryCache?.clear()
+                refresher.refresh(reportToUser = true)
             }
 
             HomeMenuAction.Refresh -> {
-                val imageLoader = SingletonImageLoader.get(env.context)
-                imageLoader.memoryCache?.clear()
+                SingletonImageLoader.get(env.context).memoryCache?.clear()
                 env.dialogs.show(AppDialog.Message(
                     title = env.getString(R.string.did_you_know),
                     message = env.getString(R.string.refresh_did_you_know),
                     icon = Icons.Outlined.Refresh,
                 ))
                 Toast.makeText(env.context, R.string.refreshing_wait, Toast.LENGTH_LONG).show()
-                // The scan outlives the screen, so it only holds on to the application.
-                val context = env.context.applicationContext
-                appScope.launch {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                        SdScanner.scanEverything(context, 5000) { progress ->
-                            if (progress.step != SdScanner.SimpleProgress.Step.DONE) {
-                                val str = if (progress.percentage == null)
-                                    context.getString(R.string.refreshing_wait)
-                                else context.getString(
-                                    R.string.still_refreshing,
-                                    progress.step.ordinal,
-                                    SdScanner.SimpleProgress.Step.DONE.ordinal - 1,
-                                    "${progress.percentage}%"
-                                )
-                                appScope.launch(Dispatchers.Main) {
-                                    Toast.makeText(context, str, Toast.LENGTH_SHORT).show()
-                                }
-                                return@scanEverything
-                            }
-                            refresher.refresh(smartScanFirst = false) {
-                                showRefreshDoneSnackBar(
-                                    env, runBlocking { env.reader.songListFlow.first().size }
-                                )
-                            }
-                        }
-                    } else {
-                        val job = launch(Dispatchers.IO) {
-                            MediaStoreCompat.scanEverything(context)
-                        }
-                        while (!job.isCompleted) {
-                            delay(5000)
-                            appScope.launch(Dispatchers.Main) {
-                                Toast.makeText(
-                                    context, context.getString(R.string.refreshing_wait),
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                        }
-                    }
-                }
+                refresher.fullRescan()
             }
 
             HomeMenuAction.Settings -> env.navigate(MainSettingsKey)
 
-            HomeMenuAction.Shuffle -> {
-                val controller = env.player
-                runBlocking { env.reader.songListFlow.first() }.takeIf { it.isNotEmpty() }
-                    ?.also {
-                        LibraryActions.shuffleAll(env, it, env.getString(R.string.category_songs))
-                    } ?: controller?.setMediaItems(listOf())
+            HomeMenuAction.Shuffle -> env.scope.launch {
+                val songs = env.reader.songListFlow.first()
+                if (songs.isNotEmpty()) {
+                    LibraryActions.shuffleAll(env, songs, env.getString(R.string.category_songs))
+                } else {
+                    env.player?.setMediaItems(listOf())
+                }
             }
-        }
-    }
-
-    /** No-op once the screen that asked is gone: [AppActionEnv.scope] is cancelled with it. */
-    private fun showRefreshDoneSnackBar(env: AppActionEnv, count: Int) {
-        env.scope.launch {
-            env.dialogs.snackbar(
-                env.getString(R.string.refreshed_songs, count),
-                env.getString(R.string.dismiss),
-            )
         }
     }
 }

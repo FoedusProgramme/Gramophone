@@ -31,7 +31,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.combineTransform
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.emptyFlow
 import org.akanework.gramophone.logic.comparators.SupportComparator
 import org.akanework.gramophone.logic.emitOrDie
 import org.akanework.gramophone.logic.utils.flows.PauseManagingSharedFlow.Companion.sharePauseableIn
@@ -46,11 +46,18 @@ import uk.akane.libphonograph.reader.FlowReader
  * never shows one folder's subfolders with another's songs.
  */
 @Immutable
-class FolderPage(val path: List<String>, val folders: List<FileNode>, val songs: List<MediaItem>)
+class FolderPage(val path: List<String>, val folders: List<FileNode>, val songs: List<MediaItem>) {
+    /** The folder's name, or [ROOT_TITLE] for the root. Also the title of its songs' queue. */
+    val title: String = path.lastOrNull() ?: ROOT_TITLE
+
+    companion object {
+        const val ROOT_TITLE = "/"
+    }
+}
 
 /**
  * State of the Folders (shallow) or Filesystem (detailed) tab: the current folder path, the
- * folder shown as a [FolderPage], and the folder's songs as a nested [LibraryTabState].
+ * folder shown as a [FolderPage], and the song list's choices as a nested [LibraryTabState].
  */
 @Stable
 class FolderTabState(
@@ -99,9 +106,12 @@ class FolderTabState(
         SharingStarted.WhileSubscribed(), replay = 1
     )
 
+    /**
+     * The song list's sort, layout and queue title. Its items are set from [pageFlow] by [show],
+     * so it has no flow of its own.
+     */
     val songs = LibraryTabState(
-        LibraryTabSpec.FolderSongs, prefs, reader, scope,
-        flowOverride = dataFlow.map { it.second.songList },
+        LibraryTabSpec.FolderSongs, prefs, reader, scope, flowOverride = emptyFlow(),
     )
 
     /** The current folder, with its subfolders and songs sorted. */
@@ -114,9 +124,17 @@ class FolderTabState(
         SharingStarted.WhileSubscribed(5000), replay = 1
     )
 
-    /** The folder shown, `null` until the first one was loaded. Set by the screen from [pageFlow]. */
+    /** The folder shown, `null` until the first one was loaded. Set from [pageFlow] by [show]. */
     var page: FolderPage? by mutableStateOf(null)
-        internal set
+        private set
+
+    /** Shows [page], one of [pageFlow]'s, and hands its songs to the song list. */
+    internal fun show(page: FolderPage) {
+        this.page = page
+        songs.items = page.songs
+        songs.loaded = true
+        songs.queueTitleOverride = page.title
+    }
 
     private fun sortFolders(item: FileNode, sortType: Sorter.Type): List<FileNode> =
         when (sortType) {

@@ -38,7 +38,6 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.outlined.ListAlt
 import androidx.compose.material.icons.automirrored.outlined.PlaylistAdd
@@ -51,11 +50,11 @@ import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material.icons.outlined.QueuePlayNext
 import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MenuAnchorPosition
 import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
@@ -68,6 +67,7 @@ import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -81,9 +81,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.PopupProperties
 import kotlinx.coroutines.launch
 import org.akanework.gramophone.R
-import org.akanework.gramophone.ui.THEME_ANIMATION_MS
+import org.akanework.gramophone.ui.components.compose.AppDropdownMenu
 import org.akanework.gramophone.ui.components.player.LocalHarmonizeCovers
 import org.akanework.gramophone.ui.components.player.harmonizeBy
 import org.akanework.gramophone.ui.components.player.rememberArtworkColorScheme
@@ -91,6 +92,10 @@ import org.akanework.gramophone.ui.library.LayoutType
 import org.akanework.gramophone.ui.library.Sorter
 import org.akanework.gramophone.ui.state.LibraryMenuAction
 import org.akanework.gramophone.ui.state.SortPrefState
+import org.akanework.gramophone.ui.theme.THEME_ANIMATION_MS
+
+/** Least width of the sort menus, so a short list of entries does not make a narrow menu. */
+private val SORT_MENU_MIN_WIDTH = 172.dp
 
 private val sortTitles = mapOf(
     Sorter.Type.NaturalOrder to R.string.natural_order,
@@ -121,46 +126,36 @@ private fun MenuText(text: String) {
 }
 
 /**
- * The `sort_menu` as a DropdownMenu: a radio group of the supported sort types, an optional
- * extra checkbox (album artist), the reverse-order checkbox and a "Layout" submenu.
+ * The `sort_menu` of the list sorted by [sort] as a DropdownMenu: a radio group of the supported
+ * sort types, an optional extra checkbox (album artist), the reverse-order checkbox and, when
+ * [onSelectLayout] is given, a "Layout" submenu, which opens beside its entry while this menu stays
+ * open. Either closing closes both. As a [submenu] itself, it opens beside its anchor.
  */
 @Composable
 fun SortMenu(
+    sort: SortPrefState,
     expanded: Boolean,
     onDismiss: () -> Unit,
-    sortTypes: Set<Sorter.Type>,
-    activeSort: Sorter.Type?,
-    isReversed: Boolean,
-    canReverse: Boolean,
-    onSelectSort: (Sorter.Type) -> Unit,
-    onToggleReverse: () -> Unit,
-    layoutType: LayoutType?,
-    onSelectLayout: ((LayoutType) -> Unit)?,
+    layoutType: LayoutType? = null,
+    onSelectLayout: ((LayoutType) -> Unit)? = null,
     extraCheckbox: Pair<String, Boolean>? = null,
     onExtraCheckbox: () -> Unit = {},
+    submenu: Boolean = false,
 ) {
+    val sortTypes = sort.sortTypes
+    val activeSort = sort.activeSortBase(SortPrefState.SORT_MENU_ORDER)
+    val isReversed = sort.isReversed
+    val canReverse = sort.canReverse
     var showLayouts by remember { mutableStateOf(false) }
     LaunchedEffect(expanded) { if (!expanded) showLayouts = false }
-    DropdownMenu(
+    AppDropdownMenu(
         expanded = expanded,
         onDismissRequest = onDismiss,
-        modifier = Modifier.widthIn(min = 172.dp),
+        modifier = Modifier.widthIn(min = SORT_MENU_MIN_WIDTH),
+        anchorPosition = if (submenu) MenuAnchorPosition.End else null,
+        // Touches on the layout menu are outside this one, which mustn't close for them
+        properties = PopupProperties(focusable = true, dismissOnClickOutside = !showLayouts),
     ) {
-        if (showLayouts && onSelectLayout != null) {
-            DropdownMenuItem(
-                text = { MenuText(stringResource(R.string.layout)) },
-                leadingIcon = { Icon(Icons.AutoMirrored.Outlined.ArrowBack, null) },
-                onClick = { showLayouts = false },
-            )
-            layoutEntries.forEach { (type, title) ->
-                DropdownMenuItem(
-                    text = { MenuText(stringResource(title)) },
-                    leadingIcon = { RadioButton(selected = layoutType == type, onClick = null) },
-                    onClick = { onSelectLayout(type); onDismiss() },
-                )
-            }
-            return@DropdownMenu
-        }
         if (extraCheckbox != null) {
             DropdownMenuItem(
                 text = { MenuText(extraCheckbox.first) },
@@ -173,22 +168,72 @@ fun SortMenu(
             DropdownMenuItem(
                 text = { MenuText(stringResource(sortTitles.getValue(type))) },
                 leadingIcon = { RadioButton(selected = activeSort == type, onClick = null) },
-                onClick = { onSelectSort(type); onDismiss() },
+                onClick = { sort.selectSort(type); onDismiss() },
             )
         }
         if (canReverse) {
             DropdownMenuItem(
                 text = { MenuText(stringResource(R.string.reverse_order)) },
                 leadingIcon = { Checkbox(checked = isReversed, onCheckedChange = null) },
-                onClick = { onToggleReverse(); onDismiss() },
+                onClick = { sort.toggleReverse(); onDismiss() },
             )
         }
         if (onSelectLayout != null) {
-            DropdownMenuItem(
-                text = { MenuText(stringResource(R.string.layout)) },
-                trailingIcon = { Icon(Icons.AutoMirrored.Outlined.KeyboardArrowRight, null) },
-                onClick = { showLayouts = true },
-            )
+            Box {
+                DropdownMenuItem(
+                    text = { MenuText(stringResource(R.string.layout)) },
+                    trailingIcon = { Icon(Icons.AutoMirrored.Outlined.KeyboardArrowRight, null) },
+                    onClick = { showLayouts = true },
+                )
+                AppDropdownMenu(
+                    expanded = expanded && showLayouts,
+                    onDismissRequest = onDismiss,
+                    modifier = Modifier.widthIn(min = SORT_MENU_MIN_WIDTH),
+                    anchorPosition = MenuAnchorPosition.End,
+                ) {
+                    layoutEntries.forEach { (type, title) ->
+                        DropdownMenuItem(
+                            text = { MenuText(stringResource(title)) },
+                            leadingIcon = { RadioButton(selected = layoutType == type, onClick = null) },
+                            onClick = { onSelectLayout(type); onDismiss() },
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+/**
+ * The sort menu of a page with more than one list, such as an artist's albums and songs. It first
+ * lists them by [titles], then opens the picked one's menu, drawn by [menu] as a submenu, beside its
+ * entry while this one stays open. Either closing closes both.
+ */
+@Composable
+fun SortMenuChooser(
+    expanded: Boolean,
+    onDismiss: () -> Unit,
+    titles: List<String>,
+    menu: @Composable (index: Int, expanded: Boolean, onDismiss: () -> Unit) -> Unit,
+) {
+    var picked by remember { mutableIntStateOf(-1) }
+    LaunchedEffect(expanded) { if (!expanded) picked = -1 }
+    AppDropdownMenu(
+        expanded = expanded,
+        onDismissRequest = onDismiss,
+        modifier = Modifier.widthIn(min = SORT_MENU_MIN_WIDTH),
+        // Touches on the picked list's menu are outside this one, which mustn't close for them
+        properties = PopupProperties(focusable = true, dismissOnClickOutside = picked < 0),
+    ) {
+        titles.forEachIndexed { index, title ->
+            Box {
+                DropdownMenuItem(
+                    text = { MenuText(title) },
+                    trailingIcon = { Icon(Icons.AutoMirrored.Outlined.KeyboardArrowRight, null) },
+                    onClick = { picked = index },
+                )
+                menu(index, expanded && picked == index, onDismiss)
+            }
         }
     }
 }
@@ -309,7 +354,7 @@ private fun LibraryItemSheetAction(
             modifier = Modifier.size(24.dp),
         )
         SingleLineText(
-            stringResource(action.title), 16.sp, 400, MaterialTheme.colorScheme.onSurface,
+            stringResource(action.title), 16.sp, 500, MaterialTheme.colorScheme.onSurface,
             Modifier.weight(1f).padding(start = 24.dp),
         )
     }

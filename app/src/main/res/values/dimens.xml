@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- https://github.com/zhanghai/AndroidFastScroll/issues/3 -->
-    <dimen name="afs_min_touch_target_size" tools:keep="@dimen/afs_min_touch_target_size">24dp
-    </dimen>
+<resources>
     <dimen name="list_height">75dp</dimen>
     <dimen name="lyric_top_padding">36dp</dimen>
     <dimen name="lyric_bottom_padding">640dp</dimen>

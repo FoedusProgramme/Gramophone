@@ -191,7 +191,7 @@ sealed class LibraryTabSpec<T : Any>(
             env: AppActionEnv, state: LibraryTabState<MediaItem>, item: MediaItem, position: Int
         ) {
             LibraryActions.playSong(
-                env, state.items, position, state.queueTitleOverride ?: "/"
+                env, state.items, position, state.queueTitleOverride ?: FolderPage.ROOT_TITLE
             )
         }
 

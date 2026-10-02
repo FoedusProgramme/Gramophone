@@ -35,14 +35,16 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.lerp
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
 import org.akanework.gramophone.ui.MediaControllerViewModel
-import org.akanework.gramophone.ui.THEME_ANIMATION_MS
 import org.akanework.gramophone.ui.components.player.NowPlayingColors
 import org.akanework.gramophone.ui.components.player.nowPlayingColors
 import org.akanework.gramophone.ui.components.player.rememberArtworkColorScheme
+import org.akanework.gramophone.ui.theme.THEME_ANIMATION_MS
+import org.koin.compose.viewmodel.koinActivityViewModel
 
 /** The song playing right now. Its list row takes [colors], the collapsed player's. */
 @Stable
@@ -55,10 +57,11 @@ class NowPlayingState {
         internal set
 }
 
+/** The playing song of [controllerViewModel], followed for as long as [lifecycle] lives. */
 @Composable
 fun rememberNowPlayingState(
-    controllerViewModel: MediaControllerViewModel,
-    lifecycle: Lifecycle,
+    controllerViewModel: MediaControllerViewModel = koinActivityViewModel(),
+    lifecycle: Lifecycle = LocalLifecycleOwner.current.lifecycle,
     /** Whether the playing row leans towards the theme's hue, off on a page themed from a cover. */
     harmonize: Boolean = true,
 ): NowPlayingState {

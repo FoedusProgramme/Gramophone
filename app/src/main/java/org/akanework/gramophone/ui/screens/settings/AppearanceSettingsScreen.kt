@@ -17,7 +17,6 @@
 
 package org.akanework.gramophone.ui.screens.settings
 
-import org.akanework.gramophone.ui.theme.AppFont
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,6 +34,7 @@ import org.akanework.gramophone.ui.components.settings.PreferenceSectionHeader
 import org.akanework.gramophone.ui.components.settings.SwitchPreferenceRow
 import org.akanework.gramophone.ui.nav.AppNavKey
 import org.akanework.gramophone.ui.nav.ThemeSettingsKey
+import org.akanework.gramophone.ui.theme.AppFont
 
 @Composable
 fun AppearanceSettingsScreen(

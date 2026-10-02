@@ -17,7 +17,6 @@
 
 package org.akanework.gramophone.ui.components.compose
 
-import android.Manifest
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -34,21 +33,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import org.akanework.gramophone.logic.hasAudioPermission
 import org.akanework.gramophone.logic.hasScopedStorageV2
-import org.akanework.gramophone.logic.hasScopedStorageWithMediaTypes
 import org.akanework.gramophone.logic.library.LibraryReadiness
 import org.akanework.gramophone.logic.library.LibraryRefresher
+import org.akanework.gramophone.logic.requiredLibraryPermissions
 import org.koin.compose.koinInject
 import uk.akane.libphonograph.reader.FlowReader
-
-/** The permissions to ask for so the library can be read on API level [sdkInt]. */
-internal fun requiredLibraryPermissions(sdkInt: Int): Array<String> = when {
-    hasScopedStorageWithMediaTypes(sdkInt) -> arrayOf(Manifest.permission.READ_MEDIA_AUDIO)
-    hasScopedStorageV2(sdkInt) -> arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
-    else -> arrayOf(
-        Manifest.permission.READ_EXTERNAL_STORAGE,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE
-    )
-}
 
 /**
  * Asks for audio permission if needed, then runs the first library scan of the process unless one
@@ -98,7 +87,8 @@ fun LibraryGate(
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { result ->
-        // Like the old onRequestPermissionsResult: the first permission decides.
+        // Only the first permission (reading audio) decides; a denied write permission does not
+        // keep the library from loading.
         if (result[permissions[0]] == true) proceed() else currentOnDenied()
     }
     // Runs after the launcher is registered, so launch() below cannot hit an unregistered one.

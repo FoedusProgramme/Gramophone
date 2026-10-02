@@ -17,7 +17,6 @@
 
 package org.akanework.gramophone.ui.components.home
 
-import androidx.compose.foundation.layout.width
 import android.net.Uri
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -34,6 +33,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Folder
@@ -48,10 +48,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.drawOutline
-import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.drawOutline
+import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
@@ -64,7 +64,7 @@ import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import coil3.request.crossfade
-import org.akanework.gramophone.ui.LocalCardSurface
+import org.akanework.gramophone.ui.theme.LocalCardSurface
 
 /** Centre like the View framework does: integer division, i.e. the odd pixel goes to the end. */
 val FloorCenter = Alignment { size, space, _ ->
@@ -244,6 +244,25 @@ private fun Modifier.insetBackground(color: Color, shape: Shape, inset: Dp): Mod
         translate(left = insetPx) { drawOutline(outline, color) }
     }
 
+/** What a list row shows before its title. */
+sealed interface ListRowLeading {
+    /** Whether the row shows its cover. */
+    val showsCover: Boolean
+
+    /** The cover. */
+    data object Cover : ListRowLeading {
+        override val showsCover get() = true
+    }
+
+    /**
+     * A track number, for lists whose covers would all be the same. [withCover] shows the cover
+     * after it too, for numbered lists of different covers.
+     */
+    data class Number(val number: Int, val withCover: Boolean) : ListRowLeading {
+        override val showsCover get() = withCover
+    }
+}
+
 /** `adapter_list_card_larger` (LIST). */
 @Composable
 fun LibraryListRow(
@@ -257,10 +276,7 @@ fun LibraryListRow(
     modifier: Modifier = Modifier,
     colors: LibraryRowColors = defaultLibraryRowColors(),
     menu: @Composable () -> Unit = {},
-    /** Shown in place of the cover, for lists whose covers would all be the same. */
-    number: Int? = null,
-    /** Shows the cover after the [number] too, for numbered lists of different covers. */
-    numberedCover: Boolean = false,
+    leading: ListRowLeading = ListRowLeading.Cover,
     /** Horizontal inset of the playing song's container from the row's edges. */
     containerInset: Dp = 0.dp,
     /** Shown before the menu button, such as a song's length. */
@@ -280,27 +296,28 @@ fun LibraryListRow(
             .padding(start = LIST_ROW_PADDING, end = LIST_ROW_PADDING),
         verticalAlignment = FloorCenterVertically,
     ) {
-        if (number != null) {
+        val numbered = leading is ListRowLeading.Number
+        if (leading is ListRowLeading.Number) {
             Box(
                 // Aligns with the 24dp start margin of the page title.
                 Modifier.padding(start = LIST_COVER_START).width(LIST_NUMBER_WIDTH),
                 contentAlignment = Alignment.CenterStart,
             ) {
-                SingleLineText(number.toString(), 15.sp, 500, colors.subtitle)
+                SingleLineText(leading.number.toString(), 15.sp, 500, colors.subtitle)
             }
         }
-        if (number == null || numberedCover) {
+        if (leading.showsCover) {
             LibraryCover(
                 uri = cover,
                 defaultCover = defaultCover,
                 cornerRadius = LIST_ROUND_CORNER_SIZE,
                 // After a number, the number's box already holds the gap.
-                modifier = Modifier.padding(start = if (number != null) 0.dp else LIST_COVER_START)
+                modifier = Modifier.padding(start = if (numbered) 0.dp else LIST_COVER_START)
                     .size(46.dp),
             )
         }
         Column(
-            Modifier.weight(1f).padding(start = if (number != null && !numberedCover) 4.dp else 16.dp),
+            Modifier.weight(1f).padding(start = if (leading.showsCover) 16.dp else 4.dp),
         ) {
             SingleLineText(
                 title, 14.sp, 500, colors.title,

@@ -120,6 +120,7 @@
     <string name="settings_blacklist">Ignorar</string>
     <string name="settings_blacklist_folder_summary">Filtre músicas de determinadas pastas (requer nova busca)</string>
     <string name="settings_blacklist_folder">Pastas ignoradas</string>
+    <string name="dialog_lyrics">Letras</string>
     <string name="fgs_failed_channel">A reprodução não foi retomada</string>
     <string name="album_cover">Capa do álbum</string>
     <string name="sort_by_release_date">Data de lançamento</string>
@@ -127,6 +128,7 @@
     <string name="share">Partilhar</string>
     <string name="album_covers_enhance_desc">Mostra capas de músicas de alta qualidade e permite que a capa do álbum e da música seja diferente (requer acesso às fotos)</string>
     <string name="timer">Despertador</string>
+    <string name="current_playlist">Lista de reprodução atual</string>
     <string name="fgs_failed_title">Falha ao retomar a reprodução da música</string>
     <string name="settings_crash_application">Travar a aplicação</string>
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
@@ -148,6 +150,7 @@
     <string name="spk_channel_invalid">Inválido</string>
     <string name="spk_channel_out_top_back_center">Fundo superior ao centro</string>
     <string name="home_menu_shuffle">Reproduzir no modo aleatório</string>
+    <string name="expand_less">Fechar</string>
     <string name="settings_status_bar_lyrics_summary">Ativar o método MeiZu para mostrar letras na barra de estado (disponível apenas em alguns dispositivos)</string>
     <string name="lyric_widget_description">Widget que mostra as letras da média que é reproduzida</string>
     <string name="no">Não</string>
@@ -236,6 +239,7 @@
     <string name="crash_report">Relatório de crash</string>
     <string name="email_clipboard">E-mail e texto copiados para a área de transferência</string>
     <string name="settings_export_logs">Exportar registo da app</string>
+    <string name="position_slider">Controle deslizante</string>
     <string name="play">Reproduzir</string>
     <string name="more">Mais</string>
     <string name="yes">Sim</string>
@@ -249,6 +253,7 @@
     <string name="grant_audio"><![CDATA[Conceda permissão para \"Música e Áudio\"]]></string>
     <string name="tab_order_summary">A app mostrará a primeira guia na inicialização. As guias após o divisor ficarão ocultas.</string>
     <string name="shuffle_all">Reproduzir no modo aleatório</string>
+    <string name="skip_previous">Pular para o anterior</string>
     <string name="settings_status_bar_lyrics_title">Letra da música na barra de estado</string>
     <string name="delete">Apagar</string>
     <string name="sort_by_file_path">Caminho do ficheiro</string>
@@ -270,6 +275,7 @@
     <string name="failed_to_parse_lyric">Falha ao analisar a letra da música</string>
     <string name="settings_contributors_click">%s (clique para saber mais!)</string>
     <string name="settings_preference_category_home">Ecrã inicial</string>
+    <string name="skip_next">Pular para o próximo</string>
     <string name="spk_encoding_e_ac3">E-AC-3</string>
     <string name="device_type_line_analog">Linha analógica</string>
     <string name="cannot_play_file">Não é possível abrir este ficheiro</string>
@@ -384,16 +390,6 @@
     <string name="edit_playlist_failed">Edição de playlist falhou: %s</string>
     <string name="add_to_playlist">Adicione a playlist</string>
     <string name="no_app_found">Nenhuma app encontrada pode fazer isto</string>
-    <string name="contributors_nift4">Mantedor/ Programador Líder</string>
-    <string name="contributors_123duo3">Líder de Design</string>
-    <string name="contributors_akanetan">Criador original, programador reformado</string>
-    <string name="contributors_developer">Programador</string>
-    <string name="contributors_wstxda">Desenhado uma variação do ícone da app</string>
-    <string name="contributors_pxeemo">Ajuda &amp; teste de novas letras</string>
-    <string name="contributors_lambada10">a fornecer letras &amp; sincronização de músicas</string>
-    <string name="contributors_code_contributions">Contribuições de código</string>
-    <string name="contributors_yuyuko1024">Barra de progresso ondulada</string>
-    <string name="contributors_saladnoober">Garantia de qualidade</string>
     <string name="home_menu_quick_refresh">Atualização rápida</string>
     <string name="add_to_queue">Adicionar à fila</string>
     <string name="disabled">Desativado</string>

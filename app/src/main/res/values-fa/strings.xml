@@ -21,7 +21,6 @@
         <item quantity="one">%d آهنگ</item>
         <item quantity="other">%d آهنگ</item>
     </plurals>
-    <string name="songs_total_duration">%1$s، %2$s</string>
     <string name="follow_system">پیروی از سامانه</string>
     <string name="light">روشن</string>
     <string name="sort_by_name">نام</string>
@@ -90,6 +89,7 @@
     <string name="settings_category_full_player">پخش کنندۀ کامل</string>
     <string name="settings_category_misc">متفرقه</string>
     <string name="crash_clipboard">گزارش ازکار افتادن در کلیپ‌بورد ذخیره شد</string>
+    <string name="dialog_lyrics">ترانه‌ها</string>
     <string name="deny_images"><![CDATA[لطفا اجازۀ دسترسی به «تصاویر و ویدیوها» را نپذیرید]]></string>
     <string name="settings_trim_lyrics">برداشتن فاصله‌های اطراف ترانه‌ها</string>
     <string name="settings_about_app">درباره</string>
@@ -134,6 +134,7 @@
     <string name="album_covers_enhance">بارگذاری بهبود یافتهٔ جلد آلبوم</string>
     <string name="share">هم‌رسانی</string>
     <string name="album_covers_enhance_desc">نمایش جلدهای آواز کیفیت بالا و اجازۀ تفاوت داشتن جلد آلبوم و آواز (نیازمند دسترسی عکس‌ها)</string>
+    <string name="current_playlist">فهرست پخش کنونی</string>
     <string name="fgs_failed_text">برای باز شدن کاره و ادامۀ پخش این‌جا کلیک کنید</string>
     <string name="timer">زمان‌سنج خواب</string>
     <string name="fgs_failed_channel">ازسرگیری پخش شکست خورد</string>
@@ -145,7 +146,11 @@
     <string name="shuffle_all">درهم کردن همه</string>
     <string name="tab_order">پیکربندی چینش زبانه‌ها</string>
     <string name="tab_order_summary">برنامه هنگام شروع اولین زبانه را نشان خواهد داد. زبانه‌های پس از جداگر مخفی خواهند شد.</string>
+    <string name="skip_next">رد کردن به بعدی</string>
+    <string name="expand_less">بستن</string>
+    <string name="skip_previous">رد کردن به قبلی</string>
     <string name="settings_preference_category_home">صفحه اصلی</string>
+    <string name="position_slider">لغزندۀ موقعیت</string>
     <string name="home_menu_shuffle">بُر زدن همه</string>
     <string name="settings_status_bar_lyrics_title">ترانۀ نوار وضعیت</string>
     <string name="settings_status_bar_lyrics_summary">به کار انداختن روش نمایشی ترانۀ MeiZu در نوار وضعیت (فقط در بعضی دستگاه‌ها در دسترس است)</string>
@@ -375,16 +380,6 @@
     <string name="delete_failed_playlist">پاک کردن فهرست پخش شکست خورد: %s</string>
     <string name="rename">تغییر نام</string>
     <string name="no_app_found">هیچ برنامه‌ای پیدا نشد که بتواند این کار را انجام دهد</string>
-    <string name="contributors_nift4">نگه‌دارنده / توسعه‌دهندۀ راهبر</string>
-    <string name="contributors_123duo3">طراح راهبر</string>
-    <string name="contributors_akanetan">سازندۀ اصلی، توسعه‌دهندۀ بازنشسته</string>
-    <string name="contributors_developer">توسعه‌دهنده</string>
-    <string name="contributors_wstxda">طراحی یک نگارش از آیکون برنامه</string>
-    <string name="contributors_pxeemo">کمک و آزمایش ترانه‌های جدید</string>
-    <string name="contributors_lambada10">ارائۀ نمونه‌های ترانه و SongSync</string>
-    <string name="contributors_code_contributions">مشارکت در کدها</string>
-    <string name="contributors_yuyuko1024">نوار پیشرفت مواج</string>
-    <string name="contributors_ghhccghk">ترانه‌های نوار وضعیت و بهبودهای دیگر</string>
     <string name="home_menu_quick_refresh">بازخوانی سریع</string>
     <string name="add_to_queue">افزودن به صف</string>
     <string name="app_name">گرامافون</string>
@@ -420,7 +415,6 @@
     <string name="reset">بازنشانی</string>
     <string name="delete_really_artist">مطمئنید که می‌خواهید همۀ آوازهای توسط «%s» را حذف کنید؟ این کار غیرقابل بازگشت است.</string>
     <string name="edit_favorites_failed">ویرایش پسندیده‌ها شکست خورد: %s</string>
-    <string name="contributors_saladnoober">تضمین کیفیت</string>
     <string name="track_gain">بلندی برابر همۀ قطعه‌ها</string>
     <string name="tempo">تمپو</string>
     <string name="pitch">پیچ</string>

@@ -126,6 +126,7 @@
     <string name="settings_crash_application">La aplicación falló</string>
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
     <string name="album_cover">Portada del álbum</string>
+    <string name="dialog_lyrics">Letras</string>
     <string name="settings_category_filters">Filtros</string>
     <string name="settings_category_misc">Varias</string>
     <string name="settings_category_full_player">Pantalla de reproducción</string>
@@ -134,6 +135,7 @@
     <string name="settings_trim_lyrics">Eliminar los espacios alrededor de las letras</string>
     <string name="crash_clipboard">Registro de fallos copiado al portapapeles</string>
     <string name="timer">Temporizador</string>
+    <string name="current_playlist">Lista de reproducción actual</string>
     <string name="fgs_failed_text">Haga clic aquí para abrir la aplicación y continuar la reproducción</string>
     <string name="fgs_failed_channel">No se puede reanudar la reproducción</string>
     <string name="fgs_failed_title">Error al reanudar la reproducción de música</string>
@@ -145,10 +147,14 @@
     <string name="grant_audio"><![CDATA[Por favor, permite los permisos Música y audio]]></string>
     <string name="play">Reproducir</string>
     <string name="more">Más</string>
+    <string name="skip_next">Saltar a la siguiente</string>
+    <string name="expand_less">Cerrar</string>
+    <string name="position_slider">Control deslizante</string>
     <string name="tab_order_summary">La aplicación mostrará la primera pestaña al iniciarse. Las pestañas que estén después del divisor estarán ocultas.</string>
     <string name="settings_preference_category_home">Pantalla de inicio</string>
     <string name="shuffle_all">Mezclar todas</string>
     <string name="tab_order">Configurar el orden de las pestañas</string>
+    <string name="skip_previous">Ir a la anterior</string>
     <string name="home_menu_shuffle">Mezclar todo</string>
     <string name="settings_status_bar_lyrics_title">Letras en la barra de estado</string>
     <string name="settings_status_bar_lyrics_summary">Habilite el método MeiZu que muestra las letras de las canciones en la barra de estado (solo disponible en algunos dispositivos)</string>
@@ -348,16 +354,6 @@
     <string name="compact_grid">Cuadrícula (compacta)</string>
     <string name="sort_by_album_year">Año del álbum</string>
     <string name="no_app_found">No se encontró ninguna aplicación que pueda hacer esto</string>
-    <string name="contributors_nift4">Mantenedor / Desarrollador líder</string>
-    <string name="contributors_123duo3">Diseñador principal</string>
-    <string name="contributors_akanetan">Creador original, desarrollador retirado</string>
-    <string name="contributors_developer">Desarrollador</string>
-    <string name="contributors_wstxda">Diseñó una variación del ícono de la aplicación</string>
-    <string name="contributors_pxeemo">Ayuda y Tester de las nuevas letras</string>
-    <string name="contributors_lambada10">Proporciona muestras de letras y SongSync</string>
-    <string name="contributors_code_contributions">Contribuciones al código</string>
-    <string name="contributors_yuyuko1024">Barra de progreso ondulada</string>
-    <string name="contributors_ghhccghk">Letras en la barra de estado y otras mejoras</string>
     <string name="home_menu_quick_refresh">Escaneo rápido</string>
     <string name="add_to_queue">Añadir a la cola</string>
     <string name="disabled">Deshabilitado</string>
@@ -472,7 +468,6 @@
     <string name="shuffled">%s (aleatorio)</string>
     <string name="spk_encoding_amr_wb">AMR‐WB</string>
     <string name="edit_favorites_failed">Edición incorrecta de favoritas: %s</string>
-    <string name="contributors_saladnoober">Garantía de Calidad</string>
     <string name="actions_query_shuffle_all_songs">baraja todas las canciones</string>
     <string name="actions_query_play_random_stuff">reproduce material aleatorio</string>
     <string name="actions_query_play_randomly">reproduce aleatoriamente</string>
@@ -491,7 +486,6 @@
     <string name="spk_encoding_dts_hd_ma">DTS-HD Master Audio</string>
     <string name="settings_replaygain_boost">Boost</string>
     <string name="d_db">%d dB</string>
-    <string name="contributors_banksio">Android Auto</string>
     <string name="loading_playlists">Cargando listas de reproducción...</string>
     <string name="edit_mode">Entrar en modo de edición</string>
 </resources>

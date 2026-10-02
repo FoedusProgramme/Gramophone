@@ -21,32 +21,54 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharedFlow
 import org.akanework.gramophone.di.appModule
 import org.akanework.gramophone.di.viewModelModule
+import org.akanework.gramophone.ui.intent.DefaultPlayIntentExecutor
+import org.akanework.gramophone.ui.intent.PlayIntentExecutor
+import org.junit.Assert.assertTrue
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.koin.android.ext.koin.androidContext
 import org.koin.android.test.verify.androidVerify
+import org.koin.dsl.koinApplication
 import org.koin.dsl.module
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.RuntimeEnvironment
 
+@RunWith(RobolectricTestRunner::class)
 class KoinGraphTest {
+
+    /** Constructor parameter types the modules fill in themselves rather than through Koin. */
+    private val extraTypes = listOf(
+        // FlowReader's filter-flow parameters come from LibraryFilterSettings inside the module
+        // lambda, not from Koin definitions.
+        SharedFlow::class,
+        // Constructors take a CoroutineScope so tests can pass their own; the module passes
+        // get<ApplicationScope>() explicitly, as ApplicationScope is not bound as a scope.
+        CoroutineScope::class,
+    )
 
     @Test
     fun appModuleResolves() {
-        appModule.androidVerify(
-            extraTypes = listOf(
-                // FlowReader's filter-flow parameters come from SettingsRepository inside the
-                // module lambda, not from Koin definitions.
-                SharedFlow::class,
-                // SettingsRepository takes its scope as CoroutineScope (ApplicationScope in the
-                // module, a direct scope in tests).
-                CoroutineScope::class,
-            )
-        )
+        appModule.androidVerify(extraTypes = extraTypes)
     }
 
     @Test
     fun viewModelModuleResolves() {
         // Application (and SavedStateHandle) are whitelisted by androidVerify; FlowReader for
         // HomeViewModel comes from appModule, so verify the two modules together.
-        module { includes(appModule, viewModelModule) }.androidVerify(
-            extraTypes = listOf(SharedFlow::class, CoroutineScope::class)
-        )
+        module { includes(appModule, viewModelModule) }.androidVerify(extraTypes = extraTypes)
+    }
+
+    @Test
+    fun playIntentExecutorResolves() {
+        // PlayIntentViewModel asks for the interface, so resolve it the same way.
+        val koin = koinApplication {
+            androidContext(RuntimeEnvironment.getApplication())
+            modules(appModule, viewModelModule)
+        }.koin
+        try {
+            assertTrue(koin.get<PlayIntentExecutor>() is DefaultPlayIntentExecutor)
+        } finally {
+            koin.close()
+        }
     }
 }

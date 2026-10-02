@@ -35,7 +35,6 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -58,16 +57,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeSource
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import org.akanework.gramophone.R
 import org.akanework.gramophone.ui.LibraryAdapterTypes
-import org.akanework.gramophone.ui.MediaControllerViewModel
-import org.koin.compose.viewmodel.koinActivityViewModel
 import org.akanework.gramophone.ui.components.compose.rememberDefaultPreferences
+import org.akanework.gramophone.ui.components.home.BackButton
 import org.akanework.gramophone.ui.components.home.GLASS_BAR_HEIGHT
 import org.akanework.gramophone.ui.components.home.LibraryIconButton
 import org.akanework.gramophone.ui.components.home.glassHazeStyle
@@ -113,9 +110,7 @@ fun SearchScreen(initialQuery: String?, onBack: () -> Unit, modifier: Modifier =
     }
     val queueTitle = stringResource(R.string.search_query, query)
     LaunchedEffect(queueTitle) { state.queueTitleOverride = queueTitle }
-    val nowPlaying = rememberNowPlayingState(
-        koinActivityViewModel<MediaControllerViewModel>(), LocalLifecycleOwner.current.lifecycle
-    )
+    val nowPlaying = rememberNowPlayingState()
     val overscroll = rememberIosOverscrollState()
     val hazeState = remember { HazeState() }
     val insets = WindowInsets.systemBars.union(WindowInsets.displayCutout)
@@ -153,12 +148,7 @@ fun SearchScreen(initialQuery: String?, onBack: () -> Unit, modifier: Modifier =
                     .padding(start = 4.dp, end = 4.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                LibraryIconButton(
-                    icon = Icons.AutoMirrored.Outlined.ArrowBack,
-                    iconSize = 24.dp,
-                    tint = MaterialTheme.colorScheme.onSurface,
-                    onClick = onBack,
-                )
+                BackButton(onBack)
                 val textStyle = textViewStyle(FIELD_TEXT_SIZE, 400, MaterialTheme.colorScheme.onSurface)
                 BasicTextField(
                     value = query,

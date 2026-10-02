@@ -1,5 +1,5 @@
 /*
- *     Copyright (C) 2025 Akane Foundation
+ *     Copyright (C) 2026 The Gramophone authors
  *
  *     Gramophone is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -17,7 +17,6 @@
 
 package org.akanework.gramophone
 
-import android.app.Application
 import android.net.Uri
 import org.akanework.gramophone.ui.components.player.seedKey
 import org.junit.Assert.assertEquals
@@ -25,10 +24,8 @@ import org.junit.Assert.assertSame
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
-@Config(application = Application::class)
 class ArtworkSeedKeyTest {
 
     private val base = "content://org.akanework.gramophone.albumart/song/78?songFile=%2FMusic%2Fa.flac"

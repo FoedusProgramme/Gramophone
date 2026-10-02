@@ -111,6 +111,7 @@
     <string name="settings_player_options_summary">Kvalita výstupu, chování přehrávání</string>
     <string name="settings_title_bold_summary">Použít tučný text pro plný přehrávač</string>
     <string name="settings_blacklist_folder_summary">Filtrovat skladby z určitých složek</string>
+    <string name="dialog_lyrics">Text skladby</string>
     <string name="home_menu_refresh">Aktualizovat</string>
     <string name="category_playlists">Playlisty</string>
     <string name="unknown_artist">Neznámý interpret</string>
@@ -136,6 +137,7 @@
     <string name="crash_clipboard">Byl zkopírován záznam o havárii do schránky</string>
     <string name="settings_trim_lyrics">Odstranit mezery kolem textu skladeb</string>
     <string name="more">Více</string>
+    <string name="skip_next">Přeskočit</string>
     <string name="settings_trim_lyrics_summary">Mezery před prvním písmenem v textovém řádku mohou mít uměleckou hodnotu. Pokud s tím nesouhlasíte, můžete zapnout tento přepínač, který tyto mezery automaticky odstraní.</string>
     <string name="dialog_bitrate">Bitrate</string>
     <string name="bitrate_format">%1$d kbps</string>
@@ -191,6 +193,7 @@
     <string name="settings_title_center_summary">Použít centralizovaný název pro přehrávač</string>
     <string name="lyric_widget_description">Widget který ukazuje text skladby která se teď přehrává</string>
     <string name="timer">Spánkový časovač</string>
+    <string name="current_playlist">Aktuální playlist</string>
     <string name="tab_order">Konfigurovat pořadí lišty</string>
     <string name="album_covers_enhance">Pokročilé načítání obálky alba</string>
     <string name="share">Sdílet</string>
@@ -242,6 +245,9 @@
     <string name="settings_category_misc">Ostatní</string>
     <string name="grant_images"><![CDATA[Prosím povolte \"Fotky a Videa\" povolení]]></string>
     <string name="tab_order_summary">Aplikace ukáže první lištu při spuštění aplikace. Lišta se za rozdělovačem skryje.</string>
+    <string name="expand_less">Zavřít</string>
+    <string name="skip_previous">Předchozí</string>
+    <string name="position_slider">Pozice slideru</string>
     <string name="no">Ne</string>
     <string name="sort_by_file_path">Cesta k souboru</string>
     <string name="shuffle_all">Zamíchat vše</string>

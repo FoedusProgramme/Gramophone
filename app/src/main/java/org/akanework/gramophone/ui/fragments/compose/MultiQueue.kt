@@ -1,6 +1,5 @@
 package org.akanework.gramophone.ui.fragments.compose
 
-import org.akanework.gramophone.logic.showsPause
 import android.os.SystemClock
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
@@ -93,6 +92,7 @@ import org.akanework.gramophone.logic.pinQueue
 import org.akanework.gramophone.logic.playOrPause
 import org.akanework.gramophone.logic.renameQueue
 import org.akanework.gramophone.logic.replaceAllSupport
+import org.akanework.gramophone.logic.showsPause
 import org.akanework.gramophone.logic.supportsWideScreen
 import org.akanework.gramophone.logic.unpinQueue
 import org.akanework.gramophone.logic.utils.CalculationUtils.convertDurationToTimeStamp
@@ -215,7 +215,8 @@ fun MqListItem(
                     // extras line
                     if (!isPinned || !isOriginal) {
                         Row(
-                            horizontalArrangement = if (!isPinned) Arrangement.SpaceBetween else Arrangement.End,
+                            horizontalArrangement =
+                                if (!isPinned) Arrangement.SpaceBetween else Arrangement.End,
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
                                 .padding(horizontal = 16.dp)
@@ -227,7 +228,13 @@ fun MqListItem(
                                 ) {
                                     val remainingTimeMs = (expiry!! - System.currentTimeMillis())
                                     Icon(
-                                        painter = painterResource(if (!isActiveQueue && remainingTimeMs < 1800000) R.drawable.ic_warning else R.drawable.ic_keep),
+                                        painter = painterResource(
+                                            if (!isActiveQueue && remainingTimeMs < 1800000) {
+                                                R.drawable.ic_warning
+                                            } else {
+                                                R.drawable.ic_keep
+                                            }
+                                        ),
                                         contentDescription = null,
                                         modifier = Modifier
                                             .size(12.dp)
@@ -236,9 +243,11 @@ fun MqListItem(
                                             }),
                                     )
                                     Text(
-                                        text = if (isActiveQueue) "∞" else convertDurationToTimeStamp(
-                                            remainingTimeMs
-                                        ),
+                                        text = if (isActiveQueue) {
+                                            "∞"
+                                        } else {
+                                            convertDurationToTimeStamp(remainingTimeMs)
+                                        },
                                         color = MaterialTheme.colorScheme.onSurface.copy(0.7f),
                                         fontSize = 10.sp,
                                         maxLines = 1,
@@ -412,7 +421,11 @@ fun QueueInfo(
                 modifier = Modifier.padding(vertical = 6.dp)
             ) {
                 Icon(
-                    imageVector = if (mqState.expanded) Icons.Outlined.ExpandLess else Icons.Outlined.ExpandMore,
+                    imageVector = if (mqState.expanded) {
+                        Icons.Outlined.ExpandLess
+                    } else {
+                        Icons.Outlined.ExpandMore
+                    },
                     contentDescription = null,
                 )
             }
@@ -515,7 +528,8 @@ fun ActionBar(
                         }
                     ),
                     contentDescription = null,
-                    tint = LocalContentColor.current.copy(if (repeatMode == REPEAT_MODE_OFF) 0.5f else 1f)
+                    tint = LocalContentColor.current
+                        .copy(if (repeatMode == REPEAT_MODE_OFF) 0.5f else 1f)
                 )
             }
             IconButton(
@@ -557,7 +571,9 @@ fun ActionBar(
                 enabled = !mqState.isDetached(),
             ) {
                 Icon(
-                    painter = painterResource(if (showPause) R.drawable.ic_pause_filled else R.drawable.ic_play_arrow),
+                    painter = painterResource(
+                        if (showPause) R.drawable.ic_pause_filled else R.drawable.ic_play_arrow
+                    ),
                     contentDescription = null,
                 )
             }
@@ -800,8 +816,13 @@ fun QueueRoot(
  */
 class MqState(
     private val coroutineScope: CoroutineScope,
+    /** Where the queue's player and service listeners are registered. */
     private val controller: MediaControllerViewModel,
-    /** The connected controller the queue is opened for, see [rememberMqState]. */
+    /**
+     * The connected controller the queue is opened for, see [rememberMqState], which everything
+     * else goes through. The queue closes when the activity stops and releases it; until then,
+     * a controller no longer connected reports an empty queue and ignores commands.
+     */
     private val instance: MediaBrowser,
     private val host: QueueSheetHost,
 ) {
@@ -834,10 +855,10 @@ class MqState(
         }
     }
 
-    val isPlaying = MutableStateFlow(instance.isPlaying)
     val showPause = MutableStateFlow(instance.showsPause)
 
-    // shuffle and repeat modes do not need to be manually set for queue loads, they will be set automatically
+    // shuffle and repeat modes do not need to be manually set for queue loads, they will be set
+    // automatically
     val shuffleModeEnabled = MutableStateFlow(instance.shuffleModeEnabled)
     val repeatMode = MutableStateFlow(instance.repeatMode)
 
@@ -868,10 +889,6 @@ class MqState(
 
 
     val playerListener = object : Player.Listener {
-        override fun onIsPlayingChanged(isPlaying: Boolean) {
-            this@MqState.isPlaying.value = isPlaying
-        }
-
         override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
             showPause.value = instance.showsPause
         }
@@ -907,7 +924,8 @@ class MqState(
 
         controller.customCommandListeners.addCallback(host.lifecycle) { _, command, _ ->
             when (command.customAction) {
-                CLIENT_QB_REFRESH_ALL, CLIENT_QB_REFRESH_QUEUES, CLIENT_QB_REFRESH_ITEM, CLIENT_QB_REFRESH_LIST, CLIENT_QB_REFRESH_CLEAR -> {
+                CLIENT_QB_REFRESH_ALL, CLIENT_QB_REFRESH_QUEUES, CLIENT_QB_REFRESH_ITEM,
+                CLIENT_QB_REFRESH_LIST, CLIENT_QB_REFRESH_CLEAR -> {
                     SessionResult(SessionResult.RESULT_SUCCESS).also { res ->
                         val level = when (command.customAction) {
                             CLIENT_QB_REFRESH_ALL -> RefreshLevel.ALL
@@ -946,7 +964,9 @@ class MqState(
                 }
 
                 else -> {
-                    return@addCallback Futures.immediateFuture(SessionResult(SessionError.ERROR_NOT_SUPPORTED))
+                    return@addCallback Futures.immediateFuture(
+                        SessionResult(SessionError.ERROR_NOT_SUPPORTED)
+                    )
                 }
             }
             return@addCallback Futures.immediateFuture(SessionResult(SessionResult.RESULT_SUCCESS))
@@ -1085,7 +1105,8 @@ class MqState(
         if (detachedQueue == null) return
         instance.loadQueue(detachedQueue!!.id, startIndex)
 
-        // do not use full resetHead(false) to avoid restoring the stats of old active queue right before the new one is loaded
+        // do not use full resetHead(false) to avoid restoring the stats of old active queue right
+        // before the new one is loaded
         detachedQueue = null
         host.lockQueue(false)
 
@@ -1150,7 +1171,10 @@ class MqState(
 
     fun togglePin(queueId: Long? = activeQueue?.second?.id) {
         if (queueId == null) return
-        val queue = (if (queueId == activeQueue?.second?.id) activeQueue?.second else inactiveQueues.find { it.id == queueId })!!
+        val queue = (
+            if (queueId == activeQueue?.second?.id) activeQueue?.second
+            else inactiveQueues.find { it.id == queueId }
+        )!!
 
         if (queue.expiry != null) {
             instance.pinQueue(queueId)
@@ -1162,7 +1186,8 @@ class MqState(
     /**
      * Trigger a chromometer update
      *
-     * @param currentMediaItemIndex Override for [androidx.media3.session.MediaBrowser.currentMediaItemIndex]
+     * @param currentMediaItemIndex Override for
+     *   [androidx.media3.session.MediaBrowser.currentMediaItemIndex]
      * @param currentPosition Override for [androidx.media3.session.MediaBrowser.getCurrentPosition]
      *
      * TODO: this recomputes the whole timer even when a caller only changed a single row.
@@ -1197,7 +1222,6 @@ class MqState(
     /** Row [from] of the queue dragged to [to]. */
     fun moveRow(from: Int, to: Int) {
         if (from == to) return
-        val mediaController = controller.get()
         val from1 = playlist.first.removeAt(from)
         playlist.first.replaceAllSupport { if (it > from1) it - 1 else it }
         val movedItem = playlist.second.removeAt(from1)
@@ -1205,7 +1229,7 @@ class MqState(
         playlist.first.replaceAllSupport { if (it >= to1) it + 1 else it }
         playlist.first.add(to, to1)
         playlist.second.add(to1, movedItem)
-        mediaController?.moveMediaItem(from1, to1)
+        instance.moveMediaItem(from1, to1)
         host.notifyListChanged()
         val currentIndex = host.currentMediaItemIndex
         if (currentIndex != null) {
@@ -1331,7 +1355,8 @@ class MqState(
                     } else {
                         Pair(activeQueue.first, activeQueue.second.queue)
                     }
-                    // update active queue with one provided by the service. Avoid dumpPlaylist() race condition
+                    // update active queue with one provided by the service. Avoid dumpPlaylist()
+                    // race condition
                     updateList(mq = activeQueue)
                 }
             }
@@ -1346,7 +1371,8 @@ class MqState(
      * Update playlist and timer
      * 
      * @param mqIndex Index of queue in the inactive queues list. Specify -1 for the active queue
-     * @param mq Optionally specify [MultiQueueObject] to be used instead of the resolved queue with mqIndex
+     * @param mq Optionally specify [MultiQueueObject] to be used instead of the resolved queue
+     *   with mqIndex
      */
     private fun updateList(
         mq: Pair<MutableList<Int>, MultiQueueObject>? = null,
@@ -1369,10 +1395,9 @@ class MqState(
         updateTimer(mq?.second?.startIndex, mq?.second?.startPositionMs)
     }
 
+    /** The queue as the player has it: empty once the controller is no longer connected. */
     private fun dumpPlaylist(): Pair<MutableList<Int>, MutableList<MediaItem>> {
         val items = LinkedList<MediaItem>()
-        // Skipped when the controller is not connected (anymore)
-        val instance = controller.get() ?: return Pair(LinkedList(), items)
         for (i in 0 until instance.mediaItemCount) {
             items.add(instance.getMediaItemAt(i))
         }

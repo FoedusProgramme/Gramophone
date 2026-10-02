@@ -47,18 +47,18 @@ import com.materialkolor.quantize.QuantizerCelebi
 import com.materialkolor.rememberDynamicColorScheme
 import com.materialkolor.score.Score
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.Dispatchers
-import org.akanework.gramophone.logic.ApplicationScope
-import org.koin.compose.koinInject
-import kotlinx.coroutines.async
-import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
+import org.akanework.gramophone.logic.ApplicationScope
 import org.akanework.gramophone.ui.components.compose.rememberBooleanPreference
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.ARTWORK_QUANTIZE_MAX
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.ARTWORK_SEED_SIZE
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.ARTWORK_SEED_SIZE_ACCURATE
-import org.akanework.gramophone.ui.tonal
+import org.akanework.gramophone.ui.theme.tonal
+import org.koin.compose.koinInject
 
 /**
  * The colour scheme seeded from a song's cover, as the player and the lists paint it. Falls back
@@ -109,15 +109,24 @@ private const val ON_FILL_VARIANT_ALPHA = 0.8f
  * [harmony] is how far the colours lean towards [appPrimary], from 0 (the cover's own, on a page
  * already themed from a cover) to 1 (fully harmonized, among the app's own surfaces).
  */
-fun nowPlayingColors(cover: ColorScheme, appPrimary: Color, harmony: Float = 1f): NowPlayingColors {
-    val isDark = cover.surface.luminance() < 0.5f
-    val primary = cover.primary.harmonizeBy(appPrimary, harmony)
-    val onFill = cover.onPrimaryContainer.harmonizeBy(appPrimary, harmony)
+fun nowPlayingColors(cover: ColorScheme, appPrimary: Color, harmony: Float = 1f): NowPlayingColors =
+    nowPlayingColors(appPrimary, harmony) { cover.it() }
+
+/** [nowPlayingColors] of the scheme [cover] looks roles up in, like [AnimatedColorScheme.color]. */
+fun nowPlayingColors(
+    appPrimary: Color,
+    harmony: Float,
+    cover: (ColorScheme.() -> Color) -> Color,
+): NowPlayingColors {
+    val surface = cover { surface }
+    val isDark = surface.luminance() < 0.5f
+    val primary = cover { primary }.harmonizeBy(appPrimary, harmony)
+    val onFill = cover { onPrimaryContainer }.harmonizeBy(appPrimary, harmony)
     return NowPlayingColors(
         bar = if (isDark) primary.tonal(DARK_BAR_CHROMA, DARK_BAR_TONE)
-            else cover.surface.harmonizeBy(appPrimary, harmony),
+            else surface.harmonizeBy(appPrimary, harmony),
         fill = if (isDark) primary.tonal(DARK_BAR_FILL_CHROMA, DARK_BAR_FILL_TONE)
-            else cover.primaryContainer.harmonizeBy(appPrimary, harmony),
+            else cover { primaryContainer }.harmonizeBy(appPrimary, harmony),
         onFill = onFill,
         onFillVariant = onFill.copy(alpha = ON_FILL_VARIANT_ALPHA),
     )

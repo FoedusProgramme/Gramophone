@@ -18,13 +18,11 @@
 package org.akanework.gramophone.logic.library
 
 import android.app.Activity
-import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
 import android.net.Uri
 import android.os.Build
-import android.provider.MediaStore
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.media3.common.util.Log
@@ -35,6 +33,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.akanework.gramophone.R
+import org.akanework.gramophone.logic.playlistUri
 import org.nift4.mediastorecompat.MediaStoreCompat
 import uk.akane.libphonograph.dynamicitem.Favorite
 import uk.akane.libphonograph.manipulator.ItemManipulator
@@ -61,15 +60,30 @@ class LibraryWriteRepository internal constructor(
         requester: MediaConsentRequester,
     ) : this(scope, requester, MediaStoreLibraryWrites(context.applicationContext, reader))
 
-    /** Adds [songs] to the playlist at [uri], or to a new playlist file [newPlaylist]. */
-    fun addToPlaylist(uri: Uri?, newPlaylist: File?, songs: List<Entry>) {
-        submit(PendingWrite.AddToPlaylist(songs, uri, newPlaylist?.path))
+    /** Appends [songs] to the playlist with MediaStore [playlistId]. */
+    fun addToPlaylist(playlistId: Long, songs: List<Entry>) {
+        submit(PendingWrite.AddToPlaylist(songs, playlistId))
+    }
+
+    /** Creates the playlist file [file], holding [songs]. */
+    fun addToNewPlaylist(file: File, songs: List<Entry>) {
+        submit(PendingWrite.AddToNewPlaylist(songs, file.path))
     }
 
     fun markFavorite(songs: List<Entry>, favorite: Boolean) {
         scope.launch {
             submitNow(PendingWrite.Favorite(songs, writes.favoritesUri(), favorite))
         }
+    }
+
+    /**
+     * Marks [songs] as favorite or not right away, for a caller that can't ask for consent (the
+     * playback service). Returns false if the write needs the user's consent first, in which case
+     * nothing is written, or if it failed; either way the user hasn't been told.
+     */
+    suspend fun markFavoriteNow(songs: List<Entry>, favorite: Boolean): Boolean {
+        val write = PendingWrite.Favorite(songs, writes.favoritesUri(), favorite)
+        return writes.consentFor(write) == null && writes.perform(write, quiet = true)
     }
 
     fun renamePlaylist(id: Long, path: File) {
@@ -90,25 +104,6 @@ class LibraryWriteRepository internal constructor(
     /** Like [deleteSongs], for the playlist with MediaStore [id]. */
     suspend fun deletePlaylist(id: Long): DeleteResult =
         writes.deletePlaylist(id).also(::queueIfNeeded)
-
-    /**
-     * Like the suspending [deleteSongs], but runs on the application scope so it finishes even if
-     * the screen that asked goes away. [onResult] is called on the main thread.
-     */
-    fun deleteSongs(list: List<Pair<File, Long>>, onResult: (DeleteResult) -> Unit) {
-        scope.launch {
-            val result = deleteSongs(list)
-            withContext(Dispatchers.Main) { onResult(result) }
-        }
-    }
-
-    /** Like [deleteSongs] with a callback, for the playlist with MediaStore [id]. */
-    fun deletePlaylist(id: Long, onResult: (DeleteResult) -> Unit) {
-        scope.launch {
-            val result = deletePlaylist(id)
-            withContext(Dispatchers.Main) { onResult(result) }
-        }
-    }
 
     /** Runs a delete the user confirmed in the app. */
     fun runConfirmed(result: DeleteResult.ConfirmThenRun) {
@@ -143,7 +138,7 @@ class LibraryWriteRepository internal constructor(
 
     private suspend fun submitNow(write: PendingWrite) {
         val consent = writes.consentFor(write)
-        if (consent != null) requester.send(consent, write) else writes.perform(write)
+        if (consent != null) requester.request(consent, write) else writes.perform(write)
     }
 
     private fun queueIfNeeded(result: DeleteResult) {
@@ -161,7 +156,12 @@ internal interface LibraryWrites {
 
     /** The consent dialog [write] needs first, or null if it can run right away. */
     suspend fun consentFor(write: PendingWrite): IntentSender?
-    suspend fun perform(write: PendingWrite)
+
+    /**
+     * Runs [write] and returns whether it worked. A failure is logged, and unless [quiet] also
+     * shown to the user.
+     */
+    suspend fun perform(write: PendingWrite, quiet: Boolean = false): Boolean
     suspend fun reportFailure(write: PendingWrite, resultCode: Int, data: Intent?)
     suspend fun createPlaylist(file: File)
     suspend fun deleteSongs(list: List<Pair<File, Long>>): DeleteResult
@@ -174,19 +174,15 @@ private class MediaStoreLibraryWrites(
 ) : LibraryWrites {
 
     override suspend fun favoritesUri(): Uri? =
-        reader.playlistListFlow.map { it.find { p -> p is Favorite } }.first()?.id?.let {
-            ContentUris.withAppendedId(
-                @Suppress("deprecation") MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, it
-            )
-        }
+        reader.playlistListFlow.map { it.find { p -> p is Favorite } }.first()?.id
+            ?.let(::playlistUri)
 
     override suspend fun consentFor(write: PendingWrite): IntentSender? = withContext(Dispatchers.IO) {
         val token = when (write) {
-            is PendingWrite.AddToPlaylist -> if (write.uri != null) {
-                MediaStoreCompat.needRequestBytesWrite(context, write.uri)
-            } else {
-                MediaStoreCompat.needRequestCreate(context, write.name!!)
-            }
+            is PendingWrite.AddToPlaylist ->
+                MediaStoreCompat.needRequestBytesWrite(context, playlistUri(write.id))
+            is PendingWrite.AddToNewPlaylist ->
+                MediaStoreCompat.needRequestCreate(context, write.path)
             is PendingWrite.Favorite -> if (write.uri != null &&
                 Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 MediaStoreCompat.needRequestAdoption(context, write.uri)
@@ -204,20 +200,22 @@ private class MediaStoreLibraryWrites(
         token?.let { MediaStoreCompat.createWriteRequest(context, listOf(it)).intentSender }
     }
 
-    override suspend fun perform(write: PendingWrite) = withContext(Dispatchers.IO) {
+    override suspend fun perform(write: PendingWrite, quiet: Boolean) = withContext(Dispatchers.IO) {
         try {
             when (write) {
                 is PendingWrite.AddToPlaylist -> addToPlaylist(write)
+                is PendingWrite.AddToNewPlaylist -> addToNewPlaylist(write)
                 is PendingWrite.Favorite -> markFavorite(write)
                 is PendingWrite.Rename ->
                     MediaStoreCompat.efficientMove(context, playlistUri(write.id), write.path)
                 PendingWrite.Delete -> Unit
             }
+            true
         } catch (e: Exception) {
             Log.e(TAG, Log.getThrowableString(e)!!)
-            toast(failureMessage(write), e.javaClass.name + ": " + e.message)
+            if (!quiet) toast(failureMessage(write), e.javaClass.name + ": " + e.message)
+            false
         }
-        Unit
     }
 
     override suspend fun reportFailure(write: PendingWrite, resultCode: Int, data: Intent?) {
@@ -250,13 +248,18 @@ private class MediaStoreLibraryWrites(
     }
 
     private suspend fun addToPlaylist(write: PendingWrite.AddToPlaylist) {
-        val readback = if (write.uri != null) {
-            ItemManipulator.readbackPlaylist(context, reader, write.uri)
-        } else PlaylistSerializer.Playlist.create()
-        val uri = write.uri ?: ItemManipulator.createPlaylist(context, File(write.name!!))
+        val uri = playlistUri(write.id)
+        val readback = ItemManipulator.readbackPlaylist(context, reader, uri)
         ItemManipulator.setPlaylistContent(
-            context, uri, readback.copy(entries = readback.entries + write.songs),
-            write.uri == null
+            context, uri, readback.copy(entries = readback.entries + write.songs), false
+        )
+    }
+
+    private suspend fun addToNewPlaylist(write: PendingWrite.AddToNewPlaylist) {
+        val empty = PlaylistSerializer.Playlist.create()
+        val uri = ItemManipulator.createPlaylist(context, File(write.path))
+        ItemManipulator.setPlaylistContent(
+            context, uri, empty.copy(entries = empty.entries + write.songs), true
         )
     }
 
@@ -281,8 +284,8 @@ private class MediaStoreLibraryWrites(
 
     @StringRes
     private fun failureMessage(write: PendingWrite) = when (write) {
-        is PendingWrite.AddToPlaylist -> if (write.uri != null) R.string.edit_playlist_failed
-            else R.string.create_failed_playlist
+        is PendingWrite.AddToPlaylist -> R.string.edit_playlist_failed
+        is PendingWrite.AddToNewPlaylist -> R.string.create_failed_playlist
         is PendingWrite.Favorite -> R.string.edit_favorites_failed
         is PendingWrite.Rename -> R.string.rename_failed_playlist
         PendingWrite.Delete -> R.string.delete_failed
@@ -293,10 +296,6 @@ private class MediaStoreLibraryWrites(
     }
 
     private fun favoritesFile() = ItemManipulator.getDefaultPlaylistFile(ItemManipulator.FAVORITES)
-
-    private fun playlistUri(id: Long) = ContentUris.withAppendedId(
-        @Suppress("deprecation") MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, id
-    )
 
     private companion object {
         const val TAG = "LibraryWriteRepository"

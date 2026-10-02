@@ -193,6 +193,10 @@
     <!-- Shows a list of contributors' nicknames like "someDeveloperA, someDeveloperB,
     someDeveloperC (click for more!)" and clicking opens credits screen -->
     <string name="settings_contributors_click">%s (click for more!)</string>
+    <!-- Screen reader action on the contributors screen, which opens the list of code contributors on GitHub -->
+    <string name="view_contributors_on_github">View contributors on GitHub</string>
+    <!-- Screen reader action on the contributors screen, which opens the translation project on Weblate -->
+    <string name="view_translators_on_weblate">View translators on Weblate</string>
     <!-- In appearance settings, change between album based color and system wide color. Subtext -->
     <string name="settings_content_based_color_summary">Enable album based color generation</string>
     <!-- In appearance settings, change between album based color and system wide color. Title -->
@@ -293,6 +297,8 @@
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
     <!-- Shown next to song's album cover in detail UI -->
     <string name="album_cover">Album cover</string>
+    <!-- Accessibility tooltip for lyrics button in full player -->
+    <string name="dialog_lyrics">Lyrics</string>
     <!-- Error message when deleting song upon user request failed unexpectedly -->
     <string name="delete_failed">Deleting song failed: %s</string>
     <!-- Error message when deleting playlist upon user request failed unexpectedly -->
@@ -326,6 +332,8 @@
     <string name="lock_tempo_pitch">Lock tempo and pitch</string>
     <!-- Used in playback speed to restore default tempo and pitch -->
     <string name="reset">Reset</string>
+    <!-- Accessibility tooltip for queue button showing which songs are playing next and before -->
+    <string name="current_playlist">Current playlist</string>
     <!-- Error notification when app is closed but user wants to play music and system denied it. Title -->
     <string name="fgs_failed_title">Failed to resume music playback</string>
     <!-- Error notification when app is closed but user wants to play music and system denied it. Subtext -->
@@ -350,8 +358,14 @@
     <string name="play">Play</string>
     <!-- Tooltip for three dots button opening context menu -->
     <string name="more">More</string>
-    <!-- Settings toggle to enable newer lyrics rendering code. Title -->
-    <!-- Settings toggle to enable newer lyrics rendering code. Subtext -->
+    <!-- Tooltip for skip to next button in full player -->
+    <string name="skip_next">Skip to next</string>
+    <!-- Tooltip for button to close full player and return to song list -->
+    <string name="expand_less">Close</string>
+    <!-- Tooltip for skip to previous button in full player -->
+    <string name="skip_previous">Skip to previous</string>
+    <!-- Accessibility label for seek bar to control song position -->
+    <string name="position_slider">Position slider</string>
     <!-- Settings toggle to enable showing lyrics in status bar (requires meizu phone). Title -->
     <string name="settings_status_bar_lyrics_title">Status bar lyrics</string>
     <!-- Settings toggle to enable showing lyrics in status bar (requires meizu phone). Subtext -->
@@ -1026,30 +1040,6 @@
     <string name="add_to_playlist">Add to playlist</string>
     <!-- Error if no internet browser is installed but user clicks a link -->
     <string name="no_app_found">No app found that can do this</string>
-    <!-- Shown below the lead developer's nickname in about screen -->
-    <string name="contributors_nift4">Maintainer / Lead Developer</string>
-    <!-- Shown below the lead designer's nickname in about screen -->
-    <string name="contributors_123duo3">Lead Designer</string>
-    <!-- Shown below the original creator's nickname in about screen -->
-    <string name="contributors_akanetan">Original creator, retired developer</string>
-    <!-- Shown below other developer's nickname in about screen -->
-    <string name="contributors_developer">Developer</string>
-    <!-- Shown below a contributor's nickname in about screen -->
-    <string name="contributors_wstxda">designed one variation of app icon</string>
-    <!-- Shown below a contributor's nickname in about screen -->
-    <string name="contributors_pxeemo">Help &amp; testing of new lyrics</string>
-    <!-- Shown below a contributor's nickname in about screen. SongSync is an app name -->
-    <string name="contributors_lambada10">providing lyric samples &amp; SongSync</string>
-    <!-- Shown below a contributor's nickname in about screen -->
-    <string name="contributors_code_contributions">Code contributions</string>
-    <!-- Shown below a contributor's nickname in about screen. This is the feature they worked on -->
-    <string name="contributors_yuyuko1024">Squiggly progress bar</string>
-    <!-- Shown below a contributor's nickname in about screen. This is the feature they worked on -->
-    <string name="contributors_ghhccghk">Status Bar lyrics &amp; other improvements</string>
-    <!-- Shown below a contributor's nickname in about screen. This is the feature they worked on -->
-    <string name="contributors_banksio">Android Auto</string>
-    <!-- Shown below a contributor's nickname in about screen -->
-    <string name="contributors_saladnoober">Quality Assurance</string>
     <!-- Home menu item to refresh song list quickly -->
     <string name="home_menu_quick_refresh">Quick refresh</string>
     <!-- Context menu item to add song to currently playing queue (as opposed to playlist which is

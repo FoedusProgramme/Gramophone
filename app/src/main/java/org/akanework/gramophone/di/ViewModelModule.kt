@@ -25,6 +25,7 @@ import org.akanework.gramophone.ui.nav.NavViewModel
 import org.akanework.gramophone.ui.state.HomeViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModelOf
+import org.koin.dsl.bind
 import org.koin.dsl.module
 import uk.akane.libphonograph.reader.FlowReader
 
@@ -32,6 +33,10 @@ val viewModelModule = module {
     viewModelOf(::MediaControllerViewModel)
     viewModelOf(::NavViewModel)
     viewModelOf(::HomeViewModel)
-    factory<PlayIntentExecutor> { DefaultPlayIntentExecutor(androidContext(), get<FlowReader>(), get()) }
+    // Declared as the class so verify checks its constructor, and bound to the interface that
+    // PlayIntentViewModel asks for.
+    factory {
+        DefaultPlayIntentExecutor(androidContext(), get<FlowReader>(), get())
+    } bind PlayIntentExecutor::class
     viewModelOf(::PlayIntentViewModel)
 }

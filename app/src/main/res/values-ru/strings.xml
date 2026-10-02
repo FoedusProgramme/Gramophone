@@ -130,6 +130,7 @@
     <string name="delete_failed">Не удалось удалить песню: %s</string>
     <string name="album_cover">Обложка альбома</string>
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
+    <string name="dialog_lyrics">Текст песни</string>
     <string name="settings_preference_category_application">Приложение</string>
     <string name="settings_category_basic_info">Основная информация</string>
     <string name="settings_category_filters">Фильтры</string>
@@ -139,6 +140,7 @@
     <string name="crash_clipboard">Журнал сбоев скопирован в буфер обмена</string>
     <string name="grant_images"><![CDATA[Пожалуйста, предоставьте разрешение \"Фото и видео\"]]></string>
     <string name="settings_trim_lyrics">Удаляет пробелы вокруг текста песни</string>
+    <string name="current_playlist">Текущий плейлист</string>
     <string name="timer">Таймер сна</string>
     <string name="sort_by_release_date">Дата выхода</string>
     <string name="album_covers_enhance">Улучшенная загрузка обложек альбомов</string>
@@ -155,6 +157,10 @@
     <string name="shuffle_all">Перемешать все</string>
     <string name="play">Играть</string>
     <string name="more">Больше</string>
+    <string name="skip_next">Перейти к следующему</string>
+    <string name="expand_less">Закрыть</string>
+    <string name="skip_previous">Перейти к предыдущему</string>
+    <string name="position_slider">Ползунок положения</string>
     <string name="settings_status_bar_lyrics_title">Текст песни в строке состояния</string>
     <string name="settings_status_bar_lyrics_summary">Включает метод показа текста песни MeiZu в строке состояния (доступно только на некоторых устройствах)</string>
     <string name="lyric_widget_description">Виджет, показывающий текст текущей песни</string>
@@ -385,16 +391,6 @@
     <string name="rename">Переименовать</string>
     <string name="refresh_did_you_know">Gramophone обновляет список песен при каждом запуске приложения, а также автоматически обнаруживает новые медиафайлы во время своей работы. Кнопка «Обновить» не просто перезагружает медиатеку в Gramophone, а запрашивает у вашей системы полное повторное сканирование всех файлов на всех подключенных постоянных накопителях (именно поэтому процесс занимает некоторое время). Это означает, что если ваша система и другие приложения работают исправно, вам никогда не понадобится использовать эту функцию.\n\nНе хватает каких-то песен? Обязательно проверьте раздел «Настройки» &gt; «Поведение» на предмет фильтра по минимальной длительности и чёрного списка папок и убедитесь, что для этих параметров установлены ожидаемые значения. Чтобы узнать о других возможных причинах, пожалуйста, ознакомьтесь с нашим разделом FAQ.</string>
     <string name="no_app_found">Не найдено ни одного приложения, которое могло бы это сделать</string>
-    <string name="contributors_nift4">Ведущий разработчик</string>
-    <string name="contributors_123duo3">Ведущий дизайнер</string>
-    <string name="contributors_akanetan">Первоначальный создатель, разработчик, отошедший от дел</string>
-    <string name="contributors_developer">Разработчик</string>
-    <string name="contributors_wstxda">Разработал один вариант иконки приложения</string>
-    <string name="contributors_pxeemo">Помощь и тестирование новых текстов песен</string>
-    <string name="contributors_lambada10">Предоставление образцов текстов песен и данных SongSync</string>
-    <string name="contributors_code_contributions">Вклад в разработку</string>
-    <string name="contributors_yuyuko1024">Волнистая полоса прогресса</string>
-    <string name="contributors_ghhccghk">Текст песни в строке состояния и другие улучшения</string>
     <string name="home_menu_quick_refresh">Быстрое обновление</string>
     <string name="add_to_queue">Добавить в очередь</string>
     <string name="app_name">Gramophоne</string>
@@ -439,7 +435,6 @@
     <string name="tempo_pitch_value">%s: %.2fx</string>
     <string name="lock_tempo_pitch">Зафиксировать темп и высоту тона</string>
     <string name="reset">Сброс</string>
-    <string name="contributors_saladnoober">Контроль качества</string>
     <string name="settings_replaygain_boost">Усиление</string>
     <string name="d_db">%d дБ</string>
     <string name="settings_replaygain_boost_desc">"«Усиление» повышает громкость как для треков с ReplayGain, так и для обычной музыки, превышая стандартный уровень громкости устройства. (Если громкость устройства уже близка к 100%, «Усиление» не сработает). С этой функцией музыка будет звучать на одном уровне с другими приложениями, например, играми. Обратите внимание: функция экспериментальная и может конфликтовать со сторонними эквалайзерами. «Усиление» не работает с Bluetooth-наушниками. Если возникнут проблемы со звуком, отключите эту функцию, установив значение 0 дБ. "</string>
@@ -502,7 +497,6 @@
     <string name="mq_pin_queue">Закрепить очередь</string>
     <string name="shuffled">%s (вперемешку)</string>
     <string name="loading_playlists">Загрузка плейлистов…</string>
-    <string name="contributors_banksio">Android Auto</string>
     <string name="unfavorite">Удалить из избранного</string>
     <string name="edit_mode">Изменить порядок</string>
     <string name="settings_notification_lyrics_title">Текст песни в уведомлении</string>

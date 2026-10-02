@@ -51,8 +51,10 @@
     <string name="settings_category_misc">อื่นๆ</string>
     <string name="settings_category_filters">ฟิลเตอร์</string>
     <string name="settings_preference_category_application">แอปพลิเคชัน</string>
+    <string name="dialog_lyrics">เนื้อเพลง</string>
     <string name="settings_preference_category_home">หน้าแรก</string>
     <string name="play">เล่น</string>
+    <string name="expand_less">ปิด</string>
     <string name="delete">ลบ</string>
     <string name="spk_channel_out_mono">โมโน</string>
     <string name="no">ไม่</string>
@@ -245,6 +247,7 @@
     <string name="album_covers_enhance_desc">แสดงปกอัลบั้มคุณภาพสูง และอนุญาตให้ปกอัลบั้มและเพลงต่างกันได้ (จำเป็นต้องอนุญาตให้เข้าถึงรูปภาพในเครื่อง)</string>
     <string name="settings_trim_lyrics">ลบช่องว่างระหว่างเนื้อเพลง</string>
     <string name="timer">ตั้งเวลาหยุดเล่น</string>
+    <string name="current_playlist">เพลย์ลิสต์ปัจจุบัน</string>
     <string name="fgs_failed_title">ไม่สามารถเริ่มเล่นเพลงต่อได้</string>
     <string name="fgs_failed_text">กดที่นี่เพื่อเปิดแอปและเริ่มเล่นเพลงต่อ</string>
     <string name="fgs_failed_channel">ไม่สามารถเริ่มเล่นเพลงต่อได้</string>
@@ -255,6 +258,8 @@
     <string name="tab_order_summary">เมื่อเปิดแอปจะแสดงเมนูแรก เมนูที่อยู่หลังเส้นแบ่งจะไม่ถูกแสดง</string>
     <string name="shuffle_all">เล่นทั้งหมดแบบสุ่ม</string>
     <string name="more">เพิ่มเติม</string>
+    <string name="skip_next">ข้ามเพลง</string>
+    <string name="skip_previous">เพลงก่อนหน้า</string>
     <string name="settings_status_bar_lyrics_title">เนื้อเพลงในแถบสเตตัส</string>
     <string name="settings_status_bar_lyrics_summary">แสดงเนื้อเพลงในแถบสเตตัส โดยใช้วิธี MeiZu (รองรับในบางอุปกรณ์)</string>
     <string name="lyric_widget_description">วิดเจ็ทที่แสดงเนื้อเพลงที่เล่นอยู่</string>

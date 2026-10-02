@@ -17,12 +17,7 @@
 
 package org.akanework.gramophone.ui.components.home
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandHorizontally
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -46,10 +41,8 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.Sort
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Search
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -83,8 +76,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.akanework.gramophone.R
 import org.akanework.gramophone.ui.HomeTab
-import org.akanework.gramophone.ui.LocalCardSurface
 import org.akanework.gramophone.ui.actions.HomeMenuAction
+import org.akanework.gramophone.ui.components.compose.AppDropdownMenu
+import org.akanework.gramophone.ui.theme.LocalCardSurface
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.cos
@@ -110,7 +104,6 @@ private val SEARCH_BUTTON_SHAPE = RoundedCornerShape(
     topStart = ACTION_OUTER_CORNER, bottomStart = ACTION_OUTER_CORNER,
     topEnd = ACTION_INNER_CORNER, bottomEnd = ACTION_INNER_CORNER,
 )
-private val MIDDLE_BUTTON_SHAPE = RoundedCornerShape(ACTION_INNER_CORNER)
 private val OVERFLOW_BUTTON_SHAPE = RoundedCornerShape(
     topStart = ACTION_INNER_CORNER, bottomStart = ACTION_INNER_CORNER,
     topEnd = ACTION_OUTER_CORNER, bottomEnd = ACTION_OUTER_CORNER,
@@ -125,16 +118,12 @@ private val OVERFLOW_BUTTON_SHAPE = RoundedCornerShape(
 private val BAR_PADDING_START = 24.dp
 private val BAR_PADDING_END = 16.dp
 
-/**
- * The home's bar: the app's mark at the start, the search and overflow actions at the end, and
- * between them a sort button while [sortMenu] is non-null, squeezing in and out as it changes.
- */
+/** The home's bar: the app's mark at the start, the search and overflow actions at the end. */
 @Composable
 fun HomeAppBar(
     onSearch: () -> Unit,
     onMenuAction: (HomeMenuAction) -> Unit,
     modifier: Modifier = Modifier,
-    sortMenu: (@Composable (expanded: Boolean, onDismiss: () -> Unit) -> Unit)? = null,
 ) {
     val insets = WindowInsets.systemBars.union(WindowInsets.displayCutout)
     Row(
@@ -153,36 +142,13 @@ fun HomeAppBar(
         Spacer(Modifier.weight(1f))
         HomeActionButton(
             icon = Icons.Outlined.Search,
+            description = stringResource(R.string.search),
             iconSize = 24.dp,
             shape = SEARCH_BUTTON_SHAPE,
             iconOffsetX = ACTION_ICON_INNER_OFFSET, // nudge toward the inner edge
             onClick = onSearch,
         )
         Spacer(Modifier.width(ACTION_BUTTON_GAP))
-        // Keeps the last menu while the button squeezes out.
-        var shownSortMenu by remember { mutableStateOf(sortMenu) }
-        if (sortMenu != null) shownSortMenu = sortMenu
-        var sortMenuOpen by remember { mutableStateOf(false) }
-        if (sortMenu == null) sortMenuOpen = false
-        AnimatedVisibility(
-            visible = sortMenu != null,
-            enter = expandHorizontally(expandFrom = Alignment.Start) + fadeIn(),
-            exit = shrinkHorizontally(shrinkTowards = Alignment.Start) + fadeOut(),
-        ) {
-            Row {
-                Box {
-                    HomeActionButton(
-                        icon = Icons.AutoMirrored.Outlined.Sort,
-                        iconSize = 24.dp,
-                        shape = MIDDLE_BUTTON_SHAPE,
-                        iconOffsetX = 0.dp,
-                        onClick = { sortMenuOpen = true },
-                    )
-                    shownSortMenu?.invoke(sortMenuOpen) { sortMenuOpen = false }
-                }
-                Spacer(Modifier.width(ACTION_BUTTON_GAP))
-            }
-        }
         HomeOverflowMenu(onMenuAction)
     }
 }
@@ -195,6 +161,7 @@ fun HomeAppBar(
 @Composable
 private fun HomeActionButton(
     icon: ImageVector,
+    description: String,
     iconSize: Dp,
     shape: Shape,
     iconOffsetX: Dp,
@@ -215,7 +182,7 @@ private fun HomeActionButton(
     ) {
         Icon(
             imageVector = icon,
-            contentDescription = null,
+            contentDescription = description,
             tint = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.offset(x = iconOffsetX).size(iconSize),
         )
@@ -229,12 +196,13 @@ private fun HomeOverflowMenu(onMenuAction: (HomeMenuAction) -> Unit) {
     Box {
         HomeActionButton(
             icon = Icons.Outlined.MoreVert,
+            description = stringResource(R.string.more),
             iconSize = 24.dp,
             shape = OVERFLOW_BUTTON_SHAPE,
             iconOffsetX = -ACTION_ICON_INNER_OFFSET, // nudge toward the inner edge
             onClick = { menuOpen = true },
         )
-        DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
+        AppDropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
             HomeMenuAction.entries.forEach { action ->
                 DropdownMenuItem(
                     text = {

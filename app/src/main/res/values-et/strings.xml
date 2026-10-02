@@ -108,6 +108,7 @@
     <string name="settings_crash_application">Jooksuta rakendus kokku</string>
     <string name="settings_crash_application_summary">Võimas kokkujooksutaja 3000</string>
     <string name="album_cover">Albumi kaanepilt</string>
+    <string name="dialog_lyrics">Laulusõnad</string>
     <string name="delete_failed">Pala kustutamine ei õnnestunud: %s</string>
     <string name="album_covers_enhance">Albumi tõhustatud kaanepiltide laadimine</string>
     <string name="album_covers_enhance_desc">Kasuta parema kvaliteediga kaanepilte ning luba albumi ja palade kaanepiltidel erineda (eeldab õigust avada fotosid ja pildifaile)</string>
@@ -117,6 +118,7 @@
     <string name="crash_clipboard">Krahhilogi on kopeeritud lõikelauale</string>
     <string name="settings_trim_lyrics">Eemalda laulusõnu ümbritsevad tühikud</string>
     <string name="timer">Unetaimer</string>
+    <string name="current_playlist">Praegune esitusloend</string>
     <string name="fgs_failed_title">Muusika esitamise jätkamine ei õnnestunud</string>
     <string name="fgs_failed_text">Rakenduse avamiseks ja taasesituse jätkamiseks klõpsi siin</string>
     <string name="sort_by_release_date">Avaldamise kuupäev</string>
@@ -145,6 +147,10 @@
     <string name="more">Veel</string>
     <string name="shuffle_all">Sega kõik lood</string>
     <string name="play">Esita</string>
+    <string name="skip_next">Hüppa järgmise juurde</string>
+    <string name="expand_less">Sulge</string>
+    <string name="skip_previous">Hüppa eelmise juurde</string>
+    <string name="position_slider">Asukoha liugur</string>
     <string name="settings_status_bar_lyrics_title">Laulusõnad olekuribal</string>
     <string name="settings_status_bar_lyrics_summary">Võta kasutusele MeiZu meetod, mis võimaldab kuvada laulusõnu olekuribal (see meetod ei tööta kõikides nutiseadmetes)</string>
     <string name="lyric_widget_description">Vidin, mis näitab hetkel esitatava meedia laulusõnu</string>
@@ -375,16 +381,6 @@
     <string name="create_failed_playlist">Esitusloendi loomine ei õnnestunud: %s</string>
     <string name="refresh_did_you_know">Gramophone otsib uusi või uuendatud palasid igal rakenduse käivitamisel ning ka töötamise ajal suudab ta uut sisu tuvastada. See „Uuenda“ nupp ei laadi palu Gramophone\'i uuesti, vaid hoopis käivitab uue süsteemiülese palade otsingu kõikidelt lubatud andmakandjatelt (sellepärast kulubki nii palju aega). Mis praktikas tähendab seda, et kui just kogu süsteemis või muudes rakendustes pole talitlusvigu, siis sul pole vaja seda funktsionaalsust kasutada.\n\nMõned palad on puudu? Palun vaata „Seadistused“ → „Käitumine“ ning kontrolli, et lugude miinimumkestused ja kaustade keeluloend vastavad sinu eelistustele. Muude võimalike põhjuste kohta leiad teavet ka meie Korduma kippuvate küsimuste lehelt.</string>
     <string name="no_app_found">Ei leidu rakendust, mis oskaks seda teha</string>
-    <string name="contributors_nift4">Hooldaja / Juhtiv arendaja</string>
-    <string name="contributors_123duo3">Juhtiv kujundaja</string>
-    <string name="contributors_akanetan">Algne autor, varasem arendaja</string>
-    <string name="contributors_developer">Arendaja</string>
-    <string name="contributors_wstxda">kujundas rakenduse ikooni ühe variandi</string>
-    <string name="contributors_pxeemo">Abi ja laulusõnade uue lahenduse testimine</string>
-    <string name="contributors_lambada10">laulusõnade näited ja SongSync</string>
-    <string name="contributors_code_contributions">Kaastöö koodi kirjutamisel</string>
-    <string name="contributors_yuyuko1024">Vingerdav edenemisriba</string>
-    <string name="contributors_ghhccghk">Laulusõnad olekuribal ja muud täiendused</string>
     <string name="home_menu_quick_refresh">Kiirvärskendus</string>
     <string name="add_to_queue">Lisa esitusjärjekorda</string>
     <string name="app_name">Gramophone</string>
@@ -435,7 +431,6 @@
     <string name="settings_replaygain_mode_desc">Valik „Nutikas“ säilitab automaatselt albumi dünaamikat, kuid ühe albumi lood on järjest esitamisel.</string>
     <string name="sort_by_artist_year"><![CDATA[Esitaja -> aasta]]></string>
     <string name="clear_queue">Tühjenda esitusjärjekord</string>
-    <string name="contributors_saladnoober">Kvaliteeditagamine</string>
     <string name="actions_query_shuffle_all_songs">sega kõik lood</string>
     <string name="actions_query_shuffle_everything">sega kõik</string>
     <string name="actions_query_play_random_songs">esita juhuslikke lugusid</string>
@@ -488,7 +483,6 @@
     <string name="mq_pin_queue">Tõsta esitusjärjekord esile</string>
     <string name="shuffled">%s (segatud järjestus)</string>
     <string name="loading_playlists">Laadin esitusloendeid...</string>
-    <string name="contributors_banksio">Android Auto</string>
     <string name="unfavorite">Eemalda lemmikute seast</string>
     <string name="edit_mode">Kasuta muutmisvaadet</string>
     <string name="settings_notification_lyrics_title">Laulusõnad teavitusena</string>

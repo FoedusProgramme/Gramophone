@@ -50,7 +50,6 @@
     <string name="settings_app_theme">应用主题</string>
     <string name="settings_theme_title">主题</string>
     <string name="settings_theme_summary">亮暗模式、颜色与主题样式</string>
-    <string name="settings_app_font_summary">应用内文字使用系统的 Google Sans Flex 字体</string>
     <string name="settings_theme_mode_section">亮暗模式</string>
     <string name="settings_theme_color_section">颜色</string>
     <string name="settings_theme_wallpaper_color">使用壁纸颜色</string>
@@ -62,8 +61,6 @@
     <plurals name="songs">
         <item quantity="other">%d 首歌曲</item>
     </plurals>
-    <string name="songs_total_duration">%1$s，%2$s</string>
-    <string name="songs_total_length">总播放时间 %s</string>
     <plurals name="albums">
         <item quantity="other">%d 张专辑</item>
     </plurals>
@@ -131,6 +128,7 @@
     <string name="settings_preference_category_application">应用</string>
     <string name="settings_crash_application">崩溃测试</string>
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
+    <string name="dialog_lyrics">歌词</string>
     <string name="album_cover">专辑封面</string>
     <string name="delete_failed">删除歌曲失败：%s</string>
     <string name="grant_images"><![CDATA[请授予“照片和视频”权限]]></string>
@@ -138,6 +136,7 @@
     <string name="crash_clipboard">已将崩溃日志复制到剪贴板</string>
     <string name="settings_trim_lyrics">删除歌词中的空行</string>
     <string name="timer">睡眠定时器</string>
+    <string name="current_playlist">当前播放列表</string>
     <string name="fgs_failed_text">点击此处以打开应用并继续播放</string>
     <string name="fgs_failed_title">无法恢复音乐播放</string>
     <string name="fgs_failed_channel">播放无法恢复</string>
@@ -154,7 +153,11 @@
     <string name="settings_status_bar_lyrics_title">状态栏歌词</string>
     <string name="settings_status_bar_lyrics_summary">启用魅族状态栏歌词（仅适用于部分设备）</string>
     <string name="lyric_widget_description">显示当前播放媒体歌词的小部件</string>
+    <string name="expand_less">关闭</string>
+    <string name="skip_previous">跳到上一个</string>
+    <string name="position_slider">位置滑块</string>
     <string name="shuffle_all">全部随机播放</string>
+    <string name="skip_next">跳到下一个</string>
     <string name="home_menu_shuffle">全部随机播放</string>
     <string name="grant_audio"><![CDATA[请授予“音乐和音频”权限]]></string>
     <string name="delete">删除</string>
@@ -250,16 +253,6 @@
     <string name="device_type_ble_headset">BLE 耳麦</string>
     <string name="rename">重命名</string>
     <string name="cannot_find_file">找不到该文件</string>
-    <string name="contributors_nift4">维护者/首席开发者</string>
-    <string name="contributors_123duo3">首席设计师</string>
-    <string name="contributors_akanetan">原作者、已退休开发者</string>
-    <string name="contributors_developer">开发者</string>
-    <string name="contributors_wstxda">设计了一个应用图标变体</string>
-    <string name="contributors_pxeemo">新歌词帮助与测试</string>
-    <string name="contributors_lambada10">提供歌词样本与歌曲同步</string>
-    <string name="contributors_code_contributions">代码贡献</string>
-    <string name="contributors_yuyuko1024">波浪进度条</string>
-    <string name="contributors_ghhccghk">状态栏歌词及其他改进</string>
     <string name="no_app_found">找不到可以执行此操作的应用</string>
     <string name="spk_encoding_mp3">MP3</string>
     <string name="spk_encoding_aac_lc">AAC-LC</string>
@@ -442,7 +435,6 @@
     <string name="settings_replaygain_mode_desc">“智能”仅在连续播放同一专辑中的歌曲时才会自动保留专辑动态范围。</string>
     <string name="sort_by_artist_year"><![CDATA[音乐人 -> 年份]]></string>
     <string name="clear_queue">清除队列</string>
-    <string name="contributors_saladnoober">质量保证</string>
     <string name="actions_query_shuffle_all_songs">随机播放所有歌曲</string>
     <string name="actions_query_shuffle_everything">随机播放所有内容</string>
     <string name="actions_query_play_random_songs">播放随机歌曲</string>
@@ -494,7 +486,6 @@
     <string name="mq_pin_queue">固定队列</string>
     <string name="shuffled">%s（随机）</string>
     <string name="loading_playlists">正在加载播放列表…</string>
-    <string name="contributors_banksio">Android Auto</string>
     <string name="unfavorite">取消收藏</string>
     <string name="edit_mode">进入编辑模式</string>
     <string name="settings_notification_lyrics_title">通知歌词</string>

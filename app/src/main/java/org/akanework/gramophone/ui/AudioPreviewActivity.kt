@@ -16,14 +16,12 @@
  */
 package org.akanework.gramophone.ui
 
-import org.akanework.gramophone.logic.showsPause
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.provider.Settings
 import android.system.ErrnoException
 import android.system.Os
 import android.util.Log
@@ -91,6 +89,8 @@ import org.akanework.gramophone.logic.getStringStrict
 import org.akanework.gramophone.logic.hasAudioPermission
 import org.akanework.gramophone.logic.hasScopedStorageV1
 import org.akanework.gramophone.logic.playOrPause
+import org.akanework.gramophone.logic.requiredLibraryPermissions
+import org.akanework.gramophone.logic.showsPause
 import org.akanework.gramophone.logic.ui.BaseActivity
 import org.akanework.gramophone.logic.utils.CalculationUtils.convertDurationToTimeStamp
 import org.akanework.gramophone.logic.utils.Flags
@@ -99,14 +99,14 @@ import org.akanework.gramophone.logic.utils.exoplayer.GramophoneExtractorsFactor
 import org.akanework.gramophone.logic.utils.exoplayer.GramophoneMediaSourceFactory
 import org.akanework.gramophone.logic.utils.exoplayer.GramophoneRenderFactory
 import org.akanework.gramophone.ui.components.compose.rememberBooleanPreference
-import org.akanework.gramophone.ui.components.compose.requiredLibraryPermissions
-import org.akanework.gramophone.ui.intent.PlayIntents
 import org.akanework.gramophone.ui.components.home.LibraryCover
 import org.akanework.gramophone.ui.components.home.rememberDefaultCoverPainter
 import org.akanework.gramophone.ui.components.home.textViewStyle
 import org.akanework.gramophone.ui.components.player.PlayPauseIcon
 import org.akanework.gramophone.ui.components.player.PlayerUtilities
 import org.akanework.gramophone.ui.components.player.SquigglyProgressBar
+import org.akanework.gramophone.ui.intent.PlayIntents
+import org.akanework.gramophone.ui.theme.GramophoneTheme
 import uk.akane.libphonograph.toUriCompat
 import java.io.File
 import kotlin.time.Duration.Companion.milliseconds
@@ -223,10 +223,7 @@ class AudioPreviewActivity : BaseActivity() {
                     ) {
                         PreviewContent(
                             state = state,
-                            onPlayPause = {
-                                if (player.playbackState == Player.STATE_ENDED) player.seekToDefaultPosition()
-                                player.playOrPause()
-                            },
+                            onPlayPause = { player.playOrPause() },
                             onSeek = { player.seekTo(it) },
                             onOpen = { openInGramophone() },
                             poll = { syncPosition() },
@@ -287,11 +284,9 @@ class AudioPreviewActivity : BaseActivity() {
             ) {
                 handleIntent(intent)
             } else {
+                // Unlike the other screens, the preview stays open and goes on once granted.
                 askedForPermissionInSettings = true
-                Toast.makeText(this, getString(R.string.grant_audio), Toast.LENGTH_LONG).show()
-                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                intent.setData("package:$packageName".toUri())
-                startActivity(intent)
+                openAppSettingsForAudio()
             }
         }
     }

@@ -1,5 +1,5 @@
 /*
- *     Copyright (C) 2025 Akane Foundation
+ *     Copyright (C) 2026 The Gramophone authors
  *
  *     Gramophone is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -22,7 +22,6 @@ import androidx.compose.animation.core.Easing
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import kotlinx.coroutines.CoroutineScope
@@ -30,6 +29,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.akanework.gramophone.logic.utils.CalculationUtils.lerp
 import org.akanework.gramophone.logic.utils.SemanticLyrics
+import org.akanework.gramophone.ui.components.player.PlaybackClock
 import org.akanework.gramophone.ui.components.player.PlayerUtilities
 import kotlin.math.PI
 import kotlin.math.cos
@@ -42,14 +42,17 @@ internal val AccelerateDecelerateEasing = Easing { (cos((it + 1f) * PI) / 2.0 + 
 
 /**
  * State of the lyrics overlay above the full player: its lyrics, visibility, fade and back-gesture
- * scale. Hoisted in the player host so it outlives the composition that draws it, which keeps the
- * scroll position across hide and show.
+ * scale. Hoisted in the player host so it outlives the composition that draws it.
  *
  * [scope] runs the fade and scale animations. It needs a MonotonicFrameClock, so the host passes
- * a scope on AndroidUiDispatcher.Main.
+ * one from the composition, whose clock draws each animation frame in the frame it's computed for.
  */
 @Stable
-class LyricsOverlayState(private val scope: CoroutineScope) {
+class LyricsOverlayState(
+    private val scope: CoroutineScope,
+    /** Where playback is: the position the lyrics draw at, shared with the player sheet. */
+    internal val clock: PlaybackClock,
+) {
     /** The current song's lyrics, or null for none (the "no lyrics" line). */
     var lyrics by mutableStateOf<SemanticLyrics?>(null)
 
@@ -67,16 +70,8 @@ class LyricsOverlayState(private val scope: CoroutineScope) {
     val covering: Boolean
         get() = visible && alpha.value == 1f && scale.value == 1f
 
-    /** Bumped by the host's position poll. The lyrics re-check the playback position on each change. */
-    var positionTick by mutableIntStateOf(0)
-        private set
-
     private var fadeJob: Job? = null
     private var scaleJob: Job? = null
-
-    fun updateLyricPositionFromPlaybackPos() {
-        positionTick++
-    }
 
     /** Fades the overlay in from transparent over [durationMs]. */
     fun fadeIn(durationMs: Int = PlayerUtilities.LYRIC_COVER_FADE_MS) {

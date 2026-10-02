@@ -43,6 +43,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.listSaver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
@@ -69,15 +71,31 @@ import org.akanework.gramophone.ui.components.home.libraryCellShape
 import org.akanework.gramophone.ui.components.home.libraryItemCard
 import org.akanework.gramophone.ui.components.home.libraryItemShape
 import org.akanework.gramophone.ui.components.home.rememberIosFlingBehavior
-import org.akanework.gramophone.ui.library.LayoutType
+import org.akanework.gramophone.ui.library.isGrid
 import org.akanework.gramophone.ui.state.FolderPage
 import org.akanework.gramophone.ui.state.FolderTabState
-import org.akanework.gramophone.ui.state.SortPrefState
 
 /** Folder page transition: the slide, and the outgoing page's fade-out before the incoming fade-in. */
 private const val FOLDER_SLIDE_MS = 200
 private const val FOLDER_FADE_OUT_MS = 70
 private const val FOLDER_FADE_IN_MS = 130
+
+/** Saves each folder's scroll position under its path. */
+private val GridStatesSaver = listSaver<HashMap<List<String>, LazyGridState>, Any>(
+    save = { states ->
+        states.flatMap { (path, grid) ->
+            listOf(ArrayList(path), grid.firstVisibleItemIndex, grid.firstVisibleItemScrollOffset)
+        }
+    },
+    restore = { saved ->
+        HashMap<List<String>, LazyGridState>().apply {
+            saved.chunked(3).forEach { (path, index, offset) ->
+                @Suppress("UNCHECKED_CAST")
+                put(path as List<String>, LazyGridState(index as Int, offset as Int))
+            }
+        }
+    },
+)
 
 /** The Folders / Filesystem tab, laid out like [LibraryTabScreen]: folders first, then songs. */
 @Composable
@@ -91,18 +109,11 @@ fun FolderTabScreen(
     val env = rememberAppActionEnv()
     val scope = rememberCoroutineScope()
     val songs = state.songs
+    CollectFolderPage(state)
     ReportFullyDrawnWhen(songs.loaded)
-    LaunchedEffect(state) {
-        state.pageFlow.collect {
-            state.page = it
-            songs.items = it.songs
-            songs.loaded = true
-            songs.queueTitleOverride = it.path.lastOrNull() ?: "/"
-        }
-    }
     val page = state.page
     val layoutType = songs.layoutType
-    val isGrid = layoutType == LayoutType.GRID || layoutType == LayoutType.COMPACT_GRID
+    val isGrid = layoutType.isGrid
     val columns = libraryColumns(layoutType)
     val density = LocalDensity.current
     val rowHeightPx = with(density) {
@@ -110,7 +121,10 @@ fun FolderTabScreen(
     }
     // One scroll state per folder, so the outgoing and incoming pages never share a grid state.
     // The current folder's ancestors keep theirs, so going up returns to where the parent was.
-    val gridStates = remember(state) { HashMap<List<String>, LazyGridState>() }
+    // Saved, so leaving the tab or recreating the page keeps them too.
+    val gridStates = rememberSaveable(state, saver = GridStatesSaver) {
+        HashMap<List<String>, LazyGridState>()
+    }
     fun gridStateFor(path: List<String>) = gridStates.getOrPut(path) { LazyGridState() }
     LaunchedEffect(page?.path) {
         val path = page?.path ?: return@LaunchedEffect
@@ -137,7 +151,7 @@ fun FolderTabScreen(
     AnimatedContent(
         targetState = page,
         modifier = modifier.fillMaxSize(),
-        // A new page only for another folder. A resort or rescan of the same folder updates it
+        // A new page only for another folder. A resort or rescan of the same folder updates it.
         contentKey = { it?.path },
         transitionSpec = {
             val from = initialState?.path
@@ -162,7 +176,7 @@ fun FolderTabScreen(
     ) { animatedPage ->
         if (animatedPage == null) return@AnimatedContent
         // Everything below comes from this page's own folder, so the outgoing page keeps showing
-        // its folder (and parent row) while the incoming one shows the new folder
+        // its folder (and parent row) while the incoming one shows the new folder.
         val gridState = remember { gridStateFor(animatedPage.path) }
         val showParent = animatedPage.path.isNotEmpty()
         val folders = animatedPage.folders
@@ -187,18 +201,7 @@ fun FolderTabScreen(
                     onSort = { folderSortOpen = true },
                     onJumpDown = { scrollTo(gridState, songsHeaderIndex) },
                     sortMenu = {
-                        SortMenu(
-                            expanded = folderSortOpen,
-                            onDismiss = { folderSortOpen = false },
-                            sortTypes = state.sort.sortTypes,
-                            activeSort = state.sort.activeSortBase(SortPrefState.SORT_MENU_ORDER),
-                            isReversed = state.sort.isReversed,
-                            canReverse = state.sort.canReverse,
-                            onSelectSort = { state.sort.selectSort(it) },
-                            onToggleReverse = { state.sort.toggleReverse() },
-                            layoutType = null,
-                            onSelectLayout = null,
-                        )
+                        SortMenu(state.sort, folderSortOpen, onDismiss = { folderSortOpen = false })
                     },
                 )
             }
@@ -223,7 +226,7 @@ fun FolderTabScreen(
             }
             item(key = "songs-header", span = { GridItemSpan(maxLineSpan) }) {
                 val count = items.size
-                val queueTitle = animatedPage.path.lastOrNull() ?: "/"
+                val queueTitle = animatedPage.title
                 LibraryHeader(
                     modifier = Modifier.libraryItemCard(
                         libraryItemShape(bottomStart = items.isEmpty(), bottomEnd = items.isEmpty())
@@ -235,18 +238,7 @@ fun FolderTabScreen(
                     onSort = { songSortOpen = true },
                     onJumpUp = { scrollTo(gridState, 0) },
                     sortMenu = {
-                        SortMenu(
-                            expanded = songSortOpen,
-                            onDismiss = { songSortOpen = false },
-                            sortTypes = songs.sortTypes,
-                            activeSort = songs.sort.activeSortBase(SortPrefState.SORT_MENU_ORDER),
-                            isReversed = songs.sort.isReversed,
-                            canReverse = songs.sort.canReverse,
-                            onSelectSort = { songs.sort.selectSort(it) },
-                            onToggleReverse = { songs.sort.toggleReverse() },
-                            layoutType = layoutType,
-                            onSelectLayout = { songs.selectLayout(it) },
-                        )
+                        LibrarySortMenu(songs, songSortOpen, onDismiss = { songSortOpen = false })
                     },
                 )
             }
@@ -266,7 +258,7 @@ fun FolderTabScreen(
             itemCount = items.size,
             headerCount = songsHeaderIndex + 1,
             columns = columns,
-            rowHeightPx = (if (isGrid) libraryGridRowHeightPx(true, columns) else rowHeightPx) + gapPx,
+            rowHeightPx = libraryRowHeightPx(layoutType, columns) + gapPx,
             headerHeightPx = decorPx * 2 + folderRowPx * (songsHeaderIndex - 1),
             hintFor = { i -> items.getOrNull(i)?.let { songs.fastScrollHintFor(it, i) } ?: "-" },
             modifier = Modifier.padding(vertical = LIBRARY_GROUP_CORNER),

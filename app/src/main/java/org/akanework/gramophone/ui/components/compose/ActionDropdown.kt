@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ChevronLeft
 import androidx.compose.material.icons.outlined.MoreVert
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
@@ -63,7 +62,7 @@ fun ActionDropdown(
             extraContent()
         }
 
-        DropdownMenu(
+        AppDropdownMenu(
             expanded = menuExpanded,
             onDismissRequest = { menuExpanded = false },
             modifier = Modifier.widthIn(min = 172.dp)

@@ -41,16 +41,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -76,6 +76,9 @@ private val THUMB_MARGIN_END = 4.dp
 private val POPUP_SIZE = 88.dp
 private const val AUTO_HIDE_DELAY_MS = 1500L
 
+/** Fade of the whole scroller as it shows and hides. */
+private const val SCROLLER_FADE_MS = 150
+
 /** Rotation of the popup shape. */
 private const val POPUP_BASE_DEGREES = 90f
 
@@ -85,19 +88,14 @@ private const val POPUP_FADE_MS = 150
 private const val POPUP_SCALE = 0.7f
 
 /**
- * Thumb distance from the end of the track at which the FAB hides. At that point the popup,
- * centred on the thumb, reaches the FAB's corner.
- */
-private val FAB_HIDE_LEAD = 56.dp
-
-/**
  * Estimates the list's scroll position and range in pixels, so the thumb spans the whole track:
  * top at the very start, bottom exactly at the end, and the header and footer rows (carousel,
  * title, albums, folders, song count) take their real share of the travel.
  *
  * The [itemCount] scrollable items after [headerCount] header items are rows of [columns] items
- * [rowHeightPx] apart. The other rows' pitches are remembered as they are laid out, with
- * [headerHeightPx] standing in for the header until all of it has been seen.
+ * [rowHeightPx] apart. The other rows' pitches are [record]ed as they are laid out, with
+ * [headerHeightPx] standing in for the header until all of it has been seen. What was recorded is
+ * snapshot state, so estimates read in a derived state are worked out again once a row is seen.
  */
 private class ScrollModel(
     private val headerCount: Int,
@@ -109,14 +107,15 @@ private class ScrollModel(
     private val rowHeightPx = rowHeightPx.coerceAtLeast(1)
 
     /** Pitch (height plus spacing) of the header and footer rows seen so far, by grid row. */
-    private val otherRows = HashMap<Int, Int>()
+    private val otherRows = mutableStateMapOf<Int, Int>()
     /** Grid row of the first scrollable item, once it has been laid out. */
-    private var firstItemRow = -1
+    private var firstItemRow by mutableIntStateOf(-1)
     /** Grid row of the last scrollable item, once it has been laid out. */
-    private var lastItemRow = -1
+    private var lastItemRow by mutableIntStateOf(-1)
 
     private val itemRows get() = (itemCount + columns - 1) / columns
 
+    /** Remembers the rows of the layout [info]. Only writes what it learns anything new from. */
     fun record(info: LazyGridLayoutInfo) {
         val end = headerCount + itemCount
         for (item in info.visibleItemsInfo) {
@@ -126,7 +125,7 @@ private class ScrollModel(
             }
             if (item.index < headerCount || item.index >= end) {
                 val pitch = item.size.height + info.mainAxisItemSpacing
-                otherRows[item.row] = maxOf(otherRows[item.row] ?: 0, pitch)
+                if (pitch > (otherRows[item.row] ?: 0)) otherRows[item.row] = pitch
             }
         }
     }
@@ -179,16 +178,6 @@ private class ScrollModel(
 }
 
 /**
- * Whether a list's fast scroller is at the end of the list. The home FAB hides on it, since the
- * thumb and popup overlap the FAB's corner there.
- */
-@Stable
-class FastScrollerState {
-    var atBottom by mutableStateOf(false)
-        internal set
-}
-
-/**
  * A fast scroller in the MD2 style: a thumb on the trailing edge that appears while the list
  * moves, can be dragged to jump through the list and shows a popup with [hintFor] of the item
  * under the thumb.
@@ -207,8 +196,6 @@ fun LibraryFastScroller(
     headerHeightPx: Int,
     hintFor: (Int) -> String,
     modifier: Modifier = Modifier,
-    /** Updated with whether the list is scrolled to its end. Null if nothing needs it. */
-    state: FastScrollerState? = null,
 ) {
     if (itemCount == 0) return
     val density = LocalDensity.current
@@ -219,17 +206,20 @@ fun LibraryFastScroller(
     val model = remember(headerCount, itemCount, columns, rowHeightPx, headerHeightPx) {
         ScrollModel(headerCount, itemCount, columns, rowHeightPx, headerHeightPx)
     }
+    // Recorded after each layout rather than while deriving the position below, which must not
+    // write state. The position follows as soon as a newly seen row has been recorded.
+    LaunchedEffect(gridState, model) {
+        snapshotFlow { gridState.layoutInfo }.collect(model::record)
+    }
     // Position along the track. Pinned to the ends when the list can't scroll further, so the
     // thumb always reaches them even where the estimate is off.
     val scrollProgress by remember(model) {
         derivedStateOf {
-            val info = gridState.layoutInfo
-            model.record(info)
             when {
                 !gridState.canScrollBackward -> 0f
                 !gridState.canScrollForward -> 1f
-                else -> (model.scrollPx(gridState).toFloat() / model.maxScrollPx(info))
-                    .coerceIn(0f, 1f)
+                else -> (model.scrollPx(gridState).toFloat() /
+                        model.maxScrollPx(gridState.layoutInfo)).coerceIn(0f, 1f)
             }
         }
     }
@@ -249,25 +239,15 @@ fun LibraryFastScroller(
             visible = false
         }
     }
-    val progress = if (dragging) dragProgress else scrollProgress
-    val thumbTop = ((trackHeight - thumbHeightPx) * progress).roundToInt()
-    val hintIndex = (progress * itemCount).toInt().coerceIn(0, itemCount - 1)
-    val canScroll = gridState.canScrollForward || gridState.canScrollBackward
-    // Checks the last item is fully visible instead of using the estimated progress, which falls
-    // slightly short of the end and would leave the FAB shown at the last row.
-    val atEnd by remember {
-        derivedStateOf {
-            val info = gridState.layoutInfo
-            val last = info.visibleItemsInfo.lastOrNull()
-            last != null && last.index == info.totalItemsCount - 1 &&
-                last.offset.y + last.size.height <= info.viewportEndOffset
-        }
+    // Where the thumb is along the track. Read in the layout phase, and in composition only
+    // through the derived values below, so scrolling moves the thumb without recomposing the
+    // scroller every frame.
+    fun progress() = if (dragging) dragProgress else scrollProgress
+    fun thumbTop() = ((trackHeight - thumbHeightPx) * progress()).roundToInt()
+    val hintIndex by remember(model) {
+        derivedStateOf { (progress() * itemCount).toInt().coerceIn(0, itemCount - 1) }
     }
-    // Hide the FAB [FAB_HIDE_LEAD] before the thumb reaches the end, so it is gone before the
-    // popup overlaps it. [atEnd] still covers the case where the estimate falls short.
-    val thumbTravel = (trackHeight - thumbHeightPx).coerceAtLeast(1)
-    val nearEnd = progress >= 1f - with(density) { FAB_HIDE_LEAD.toPx() } / thumbTravel
-    if (state != null) SideEffect { state.atBottom = canScroll && (atEnd || nearEnd) }
+    val canScroll = gridState.canScrollForward || gridState.canScrollBackward
 
     Box(
         modifier
@@ -277,8 +257,8 @@ fun LibraryFastScroller(
     ) {
         AnimatedVisibility(
             visible = visible && canScroll,
-            enter = fadeIn(tween(150)),
-            exit = fadeOut(tween(150)),
+            enter = fadeIn(tween(SCROLLER_FADE_MS)),
+            exit = fadeOut(tween(SCROLLER_FADE_MS)),
             modifier = Modifier.align(Alignment.TopEnd),
         ) {
             Box(Modifier.fillMaxSize()) {
@@ -290,7 +270,11 @@ fun LibraryFastScroller(
                             scaleOut(tween(POPUP_FADE_MS), targetScale = POPUP_SCALE),
                     modifier = Modifier
                         .align(Alignment.TopEnd)
-                        .offset { IntOffset(0, (thumbTop + thumbHeightPx / 2 - with(density) { POPUP_SIZE.roundToPx() } / 2).coerceAtLeast(0)) },
+                        .offset {
+                            // Centred on the thumb, but never above the track.
+                            val top = thumbTop() + thumbHeightPx / 2 - POPUP_SIZE.roundToPx() / 2
+                            IntOffset(0, top.coerceAtLeast(0))
+                        },
                 ) {
                     Box(
                         Modifier
@@ -318,15 +302,17 @@ fun LibraryFastScroller(
                 Box(
                     Modifier
                         .align(Alignment.TopEnd)
-                        .offset { IntOffset(0, thumbTop - touchOverhang) }
+                        .offset { IntOffset(0, thumbTop() - touchOverhang) }
                         .padding(end = THUMB_MARGIN_END)
                         .width(THUMB_TOUCH_WIDTH)
                         .height(THUMB_TOUCH_HEIGHT)
                         .pointerInput(trackHeight, model) {
                             detectDragGestures(
                                 onDragStart = {
+                                    // The live position: this handler outlives the composition
+                                    // that made it.
+                                    dragProgress = scrollProgress
                                     dragging = true
-                                    dragProgress = progress
                                     dragMaxPx = if (gridState.canScrollForward) {
                                         model.maxScrollPx(gridState.layoutInfo)
                                     } else model.scrollPx(gridState).coerceAtLeast(1)

@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.scene.SceneState
 import androidx.navigationevent.NavigationEvent
-import org.akanework.gramophone.ui.LocalDarkTheme
+import org.akanework.gramophone.ui.theme.LocalDarkTheme
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min

@@ -17,34 +17,19 @@
 
 package org.akanework.gramophone.ui.intent
 
-import android.content.Context
-import android.widget.Toast
-import androidx.core.content.pm.ShortcutManagerCompat
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
-import androidx.media3.common.util.Log
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import org.akanework.gramophone.R
-import org.akanework.gramophone.logic.toMediaStoreId
 import org.akanework.gramophone.logic.library.LibraryReadiness
-import org.akanework.gramophone.logic.library.LibraryWriteRepository
 import org.akanework.gramophone.ui.MediaControllerViewModel
-import org.akanework.gramophone.ui.actions.SHORTCUT_SHUFFLE_ALL
 import org.akanework.gramophone.ui.nav.AppNavKey
 import org.akanework.gramophone.ui.nav.NavViewModel
-import org.akanework.gramophone.ui.nav.PlaylistKey
-import org.akanework.gramophone.ui.nav.SearchKey
-import uk.akane.libphonograph.reader.FlowReader
 
 /** What running a [PlayIntentAction] needs from the screen. */
 interface PlayIntentHost {
@@ -62,15 +47,22 @@ fun interface PlayIntentExecutor {
  * ready and a host is [bind]ed, then run one at a time in [viewModelScope]: each is taken off the
  * queue before it runs, so a recreated activity neither cancels nor repeats it, and clearing the
  * view model (the activity really finishing) drops whatever is still queued.
+ *
+ * The queue itself is not saved. Only how far the launch intent got is, so that after process
+ * death [enqueueLaunchIntent] can run the rest of it.
  */
 class PlayIntentViewModel(
     readiness: LibraryReadiness,
     private val executor: PlayIntentExecutor,
+    private val savedState: SavedStateHandle,
 ) : ViewModel() {
     // Only touched on the main thread (enqueue callers and viewModelScope).
     private val pending = ArrayDeque<PlayIntentAction>()
     private val enqueued = Channel<Unit>(Channel.CONFLATED)
     private val host = MutableStateFlow<PlayIntentHost?>(null)
+    private var launchIntentTaken = false
+    /** How many actions at the head of [pending] come from the launch intent. */
+    private var launchActionsQueued = 0
 
     init {
         viewModelScope.launch {
@@ -81,9 +73,30 @@ class PlayIntentViewModel(
                     enqueued.receive()
                     continue
                 }
+                val fromLaunchIntent = launchActionsQueued > 0
+                if (fromLaunchIntent) launchActionsQueued--
                 executor.execute(action, host.filterNotNull().first())
+                // Autoplay too: restoring the activity, even in a new process, must not start
+                // playback again.
+                if (fromLaunchIntent) savedState[KEY_LAUNCH_ACTIONS_DONE] = launchActionsDone() + 1
             }
         }
+    }
+
+    private fun launchActionsDone(): Int = savedState[KEY_LAUNCH_ACTIONS_DONE] ?: 0
+
+    /**
+     * Enqueues the [actions] of the activity's launch intent, before anything else is enqueued.
+     * Only the first call on this view model counts, so an activity recreated around it (rotation)
+     * runs nothing again. A view model recreated after process death skips the actions that had
+     * finished before, [PlayIntentAction.Autoplay] included, and runs only the rest.
+     */
+    fun enqueueLaunchIntent(actions: List<PlayIntentAction>) {
+        if (launchIntentTaken) return
+        launchIntentTaken = true
+        val remaining = actions.drop(launchActionsDone())
+        launchActionsQueued = remaining.size
+        enqueue(remaining)
     }
 
     fun enqueue(actions: List<PlayIntentAction>) {
@@ -107,89 +120,8 @@ class PlayIntentViewModel(
         override suspend fun awaitController(): Player = controllers.awaitController()
         override fun navigateTo(key: AppNavKey) = navigation.navigateTo(key)
     }
-}
-
-/** Runs play intent actions against the loaded library, the controller and navigation. */
-class DefaultPlayIntentExecutor internal constructor(
-    private val context: Context,
-    /** The library's songs by id; [FlowReader.idMapFlow] outside tests. */
-    private val idMapFlow: Flow<Map<Long, MediaItem>>,
-    private val libraryWrites: LibraryWriteRepository,
-) : PlayIntentExecutor {
-    constructor(
-        context: Context,
-        reader: FlowReader,
-        libraryWrites: LibraryWriteRepository,
-    ) : this(context, reader.idMapFlow, libraryWrites)
-
-    override suspend fun execute(action: PlayIntentAction, host: PlayIntentHost) {
-        Log.i(TAG, "execute($action)")
-        when (action) {
-            is PlayIntentAction.PlayById -> {
-                val mediaItem = withContext(Dispatchers.Default) {
-                    val col = idMapFlow.firstOrNull()
-                    // Search suggestions send "MediaStore:<id>", audio preview a bare id.
-                    val id = action.id.toMediaStoreId() ?: action.id.toLongOrNull()
-                    val item = id?.let { col?.let { it2 -> it2[it] } }
-                    if (item == null) {
-                        Log.e(TAG, "can't find file with ID ${action.id} in library with" +
-                                " ${col?.size} items")
-                    }
-                    item
-                }
-                if (mediaItem != null) {
-                    val controller = host.awaitController()
-                    controller.setMediaItem(mediaItem, action.positionMs)
-                    controller.prepare()
-                    controller.play()
-                } else {
-                    Toast.makeText(context, R.string.cannot_find_file, Toast.LENGTH_LONG).show()
-                }
-            }
-            is PlayIntentAction.MarkFavorite ->
-                libraryWrites.markFavorite(listOf(action.entry), action.favorite)
-            is PlayIntentAction.OpenPlaylist -> host.navigateTo(PlaylistKey(action.id, null))
-            is PlayIntentAction.OpenSearch -> host.navigateTo(SearchKey(action.query))
-            is PlayIntentAction.PlayFromSearch -> {
-                val controller = host.awaitController()
-                controller.setMediaItem(
-                    MediaItem.Builder()
-                        .setRequestMetadata(
-                            MediaItem.RequestMetadata.Builder()
-                                .setSearchQuery(action.query) // may be empty
-                                .setExtras(action.extras)
-                                .build()
-                        )
-                        .build()
-                )
-                controller.prepare()
-                controller.play()
-            }
-            is PlayIntentAction.Shuffle -> {
-                ShortcutManagerCompat.reportShortcutUsed(context, SHORTCUT_SHUFFLE_ALL)
-                val controller = host.awaitController()
-                controller.shuffleModeEnabled = true
-                controller.setMediaItem(
-                    MediaItem.Builder()
-                        .setRequestMetadata(
-                            MediaItem.RequestMetadata.Builder()
-                                .setSearchQuery(action.query) // empty = every song
-                                .build()
-                        )
-                        .build()
-                )
-                controller.prepare()
-                controller.play()
-            }
-            PlayIntentAction.Autoplay -> {
-                val controller = host.awaitController()
-                controller.prepare()
-                controller.play()
-            }
-        }
-    }
 
     private companion object {
-        const val TAG = "PlayIntentExecutor"
+        const val KEY_LAUNCH_ACTIONS_DONE = "launch_actions_done"
     }
 }

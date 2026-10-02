@@ -108,6 +108,7 @@
     <string name="settings_content_based_color">Inhaltsbasierte Farben</string>
     <string name="settings_content_based_color_summary">Albumbasierte Farbgenerierung aktivieren</string>
     <string name="album_cover">Albumcover</string>
+    <string name="dialog_lyrics">Liedtexte</string>
     <string name="settings_blacklist">Schwarze Liste</string>
     <string name="settings_blacklist_folder">Ordner auf schwarze Liste setzen</string>
     <string name="settings_blacklist_folder_summary">Titel aus bestimmten Ordnern filtern</string>
@@ -129,6 +130,7 @@
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
     <string name="settings_crash_application">Anwendung abstürzen lassen</string>
     <string name="opensource_info">Open-Source unter GPL-3.0\nCopyright %s</string>
+    <string name="current_playlist">Aktuelle Wiedergabeliste</string>
     <string name="fgs_failed_title">Fehler beim Fortsetzen der Musikwiedergabe</string>
     <string name="share">Teilen</string>
     <string name="timer_expiry">Einschlaftimer wird Musik bei %s pausieren</string>
@@ -138,11 +140,15 @@
     <string name="fgs_failed_text">Klicke hier, um die App zu öffnen und die Wiedergabe fortzusetzen</string>
     <string name="fgs_failed_channel">Wiedergabe konnte nicht fortgesetzt werden</string>
     <string name="timer">Einschlaftimer</string>
+    <string name="position_slider">Positionsschieberegler</string>
     <string name="grant_audio"><![CDATA[Bitte die Berechtigung „Musik und Audio“ erteilen]]></string>
     <string name="tab_order">Tab-Reihenfolge konfigurieren</string>
     <string name="tab_order_summary">Die App zeigt beim Starten den ersten Tab an. Tabs nach der Trennlinie werden ausgeblendet.</string>
     <string name="play">Wiedergabe</string>
     <string name="more">Mehr</string>
+    <string name="expand_less">Schließen</string>
+    <string name="skip_next">Zum Nächsten springen</string>
+    <string name="skip_previous">Zum Vorherigen springen</string>
     <string name="settings_preference_category_home">Startbildschirm</string>
     <string name="shuffle_all">Alles zufällig abspielen</string>
     <string name="settings_status_bar_lyrics_title">Liedtexte in der Statusleiste</string>
@@ -365,18 +371,11 @@
     <string name="edit_playlist_failed">Bearbeiten der Wiedergabeliste fehlgeschlagen: %s</string>
     <string name="add_to_playlist">Zur Wiedergabeliste hinzufügen</string>
     <string name="no_app_found">Keine passende App gefunden</string>
-    <string name="contributors_nift4">Maintainer / Hauptentwickler</string>
-    <string name="contributors_123duo3">Hauptdesigner</string>
-    <string name="contributors_developer">Entwickler</string>
-    <string name="contributors_wstxda">Hat eine Variation des App-Icon gestaltet</string>
-    <string name="contributors_pxeemo">Mithilfe &amp; Testen von neuen Liedtexten</string>
     <string name="app_name">Gramophone</string>
     <string name="mix_port_flag_non_blocking">Nicht blockierend</string>
     <string name="mix_port_flag_compress_offload">Komprimierter Offload</string>
     <string name="spk_encoding_pcm_16bit_offload">16-bit PCM Offload</string>
     <string name="spk_encoding_pcm_24bit_offload">24-bit (8.24) PCM offload</string>
-    <string name="contributors_yuyuko1024">Verschnörkelter Fortschrittsbalken</string>
-    <string name="contributors_ghhccghk">Liedtexte in der Statusleiste &amp; andere Verbesserungen</string>
     <string name="home_menu_quick_refresh">Schnelles Aktualisieren</string>
     <string name="add_to_queue">Zur Warteschlange hinzufügen</string>
     <string name="disabled">deaktiviert</string>
@@ -387,9 +386,6 @@
     <string name="mix_port_flag_deep_buffer">Tiefpuffer</string>
     <string name="refreshing_wait">Aktualisierung, bitte warten…</string>
     <string name="still_refreshing">Aktualisierung, Schritt %1$d/%2$d: %3$s</string>
-    <string name="contributors_akanetan">Ursprünglicher Schöpfer, pensionierter Entwickler</string>
-    <string name="contributors_lambada10">Bereitstellung von Liedtextbeispielen &amp; SongSync</string>
-    <string name="contributors_code_contributions">Codebeiträge</string>
     <string name="mix_port_flag_fast">Schnell</string>
     <plurals name="folders_plural">
         <item quantity="one">%d Ordner</item>
@@ -411,7 +407,6 @@
     <string name="settings_replaygain_mode">Modus</string>
     <string name="duration_queue">Noch %s, %s insgesamt</string>
     <string name="clear_queue">Warteschlange leeren</string>
-    <string name="contributors_saladnoober">Qualitätssicherung</string>
     <string name="discard">Verwerfen</string>
     <string name="restore_edits">Änderungen wiederherstellen?</string>
     <string name="discard_changes_title">Änderungen verwerfen?</string>
@@ -461,6 +456,5 @@
     <string name="sort_by_artist_year"><![CDATA[Interpret -> Jahr]]></string>
     <string name="settings_mq_enabled">Mehrere Warteschlangen</string>
     <string name="settings_replaygain_drc_desc">Kompressor benutzen, um Übersteuerung zu vermeiden (empfohlen). Ist diese Funktion deaktiviert, wird stattdessen die Lautstärke reduziert, was den Normalisierungseffekt zunichtemacht.</string>
-    <string name="contributors_banksio">Android Auto</string>
     <string name="search_query">Suchen: %s</string>
 </resources>

@@ -18,9 +18,14 @@
 package org.akanework.gramophone.logic.ui
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.provider.Settings
+import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.core.net.toUri
+import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.defaultPrefs
 import org.akanework.gramophone.ui.theme.overrideConfiguration
 import org.akanework.gramophone.ui.theme.themeMode
@@ -38,5 +43,19 @@ open class BaseActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         prefs = defaultPrefs
         super.onCreate(savedInstanceState)
+    }
+
+    /** Asks for audio permission in the app's settings instead, and closes the screen. */
+    protected open fun onLibraryPermissionDenied() {
+        openAppSettingsForAudio()
+        finish()
+    }
+
+    /** Tells the user to grant audio access and opens the app's system settings page for it. */
+    protected fun openAppSettingsForAudio() {
+        Toast.makeText(this, getString(R.string.grant_audio), Toast.LENGTH_LONG).show()
+        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+        intent.setData("package:$packageName".toUri())
+        startActivity(intent)
     }
 }

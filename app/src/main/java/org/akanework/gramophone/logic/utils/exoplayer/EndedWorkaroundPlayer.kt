@@ -147,6 +147,18 @@ class EndedWorkaroundPlayer(
                     .build()
             }
         }
+        // Without an artist, systems show nothing, or on some ROMs the word "null": name it the
+        // way the app does. Only what the session shows changes, not the song in the library.
+        if (superState.playlist.isNotEmpty() && superState.currentMetadata.artist == null) {
+            superState = superState.buildUpon()
+                .setPlaylist(
+                    superState.timeline, superState.currentTracks,
+                    superState.currentMetadata.buildUpon()
+                        .setArtist(context.getString(R.string.unknown_artist))
+                        .build()
+                )
+                .build()
+        }
         if (context.packageName == "com.tencent.qqmusic") {
             // Oplus uses package name whitelist for their lockscreen lyric feature
             // (don't use BuildConfig in order to allow late patching of package name, after build)

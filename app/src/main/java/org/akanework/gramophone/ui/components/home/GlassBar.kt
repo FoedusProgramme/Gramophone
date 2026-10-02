@@ -33,6 +33,8 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.text.BasicText
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -41,7 +43,6 @@ import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -65,6 +66,13 @@ val GLASS_BAR_HEIGHT = 64.dp
 private val TOOLBAR_PADDING_START = 24.dp
 private val TOOLBAR_PADDING_END = 8.dp
 private val BAR_TITLE_SIZE = 22.sp // textAppearanceTitleLarge
+
+/**
+ * With a [BackButton], the bar's own 4dp plus 6dp puts the arrow's strokes on the 24dp text
+ * margin. The bar's title follows the button at 4dp.
+ */
+private val BACK_BUTTON_INSET = 4.dp + 6.dp
+private val BACK_TITLE_INSET = 4.dp
 
 /**
  * Blur only, no flat tint: a tint would read as a solid band laid across the blurred content.
@@ -180,8 +188,10 @@ fun GlassTitleBar(
             navigationIcon?.invoke()
             BasicText(
                 text = title,
-                style = textViewStyle(BAR_TITLE_SIZE, 400, MaterialTheme.colorScheme.onSurface)
-                    .copy(platformStyle = PlatformTextStyle(includeFontPadding = false)),
+                style = textViewStyle(
+                    BAR_TITLE_SIZE, 400, MaterialTheme.colorScheme.onSurface,
+                    includeFontPadding = false,
+                ),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier
@@ -192,4 +202,42 @@ fun GlassTitleBar(
             actions()
         }
     }
+}
+
+/**
+ * [GlassTitleBar] of a page that goes back: a [BackButton] first, with its arrow on the page's
+ * text margin, then the title.
+ */
+@Composable
+fun GlassTitleBar(
+    hazeState: HazeState,
+    title: String,
+    scrolled: () -> Float,
+    onBack: () -> Unit,
+    modifier: Modifier = Modifier,
+    actions: @Composable RowScope.() -> Unit = {},
+    /** How far below the bar the content's large title starts at rest, see [barTitleAlpha]. */
+    titleTopGap: Dp = LARGE_TITLE_TOP_GAP,
+) = GlassTitleBar(
+    hazeState = hazeState,
+    title = title,
+    scrolled = scrolled,
+    modifier = modifier,
+    toolbarPaddingStart = BACK_BUTTON_INSET,
+    titlePaddingStart = BACK_TITLE_INSET,
+    navigationIcon = { BackButton(onBack) },
+    actions = actions,
+    titleTopGap = titleTopGap,
+)
+
+/** The back arrow at the start of a page's bar. */
+@Composable
+fun BackButton(onBack: () -> Unit, modifier: Modifier = Modifier) {
+    LibraryIconButton(
+        icon = Icons.AutoMirrored.Outlined.ArrowBack,
+        iconSize = 24.dp,
+        tint = MaterialTheme.colorScheme.onSurface,
+        onClick = onBack,
+        modifier = modifier,
+    )
 }

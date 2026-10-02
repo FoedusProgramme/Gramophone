@@ -48,7 +48,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.BugReport
 import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material3.AlertDialog
@@ -85,11 +84,11 @@ import org.akanework.gramophone.BuildConfig
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.allowDiskAccessInStrictMode
 import org.akanework.gramophone.logic.hasOsClipboardDialog
-import org.akanework.gramophone.ui.GramophoneTheme
-import org.akanework.gramophone.ui.LocalCardSurface
+import org.akanework.gramophone.ui.components.home.BackButton
 import org.akanework.gramophone.ui.components.home.GLASS_BAR_HEIGHT
 import org.akanework.gramophone.ui.components.home.GlassTitleBar
-import org.akanework.gramophone.ui.components.home.LibraryIconButton
+import org.akanework.gramophone.ui.theme.GramophoneTheme
+import org.akanework.gramophone.ui.theme.LocalCardSurface
 import java.io.File
 import java.nio.charset.Charset
 import java.text.SimpleDateFormat
@@ -311,14 +310,7 @@ private fun CrashScreen(
             scrolled = { Float.MAX_VALUE },
             toolbarPaddingStart = 4.dp,
             titlePaddingStart = 4.dp,
-            navigationIcon = {
-                LibraryIconButton(
-                    icon = Icons.AutoMirrored.Outlined.ArrowBack,
-                    iconSize = 24.dp,
-                    tint = MaterialTheme.colorScheme.onSurface,
-                    onClick = onBack,
-                )
-            },
+            navigationIcon = { BackButton(onBack) },
         )
         ExtendedFloatingActionButton(
             onClick = onShare,

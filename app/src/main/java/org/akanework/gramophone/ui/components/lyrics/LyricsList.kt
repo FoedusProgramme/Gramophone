@@ -83,7 +83,7 @@ import kotlin.math.min
 import kotlin.math.roundToInt
 import kotlin.properties.Delegates
 
-private const val TAG = "NewLyrics"
+private const val TAG = "LyricsList"
 
 /** How long a user scroll keeps the lyrics from following playback again. */
 private const val USER_SCROLL_HOLD_MS = 5000L
@@ -119,15 +119,16 @@ private const val JUMP_FADE_SLIDE_DURATION_MS = 400.0
  * to the next line with a staggered wave, lines further below starting later. A seek instead
  * scrolls straight to its line, or fades across when that is far away.
  *
- * Scrolling is a [ScrollableState] over [NewLyricsRenderer.scrollY]. Following playback pauses
+ * While [visible], the playback position is checked on each poll of the player sheet's clock.
+ * Scrolling is a [ScrollableState] over [LyricsRenderer.scrollY]. Following playback pauses
  * for [USER_SCROLL_HOLD_MS] after a user scroll or fling.
  */
 @Composable
-internal fun NewLyrics(
+internal fun LyricsList(
     lyrics: SemanticLyrics?,
     visible: Boolean,
-    positionTick: () -> Int,
-    colors: LyricsColors,
+    /** Read outside composition: a change is applied without recomposing. */
+    colors: () -> LyricsColors,
     padding: LyricsPadding,
     playback: LyricsPlayback,
     modifier: Modifier = Modifier,
@@ -136,7 +137,7 @@ internal fun NewLyrics(
     val frame = remember { mutableIntStateOf(0) }
     val frameRequests = remember { Channel<Unit>(Channel.CONFLATED) }
     val renderer = remember(playback) {
-        NewLyricsRenderer(context, playback) { frameRequests.trySend(Unit) }
+        LyricsRenderer(context, playback) { frameRequests.trySend(Unit) }
     }
 
     val center = rememberBooleanPreference("lyric_center", false).value
@@ -144,47 +145,41 @@ internal fun NewLyrics(
     val noAnimation = rememberBooleanPreference("lyric_no_animation", false).value
     val autoWord = rememberBooleanPreference("translation_auto_word", false).value
     val textSize = rememberIntPreference("lyric_text_size", 34).value
-    // AppFont reads the setting itself. Keying on the theme's copy of it rebuilds on a change
+    // The theme decides whether the app font is used
     val appFont = LocalAppFontEnabled.current
     val typeface = remember(appFont, bold) {
-        AppFont.typeface(context, if (bold) 700 else 500)
+        AppFont.typeface(context, if (bold) 700 else 500, appFont)
     }
     SideEffect {
         renderer.visible = visible
-        renderer.setPadding(padding.left, padding.top, padding.right, padding.bottom)
+        renderer.padding = padding
         renderer.applyPrefs(center, autoWord, noAnimation, textSize, typeface)
-        renderer.updateTextColor(colors.default, colors.highlight, colors.highlightTl)
+        colors().let { renderer.updateTextColor(it.default, it.highlight, it.highlightTl) }
         renderer.updateLyrics(lyrics)
     }
+    LaunchedEffect(renderer) {
+        snapshotFlow { colors() }.collect {
+            renderer.updateTextColor(it.default, it.highlight, it.highlightTl)
+        }
+    }
 
-    // Each invalidate request triggers a redraw on the next frame
+    // Each redraw request draws again on the next frame
     LaunchedEffect(renderer) {
         for (request in frameRequests) {
             withFrameNanos { frame.intValue++ }
         }
     }
-    LaunchedEffect(renderer) {
-        snapshotFlow { positionTick() }.collect { renderer.updateLyricPositionFromPlaybackPos() }
+    // Synced lines move on with the playback position alone, which nothing else redraws for:
+    // check again each time the player sheet's poll moves it
+    LaunchedEffect(renderer, visible) {
+        if (visible) snapshotFlow { playback.polledPosition }.collect { renderer.pollPosition() }
     }
-    // User scroll hold: invalidate once it expires so the lyrics follow playback again
-    LaunchedEffect(renderer) {
-        for (request in renderer.resumeRequests) {
-            while (true) {
-                val wait = renderer.resumeAt - SystemClock.uptimeMillis()
-                if (wait <= 0) break
-                delay(wait)
-            }
-            if (renderer.isCallbackQueued) {
-                renderer.isCallbackQueued = false
-                renderer.invalidate()
-            }
-        }
-    }
+    LaunchedEffect(renderer) { renderer.releaseScrollHolds() }
 
     val scrollState = remember(renderer) {
         ScrollableState { delta -> renderer.scrollByUser(delta) }
     }
-    renderer.isUserInteracting = { scrollState.isScrollInProgress }
+    SideEffect { renderer.isUserInteracting = { scrollState.isScrollInProgress } }
     val overscroll = rememberOverscrollEffect()
     Spacer(
         modifier
@@ -203,7 +198,7 @@ internal fun NewLyrics(
                         // second one, and swallows double taps
                         detectTapGestures(
                             onDoubleTap = {},
-                            onTap = { renderer.onSingleTapConfirmed(it.y) },
+                            onTap = { renderer.seekToLineAt(it.y) },
                         )
                     }
             )
@@ -220,11 +215,11 @@ internal fun NewLyrics(
 }
 
 /**
- * Drawing and follow-playback logic of the v2 lyrics. [draw] lays the lines out when needed,
+ * Drawing and follow-playback logic of [LyricsList]. [draw] lays the lines out when needed,
  * advances the follow-playback scroll, draws a frame and decides where to scroll next.
- * [invalidate] requests another frame.
+ * [redraw] requests another frame.
  */
-internal class NewLyricsRenderer(
+internal class LyricsRenderer(
     private val context: Context,
     private val instance: LyricsPlayback,
     private val requestFrame: () -> Unit,
@@ -247,8 +242,12 @@ internal class NewLyricsRenderer(
     private var paddingVerticalTl = 2f
     private var paddingVerticalDefault = 18f
     private var colorSpanPool = mutableListOf<MyForegroundColorSpan>()
-    private var spForRender: Pair<IntArray, List<SbItem>>? = null
-    private var spForMeasure: Pair<IntArray, List<SbItem>>? = null
+
+    /** The lines as last laid out, which drawing, taps and seeks use. Null until laid out. */
+    private var measured: MeasuredLyrics? = null
+
+    /** Whether [measured] is out of date, so the next frame lays the lines out again. */
+    private var measuredStale = true
     private var lyrics: SemanticLyrics? = null
     private var lyricsSet = false
     private var posForRender = 0uL
@@ -307,36 +306,38 @@ internal class NewLyricsRenderer(
     private var snapPending = true
     private var width = 0
     private var height = 0
-    private var paddingLeft = 0
-    private var paddingTop = 0
-    private var paddingRight = 0
-    private var paddingBottom = 0
+
+    /** Insets (px) the lines are drawn inside. The lyrics still scroll underneath them. */
+    var padding = LyricsPadding(0, 0, 0, 0)
+        set(value) {
+            if (field != value) {
+                field = value
+                remeasure()
+            }
+        }
+
+    /** The drawing area inside [padding] (px), which the lines are laid out for and scroll in. */
+    private val viewportWidth: Int
+        get() = width - padding.left - padding.right
+    private val viewportHeight: Int
+        get() = height - padding.top - padding.bottom
     private var scrollYf = 0f
     private val scrollY: Int
         get() = scrollYf.toInt()
     var isUserInteracting: () -> Boolean = { false }
 
-    // User scroll hold, waited out by the composable
-    val resumeRequests = Channel<Unit>(Channel.CONFLATED)
-    var resumeAt = 0L
-        private set
-    var isCallbackQueued = false
+    /** Uptime (ms) until which a user scroll holds the lyrics where they are, null if not held. */
+    private var scrollHeldUntil: Long? = null
+    private val scrollHolds = Channel<Unit>(Channel.CONFLATED)
 
-    fun invalidate() {
+    /** Requests a frame, if the lyrics are shown. */
+    private fun redraw() {
         if (visible) requestFrame()
     }
 
-    fun setPadding(left: Int, top: Int, right: Int, bottom: Int) {
-        if (left != paddingLeft || top != paddingTop || right != paddingRight || bottom != paddingBottom) {
-            paddingLeft = left
-            paddingTop = top
-            paddingRight = right
-            paddingBottom = bottom
-            requestLayout()
-        }
-    }
-
-    fun applyPrefs(center: Boolean, autoWord: Boolean, noAnimation: Boolean, textSize: Int, typeface: Typeface) {
+    fun applyPrefs(
+        center: Boolean, autoWord: Boolean, noAnimation: Boolean, textSize: Int, typeface: Typeface
+    ) {
         if (this.noAnimation != noAnimation) {
             this.noAnimation = noAnimation
             lyricAnimTime = if (noAnimation) 0f else 650f
@@ -359,7 +360,7 @@ internal class NewLyricsRenderer(
             this.autoWord = autoWord
             changed = true
         }
-        if (changed) requestLayout()
+        if (changed) remeasure()
     }
 
     fun updateTextColor(
@@ -394,11 +395,11 @@ internal class NewLyricsRenderer(
             repeat(2) { gradientTlSpanPool.add(makeGradientTlSpan()) }
         }
         if (changed || changedTl) {
-            spForRender?.second?.forEach {
+            measured?.lines?.forEach {
                 it.text.getSpans<MyGradientSpan>()
                     .forEach { s -> it.text.removeSpan(s) }
             }
-            invalidateDeeply()
+            redrawAllLines()
         }
     }
 
@@ -406,9 +407,8 @@ internal class NewLyricsRenderer(
     fun updateLyrics(parsedLyrics: SemanticLyrics?) {
         if (lyricsSet && lyrics === parsedLyrics) return
         lyricsSet = true
-        spForRender = null
-        spForMeasure = null
-        requestLayout()
+        measured = null
+        remeasure()
         lyrics = parsedLyrics
         stateOverrides.clear()
         // Line indices and offsets refer to the old lines. Go straight to the new lyrics' line
@@ -418,9 +418,34 @@ internal class NewLyricsRenderer(
         snapPending = true
     }
 
-    fun updateLyricPositionFromPlaybackPos() {
-        if (instance.getCurrentPosition() != posForRender && lyrics is SemanticLyrics.SyncedLyrics)
-            invalidate() // if not playing, might stay same
+    /** Requests a frame if synced lyrics' playback position moved since the last one drawn. */
+    fun pollPosition() {
+        if (lyrics is SemanticLyrics.SyncedLyrics && instance.getCurrentPosition() != posForRender)
+            redraw() // if not playing, might stay same
+    }
+
+    /**
+     * Ends each user scroll hold once it runs out and requests a frame, so the lyrics follow
+     * playback again. Runs for as long as the lyrics are composed.
+     */
+    suspend fun releaseScrollHolds() {
+        for (hold in scrollHolds) {
+            while (true) {
+                val wait = (scrollHeldUntil ?: break) - SystemClock.uptimeMillis()
+                if (wait <= 0) {
+                    scrollHeldUntil = null
+                    redraw()
+                    break
+                }
+                delay(wait)
+            }
+        }
+    }
+
+    /** Holds the lyrics where the user scrolled them for [USER_SCROLL_HOLD_MS] from now. */
+    private fun holdScroll() {
+        scrollHeldUntil = SystemClock.uptimeMillis() + USER_SCROLL_HOLD_MS
+        scrollHolds.trySend(Unit)
     }
 
     private fun applySize() {
@@ -438,19 +463,20 @@ internal class NewLyricsRenderer(
             newTextSize * translationBackgroundTextSize / defaultTextSize
     }
 
-    private fun requestLayout() {
-        spForMeasure = null
-        invalidate()
+    /** Marks the laid out lines out of date: the next frame lays them out again. */
+    private fun remeasure() {
+        measuredStale = true
+        redraw()
     }
 
     private val scrollRange: Int
-        get() = max(0, (spForRender?.first?.get(1) ?: 0) - (height - paddingTop - paddingBottom))
+        get() = max(0, (measured?.contentHeight ?: 0) - viewportHeight)
 
     private fun scrollTo(y: Int) {
         val clamped = y.coerceIn(0, scrollRange).toFloat()
         if (clamped != scrollYf) {
             scrollYf = clamped
-            invalidate()
+            redraw()
         }
     }
 
@@ -460,7 +486,7 @@ internal class NewLyricsRenderer(
         val consumed = new - scrollYf
         if (consumed != 0f) {
             scrollYf = new
-            invalidate()
+            redraw()
         }
         return consumed
     }
@@ -531,50 +557,52 @@ internal class NewLyricsRenderer(
         return abs(pos.toDouble() - expected) > SEEK_DETECT_MS
     }
 
-    private fun ensureLayout() {
-        val myWidth = width - paddingLeft - paddingRight
-        val viewportHeight = height - paddingBottom - paddingTop
-        if (spForMeasure == null || spForMeasure!!.first[0] != myWidth ||
-            spForMeasure!!.first[4] != viewportHeight
-        ) {
-            spForMeasure = buildSpForMeasure(lyrics, myWidth, viewportHeight)
-            spForRender = null
-        }
-        if (spForRender !== spForMeasure) {
-            spForRender = spForMeasure
-            invalidateDeeply()
-            // Keep the scroll position in the (possibly smaller) new range
-            scrollTo(scrollY)
-        }
+    /** The lines laid out for the current viewport, laying them out again if needed. */
+    private fun ensureLayout(): MeasuredLyrics {
+        val current = measured
+        if (current != null && !measuredStale && current.width == viewportWidth &&
+            current.viewportHeight == viewportHeight
+        ) return current
+        val new = measureLines(lyrics, viewportWidth, viewportHeight)
+        measured = new
+        measuredStale = false
+        redrawAllLines()
+        // Keep the scroll position in the (possibly smaller) new range
+        scrollTo(scrollY)
+        return new
     }
 
-    private fun invalidateDeeply() {
+    /** Drops every line's recorded drawing and requests a frame. */
+    private fun redrawAllLines() {
         if (hasRenderNodes()) {
             cachedNodes!!.forEach { _, it ->
                 it.discardDisplayList()
             }
             cachedNodes.clear()
         }
-        invalidate()
+        redraw()
     }
 
+    /** Draws a frame into a [width] x [height] px area and decides where to scroll next. */
     fun draw(canvas: Canvas, width: Int, height: Int) {
-        if (this.width != width || this.height != height) {
-            this.width = width
-            this.height = height
-        }
-        if (width - paddingLeft - paddingRight <= 0 || typeface == null) return
-        ensureLayout()
+        this.width = width
+        this.height = height
+        if (viewportWidth <= 0 || typeface == null) return
+        val measured = ensureLayout()
         val alpha = jumpFade?.alpha(AnimationUtils.currentAnimationTimeMillis().toDouble()) ?: 1f
-        val sc = if (alpha < 1f)
-            canvas.saveLayerAlpha(0f, 0f, width.toFloat(), height.toFloat(), (alpha * 255).roundToInt())
-        else canvas.save()
-        canvas.translate(paddingLeft.toFloat(), paddingTop.toFloat() - scrollYf)
-        onDrawForChild(canvas)
+        val sc = if (alpha < 1f) canvas.saveLayerAlpha(
+            0f, 0f, width.toFloat(), height.toFloat(), (alpha * 255).roundToInt()
+        ) else canvas.save()
+        canvas.translate(padding.left.toFloat(), padding.top.toFloat() - scrollYf)
+        drawLines(canvas, measured)
         canvas.restoreToCount(sc)
     }
 
-    private fun onDrawForChild(canvas: Canvas) {
+    /**
+     * Draws [measured]'s lines at the playback position, with their fades and the running scroll
+     * animations, then follows playback.
+     */
+    private fun drawLines(canvas: Canvas, measured: MeasuredLyrics) {
         val cat = AnimationUtils.currentAnimationTimeMillis().toDouble()
         posForRender = instance.getCurrentPosition().also {
             if (posForRender > it && posForRender - it < 1000uL)
@@ -583,13 +611,14 @@ internal class NewLyricsRenderer(
                     "regressing position by ${posForRender - it}ms from $posForRender to $it!"
                 )
         }
+        val lines = measured.lines
         // A seek: carry the line fades over from the position last drawn, on the very frame the
         // new position shows up, and scroll there as a jump rather than as playback moving on
         val lastPos = lastFramePos
         if (lastPos != null && lastPos != posForRender &&
             (tapSeekPending || isSeek(posForRender, cat))) {
             tapSeekPending = false
-            handleSeek(lastPos, posForRender)
+            handleSeek(lines, lastPos, posForRender)
             seekPending = true
         }
         val isPlaying = instance.isPlaying()
@@ -598,7 +627,7 @@ internal class NewLyricsRenderer(
         lastFramePlaying = isPlaying
         val useRenderNodes = hasRenderNodes() && canvas.isHardwareAccelerated
         var animating = false
-        val globalPaddingTop = spForRender!!.first[2]
+        val globalPaddingTop = measured.paddingTop
         var heightSoFar = globalPaddingTop.toDouble()
         var heightSoFarWithoutTranslated = heightSoFar
         var determineTimeUntilNext = false
@@ -609,16 +638,16 @@ internal class NewLyricsRenderer(
         var lastScrollTargetIdx: Int? = null
         canvas.save()
         canvas.translate(globalPaddingHorizontal, globalPaddingTop.toFloat())
-        val width = width - paddingLeft - paddingRight - globalPaddingHorizontal * 2
+        val lineWidth = viewportWidth - globalPaddingHorizontal * 2
         pruneScrollWaves(cat)
         if (jumpFade?.done(cat) == true) jumpFade = null
         if (scrollWaves.isNotEmpty() || jumpFade != null) animating = true
-        if (drawnLineOffsets.size != spForRender!!.second.size)
-            drawnLineOffsets = FloatArray(spForRender!!.second.size)
+        if (drawnLineOffsets.size != lines.size)
+            drawnLineOffsets = FloatArray(lines.size)
         // Per wave: main lines passed so far after its target line, for the line delays.
         // Translation and background lines move with their main line.
         val waveLineCounts = IntArray(scrollWaves.size)
-        spForRender!!.second.forEachIndexed { i, it ->
+        lines.forEachIndexed { i, it ->
             if (it.line?.isTranslated != true && it.speaker?.isBackground != true) {
                 scrollWaves.forEachIndexed { w, wave -> if (i > wave.targetIdx) waveLineCounts[w]++ }
             }
@@ -628,93 +657,40 @@ internal class NewLyricsRenderer(
             var realGradientEnd = -1
             var wordIdx: Int? = null
             var gradientProgress = Float.NEGATIVE_INFINITY
-            val firstTs = it.line?.start ?: ULong.MIN_VALUE
-            var lastTs = min(it.line?.end ?: Int.MAX_VALUE.toULong(), Int.MAX_VALUE.toULong())
-            var endIsImplicit = it.line?.endIsImplicit != false
-            if (Flags.IGNORE_SMALL_ENDTIME_GAPS && it.line?.start != null && (!it.line.isTranslated
-                        && it.theWords == null || it.line.isTranslated && spForRender!!.second
-                    .subList(0, i).find { l -> l.line?.start == it.line.start }?.theWords == null)) {
-                val j = spForRender!!.second.subList(i, spForRender!!.second.size).find { l ->
-                    (l.line?.start ?: Int.MAX_VALUE.toULong()) > it.line.start }?.line?.start
-                val nextStartTime = min(j ?: Int.MAX_VALUE.toULong(), Int.MAX_VALUE.toULong())
-                if (j != null && abs(nextStartTime.toLong() - lastTs.toLong()) < lyricAnimTime) {
-                    lastTs = nextStartTime - 1uL
-                    endIsImplicit = true
-                }
-            }
-            if (Flags.NO_ANIM_GRADIENT_LAST_FRAME_MONKEY_FIX && lyricAnimTime == 0f && it.theWords != null) {
-                lastTs += 17.toUInt() // the assumption is that display is at least 60hz
-            }
-            val timeOffsetForUse = min(
-                scaleInAnimTime, min(
-                    lerp(
-                        firstTs.toFloat(), lastTs.toFloat(),
-                        0.5f
-                    ) - firstTs.toFloat(),
-                    max(firstTs.toFloat(), scaleInAnimTime)
-                )
-            )
-            val fadeInStart = max(firstTs.toLong() - timeOffsetForUse.toLong(), 0L).toULong()
-            val fadeInEnd = firstTs + timeOffsetForUse.toULong()
-            // If end is implicit, it's the start point of next line, so animate smoothly.
-            val fadeOutStart = if (!endIsImplicit) lastTs
-            else lastTs - timeOffsetForUse.toULong()
-            val fadeOutEnd = if (!endIsImplicit)
-                lastTs + (timeOffsetForUse * 2).toULong()
-            else lastTs + timeOffsetForUse.toULong()
-            val highlightReal = posForRender in fadeInStart..fadeOutEnd
+            val t = lineTiming(lines, i)
             val override = stateOverrides[i]
             val overridePos = override?.let {
                 if (it >= 0f)
                     it.toULong() + posForRender - stateTime
                 else (-it).toULong() // negative signals freeze
             } ?: posForRender
-            val highlight = overridePos in fadeInStart..fadeOutEnd
+            val highlight = t.highlighted(overridePos)
             if (override != null) {
-                val animPosReal = if (!highlightReal) 0f else if (posForRender >= fadeInEnd)
-                    min(
-                        1f, 1f - lerpInv(
-                            fadeOutStart.toFloat(),
-                            fadeOutEnd.toFloat(), posForRender.toFloat()
-                        )
-                    )
-                else lerpInv(
-                    fadeInStart.toFloat(),
-                    fadeInEnd.toFloat(), posForRender.toFloat()
-                )
-                val animPos = if (!highlight) 0f else if (overridePos >= fadeInEnd) min(
-                    1f,
-                    1f - lerpInv(
-                        fadeOutStart.toFloat(), fadeOutEnd.toFloat(),
-                        overridePos.toFloat()
-                    )
-                ) else lerpInv(
-                    fadeInStart.toFloat(),
-                    fadeInEnd.toFloat(), overridePos.toFloat()
-                )
-                if (timeOffsetForUse == 0f || if (overridePos >= fadeInEnd) animPos <= animPosReal
+                val animPosReal = t.fadeProgress(posForRender)
+                val animPos = t.fadeProgress(overridePos)
+                if (t.fadeTime == 0f || if (overridePos >= t.fadeInEnd) animPos <= animPosReal
                     else animPos >= animPosReal)
                     stateOverrides.remove(i)
             }
-            val scrollTarget = posForRender in fadeInStart..(lastTs - timeOffsetForUse.toULong())
+            val scrollTarget = posForRender in t.fadeInStart..(t.end - t.fadeTime.toULong())
             val scaleInProgress = if (it.line == null) 1f else lerpInv(
-                fadeInStart.toFloat(), fadeInEnd.toFloat(),
+                t.fadeInStart.toFloat(), t.fadeInEnd.toFloat(),
                 overridePos.toFloat()
             )
             val scaleOutProgress = if (it.line == null) 1f else lerpInv(
-                fadeOutStart.toFloat(),
-                fadeOutEnd.toFloat(),
+                t.fadeOutStart.toFloat(),
+                t.fadeOutEnd.toFloat(),
                 overridePos.toFloat()
             )
             val hlScaleFactor = if (it.line == null) 1f else {
                 // lerp() argument order is swapped because we divide by this factor
-                if (scaleOutProgress in 0f..1f && timeOffsetForUse > 0f)
+                if (scaleOutProgress in 0f..1f && t.fadeTime > 0f)
                     lerp(
                         smallSizeFactor,
                         1f,
                         scaleColorEasing.transform(scaleOutProgress)
                     )
-                else if (scaleInProgress in 0f..1f && timeOffsetForUse > 0f)
+                else if (scaleInProgress in 0f..1f && t.fadeTime > 0f)
                     lerp(
                         1f,
                         smallSizeFactor,
@@ -727,7 +703,7 @@ internal class NewLyricsRenderer(
             val node = if (useRenderNodes) {
                 val node = cachedNodes!![i]
                 if (node == null) {
-                    val newNode = RenderNode("NewLyrics_$i")
+                    val newNode = RenderNode("LyricsLine_$i")
                     cachedNodes[i] = newNode
                     newNode
                 } else node
@@ -738,7 +714,7 @@ internal class NewLyricsRenderer(
             else it.layout.alignment == Layout.Alignment.ALIGN_NORMAL
             if (((scaleInProgress >= -.1f && scaleInProgress <= 1f) ||
                         (scaleOutProgress >= -.1f && scaleOutProgress <= 1f)) &&
-                timeOffsetForUse > 0f && it.line != null && isPlaying
+                t.fadeTime > 0f && it.line != null && isPlaying
             )
                 animating = true
             if (it.line?.isTranslated != true && it.speaker?.isBackground != true) {
@@ -753,7 +729,7 @@ internal class NewLyricsRenderer(
                 firstScrollTargetIdx = i
                 determineTimeUntilNext = true
             }
-            if (posForRender >= fadeInStart && it.line?.isTranslated != true
+            if (posForRender >= t.fadeInStart && it.line?.isTranslated != true
                 && it.speaker?.isBackground != true
             ) {
                 lastScrollTarget = heightSoFar.toInt()
@@ -767,7 +743,7 @@ internal class NewLyricsRenderer(
             val culledDown = heightSoFar + lineOffset > scrollY + height
             canvas.translate(0f, it.paddingTop.toFloat() + lineOffset -
                     (it.layout.height.toFloat() / hlScaleFactor - it.layout.height.toFloat()) / 2)
-            val culled = culledDown || scrollY - paddingTop > heightSoFar + lineOffset +
+            val culled = culledDown || scrollY - padding.top > heightSoFar + lineOffset +
                     it.layout.height.toFloat() + it.paddingBottom
             if (!culled) {
                 if (highlight) {
@@ -780,13 +756,13 @@ internal class NewLyricsRenderer(
                             val word = it.theWords[wordIdx]
                             spanEnd = word.charRange.last + 1 // get exclusive end
                             val gradientEndTime = min(
-                                fadeOutStart.toFloat(),
+                                t.fadeOutStart.toFloat(),
                                 word.timeRange.last.toFloat()
                             )
                             val gradientStartTime = min(
                                 max(
                                     word.timeRange.first.toFloat(),
-                                    firstTs.toFloat()
+                                    t.start.toFloat()
                                 ), gradientEndTime - 1f
                             )
                             gradientProgress = lerpInv(
@@ -826,9 +802,9 @@ internal class NewLyricsRenderer(
                     if (!highlight)
                         canvas.save()
                     if (it.layout.alignment != Layout.Alignment.ALIGN_CENTER)
-                        canvas.translate(width * (1 - smallSizeFactor / hlScaleFactor), 0f)
+                        canvas.translate(lineWidth * (1 - smallSizeFactor / hlScaleFactor), 0f)
                     else // Layout.Alignment.ALIGN_CENTER
-                        canvas.translate(width * ((1 - smallSizeFactor / hlScaleFactor) / 2), 0f)
+                        canvas.translate(lineWidth * ((1 - smallSizeFactor / hlScaleFactor) / 2), 0f)
                 }
                 if (gradientProgress >= -.1f && gradientProgress <= 1f && isPlaying)
                     animating = true
@@ -836,7 +812,7 @@ internal class NewLyricsRenderer(
             val spanEndWithoutGradient = if (realGradientStart == -1) spanEnd else realGradientStart
             val inColorAnim = ((scaleInProgress in 0f..1f && gradientProgress ==
                     Float.NEGATIVE_INFINITY) || scaleOutProgress in 0f..1f) &&
-                    timeOffsetForUse > 0f
+                    t.fadeTime > 0f
             var colorSpan = it.text.getSpans<MyForegroundColorSpan>().firstOrNull()
             val cachedEnd = colorSpan?.let { j -> it.text.getSpanEnd(j) } ?: -1
             val wordActiveSpanForLine = if (it.line?.isTranslated == true)
@@ -933,7 +909,7 @@ internal class NewLyricsRenderer(
                 }
                 if (useRenderNodes) {
                     if (!hasValidCachedNode) {
-                        node!!.setPosition(0, 0, width.toInt(),
+                        node!!.setPosition(0, 0, lineWidth.toInt(),
                             it.layout.height)
                         val nodeCanvas = node.beginRecording()
                         it.layout.draw(nodeCanvas)
@@ -948,7 +924,7 @@ internal class NewLyricsRenderer(
             } else if (!hasValidCachedNode) {
                 // The spans changed while the line is off screen: don't draw the old recording
                 // once it's back
-                node?.discardDisplayList()
+                if (hasRenderNodes()) node?.discardDisplayList()
             }
             canvas.translate(0f, (it.layout.height.toFloat()) / hlScaleFactor -
                     (it.layout.height.toFloat() / hlScaleFactor - it.layout.height.toFloat()) / 2
@@ -957,72 +933,149 @@ internal class NewLyricsRenderer(
         }
         canvas.restore()
         if (animating)
-            invalidate()
-        if (isUserInteracting()) {
-            resumeAt = SystemClock.uptimeMillis() + USER_SCROLL_HOLD_MS
-            isCallbackQueued = true
-            resumeRequests.trySend(Unit)
-            if (spForRender!!.first[3] == 1)
-                currentScrollTarget = null
-            // The user takes over: show the lyrics where they are
-            if (jumpFade?.jumped == false) jumpFade = null
-        } else if (!isCallbackQueued) {
-            val scrollTarget = max(0, (firstScrollTarget ?: lastScrollTarget ?: 0) -
-                    globalPaddingTop)
-            val scrollTargetIndex = firstScrollTargetIdx ?: lastScrollTargetIdx
-            val fade = jumpFade
-            if (fade != null && !fade.jumped) {
-                // Fading out for a jump: go wherever playback is by the time the lyrics are out
-                if (scrollTarget != currentScrollTarget) {
-                    currentScrollTarget = scrollTarget
-                    fade.delta = scrollTarget.coerceIn(0, scrollRange) - scrollYf
-                    fade.scrollTarget = scrollTarget
-                }
-                if (fade.fadedOut(cat)) {
-                    fade.jumped = true
-                    scrollWaves.clear()
-                    scrollTo(fade.scrollTarget)
-                    val slide = JUMP_FADE_SLIDE_FRACTION * (height - paddingTop - paddingBottom)
-                    val delta = fade.delta.coerceIn(-slide, slide)
-                    if (delta != 0f) scrollWaves.add(ScrollWave(cat, delta, 0, staggered = false,
-                        duration = JUMP_FADE_SLIDE_DURATION_MS))
-                }
-                invalidate()
-            } else if (scrollTarget != currentScrollTarget) {
-                if (lyricAnimTime == 0f || snapPending) {
-                    currentScrollTarget = scrollTarget
-                    scrollWaves.clear()
-                    jumpFade = null
-                    scrollTo(scrollTarget)
-                } else {
-                    currentScrollTarget = scrollTarget
-                    val from = scrollYf
-                    val delta = scrollTarget.coerceIn(0, scrollRange) - from
-                    val viewportHeight = height - paddingTop - paddingBottom
-                    if (seekPending && abs(delta) > JUMP_SCROLL_MAX_VIEWPORTS * viewportHeight) {
-                        // Too far to scroll through: fade out from however visible the lyrics are
-                        val alpha = fade?.alpha(cat) ?: 1f
-                        jumpFade = JumpFade(cat - (1f - alpha) * JUMP_FADE_OUT_MS, scrollTarget, delta)
-                    } else if (delta != 0f) {
-                        // Jump there, then let each line move from where it was on screen.
-                        scrollTo(scrollTarget)
-                        scrollWaves.add(
-                            if (seekPending) ScrollWave(cat, scrollYf - from, scrollTargetIndex ?: 0,
-                                staggered = false, duration = JUMP_SCROLL_DURATION_MS)
-                            else ScrollWave(cat, scrollYf - from, scrollTargetIndex ?: 0)
-                        )
-                    }
-                    invalidate()
-                }
-            }
-        }
+            redraw()
+        val scrollTarget = max(0, (firstScrollTarget ?: lastScrollTarget ?: 0) - globalPaddingTop)
+        followPlayback(cat, measured, scrollTarget, firstScrollTargetIdx ?: lastScrollTargetIdx)
         seekPending = false
         snapPending = false
     }
 
-    private fun buildSpForMeasure(
+    /**
+     * After a frame at [time]: scrolls to [target], which shows the line being sung ([targetIdx])
+     * where the first line starts. Not while the user scrolls or a user scroll holds the lyrics.
+     */
+    private fun followPlayback(
+        time: Double, measured: MeasuredLyrics, target: Int, targetIdx: Int?
+    ) {
+        if (isUserInteracting()) {
+            holdScroll()
+            if (measured.synced)
+                currentScrollTarget = null
+            // The user takes over: show the lyrics where they are
+            if (jumpFade?.jumped == false) jumpFade = null
+            return
+        }
+        if (scrollHeldUntil != null) return
+        val fade = jumpFade
+        if (fade != null && !fade.jumped) {
+            // Fading out for a jump: go wherever playback is by the time the lyrics are out
+            if (target != currentScrollTarget) {
+                currentScrollTarget = target
+                fade.delta = target.coerceIn(0, scrollRange) - scrollYf
+                fade.scrollTarget = target
+            }
+            if (fade.fadedOut(time)) {
+                fade.jumped = true
+                scrollWaves.clear()
+                scrollTo(fade.scrollTarget)
+                val slide = JUMP_FADE_SLIDE_FRACTION * viewportHeight
+                val delta = fade.delta.coerceIn(-slide, slide)
+                if (delta != 0f) scrollWaves.add(ScrollWave(time, delta, 0, staggered = false,
+                    duration = JUMP_FADE_SLIDE_DURATION_MS))
+            }
+            redraw()
+        } else if (target != currentScrollTarget) {
+            currentScrollTarget = target
+            if (lyricAnimTime == 0f || snapPending) {
+                scrollWaves.clear()
+                jumpFade = null
+                scrollTo(target)
+            } else {
+                val from = scrollYf
+                val delta = target.coerceIn(0, scrollRange) - from
+                if (seekPending && abs(delta) > JUMP_SCROLL_MAX_VIEWPORTS * viewportHeight) {
+                    // Too far to scroll through: fade out from however visible the lyrics are
+                    val alpha = fade?.alpha(time) ?: 1f
+                    jumpFade = JumpFade(time - (1f - alpha) * JUMP_FADE_OUT_MS, target, delta)
+                } else if (delta != 0f) {
+                    // Jump there, then let each line move from where it was on screen.
+                    scrollTo(target)
+                    scrollWaves.add(
+                        if (seekPending) ScrollWave(time, scrollYf - from, targetIdx ?: 0,
+                            staggered = false, duration = JUMP_SCROLL_DURATION_MS)
+                        else ScrollWave(time, scrollYf - from, targetIdx ?: 0)
+                    )
+                }
+                redraw()
+            }
+        }
+    }
+
+    /**
+     * When a line is sung and fades, as playback positions (ms). It scales and colours in over
+     * [fadeInStart]..[fadeInEnd] around its [start], and back out over [fadeOutStart]..[fadeOutEnd]
+     * around its [end] (or from it, if the end is explicit). [fadeTime] is half of each fade.
+     */
+    private class LineTiming(
+        val start: ULong,
+        val end: ULong,
+        val fadeTime: Float,
+        val fadeInStart: ULong,
+        val fadeInEnd: ULong,
+        val fadeOutStart: ULong,
+        val fadeOutEnd: ULong,
+    ) {
+        /** Whether the line is highlighted (fading in, sung or fading out) at [pos]. */
+        fun highlighted(pos: ULong) = pos in fadeInStart..fadeOutEnd
+
+        /** How far the line is faded in at [pos], from 0 (not highlighted) to 1. */
+        fun fadeProgress(pos: ULong): Float = when {
+            !highlighted(pos) -> 0f
+            pos >= fadeInEnd ->
+                min(1f, 1f - lerpInv(fadeOutStart.toFloat(), fadeOutEnd.toFloat(), pos.toFloat()))
+            else -> lerpInv(fadeInStart.toFloat(), fadeInEnd.toFloat(), pos.toFloat())
+        }
+    }
+
+    /**
+     * Timing of line [i] of [lines]. A line without words that ends less than [lyricAnimTime]
+     * away from the next start ends just before it instead, so it fades out as the next fades in.
+     */
+    private fun lineTiming(lines: List<SbItem>, i: Int): LineTiming {
+        val item = lines[i]
+        val line = item.line
+        val start = line?.start ?: ULong.MIN_VALUE
+        var end = min(line?.end ?: Int.MAX_VALUE.toULong(), Int.MAX_VALUE.toULong())
+        var endIsImplicit = line?.endIsImplicit != false
+        if (Flags.IGNORE_SMALL_ENDTIME_GAPS && line?.start != null && (!line.isTranslated
+                    && item.theWords == null || line.isTranslated && lines
+                .subList(0, i).find { l -> l.line?.start == line.start }?.theWords == null)) {
+            val j = lines.subList(i, lines.size).find { l ->
+                (l.line?.start ?: Int.MAX_VALUE.toULong()) > line.start }?.line?.start
+            val nextStartTime = min(j ?: Int.MAX_VALUE.toULong(), Int.MAX_VALUE.toULong())
+            if (j != null && abs(nextStartTime.toLong() - end.toLong()) < lyricAnimTime) {
+                end = nextStartTime - 1uL
+                endIsImplicit = true
+            }
+        }
+        if (Flags.NO_ANIM_GRADIENT_LAST_FRAME_MONKEY_FIX && lyricAnimTime == 0f &&
+            item.theWords != null
+        ) {
+            end += 17.toUInt() // the assumption is that display is at least 60hz
+        }
+        val fadeTime = min(
+            scaleInAnimTime, min(
+                lerp(
+                    start.toFloat(), end.toFloat(),
+                    0.5f
+                ) - start.toFloat(),
+                max(start.toFloat(), scaleInAnimTime)
+            )
+        )
+        val fadeInStart = max(start.toLong() - fadeTime.toLong(), 0L).toULong()
+        val fadeInEnd = start + fadeTime.toULong()
+        // If end is implicit, it's the start point of next line, so animate smoothly.
+        val fadeOutStart = if (!endIsImplicit) end
+        else end - fadeTime.toULong()
+        val fadeOutEnd = if (!endIsImplicit)
+            end + (fadeTime * 2).toULong()
+        else end + fadeTime.toULong()
+        return LineTiming(start, end, fadeTime, fadeInStart, fadeInEnd, fadeOutStart, fadeOutEnd)
+    }
+
+    private fun measureLines(
         lyrics: SemanticLyrics?, width: Int, viewportHeight: Int
-    ): Pair<IntArray, List<SbItem>> {
+    ): MeasuredLyrics {
         val lines =
             lyrics?.unsyncedText ?: listOf(context.getString(R.string.no_lyric_found) to null)
         val syncedLines = (lyrics as? SemanticLyrics.SyncedLyrics?)?.text
@@ -1152,85 +1205,58 @@ internal class NewLyricsRenderer(
             (viewportHeight * (5f / 6f)).toInt() -
                     (lastIdx?.let { heights.subList(it, heights.size).sum() } ?: 0))
         else if (lyrics != null) context.resources.getDimensionPixelSize(R.dimen.lyric_bottom_padding) else 0
-        return Pair(
-            intArrayOf(
-                width,
-                heights.sum() + globalPaddingTop + globalPaddingBottom,
-                globalPaddingTop,
-                if (lyrics is SemanticLyrics.SyncedLyrics) 1 else 0,
-                viewportHeight,
-            ), spLines
+        return MeasuredLyrics(
+            width = width,
+            contentHeight = heights.sum() + globalPaddingTop + globalPaddingBottom,
+            paddingTop = globalPaddingTop,
+            synced = lyrics is SemanticLyrics.SyncedLyrics,
+            viewportHeight = viewportHeight,
+            lines = spLines,
         )
     }
 
-    /** A tap at [viewY] (px from the top of the lyrics): seek to the line under it. */
-    fun onSingleTapConfirmed(viewY: Float) {
-        if (spForRender == null) {
-            requestLayout()
+    /**
+     * A tap at [y] (px from the top of the lyrics): seeks to the line under it, and lets the
+     * lyrics follow playback again right away.
+     */
+    fun seekToLineAt(y: Float) {
+        val measured = measured
+        if (measured == null) {
+            remeasure()
             return
         }
         // Convert to content coordinates
-        val y = viewY + scrollY - paddingTop
+        val contentY = y + scrollY - padding.top
         var foundItem: SemanticLyrics.LyricLine? = null
         if (lyrics is SemanticLyrics.SyncedLyrics) {
-            var heightSoFar = spForRender!!.first[2]
-            spForRender!!.second.forEachIndexed { i, it ->
+            var heightSoFar = measured.paddingTop
+            measured.lines.forEachIndexed { i, it ->
                 val myHeight = it.paddingTop + it.layout.height + it.paddingBottom
                 // Where the line is drawn, which a running scroll animation moves it away from
                 val top = heightSoFar + (drawnLineOffsets.getOrNull(i) ?: 0f)
-                if (y >= top && y <= top + myHeight && it.line!!.isClickable)
+                if (contentY >= top && contentY <= top + myHeight && it.line!!.isClickable)
                     foundItem = it.line
                 heightSoFar += myHeight
             }
         }
-        resumeAt = 0L
-        isCallbackQueued = false
+        scrollHeldUntil = null
         if (foundItem != null) {
             // The next frame showing a new position carries the line fades over to it (see
-            // onDrawForChild), even if it's too close to the old one to be told apart from playback
+            // drawLines), even if it's too close to the old one to be told apart from playback
             tapSeekPending = true
             instance.seekTo(foundItem.start)
             instance.setPlayWhenReady(true)
         }
-        invalidate()
+        redraw()
     }
 
-    private fun handleSeek(from: ULong, to: ULong) {
-        spForRender?.second?.forEachIndexed { i, it ->
-            val firstTs = it.line?.start ?: ULong.MIN_VALUE
-            var lastTs = min(it.line?.end ?: Int.MAX_VALUE.toULong(), Int.MAX_VALUE.toULong())
-            var endIsImplicit = it.line?.endIsImplicit != false
-            if (Flags.IGNORE_SMALL_ENDTIME_GAPS && it.line?.start != null && (!it.line.isTranslated
-                        && it.theWords == null || it.line.isTranslated && spForRender!!.second
-                    .subList(0, i).find { l -> l.line?.start == it.line.start }?.theWords == null)) {
-                val j = spForRender!!.second.subList(i, spForRender!!.second.size).find { l ->
-                    (l.line?.start ?: Int.MAX_VALUE.toULong()) > it.line.start }?.line?.start
-                val nextStartTime = min(j ?: Int.MAX_VALUE.toULong(), Int.MAX_VALUE.toULong())
-                if (j != null && abs(nextStartTime.toLong() - lastTs.toLong()) < lyricAnimTime) {
-                    lastTs = nextStartTime
-                    endIsImplicit = true
-                }
-            }
-            if (Flags.NO_ANIM_GRADIENT_LAST_FRAME_MONKEY_FIX && lyricAnimTime == 0f && it.theWords != null) {
-                lastTs += 17.toUInt() // the assumption is that display is at least 60hz
-            }
-            val timeOffsetForUse = min(
-                scaleInAnimTime, min(
-                    lerp(
-                        firstTs.toFloat(), lastTs.toFloat(),
-                        0.5f
-                    ) - firstTs.toFloat(),
-                    max(firstTs.toFloat(), scaleInAnimTime)
-                )
-            )
-            val fadeInStart = max(firstTs.toLong() - timeOffsetForUse.toLong(), 0L).toULong()
-            val fadeInEnd = firstTs + timeOffsetForUse.toULong()
-            // If end is implicit, it's the start point of next line, so animate smoothly.
-            val fadeOutStart = if (!endIsImplicit) lastTs
-            else lastTs - timeOffsetForUse.toULong()
-            val fadeOutEnd = if (!endIsImplicit)
-                lastTs + (timeOffsetForUse * 2).toULong()
-            else lastTs + timeOffsetForUse.toULong()
+    /**
+     * A seek from [from] to [to]: each of [lines] whose fade differs between the two positions
+     * gets a [stateOverrides] entry, so it goes on fading from where it was.
+     */
+    private fun handleSeek(lines: List<SbItem>, from: ULong, to: ULong) {
+        lines.forEachIndexed { i, it ->
+            val t = lineTiming(lines, i)
             val override = stateOverrides[i]
             val overridePos = override?.let {
                 // if there's an old override we'll continue there
@@ -1238,32 +1264,22 @@ internal class NewLyricsRenderer(
                     it.toULong() + from - stateTime
                 else (-it).toULong() // negative signals freeze
             } ?: from
-            val highlight = overridePos in fadeInStart..fadeOutEnd
-            val animPosNow = if (!highlight) 0f else if (overridePos >= fadeInEnd)
-                min(1f, 1f - lerpInv(fadeOutStart.toFloat(),
-                    fadeOutEnd.toFloat(), overridePos.toFloat()))
-            else lerpInv(fadeInStart.toFloat(),
-                fadeInEnd.toFloat(), overridePos.toFloat())
-            val highlightAfterSeek = to in fadeInStart..fadeOutEnd
-            val animPosAfterSeek = if (!highlightAfterSeek) 0f else if (to >=
-                fadeInEnd) min(1f, 1f - lerpInv(fadeOutStart.toFloat(),
-                fadeOutEnd.toFloat(), to.toFloat()))
-            else lerpInv(fadeInStart.toFloat(),
-                fadeInEnd.toFloat(), to.toFloat())
+            val animPosNow = t.fadeProgress(overridePos)
+            val animPosAfterSeek = t.fadeProgress(to)
             if (animPosNow != animPosAfterSeek && it.theWords == null)
                 stateOverrides[i] =
                         // Now we have to decide what behavior towards infinity we wish to have...
                     when {
                         // If we are fading out or fully faded out at target, skip to fade out
                         // at current animation point
-                        to !in fadeInStart..<fadeOutStart ->
-                            lerp(fadeOutStart.toFloat(), fadeOutEnd.toFloat(),
+                        to !in t.fadeInStart..<t.fadeOutStart ->
+                            lerp(t.fadeOutStart.toFloat(), t.fadeOutEnd.toFloat(),
                                 1f - animPosNow)
                         // If we're fading in at target and are already fully faded in here,
                         // stay fully faded in and wait for target to finish fading in too.
-                        overridePos in fadeInEnd..<fadeOutStart ->
+                        overridePos in t.fadeInEnd..<t.fadeOutStart ->
                             -overridePos.toFloat() // negative signals freeze
-                        else -> lerp(fadeInStart.toFloat(), fadeInEnd.toFloat(),
+                        else -> lerp(t.fadeInStart.toFloat(), t.fadeInEnd.toFloat(),
                             animPosNow)
                     }
             else if (override != null)
@@ -1277,5 +1293,19 @@ internal class NewLyricsRenderer(
         val paddingTop: Int, val paddingBottom: Int, val theWords: List<SemanticLyrics.Word>?,
         val words: List<List<Int>>?, val rlm: List<Int>?, val speaker: SpeakerEntity?,
         val line: SemanticLyrics.LyricLine?
+    )
+
+    /**
+     * [lines] laid out [width] px wide, for a viewport [viewportHeight] px tall. The content is
+     * [contentHeight] px tall and starts with [paddingTop] px above the first line: for [synced]
+     * lyrics, a sixth of the viewport, where the line being sung is scrolled to.
+     */
+    private class MeasuredLyrics(
+        val width: Int,
+        val contentHeight: Int,
+        val paddingTop: Int,
+        val synced: Boolean,
+        val viewportHeight: Int,
+        val lines: List<SbItem>,
     )
 }

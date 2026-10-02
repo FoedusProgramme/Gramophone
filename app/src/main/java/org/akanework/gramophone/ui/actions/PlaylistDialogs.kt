@@ -17,8 +17,6 @@
 
 package org.akanework.gramophone.ui.actions
 
-import android.content.ContentUris
-import android.provider.MediaStore
 import android.widget.Toast
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.PlaylistPlay
@@ -86,9 +84,9 @@ object PlaylistDialogs {
             ).show()
             return
         }
-        // On the application scope, like the Activity's lifecycleScope before: the chooser still
-        // shows (on root-level dialogs) if the screen that asked goes away meanwhile.
-        env.appScope.launch(Dispatchers.Default) {
+        // On the screen's scope: the chooser goes to this activity's dialogs, so it is dropped
+        // with the screen rather than shown on a dead one.
+        env.scope.launch(Dispatchers.Default) {
             val job = async(start = CoroutineStart.UNDISPATCHED) {
                 env.reader.playlistListFlow.first().filter { it.title != null }
             }
@@ -123,18 +121,12 @@ object PlaylistDialogs {
                 ) { chosen ->
                     if (playlists.size == chosen) {
                         playlistNameDialog(env, R.string.create_playlist, "",
-                            { ItemManipulator.getDefaultPlaylistFile(it) }) { name ->
-                            env.writes.addToPlaylist(null, name, listOf(song))
+                            { ItemManipulator.getDefaultPlaylistFile(it) }) { file ->
+                            env.writes.addToNewPlaylist(file, listOf(song))
                         }
                         return@Choice
                     }
-                    val pl = playlists[chosen]
-                    env.writes.addToPlaylist(
-                        ContentUris.withAppendedId(
-                            @Suppress("deprecation") MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI,
-                            pl.id!!
-                        ), null, listOf(song)
-                    )
+                    env.writes.addToPlaylist(playlists[chosen].id!!, listOf(song))
                 })
             }
         }

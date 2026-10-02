@@ -17,7 +17,6 @@
 
 package org.akanework.gramophone
 
-import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Build
@@ -27,7 +26,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharedFlow
 import org.akanework.gramophone.logic.defaultPrefs
-import org.akanework.gramophone.logic.settings.SettingsRepository
+import org.akanework.gramophone.logic.settings.LibraryFilterSettings
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
@@ -39,15 +38,13 @@ import org.robolectric.RuntimeEnvironment
 import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 
-// Plain Application: the repository is constructed directly, without the Koin graph.
-@Config(application = Application::class)
 @RunWith(RobolectricTestRunner::class)
-class SettingsRepositoryTest {
+class LibraryFilterSettingsTest {
 
     private lateinit var context: Context
     private lateinit var prefs: SharedPreferences
 
-    // Runs the repository's start-up work synchronously inside the constructor.
+    // Runs the settings' start-up work synchronously inside the constructor.
     private val directScope = CoroutineScope(Dispatchers.Unconfined)
 
     @Before
@@ -57,7 +54,7 @@ class SettingsRepositoryTest {
         prefs.edit(commit = true) { clear() }
     }
 
-    private fun newRepository() = SettingsRepository(context, directScope)
+    private fun newSettings() = LibraryFilterSettings(context, directScope)
 
     private fun idle() = shadowOf(Looper.getMainLooper()).idle()
 
@@ -71,61 +68,65 @@ class SettingsRepositoryTest {
             putStringSet("folderFilter", setOf("Music/Ignored"))
             putStringSet("folderAllow", setOf("Music/Allowed"))
         }
-        val repo = newRepository()
-        assertEquals(42L, repo.minSongLengthSecondsFlow.latest())
-        assertEquals(setOf("Music/Ignored"), repo.blackListSetFlow.latest())
-        assertEquals(setOf("Music/Allowed"), repo.whiteListSetFlow.latest())
-        assertEquals(1_209_600L, repo.recentlyAddedFilterSecondFlow.value)
+        val settings = newSettings()
+        assertEquals(42L, settings.minSongLengthSecondsFlow.latest())
+        assertEquals(setOf("Music/Ignored"), settings.blackListSetFlow.latest())
+        assertEquals(setOf("Music/Allowed"), settings.whiteListSetFlow.latest())
+    }
+
+    @Test
+    fun recentlyAddedCoversTwoWeeks() {
+        assertEquals(1_209_600L, LibraryFilterSettings.RECENTLY_ADDED_WINDOW_SECONDS)
     }
 
     @Test
     fun minSongLengthDefaultsToResourceValue() {
-        val repo = newRepository()
+        val settings = newSettings()
         val expected = context.resources.getInteger(R.integer.filter_default_sec).toLong()
-        assertEquals(expected, repo.minSongLengthSecondsFlow.latest())
+        assertEquals(expected, settings.minSongLengthSecondsFlow.latest())
     }
 
     @Test
     fun blacklistFollowsFolderFilterAndFallsBackToExtraDisallowedFolders() {
-        val repo = newRepository()
-        assertEquals(repo.extraDisallowedFolders, repo.blackListSetFlow.latest())
-        assertEquals(emptySet<String>(), repo.whiteListSetFlow.latest())
+        val settings = newSettings()
+        assertEquals(settings.extraDisallowedFolders, settings.blackListSetFlow.latest())
+        assertEquals(emptySet<String>(), settings.whiteListSetFlow.latest())
 
         prefs.edit(commit = true) { putStringSet("folderFilter", setOf("A", "B")) }
         idle()
-        assertEquals(setOf("A", "B"), repo.blackListSetFlow.latest())
+        assertEquals(setOf("A", "B"), settings.blackListSetFlow.latest())
 
         prefs.edit(commit = true) { putInt("mediastore_filter", 17) }
         idle()
-        assertEquals(17L, repo.minSongLengthSecondsFlow.latest())
+        assertEquals(17L, settings.minSongLengthSecondsFlow.latest())
 
         prefs.edit(commit = true) { remove("folderFilter") }
         idle()
-        assertEquals(repo.extraDisallowedFolders, repo.blackListSetFlow.latest())
+        assertEquals(settings.extraDisallowedFolders, settings.blackListSetFlow.latest())
     }
 
     @Test
     @Config(sdk = [Build.VERSION_CODES.S_V2])
     fun albumCoversPrefAppliesWithoutScopedStorage() {
         prefs.edit(commit = true) { putBoolean("album_covers", false) }
-        val repo = newRepository()
-        assertEquals(false, repo.shouldUseEnhancedCoverReadingFlow.latest())
+        val settings = newSettings()
+        assertEquals(false, settings.shouldUseEnhancedCoverReadingFlow.latest())
 
         prefs.edit(commit = true) { putBoolean("album_covers", true) }
         idle()
-        assertEquals(true, repo.shouldUseEnhancedCoverReadingFlow.latest())
+        assertEquals(true, settings.shouldUseEnhancedCoverReadingFlow.latest())
     }
 
     @Test
     @Config(sdk = [Build.VERSION_CODES.TIRAMISU])
     fun albumCoversPrefIgnoredWithScopedStorage() {
         prefs.edit(commit = true) { putBoolean("album_covers", false) }
-        val repo = newRepository()
-        assertNull(repo.shouldUseEnhancedCoverReadingFlow.latest())
+        val settings = newSettings()
+        assertNull(settings.shouldUseEnhancedCoverReadingFlow.latest())
 
         prefs.edit(commit = true) { putBoolean("album_covers", true) }
         idle()
-        assertNull(repo.shouldUseEnhancedCoverReadingFlow.latest())
+        assertNull(settings.shouldUseEnhancedCoverReadingFlow.latest())
     }
 
     @Test
@@ -134,26 +135,29 @@ class SettingsRepositoryTest {
             putStringSet("folderFilter", setOf("Custom"))
             putInt("mediastore_filter", 60)
         }
-        val repo = newRepository()
+        val settings = newSettings()
         val defaultSec = context.resources.getInteger(R.integer.filter_default_sec)
         assertFalse(prefs.getBoolean("needToAdd_isMusicBlacklist", true))
-        assertEquals(setOf("Custom") + repo.extraDisallowedFolders, prefs.getStringSet("folderFilter", null))
+        assertEquals(
+            setOf("Custom") + settings.extraDisallowedFolders,
+            prefs.getStringSet("folderFilter", null)
+        )
         assertEquals(defaultSec, prefs.getInt("mediastore_filter", -1))
-        assertEquals(defaultSec.toLong(), repo.minSongLengthSecondsFlow.latest())
+        assertEquals(defaultSec.toLong(), settings.minSongLengthSecondsFlow.latest())
 
         // A second start must not migrate again.
         prefs.edit(commit = true) {
             putStringSet("folderFilter", setOf("Custom"))
             putInt("mediastore_filter", 60)
         }
-        newRepository()
+        newSettings()
         assertEquals(setOf("Custom"), prefs.getStringSet("folderFilter", null))
         assertEquals(60, prefs.getInt("mediastore_filter", -1))
     }
 
     @Test
     fun migrationDoesNotCreateFolderFilterWhenUnset() {
-        newRepository()
+        newSettings()
         assertFalse(prefs.contains("folderFilter"))
         assertFalse(prefs.getBoolean("needToAdd_isMusicBlacklist", true))
     }

@@ -1,5 +1,5 @@
 /*
- *     Copyright (C) 2025 Akane Foundation
+ *     Copyright (C) 2026 The Gramophone authors
  *
  *     Gramophone is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -28,8 +28,6 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.core.graphics.TypefaceCompat
-import org.akanework.gramophone.logic.defaultPrefs
-import org.akanework.gramophone.logic.getBooleanStrict
 import org.akanework.gramophone.ui.components.compose.rememberBooleanPreference
 
 /*
@@ -54,16 +52,22 @@ object AppFont {
     /** Whether this device has Google Sans Flex. */
     val isAvailable: Boolean get() = flexBase != null
 
-    /** Whether the app uses Google Sans Flex: it is available and the setting is on. */
-    fun isEnabled(context: Context): Boolean =
-        isAvailable && context.defaultPrefs.getBooleanStrict(PREF_KEY, PREF_DEFAULT)
+    /** Whether the app uses Google Sans Flex: the [setting] is on and the device has the font. */
+    fun isEnabled(setting: Boolean): Boolean = setting && isAvailable
 
-    /** The app typeface at [weight], for views and paints. */
-    fun typeface(context: Context, weight: Int, italic: Boolean = false): Typeface =
-        TypefaceCompat.create(context, if (isEnabled(context)) flexBase else null, weight, italic)
+    /**
+     * The app typeface at [weight], for views and paints: Google Sans Flex when [enabled] (see
+     * [isEnabled]), the platform's sans-serif otherwise.
+     */
+    fun typeface(
+        context: Context,
+        weight: Int,
+        enabled: Boolean,
+        italic: Boolean = false,
+    ): Typeface = TypefaceCompat.create(context, if (enabled) flexBase else null, weight, italic)
 
-    /** The app font family for Compose, or null for the platform default. */
-    fun fontFamily(enabled: Boolean): FontFamily? = if (enabled && isAvailable) flexFamily else null
+    /** The app font family for Compose when [enabled] (see [isEnabled]), else null. */
+    fun fontFamily(enabled: Boolean): FontFamily? = if (enabled) flexFamily else null
 
     private val flexFamily: FontFamily by lazy {
         FontFamily(
@@ -82,7 +86,7 @@ val LocalAppFontEnabled = staticCompositionLocalOf { false }
 /** Whether the app font setting is on and the device has the font, as Compose state. */
 @Composable
 fun rememberAppFontEnabled(): Boolean =
-    AppFont.isAvailable && rememberBooleanPreference(AppFont.PREF_KEY, AppFont.PREF_DEFAULT).value
+    AppFont.isEnabled(rememberBooleanPreference(AppFont.PREF_KEY, AppFont.PREF_DEFAULT).value)
 
 /** Material's default type scale using [family], or unchanged when [family] is null. */
 fun appTypography(family: FontFamily?): Typography {

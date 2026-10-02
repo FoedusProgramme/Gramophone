@@ -53,6 +53,7 @@
     <string name="settings_blacklist_folder">Fekete listás mappák</string>
     <string name="settings_category_filters">Szűrők</string>
     <string name="settings_crash_application_summary">Össze-o-moltató 3000</string>
+    <string name="dialog_lyrics">Dalszövegek</string>
     <string name="settings_about_app">Névjegy</string>
     <string name="settings_about_gramophone">Alkalmazás névjegye</string>
     <string name="sort_by_album">Album</string>
@@ -268,9 +269,14 @@
     <string name="album_covers_enhance">Feljavított album borító beöltése</string>
     <string name="share">Megosztás</string>
     <string name="timer">Elalvás időzítő</string>
+    <string name="current_playlist">Jelenlegi lejátszási lista</string>
     <string name="tab_order">Fülek sorrendjének beállítása</string>
     <string name="tab_order_summary">Az applikáció az első fület mutatja elinduláskor. Az elválasztó után levő fülek elrejtésre kerülnek.</string>
     <string name="shuffle_all">Mindegyik véletlen sorrendben</string>
+    <string name="skip_next">Ugrás a következőre</string>
+    <string name="skip_previous">Ugrás az előzőre</string>
+    <string name="position_slider">Csúszka áthelyezése</string>
+    <string name="expand_less">Bezár</string>
     <string name="delete">Törlés</string>
     <string name="device_type_builtin_speaker">Beépített hangszóró</string>
     <string name="device_type_usb_device">USB eszköz</string>

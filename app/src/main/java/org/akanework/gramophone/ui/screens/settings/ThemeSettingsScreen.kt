@@ -69,8 +69,6 @@ import com.materialkolor.hct.Hct
 import com.materialkolor.ktx.toColor
 import com.materialkolor.ktx.toHct
 import org.akanework.gramophone.R
-import org.akanework.gramophone.ui.LocalDarkTheme
-import org.akanework.gramophone.ui.THEME_ANIMATION_MS
 import org.akanework.gramophone.ui.components.compose.rememberBooleanPreference
 import org.akanework.gramophone.ui.components.compose.rememberIntPreference
 import org.akanework.gramophone.ui.components.compose.rememberStringPreference
@@ -82,12 +80,14 @@ import org.akanework.gramophone.ui.components.settings.PreferenceScreen
 import org.akanework.gramophone.ui.components.settings.PreferenceSectionHeader
 import org.akanework.gramophone.ui.components.settings.SwitchPreferenceRow
 import org.akanework.gramophone.ui.theme.DEFAULT_SEED_COLOR
+import org.akanework.gramophone.ui.theme.LocalDarkTheme
 import org.akanework.gramophone.ui.theme.PREF_PALETTE_STYLE
 import org.akanework.gramophone.ui.theme.PREF_PURE_DARK
 import org.akanework.gramophone.ui.theme.PREF_SEED_COLOR
 import org.akanework.gramophone.ui.theme.PREF_THEME_MODE
 import org.akanework.gramophone.ui.theme.PREF_WALLPAPER_COLOR
 import org.akanework.gramophone.ui.theme.PRESET_SEED_COLORS
+import org.akanework.gramophone.ui.theme.THEME_ANIMATION_MS
 import org.akanework.gramophone.ui.theme.ThemeMode
 import org.akanework.gramophone.ui.theme.activeSeedColor
 import org.akanework.gramophone.ui.theme.applyToSystem

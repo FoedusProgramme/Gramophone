@@ -18,7 +18,6 @@
     <plurals name="songs">
         <item quantity="other">%d 個の曲</item>
     </plurals>
-    <string name="songs_total_duration">%1$s、%2$s</string>
     <plurals name="albums">
         <item quantity="other">%d 個のアルバム</item>
     </plurals>
@@ -121,10 +120,12 @@
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
     <string name="settings_crash_application">アプリをクラッシュさせる</string>
     <string name="album_cover">アルバムカバー</string>
+    <string name="dialog_lyrics">歌詞</string>
     <string name="deny_images"><![CDATA[「写真と動画」の権限を拒否してください]]></string>
     <string name="grant_images"><![CDATA[「写真と動画」の権限を許可してください]]></string>
     <string name="crash_clipboard">クラッシュログをクリップボードにコピー</string>
     <string name="settings_trim_lyrics">歌詞の空白を削除する</string>
+    <string name="current_playlist">現在のプレイリスト</string>
     <string name="timer">スリープタイマー</string>
     <string name="fgs_failed_title">音楽の再生を再開できませんでした</string>
     <string name="fgs_failed_text">アプリを開いて再生を続行するにはここをタップしてください</string>
@@ -140,6 +141,10 @@
     <string name="shuffle_all">すべてシャッフル</string>
     <string name="play">再生</string>
     <string name="more">詳細</string>
+    <string name="skip_next">次へスキップ</string>
+    <string name="expand_less">閉じる</string>
+    <string name="skip_previous">前へスキップ</string>
+    <string name="position_slider">スライダーの位置</string>
     <string name="tab_order_summary">起動時に表示するタブを設定します。区切り線以降のタブは非表示になります。</string>
     <string name="settings_status_bar_lyrics_title">ステータスバーの歌詞</string>
     <string name="settings_status_bar_lyrics_summary">MeiZu 方式のステータスバーの歌詞表示を有効化します (一部のデバイスでのみ対応)</string>
@@ -370,16 +375,6 @@
     <string name="add_to_playlist">プレイリストに追加</string>
     <string name="refresh_did_you_know">Gramophone はアプリを起動するたびに曲の一覧を要求して起動中に新しいメディアを自動的に検出します。この「更新」ボタンは Gramophone 内のメディアを再読み込みするのではなく、すべてのメディアストレージデバイスからすべてのファイルを再スキャンするようシステムに要求します (そのため、多少時間を要します)。つまり、システムや他のアプリに不具合がない限り、この機能を使用する必要はありません。\n\n曲が不足している場合は「設定」→「動作」から「曲の最小の長さ」と「フォルダのブラックリスト」を確認し、これらの設定が適切な値に設定されているか確認してください。その他の考えられる原因については FAQ をご確認ください。</string>
     <string name="no_app_found">実行できるアプリが見つかりません</string>
-    <string name="contributors_nift4">メンテナー / リードデベロッパー</string>
-    <string name="contributors_123duo3">リードデザイナー</string>
-    <string name="contributors_akanetan">オリジナルの作者、引退した開発者</string>
-    <string name="contributors_developer">デベロッパー</string>
-    <string name="contributors_wstxda">アプリアイコンのバリエーションを 1 つデザインしました</string>
-    <string name="contributors_pxeemo">新しい歌詞のヘルプとテスト</string>
-    <string name="contributors_lambada10">歌詞のサンプルと SongSync の提供</string>
-    <string name="contributors_code_contributions">コードの貢献</string>
-    <string name="contributors_yuyuko1024">曲がりくねったプログレスバー</string>
-    <string name="contributors_ghhccghk">ステータスバーの歌詞とその他の改善</string>
     <string name="home_menu_quick_refresh">クイック更新</string>
     <string name="add_to_queue">キューに追加</string>
     <string name="app_name">Gramophone</string>
@@ -420,7 +415,6 @@
     <string name="tempo_pitch_value">%s: %.2fx</string>
     <string name="lock_tempo_pitch">テンポとピッチをロック</string>
     <string name="reset">リセット</string>
-    <string name="contributors_saladnoober">音質の保証</string>
     <string name="settings_replaygain_boost">ブースト</string>
     <string name="d_db">%d dB</string>
     <string name="settings_replaygain_no_rg_amp_desc">リプレイゲインタグのない大音量な曲の音量を下げます</string>

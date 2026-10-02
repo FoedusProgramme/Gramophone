@@ -45,8 +45,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -63,17 +61,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeSource
-import org.akanework.gramophone.ui.LocalCardSurface
 import org.akanework.gramophone.ui.components.home.GLASS_BAR_HEIGHT
 import org.akanework.gramophone.ui.components.home.GlassTitleBar
 import org.akanework.gramophone.ui.components.home.LargeTitle
-import org.akanework.gramophone.ui.components.home.LibraryIconButton
 import org.akanework.gramophone.ui.components.home.PAGE_TITLE_TOP_GAP
 import org.akanework.gramophone.ui.components.home.PageTitleStyle
 import org.akanework.gramophone.ui.components.home.iosOverscroll
 import org.akanework.gramophone.ui.components.home.rememberIosFlingBehavior
 import org.akanework.gramophone.ui.components.home.rememberIosOverscrollState
 import org.akanework.gramophone.ui.components.home.rememberLargeTitleState
+import org.akanework.gramophone.ui.theme.LocalCardSurface
 
 /*
  * A page of grouped settings,
@@ -90,14 +87,10 @@ private val ROW_PADDING = 16.dp
 
 /*
  * The header: the page title starts [PAGE_TITLE_TOP_GAP] under the bar and the first section
- * [TITLE_TO_CONTENT_GAP] under the title. The back button sits at the bar's own 4dp plus 6dp,
- * which puts the arrow's strokes on the 24dp text margin. The bar's title follows it at 4dp.
+ * [TITLE_TO_CONTENT_GAP] under the title.
  */
 /** Under the title, before the first section header or group. */
 private val TITLE_TO_CONTENT_GAP = 4.dp
-private val BACK_BUTTON_INSET = 4.dp + 6.dp
-private val BAR_TITLE_INSET = 4.dp
-
 
 /** The top-level pages' marks: a tinted disc, then the text. */
 private val ICON_CONTAINER_SIZE = 40.dp
@@ -164,17 +157,8 @@ fun PreferenceScreen(
             hazeState = hazeState,
             title = title,
             scrolled = scrolled,
-            toolbarPaddingStart = BACK_BUTTON_INSET,
-            titlePaddingStart = BAR_TITLE_INSET,
+            onBack = onBack,
             titleTopGap = PAGE_TITLE_TOP_GAP,
-            navigationIcon = {
-                LibraryIconButton(
-                    icon = Icons.AutoMirrored.Outlined.ArrowBack,
-                    iconSize = 24.dp,
-                    tint = MaterialTheme.colorScheme.onSurface,
-                    onClick = onBack,
-                )
-            },
             actions = actions,
         )
     }

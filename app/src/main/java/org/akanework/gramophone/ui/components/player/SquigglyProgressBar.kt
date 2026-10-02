@@ -1,6 +1,5 @@
 package org.akanework.gramophone.ui.components.player
 
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
@@ -11,6 +10,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Modifier
@@ -18,6 +18,7 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorProducer
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -45,11 +46,28 @@ fun SquigglyProgressBar(
     animating: Boolean,
     color: Color,
     trackColor: Color,
-    modifier: Modifier = Modifier,
     onScrub: (Float) -> Unit,
     onSeek: (Float) -> Unit,
     /** A drag was cancelled: drop the scrub without seeking. */
     onScrubCancel: () -> Unit,
+    modifier: Modifier = Modifier,
+) = SquigglyProgressBar(
+    fraction, animating, ColorProducer { color }, ColorProducer { trackColor },
+    onScrub, onSeek, onScrubCancel, modifier,
+)
+
+/** The bar with its colours read in the draw phase, so changing them only redraws it. */
+@Composable
+fun SquigglyProgressBar(
+    fraction: Float,
+    animating: Boolean,
+    color: ColorProducer,
+    trackColor: ColorProducer,
+    onScrub: (Float) -> Unit,
+    onSeek: (Float) -> Unit,
+    /** A drag was cancelled: drop the scrub without seeking. */
+    onScrubCancel: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     // The gesture handlers outlive recompositions, so they read the latest callbacks
     val currentOnScrub by rememberUpdatedState(onScrub)
@@ -99,6 +117,8 @@ fun SquigglyProgressBar(
                 )
             },
     ) {
+        val color = color()
+        val trackColor = trackColor()
         val totalWidth = size.width
         val centerY = size.height / 2f
         val progress = fraction.coerceIn(0f, 1f)

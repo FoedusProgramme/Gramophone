@@ -18,30 +18,30 @@
 package org.akanework.gramophone.logic.library
 
 import android.content.IntentSender
-import androidx.media3.common.util.Log
-import kotlinx.coroutines.channels.Channel
+import org.akanework.gramophone.logic.utils.RedeliveringQueue
 
+/**
+ * One MediaStore consent prompt: [sender] shows the system dialog, and [payload] is handed back
+ * with the user's answer to [LibraryWriteRepository.onConsentResult].
+ */
 class ConsentRequest(val sender: IntentSender, val payload: PendingWrite)
 
 /**
- * Queue of MediaStore consent prompts. Anything may enqueue, from any thread, before any UI
- * exists; the root MediaConsentHost takes the requests one at a time and shows them. A channel
- * (not a SharedFlow) so requests made while no host collects are kept, not dropped.
+ * Queue of MediaStore consent prompts. Anything may [request], from any thread, before any UI
+ * exists; the root MediaConsentHost takes the requests one at a time with [next] and shows them.
+ * Requests made while no host is waiting are kept, and one handed to a host that is gone before
+ * it resumes (its activity recreated) is queued again, at the back.
  */
 class MediaConsentRequester {
-    private val requests = Channel<ConsentRequest>(Channel.BUFFERED)
+    private val requests = RedeliveringQueue<ConsentRequest>(TAG)
 
+    /** Queues a prompt for [sender]. Never suspends. */
     fun request(sender: IntentSender, payload: PendingWrite) {
-        val result = requests.trySend(ConsentRequest(sender, payload))
-        if (result.isFailure) Log.e(TAG, "dropped consent request for $payload")
-    }
-
-    suspend fun send(sender: IntentSender, payload: PendingWrite) {
-        requests.send(ConsentRequest(sender, payload))
+        requests.post(ConsentRequest(sender, payload))
     }
 
     /** Waits for the next request. Only the host should call this. */
-    suspend fun next(): ConsentRequest = requests.receive()
+    suspend fun next(): ConsentRequest = requests.next()
 
     private companion object {
         const val TAG = "MediaConsentRequester"

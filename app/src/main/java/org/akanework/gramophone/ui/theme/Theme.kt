@@ -1,4 +1,4 @@
-package org.akanework.gramophone.ui
+package org.akanework.gramophone.ui.theme
 
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
@@ -23,13 +23,6 @@ import com.materialkolor.ktx.animateColorScheme
 import com.materialkolor.ktx.toColor
 import com.materialkolor.ktx.toHct
 import org.akanework.gramophone.logic.enableEdgeToEdgeProperly
-import org.akanework.gramophone.ui.theme.AppFont
-import org.akanework.gramophone.ui.theme.LocalAppFontEnabled
-import org.akanework.gramophone.ui.theme.appTypography
-import org.akanework.gramophone.ui.theme.isDark
-import org.akanework.gramophone.ui.theme.rememberAppFontEnabled
-import org.akanework.gramophone.ui.theme.rememberThemeSettings
-import org.akanework.gramophone.ui.theme.themeColorScheme
 
 val LocalCardSurface = staticCompositionLocalOf { Color.Unspecified }
 

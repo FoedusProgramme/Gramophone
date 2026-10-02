@@ -4,15 +4,13 @@ import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.Easing
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.layout.layout
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Constraints
-import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.constrain
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.akanework.gramophone.logic.utils.CalculationUtils.lerp
@@ -23,10 +21,6 @@ object PlayerUtilities {
 
     const val SQUIGGLY_TRACK_ALPHA = 0.30f
     const val LYRIC_COVER_FADE_MS = 125
-
-    // Player repeat
-    const val PLAYER_REPEAT_OFF = 0
-    const val PLAYER_REPEAT_ONE = 1
 
     // Speed dialog
     const val SPEED_MIN = 0.25f
@@ -52,7 +46,7 @@ object PlayerUtilities {
 
     const val SETTLED_EPS = 0.99f
 
-    // Metrics
+    // Floating mini bar
     val MINI_HEIGHT = 56.dp
     val MINI_SIDE_INSET = 16.dp
     val MINI_ARTWORK = 44.dp
@@ -61,31 +55,54 @@ object PlayerUtilities {
     val MINI_PLATFORM_GAP = 8.dp
     val MINI_PLATFORM_MIN = 24.dp
 
+    // The full player's layout: FullPlayer lays it out, SheetGeometry sums it up to size the cover
+    /** The top buttons, in a row above the cover (portrait) or a column beside it (landscape). */
+    val TOP_BUTTON_SIZE = 52.dp
+    /** Between the top button row and the cover. */
+    val ART_TOP_GAP = 16.dp
+    val TITLE_LINE_HEIGHT = 32.sp
+    val ARTIST_LINE_HEIGHT = 25.sp
+    /** The position and duration line under the progress bar. */
+    val TIME_LINE_HEIGHT = 24.sp
+    val TITLE_ARTIST_GAP = 3.dp
+    val ARTIST_PROGRESS_GAP = 12.dp
+    val PROGRESS_BAR_HEIGHT = 48.dp
+    val TIME_TRANSPORT_GAP = 18.dp
+    /** The previous, play and next buttons, which shrink as squares if they have to. */
+    val TRANSPORT_BUTTON_SIZE = 90.dp
+    /** The bottom row's buttons: lyrics, repeat, shuffle, favourite and queue. */
+    val ACTION_BUTTON_SIZE = 48.dp
+    val ACTION_BAR_VERTICAL_PADDING = 4.dp
+
     // Expanded artwork
     val EXPANDED_ART_SIDE_INSET = 24.dp
-    val EXPANDED_ART_TOP_OFFSET = 68.dp // 52dp top-button row + 16dp gap
+    val EXPANDED_ART_TOP_OFFSET = TOP_BUTTON_SIZE + ART_TOP_GAP
     val EXPANDED_ART_CORNER = 22.dp
     const val EXPANDED_ART_MAX_HEIGHT_FRACTION = 0.5f
     // What the portrait player keeps below the cover, so the cover shrinks on short screens
-    // instead of squashing the controls: 3dp + 12dp + 48dp slider + 18dp + 90dp transport row,
-    // the title, artist and time lines at their real line heights (about 32, 28 and 24sp, which
-    // grow with the font scale), the bottom button row, and the least room around the controls
-    // (split above the title and below the transport row) so they never touch the cover.
-    val EXPANDED_CONTROLS_FIXED = 171.dp
-    val EXPANDED_CONTROLS_TEXT = 84.sp
-    val EXPANDED_ACTION_BAR = 56.dp
+    // instead of squashing the controls: the gaps, the progress bar and the transport row, the
+    // title, artist and time lines at their line heights (which grow with the font scale), the
+    // bottom button row, and the least room around the controls (split above the title and below
+    // the transport row) so they never touch the cover.
+    val EXPANDED_CONTROLS_FIXED =
+        TITLE_ARTIST_GAP + ARTIST_PROGRESS_GAP + PROGRESS_BAR_HEIGHT + TIME_TRANSPORT_GAP +
+            TRANSPORT_BUTTON_SIZE
+    // Converted to px one by one, as the text does: with non-linear font scaling (Android 14)
+    // their sum in sp would grow less than the lines themselves.
+    val EXPANDED_CONTROLS_LINES = listOf(TITLE_LINE_HEIGHT, ARTIST_LINE_HEIGHT, TIME_LINE_HEIGHT)
+    val EXPANDED_ACTION_BAR = ACTION_BUTTON_SIZE + ACTION_BAR_VERTICAL_PADDING * 2
     val EXPANDED_CONTROLS_MIN_GAP = 48.dp
 
     const val WIDE_LANDSCAPE_MIN_WIDTH = 600
+    // Around the landscape cover
     val LAND_ART_START = 24.dp
     val LAND_ART_TOP = 16.dp
     val LAND_ART_BOTTOM = 25.dp
     val PORTRAIT_MARGIN = 36.dp
     val LANDSCAPE_MARGIN = 28.dp
-    val LANDSCAPE_TOP_BUTTON_SIZE = 52.dp
-    
+
     const val CORNER_SQUARE_START = 0.9f
-    
+
     val ARC_HORIZONTAL_EASING = CubicBezierEasing(0.2f, 0.8f, 0.3f, 1f)
     const val ARC_STRENGTH = 1f
     val SIZE_EASING = CubicBezierEasing(0.1f, 0f, 0.4f, 1f)
@@ -131,31 +148,34 @@ object PlayerUtilities {
         easing: Easing,
     ): Float = lerp(progress, easing.transform(progress), ARC_STRENGTH)
 
+    /**
+     * Lays the content out at [bounds] (px, in the parent's coordinates, mirrored in RTL like an
+     * offset), within the parent's constraints and in its own layer, so moving it doesn't redraw
+     * the parent. [bounds] is read in the layout phase, so a moving sheet lays out again without
+     * recomposing.
+     */
+    fun Modifier.absolute(bounds: () -> Rect): Modifier = placeAt(bounded = true, bounds)
 
-    fun Modifier.absolute(
-        x: Float,
-        y: Float,
-        widthPx: Float,
-        heightPx: Float,
-    ): Modifier = composed {
-        val density = LocalDensity.current
-        offset { IntOffset(x.roundToInt(), y.roundToInt()) }
-            .size(with(density) { widthPx.toDp() }, with(density) { heightPx.toDp() })
-    }
+    /** Like [absolute], but at its full size even past the parent, and never mirrored. */
+    fun Modifier.absoluteUnbounded(bounds: () -> Rect): Modifier = placeAt(bounded = false, bounds)
 
-    fun Modifier.absoluteUnbounded(
-        x: Float,
-        y: Float,
-        widthPx: Float,
-        heightPx: Float,
-    ): Modifier = layout { measurable, constraints ->
-        val width = widthPx.roundToInt().coerceAtLeast(0)
-        val height = heightPx.roundToInt().coerceAtLeast(0)
-        val placeable = measurable.measure(Constraints.fixed(width, height))
-        val layoutWidth = width.coerceIn(constraints.minWidth, constraints.maxWidth)
-        val layoutHeight = height.coerceIn(constraints.minHeight, constraints.maxHeight)
-        layout(layoutWidth, layoutHeight) {
-            placeable.place(x.roundToInt(), y.roundToInt())
+    // The modifier takes the whole parent. An offset would leave its own box, the size of the
+    // content, at the parent's corner, which shows up there with layout bounds on.
+    private fun Modifier.placeAt(bounded: Boolean, bounds: () -> Rect): Modifier =
+        layout { measurable, constraints ->
+            val b = bounds()
+            val size = Constraints.fixed(
+                b.width.roundToInt().coerceAtLeast(0),
+                b.height.roundToInt().coerceAtLeast(0),
+            )
+            val placeable = measurable.measure(if (bounded) constraints.constrain(size) else size)
+            val width = if (constraints.hasBoundedWidth) constraints.maxWidth else placeable.width
+            val height =
+                if (constraints.hasBoundedHeight) constraints.maxHeight else placeable.height
+            layout(width, height) {
+                val x = b.left.roundToInt()
+                val y = b.top.roundToInt()
+                if (bounded) placeable.placeRelativeWithLayer(x, y) else placeable.place(x, y)
+            }
         }
-    }
 }

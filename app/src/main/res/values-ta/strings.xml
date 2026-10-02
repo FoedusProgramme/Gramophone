@@ -127,6 +127,7 @@
     <string name="settings_crash_application">செயலிழப்பு பயன்பாடு</string>
     <string name="settings_crash_application_summary">க்ராச்-ஓ-மேடிக் 3000</string>
     <string name="album_cover">ஆல்பம் கவர்</string>
+    <string name="dialog_lyrics">பாடல்</string>
     <string name="delete_failed">பாடலை நீக்குவதில் தோல்வி: %s</string>
     <string name="album_covers_enhance">மேம்படுத்தப்பட்ட ஆல்பம் கவர் ஏற்றுதல்</string>
     <string name="album_covers_enhance_desc">உயர் தரமான பாடல் கவர்களைக் காண்பி, ஆல்பம் மற்றும் பாடல் அட்டையை வேறுபடுத்த அனுமதிக்கவும் (புகைப்படங்கள் அணுகல் தேவை)</string>
@@ -136,6 +137,7 @@
     <string name="crash_clipboard">இடைநிலைப்பலகைக்கு க்ராச் பதிவை நகலெடுத்தது</string>
     <string name="settings_trim_lyrics">பாடல் வரிகளைச் சுற்றியுள்ள இடங்களை அகற்று</string>
     <string name="timer">தூக்க நேரங்குறிகருவி</string>
+    <string name="current_playlist">தற்போதைய பிளேலிச்ட்</string>
     <string name="fgs_failed_title">மியூசிக் பிளேபேக்கை மீண்டும் தொடங்குவதில் தோல்வி</string>
     <string name="fgs_failed_text">பயன்பாட்டைத் திறந்து பிளேபேக்கைத் தொடர இங்கே சொடுக்கு செய்க</string>
     <string name="fgs_failed_channel">பின்னணி மீண்டும் தொடங்கத் தவறிவிட்டது</string>
@@ -145,7 +147,11 @@
     <string name="tab_order">தாவல் வரிசையை உள்ளமைக்கவும்</string>
     <string name="tab_order_summary">பயன்பாடு தொடக்கத்தில் முதல் தாவலைக் காண்பிக்கும். வகுப்பாளருக்குப் பிறகு தாவல்கள் மறைக்கப்படும்.</string>
     <string name="play">விளையாடுங்கள்</string>
+    <string name="skip_next">அடுத்து செல்லவும்</string>
     <string name="more">மேலும்</string>
+    <string name="expand_less">மூடு</string>
+    <string name="skip_previous">முந்தையதைத் தவிர்க்கவும்</string>
+    <string name="position_slider">நிலை ச்லைடர்</string>
     <string name="settings_status_bar_lyrics_title">நிலை பட்டை பாடல்</string>
     <string name="settings_status_bar_lyrics_summary">நிலை பட்டியில் பாடல்களைக் காண்பிக்கும் மீசு முறையை இயக்கவும் (சில சாதனங்களில் மட்டுமே கிடைக்கும்)</string>
     <string name="lyric_widget_description">தற்போது விளையாடும் ஊடகங்களின் பாடல்களைக் காட்டும் விட்செட்</string>
@@ -373,16 +379,6 @@
     <string name="edit_playlist_failed">பிளேலிச்ட்டைத் திருத்த முடியவில்லை: %s</string>
     <string name="add_to_playlist">பிளேலிச்ட்டில் சேர்க்கவும்</string>
     <string name="no_app_found">இதைச் செய்யக்கூடிய எந்த பயன்பாடும் கிடைக்கவில்லை</string>
-    <string name="contributors_nift4">பராமரிப்பாளர் / முன்னணி உருவாக்குபவர்</string>
-    <string name="contributors_123duo3">முன்னணி வடிவமைப்பாளர்</string>
-    <string name="contributors_akanetan">அசல் படைப்பாளி, ஓய்வு பெற்ற உருவாக்குபவர்</string>
-    <string name="contributors_developer">உருவாக்குநர்</string>
-    <string name="contributors_wstxda">பயன்பாட்டு ஐகானின் ஒரு மாறுபாடு வடிவமைக்கப்பட்டுள்ளது</string>
-    <string name="contributors_pxeemo">புதிய பாடல்களின் உதவி மற்றும் சோதனை</string>
-    <string name="contributors_lambada10">பாடல் மாதிரிகள் மற்றும் பாடல்கள்</string>
-    <string name="contributors_code_contributions">குறியீடு பங்களிப்புகள்</string>
-    <string name="contributors_yuyuko1024">மோசமான முன்னேற்றப் பட்டி</string>
-    <string name="contributors_ghhccghk">ச்டேட்டச் பார் பாடல் வரிகள் மற்றும் பிற மேம்பாடுகள்</string>
     <string name="app_name">கிராமபோன்</string>
     <plurals name="folders_plural">
         <item quantity="one">%d கோப்புறை</item>
@@ -395,7 +391,6 @@
     <string name="lock_tempo_pitch">லாக் டெம்போ மற்றும் பிட்ச்</string>
     <string name="reset">மீட்டமை</string>
     <string name="timer_expiry_end_of_this_song">இந்த பாடலின் முடிவில் ச்லீப் நேரங்குறிகருவி இசையை இடைநிறுத்தும்</string>
-    <string name="contributors_saladnoober">தர பொறுப்பு</string>
     <string name="home_menu_quick_refresh">விரைவான புதுப்பிப்பு</string>
     <string name="add_to_queue">வரிசையில் சேர்க்கவும்</string>
     <string name="disabled">முடக்கப்பட்டது</string>

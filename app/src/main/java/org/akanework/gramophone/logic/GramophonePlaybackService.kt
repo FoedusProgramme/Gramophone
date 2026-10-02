@@ -23,7 +23,6 @@ import android.bluetooth.BluetoothCodecStatus
 import android.bluetooth.BluetoothProfile
 import android.content.BroadcastReceiver
 import android.content.ComponentName
-import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -114,6 +113,7 @@ import kotlinx.coroutines.guava.future
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.akanework.gramophone.R
+import org.akanework.gramophone.logic.library.LibraryWriteRepository
 import org.akanework.gramophone.logic.ui.MeiZuLyricsMediaNotificationProvider
 import org.akanework.gramophone.logic.ui.isManualNotificationUpdate
 import org.akanework.gramophone.logic.utils.AfFormatInfo
@@ -137,18 +137,15 @@ import org.akanework.gramophone.logic.utils.exoplayer.GramophoneRenderFactory
 import org.akanework.gramophone.ui.AudioPreviewActivity
 import org.akanework.gramophone.ui.LyricWidgetProvider
 import org.akanework.gramophone.ui.MainActivity
-import org.akanework.gramophone.ui.intent.PlayIntents
 import org.akanework.gramophone.ui.fragments.compose.MqState.Companion.CLIENT_QB_REFRESH_ALL
 import org.akanework.gramophone.ui.fragments.compose.MqState.Companion.CLIENT_QB_REFRESH_CLEAR
 import org.akanework.gramophone.ui.fragments.compose.MqState.Companion.CLIENT_QB_REFRESH_ITEM
 import org.akanework.gramophone.ui.fragments.compose.MqState.Companion.CLIENT_QB_REFRESH_LIST
 import org.akanework.gramophone.ui.fragments.compose.MqState.Companion.CLIENT_QB_REFRESH_QUEUES
-import org.nift4.mediastorecompat.MediaStoreCompat
+import org.akanework.gramophone.ui.intent.PlayIntents
+import org.koin.android.ext.android.inject
 import uk.akane.libphonograph.dynamicitem.Favorite
 import uk.akane.libphonograph.items.albumId
-import uk.akane.libphonograph.manipulator.ItemManipulator
-import uk.akane.libphonograph.manipulator.PlaylistSerializer
-import org.koin.android.ext.android.inject
 import uk.akane.libphonograph.manipulator.PlaylistSerializer.Entry
 import uk.akane.libphonograph.reader.FlowReader
 import java.util.concurrent.Executor
@@ -204,6 +201,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
 
     private lateinit var libraryTreeLoader: LibraryTreeLoader
     private val reader: FlowReader by inject()
+    private val libraryWrites: LibraryWriteRepository by inject()
 
     private var controller: MediaBrowser? = null
     lateinit var qb: QueueBoard
@@ -727,41 +725,9 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                 completion.set(SessionResult(SessionResult.RESULT_ERROR_BAD_VALUE))
                 return@launch
             }
-            val uriIn = reader.playlistListFlow.map { it.find { p ->
-                p is Favorite } }.first()?.id?.let {
-                ContentUris.withAppendedId(@Suppress("deprecation")
-                MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, it)
-            }
-            val token = if (uriIn != null) {
-                MediaStoreCompat.needRequestBytesWrite(this@GramophonePlaybackService,
-                    uriIn)
-            } else {
-                MediaStoreCompat.needRequestCreate(this@GramophonePlaybackService,
-                    ItemManipulator.getDefaultPlaylistFile(
-                        ItemManipulator.FAVORITES).path)
-            }
-            var error: Exception? = null
-            if (token == null) {
-                try {
-                    val uri = uriIn ?: ItemManipulator.createPlaylist(
-                        this@GramophonePlaybackService, ItemManipulator
-                            .getDefaultPlaylistFile(ItemManipulator.FAVORITES))
-                    val readback = if (uriIn != null) ItemManipulator.readbackPlaylist(
-                        this@GramophonePlaybackService, reader, uri) else
-                            PlaylistSerializer.Playlist.create()
-                    val newSongs = if (rating.isHeart) {
-                        readback.entries + song
-                    } else {
-                        readback.entries.filter { !song.fuzzyEquals(it) }
-                    }
-                    ItemManipulator.setPlaylistContent(this@GramophonePlaybackService, uri,
-                        readback.copy(entries = newSongs), uriIn == null)
-                } catch (e: Exception) {
-                    Log.e(TAG, "failed to set $rating on $mediaId", e)
-                    error = e
-                }
-            }
-            if (token == null && error == null) {
+            // The same write the app does; if it needs the user's consent first, which only the
+            // app can ask for, the notification below offers to open it.
+            if (libraryWrites.markFavoriteNow(listOf(song), rating.isHeart)) {
                 completion.set(SessionResult(SessionResult.RESULT_SUCCESS))
             } else {
                 if (!supportsNotificationPermission() || hasNotificationPermission()) {

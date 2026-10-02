@@ -20,7 +20,9 @@ package org.akanework.gramophone.logic
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.ContentResolver
+import android.content.ContentUris
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.database.Cursor
@@ -53,6 +55,7 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.Tracks
 import androidx.media3.common.util.Log
+import androidx.media3.common.util.Util
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionCommand
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -90,20 +93,19 @@ import java.util.Locale
 
 /**
  * Whether a play/pause button should show pause: playback is requested ([Player.getPlayWhenReady])
- * and has not ended. Unlike [Player.isPlaying] it stays put while buffering or seeking.
+ * and the player is neither idle (e.g. after an error) nor ended. Unlike [Player.isPlaying] it
+ * stays put while buffering or seeking.
  */
 val Player.showsPause: Boolean
-    get() = playWhenReady && playbackState != Player.STATE_ENDED
+    get() = playWhenReady && playbackState != Player.STATE_ENDED &&
+            playbackState != Player.STATE_IDLE
 
+/**
+ * What tapping the play/pause button does, matching what it shows ([showsPause]). Playing also
+ * prepares an idle player (after an error) and starts an ended one over.
+ */
 fun Player.playOrPause() {
-    if (playWhenReady) {
-        if (playbackState == Player.STATE_ENDED)
-            seekToDefaultPosition()
-        else
-            pause()
-    } else {
-        play()
-    }
+    if (showsPause) Util.handlePauseButtonAction(this) else Util.handlePlayButtonAction(this)
 }
 
 fun MediaItem.getFile(): File? {
@@ -120,6 +122,11 @@ fun MediaItem.requireMediaStoreId(): Long {
     return mediaId.toMediaStoreId()
         ?: throw IllegalArgumentException("Media item with ID $mediaId doesn't appear to be media store item")
 }
+
+/** The MediaStore content uri of the playlist with MediaStore id [id]. */
+fun playlistUri(id: Long): Uri = ContentUris.withAppendedId(
+    @Suppress("deprecation") MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, id
+)
 
 fun MediaItem.getBitrate(context: Context): Int? {
     val retriever = MediaMetadataRetriever()
@@ -475,6 +482,16 @@ inline fun Context.hasAudioPermission() =
                 Manifest.permission.READ_EXTERNAL_STORAGE
             ) == PackageManager.PERMISSION_GRANTED)
 
+/** The permissions to ask for so the library can be read on API level [sdkInt]. */
+fun requiredLibraryPermissions(sdkInt: Int): Array<String> = when {
+    hasScopedStorageWithMediaTypes(sdkInt) -> arrayOf(Manifest.permission.READ_MEDIA_AUDIO)
+    hasScopedStorageV2(sdkInt) -> arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
+    else -> arrayOf(
+        Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE
+    )
+}
+
 // use below functions if accessing from UI thread only
 @Suppress("NOTHING_TO_INLINE")
 @Contract(value = "_,!null->!null")
@@ -626,4 +643,11 @@ fun getSystemProperty(key: String): String? {
     } catch (e: Exception) {
         null
     }
+}
+
+/** The activity this context belongs to, if any. */
+tailrec fun Context.findActivity(): ComponentActivity? = when (this) {
+    is ComponentActivity -> this
+    is ContextWrapper -> baseContext.findActivity()
+    else -> null
 }

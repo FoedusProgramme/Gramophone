@@ -42,7 +42,7 @@ import uk.akane.libphonograph.reader.FlowReader
 /**
  * The folder filters: which folders the library leaves out (the blacklist), and, on its own tab,
  * which ones it is limited to (the whitelist). Each is a set of paths in the preferences, which
- * SettingsRepository turns into the flows the library reader filters by.
+ * LibraryFilterSettings turns into the flows the library reader filters by.
  */
 @Composable
 fun BlacklistScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {

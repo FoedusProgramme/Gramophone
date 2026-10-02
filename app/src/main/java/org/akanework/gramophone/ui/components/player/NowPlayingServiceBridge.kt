@@ -15,7 +15,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.akanework.gramophone.ui.components
+package org.akanework.gramophone.ui.components.player
 
 import android.content.SharedPreferences
 import android.os.Build
@@ -36,24 +36,18 @@ import org.akanework.gramophone.logic.utils.AudioFormatDetector.AudioQuality
 import org.akanework.gramophone.logic.utils.AudioFormatDetector.SpatialFormat
 import org.akanework.gramophone.logic.utils.SemanticLyrics
 import org.akanework.gramophone.ui.MediaControllerViewModel
-import org.akanework.gramophone.ui.nav.AlbumKey
-import org.akanework.gramophone.ui.nav.AppNavKey
-import org.akanework.gramophone.ui.nav.ArtistKey
-import uk.akane.libphonograph.items.albumId
-import uk.akane.libphonograph.items.artistId
 
-// Temp class for view integration, should be deleted later
-// after integration finishes
-class NowPlayingController(
+/**
+ * What the service tells the player sheet besides the playback state: the lyrics, pulled on each
+ * connection and then pushed when they change, and the audio format, shown as a quality badge
+ * while the setting is on. [release] it with the sheet.
+ */
+internal class NowPlayingServiceBridge(
     private val controller: MediaControllerViewModel,
     lifecycle: Lifecycle,
     private val prefs: SharedPreferences,
-    private val navigate: (AppNavKey) -> Unit,
     private val updateLyrics: (SemanticLyrics?) -> Unit,
-    private val minimize: () -> Unit,
     private val onQualityChanged: (iconRes: Int?, text: String?) -> Unit,
-    private val openQueue: () -> Unit,
-    private val closeQueue: () -> Unit,
 ) : SharedPreferences.OnSharedPreferenceChangeListener {
 
     private val instance get() = controller.get()
@@ -62,9 +56,7 @@ class NowPlayingController(
     private var currentFormat: AudioFormatDetector.AudioFormats? = null
     private var lastQualityInfo: AudioFormatInfo? = null
 
-    private val formatUpdateRunnable = Runnable {
-        pushQuality(if (enableQualityInfo) AudioFormatDetector.detectAudioFormat(currentFormat) else null)
-    }
+    private val formatUpdateRunnable = Runnable { pushQuality(detectQuality()) }
 
     init {
         prefs.registerOnSharedPreferenceChangeListener(this)
@@ -90,12 +82,9 @@ class NowPlayingController(
             }
             Futures.immediateFuture(SessionResult(SessionResult.RESULT_SUCCESS))
         }
-    }
-
-    fun refreshLyrics() = updateLyrics(instance?.getLyrics())
-
-    fun onStop() {
-        closeQueue()
+        controller.addControllerCallback(lifecycle) { instance, _ ->
+            updateLyrics(instance.getLyrics())
+        }
     }
 
     fun release() {
@@ -106,9 +95,12 @@ class NowPlayingController(
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         if (key == null || key == "audio_quality_info") {
             enableQualityInfo = prefs.getBooleanStrict("audio_quality_info", false)
-            pushQuality(if (enableQualityInfo) AudioFormatDetector.detectAudioFormat(currentFormat) else null)
+            pushQuality(detectQuality())
         }
     }
+
+    private fun detectQuality(): AudioFormatInfo? =
+        if (enableQualityInfo) AudioFormatDetector.detectAudioFormat(currentFormat) else null
 
     private fun pushQuality(info: AudioFormatInfo?) {
         if (info == lastQualityInfo) return
@@ -155,19 +147,5 @@ class NowPlayingController(
             if (hadFirst) append(" / ")
             append("${it / 1000}kbps")
         }
-    }
-
-    fun openAlbumPage() {
-        minimize()
-        navigate(AlbumKey(instance?.currentMediaItem?.mediaMetadata?.albumId))
-    }
-
-    fun openArtistPage() {
-        minimize()
-        navigate(ArtistKey(instance?.currentMediaItem?.mediaMetadata?.artistId, false))
-    }
-
-    fun showQueue() {
-        if (instance != null) openQueue()
     }
 }

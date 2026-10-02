@@ -86,10 +86,11 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory {
         StrictModeInitializer.install()
         android.util.Log.d(TAG, "GramophoneApplication.onCreate()")
         LoggingInitializer.install()
-        // Resolve eagerly where they used to be constructed: both register observers/receivers in
-        // their constructors, so keep the same start-up timing as before the Koin migration.
-        // FlowReader pulls in SettingsRepository, which migrates and loads the filter preferences
-        // on ApplicationScope.
+        // Created at start-up rather than on first use, as both register observers/receivers in
+        // their constructors; and here rather than with createdAtStart, which would create them
+        // inside startKoin, before StrictMode and logging are installed. FlowReader pulls in
+        // LibraryFilterSettings, which migrates and loads the filter preferences on
+        // ApplicationScope.
         get<UacManager>()
         get<FlowReader>()
         // Set application theme when launching.

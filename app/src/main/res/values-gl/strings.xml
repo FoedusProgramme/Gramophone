@@ -132,6 +132,7 @@
     <string name="settings_crash_application">Fallo na aplicación</string>
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
     <string name="album_cover">Portado do álbum</string>
+    <string name="dialog_lyrics">Letras</string>
     <string name="delete_failed">Fallou o borrado da canción: %s</string>
     <string name="album_covers_enhance">Carga de portada mellorada</string>
     <string name="album_covers_enhance_desc">Mostrar portadas de maior calidade e permitir que a portada do álbum e a canción sexan diferentes (require acceso a fotos)</string>
@@ -140,6 +141,7 @@
     <string name="grant_audio"><![CDATA[Concede o permiso para «Música e son»]]></string>
     <string name="crash_clipboard">Copiouse o informe do fallo ao portapapeis</string>
     <string name="timer">Temporizador</string>
+    <string name="current_playlist">Lista actual</string>
     <string name="fgs_failed_title">Fallo ao retomar a reprodución</string>
     <string name="settings_trim_lyrics">Eliminar espazos arredor da letra</string>
     <string name="fgs_failed_text">Preme aquí para abrir a app e seguir reproducindo</string>
@@ -152,6 +154,10 @@
     <string name="shuffle_all">Barallar todo</string>
     <string name="play">Reproducir</string>
     <string name="more">Máis</string>
+    <string name="skip_next">Ir á seguinte</string>
+    <string name="expand_less">Pechar</string>
+    <string name="skip_previous">Ir á anterior</string>
+    <string name="position_slider">Marcador de posición</string>
     <string name="settings_status_bar_lyrics_title">Letras na barra de estado</string>
     <string name="delete">Eliminar</string>
     <string name="settings_status_bar_lyrics_summary">Activar o método MeiZu para mostrar a letra na barra de estado (dispoñible só nalgúns dispositivos)</string>
@@ -375,16 +381,6 @@
     <string name="refreshing_wait">Actualizando, agarda…</string>
     <string name="refresh_did_you_know">Gramophone mira se hai actualizacións nas listas cada vez que se inicia, e mentras está a funcionar, tamén detectará se hai novas cancións. Este botón «Actualizar» non volve a cargar o multimedia en Gramophone, se non que lle pide ao sistema volver a escanear todos os ficheiros das almacenaxes permanentes (por iso lle leva un pouco de tempo). Isto significa que, a non ser que o sistema ou outras apps non estean a funcionar correctamente, non precisarás usar nunca esta característica.\n\nFaltan algunhas cancións? Comproba o filtro de lonxitude mínima e os cartafoles ignorados en Axustes &gt; Comportamento, e confirma que teñen os valores agardados. Para outras posibles razóns mira as nósas PMF.</string>
     <string name="no_app_found">Non atopamos unha app para iso</string>
-    <string name="contributors_nift4">Mantemento / Desenvolvedora principal</string>
-    <string name="contributors_123duo3">Deseñadora principal</string>
-    <string name="contributors_akanetan">Creadora orixinal, fóra do proxecto</string>
-    <string name="contributors_developer">Desenvolvedora</string>
-    <string name="contributors_wstxda">deseñou unha versión da icona da app</string>
-    <string name="contributors_pxeemo">Axuda e proba o novo formato das letras</string>
-    <string name="contributors_lambada10">proporciona exemplos de letra e SongSync</string>
-    <string name="contributors_code_contributions">Colaboración no código</string>
-    <string name="contributors_yuyuko1024">A barra de progreso con ondas</string>
-    <string name="contributors_ghhccghk">Letras na barra de estado e outras melloras</string>
     <string name="home_menu_quick_refresh">Actualización rápida</string>
     <string name="add_to_queue">Engadir á cola</string>
     <string name="app_name">Gramophone</string>
@@ -435,7 +431,6 @@
     <string name="settings_replaygain_mode_desc">«Intelixente» conserva automáticamente a dinámica do álbum so cando se reproducen cancións de xeito consecutivo dun álbum.</string>
     <string name="sort_by_artist_year"><![CDATA[Artist -> ano]]></string>
     <string name="clear_queue">Limpar cola</string>
-    <string name="contributors_saladnoober">Control da calidade</string>
     <string name="actions_query_shuffle_all_songs">barallar todas as cancións</string>
     <string name="actions_query_shuffle_everything">barallar todo</string>
     <string name="actions_query_play_random_songs">reproducir cancións ao chou</string>
@@ -488,7 +483,6 @@
     <string name="mq_pin_queue">Fixar a cola</string>
     <string name="shuffled">%s (barallado)</string>
     <string name="loading_playlists">Cargando as listas…</string>
-    <string name="contributors_banksio">Android Auto</string>
     <string name="unfavorite">Retirar favorita</string>
     <string name="edit_mode">Entrar no modo edición</string>
     <string name="reverse_order">Orde inversa</string>

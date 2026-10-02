@@ -17,19 +17,21 @@
 
 package org.akanework.gramophone
 
-import android.app.Application
-import android.content.Intent
-import android.content.IntentSender
 import android.net.Uri
+import android.os.Bundle
+import android.os.Looper
+import android.provider.MediaStore
+import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
+import androidx.media3.common.SimpleBasePlayer
+import com.google.common.util.concurrent.Futures
+import com.google.common.util.concurrent.ListenableFuture
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
-import org.akanework.gramophone.logic.library.DeleteResult
 import org.akanework.gramophone.logic.library.LibraryWriteRepository
-import org.akanework.gramophone.logic.library.LibraryWrites
 import org.akanework.gramophone.logic.library.MediaConsentRequester
 import org.akanework.gramophone.logic.library.PendingWrite
 import org.akanework.gramophone.ui.intent.DefaultPlayIntentExecutor
@@ -44,33 +46,59 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
-import org.robolectric.annotation.Config
 import org.robolectric.shadows.ShadowToast
-import java.io.File
-import java.lang.reflect.Proxy
+import uk.akane.libphonograph.manipulator.PlaylistSerializer.Entry
 
 /**
- * How [DefaultPlayIntentExecutor] resolves the ids it is handed: a bare MediaStore id (audio
- * preview) or the library's "MediaStore:<id>" (search suggestions), and what happens when the id
- * isn't in the library. The controller is a recording proxy and the library a fixed id map.
+ * What [DefaultPlayIntentExecutor] asks of the controller and the library writes for each action,
+ * and how it resolves the ids it is handed: a bare MediaStore id (audio preview) or the library's
+ * "MediaStore:<id>" (search suggestions). The controller is a recording player and the library a
+ * fixed id map.
  */
-@Config(application = Application::class)
 @RunWith(RobolectricTestRunner::class)
 class DefaultPlayIntentExecutorTest {
 
-    /** One recorded [Player] call: method name and arguments. */
-    private data class Call(val name: String, val args: List<Any?>)
+    /** A player that records the calls the executor makes, and does nothing else. */
+    private class RecordingPlayer : SimpleBasePlayer(Looper.getMainLooper()) {
+        val calls = mutableListOf<String>()
+        // Not "mediaItems": its setter would clash with Player.setMediaItems.
+        var loadedItems: List<MediaItem> = emptyList()
+        var loadedPositionMs = C.TIME_UNSET
+
+        override fun getState(): State = State.Builder()
+            .setAvailableCommands(Player.Commands.Builder().addAllCommands().build())
+            .build()
+
+        override fun handleSetMediaItems(
+            mediaItems: List<MediaItem>,
+            startIndex: Int,
+            startPositionMs: Long,
+        ): ListenableFuture<*> {
+            calls += "setMediaItems"
+            loadedItems = mediaItems.toList()
+            loadedPositionMs = startPositionMs
+            return Futures.immediateVoidFuture()
+        }
+
+        override fun handlePrepare(): ListenableFuture<*> {
+            calls += "prepare"
+            return Futures.immediateVoidFuture()
+        }
+
+        override fun handleSetPlayWhenReady(playWhenReady: Boolean): ListenableFuture<*> {
+            calls += if (playWhenReady) "play" else "pause"
+            return Futures.immediateVoidFuture()
+        }
+
+        override fun handleSetShuffleModeEnabled(shuffleModeEnabled: Boolean): ListenableFuture<*> {
+            calls += "setShuffleModeEnabled($shuffleModeEnabled)"
+            return Futures.immediateVoidFuture()
+        }
+    }
 
     private class FakeHost : PlayIntentHost {
-        val calls = mutableListOf<Call>()
+        val player = RecordingPlayer()
         var controllerRequests = 0
-
-        private val player = Proxy.newProxyInstance(
-            Player::class.java.classLoader, arrayOf(Player::class.java)
-        ) { _, method, args ->
-            calls += Call(method.name, args?.toList() ?: emptyList())
-            null // every method used here returns void
-        } as Player
 
         override suspend fun awaitController(): Player {
             controllerRequests++
@@ -80,36 +108,30 @@ class DefaultPlayIntentExecutorTest {
         override fun navigateTo(key: AppNavKey) = error("unused")
     }
 
-    private class FakeWrites : LibraryWrites {
-        override suspend fun favoritesUri(): Uri? = null
-        override suspend fun consentFor(write: PendingWrite): IntentSender? = null
-        override suspend fun perform(write: PendingWrite) {}
-        override suspend fun reportFailure(write: PendingWrite, resultCode: Int, data: Intent?) {}
-        override suspend fun createPlaylist(file: File) {}
-        override suspend fun deleteSongs(list: List<Pair<File, Long>>): DeleteResult = error("unused")
-        override suspend fun deletePlaylist(id: Long): DeleteResult = error("unused")
-    }
-
     private val song = MediaItem.Builder().setMediaId("42").build()
-    private val writes = FakeWrites()
+    private val writes = FakeLibraryWrites()
     private val host = FakeHost()
     private val executor = DefaultPlayIntentExecutor(
         RuntimeEnvironment.getApplication(),
         flowOf(mapOf(42L to song)),
-        LibraryWriteRepository(CoroutineScope(Dispatchers.Unconfined), MediaConsentRequester(), writes),
+        LibraryWriteRepository(
+            CoroutineScope(Dispatchers.Unconfined), MediaConsentRequester(), writes
+        ),
     )
 
     private fun execute(action: PlayIntentAction) = runBlocking { executor.execute(action, host) }
 
-    private fun callNames() = host.calls.map { it.name }
+    private fun calls() = host.player.calls
+
+    private fun searchQuery() = host.player.loadedItems.single().requestMetadata.searchQuery
 
     @Test
     fun playByIdFoundPlaysFromPosition() {
         execute(PlayIntentAction.PlayById("42", 1234L))
 
-        assertEquals(listOf("setMediaItem", "prepare", "play"), callNames())
-        assertSame(song, host.calls[0].args[0])
-        assertEquals(1234L, host.calls[0].args[1])
+        assertEquals(listOf("setMediaItems", "prepare", "play"), calls())
+        assertSame(song, host.player.loadedItems.single())
+        assertEquals(1234L, host.player.loadedPositionMs)
         assertNull(ShadowToast.getLatestToast())
     }
 
@@ -118,8 +140,8 @@ class DefaultPlayIntentExecutorTest {
         // Search suggestions send the library's own media id format.
         execute(PlayIntentAction.PlayById("MediaStore:42", 0L))
 
-        assertEquals(listOf("setMediaItem", "prepare", "play"), callNames())
-        assertSame(song, host.calls[0].args[0])
+        assertEquals(listOf("setMediaItems", "prepare", "play"), calls())
+        assertSame(song, host.player.loadedItems.single())
         assertNull(ShadowToast.getLatestToast())
     }
 
@@ -127,7 +149,7 @@ class DefaultPlayIntentExecutorTest {
     fun playByIdMissingMediaStoreIdToasts() {
         execute(PlayIntentAction.PlayById("MediaStore:7", 0L))
 
-        assertTrue(host.calls.isEmpty())
+        assertTrue(calls().isEmpty())
         assertTrue(
             ShadowToast.showedToast(
                 RuntimeEnvironment.getApplication().getString(R.string.cannot_find_file)
@@ -141,12 +163,59 @@ class DefaultPlayIntentExecutorTest {
         execute(PlayIntentAction.PlayById("not a number", 0L))
 
         assertEquals(0, host.controllerRequests)
-        assertTrue(host.calls.isEmpty())
+        assertTrue(calls().isEmpty())
         assertEquals(2, ShadowToast.shownToastCount())
         assertTrue(
             ShadowToast.showedToast(
                 RuntimeEnvironment.getApplication().getString(R.string.cannot_find_file)
             )
         )
+    }
+
+    @Test
+    fun markFavoriteWritesWithoutTheController() {
+        val entry = Entry(listOf(Uri.parse("file:///music/a.flac")))
+        execute(PlayIntentAction.MarkFavorite(entry, favorite = true))
+
+        assertEquals(
+            listOf<PendingWrite>(PendingWrite.Favorite(listOf(entry), null, favorite = true)),
+            writes.performed
+        )
+        assertEquals(0, host.controllerRequests)
+    }
+
+    @Test
+    fun playFromSearchPlaysTheQueryWithItsExtras() {
+        val extras = Bundle().apply {
+            putString(MediaStore.EXTRA_MEDIA_FOCUS, MediaStore.Audio.Artists.ENTRY_CONTENT_TYPE)
+        }
+        execute(PlayIntentAction.PlayFromSearch("Artist", extras))
+
+        assertEquals(listOf("setMediaItems", "prepare", "play"), calls())
+        assertEquals("Artist", searchQuery())
+        assertEquals(
+            MediaStore.Audio.Artists.ENTRY_CONTENT_TYPE,
+            host.player.loadedItems.single().requestMetadata.extras
+                ?.getString(MediaStore.EXTRA_MEDIA_FOCUS)
+        )
+    }
+
+    @Test
+    fun shuffleTurnsOnShuffleBeforePlayingTheQuery() {
+        execute(PlayIntentAction.Shuffle(""))
+
+        assertEquals(
+            listOf("setShuffleModeEnabled(true)", "setMediaItems", "prepare", "play"), calls()
+        )
+        // An empty query means every song.
+        assertEquals("", searchQuery())
+        assertNull(host.player.loadedItems.single().requestMetadata.extras)
+    }
+
+    @Test
+    fun autoplayPlaysWhatIsQueued() {
+        execute(PlayIntentAction.Autoplay)
+
+        assertEquals(listOf("prepare", "play"), calls())
     }
 }
