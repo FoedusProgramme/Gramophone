@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -56,9 +58,9 @@ kotlin {
 }
 
 dependencies {
-    implementation("androidx.core:core-ktx:1.17.0")
-    implementation("androidx.media3:media3-common:1.11.0")
-    implementation("androidx.media3:media3-exoplayer:1.11.0")
+    implementation("androidx.core:core-ktx:1.19.1")
+    implementation("androidx.media3:media3-common")
+    implementation("androidx.media3:media3-exoplayer")
     implementation("io.github.nift4.dlfunc:dlfunc:0.1.6")
     implementation(project(":misc:audiofxfwd"))
     // stub project that provides hidden SDK classes, which themselves depend on public SDK

@@ -6,7 +6,7 @@ import org.jetbrains.kotlin.util.removeSuffixIfPresent
 import java.util.Properties
 
 val aboutLibsVersion = "13.1.0" // keep in sync with plugin version
-val kotlinVersion = "2.3.20"
+val kotlinVersion = "2.4.20"
 
 plugins {
     id("com.android.application")
@@ -22,7 +22,7 @@ plugins {
 android {
     val packageProperties = readProperties(file("../package.properties"))
     fun resolveProperties(property: String): String? {
-        return if (project.hasProperty(property)) project.properties[property].toString()
+        return if (project.hasProperty(property)) project.findProperty(property).toString()
         else packageProperties.getOrDefault(property, null) as String?
     }
 
@@ -48,7 +48,7 @@ android {
             }
         }
         create("release2") {
-            if (resolveProperties("AKANE2_RELEASE_KEY_ALIAS")!= null) {
+            if (resolveProperties("AKANE2_RELEASE_KEY_ALIAS") != null) {
                 storeFile = file(resolveProperties("AKANE2_RELEASE_STORE_FILE")!!)
                 storePassword = resolveProperties("AKANE2_RELEASE_STORE_PASSWORD")
                 keyAlias = resolveProperties("AKANE2_RELEASE_KEY_ALIAS")
@@ -80,8 +80,6 @@ android {
             pickFirsts += "lib/x86_64/libdlfunc.so"
         }
         resources {
-            // https://youtrack.jetbrains.com/issue/KT-48019/Bundle-Kotlin-Tooling-Metadata-into-apk-artifacts
-            excludes += "kotlin-tooling-metadata.json"
             // https://issuetracker.google.com/issues/152898926#comment7
             excludes += "META-INF/*.version"
             // https://github.com/Kotlin/kotlinx.coroutines?tab=readme-ov-file#avoiding-including-the-debug-infrastructure-in-the-resulting-apk
@@ -285,7 +283,7 @@ baselineProfile {
 }
 
 // https://stackoverflow.com/a/77745844
-tasks.withType<PackageAndroidArtifact> {
+tasks.withType<PackageAndroidArtifact>().configureEach {
     doFirst { appMetadata.asFile.orNull?.writeText("") }
 }
 
@@ -311,7 +309,7 @@ aboutLibraries {
 dependencies {
     implementation(project(":hificore"))
     implementation(project(":misc:alacdecoder"))
-    val composeBom = platform("androidx.compose:compose-bom:2025.05.00")
+    val composeBom = platform("androidx.compose:compose-bom:2026.09.00")
     implementation(composeBom)
     androidTestImplementation(composeBom)
     implementation("androidx.compose.material:material-icons-extended")
@@ -319,34 +317,34 @@ dependencies {
     // material3 that materialkolor and aboutlibraries depend on.
     implementation("androidx.compose.material3:material3:1.5.0-alpha22")
     implementation("androidx.compose.animation:animation-graphics")
-    implementation("dev.chrisbanes.haze:haze:1.7.2")
+    implementation("dev.chrisbanes.haze:haze:1.7.3")
     implementation("androidx.compose.ui:ui-tooling-preview")
     debugImplementation("androidx.compose.ui:ui-tooling")
-    implementation("androidx.activity:activity-compose:1.11.0")
-    implementation("androidx.collection:collection-ktx:1.5.0")
+    implementation("androidx.activity:activity-compose:1.13.0")
+    implementation("androidx.collection:collection-ktx:1.6.0")
     implementation("androidx.concurrent:concurrent-futures-ktx:1.3.0")
-    implementation("androidx.core:core-ktx:1.17.0")
+    implementation("androidx.core:core-ktx:1.19.1")
     implementation("androidx.graphics:graphics-shapes:1.1.0")
     implementation("androidx.core:core-splashscreen:1.2.0")
     implementation("androidx.navigation3:navigation3-runtime:1.1.7")
     implementation("androidx.navigation3:navigation3-ui:1.1.7")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.4")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.11.0")
     implementation("com.materialkolor:material-kolor:5.0.1")
     implementation(platform("io.insert-koin:koin-bom:4.2.2"))
     implementation("io.insert-koin:koin-android")
     implementation("io.insert-koin:koin-androidx-compose")
     implementation("io.github.nift4.mediastorecompat:mediastorecompat:1.0.0-alpha33")
-    val media3Version = "1.10.1"
-    implementation("androidx.media3:media3-common-ktx:$media3Version")
-    implementation("androidx.media3:media3-exoplayer:$media3Version")
-    implementation("androidx.media3:media3-exoplayer-midi:$media3Version")
-    implementation("androidx.media3:media3-session:$media3Version")
+    implementation("androidx.media3:media3-common-ktx")
+    implementation("androidx.media3:media3-exoplayer")
+    implementation("androidx.media3:media3-exoplayer-midi")
+    implementation("androidx.media3:media3-session")
     val coroutinesVersion = "1.11.0"
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-guava:$coroutinesVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.5.2")
     //implementation("androidx.paging:paging-runtime-ktx:3.2.1") TODO paged, partial, flow based library loading
     //implementation("androidx.paging:paging-guava:3.2.1") TODO do we have guava? do we need this?
     implementation("com.mikepenz:aboutlibraries-compose-m3:$aboutLibsVersion")
-    val coilVersion = "3.4.0"
+    val coilVersion = "3.6.3"
     implementation("io.coil-kt.coil3:coil-compose:$coilVersion")
     lintChecks("io.coil-kt.coil3:coil-lint:$coilVersion")
     implementation("org.lsposed.hiddenapibypass:hiddenapibypass:6.1")
