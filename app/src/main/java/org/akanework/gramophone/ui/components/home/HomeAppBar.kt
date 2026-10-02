@@ -326,9 +326,10 @@ fun LabelTabRow(
                     .padding(horizontal = TAB_PADDING),
                 contentAlignment = Alignment.Center,
             ) {
+                val selected = index == selectedTab
                 SingleLineText(
-                    label, 15.sp, 500,
-                    if (index == selectedTab) selectedColor else unselectedColor,
+                    label, 15.sp, if (selected) 600 else 500,
+                    if (selected) selectedColor else unselectedColor,
                 )
             }
         }

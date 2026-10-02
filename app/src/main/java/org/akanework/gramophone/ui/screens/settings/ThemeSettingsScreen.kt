@@ -65,9 +65,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.materialkolor.PaletteStyle
 import com.materialkolor.dynamicColorScheme
-import com.materialkolor.hct.Hct
-import com.materialkolor.ktx.toColor
-import com.materialkolor.ktx.toHct
 import org.akanework.gramophone.R
 import org.akanework.gramophone.ui.components.compose.rememberBooleanPreference
 import org.akanework.gramophone.ui.components.compose.rememberIntPreference
@@ -79,6 +76,7 @@ import org.akanework.gramophone.ui.components.settings.PreferenceRow
 import org.akanework.gramophone.ui.components.settings.PreferenceScreen
 import org.akanework.gramophone.ui.components.settings.PreferenceSectionHeader
 import org.akanework.gramophone.ui.components.settings.SwitchPreferenceRow
+import org.akanework.gramophone.ui.theme.ChromaTone
 import org.akanework.gramophone.ui.theme.DEFAULT_SEED_COLOR
 import org.akanework.gramophone.ui.theme.LocalDarkTheme
 import org.akanework.gramophone.ui.theme.PREF_PALETTE_STYLE
@@ -91,6 +89,7 @@ import org.akanework.gramophone.ui.theme.THEME_ANIMATION_MS
 import org.akanework.gramophone.ui.theme.ThemeMode
 import org.akanework.gramophone.ui.theme.activeSeedColor
 import org.akanework.gramophone.ui.theme.applyToSystem
+import org.akanework.gramophone.ui.theme.hue
 import org.akanework.gramophone.ui.theme.rememberThemeSettings
 import org.akanework.gramophone.ui.theme.supportsWallpaperColor
 import org.akanework.gramophone.ui.theme.themeModeOf
@@ -101,8 +100,8 @@ private val SWATCH_GAP = 12.dp
 private val SWATCH_CHECK_SIZE = 20.dp
 private val SWATCHES_TOP_GAP = 12.dp
 private val HUE_TRACK_HEIGHT = 16.dp
-private const val SEED_CHROMA = 48.0
-private const val SEED_TONE = 40.0
+/** The custom seed's chroma and tone, in the hue picked. */
+private val SEED = ChromaTone(chroma = 48.0, tone = 40.0)
 private const val HUE_STOPS = 12
 private const val HUE_MAX = 360f
 private val STYLE_CARD_WIDTH = 84.dp
@@ -205,12 +204,12 @@ private fun SeedColorRow(shape: Shape, enabled: Boolean, selected: Color, onSele
                     ColorSwatch(color, selected = color == selected, enabled = enabled) { onSelect(color) }
                 }
             }
-            var hue by remember(selected) { mutableFloatStateOf(selected.toHct().hue.toFloat()) }
+            var hue by remember(selected) { mutableFloatStateOf(selected.hue.toFloat()) }
             HueSlider(
                 hue = hue,
                 enabled = enabled,
                 onHueChange = { hue = it },
-                onHueChangeFinished = { onSelect(Hct.from(hue.toDouble(), SEED_CHROMA, SEED_TONE).toColor()) },
+                onHueChangeFinished = { onSelect(SEED.inHue(hue.toDouble())) },
             )
         }
     }
@@ -246,7 +245,7 @@ private fun HueSlider(
 ) {
     val brush = remember {
         Brush.horizontalGradient(
-            (0..HUE_STOPS).map { Hct.from(it * HUE_MAX.toDouble() / HUE_STOPS, SEED_CHROMA, SEED_TONE).toColor() }
+            (0..HUE_STOPS).map { SEED.inHue(it * HUE_MAX.toDouble() / HUE_STOPS) }
         )
     }
     Slider(

@@ -100,8 +100,6 @@ import org.akanework.gramophone.logic.utils.Flags
 import org.akanework.gramophone.ui.MediaControllerViewModel
 import org.akanework.gramophone.ui.components.compose.QueueDropdownMenu
 import org.akanework.gramophone.ui.components.player.QueueSheetHost
-import org.akanework.gramophone.ui.components.player.QueueTimer
-import org.akanework.gramophone.ui.components.player.QueueTimerState
 import java.util.LinkedList
 
 @Composable
@@ -623,68 +621,13 @@ fun ActionBar(
 }
 
 @Composable
-fun BottomSheetActions(
-    mqState: MqState,
-    timer: QueueTimerState,
-    modifier: Modifier = Modifier,
-    onDismiss: (() -> Unit)? = null,
-    onRecyclerScrollTo: (() -> Unit)? = null,
-) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
-            .fillMaxWidth(),
-    ) {
-        Row(
-            horizontalArrangement = Arrangement.SpaceAround
-        ) {
-            // TODO: no longer needed?
-            Button(
-                colors = ButtonDefaults.textButtonColors(),
-                onClick = {
-                    onDismiss?.invoke()
-                    mqState.removeQueue()
-                }
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.baseline_delete_sweep_24),
-                    contentDescription = null,
-                )
-                Text(
-                    stringResource(R.string.clear_queue)
-                )
-            }
-
-            Button(
-                colors = ButtonDefaults.textButtonColors(),
-                onClick = {
-                    onRecyclerScrollTo?.invoke()
-                }
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_unfold_double),
-                    contentDescription = null,
-                )
-                Text(
-                    stringResource(R.string.scroll_to_playing)
-                )
-            }
-        }
-
-        QueueTimer(timer)
-    }
-}
-
-@Composable
 fun QueueRoot(
     mqState: MqState,
     pagerState: PagerState,
     coroutineScope: CoroutineScope,
-    timer: QueueTimerState,
     mqEnabled: Boolean,
     modifier: Modifier = Modifier,
     onDismiss: (() -> Unit)? = null,
-    onRecyclerScrollTo: (() -> Unit)? = null,
 ) {
     val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
@@ -724,14 +667,9 @@ fun QueueRoot(
                     }
                 }
 
-                1 -> {
-                    BottomSheetActions(
-                        mqState = mqState,
-                        timer = timer,
-                        onDismiss = onDismiss,
-                        onRecyclerScrollTo = onRecyclerScrollTo,
-                    )
-                }
+                // What was here, clearing the queue, scrolling to the song playing and the time
+                // left, floats over the songs, see QueuePanel
+                1 -> {}
             }
         }
 

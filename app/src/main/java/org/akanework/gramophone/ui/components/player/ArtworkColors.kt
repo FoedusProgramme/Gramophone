@@ -31,7 +31,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.luminance
 import coil3.BitmapImage
 import coil3.PlatformContext
@@ -41,7 +40,6 @@ import coil3.request.ImageRequest
 import coil3.request.SuccessResult
 import coil3.request.allowHardware
 import com.materialkolor.PaletteStyle
-import com.materialkolor.ktx.harmonize
 import com.materialkolor.ktx.quantize
 import com.materialkolor.quantize.QuantizerCelebi
 import com.materialkolor.rememberDynamicColorScheme
@@ -57,6 +55,8 @@ import org.akanework.gramophone.ui.components.compose.rememberBooleanPreference
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.ARTWORK_QUANTIZE_MAX
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.ARTWORK_SEED_SIZE
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.ARTWORK_SEED_SIZE_ACCURATE
+import org.akanework.gramophone.ui.theme.ChromaTone
+import org.akanework.gramophone.ui.theme.harmonizeBy
 import org.akanework.gramophone.ui.theme.tonal
 import org.koin.compose.koinInject
 
@@ -99,10 +99,8 @@ data class NowPlayingColors(
 
 /** By night the cover scheme's surface is nearly black and its primary container dull, so the
  *  bar and its progress take the cover's hue at tones of their own. */
-private const val DARK_BAR_CHROMA = 14.0
-private const val DARK_BAR_TONE = 12.0
-private const val DARK_BAR_FILL_CHROMA = 32.0
-private const val DARK_BAR_FILL_TONE = 35.0
+private val DARK_BAR = ChromaTone(chroma = 14.0, tone = 12.0)
+private val DARK_BAR_FILL = ChromaTone(chroma = 32.0, tone = 35.0)
 private const val ON_FILL_VARIANT_ALPHA = 0.8f
 
 /**
@@ -123,20 +121,13 @@ fun nowPlayingColors(
     val primary = cover { primary }.harmonizeBy(appPrimary, harmony)
     val onFill = cover { onPrimaryContainer }.harmonizeBy(appPrimary, harmony)
     return NowPlayingColors(
-        bar = if (isDark) primary.tonal(DARK_BAR_CHROMA, DARK_BAR_TONE)
+        bar = if (isDark) primary.tonal(DARK_BAR)
             else surface.harmonizeBy(appPrimary, harmony),
-        fill = if (isDark) primary.tonal(DARK_BAR_FILL_CHROMA, DARK_BAR_FILL_TONE)
+        fill = if (isDark) primary.tonal(DARK_BAR_FILL)
             else cover { primaryContainer }.harmonizeBy(appPrimary, harmony),
         onFill = onFill,
         onFillVariant = onFill.copy(alpha = ON_FILL_VARIANT_ALPHA),
     )
-}
-
-/** This colour leant towards [target] by [fraction]: unchanged at 0, harmonized at 1. */
-fun Color.harmonizeBy(target: Color, fraction: Float): Color = when {
-    fraction <= 0f -> this
-    fraction >= 1f -> harmonize(target)
-    else -> lerp(this, harmonize(target), fraction)
 }
 
 /**

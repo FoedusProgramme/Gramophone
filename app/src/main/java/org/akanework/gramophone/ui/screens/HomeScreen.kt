@@ -72,6 +72,7 @@ import org.akanework.gramophone.ui.components.home.TAB_INDICATOR_INSET
 import org.akanework.gramophone.ui.components.home.rememberNowPlayingState
 import org.akanework.gramophone.ui.nav.LocalAppBarTopPadding
 import org.akanework.gramophone.ui.nav.LocalListBottomPadding
+import org.akanework.gramophone.ui.nav.LocalListSideInsets
 import org.akanework.gramophone.ui.nav.LocalPlayerBottomPadding
 import org.akanework.gramophone.ui.nav.NAV_TRANSITION_MS
 import org.akanework.gramophone.ui.nav.NavAxisEasing
@@ -180,6 +181,8 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                         placeable.place(0, 0)
                     }
                 }
+                // Clear of the side system bars and cutouts itself, so its corners show
+                .windowInsetsPadding(insets.only(WindowInsetsSides.Horizontal))
                 .padding(start = LIBRARY_SIDE_MARGIN, end = LIBRARY_SIDE_MARGIN)
                 .clip(RoundedCornerShape(LIBRARY_GROUP_CORNER))
                 .background(MaterialTheme.colorScheme.surfaceContainerLow),
@@ -187,6 +190,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
             CompositionLocalProvider(
                 LocalAppBarTopPadding provides 0.dp,
                 LocalListBottomPadding provides 0.dp,
+                LocalListSideInsets provides false,
             ) {
                 HorizontalPager(
                     state = pagerState,

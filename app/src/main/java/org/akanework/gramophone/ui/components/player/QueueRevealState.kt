@@ -1,5 +1,5 @@
 /*
- *     Copyright (C) 2025 Akane Foundation
+ *     Copyright (C) 2026 The Gramophone authors
  *
  *     Gramophone is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -17,11 +17,9 @@
 
 package org.akanework.gramophone.ui.components.player
 
-import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.animate
 import androidx.compose.animation.core.spring
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.gestures.DraggableState
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.draggable
@@ -29,55 +27,39 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import org.akanework.gramophone.ui.components.player.PlayerUtilities.COMMIT_THRESHOLD
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.ENDPOINT_THRESHOLD
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.FLING_VELOCITY
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.PROGRESS_THRESHOLD
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.SPATIAL_DAMPING
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.SPATIAL_STIFFNESS
-import org.akanework.gramophone.ui.nav.NAV_TRANSITION_MS
-import org.akanework.gramophone.ui.nav.NavAxisEasing
 import kotlin.math.abs
 
+/** Past half way, a let go queue opens the rest of the way, short of it it closes. */
+private const val QUEUE_COMMIT_THRESHOLD = 0.5f
+
 /**
- * The sheet's expand/collapse [progress] and its slide in and out below the screen. [scope] runs
- * the animations, on the composition's frame clock.
+ * How far the queue has come up over the full player (see QueueDrawer), from 0, below the screen
+ * under the player's bottom row, to 1, filling the screen. [scope] runs the animations.
  */
 @Stable
-class NowPlayingSheetState(
-    private val scope: CoroutineScope,
-    initialExpanded: Boolean = false,
-) {
-    var progress by mutableFloatStateOf(if (initialExpanded) 1f else 0f)
-        private set
-    var expandedTarget by mutableStateOf(initialExpanded)
+class QueueRevealState(private val scope: CoroutineScope) {
+    /** Read in the layout and draw phases, as it changes every frame of motion. */
+    var progress by mutableFloatStateOf(0f)
         private set
 
-    private val slideAnimation = Animatable(0f)
+    /** Whether any of the queue shows. Derived, so its readers are only invalidated as it flips. */
+    val shown: Boolean by derivedStateOf { progress > 0f }
 
-    /** How far the sheet has slid up into the screen, from 0, fully below it, to 1. */
-    val shownFraction: Float
-        get() = slideAnimation.value
+    /** Whether it's all the way up, covering what it comes up over. Derived like [shown]. */
+    val revealed: Boolean by derivedStateOf { progress >= 1f }
 
-    /**
-     * Whether the sheet covers the whole screen: fully expanded and slid in, where its surface is
-     * opaque and square-cornered. Read in the draw phase: the frame the sheet starts to move
-     * (drag, back gesture, collapse) draws what's under it again. Derived, so its readers are only
-     * invalidated when it flips, not on every frame of motion.
-     */
-    val coversScreen: Boolean by derivedStateOf { progress >= 1f && shownFraction >= 1f }
-
-    // Vertical distance (px) of a full expand
+    /** How far (px) the queue comes up, see [SheetGeometry.queueTravel]. */
     var travelPx: Float = 1f
-
-    /** Drags the sheet, see [onDrag]. Shared by everything the sheet can be dragged by. */
-    internal val dragState = DraggableState { delta -> onDrag(delta) }
 
     private val animationSpec: AnimationSpec<Float> =
         spring(
@@ -88,7 +70,7 @@ class NowPlayingSheetState(
 
     private var animation: Job? = null
 
-    // Consumes [deltaPx] of an upward-positive drag and returns how much progress actually moved
+    /** Moves the queue by a drag of [deltaPx] (down is positive), returning how far it moved. */
     fun onDrag(deltaPx: Float): Float {
         animation?.cancel()
         val previous = progress
@@ -101,55 +83,30 @@ class NowPlayingSheetState(
             when {
                 velocityPx < -FLING_VELOCITY -> 1f
                 velocityPx > FLING_VELOCITY -> 0f
-                progress > COMMIT_THRESHOLD -> 1f
+                progress > QUEUE_COMMIT_THRESHOLD -> 1f
                 else -> 0f
             }
         if (abs(progress - target) <= ENDPOINT_THRESHOLD) {
-            snapTo(target)
+            animation?.cancel()
+            progress = target
             return
         }
-        // Hand the release velocity to the spring
         animateTo(target, initialVelocity = -velocityPx / travelPx)
     }
 
-    fun expand() = animateTo(1f)
+    fun reveal() = animateTo(1f)
 
-    fun collapse() = animateTo(0f)
+    fun hide() {
+        if (progress > 0f) animateTo(0f)
+    }
 
+    /** Follows the back gesture, which takes the queue back down. */
     fun onBackProgress(fraction: Float) {
         animation?.cancel()
         progress = (1f - fraction).coerceIn(0f, 1f)
     }
 
-    /**
-     * Slides the sheet in or out below the screen, with the page transition's duration and
-     * easing, so the bar doesn't disappear faster than the page when entering or leaving
-     * settings.
-     */
-    fun slide(shown: Boolean) {
-        scope.launch {
-            slideAnimation.animateTo(
-                targetValue = if (shown) 1f else 0f,
-                animationSpec = tween(NAV_TRANSITION_MS, easing = NavAxisEasing),
-            )
-        }
-    }
-
-    fun snapToCollapsed() = snapTo(0f)
-
-    fun snapToExpanded() = snapTo(1f)
-
-    private fun snapTo(target: Float) {
-        animation?.cancel()
-        expandedTarget = target == 1f
-        progress = target
-    }
-
-    private fun animateTo(
-        target: Float,
-        initialVelocity: Float = 0f,
-    ) {
-        expandedTarget = target == 1f
+    private fun animateTo(target: Float, initialVelocity: Float = 0f) {
         animation?.cancel()
         animation =
             scope.launch {
@@ -164,11 +121,35 @@ class NowPlayingSheetState(
     }
 }
 
-/** Drags [state] up and down, and settles it where the drag lets go. */
-internal fun Modifier.sheetDrag(state: NowPlayingSheetState, enabled: Boolean = true): Modifier =
+/**
+ * Drags the bottom row, or the preview over the queue: up brings the [queue] up over the player,
+ * and down takes it back, or, while it's down, pulls the [sheet] down like the rest of the player.
+ */
+internal class BottomRowDrag(
+    private val sheet: NowPlayingSheetState,
+    private val queue: QueueRevealState,
+) {
+    /** Which one this drag moves, picked by its first move. */
+    private var movesSheet: Boolean? = null
+
+    val state = DraggableState { delta ->
+        val sheetDrag = movesSheet ?: (!queue.shown && delta > 0f).also { movesSheet = it }
+        if (sheetDrag) sheet.onDrag(delta) else queue.onDrag(delta)
+    }
+
+    fun onStopped(velocity: Float) {
+        when (movesSheet) {
+            true -> sheet.settle(velocity)
+            false -> queue.settle(velocity)
+            null -> {}
+        }
+        movesSheet = null
+    }
+}
+
+internal fun Modifier.bottomRowDrag(drag: BottomRowDrag): Modifier =
     draggable(
-        state = state.dragState,
+        state = drag.state,
         orientation = Orientation.Vertical,
-        enabled = enabled,
-        onDragStopped = { velocity -> state.settle(velocity) },
+        onDragStopped = { velocity -> drag.onStopped(velocity) },
     )

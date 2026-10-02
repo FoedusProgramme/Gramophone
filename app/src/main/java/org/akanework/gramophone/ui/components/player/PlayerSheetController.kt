@@ -30,8 +30,10 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
@@ -48,7 +50,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.core.content.edit
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.media3.common.PlaybackParameters
 import androidx.media3.common.Player
@@ -200,7 +201,7 @@ class PlayerSheetController internal constructor(
     /** Whether the top page is themed from a cover, see [PlayerSheet]'s pageTinted. */
     internal val pageTinted: Boolean by derivedStateOf { navViewModel.topScheme != null }
 
-    internal var queueOpen by mutableStateOf(false)
+    internal val queueReveal = QueueRevealState(sheetScope)
 
     /** The mini bar's [collapsedFootprint] (px), set by [PlayerSheetHost] from the insets. */
     internal var collapsedFootprint by mutableIntStateOf(0)
@@ -267,7 +268,6 @@ class PlayerSheetController internal constructor(
                 PlaylistSerializer.Entry.ofMediaItem(song)?.let { toggleFavorite(listOf(it), on) }
             }
         },
-        showQueue = { if (instance != null) queueOpen = true },
         showLyrics = { lyrics.fadeIn() },
         openAlbum = {
             sheetState.collapse()
@@ -325,8 +325,9 @@ class PlayerSheetController internal constructor(
 }
 
 /**
- * The sheet of [controller], plus the queue when open. Composed after the pages so it draws over
- * them and its back callback, added to the dispatcher after theirs, takes priority over them.
+ * The sheet of [controller], with the queue under the full player. Composed after the pages so it
+ * draws over them and its back callback, added to the dispatcher after theirs, takes priority
+ * over them.
  */
 @Composable
 fun PlayerSheetHost(controller: PlayerSheetController, modifier: Modifier = Modifier) {
@@ -342,61 +343,95 @@ fun PlayerSheetHost(controller: PlayerSheetController, modifier: Modifier = Modi
     )
     val footprint = collapsedFootprint(insets.bottom.toFloat(), density).roundToInt()
     SideEffect { controller.collapsedFootprint = footprint }
-    PlayerSheetBackHandler(controller.sheetState, controller.lyrics)
+    PlayerSheetBackHandler(controller.sheetState, controller.lyrics, controller.queueReveal)
+    // The player slides back over the queue as it collapses
+    LaunchedEffect(controller) {
+        snapshotFlow { controller.sheetState.expandedTarget }.collect {
+            if (!it) controller.queueReveal.hide()
+        }
+    }
+    // The queue shows the MediaController, which the activity releases when it stops.
+    val connection by controller.mediaController.connection.collectAsState()
     PlayerSheet(
         state = controller.sheetState,
         player = controller.playerState,
         insets = insets,
         pageTinted = controller.pageTinted,
         lyrics = controller.lyrics,
+        queue = controller.queueReveal,
         actions = controller.actions,
         dialogCallbacks = controller.dialogCallbacks,
         modifier = modifier,
-    )
-    // The queue shows the MediaController, which the activity releases when it stops.
-    LifecycleEventEffect(Lifecycle.Event.ON_STOP) { controller.queueOpen = false }
-    if (controller.queueOpen) {
-        QueueSheet(controller.mediaController, onDismiss = { controller.queueOpen = false })
+    ) { queueModifier ->
+        key(connection) {
+            if (connection != null) {
+                QueuePanel(
+                    controller.mediaController,
+                    onDismiss = controller.queueReveal::hide,
+                    modifier = queueModifier,
+                )
+            }
+        }
     }
 }
 
+/** What a back gesture puts away, see [PlayerSheetBackHandler]. */
+private enum class BackTarget { Lyrics, Queue, Sheet }
+
 /**
  * Collapses the expanded [sheet] on back, following the predictive back gesture, or first fades
- * out the [lyrics] over it. Only enabled while the sheet is (going to be) expanded.
+ * out the [lyrics] over it, or slides it back over the [queue]. Only enabled while the sheet is
+ * (going to be) expanded.
  */
 @Composable
-private fun PlayerSheetBackHandler(sheet: NowPlayingSheetState, lyrics: LyricsOverlayState) {
+private fun PlayerSheetBackHandler(
+    sheet: NowPlayingSheetState,
+    lyrics: LyricsOverlayState,
+    queue: QueueRevealState,
+) {
     val backDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
         ?: return
     val lifecycleOwner = LocalLifecycleOwner.current
-    LaunchedEffect(backDispatcher, lifecycleOwner, sheet, lyrics) {
+    LaunchedEffect(backDispatcher, lifecycleOwner, sheet, lyrics, queue) {
         val callback = object : OnBackPressedCallback(enabled = false) {
+            // Picked when the gesture starts: the queue, say, is gone by the time it ends
+            private var target: BackTarget? = null
+
+            private fun target() = target ?: when {
+                lyrics.visible -> BackTarget.Lyrics
+                queue.shown -> BackTarget.Queue
+                else -> BackTarget.Sheet
+            }
+
             override fun handleOnBackStarted(backEvent: BackEventCompat) {
-                if (lyrics.visible) lyrics.onBackStarted()
+                target = target()
+                if (target == BackTarget.Lyrics) lyrics.onBackStarted()
             }
 
             override fun handleOnBackProgressed(backEvent: BackEventCompat) {
-                if (lyrics.visible) {
-                    lyrics.onBackProgressed(backEvent.progress)
-                } else {
-                    sheet.onBackProgress(backEvent.progress)
+                when (target()) {
+                    BackTarget.Lyrics -> lyrics.onBackProgressed(backEvent.progress)
+                    BackTarget.Queue -> queue.onBackProgress(backEvent.progress)
+                    BackTarget.Sheet -> sheet.onBackProgress(backEvent.progress)
                 }
             }
 
             override fun handleOnBackPressed() {
-                if (lyrics.visible) {
-                    lyrics.onBackPressed()
-                } else {
-                    sheet.collapse()
+                when (target()) {
+                    BackTarget.Lyrics -> lyrics.onBackPressed()
+                    BackTarget.Queue -> queue.hide()
+                    BackTarget.Sheet -> sheet.collapse()
                 }
+                target = null
             }
 
             override fun handleOnBackCancelled() {
-                if (lyrics.visible) {
-                    lyrics.onBackCancelled()
-                } else {
-                    sheet.expand()
+                when (target()) {
+                    BackTarget.Lyrics -> lyrics.onBackCancelled()
+                    BackTarget.Queue -> queue.reveal()
+                    BackTarget.Sheet -> sheet.expand()
                 }
+                target = null
             }
         }
         backDispatcher.addCallback(lifecycleOwner, callback)

@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.constrain
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.akanework.gramophone.logic.utils.CalculationUtils.lerp
+import org.akanework.gramophone.ui.components.home.EDITABLE_ROW_HEIGHT
 import kotlin.math.roundToInt
 
 object PlayerUtilities {
@@ -70,9 +71,10 @@ object PlayerUtilities {
     val TIME_TRANSPORT_GAP = 18.dp
     /** The previous, play and next buttons, which shrink as squares if they have to. */
     val TRANSPORT_BUTTON_SIZE = 90.dp
-    /** The bottom row's buttons: lyrics, repeat, shuffle, favourite and queue. */
+    /** The bottom row's buttons: lyrics, repeat, shuffle and favourite. */
     val ACTION_BUTTON_SIZE = 48.dp
-    val ACTION_BAR_VERTICAL_PADDING = 4.dp
+    /** Above and below the bottom row's buttons, on the top of the queue. */
+    val ACTION_BAR_VERTICAL_PADDING = 16.dp
 
     // Expanded artwork
     val EXPANDED_ART_SIDE_INSET = 24.dp
@@ -90,7 +92,20 @@ object PlayerUtilities {
     // Converted to px one by one, as the text does: with non-linear font scaling (Android 14)
     // their sum in sp would grow less than the lines themselves.
     val EXPANDED_CONTROLS_LINES = listOf(TITLE_LINE_HEIGHT, ARTIST_LINE_HEIGHT, TIME_LINE_HEIGHT)
-    val EXPANDED_ACTION_BAR = ACTION_BUTTON_SIZE + ACTION_BAR_VERTICAL_PADDING * 2
+    val EXPANDED_ACTION_BAR =
+        ACTION_BUTTON_SIZE + ACTION_BAR_VERTICAL_PADDING * 2
+    /** The queue's drag handle, above the bottom row. */
+    val QUEUE_HANDLE_WIDTH = 32.dp
+    val QUEUE_HANDLE_THICKNESS = 4.dp
+    /** Around the handle, which is at the top of its place, with more room under it to touch. */
+    val QUEUE_HANDLE_TOP_PADDING = 8.dp
+    val QUEUE_HANDLE_BOTTOM_PADDING = 20.dp
+    /** The song playing at the top over the queue: a row like the songs', over its progress. */
+    val QUEUE_PREVIEW_ROW_HEIGHT = EDITABLE_ROW_HEIGHT
+    val QUEUE_PREVIEW_PROGRESS_HEIGHT = 4.dp
+    val QUEUE_PREVIEW_BOTTOM_PADDING = 12.dp
+    val QUEUE_PREVIEW_HEIGHT =
+        QUEUE_PREVIEW_ROW_HEIGHT + QUEUE_PREVIEW_PROGRESS_HEIGHT + QUEUE_PREVIEW_BOTTOM_PADDING
     val EXPANDED_CONTROLS_MIN_GAP = 48.dp
 
     const val WIDE_LANDSCAPE_MIN_WIDTH = 600
@@ -110,15 +125,15 @@ object PlayerUtilities {
     const val POSITION_POLL_MS = 500L
     const val FULL_POLL_MS = 100L
 
-    val SQUIGGLY_WAVELENGTH = 27.dp
-    val SQUIGGLY_AMPLITUDE = 2.7.dp
+    val SQUIGGLY_WAVELENGTH = 36.dp
+    val SQUIGGLY_AMPLITUDE = 3.6.dp
     val SQUIGGLY_PHASE_SPEED = 8.dp
-    val SQUIGGLY_STROKE_WIDTH = 3.4.dp
+    val SQUIGGLY_STROKE_WIDTH = 4.dp
     const val SQUIGGLY_AMP_IN_MS = 800
     const val SQUIGGLY_AMP_OUT_MS = 550
     const val SQUIGGLY_TRANSITION_PERIODS = 1.5f
-    val SQUIGGLY_THUMB_WIDTH = 5.dp
-    val SQUIGGLY_THUMB_HEIGHT = 20.dp
+    val SQUIGGLY_THUMB_WIDTH = 6.dp
+    val SQUIGGLY_THUMB_HEIGHT = 24.dp
 
     val TIMER_MINUTES = listOf(0, 1, 3, 5, 10, 15, 20, 30, 45, 60, 90)
 

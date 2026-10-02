@@ -77,6 +77,7 @@ import org.akanework.gramophone.ui.library.LayoutType
 import org.akanework.gramophone.ui.library.isGrid
 import org.akanework.gramophone.ui.nav.LocalAppBarTopPadding
 import org.akanework.gramophone.ui.nav.LocalListBottomPadding
+import org.akanework.gramophone.ui.nav.LocalListSideInsets
 import org.akanework.gramophone.ui.nav.LocalPlayerBottomPadding
 import org.akanework.gramophone.ui.nav.LocalReportFullyDrawn
 import org.akanework.gramophone.ui.state.FolderTabState
@@ -124,8 +125,8 @@ fun libraryColumns(layoutType: LayoutType?): Int {
 }
 
 /**
- * Content padding of a list: horizontal system bar / cutout insets, and at the bottom whichever
- * is larger of the navigation bar and the mini player.
+ * Content padding of a list: horizontal system bar / cutout insets (see [LocalListSideInsets]),
+ * and at the bottom whichever is larger of the navigation bar and the mini player.
  */
 @Composable
 fun libraryContentPadding(
@@ -135,10 +136,11 @@ fun libraryContentPadding(
     val insets = WindowInsets.systemBars.union(WindowInsets.displayCutout).asPaddingValues()
     val direction = LocalLayoutDirection.current
     val playerPadding = with(LocalDensity.current) { LocalPlayerBottomPadding.current.toDp() }
+    val sides = LocalListSideInsets.current
     return PaddingValues(
         top = top,
-        start = insets.calculateStartPadding(direction),
-        end = insets.calculateEndPadding(direction),
+        start = if (sides) insets.calculateStartPadding(direction) else 0.dp,
+        end = if (sides) insets.calculateEndPadding(direction) else 0.dp,
         bottom = LocalListBottomPadding.current
             ?: max(insets.calculateBottomPadding().value, playerPadding.value).dp,
     )
@@ -152,7 +154,7 @@ fun libraryContentPadding(
 fun libraryRowHeightPx(layoutType: LayoutType?, columns: Int): Int {
     val density = LocalDensity.current
     if (!layoutType.isGrid) return with(density) { LIST_HEIGHT.roundToPx() }
-    val padding = libraryContentPadding()
+    val padding = WindowInsets.systemBars.union(WindowInsets.displayCutout).asPaddingValues()
     val direction = LocalLayoutDirection.current
     val windowWidthPx = LocalWindowInfo.current.containerSize.width
     return with(density) {

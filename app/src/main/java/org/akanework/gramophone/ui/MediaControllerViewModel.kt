@@ -36,6 +36,7 @@ import androidx.media3.session.SessionResult
 import androidx.media3.session.SessionToken
 import com.google.common.util.concurrent.ListenableFuture
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import org.akanework.gramophone.logic.GramophonePlaybackService
@@ -60,6 +61,10 @@ class MediaControllerViewModel(application: Application) : AndroidViewModel(appl
         get() = connectionListenersImpl.toBaseInterface()
     // Unlike connectionListeners, not tied to (and released with) the activity lifecycle.
     private val connected = MutableStateFlow<MediaBrowser?>(null)
+
+    /** The connected controller, null while there's none (the activity is stopped, say). */
+    val connection: StateFlow<MediaBrowser?>
+        get() = connected
 
     override fun onStart(owner: LifecycleOwner) {
         val sessionToken =

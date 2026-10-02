@@ -18,10 +18,7 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
-import com.materialkolor.hct.Hct
 import com.materialkolor.ktx.animateColorScheme
-import com.materialkolor.ktx.toColor
-import com.materialkolor.ktx.toHct
 import org.akanework.gramophone.logic.enableEdgeToEdgeProperly
 
 val LocalCardSurface = staticCompositionLocalOf { Color.Unspecified }
@@ -39,12 +36,9 @@ private const val DARK_CARD_TONE_LIFT = 4.0
 
 internal fun cardSurface(scheme: ColorScheme, dark: Boolean): Color =
     if (dark) {
-        val pageTone = scheme.surfaceContainerLow.toHct().tone
+        val pageTone = scheme.surfaceContainerLow.tone
         scheme.primary.tonal(DARK_CARD_CHROMA, maxOf(DARK_CARD_TONE, pageTone + DARK_CARD_TONE_LIFT))
     } else scheme.surfaceBright
-
-/** This colour's hue at the given [chroma] and [tone]. */
-fun Color.tonal(chroma: Double, tone: Double): Color = Hct.from(toHct().hue, chroma, tone).toColor()
 
 /**
  * The app theme from the stored theme settings. Colours cross over when the settings change,

@@ -169,6 +169,12 @@ val LocalAppBarTopPadding = compositionLocalOf { 0.dp }
  */
 val LocalListBottomPadding = compositionLocalOf<Dp?> { null }
 
+/**
+ * Whether a list keeps clear of the system bars and cutouts at its sides. The home's sheet keeps
+ * clear of them itself, with its corners, so its lists don't.
+ */
+val LocalListSideInsets = compositionLocalOf { true }
+
 /** True while a page covers the always-composed home (so it can pause its animations). */
 val LocalHomeCovered = compositionLocalOf { false }
 

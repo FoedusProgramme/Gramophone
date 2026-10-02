@@ -26,17 +26,28 @@ import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuPopup
+import androidx.compose.material3.DropdownMenuPopupPositionProvider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuAnchorPosition
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.MotionScheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.TransformOrigin
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.DpOffset
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntRect
+import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.PopupProperties
 
@@ -58,60 +69,95 @@ private object MenuMotionScheme : MotionScheme {
 }
 
 /**
- * A Material `DropdownMenu` on the lowest container colour above the surface, opening and closing
- * over eased durations rather than the theme's springs. With an [anchorPosition], it goes there
- * instead of below its anchor: [MenuAnchorPosition.End] for a submenu opening beside its entry.
+ * A Material dropdown menu on the lowest container colour above the surface, with large corners,
+ * opening and closing over eased durations rather than the theme's springs. It goes below its
+ * anchor, or at [anchorPosition]: [MenuAnchorPosition.End] for a submenu opening beside its entry.
+ *
+ * Its shadow fades in with it: Material's DropdownMenu fades a layer of its own size, which cuts
+ * the shadow off until the fade ends, so this one fades the menu with [SHADOW_ROOM] around it.
  */
 @Composable
 fun AppDropdownMenu(
     expanded: Boolean,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
-    anchorPosition: MenuAnchorPosition? = null,
-    properties: PopupProperties = PopupProperties(focusable = true),
+    anchorPosition: MenuAnchorPosition = MenuAnchorPosition.Below,
+    dismissOnClickOutside: Boolean = true,
     content: @Composable ColumnScope.() -> Unit,
 ) {
+    val room = with(LocalDensity.current) { SHADOW_ROOM.roundToPx() }
+    val position = MenuDefaults.rememberDropdownMenuPopupPositionProvider(
+        anchorPosition,
+        // Beside its anchor, up by the padding above the first entry, which then lines up with it
+        offset = if (anchorPosition == MenuAnchorPosition.Below) DpOffset.Zero
+            else DpOffset(0.dp, -MENU_VERTICAL_PADDING),
+    )
+    val positionWithRoom = remember(position, room) { RoomyPositionProvider(position, room) }
     MaterialTheme(motionScheme = MenuMotionScheme) {
-        val color = MaterialTheme.colorScheme.surfaceContainerLow
-        if (anchorPosition == null) {
-            DropdownMenu(
-                expanded = expanded,
-                onDismissRequest = onDismissRequest,
-                modifier = modifier,
-                properties = properties,
-                containerColor = color,
-                content = content,
-            )
-        } else {
-            DropdownMenuPopup(
-                expanded = expanded,
-                onDismissRequest = onDismissRequest,
-                // Up by the padding above the first entry, which then lines up with the anchor
-                popupPositionProvider = MenuDefaults.rememberDropdownMenuPopupPositionProvider(
-                    anchorPosition,
-                    offset = DpOffset(0.dp, -MENU_VERTICAL_PADDING),
-                ),
-                properties = properties,
+        DropdownMenuPopup(
+            expanded = expanded,
+            onDismissRequest = onDismissRequest,
+            popupPositionProvider = positionWithRoom,
+            // The room may go past the edge of the screen; the menu is kept on it
+            properties = PopupProperties(
+                focusable = true,
+                dismissOnClickOutside = dismissOnClickOutside,
+                clippingEnabled = false,
+            ),
+        ) {
+            // What DropdownMenu puts its entries on
+            Surface(
+                modifier = Modifier.padding(SHADOW_ROOM),
+                shape = MenuShape,
+                color = MaterialTheme.colorScheme.surfaceContainerLow,
+                tonalElevation = MenuDefaults.TonalElevation,
+                shadowElevation = MenuDefaults.ShadowElevation,
             ) {
-                // What DropdownMenu puts its entries on
-                Surface(
-                    shape = MenuDefaults.shape,
-                    color = color,
-                    tonalElevation = MenuDefaults.TonalElevation,
-                    shadowElevation = MenuDefaults.ShadowElevation,
-                ) {
-                    Column(
-                        modifier
-                            .padding(vertical = MENU_VERTICAL_PADDING)
-                            .width(IntrinsicSize.Max)
-                            .verticalScroll(rememberScrollState()),
-                        content = content,
-                    )
-                }
+                Column(
+                    modifier
+                        .padding(vertical = MENU_VERTICAL_PADDING)
+                        .width(IntrinsicSize.Max)
+                        .verticalScroll(rememberScrollState()),
+                    content = content,
+                )
             }
         }
     }
 }
 
+/**
+ * Places a menu drawn [room] inside its popup where [menu] places the menu itself, and grows it
+ * from the same point.
+ */
+private class RoomyPositionProvider(
+    private val menu: DropdownMenuPopupPositionProvider,
+    private val room: Int,
+) : DropdownMenuPopupPositionProvider {
+    override var transformOrigin by mutableStateOf(TransformOrigin.Center)
+        private set
+
+    override fun calculatePosition(
+        anchorBounds: IntRect,
+        windowSize: IntSize,
+        layoutDirection: LayoutDirection,
+        popupContentSize: IntSize,
+    ): IntOffset {
+        val size = IntSize(popupContentSize.width - 2 * room, popupContentSize.height - 2 * room)
+        val position = menu.calculatePosition(anchorBounds, windowSize, layoutDirection, size)
+        val origin = menu.transformOrigin
+        transformOrigin = TransformOrigin(
+            (room + origin.pivotFractionX * size.width) / popupContentSize.width,
+            (room + origin.pivotFractionY * size.height) / popupContentSize.height,
+        )
+        return IntOffset(position.x - room, position.y - room)
+    }
+}
+
 /** Above and below a menu's entries, as in DropdownMenu. */
 private val MENU_VERTICAL_PADDING = 8.dp
+
+/** Material 3 expressive's large corners. */
+private val MenuShape = RoundedCornerShape(16.dp)
+
+/** Room around a menu for its shadow, see [AppDropdownMenu]. */
+private val SHADOW_ROOM = 8.dp

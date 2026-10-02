@@ -43,9 +43,18 @@ import androidx.compose.ui.unit.sp
  * and the queue's rows. Same height and cover as the compact library row.
  */
 
+private val ROW_PADDING = 6.dp
 private val HANDLE_SLOT = 40.dp
+private val ROW_ICON_SIZE = 24.dp
 private val COVER_SIZE = 50.dp
 private val TEXT_MARGIN = 18.dp
+
+/** The remove button's, a LibraryIconButton's, slot. */
+private val REMOVE_SLOT = 48.dp
+
+/** How far in from the row's start its drag handle's icon is, and from its end the remove icon. */
+val EDITABLE_ROW_ICON_START = ROW_PADDING + (HANDLE_SLOT - ROW_ICON_SIZE) / 2
+val EDITABLE_ROW_ICON_END = ROW_PADDING + (REMOVE_SLOT - ROW_ICON_SIZE) / 2
 
 @Composable
 fun EditableSongRow(
@@ -70,7 +79,7 @@ fun EditableSongRow(
                 indication = null,
                 onClick = onClick,
             )
-            .padding(start = 6.dp, end = 6.dp),
+            .padding(start = ROW_PADDING, end = ROW_PADDING),
         verticalAlignment = FloorCenterVertically,
     ) {
         if (showControls) {
@@ -82,7 +91,7 @@ fun EditableSongRow(
                     imageVector = Icons.Outlined.DragHandle,
                     contentDescription = null,
                     tint = colors.icon,
-                    modifier = Modifier.size(24.dp),
+                    modifier = Modifier.size(ROW_ICON_SIZE),
                 )
             }
         }
@@ -105,7 +114,7 @@ fun EditableSongRow(
         if (showControls) {
             LibraryIconButton(
                 icon = Icons.Outlined.Close,
-                iconSize = 24.dp,
+                iconSize = ROW_ICON_SIZE,
                 tint = colors.icon,
                 onClick = onRemove,
             )

@@ -34,6 +34,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -49,23 +50,34 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Article
-import androidx.compose.material.icons.automirrored.outlined.PlaylistPlay
 import androidx.compose.material.icons.outlined.AlarmOff
 import androidx.compose.material.icons.outlined.AlarmOn
 import androidx.compose.material.icons.outlined.ExpandMore
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Repeat
 import androidx.compose.material.icons.outlined.RepeatOne
 import androidx.compose.material.icons.outlined.Shuffle
 import androidx.compose.material.icons.outlined.SkipNext
 import androidx.compose.material.icons.outlined.SkipPrevious
 import androidx.compose.material.icons.outlined.Speed
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ButtonGroupDefaults
+import androidx.compose.material3.ButtonShapes
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MotionScheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
+import androidx.compose.material3.Text
+import androidx.compose.material3.ToggleButton
+import androidx.compose.material3.ToggleButtonDefaults
+import androidx.compose.material3.ToggleButtonShapes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -91,6 +103,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.PlatformTextStyle
@@ -105,6 +118,7 @@ import androidx.compose.ui.unit.sp
 import androidx.media3.common.Player
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.utils.CalculationUtils
+import org.akanework.gramophone.ui.components.compose.AppDropdownMenu
 import org.akanework.gramophone.ui.components.compose.rememberBooleanPreference
 import org.akanework.gramophone.ui.components.lyrics.LyricsOverlay
 import org.akanework.gramophone.ui.components.lyrics.LyricsOverlayState
@@ -114,6 +128,7 @@ import org.akanework.gramophone.ui.components.player.PlayerUtilities.ACTION_BUTT
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.ARTIST_LINE_HEIGHT
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.ARTIST_PROGRESS_GAP
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.ART_TOP_GAP
+import org.akanework.gramophone.ui.components.player.PlayerUtilities.EXPANDED_ACTION_BAR
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.LANDSCAPE_MARGIN
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.LAND_ART_BOTTOM
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.LAND_ART_START
@@ -141,6 +156,7 @@ internal fun FullPlayerContent(
     actions: FullPlayerActions,
     scheme: AnimatedColorScheme,
     lyrics: LyricsOverlayState,
+    queue: QueueRevealState,
     onOpenDialog: (PlayerDialog) -> Unit,
 ) {
     val expanding by remember(state) { derivedStateOf { state.progress > 0f } }
@@ -174,10 +190,10 @@ internal fun FullPlayerContent(
                     .pageFollowingCover(frame) {
                         alpha = expandedContentAlpha(it.progress) * playerVisibility
                     }
-                    .drawBehind { drawRect(scheme.color { surface }) }
-                    .then(if (lyricsCovering) Modifier else Modifier.sheetDrag(state)),
+                    .drawBehind { drawRect(scheme.color { surfaceContainerLow }) }
+                    .sheetDrag(state, enabled = !lyricsCovering && !queue.shown),
             ) {
-                FullPlayerScaffold(geometry, player, actions, scheme, onOpenDialog)
+                FullPlayerScaffold(geometry, player, actions, scheme, onOpenDialog, queue)
             }
         }
     }
@@ -190,6 +206,7 @@ private fun FullPlayerScaffold(
     actions: FullPlayerActions,
     scheme: AnimatedColorScheme,
     onOpenDialog: (PlayerDialog) -> Unit,
+    queue: QueueRevealState,
 ) {
     val density = LocalDensity.current
     // Clear of the system bars and cutouts
@@ -203,14 +220,14 @@ private fun FullPlayerScaffold(
     }
     val coverSize = with(density) { geometry.expandedArtSize.toDp() }
     if (geometry.isWideLandscape) {
-        LandscapeScaffold(coverSize, insets, player, actions, scheme, onOpenDialog)
+        LandscapeScaffold(coverSize, insets, player, actions, scheme, onOpenDialog, queue)
     } else {
         Column(
             Modifier
                 .fillMaxSize()
                 .padding(insets),
         ) {
-            TopButtonRow(player, actions, scheme, onOpenDialog)
+            TopButtonRow(player, actions, scheme, onOpenDialog, Modifier.fadingOverQueue(queue))
             Spacer(Modifier.height(ART_TOP_GAP))
             // The cover's slot. Its size already leaves the controls below their natural height
             // (see SheetGeometry), so they sit centered in what is left.
@@ -218,12 +235,14 @@ private fun FullPlayerScaffold(
             Box(
                 Modifier
                     .weight(1f)
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .fadingOverQueue(queue),
                 contentAlignment = Alignment.Center,
             ) {
                 PlayerControls(player, actions, scheme, PORTRAIT_MARGIN, Modifier.fillMaxWidth())
             }
-            ActionBarRow(player, actions, scheme)
+            // The bottom row's place: the row is on top of the queue, see QueueDrawer
+            Spacer(Modifier.height(EXPANDED_ACTION_BAR))
         }
     }
 }
@@ -236,6 +255,7 @@ private fun LandscapeScaffold(
     actions: FullPlayerActions,
     scheme: AnimatedColorScheme,
     onOpenDialog: (PlayerDialog) -> Unit,
+    queue: QueueRevealState,
 ) {
     Box(
         Modifier
@@ -260,10 +280,11 @@ private fun LandscapeScaffold(
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxWidth()
-                        .heightIn(min = 200.dp),
+                        .heightIn(min = 200.dp)
+                        .fadingOverQueue(queue),
                     verticalArrangement = Arrangement.Center,
                 )
-                ActionBarRow(player, actions, scheme)
+                Spacer(Modifier.height(EXPANDED_ACTION_BAR))
             }
         }
         TopButtonColumn(
@@ -274,6 +295,14 @@ private fun LandscapeScaffold(
         )
     }
 }
+
+/**
+ * Fades out as the [queue] comes up over the player, and is out of reach of screen readers once
+ * under it.
+ */
+private fun Modifier.fadingOverQueue(queue: QueueRevealState): Modifier =
+    graphicsLayer { alpha = 1f - queue.progress }
+        .then(if (queue.revealed) Modifier.clearAndSetSemantics {} else Modifier)
 
 /** The title and artist, the progress bar and times, and the transport row. */
 @Composable
@@ -304,8 +333,7 @@ private fun TopButtonColumn(
 ) {
     Column(modifier) {
         MinimizeButton(scheme, actions.minimize)
-        SpeedButton(scheme, onOpenDialog)
-        TimerButton(player, scheme, onOpenDialog)
+        OverflowButton(player, scheme, onOpenDialog)
     }
 }
 
@@ -315,9 +343,10 @@ private fun TopButtonRow(
     actions: FullPlayerActions,
     scheme: AnimatedColorScheme,
     onOpenDialog: (PlayerDialog) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Row(
-        Modifier
+        modifier
             .fillMaxWidth()
             .height(TOP_BUTTON_SIZE),
         verticalAlignment = Alignment.CenterVertically,
@@ -325,8 +354,7 @@ private fun TopButtonRow(
         Spacer(Modifier.width(24.dp))
         MinimizeButton(scheme, actions.minimize)
         Spacer(Modifier.weight(1f))
-        TimerButton(player, scheme, onOpenDialog)
-        SpeedButton(scheme, onOpenDialog)
+        OverflowButton(player, scheme, onOpenDialog)
         Spacer(Modifier.width(24.dp))
     }
 }
@@ -335,47 +363,68 @@ private fun TopButtonRow(
 private fun MinimizeButton(scheme: AnimatedColorScheme, onClick: () -> Unit) {
     IconSlot(
         Icons.Outlined.ExpandMore, R.string.expand_less, scheme.colorProducer { onSurface },
-        box = TOP_BUTTON_SIZE, icon = 28.dp, onClick = onClick,
+        scheme.colorProducer { surfaceBright }, icon = 28.dp, onClick = onClick,
     )
 }
 
+/** The timer and the playback speed, in a menu in the cover's colours like the player's dialogs. */
 @Composable
-private fun SpeedButton(scheme: AnimatedColorScheme, onOpenDialog: (PlayerDialog) -> Unit) {
-    IconSlot(
-        Icons.Outlined.Speed, R.string.playback_speed, scheme.colorProducer { onSurface },
-        box = TOP_BUTTON_SIZE, icon = 24.dp, onClick = { onOpenDialog(PlayerDialog.Speed) },
-    )
-}
-
-@Composable
-private fun TimerButton(
+private fun OverflowButton(
     player: PlayerSheetPlayerState,
     scheme: AnimatedColorScheme,
     onOpenDialog: (PlayerDialog) -> Unit,
 ) {
-    IconSlot(
-        image = if (player.timerActive) Icons.Outlined.AlarmOn else Icons.Outlined.AlarmOff,
-        description = R.string.timer,
-        tint = scheme.colorProducer { onSurface },
-        box = TOP_BUTTON_SIZE,
-        icon = 24.dp,
-        onClick = { onOpenDialog(PlayerDialog.Timer) },
+    var menuOpen by remember { mutableStateOf(false) }
+    val open = { dialog: PlayerDialog ->
+        menuOpen = false
+        onOpenDialog(dialog)
+    }
+    Box {
+        IconSlot(
+            Icons.Outlined.MoreVert, R.string.more, scheme.colorProducer { onSurface },
+            scheme.colorProducer { surfaceBright }, icon = 24.dp, onClick = { menuOpen = true },
+        )
+        MaterialTheme(colorScheme = scheme.target) {
+            AppDropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
+                OverflowItem(
+                    if (player.timerActive) Icons.Outlined.AlarmOn else Icons.Outlined.AlarmOff,
+                    R.string.timer,
+                ) { open(PlayerDialog.Timer) }
+                OverflowItem(Icons.Outlined.Speed, R.string.playback_speed) { open(PlayerDialog.Speed) }
+            }
+        }
+    }
+}
+
+/** An entry of the player's menu. */
+@Composable
+private fun OverflowItem(image: ImageVector, @StringRes title: Int, onClick: () -> Unit) {
+    DropdownMenuItem(
+        text = { Text(stringResource(title), fontSize = 16.sp, fontWeight = FontWeight.Normal) },
+        onClick = onClick,
+        leadingIcon = { Icon(image, contentDescription = null) },
     )
 }
 
+/**
+ * A top button: its icon on a circle of [background], as tall as the bottom row's buttons, in a
+ * [TOP_BUTTON_SIZE] slot. The colours are read where they're drawn, as the cover's scheme changes.
+ */
 @Composable
 private fun IconSlot(
     image: ImageVector,
     @StringRes description: Int,
     tint: ColorProducer,
-    box: Dp,
+    background: ColorProducer,
     icon: Dp,
     onClick: () -> Unit,
 ) {
     Box(
         Modifier
-            .size(box)
+            .size(TOP_BUTTON_SIZE)
+            .padding((TOP_BUTTON_SIZE - ACTION_BUTTON_SIZE) / 2)
             .clip(CircleShape)
+            .drawBehind { drawRect(background()) }
             .clickable(onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {
@@ -574,18 +623,30 @@ private fun ProgressSection(
         Spacer(Modifier.weight(1f))
         val quality = player.qualityText
         if (!quality.isNullOrEmpty()) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            // On a pill of the secondary container, as tall as the times beside it
+            val qualityColor = scheme.colorProducer { onSecondaryContainer }
+            Row(
+                Modifier
+                    .clip(CircleShape)
+                    .drawBehind { drawRect(scheme.color { secondaryContainer }) }
+                    .padding(horizontal = QUALITY_PADDING),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
                 player.qualityIcon?.let {
-                    TintedIcon(painterResource(it), timeColor, Modifier.size(18.dp))
+                    TintedIcon(painterResource(it), qualityColor, Modifier.size(QUALITY_ICON_SIZE))
                     Spacer(Modifier.width(4.dp))
                 }
-                TimeText(quality, timeColor, 12.sp)
+                TimeText(quality, qualityColor, 12.sp)
             }
             Spacer(Modifier.weight(1f))
         }
         TimeText(CalculationUtils.convertDurationToTimeStamp(durationMs), timeColor, 14.sp)
     }
 }
+
+/** Either side of the audio quality, inside its pill, and its icon. */
+private val QUALITY_PADDING = 8.dp
+private val QUALITY_ICON_SIZE = 16.dp
 
 /** A line of the time row, in [color] read in the draw phase. */
 @Composable
@@ -603,6 +664,9 @@ private fun TimeText(text: String, color: ColorProducer, fontSize: TextUnit) {
 
 /** How far the play button's backdrop turns as it blooms into the cookie. */
 private const val PLAY_MORPH_ROTATION = 30f
+
+/** The play button's backdrop as a fraction of its slot. */
+private const val PLAY_BACKDROP_SCALE = 0.95f
 
 /** The expressive scheme's quick, slightly bouncy spring, for the play button's morph. */
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -641,7 +705,11 @@ private fun TransportRow(
             Box(
                 Modifier
                     .matchParentSize()
-                    .graphicsLayer { rotationZ = PLAY_MORPH_ROTATION * morph.value }
+                    .graphicsLayer {
+                        rotationZ = PLAY_MORPH_ROTATION * morph.value
+                        scaleX = PLAY_BACKDROP_SCALE
+                        scaleY = PLAY_BACKDROP_SCALE
+                    }
                     .drawBehind {
                         val outline = PlayButtonMorphShape(morph.value)
                             .createOutline(size, layoutDirection, this)
@@ -695,31 +763,50 @@ private fun TransportButton(
     }
 }
 
+/**
+ * The bottom row: Material 3 expressive's connected button group, on the brightest surface, as
+ * wide as the controls above it. The toggles round off when on, on the primary container (the
+ * favourite on the tertiary one).
+ * It sits on top of the queue, which comes up with it when dragged up (see QueueDrawer).
+ */
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-private fun ActionBarRow(
+internal fun ActionBarRow(
     player: PlayerSheetPlayerState,
     actions: FullPlayerActions,
     scheme: AnimatedColorScheme,
+    horizontalMargin: Dp,
+    modifier: Modifier = Modifier,
 ) {
     val repeatMode = player.repeatMode
     val shuffle = player.shuffleMode
     val favorite = player.isFavorite
     val plainTint = scheme.colorProducer { onSurface }
     val checkTint = { on: Boolean ->
-        scheme.colorProducer { if (on) onSurface else outlineVariant }
+        scheme.colorProducer { if (on) onPrimaryContainer else outlineVariant }
     }
+    val container = scheme.color { surfaceBright }
+    val checkedContainer = scheme.color { primaryContainer }
+    val leading = ButtonGroupDefaults.connectedLeadingButtonShapes()
+    val middle = ButtonGroupDefaults.connectedMiddleButtonShapes()
+    val trailing = ButtonGroupDefaults.connectedTrailingButtonShapes()
     Row(
-        Modifier
+        modifier
             .fillMaxWidth()
-            .padding(horizontal = 38.dp, vertical = ACTION_BAR_VERTICAL_PADDING),
-        horizontalArrangement = Arrangement.SpaceBetween,
+            .padding(
+                start = horizontalMargin,
+                top = ACTION_BAR_VERTICAL_PADDING,
+                end = horizontalMargin,
+                bottom = ACTION_BAR_VERTICAL_PADDING,
+            ),
+        horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         ActionButton(
-            Icons.AutoMirrored.Outlined.Article, R.string.dialog_lyrics, plainTint,
+            Icons.AutoMirrored.Outlined.Article, R.string.dialog_lyrics, plainTint, leading, container,
             actions.showLyrics,
         )
-        ActionButton(
+        ActionToggle(
             image = if (repeatMode == Player.REPEAT_MODE_ONE) {
                 Icons.Outlined.RepeatOne
             } else {
@@ -727,29 +814,80 @@ private fun ActionBarRow(
             },
             description = R.string.repeat_mode,
             tint = checkTint(repeatMode != Player.REPEAT_MODE_OFF),
+            shapes = middle,
+            container = container,
+            checkedContainer = checkedContainer,
+            checked = repeatMode != Player.REPEAT_MODE_OFF,
             onClick = actions.cycleRepeat,
         )
-        ActionButton(Icons.Outlined.Shuffle, R.string.shuffle, checkTint(shuffle)) {
+        ActionToggle(
+            Icons.Outlined.Shuffle, R.string.shuffle, checkTint(shuffle), middle,
+            container, checkedContainer, shuffle,
+        ) {
             actions.toggleShuffle(!shuffle)
         }
-        ActionButton(
+        ActionToggle(
             image = if (favorite) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
             description = R.string.playlist_favourite,
-            tint = scheme.colorProducer { if (favorite) tertiary else onSurface },
+            // The favourite on the tertiary colours rather than the primary ones
+            tint = scheme.colorProducer { if (favorite) onTertiaryContainer else onSurface },
+            shapes = trailing,
+            container = container,
+            checkedContainer = scheme.color { tertiaryContainer },
+            checked = favorite,
             onClick = { actions.toggleFavorite(!favorite) },
-        )
-        ActionButton(
-            Icons.AutoMirrored.Outlined.PlaylistPlay, R.string.current_playlist, plainTint,
-            actions.showQueue,
         )
     }
 }
 
-/** A button of the bottom row. */
+/** A button of the bottom row, of the group's [shapes] and [container] colour. */
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-private fun ActionButton(
+private fun RowScope.ActionButton(
     image: ImageVector,
     @StringRes description: Int,
     tint: ColorProducer,
+    shapes: ToggleButtonShapes,
+    container: Color,
     onClick: () -> Unit,
-) = IconSlot(image, description, tint, box = ACTION_BUTTON_SIZE, icon = 24.dp, onClick = onClick)
+) {
+    Button(
+        onClick = onClick,
+        shapes = ButtonShapes(shapes.shape, shapes.pressedShape),
+        modifier = Modifier.weight(1f).height(ACTION_BUTTON_SIZE),
+        colors = ButtonDefaults.buttonColors(containerColor = container),
+        elevation = null,
+        contentPadding = PaddingValues(0.dp),
+    ) {
+        TintedIcon(image, tint, Modifier.size(24.dp), stringResource(description))
+    }
+}
+
+/** A toggle of the bottom row, on [container], or [checkedContainer] while [checked]. */
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+private fun RowScope.ActionToggle(
+    image: ImageVector,
+    @StringRes description: Int,
+    tint: ColorProducer,
+    shapes: ToggleButtonShapes,
+    container: Color,
+    checkedContainer: Color,
+    checked: Boolean,
+    onClick: () -> Unit,
+) {
+    ToggleButton(
+        checked = checked,
+        onCheckedChange = { onClick() },
+        modifier = Modifier.weight(1f).height(ACTION_BUTTON_SIZE),
+        shapes = shapes,
+        colors = ToggleButtonDefaults.toggleButtonColors(
+            containerColor = container,
+            checkedContainerColor = checkedContainer,
+        ),
+        elevation = null,
+        contentPadding = PaddingValues(0.dp),
+    ) {
+        TintedIcon(image, tint, Modifier.size(24.dp), stringResource(description))
+    }
+}

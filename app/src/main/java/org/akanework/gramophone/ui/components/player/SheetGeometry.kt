@@ -49,7 +49,9 @@ import org.akanework.gramophone.ui.components.player.PlayerUtilities.MINI_HEIGHT
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.MINI_PLATFORM_GAP
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.MINI_PLATFORM_MIN
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.MINI_SIDE_INSET
+import org.akanework.gramophone.ui.components.player.PlayerUtilities.QUEUE_PREVIEW_HEIGHT
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.SIZE_EASING
+import org.akanework.gramophone.ui.components.player.PlayerUtilities.TOP_BUTTON_SIZE
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.absolute
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.absoluteUnbounded
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.arcFraction
@@ -90,8 +92,9 @@ class SheetGeometry(
     /** See [collapsedFootprint]. */
     val collapsedFootprint = miniBarMargin + collapsedHeight
     private val collapsedTop = rootHeight - miniBarMargin - collapsedHeight
-    private val collapsedLeft = maxOf(with(density) { MINI_SIDE_INSET.toPx() }, leftInset)
-    private val collapsedRight = maxOf(with(density) { MINI_SIDE_INSET.toPx() }, rightInset)
+    // Its margin beyond the side system bars and cutouts, as the home's sheet has its own
+    private val collapsedLeft = leftInset + with(density) { MINI_SIDE_INSET.toPx() }
+    private val collapsedRight = rightInset + with(density) { MINI_SIDE_INSET.toPx() }
 
     /** Vertical distance of a full expand. */
     val travelPx = collapsedTop.coerceAtLeast(1f)
@@ -105,6 +108,18 @@ class SheetGeometry(
     val expandedArtSize: Float
     val expandedArtLeft: Float
     val expandedArtTop: Float
+
+    /**
+     * The queue, its handle over its songs, from the player's bottom row ([queueRowBounds]) down
+     * below the screen, under the row. The two come up [queueTravel] together, the queue to fill
+     * the screen under the [queuePreviewBounds].
+     */
+    val queuePanelBounds: Rect
+    val queueRowBounds: Rect
+    val queueTravel: Float
+
+    /** The song playing, at the top of the player (under the status bar) once the queue is up. */
+    val queuePreviewBounds: Rect
 
     init {
         fun Dp.px() = with(density) { toPx() }
@@ -132,6 +147,17 @@ class SheetGeometry(
             // Full width it lines up with the top buttons, smaller it is centered.
             expandedArtLeft = leftInset + (safeWidth - expandedArtSize) / 2f
         }
+        // Across the screen, or the controls' column beside the landscape cover
+        val queueLeft = if (isWideLandscape) expandedArtLeft + expandedArtSize else 0f
+        val queueRight =
+            if (isWideLandscape) rootWidth - rightInset - TOP_BUTTON_SIZE.px() else rootWidth
+        val rowHeight = EXPANDED_ACTION_BAR.px()
+        val rowTop = rootHeight - bottomInset - rowHeight
+        val previewBottom = statusTop + QUEUE_PREVIEW_HEIGHT.px()
+        queueTravel = (rowTop - previewBottom).coerceAtLeast(1f)
+        queueRowBounds = Rect(queueLeft, rowTop, queueRight, rowTop + rowHeight)
+        queuePanelBounds = Rect(queueLeft, rowTop, queueRight, rowTop + rootHeight - previewBottom)
+        queuePreviewBounds = Rect(queueLeft, 0f, queueRight, previewBottom)
     }
 
     /** The sheet [progress] of the way from the mini bar (0) to the full screen player (1). */

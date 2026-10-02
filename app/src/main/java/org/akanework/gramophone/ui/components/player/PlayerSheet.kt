@@ -106,6 +106,7 @@ import org.akanework.gramophone.ui.components.player.PlayerUtilities.absolute
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.miniContentAlpha
 import org.akanework.gramophone.ui.nav.NAV_TRANSITION_MS
 import org.akanework.gramophone.ui.nav.NavAxisEasing
+import org.akanework.gramophone.ui.theme.harmonizeBy
 import kotlin.math.roundToInt
 
 /** The system bar and cutout insets (px) the sheet spans, which its content keeps clear of. */
@@ -161,7 +162,6 @@ class FullPlayerActions(
     val cycleRepeat: () -> Unit,
     val toggleShuffle: (Boolean) -> Unit,
     val toggleFavorite: (Boolean) -> Unit,
-    val showQueue: () -> Unit,
     val showLyrics: () -> Unit,
     val openAlbum: () -> Unit,
     val openArtist: () -> Unit,
@@ -171,7 +171,8 @@ class FullPlayerActions(
 
 /**
  * The floating mini bar, which [state] expands into the full screen player, over a scrim. It
- * spans the system bars and cutouts, [insets], and keeps its content clear of them.
+ * spans the system bars and cutouts, [insets], and keeps its content clear of them. The full
+ * player's bottom row brings the [queue]'s [queueContent] up over it.
  */
 @Composable
 fun PlayerSheet(
@@ -181,9 +182,11 @@ fun PlayerSheet(
     /** Whether the current page is themed from a cover, where the bar isn't harmonized. */
     pageTinted: Boolean,
     lyrics: LyricsOverlayState,
+    queue: QueueRevealState,
     actions: FullPlayerActions,
     dialogCallbacks: PlayerDialogCallbacks,
     modifier: Modifier = Modifier,
+    queueContent: @Composable (Modifier) -> Unit,
 ) {
     val density = LocalDensity.current
     val cookieCover = rememberBooleanPreference("cookie_cover", false).value
@@ -252,6 +255,7 @@ fun PlayerSheet(
         val current = remember(geometry) { derivedStateOf { geometry.frameAt(state.progress) } }
         val frame = remember(current) { { current.value } }
         state.travelPx = geometry.travelPx
+        queue.travelPx = geometry.queueTravel
 
         // Scrim behind the sheet (only meaningful mid/late morph; fully covered at progress = 1,
         // where it isn't drawn).
@@ -282,7 +286,7 @@ fun PlayerSheet(
             }
             ProgressFill(player, frame) { barColors.value.fill }
             FullPlayerContent(
-                state, frame, geometry, player, actions, coverScheme, lyrics,
+                state, frame, geometry, player, actions, coverScheme, lyrics, queue,
                 onOpenDialog = { activeDialog = it },
             )
             val fullyExpanded by remember(state) {
@@ -292,8 +296,13 @@ fun PlayerSheet(
                 SheetInteraction(state, player, geometry, frame, { miniColors.value }, actions)
             }
             SharedArtwork(
-                state, player, lyrics, frame, geometry.rootWidth, cookie = cookieCover,
+                state, player, lyrics, queue, frame, geometry.rootWidth, cookie = cookieCover,
+                // Beside the queue in landscape, it stays
+                fadesOverQueue = !geometry.isWideLandscape,
                 onClick = actions.openSongDetails,
+            )
+            QueueDrawer(
+                state, frame, geometry, player, actions, coverScheme, lyrics, queue, queueContent,
             )
         }
     }
@@ -307,14 +316,14 @@ private data class MiniBarColors(
     val onPlayButton: Color,
 )
 
-/** Sheet background: [collapsedColor] when collapsed, the surface color when expanded. */
+/** Sheet background: [collapsedColor] when collapsed, the low surface container when expanded. */
 @Composable
 private fun SheetSurface(
     frame: () -> SheetFrame,
     hidden: () -> Boolean,
     collapsedColor: () -> Color,
 ) {
-    val expanded = MaterialTheme.colorScheme.surface
+    val expanded = MaterialTheme.colorScheme.surfaceContainerLow
     Box(
         Modifier
             .onSheet(frame)
@@ -450,9 +459,11 @@ private fun SharedArtwork(
     state: NowPlayingSheetState,
     player: PlayerSheetPlayerState,
     lyrics: LyricsOverlayState,
+    queue: QueueRevealState,
     frame: () -> SheetFrame,
     rootWidth: Float,
     cookie: Boolean,
+    fadesOverQueue: Boolean,
     onClick: () -> Unit,
 ) {
     val artwork = player.artworkUri
@@ -481,7 +492,12 @@ private fun SharedArtwork(
         derivedStateOf { frame().progress > COVER_CLICK_MIN }
     }
     val clickModifier = if (coverClickable) Modifier.clickable(onClick = onClick) else Modifier
-    val gestures = if (lyricsCovering) Modifier else Modifier.sheetDrag(state).then(clickModifier)
+    val underQueue = fadesOverQueue && queue.revealed
+    val gestures = if (lyricsCovering || queue.shown) {
+        Modifier
+    } else {
+        Modifier.sheetDrag(state).then(clickModifier)
+    }
     Box(Modifier.onSheet(frame)) {
         CrossfadeArtwork(
             request = request,
@@ -489,7 +505,8 @@ private fun SharedArtwork(
                 .absolute { frame().artBounds }
                 .graphicsLayer {
                     val f = frame()
-                    alpha = coverAlpha
+                    // Out with the rest of the player as the queue comes up
+                    alpha = if (fadesOverQueue) coverAlpha * (1f - queue.progress) else coverAlpha
                     shape = if (cookie) {
                         CookieMorphShape(f.progress)
                     } else {
@@ -500,7 +517,7 @@ private fun SharedArtwork(
                 .background(MaterialTheme.colorScheme.surfaceContainerHighest)
                 .semantics {
                     contentDescription = coverDescription
-                    if (lyricsCovering) hideFromAccessibility()
+                    if (lyricsCovering || underQueue) hideFromAccessibility()
                 }
                 .then(gestures),
         )

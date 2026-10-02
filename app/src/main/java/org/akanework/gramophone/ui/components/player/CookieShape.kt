@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.graphics.shapes.CornerRounding
 import androidx.graphics.shapes.Morph
 import androidx.graphics.shapes.RoundedPolygon
+import androidx.graphics.shapes.TransformResult
 import androidx.graphics.shapes.rectangle
 import androidx.graphics.shapes.star
 import androidx.graphics.shapes.toPath
@@ -65,11 +66,22 @@ private val COOKIE = RoundedPolygon.star(
 private val MINI_TO_COOKIE = Morph(MINI_SQUARE, COOKIE)
 
 /*
- * The play button's backdrop: Material's circle while paused, blooming into its twelve-sided
- * cookie while playing.
+ * The play button's backdrop: Material's rounded square while paused, blooming into its
+ * twelve-sided cookie while playing. The square fills its bounds where the cookie's scallops
+ * don't, so it's drawn smaller to look the same size.
  */
+private const val PAUSED_SQUARE_SCALE = 0.92f
+
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
-private val CIRCLE_TO_FLOWER = Morph(MaterialShapes.Circle, MaterialShapes.Cookie12Sided)
+private val SQUARE_TO_FLOWER = Morph(
+    MaterialShapes.Square.transformed { x, y ->
+        TransformResult(
+            0.5f + (x - 0.5f) * PAUSED_SQUARE_SCALE,
+            0.5f + (y - 0.5f) * PAUSED_SQUARE_SCALE,
+        )
+    },
+    MaterialShapes.Cookie12Sided,
+)
 
 /** [morph] at [progress], stretched from its unit square to the shape's bounds. */
 private class UnitMorphShape(private val morph: Morph, private val progress: Float) : Shape {
@@ -88,7 +100,7 @@ private class UnitMorphShape(private val morph: Morph, private val progress: Flo
 fun CookieMorphShape(progress: Float): Shape = UnitMorphShape(MINI_TO_COOKIE, progress.coerceIn(0f, 1f))
 
 /**
- * The play button's backdrop [progress] of the way from the paused circle to the playing cookie.
+ * The play button's backdrop [progress] of the way from the paused square to the playing cookie.
  * Left unclamped so a springy [progress] overshoots into the shape instead of stopping dead.
  */
-fun PlayButtonMorphShape(progress: Float): Shape = UnitMorphShape(CIRCLE_TO_FLOWER, progress)
+fun PlayButtonMorphShape(progress: Float): Shape = UnitMorphShape(SQUARE_TO_FLOWER, progress)

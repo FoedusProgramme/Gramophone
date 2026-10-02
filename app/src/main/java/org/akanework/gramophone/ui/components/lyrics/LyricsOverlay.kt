@@ -34,10 +34,10 @@ import org.akanework.gramophone.ui.MediaControllerViewModel
 import org.akanework.gramophone.ui.components.player.AnimatedColorScheme
 import org.koin.compose.viewmodel.koinActivityViewModel
 
-/** Alpha of the primary colour, over the surface, that lines which aren't sung are drawn in. */
+/** Alpha of the primary colour, over the background, that lines which aren't sung are drawn in. */
 private const val LYRIC_DEFAULT_ALPHA = 0.30f
 
-/** Alpha of the primary colour, over the surface, of a translation line being sung. */
+/** Alpha of the primary colour, over the background, of a translation line being sung. */
 private const val LYRIC_HIGHLIGHT_TL_ALPHA = 0.784f
 
 /** The lyric colours as ARGB ints, as the text paints take them. */
@@ -49,8 +49,9 @@ internal data class LyricsColors(val default: Int, val highlight: Int, val highl
 data class LyricsPadding(val left: Int, val top: Int, val right: Int, val bottom: Int)
 
 /**
- * The lyrics overlay: the current song's lyrics on the cover scheme's surface, following
- * playback. [state] carries its visibility, fade and back-gesture scale.
+ * The lyrics overlay: the current song's lyrics on the player's background, the cover scheme's
+ * low surface container, following playback. [state] carries its visibility, fade and
+ * back-gesture scale.
  */
 @Composable
 fun LyricsOverlay(
@@ -65,11 +66,11 @@ fun LyricsOverlay(
     val colors = remember(scheme) {
         {
             val primary = scheme.color { primary }
-            val surface = scheme.color { surface }
+            val background = scheme.color { surfaceContainerLow }
             LyricsColors(
-                default = primary.copy(alpha = LYRIC_DEFAULT_ALPHA).compositeOver(surface).toArgb(),
+                default = primary.copy(alpha = LYRIC_DEFAULT_ALPHA).compositeOver(background).toArgb(),
                 highlight = primary.toArgb(),
-                highlightTl = primary.copy(alpha = LYRIC_HIGHLIGHT_TL_ALPHA).compositeOver(surface).toArgb(),
+                highlightTl = primary.copy(alpha = LYRIC_HIGHLIGHT_TL_ALPHA).compositeOver(background).toArgb(),
             )
         }
     }
@@ -91,7 +92,7 @@ fun LyricsOverlay(
             }
             // When hidden, nothing is drawn and no input is taken
             .drawWithContent { if (state.visible) drawContent() }
-            .then(if (visible) Modifier.drawBehind { drawRect(scheme.color { surface }) } else Modifier),
+            .then(if (visible) Modifier.drawBehind { drawRect(scheme.color { surfaceContainerLow }) } else Modifier),
     ) {
         LyricsList(state.lyrics, visible, colors, padding, playback, Modifier.fillMaxSize())
     }

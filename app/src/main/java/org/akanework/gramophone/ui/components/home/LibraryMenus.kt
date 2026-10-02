@@ -54,9 +54,9 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MenuAnchorPosition
 import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuAnchorPosition
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.SheetValue
@@ -81,18 +81,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.PopupProperties
 import kotlinx.coroutines.launch
 import org.akanework.gramophone.R
 import org.akanework.gramophone.ui.components.compose.AppDropdownMenu
 import org.akanework.gramophone.ui.components.player.LocalHarmonizeCovers
-import org.akanework.gramophone.ui.components.player.harmonizeBy
 import org.akanework.gramophone.ui.components.player.rememberArtworkColorScheme
 import org.akanework.gramophone.ui.library.LayoutType
 import org.akanework.gramophone.ui.library.Sorter
 import org.akanework.gramophone.ui.state.LibraryMenuAction
 import org.akanework.gramophone.ui.state.SortPrefState
 import org.akanework.gramophone.ui.theme.THEME_ANIMATION_MS
+import org.akanework.gramophone.ui.theme.harmonizeBy
 
 /** Least width of the sort menus, so a short list of entries does not make a narrow menu. */
 private val SORT_MENU_MIN_WIDTH = 172.dp
@@ -152,9 +151,9 @@ fun SortMenu(
         expanded = expanded,
         onDismissRequest = onDismiss,
         modifier = Modifier.widthIn(min = SORT_MENU_MIN_WIDTH),
-        anchorPosition = if (submenu) MenuAnchorPosition.End else null,
+        anchorPosition = if (submenu) MenuAnchorPosition.End else MenuAnchorPosition.Below,
         // Touches on the layout menu are outside this one, which mustn't close for them
-        properties = PopupProperties(focusable = true, dismissOnClickOutside = !showLayouts),
+        dismissOnClickOutside = !showLayouts,
     ) {
         if (extraCheckbox != null) {
             DropdownMenuItem(
@@ -223,7 +222,7 @@ fun SortMenuChooser(
         onDismissRequest = onDismiss,
         modifier = Modifier.widthIn(min = SORT_MENU_MIN_WIDTH),
         // Touches on the picked list's menu are outside this one, which mustn't close for them
-        properties = PopupProperties(focusable = true, dismissOnClickOutside = picked < 0),
+        dismissOnClickOutside = picked < 0,
     ) {
         titles.forEachIndexed { index, title ->
             Box {
