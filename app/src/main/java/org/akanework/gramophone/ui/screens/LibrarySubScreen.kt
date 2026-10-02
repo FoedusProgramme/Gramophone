@@ -84,15 +84,14 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.os.ConfigurationCompat
 import androidx.media3.common.MediaItem
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeSource
@@ -875,10 +874,8 @@ private fun DrawScope.drawListSheet(grid: LazyGridState, color: Color, corner: F
 private fun SongsFooter(songs: List<MediaItem>, showCount: Boolean) {
     val count = songs.size
     val total = remember(songs) { songs.sumOf { it.mediaMetadata.durationMs ?: 0L } }
-    // Configuration.getLocales is API 24
-    val locale =
-        ConfigurationCompat.getLocales(LocalConfiguration.current)[0] ?: Locale.ROOT
-    val duration = remember(total, locale) { formatTotalDuration(total, locale) }
+    val locale = LocalLocale.current
+    val duration = remember(total, locale) { formatTotalDuration(total, locale.platformLocale) }
     SingleLineText(
         if (showCount) stringResource(
             R.string.songs_total_duration,
