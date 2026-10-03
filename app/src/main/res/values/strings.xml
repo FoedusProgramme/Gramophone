@@ -390,6 +390,10 @@
     <string name="settings_lyrics_ui">Enable new lyric UI</string>
     <!-- Settings toggle to enable newer lyrics rendering code. Subtext -->
     <string name="settings_lyrics_ui_summary">Experimental UI to display word-by-word lyric with advanced features</string>
+    <!-- Settings toggle to enable inline bracket word-by-word LRC parsing. Title -->
+    <string name="settings_lrc_bracket_word_sync_title">Word-by-word LRC lyrics</string>
+    <!-- Settings toggle to enable inline bracket word-by-word LRC parsing. Subtext -->
+    <string name="settings_lrc_bracket_word_sync_summary">Enable support for word-by-word LRC format with inline bracket timestamps; falls back to line-level lyrics when disabled</string>
     <!-- Settings toggle to enable showing lyrics in status bar (requires meizu phone). Title -->
     <string name="settings_status_bar_lyrics_title">Status bar lyrics</string>
     <!-- Settings toggle to enable showing lyrics in status bar (requires meizu phone). Subtext -->
