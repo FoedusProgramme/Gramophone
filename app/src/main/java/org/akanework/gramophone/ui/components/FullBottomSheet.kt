@@ -17,6 +17,7 @@
 
 package org.akanework.gramophone.ui.components
 
+import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
@@ -36,14 +37,19 @@ import android.util.AttributeSet
 import android.view.AbsSavedState
 import android.view.Gravity
 import android.view.KeyEvent
+import android.view.MotionEvent
 import android.view.View
+import android.view.ViewConfiguration
 import android.view.ViewGroup
 import android.view.ViewPropertyAnimator
 import android.view.WindowInsets
+import android.view.animation.LinearInterpolator
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.SeekBar
@@ -132,14 +138,13 @@ import org.akanework.gramophone.logic.utils.CalculationUtils
 import org.akanework.gramophone.logic.utils.ColorUtils
 import org.akanework.gramophone.logic.utils.Flags
 import org.akanework.gramophone.ui.MainActivity
-import org.akanework.gramophone.ui.fragments.ArtistSubFragment
 import org.akanework.gramophone.ui.fragments.DetailDialogFragment
 import org.akanework.gramophone.ui.fragments.GeneralSubFragment
 import uk.akane.libphonograph.items.albumId
-import uk.akane.libphonograph.items.artistId
 import uk.akane.libphonograph.manipulator.PlaylistSerializer.Entry
 import java.text.NumberFormat
 import java.text.ParseException
+import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
@@ -170,6 +175,10 @@ class FullBottomSheet
 
     private val prefs = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
     private var currentFormat: AudioFormatDetector.AudioFormats? = null
+    private var rotateCookieButton = false
+    private var shouldRotateCookieButton = false
+    private var swipeToSwitchTrackEnabled = false
+    private var cookieRotationAnimator: ObjectAnimator? = null
 
     companion object {
         const val SLIDER_UPDATE_INTERVAL: Long = 100
@@ -177,6 +186,7 @@ class FullBottomSheet
         const val FOREGROUND_COLOR_TRANSITION_SEC: Long = 150
         const val LYRIC_FADE_TRANSITION_SEC: Long = 125
         private const val TAG = "FullBottomSheet"
+        private const val SWIPE_THRESHOLD_DP = 50
     }
 
     private val touchListener =
@@ -201,7 +211,7 @@ class FullBottomSheet
                 if (mediaId != null) {
                     if (seekBar != null) {
                         instance?.seekTo((seekBar.progress.toLong()))
-                        bottomSheetFullLyricView.updateLyricPositionFromPlaybackPos()
+                        lyricPanelController.syncPlaybackPosition()
                     }
                 }
                 isUserTracking = false
@@ -217,7 +227,7 @@ class FullBottomSheet
                 val mediaId = instance?.currentMediaItem
                 if (mediaId != null) {
                     instance?.seekTo((slider.value.toLong()))
-                    bottomSheetFullLyricView.updateLyricPositionFromPlaybackPos()
+                    lyricPanelController.syncPlaybackPosition()
                 }
                 isUserTracking = false
             }
@@ -252,6 +262,7 @@ class FullBottomSheet
     private val bottomSheetFullTitle: TextView
     private val bottomSheetFullSubtitle: TextView
     private val bottomSheetFullControllerButton: MaterialButton
+    private val bottomSheetFullControllerButtonBg: ImageView
     private val bottomSheetFullNextButton: MaterialButton
     private val bottomSheetFullPreviousButton: MaterialButton
     private val bottomSheetFullDuration: TextView
@@ -269,6 +280,8 @@ class FullBottomSheet
     private val bottomSheetFullSlider: Slider
     private val bottomSheetFullCoverFrame: MaterialCardView
     val bottomSheetFullLyricView: LyricsView by lazy { (parent as ViewGroup).findViewById(R.id.lyric_frame)!! }
+    private val lyricPanelController: LyricPanelController
+
     private val progressDrawable: SquigglyProgress
     private var pqs: PlaylistQueueSheet? = null
 
@@ -276,10 +289,24 @@ class FullBottomSheet
         inflate(context, R.layout.full_player, this)
         bottomSheetFullCoverFrame = findViewById(R.id.album_cover_frame)
         bottomSheetFullCover = findViewById(R.id.full_sheet_cover)
+        val bottomSheetInlineLyricFrame: FrameLayout = findViewById(R.id.inline_lyric_frame)
+        val bottomSheetInlineLyricView: LyricsView = findViewById(R.id.inline_lyric_view)
+        bottomSheetLyricButton = findViewById(R.id.lyrics)
+        lyricPanelController = LyricPanelController(
+            fullLyricViewProvider = { bottomSheetFullLyricView },
+            inlineLyricFrame = bottomSheetInlineLyricFrame,
+            inlineLyricView = bottomSheetInlineLyricView,
+            coverFrame = bottomSheetFullCoverFrame,
+            lyricButton = bottomSheetLyricButton,
+            prefs = prefs,
+            contextProvider = { wrappedContext ?: context },
+            onFullPlayerVisibilityRequest = { visibilityDueToLyrics = it }
+        )
         bottomSheetFullTitle = findViewById(R.id.full_song_name)
         bottomSheetFullSubtitle = findViewById(R.id.full_song_artist)
         bottomSheetFullPreviousButton = findViewById(R.id.sheet_previous_song)
         bottomSheetFullControllerButton = findViewById(R.id.sheet_mid_button)
+        bottomSheetFullControllerButtonBg = findViewById(R.id.sheet_mid_button_bg)
         bottomSheetFullNextButton = findViewById(R.id.sheet_next_song)
         bottomSheetFullPosition = findViewById(R.id.position)
         bottomSheetFullDuration = findViewById(R.id.duration)
@@ -292,7 +319,6 @@ class FullBottomSheet
         bottomSheetPlaybackSpeedButton = findViewById(R.id.playback_speed)
         bottomSheetFavoriteButton = findViewById(R.id.favor)
         bottomSheetPlaylistButton = findViewById(R.id.playlist)
-        bottomSheetLyricButton = findViewById(R.id.lyrics)
         bottomSheetFullQualityDetails = findViewById(R.id.quality_details)
         refreshSettings(null)
         prefs.registerOnSharedPreferenceChangeListener(this)
@@ -302,7 +328,7 @@ class FullBottomSheet
 
                 GramophonePlaybackService.SERVICE_GET_LYRICS -> {
                     val parsedLyrics = instance?.getLyrics()
-                    bottomSheetFullLyricView.updateLyrics(parsedLyrics)
+                    lyricPanelController.updateLyrics(parsedLyrics)
                 }
 
                 GramophonePlaybackService.SERVICE_GET_AUDIO_FORMAT -> {
@@ -356,6 +382,52 @@ class FullBottomSheet
             }
         }
 
+        var startX = 0f
+        var startY = 0f
+        val touchSlop = ViewConfiguration.get(context).scaledTouchSlop
+        val swipeThresholdPx = SWIPE_THRESHOLD_DP.dpToPx(context)
+        bottomSheetFullCover.setOnTouchListener { v, event ->
+            if (!swipeToSwitchTrackEnabled) return@setOnTouchListener false
+            when (event.actionMasked) {
+                MotionEvent.ACTION_DOWN -> {
+                    startX = event.x
+                    startY = event.y
+                    true
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    val dx = event.x - startX
+                    val dy = event.y - startY
+                    if (abs(dx) > touchSlop && abs(dx) > abs(dy)) {
+                        v.parent?.requestDisallowInterceptTouchEvent(true)
+                    }
+                    true
+                }
+                MotionEvent.ACTION_UP -> {
+                    v.parent?.requestDisallowInterceptTouchEvent(false)
+                    val dx = event.x - startX
+                    val dy = event.y - startY
+                    val absDx = abs(dx)
+                    val absDy = abs(dy)
+                    if (absDx > absDy && absDx > swipeThresholdPx) {
+                        ViewCompat.performHapticFeedback(v, HapticFeedbackConstantsCompat.CONTEXT_CLICK)
+                        if (dx < 0) {
+                            instance?.seekToNext()
+                        } else {
+                            instance?.seekToPrevious()
+                        }
+                    } else {
+                        v.performClick()
+                    }
+                    true
+                }
+                MotionEvent.ACTION_CANCEL -> {
+                    v.parent?.requestDisallowInterceptTouchEvent(false)
+                    true
+                }
+                else -> true
+            }
+        }
+
         bottomSheetFullTitle.setOnClickListener {
             minimize?.invoke()
             activity.startFragment(GeneralSubFragment()) {
@@ -378,11 +450,9 @@ class FullBottomSheet
         }
 
         bottomSheetFullSubtitle.setOnClickListener {
+            val mediaItem = instance?.currentMediaItem ?: return@setOnClickListener
             minimize?.invoke()
-            activity.startFragment(ArtistSubFragment()) {
-                putString("Id", instance?.currentMediaItem?.mediaMetadata?.artistId?.toString())
-                putInt("Item", R.id.artist)
-            }
+            activity.navigateToArtistDialog(mediaItem)
         }
 
         bottomSheetTimerButton.setOnClickListener {
@@ -547,7 +617,7 @@ class FullBottomSheet
 
         bottomSheetLyricButton.setOnClickListener {
             ViewCompat.performHapticFeedback(it, HapticFeedbackConstantsCompat.CONTEXT_CLICK)
-            bottomSheetFullLyricView.fadInAnimation(LYRIC_FADE_TRANSITION_SEC)
+            lyricPanelController.onLyricButtonClicked()
         }
 
         bottomSheetShuffleButton.setOnClickListener {
@@ -589,12 +659,15 @@ class FullBottomSheet
                 Player.MEDIA_ITEM_TRANSITION_REASON_PLAYLIST_CHANGED
             )
             onMediaMetadataChanged(instance?.mediaMetadata ?: MediaMetadata.EMPTY)
+            val parsedLyrics = instance?.getLyrics()
+            lyricPanelController.updateLyrics(parsedLyrics)
             firstTime = false
         }
     }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
+        lyricPanelController.attachFullLyricView()
         val colorPrimary =
             MaterialColors.getColor(
                 context,
@@ -611,31 +684,66 @@ class FullBottomSheet
             ColorUtils.ColorType.COLOR_BACKGROUND_ELEVATED,
             context
         )
-        bottomSheetFullLyricView.updateTextColor(
-            androidx.core.graphics.ColorUtils.compositeColors(
-                androidx.core.graphics.ColorUtils.setAlphaComponent(colorPrimary, 77),
-                backgroundProcessedColor
-            ),
-            colorPrimary,
-            androidx.core.graphics.ColorUtils.compositeColors(
-                androidx.core.graphics.ColorUtils.setAlphaComponent(colorPrimary, 200),
-                backgroundProcessedColor
-            ),
+        val lyricsTextCol = androidx.core.graphics.ColorUtils.compositeColors(
+            androidx.core.graphics.ColorUtils.setAlphaComponent(colorPrimary, 77),
+            backgroundProcessedColor
         )
+        val lyricsHighlightTlCol = androidx.core.graphics.ColorUtils.compositeColors(
+            androidx.core.graphics.ColorUtils.setAlphaComponent(colorPrimary, 200),
+            backgroundProcessedColor
+        )
+        lyricPanelController.updateColors(lyricsTextCol, colorPrimary, lyricsHighlightTlCol)
         bottomSheetFullSeekBar.progressTintList = ColorStateList.valueOf(colorPrimary)
+        lyricPanelController.updateButtonTint()
+        shouldRotateCookieButton = instance?.isPlaying == true
+        syncButtonRotation()
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        // Cancel animator on detach; shouldRotateCookieButton is preserved so
+        // re-attach via onAttachedToWindow can resume correctly.
+        cookieRotationAnimator?.cancel()
+        cookieRotationAnimator = null
+    }
+
+    // Single authority for button rotation state.
+    // Callers only set shouldRotateCookieButton and call syncButtonRotation();
+    // rotateCookieButton (the pref) is checked exactly once, here.
+    private fun syncButtonRotation(reset: Boolean = false) {
+        if (rotateCookieButton && shouldRotateCookieButton) {
+            if (cookieRotationAnimator == null) {
+                val currentRotation = bottomSheetFullControllerButtonBg.rotation % 360f
+                cookieRotationAnimator = ObjectAnimator.ofFloat(
+                    bottomSheetFullControllerButtonBg,
+                    View.ROTATION,
+                    currentRotation,
+                    currentRotation + 360f
+                ).apply {
+                    duration = 40000L   // ~40 s/rev, aligned with TransformableImageView cover speed
+                    repeatCount = ValueAnimator.INFINITE
+                    interpolator = LinearInterpolator()
+                    start()
+                }
+            }
+        } else {
+            cookieRotationAnimator?.cancel()
+            cookieRotationAnimator = null
+            if (reset) bottomSheetFullControllerButtonBg.rotation = 0f
+        }
     }
 
     override fun onSaveInstanceState(): Parcelable {
         return Bundle().apply {
             putParcelable("Super", super.onSaveInstanceState())
-            putBoolean("Lyrics", bottomSheetFullLyricView.isVisible)
+            lyricPanelController.saveInstanceState(this)
         }
     }
 
     override fun onRestoreInstanceState(state: Parcelable?) {
         state as Bundle?
         if (state != null) {
-            bottomSheetFullLyricView.isVisible = state.getBoolean("Lyrics")
+            lyricPanelController.restoreInstanceState(state)
             super.onRestoreInstanceState(BundleCompat.getParcelable(state, "Super", AbsSavedState::class.java))
         } else {
             super.onRestoreInstanceState(null)
@@ -670,6 +778,7 @@ class FullBottomSheet
     }
 
     private fun refreshSettings(key: String?) {
+        lyricPanelController.onPreferenceChanged(key)
         if (key == null || key == "default_progress_bar") {
             if (prefs.getBooleanStrict("default_progress_bar", false)) {
                 bottomSheetFullSlider.visibility = VISIBLE
@@ -710,6 +819,13 @@ class FullBottomSheet
         }
         if (key == null || key == "cookie_cover") {
             bottomSheetFullCover.setClip(prefs.getBooleanStrict("cookie_cover", false))
+        }
+        if (key == null || key == "rotate_cookie_button") {
+            rotateCookieButton = prefs.getBooleanStrict("rotate_cookie_button", false)
+            syncButtonRotation(reset = !rotateCookieButton)
+        }
+        if (key == null || key == "swipe_to_switch_track") {
+            swipeToSwitchTrackEnabled = prefs.getBooleanStrict("swipe_to_switch_track", false)
         }
     }
 
@@ -1139,7 +1255,8 @@ class FullBottomSheet
             )
 
             val secondaryContainerTransition = ValueAnimator.ofArgb(
-                bottomSheetFullControllerButton.backgroundTintList!!.defaultColor,
+                bottomSheetFullControllerButtonBg.imageTintList?.defaultColor
+                    ?: colorSecondaryContainer,
                 colorSecondaryContainer
             )
 
@@ -1153,18 +1270,26 @@ class FullBottomSheet
                 colorContrastFainted
             )
 
+            val lyricTransition = lyricPanelController.createLyricButtonTransition(
+                colorOnSurface,
+                colorOnSurfaceVariant,
+                BACKGROUND_COLOR_TRANSITION_SEC
+            )
+
+            // The playlist button tint represents the single solid colorOnSurface from the previous transition,
+            // serving as an authoritative monochrome start value (the lyrics button uses a 2-state selector in inline mode).
             val colorOnSurfaceTransition = ValueAnimator.ofArgb(
-                bottomSheetLyricButton.iconTint.defaultColor,
+                bottomSheetPlaylistButton.iconTint.defaultColor,
                 colorOnSurface
             )
 
             val lyricTextColorTransition = ValueAnimator.ofArgb(
-                bottomSheetFullLyricView.defaultTextColor,
+                lyricPanelController.defaultTextColor,
                 lyricsTextColor
             )
 
             val lyricHighlightTlColorTransition = ValueAnimator.ofArgb(
-                bottomSheetFullLyricView.highlightTlTextColor,
+                lyricPanelController.highlightTlTextColor,
                 lyricsHighlightTlColor
             )
 
@@ -1200,7 +1325,7 @@ class FullBottomSheet
                     setBackgroundColor(
                         animation.animatedValue as Int
                     )
-                    bottomSheetFullLyricView.setBackgroundColor(
+                    lyricPanelController.setFullLyricBackgroundColor(
                         animation.animatedValue as Int
                     )
                 }
@@ -1218,7 +1343,7 @@ class FullBottomSheet
                         ColorStateList.valueOf(progressColor)
                     bottomSheetFullSeekBar.thumbTintList =
                         ColorStateList.valueOf(progressColor)
-                    bottomSheetFullLyricView.updateHighlightColor(progressColor)
+                    lyricPanelController.updateHighlightColor(progressColor)
                 }
                 duration = BACKGROUND_COLOR_TRANSITION_SEC
             }
@@ -1226,7 +1351,7 @@ class FullBottomSheet
             secondaryContainerTransition.apply {
                 addUpdateListener { animation ->
                     val progressColor = animation.animatedValue as Int
-                    bottomSheetFullControllerButton.backgroundTintList =
+                    bottomSheetFullControllerButtonBg.imageTintList =
                         ColorStateList.valueOf(progressColor)
                 }
                 duration = BACKGROUND_COLOR_TRANSITION_SEC
@@ -1259,8 +1384,6 @@ class FullBottomSheet
                         ColorStateList.valueOf(progressColor)
                     bottomSheetPlaylistButton.iconTint =
                         ColorStateList.valueOf(progressColor)
-                    bottomSheetLyricButton.iconTint =
-                        ColorStateList.valueOf(progressColor)
                     bottomSheetFullNextButton.iconTint =
                         ColorStateList.valueOf(progressColor)
                     bottomSheetFullPreviousButton.iconTint =
@@ -1274,7 +1397,7 @@ class FullBottomSheet
             lyricTextColorTransition.apply {
                 addUpdateListener { animation ->
                     val progressColor = animation.animatedValue as Int
-                    bottomSheetFullLyricView.updateTextColor(progressColor)
+                    lyricPanelController.updateTextColor(progressColor)
                 }
                 duration = BACKGROUND_COLOR_TRANSITION_SEC
             }
@@ -1282,7 +1405,7 @@ class FullBottomSheet
             lyricHighlightTlColorTransition.apply {
                 addUpdateListener { animation ->
                     val progressColor = animation.animatedValue as Int
-                    bottomSheetFullLyricView.updateHighlightTlColor(progressColor)
+                    lyricPanelController.updateHighlightTlColor(progressColor)
                 }
                 duration = BACKGROUND_COLOR_TRANSITION_SEC
             }
@@ -1318,6 +1441,7 @@ class FullBottomSheet
                 onSecondaryContainerTransition.start()
                 colorContrastFaintedTransition.start()
                 colorOnSurfaceTransition.start()
+                lyricTransition.start()
                 lyricTextColorTransition.start()
                 lyricHighlightTlColorTransition.start()
                 loopTransition.start()
@@ -1332,6 +1456,7 @@ class FullBottomSheet
                 onSecondaryContainerTransition.awaitEnd()
                 colorContrastFaintedTransition.awaitEnd()
                 colorOnSurfaceTransition.awaitEnd()
+                lyricTransition.awaitEnd()
                 lyricTextColorTransition.awaitEnd()
                 lyricHighlightTlColorTransition.awaitEnd()
                 loopTransition.awaitEnd()
@@ -1343,14 +1468,14 @@ class FullBottomSheet
         currentJob = null
         postOnAnimation {
             setBackgroundColor(backgroundProcessedColor)
-            bottomSheetFullLyricView.setBackgroundColor(backgroundProcessedColor)
+            lyricPanelController.setFullLyricBackgroundColor(backgroundProcessedColor)
             bottomSheetFullTitle.setTextColor(
                 colorPrimary
             )
             bottomSheetFullSubtitle.setTextColor(
                 colorSecondary
             )
-            bottomSheetFullControllerButton.backgroundTintList =
+            bottomSheetFullControllerButtonBg.imageTintList =
                 ColorStateList.valueOf(colorSecondaryContainer)
             bottomSheetFullControllerButton.iconTint =
                 ColorStateList.valueOf(colorOnSecondaryContainer)
@@ -1372,7 +1497,7 @@ class FullBottomSheet
             bottomSheetFullQualityDetails.setTextColor(
                 colorOnSurfaceVariant
             )
-            bottomSheetFullLyricView.updateTextColor(
+            lyricPanelController.updateColors(
                 lyricsTextColor,
                 colorPrimary,
                 lyricsHighlightTlColor,
@@ -1388,8 +1513,7 @@ class FullBottomSheet
                 selectorBackground
             bottomSheetLoopButton.iconTint =
                 selectorBackground
-            bottomSheetLyricButton.iconTint =
-                ColorStateList.valueOf(colorOnSurface)
+            lyricPanelController.updateButtonTint()
             bottomSheetFavoriteButton.iconTint =
                 selectorFavBackground
 
@@ -1478,7 +1602,7 @@ class FullBottomSheet
                     min(instance?.currentPosition?.toFloat() ?: 0f, bottomSheetFullSlider.valueTo)
                 bottomSheetFullPosition.text = position
             }
-            bottomSheetFullLyricView.updateLyricPositionFromPlaybackPos()
+            lyricPanelController.syncPlaybackPosition()
         }
     }
 
@@ -1537,10 +1661,11 @@ class FullBottomSheet
                         wrappedContext ?: context,
                         R.drawable.play_anim
                     )
-                bottomSheetFullControllerButton.background =
+                bottomSheetFullControllerButtonBg.setImageDrawable(
                     AppCompatResources.getDrawable(context, R.drawable.bg_play_anim)
+                )
                 bottomSheetFullControllerButton.icon.startAnimation()
-                bottomSheetFullControllerButton.background.startAnimation()
+                bottomSheetFullControllerButtonBg.drawable?.startAnimation()
                 bottomSheetFullControllerButton.setTag(R.id.play_next, 1)
             }
             if (!isUserTracking) {
@@ -1551,19 +1676,24 @@ class FullBottomSheet
                 handler.postDelayed(positionRunnable, SLIDER_UPDATE_INTERVAL)
             }
             bottomSheetFullCover.startRotation()
+            shouldRotateCookieButton = true
+            syncButtonRotation()
         } else if (playbackState != Player.STATE_BUFFERING) {
+            bottomSheetFullCover.stopRotation()
+            shouldRotateCookieButton = false
+            syncButtonRotation()
             if (bottomSheetFullControllerButton.getTag(R.id.play_next) as Int? != 2) {
                 bottomSheetFullControllerButton.icon =
                     AppCompatResources.getDrawable(
                         wrappedContext ?: context,
                         R.drawable.pause_anim
                     )
-                bottomSheetFullControllerButton.background =
+                bottomSheetFullControllerButtonBg.setImageDrawable(
                     AppCompatResources.getDrawable(context, R.drawable.bg_pause_anim)
+                )
                 bottomSheetFullControllerButton.icon.startAnimation()
-                bottomSheetFullControllerButton.background.startAnimation()
+                bottomSheetFullControllerButtonBg.drawable?.startAnimation()
                 bottomSheetFullControllerButton.setTag(R.id.play_next, 2)
-                bottomSheetFullCover.stopRotation()
             }
             if (!isUserTracking) {
                 progressDrawable.animate = false
@@ -1602,7 +1732,7 @@ class FullBottomSheet
                     min(instance?.currentPosition?.toFloat() ?: 0f, bottomSheetFullSlider.valueTo)
                 bottomSheetFullPosition.text = position
             }
-            bottomSheetFullLyricView.updateLyricPositionFromPlaybackPos()
+            lyricPanelController.syncPlaybackPosition()
             if (instance?.isPlaying == true && runnableRunning) {
                 handler.postDelayed(this, SLIDER_UPDATE_INTERVAL)
             } else {

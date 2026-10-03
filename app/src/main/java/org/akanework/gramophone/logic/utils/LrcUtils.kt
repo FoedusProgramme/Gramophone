@@ -44,7 +44,12 @@ object LrcUtils {
         SRT
     }
 
-    data class LrcParserOptions(val trim: Boolean, val multiLine: Boolean, val errorText: String?)
+    data class LrcParserOptions(
+        val trim: Boolean,
+        val multiLine: Boolean,
+        val errorText: String?,
+        val bracketWordSync: Boolean = false
+    )
 
     @VisibleForTesting
     fun parseLyrics(
@@ -63,7 +68,7 @@ object LrcUtils {
             else null
         }, {
             if (format == null || format == LyricFormat.LRC)
-                parseLrc(lyrics, parserOptions.trim, parserOptions.multiLine)
+                parseLrc(lyrics, parserOptions.trim, parserOptions.multiLine, parserOptions.bracketWordSync)
             else null
         })) {
             return try {
@@ -177,7 +182,7 @@ object LrcUtils {
             }
             val hasWords = it.text.find { it.words != null } != null
             val hasTl = it.text.find { it.isTranslated } != null
-            if (hasWords) 10 else 0 + if (hasTl) 1 else 0
+            (if (hasWords) 10 else 0) + (if (hasTl) 1 else 0)
         }
         return out
     }

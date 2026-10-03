@@ -56,6 +56,7 @@ import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.ui.BugHandlerActivity
 import org.akanework.gramophone.logic.utils.CoilArtPipeline
 import org.akanework.gramophone.ui.LyricWidgetProvider
+import uk.akane.libphonograph.utils.TagSplitter
 import org.lsposed.hiddenapibypass.HiddenApiBypass
 import org.lsposed.hiddenapibypass.LSPass
 import org.nift4.gramophone.hificore.UacManager
@@ -96,6 +97,8 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
     val shouldUseEnhancedCoverReadingFlow = if (hasScopedStorageWithMediaTypes()) null else
         MutableSharedFlow<Boolean?>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     val recentlyAddedFilterSecondFlow = MutableStateFlow(1_209_600L)
+    val tagSplitConfigFlow = MutableSharedFlow<TagSplitter.TagSplitConfig>(replay = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST)
     val extraDisallowedFolders = setOf(
         Environment.DIRECTORY_RINGTONES,
         Environment.DIRECTORY_NOTIFICATIONS,
@@ -244,7 +247,8 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
             whiteListSetFlow,
             if (hasScopedStorageWithMediaTypes()) MutableStateFlow(null) else
                 shouldUseEnhancedCoverReadingFlow!!,
-            recentlyAddedFilterSecondFlow
+            recentlyAddedFilterSecondFlow,
+            tagSplitConfigFlow
         )
         // Set application theme when launching.
         when (themeMode) {
@@ -317,6 +321,15 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
             }
             if ((key == null || key == "album_covers") && !hasScopedStorageWithMediaTypes()) {
                 shouldUseEnhancedCoverReadingFlow!!.emit(prefs.getBoolean("album_covers", true))
+            }
+            if (key == null ||
+                key == TagSplitter.PREF_MULTI_ARTIST_ENABLED ||
+                key == TagSplitter.PREF_MULTI_GENRE_ENABLED ||
+                key == TagSplitter.PREF_SPLIT_ARTIST_SYMBOLS ||
+                key == TagSplitter.PREF_SPLIT_ARTIST_WORDS ||
+                key == TagSplitter.PREF_SPLIT_GENRE_SYMBOLS
+            ) {
+                tagSplitConfigFlow.emit(TagSplitter.getTagSplitConfig(prefs))
             }
         }
     }
@@ -403,7 +416,8 @@ class GramophoneApplication : Application(), SingletonImageLoader.Factory,
     private fun isColorOS(): Boolean {
         val props = listOf(
             "ro.build.version.opporom",
-            "ro.oplus.os.version"
+            "ro.oplus.os.version",
+            "ro.build.version.realmeui"
         )
         return props.any {
             !getSystemProperty(it).isNullOrBlank()

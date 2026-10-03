@@ -32,6 +32,7 @@ import androidx.media3.common.MediaItem
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.akanework.gramophone.R
+import uk.akane.libphonograph.items.matchesSearch
 
 class SearchSuggestionsProvider : ContentProvider() {
     override fun delete(
@@ -94,18 +95,7 @@ class SearchSuggestionsProvider : ContentProvider() {
         val text = text.trim()
         val list = context!!.gramophoneApplication.reader.songListFlow.first()
         // TODO support focus and sub queries (see MainActivity)
-        return if (text == "") list else list.filter {
-            // TODO sort results by match quality? (using raw=natural order)
-            // TODO this is copied directly from SearchFragment and GramophonePlaybackService,
-            //  it should be deduplicated
-            val isMatchingTitle =
-                it.mediaMetadata.title?.contains(text, true) == true
-            val isMatchingAlbum =
-                it.mediaMetadata.albumTitle?.contains(text, true) == true
-            val isMatchingArtist =
-                it.mediaMetadata.artist?.contains(text, true) == true
-            isMatchingTitle || isMatchingAlbum || isMatchingArtist
-        }
+        return if (text == "") list else list.filter { it.matchesSearch(text) }
     }
 
     private fun queryCachedShortcut(id: Long): Cursor {

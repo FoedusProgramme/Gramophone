@@ -124,7 +124,7 @@ class EndedWorkaroundPlayer(
         }
         if (superState.playWhenReady && superState.playbackState != STATE_ENDED && superState.playbackState != STATE_IDLE) {
             val notifLyric = getNotificationLyric()
-            if (!notifLyric.isNullOrBlank()) {
+            if (notifLyric != null) {
                 val origTitle = superState.currentMetadata.title?.toString() ?: ""
                 val origArtist = superState.currentMetadata.artist?.toString() ?: ""
                 val subtitle = if (origArtist.isNotBlank() && origTitle.isNotBlank()) {
@@ -171,17 +171,21 @@ class EndedWorkaroundPlayer(
                                     )
                                     // This can parse some odd Netease-specific JSON list or normal
                                     // LRC without bells and whistles (fwiw, the Netease format is
-                                    // not even better than plain LRC), no word sync as of right now
+                                    // not even better than plain LRC), no word sync as of right now.
+                                    // Note: distinctBy { it.start / 10uL } guarantees strictly monotonic
+                                    // centisecond timestamps required by OEM lockscreen parsers, dropping
+                                    // duplicated timestamps or degenerate identical-start segments for the
+                                    // lockscreen bundle while internal full lyrics remain untouched.
                                     put(
-                                        "lyric", lyric.text.joinToString(
-                                            "\n"
-                                        ) {
-                                            val s = it.start.toLong() / 1000
-                                            "[%02d:%02d.%02d]".format(
-                                                s / 60, s % 60,
-                                                (it.start.toLong() % 1000) / 10
-                                            ) + it.text
-                                        })
+                                        "lyric", lyric.text.filter { !it.isTranslated }
+                                            .distinctBy { it.start / 10uL }
+                                            .joinToString("\n") {
+                                                val s = it.start.toLong() / 1000
+                                                "[%02d:%02d.%02d]".format(
+                                                    s / 60, s % 60,
+                                                    (it.start.toLong() % 1000) / 10
+                                                ) + it.text
+                                            })
                                 }.toString())
                             }).build()
                     ).build()
