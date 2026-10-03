@@ -36,6 +36,7 @@ import org.akanework.gramophone.logic.ui.DefaultItemHeightHelper
 import org.akanework.gramophone.logic.ui.MyRecyclerView
 import org.akanework.gramophone.ui.adapters.AlbumAdapter
 import org.akanework.gramophone.ui.adapters.SongAdapter
+import uk.akane.libphonograph.items.findArtist
 
 /**
  * ArtistSubFragment:
@@ -65,24 +66,29 @@ class ArtistSubFragment : BaseFragment(true), PopupTextProvider {
         val appBarLayout = rootView.findViewById<AppBarLayout>(R.id.appbarlayout)
         appBarLayout.enableEdgeToEdgePaddingListener()
 
-        val id = requireArguments().getString("Id")?.toLong()
+        val id = requireArguments().getString("Id")?.toLongOrNull()
+        val name = requireArguments().getString("Name")
         val itemType = requireArguments().getInt("Item")
         recyclerView = rootView.findViewById(R.id.recyclerview)
 
         val item = mainActivity.reader.let {
             if (itemType == R.id.album_artist)
                 it.albumArtistListFlow else it.artistListFlow
-        }.map { it.find { it.id == id } }
-        val title = item.map { it?.title ?: requireContext().getString(R.string.unknown_artist) }
+        }.map { list ->
+            list.findArtist(id = id, name = name)
+        }
+        val title = item.map { it?.title ?: name ?: requireContext().getString(R.string.unknown_artist) }
+        val albumsFlow = item.map { it?.albumList ?: emptyList() }
+        val songsFlow = item.map { it?.songList ?: emptyList() }
         albumAdapter = AlbumAdapter(
-            this, title, item.map { it?.albumList },
+            this, title, albumsFlow,
             isSubFragment = itemType
         )
         albumAdapter.decorAdapter.jumpDownPos = { albumAdapter.concatAdapter.itemCount }
         songAdapter = SongAdapter(
             this,
             title,
-            item.map { it?.songList },
+            songsFlow,
             isSubFragment = itemType
         )
         songAdapter.decorAdapter.jumpUpPos = { 0 }
