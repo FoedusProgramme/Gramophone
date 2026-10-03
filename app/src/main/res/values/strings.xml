@@ -261,6 +261,10 @@
     <string name="settings_lyrics_configuration">Lyrics configuration</string>
     <!-- Settings subcategory in player UI settings about the lyrics feature. Subtext -->
     <string name="settings_lyrics_configuration_summary">Configure lyrics appearance</string>
+    <!-- Toggle in lyrics settings to display lyrics in fullscreen mode. Title -->
+    <string name="settings_lyrics_fullscreen">Fullscreen lyrics</string>
+    <!-- Toggle in lyrics settings to display lyrics in fullscreen mode. Subtext -->
+    <string name="settings_lyrics_fullscreen_summary">Display lyrics panel in fullscreen mode</string>
     <!-- Toggle in lyrics settings to make all lyrics bold. Title -->
     <string name="settings_lyrics_bold">Bold lyrics</string>
     <!-- Toggle in lyrics settings to make all lyrics bold. Subtext -->
