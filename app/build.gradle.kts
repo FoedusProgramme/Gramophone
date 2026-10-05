@@ -80,8 +80,6 @@ android {
             pickFirsts += "lib/x86_64/libdlfunc.so"
         }
         resources {
-            // https://issuetracker.google.com/issues/152898926#comment7
-            excludes += "META-INF/*.version"
             // https://github.com/Kotlin/kotlinx.coroutines?tab=readme-ov-file#avoiding-including-the-debug-infrastructure-in-the-resulting-apk
             excludes += "DebugProbesKt.bin"
             // covered by AboutLicenses instead
