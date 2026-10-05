@@ -35,7 +35,6 @@
     <string name="shuffle">درهم</string>
     <string name="settings_category_appearance">نمایه</string>
     <string name="repeat_mode">حالت تکرار</string>
-    <string name="unknown_version">نسخه ناشناخته</string>
     <string name="settings_category_behavior">رفتار</string>
     <string name="dialog_title">عنوان</string>
     <string name="settings_version">نسخه</string>
@@ -58,7 +57,6 @@
     <string name="settings_default_progress_bar_summary">به کار انداختن سبک material برای نوار پیشرفت</string>
     <string name="playlist_favourite">پسندیده‌ها</string>
     <string name="no_lyric_found">متن‌ترانه یافت نشد</string>
-    <string name="now_playing">در حال پخش</string>
     <string name="settings_package_type">گونۀ بسته</string>
     <string name="unknown_title">نام ناشناخته</string>
     <string name="settings_appearance_summary">ظاهر برنامه، حالت‌های زمینه</string>
@@ -70,10 +68,7 @@
     <string name="settings_title_center_summary">بکاربردن نام وسط‌چین در پخش کنندۀ کامل</string>
     <string name="settings_player_options">صدا</string>
     <string name="settings_behavior_summary">پالایه‌ها، رفتار اجرا</string>
-    <string name="settings_library">کتابخانه</string>
     <string name="settings_category_links">پیوندها</string>
-    <string name="settings_library_summary">مدیریت کتابخانۀ رسانه</string>
-    <string name="settings_customization_summary">مدیریت گزینه‌های شخصی‌سازی</string>
     <string name="settings_title_bold">نام درشت</string>
     <string name="settings_color_accuracy">دقت رنگ</string>
     <string name="settings_experimental_settings">آزمایشی</string>
@@ -94,7 +89,6 @@
     <string name="settings_category_full_player">پخش کنندۀ کامل</string>
     <string name="settings_category_misc">متفرقه</string>
     <string name="crash_clipboard">گزارش ازکار افتادن در کلیپ‌بورد ذخیره شد</string>
-    <string name="dialog_edit_metadata">ویرایش</string>
     <string name="dialog_lyrics">ترانه‌ها</string>
     <string name="deny_images"><![CDATA[لطفا اجازۀ دسترسی به «تصاویر و ویدیوها» را نپذیرید]]></string>
     <string name="settings_trim_lyrics">برداشتن فاصله‌های اطراف ترانه‌ها</string>
@@ -114,7 +108,6 @@
     <string name="settings_blacklist_folder">شاخه‌های فهرست سیاه</string>
     <string name="check_for_updates">کانال ما را برای به‌روز رسانی‌ها بررسی کنید!</string>
     <string name="settings_crash_application_summary">Crash-O-Matic ۳۰۰۰</string>
-    <string name="settings_customization">شخصی‌سازی</string>
     <string name="dark">تیره</string>
     <plurals name="artists">
         <item quantity="one">%d هنرمند</item>
@@ -124,7 +117,6 @@
     <string name="details">ریزگان</string>
     <string name="settings_player_ui_summary">رابط کاربری پخش‌کننده، ترانه‌ها</string>
     <string name="dialog_genre">سبک</string>
-    <string name="compact_list">فهرست (جمع و جور)</string>
     <string name="opensource_info">متن‌باز شده با قوانین GPL-3.0\nگواهی پخش %s</string>
     <string name="settings_player_options_summary">کیفیت خروجی، رفتار پخش کننده</string>
     <string name="category_playlists">فهرست‌های پخش</string>
@@ -133,7 +125,6 @@
     <string name="grant_images"><![CDATA[لطفا اجازۀ دسترسی به «تصاویر و ویدیوها» را بپذیرید]]></string>
     <string name="home_menu_refresh">بازخوانی</string>
     <string name="refreshed_songs">%1$d آهنگ بازخوانی شد</string>
-    <string name="home_menu_search">جست‌وجو</string>
     <string name="settings_experimental_settings_summary">قابلیت‌های آزمایشی، متفرقه</string>
     <string name="dialog_track_number">شمارۀ اثر</string>
     <string name="unknown_playlist">فهرست پخش ناشناخته</string>
@@ -152,24 +143,14 @@
     <string name="grant_audio"><![CDATA[لطفا اجازۀ دسترسی به «صدا و موسیقی» را بپذیرید]]></string>
     <string name="play">پخش</string>
     <string name="more">بیشتر</string>
-    <string name="play_all">پخش همه</string>
     <string name="shuffle_all">درهم کردن همه</string>
-    <string name="sort">چینش</string>
-    <string name="back">برگشت</string>
-    <string name="scroll_to_albums">‍لغزش به آلبوم‌ها</string>
-    <string name="seekbar">نوار جویش</string>
-    <string name="divider">جداگر</string>
     <string name="tab_order">پیکربندی چینش زبانه‌ها</string>
     <string name="tab_order_summary">برنامه هنگام شروع اولین زبانه را نشان خواهد داد. زبانه‌های پس از جداگر مخفی خواهند شد.</string>
-    <string name="remove">برداشتن</string>
     <string name="skip_next">رد کردن به بعدی</string>
     <string name="expand_less">بستن</string>
     <string name="skip_previous">رد کردن به قبلی</string>
-    <string name="scroll_to_songs">لغزش به آهنگ‌ها</string>
     <string name="settings_preference_category_home">صفحه اصلی</string>
     <string name="position_slider">لغزندۀ موقعیت</string>
-    <string name="settings_lyrics_ui">به کار انداختن رابط کاربری جدید ترانه</string>
-    <string name="settings_lyrics_ui_summary">رابط کاربری آزمایشی برای نمایش ترانۀ کلمه‌به‌کلمه با قابلیت‌های پیشرفته</string>
     <string name="home_menu_shuffle">بُر زدن همه</string>
     <string name="settings_status_bar_lyrics_title">ترانۀ نوار وضعیت</string>
     <string name="settings_status_bar_lyrics_summary">به کار انداختن روش نمایشی ترانۀ MeiZu در نوار وضعیت (فقط در بعضی دستگاه‌ها در دسترس است)</string>
@@ -368,8 +349,6 @@
     <string name="spk_encoding_aac_adts_lc">AAC-LC در ADTS</string>
     <string name="spk_encoding_aac_latm_he_v1">HE-AAC v1 در LATM</string>
     <string name="spk_encoding_aac_adts_erlc">AAC-ERLC در ADTS</string>
-    <string name="audio_signal_chain">زنجیرۀ سیگنال صدا</string>
-    <string name="audio_not_initialized">سامانۀ پخش صدا مقداردهی نشده است. پخش کردن چیزی را امتحان کنید!</string>
     <string name="failed_to_parse_lyric">تجزیۀ ترانه شکست خورد</string>
     <string name="mix_port_flag_incall_music">آهنگ هنگام-تماس</string>
     <string name="crash_report">گزارش کار افتادن</string>
@@ -392,7 +371,6 @@
     <string name="playlist_name">نام فهرست پخش</string>
     <string name="rename_playlist">تغییر نام فهرست پخش</string>
     <string name="add_to_playlist">افزودن به فهرست پخش</string>
-    <string name="enter_msg_for_dev_here">این‌جا پیام را برای توسعه‌دهنده وارد کنید</string>
     <string name="do_not_enter_email_enter_msg">پیام را وارد کنید، نه نشانی ایمیل</string>
     <string name="create_failed_playlist">ایجاد فهرست پخش شکست خورد: %s</string>
     <string name="edit_playlist_failed">ویرایش فهرست پخش شکست خورد: %s</string>
@@ -402,16 +380,6 @@
     <string name="delete_failed_playlist">پاک کردن فهرست پخش شکست خورد: %s</string>
     <string name="rename">تغییر نام</string>
     <string name="no_app_found">هیچ برنامه‌ای پیدا نشد که بتواند این کار را انجام دهد</string>
-    <string name="contributors_nift4">نگه‌دارنده / توسعه‌دهندۀ راهبر</string>
-    <string name="contributors_123duo3">طراح راهبر</string>
-    <string name="contributors_akanetan">سازندۀ اصلی، توسعه‌دهندۀ بازنشسته</string>
-    <string name="contributors_developer">توسعه‌دهنده</string>
-    <string name="contributors_wstxda">طراحی یک نگارش از آیکون برنامه</string>
-    <string name="contributors_pxeemo">کمک و آزمایش ترانه‌های جدید</string>
-    <string name="contributors_lambada10">ارائۀ نمونه‌های ترانه و SongSync</string>
-    <string name="contributors_code_contributions">مشارکت در کدها</string>
-    <string name="contributors_yuyuko1024">نوار پیشرفت مواج</string>
-    <string name="contributors_ghhccghk">ترانه‌های نوار وضعیت و بهبودهای دیگر</string>
     <string name="home_menu_quick_refresh">بازخوانی سریع</string>
     <string name="add_to_queue">افزودن به صف</string>
     <string name="app_name">گرامافون</string>
@@ -424,7 +392,6 @@
         <item quantity="one">%d پوشه</item>
         <item quantity="other">%d پوشه</item>
     </plurals>
-    <string name="timer_expiry_eos">زمان‌سنج خواب وقتی پخش آهنگ در %s به پایان برسد موسیقی را متوقف خواهد کرد</string>
     <string name="timer_expiry_end_of_this_song">زمان‌سنج خواب در پایان این آهنگ موسیقی را متوقف خواهد کرد</string>
     <string name="spk_encoding_pcm_20bit">PCM ‫۲۰-بیت</string>
     <string name="settings_cookie_summary">جلد آلبوم کلوچه‌ای شکل شود</string>
@@ -433,11 +400,10 @@
     <string name="settings_stop_on_dismiss">توقف در هنگام رد کردن</string>
     <string name="settings_stop_on_dismiss_summary">توقف پخش وقتی که برنامه از موارد اخیر برداشته می‌شود</string>
     <string name="spk_encoding_pcm_20bit_big_endian">PCM ‫۲۰-بیت ‬(big endian)</string>
-    <string name="sort_by_album_artist_year"><![CDATA[هنرمند آلبوم -&gt; سال]]></string>
+    <string name="sort_by_album_artist_year"><![CDATA[هنرمند آلبوم -> سال]]></string>
     <string name="compact_grid">شبکه‌ای (جمع و جور)</string>
     <string name="sort_by_album_year">سال آلبوم</string>
     <string name="forbidden_symbol_error">کاراکتر نامعتبر در نام</string>
-    <string name="translators">مترجمان</string>
     <string name="settings_replaygain">هم‌بلندساز</string>
     <string name="settings_replaygain_mode">حالت</string>
     <string name="settings_replaygain_preamp">پیش‌تقویت‌کننده</string>
@@ -449,7 +415,6 @@
     <string name="reset">بازنشانی</string>
     <string name="delete_really_artist">مطمئنید که می‌خواهید همۀ آوازهای توسط «%s» را حذف کنید؟ این کار غیرقابل بازگشت است.</string>
     <string name="edit_favorites_failed">ویرایش پسندیده‌ها شکست خورد: %s</string>
-    <string name="contributors_saladnoober">تضمین کیفیت</string>
     <string name="track_gain">بلندی برابر همۀ قطعه‌ها</string>
     <string name="tempo">تمپو</string>
     <string name="pitch">پیچ</string>
@@ -465,7 +430,7 @@
     <string name="settings_replaygain_no_rg_amp_desc">کاهش صدا برای آهنگ‌های بلندی که برچسب ReplayGain ندارند</string>
     <string name="settings_replaygain_preamp_desc">افزایش یا کاهش بلندی آهنگ‌هایی که دارای برچسب ReplayGain هستند. مقادیر بالاتر ممکن است باعث از دست رفتن پویایی صدا شود، زیرا برای جلوگیری از برش و اعوجاج صدا (clipping) عمل می‌کند.</string>
     <string name="settings_replaygain_mode_desc">«هوشمند» به طور خودکار پویایی آلبوم را فقط زمانی حفظ می‌کند که آهنگ‌های یک آلبوم به صورت متوالی پخش شوند.</string>
-    <string name="sort_by_artist_year"><![CDATA[هنرمند -&gt; سال]]></string>
+    <string name="sort_by_artist_year"><![CDATA[هنرمند -> سال]]></string>
     <string name="clear_queue">پاک کردن صف</string>
     <string name="actions_query_shuffle_all_songs">بر زدن همۀ آهنگ‌ها</string>
     <string name="actions_query_shuffle_everything">بر زدن همه‌چیز</string>
@@ -484,7 +449,6 @@
     <string name="save">ذخیره کردن</string>
     <string name="discard">نادیده گرفتن</string>
     <string name="discard_changes_msg">واقعا میخواهید تغییرات در فهرست پخش «%s» را نادیده بگیرید؟</string>
-    <string name="apply">پیاده‌سازی</string>
     <string name="restore_edits">بازگردانی تغییرات؟</string>
     <string name="restore_edits_msg">تغییرات ذخیره‌نشده‌ای در فهرست پخش «%s» وجود دارد. آیا می‌خواهید این تغییرات را بازیابی کنید، یا آن‌ها را رد کنید و از نو با یک نسخه جدید شروع کنید؟</string>
     <string name="restore">بازگرداندن</string>

@@ -17,38 +17,45 @@
 
 package org.akanework.gramophone.logic.ui
 
+import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
-import android.content.res.Configuration
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.preference.PreferenceManager
+import android.provider.Settings
+import android.widget.Toast
+import androidx.activity.ComponentActivity
+import androidx.core.net.toUri
 import org.akanework.gramophone.R
-import org.akanework.gramophone.logic.getBooleanStrict
+import org.akanework.gramophone.logic.defaultPrefs
+import org.akanework.gramophone.ui.theme.overrideConfiguration
+import org.akanework.gramophone.ui.theme.themeMode
 
-open class BaseActivity : AppCompatActivity() {
+open class BaseActivity : ComponentActivity() {
     lateinit var prefs: SharedPreferences
-    private val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
-        if (key == "pureDark" && (resources.configuration.uiMode and
-                    Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        ) {
-            recreate()
-        }
+
+    override fun attachBaseContext(newBase: Context) {
+        val override = newBase.defaultPrefs.themeMode().overrideConfiguration()
+        super.attachBaseContext(
+            if (override == null) newBase else newBase.createConfigurationContext(override)
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
-        if (prefs.getBooleanStrict("pureDark", false) &&
-            (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
-            Configuration.UI_MODE_NIGHT_YES
-        ) {
-            setTheme(R.style.Theme_Gramophone_PureDark)
-        }
-        prefs.registerOnSharedPreferenceChangeListener(listener)
+        prefs = defaultPrefs
         super.onCreate(savedInstanceState)
     }
 
-    override fun onDestroy() {
-        prefs.unregisterOnSharedPreferenceChangeListener(listener)
-        super.onDestroy()
+    /** Asks for audio permission in the app's settings instead, and closes the screen. */
+    protected open fun onLibraryPermissionDenied() {
+        openAppSettingsForAudio()
+        finish()
+    }
+
+    /** Tells the user to grant audio access and opens the app's system settings page for it. */
+    protected fun openAppSettingsForAudio() {
+        Toast.makeText(this, getString(R.string.grant_audio), Toast.LENGTH_LONG).show()
+        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+        intent.setData("package:$packageName".toUri())
+        startActivity(intent)
     }
 }

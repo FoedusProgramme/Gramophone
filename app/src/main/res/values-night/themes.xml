@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <style name="Base.Theme.Gramophone" parent="android:Theme.Material.NoActionBar" />
     <style name="Theme.Splash" parent="Night.Theme.Splash" />
 </resources>

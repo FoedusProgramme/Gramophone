@@ -35,7 +35,10 @@ import androidx.media3.session.SessionCommand
 import androidx.media3.session.SessionResult
 import androidx.media3.session.SessionToken
 import com.google.common.util.concurrent.ListenableFuture
-import org.akanework.gramophone.logic.GramophoneApplication
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
 import org.akanework.gramophone.logic.GramophonePlaybackService
 import org.akanework.gramophone.logic.utils.LifecycleCallbackListImpl
 import java.util.concurrent.ExecutionException
@@ -43,7 +46,7 @@ import java.util.concurrent.ExecutionException
 class MediaControllerViewModel(application: Application) : AndroidViewModel(application),
     DefaultLifecycleObserver, MediaBrowser.Listener {
 
-    private val context: GramophoneApplication
+    private val context: Application
         get() = getApplication()
     private val mainExecutor = ContextCompat.getMainExecutor(application)
     private var controllerLifecycle: LifecycleHost? = null
@@ -56,6 +59,12 @@ class MediaControllerViewModel(application: Application) : AndroidViewModel(appl
         get() = customCommandListenersImpl.toBaseInterface()
     val connectionListeners
         get() = connectionListenersImpl.toBaseInterface()
+    // Unlike connectionListeners, not tied to (and released with) the activity lifecycle.
+    private val connected = MutableStateFlow<MediaBrowser?>(null)
+
+    /** The connected controller, null while there's none (the activity is stopped, say). */
+    val connection: StateFlow<MediaBrowser?>
+        get() = connected
 
     override fun onStart(owner: LifecycleOwner) {
         val sessionToken =
@@ -99,6 +108,7 @@ class MediaControllerViewModel(application: Application) : AndroidViewModel(appl
                                 instance?.release()
                             } else {
                                 lc.lifecycleRegistry.currentState = Lifecycle.State.CREATED
+                                connected.value = instance
                                 connectionListenersImpl.dispatch { it(instance, lc.lifecycle) }
                             }
                         }, mainExecutor
@@ -136,6 +146,12 @@ class MediaControllerViewModel(application: Application) : AndroidViewModel(appl
         }
     }
 
+    /**
+     * Suspends until the controller is connected (possibly after the activity is recreated or
+     * started again) and returns it. Use it right away: it goes away when the activity stops.
+     */
+    suspend fun awaitController(): MediaBrowser = connected.filterNotNull().first()
+
     fun get(): MediaBrowser? {
         if (controllerFuture?.isDone == true && controllerFuture?.isCancelled == false) {
             return controllerFuture!!.get()
@@ -144,6 +160,7 @@ class MediaControllerViewModel(application: Application) : AndroidViewModel(appl
     }
 
     override fun onDisconnected(controller: MediaController) {
+        connected.value = null
         controllerLifecycle?.destroy()
         controllerLifecycle = null
         controllerFuture = null
@@ -152,6 +169,7 @@ class MediaControllerViewModel(application: Application) : AndroidViewModel(appl
     // TODO reconsider whether onStop is a good place, as getting stopped is quite easy and
     //  predictive back makes it obvious that we are reconnecting
     override fun onStop(owner: LifecycleOwner) {
+        connected.value = null
         if (controllerFuture?.isDone == true) {
             if (controllerFuture?.isCancelled == false) {
                 controllerFuture?.get()?.release()

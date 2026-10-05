@@ -1,0 +1,1317 @@
+/*
+ *     Copyright (C) 2024 nift4
+ *
+ *     Gramophone is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     Gramophone is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+package org.akanework.gramophone.ui.components.lyrics
+
+import android.annotation.SuppressLint
+import android.content.Context
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.RenderNode
+import android.graphics.Typeface
+import android.os.Build
+import android.os.SystemClock
+import android.text.Layout
+import android.text.SpannableStringBuilder
+import android.text.Spanned
+import android.text.StaticLayout
+import android.text.TextPaint
+import android.util.SparseArray
+import android.util.TypedValue
+import android.view.animation.AnimationUtils
+import androidx.compose.animation.core.CubicBezierEasing
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.ScrollableState
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.overscroll
+import androidx.compose.foundation.rememberOverscrollEffect
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshotFlow
+import androidx.compose.runtime.withFrameNanos
+import androidx.compose.ui.FrameRateCategory
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.preferredFrameRate
+import androidx.core.graphics.ColorUtils
+import androidx.core.text.getSpans
+import androidx.core.util.forEach
+import androidx.media3.common.util.Log
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
+import org.akanework.gramophone.R
+import org.akanework.gramophone.logic.dpToPx
+import org.akanework.gramophone.logic.hasRenderNodes
+import org.akanework.gramophone.logic.ui.spans.MyForegroundColorSpan
+import org.akanework.gramophone.logic.ui.spans.MyGradientSpan
+import org.akanework.gramophone.logic.ui.spans.StaticLayoutBuilderCompat
+import org.akanework.gramophone.logic.utils.CalculationUtils.lerp
+import org.akanework.gramophone.logic.utils.CalculationUtils.lerpInv
+import org.akanework.gramophone.logic.utils.Flags
+import org.akanework.gramophone.logic.utils.SemanticLyrics
+import org.akanework.gramophone.logic.utils.SpeakerEntity
+import org.akanework.gramophone.logic.utils.findBidirectionalBarriers
+import org.akanework.gramophone.ui.components.compose.rememberBooleanPreference
+import org.akanework.gramophone.ui.components.compose.rememberIntPreference
+import org.akanework.gramophone.ui.theme.AppFont
+import org.akanework.gramophone.ui.theme.LocalAppFontEnabled
+import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
+import kotlin.math.roundToInt
+import kotlin.properties.Delegates
+
+private const val TAG = "LyricsList"
+
+/** How long a user scroll keeps the lyrics from following playback again. */
+private const val USER_SCROLL_HOLD_MS = 5000L
+
+/** Follow-playback scroll: how long each line takes to move, and how its start is staggered. */
+private const val SCROLL_WAVE_DURATION_MS = 700.0
+private const val SCROLL_WAVE_DELAY_MIN_MS = 10.0
+private const val SCROLL_WAVE_DELAY_STEP_MS = 20.0
+private const val SCROLL_WAVE_DELAY_MAX_MS = 190.0
+
+/**
+ * A playback position this far off from where the last frame's position would have advanced to
+ * is a seek (slider, skip back, a tapped line) rather than playback moving on.
+ */
+private const val SEEK_DETECT_MS = 700.0
+
+/** A seek within this many viewport heights scrolls there directly, all lines moving together. */
+private const val JUMP_SCROLL_MAX_VIEWPORTS = 1f
+private const val JUMP_SCROLL_DURATION_MS = 500.0
+
+/**
+ * A seek further away fades the lyrics out, jumps, and fades them back in while they slide the
+ * last [JUMP_FADE_SLIDE_FRACTION] of the viewport height into place.
+ */
+private const val JUMP_FADE_OUT_MS = 120.0
+private const val JUMP_FADE_IN_MS = 250.0
+private const val JUMP_FADE_SLIDE_FRACTION = 0.15f
+private const val JUMP_FADE_SLIDE_DURATION_MS = 400.0
+
+/**
+ * The lyrics: every line is laid out as a StaticLayout and drawn directly onto the canvas, with
+ * word-by-word gradients and per-line scale and colour fades. Following playback, the list moves
+ * to the next line with a staggered wave, lines further below starting later. A seek instead
+ * scrolls straight to its line, or fades across when that is far away.
+ *
+ * While [visible], the playback position is checked on each poll of the player sheet's clock.
+ * Scrolling is a [ScrollableState] over [LyricsRenderer.scrollY]. Following playback pauses
+ * for [USER_SCROLL_HOLD_MS] after a user scroll or fling.
+ */
+@Composable
+internal fun LyricsList(
+    lyrics: SemanticLyrics?,
+    visible: Boolean,
+    /** Read outside composition: a change is applied without recomposing. */
+    colors: () -> LyricsColors,
+    padding: LyricsPadding,
+    playback: LyricsPlayback,
+    modifier: Modifier = Modifier,
+) {
+    val context = LocalContext.current
+    val frame = remember { mutableIntStateOf(0) }
+    val frameRequests = remember { Channel<Unit>(Channel.CONFLATED) }
+    val renderer = remember(playback) {
+        LyricsRenderer(context, playback) { frameRequests.trySend(Unit) }
+    }
+
+    val center = rememberBooleanPreference("lyric_center", false).value
+    val bold = rememberBooleanPreference("lyric_bold", false).value
+    val noAnimation = rememberBooleanPreference("lyric_no_animation", false).value
+    val autoWord = rememberBooleanPreference("translation_auto_word", false).value
+    val textSize = rememberIntPreference("lyric_text_size", 34).value
+    // The theme decides whether the app font is used
+    val appFont = LocalAppFontEnabled.current
+    val typeface = remember(appFont, bold) {
+        AppFont.typeface(context, if (bold) 700 else 500, appFont)
+    }
+    SideEffect {
+        renderer.visible = visible
+        renderer.padding = padding
+        renderer.applyPrefs(center, autoWord, noAnimation, textSize, typeface)
+        colors().let { renderer.updateTextColor(it.default, it.highlight, it.highlightTl) }
+        renderer.updateLyrics(lyrics)
+    }
+    LaunchedEffect(renderer) {
+        snapshotFlow { colors() }.collect {
+            renderer.updateTextColor(it.default, it.highlight, it.highlightTl)
+        }
+    }
+
+    // Each redraw request draws again on the next frame
+    LaunchedEffect(renderer) {
+        for (request in frameRequests) {
+            withFrameNanos { frame.intValue++ }
+        }
+    }
+    // Synced lines move on with the playback position alone, which nothing else redraws for:
+    // check again each time the player sheet's poll moves it
+    LaunchedEffect(renderer, visible) {
+        if (visible) snapshotFlow { playback.polledPosition }.collect { renderer.pollPosition() }
+    }
+    LaunchedEffect(renderer) { renderer.releaseScrollHolds() }
+
+    val scrollState = remember(renderer) {
+        ScrollableState { delta -> renderer.scrollByUser(delta) }
+    }
+    SideEffect { renderer.isUserInteracting = { scrollState.isScrollInProgress } }
+    val overscroll = rememberOverscrollEffect()
+    Spacer(
+        modifier
+            .clipToBounds()
+            .then(
+                if (!visible) Modifier
+                else Modifier
+                    .scrollable(
+                        scrollState,
+                        Orientation.Vertical,
+                        reverseDirection = true,
+                        overscrollEffect = overscroll,
+                    )
+                    .pointerInput(renderer) {
+                        // A double tap listener delays single taps until it's clear there's no
+                        // second one, and swallows double taps
+                        detectTapGestures(
+                            onDoubleTap = {},
+                            onTap = { renderer.seekToLineAt(it.y) },
+                        )
+                    }
+            )
+            .overscroll(overscroll)
+            // With adaptive refresh rates (Android 15), a redraw nothing asks a rate for runs at
+            // the normal one until a touch boosts it, and the lyrics' scrolling and highlights
+            // look slow. Ask for the high one in the frames they're drawn in.
+            .preferredFrameRate(FrameRateCategory.High)
+            .drawBehind {
+                frame.intValue
+                // Read the parameter (not the renderer's copy) so a change of visibility triggers a redraw
+                if (!visible) return@drawBehind
+                drawIntoCanvas {
+                    renderer.draw(it.nativeCanvas, size.width.roundToInt(), size.height.roundToInt())
+                }
+            },
+    )
+}
+
+/**
+ * Drawing and follow-playback logic of [LyricsList]. [draw] lays the lines out when needed,
+ * advances the follow-playback scroll, draws a frame and decides where to scroll next.
+ * [redraw] requests another frame.
+ */
+internal class LyricsRenderer(
+    private val context: Context,
+    private val instance: LyricsPlayback,
+    private val requestFrame: () -> Unit,
+) {
+    private val smallSizeFactor = 0.97f
+    private var lyricAnimTime by Delegates.notNull<Float>()
+
+    private val scaleInAnimTime
+        get() = lyricAnimTime / 2f
+    private val scaleColorEasing = CubicBezierEasing(0.4f, 0.2f, 0f, 1f)
+    private val scrollWaveEasing = CubicBezierEasing(0.6f, 0f, 0.2f, 1f)
+    private val jumpScrollEasing = CubicBezierEasing(0.2f, 0f, 0f, 1f)
+    private var typeface: Typeface? = null
+    private val grdWidth = context.resources.getDimension(R.dimen.lyric_gradient_size)
+    private val defaultTextSize = context.resources.getDimension(R.dimen.lyric_text_size)
+    private val translationTextSize = context.resources.getDimension(R.dimen.lyric_tl_text_size)
+    private val translationBackgroundTextSize =
+        context.resources.getDimension(R.dimen.lyric_tl_bg_text_size)
+    private var globalPaddingHorizontal = 28.5f.dpToPx(context)
+    private var paddingVerticalTl = 2f
+    private var paddingVerticalDefault = 18f
+    private var colorSpanPool = mutableListOf<MyForegroundColorSpan>()
+
+    /** The lines as last laid out, which drawing, taps and seeks use. Null until laid out. */
+    private var measured: MeasuredLyrics? = null
+
+    /** Whether [measured] is out of date, so the next frame lays the lines out again. */
+    private var measuredStale = true
+    private var lyrics: SemanticLyrics? = null
+    private var lyricsSet = false
+    private var posForRender = 0uL
+    private var currentScrollTarget: Int? = null
+    private val scrollWaves = ArrayList<ScrollWave>()
+    private var jumpFade: JumpFade? = null
+
+    // Seek detection: the last frame's position and time, and whether a seek is to be animated
+    private var lastFramePos: ULong? = null
+    private var lastFrameTime = 0.0
+    private var lastFramePlaying = false
+    private var tapSeekPending = false
+    private var seekPending = false
+
+    /** Wave offset each line was last drawn with, so a tap hits the line under the finger. */
+    private var drawnLineOffsets = FloatArray(0)
+    private var stateOverrides = hashMapOf<Int, Float>()
+    private var stateTime = 0uL
+    private var defaultTextColor = 0
+    private var highlightTextColor = 0
+    private var highlightTlTextColor = 0
+    private val defaultTextPaint = TextPaint().apply {
+        color = Color.RED
+    }
+    private val translationTextPaint = TextPaint().apply {
+        color = Color.GREEN
+    }
+    private val translationBackgroundTextPaint = TextPaint().apply {
+        color = Color.BLUE
+    }
+    private var wordActiveSpan = MyForegroundColorSpan(Color.CYAN)
+    private var wordActiveTlSpan = MyForegroundColorSpan(Color.CYAN)
+    private var gradientSpanPool = mutableListOf<MyGradientSpan>()
+    private var gradientTlSpanPool = mutableListOf<MyGradientSpan>()
+    private val cachedNodes = if (hasRenderNodes()) SparseArray<RenderNode>() else null
+    private fun makeGradientSpan() =
+        MyGradientSpan(grdWidth, defaultTextColor, highlightTextColor)
+
+    private fun makeGradientTlSpan() =
+        MyGradientSpan(grdWidth, defaultTextColor, highlightTlTextColor)
+
+    // Preferences, pushed in by the composable
+    private var center = false
+    private var autoWord = false
+    private var noAnimation: Boolean? = null
+    private var textSizeSp = -1
+
+    // Size, scroll offset and padding of the drawing area
+    var visible = false
+        set(value) {
+            // Coming back into view, go straight to the current line instead of animating there
+            // from wherever the lyrics were left
+            if (value && !field) snapPending = true
+            field = value
+        }
+    private var snapPending = true
+    private var width = 0
+    private var height = 0
+
+    /** Insets (px) the lines are drawn inside. The lyrics still scroll underneath them. */
+    var padding = LyricsPadding(0, 0, 0, 0)
+        set(value) {
+            if (field != value) {
+                field = value
+                remeasure()
+            }
+        }
+
+    /** The drawing area inside [padding] (px), which the lines are laid out for and scroll in. */
+    private val viewportWidth: Int
+        get() = width - padding.left - padding.right
+    private val viewportHeight: Int
+        get() = height - padding.top - padding.bottom
+    private var scrollYf = 0f
+    private val scrollY: Int
+        get() = scrollYf.toInt()
+    var isUserInteracting: () -> Boolean = { false }
+
+    /** Uptime (ms) until which a user scroll holds the lyrics where they are, null if not held. */
+    private var scrollHeldUntil: Long? = null
+    private val scrollHolds = Channel<Unit>(Channel.CONFLATED)
+
+    /** Requests a frame, if the lyrics are shown. */
+    private fun redraw() {
+        if (visible) requestFrame()
+    }
+
+    fun applyPrefs(
+        center: Boolean, autoWord: Boolean, noAnimation: Boolean, textSize: Int, typeface: Typeface
+    ) {
+        if (this.noAnimation != noAnimation) {
+            this.noAnimation = noAnimation
+            lyricAnimTime = if (noAnimation) 0f else 650f
+        }
+        var changed = false
+        if (this.typeface !== typeface) {
+            this.typeface = typeface
+            defaultTextPaint.typeface = typeface
+            translationTextPaint.typeface = typeface
+            translationBackgroundTextPaint.typeface = typeface
+            changed = true
+        }
+        if (textSizeSp != textSize) {
+            textSizeSp = textSize
+            applySize()
+            changed = true
+        }
+        if (this.center != center || this.autoWord != autoWord) {
+            this.center = center
+            this.autoWord = autoWord
+            changed = true
+        }
+        if (changed) remeasure()
+    }
+
+    fun updateTextColor(
+        newColor: Int, newHighlightColor: Int, newHighlightTlColor: Int
+    ) {
+        var changed = false
+        var changedTl = false
+        if (defaultTextColor != newColor) {
+            defaultTextColor = newColor
+            defaultTextPaint.color = defaultTextColor
+            translationTextPaint.color = defaultTextColor
+            translationBackgroundTextPaint.color = defaultTextColor
+            changed = true
+            changedTl = true
+        }
+        if (highlightTextColor != newHighlightColor) {
+            highlightTextColor = newHighlightColor
+            wordActiveSpan.color = highlightTextColor
+            changed = true
+        }
+        if (highlightTlTextColor != newHighlightTlColor) {
+            highlightTlTextColor = newHighlightTlColor
+            wordActiveTlSpan.color = highlightTlTextColor
+            changedTl = true
+        }
+        if (changed) {
+            gradientSpanPool.clear()
+            repeat(3) { gradientSpanPool.add(makeGradientSpan()) }
+        }
+        if (changedTl) {
+            gradientTlSpanPool.clear()
+            repeat(2) { gradientTlSpanPool.add(makeGradientTlSpan()) }
+        }
+        if (changed || changedTl) {
+            measured?.lines?.forEach {
+                it.text.getSpans<MyGradientSpan>()
+                    .forEach { s -> it.text.removeSpan(s) }
+            }
+            redrawAllLines()
+        }
+    }
+
+    /** Takes [parsedLyrics] if it is a different object than the one shown. */
+    fun updateLyrics(parsedLyrics: SemanticLyrics?) {
+        if (lyricsSet && lyrics === parsedLyrics) return
+        lyricsSet = true
+        measured = null
+        remeasure()
+        lyrics = parsedLyrics
+        stateOverrides.clear()
+        // Line indices and offsets refer to the old lines. Go straight to the new lyrics' line
+        scrollWaves.clear()
+        jumpFade = null
+        currentScrollTarget = null
+        snapPending = true
+    }
+
+    /** Requests a frame if synced lyrics' playback position moved since the last one drawn. */
+    fun pollPosition() {
+        if (lyrics is SemanticLyrics.SyncedLyrics && instance.getCurrentPosition() != posForRender)
+            redraw() // if not playing, might stay same
+    }
+
+    /**
+     * Ends each user scroll hold once it runs out and requests a frame, so the lyrics follow
+     * playback again. Runs for as long as the lyrics are composed.
+     */
+    suspend fun releaseScrollHolds() {
+        for (hold in scrollHolds) {
+            while (true) {
+                val wait = (scrollHeldUntil ?: break) - SystemClock.uptimeMillis()
+                if (wait <= 0) {
+                    scrollHeldUntil = null
+                    redraw()
+                    break
+                }
+                delay(wait)
+            }
+        }
+    }
+
+    /** Holds the lyrics where the user scrolled them for [USER_SCROLL_HOLD_MS] from now. */
+    private fun holdScroll() {
+        scrollHeldUntil = SystemClock.uptimeMillis() + USER_SCROLL_HOLD_MS
+        scrollHolds.trySend(Unit)
+    }
+
+    private fun applySize() {
+        val newTextSize = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_SP,
+            textSizeSp.toFloat(),
+            context.resources.displayMetrics
+        )
+        globalPaddingHorizontal = 28.5f.dpToPx(context) * newTextSize / defaultTextSize
+        paddingVerticalTl = 2f * newTextSize / defaultTextSize
+        paddingVerticalDefault = 18f * newTextSize / defaultTextSize
+        defaultTextPaint.textSize = newTextSize
+        translationTextPaint.textSize = newTextSize * translationTextSize / defaultTextSize
+        translationBackgroundTextPaint.textSize =
+            newTextSize * translationBackgroundTextSize / defaultTextSize
+    }
+
+    /** Marks the laid out lines out of date: the next frame lays them out again. */
+    private fun remeasure() {
+        measuredStale = true
+        redraw()
+    }
+
+    private val scrollRange: Int
+        get() = max(0, (measured?.contentHeight ?: 0) - viewportHeight)
+
+    private fun scrollTo(y: Int) {
+        val clamped = y.coerceIn(0, scrollRange).toFloat()
+        if (clamped != scrollYf) {
+            scrollYf = clamped
+            redraw()
+        }
+    }
+
+    /** Applies a drag or fling step of [delta] px and returns the consumed amount. */
+    fun scrollByUser(delta: Float): Float {
+        val new = (scrollYf + delta).coerceIn(0f, scrollRange.toFloat())
+        val consumed = new - scrollYf
+        if (consumed != 0f) {
+            scrollYf = new
+            redraw()
+        }
+        return consumed
+    }
+
+    /**
+     * A scroll animation. The scroll position jumps by [delta] at once, and every line is drawn
+     * [delta] px lower and moves up to its new place. Following playback the wave is [staggered]:
+     * lines from [targetIdx] down start later the further they are from it, so the list catches
+     * up line by line. After a seek all lines move together.
+     */
+    private class ScrollWave(
+        val start: Double,
+        val delta: Float,
+        val targetIdx: Int,
+        val staggered: Boolean = true,
+        val duration: Double = SCROLL_WAVE_DURATION_MS,
+    ) {
+        val end get() = start + (if (staggered) SCROLL_WAVE_DELAY_MAX_MS else 0.0) + duration
+    }
+
+    /**
+     * A seek too far to scroll to: the lyrics fade out from [start], then jump to [scrollTarget]
+     * and fade back in. [jumped] once the jump was made.
+     */
+    private class JumpFade(var start: Double, var scrollTarget: Int, var delta: Float) {
+        var jumped = false
+
+        fun alpha(time: Double): Float {
+            val t = time - start
+            return if (t < JUMP_FADE_OUT_MS) 1f - (t / JUMP_FADE_OUT_MS).toFloat().coerceIn(0f, 1f)
+            else ((t - JUMP_FADE_OUT_MS) / JUMP_FADE_IN_MS).toFloat().coerceIn(0f, 1f)
+        }
+
+        fun fadedOut(time: Double) = time - start >= JUMP_FADE_OUT_MS
+        fun done(time: Double) = time - start >= JUMP_FADE_OUT_MS + JUMP_FADE_IN_MS
+    }
+
+    /** Delay before line [i] starts moving in [wave]. [k] counts main lines between the target and it. */
+    private fun scrollWaveDelay(i: Int, wave: ScrollWave, k: Int): Double =
+        if (!wave.staggered || i < wave.targetIdx) 0.0
+        else min(SCROLL_WAVE_DELAY_MIN_MS + k * SCROLL_WAVE_DELAY_STEP_MS, SCROLL_WAVE_DELAY_MAX_MS)
+
+    /** Remaining offset of line [i] at [time], summed over the running waves. */
+    private fun scrollWaveOffset(i: Int, time: Double, k: IntArray): Float {
+        var offset = 0f
+        scrollWaves.forEachIndexed { w, wave ->
+            val begin = wave.start + scrollWaveDelay(i, wave, k[w])
+            val progress = ((time - begin) / wave.duration).toFloat().coerceIn(0f, 1f)
+            val easing = if (wave.staggered) scrollWaveEasing else jumpScrollEasing
+            offset += wave.delta * (1f - easing.transform(progress))
+        }
+        return offset
+    }
+
+    /** Drops the waves every line has finished. */
+    private fun pruneScrollWaves(time: Double) {
+        scrollWaves.removeAll { time >= it.end }
+    }
+
+    /**
+     * Whether [pos] is a seek away from the last frame's position: further from where playback
+     * would have moved it to than a late or corrected position report explains.
+     */
+    private fun isSeek(pos: ULong, time: Double): Boolean {
+        val last = lastFramePos ?: return false
+        val expected = last.toDouble() +
+                if (lastFramePlaying) (time - lastFrameTime) * instance.speed() else 0.0
+        return abs(pos.toDouble() - expected) > SEEK_DETECT_MS
+    }
+
+    /** The lines laid out for the current viewport, laying them out again if needed. */
+    private fun ensureLayout(): MeasuredLyrics {
+        val current = measured
+        if (current != null && !measuredStale && current.width == viewportWidth &&
+            current.viewportHeight == viewportHeight
+        ) return current
+        val new = measureLines(lyrics, viewportWidth, viewportHeight)
+        measured = new
+        measuredStale = false
+        redrawAllLines()
+        // Keep the scroll position in the (possibly smaller) new range
+        scrollTo(scrollY)
+        return new
+    }
+
+    /** Drops every line's recorded drawing and requests a frame. */
+    private fun redrawAllLines() {
+        if (hasRenderNodes()) {
+            cachedNodes!!.forEach { _, it ->
+                it.discardDisplayList()
+            }
+            cachedNodes.clear()
+        }
+        redraw()
+    }
+
+    /** Draws a frame into a [width] x [height] px area and decides where to scroll next. */
+    fun draw(canvas: Canvas, width: Int, height: Int) {
+        this.width = width
+        this.height = height
+        if (viewportWidth <= 0 || typeface == null) return
+        val measured = ensureLayout()
+        val alpha = jumpFade?.alpha(AnimationUtils.currentAnimationTimeMillis().toDouble()) ?: 1f
+        val sc = if (alpha < 1f) canvas.saveLayerAlpha(
+            0f, 0f, width.toFloat(), height.toFloat(), (alpha * 255).roundToInt()
+        ) else canvas.save()
+        canvas.translate(padding.left.toFloat(), padding.top.toFloat() - scrollYf)
+        drawLines(canvas, measured)
+        canvas.restoreToCount(sc)
+    }
+
+    /**
+     * Draws [measured]'s lines at the playback position, with their fades and the running scroll
+     * animations, then follows playback.
+     */
+    private fun drawLines(canvas: Canvas, measured: MeasuredLyrics) {
+        val cat = AnimationUtils.currentAnimationTimeMillis().toDouble()
+        posForRender = instance.getCurrentPosition().also {
+            if (posForRender > it && posForRender - it < 1000uL)
+                Log.w(
+                    TAG,
+                    "regressing position by ${posForRender - it}ms from $posForRender to $it!"
+                )
+        }
+        val lines = measured.lines
+        // A seek: carry the line fades over from the position last drawn, on the very frame the
+        // new position shows up, and scroll there as a jump rather than as playback moving on
+        val lastPos = lastFramePos
+        if (lastPos != null && lastPos != posForRender &&
+            (tapSeekPending || isSeek(posForRender, cat))) {
+            tapSeekPending = false
+            handleSeek(lines, lastPos, posForRender)
+            seekPending = true
+        }
+        val isPlaying = instance.isPlaying()
+        lastFramePos = posForRender
+        lastFrameTime = cat
+        lastFramePlaying = isPlaying
+        val useRenderNodes = hasRenderNodes() && canvas.isHardwareAccelerated
+        var animating = false
+        val globalPaddingTop = measured.paddingTop
+        var heightSoFar = globalPaddingTop.toDouble()
+        var heightSoFarWithoutTranslated = heightSoFar
+        var determineTimeUntilNext = false
+        var timeUntilNext = 0uL // TODO: remove if useless
+        var firstScrollTarget: Int? = null
+        var firstScrollTargetIdx: Int? = null
+        var lastScrollTarget: Int? = null
+        var lastScrollTargetIdx: Int? = null
+        canvas.save()
+        canvas.translate(globalPaddingHorizontal, globalPaddingTop.toFloat())
+        val lineWidth = viewportWidth - globalPaddingHorizontal * 2
+        pruneScrollWaves(cat)
+        if (jumpFade?.done(cat) == true) jumpFade = null
+        if (scrollWaves.isNotEmpty() || jumpFade != null) animating = true
+        if (drawnLineOffsets.size != lines.size)
+            drawnLineOffsets = FloatArray(lines.size)
+        // Per wave: main lines passed so far after its target line, for the line delays.
+        // Translation and background lines move with their main line.
+        val waveLineCounts = IntArray(scrollWaves.size)
+        lines.forEachIndexed { i, it ->
+            if (it.line?.isTranslated != true && it.speaker?.isBackground != true) {
+                scrollWaves.forEachIndexed { w, wave -> if (i > wave.targetIdx) waveLineCounts[w]++ }
+            }
+            var spanEnd = -1
+            var spanStartGradient = -1
+            var realGradientStart = -1
+            var realGradientEnd = -1
+            var wordIdx: Int? = null
+            var gradientProgress = Float.NEGATIVE_INFINITY
+            val t = lineTiming(lines, i)
+            val override = stateOverrides[i]
+            val overridePos = override?.let {
+                if (it >= 0f)
+                    it.toULong() + posForRender - stateTime
+                else (-it).toULong() // negative signals freeze
+            } ?: posForRender
+            val highlight = t.highlighted(overridePos)
+            if (override != null) {
+                val animPosReal = t.fadeProgress(posForRender)
+                val animPos = t.fadeProgress(overridePos)
+                if (t.fadeTime == 0f || if (overridePos >= t.fadeInEnd) animPos <= animPosReal
+                    else animPos >= animPosReal)
+                    stateOverrides.remove(i)
+            }
+            val scrollTarget = posForRender in t.fadeInStart..(t.end - t.fadeTime.toULong())
+            val scaleInProgress = if (it.line == null) 1f else lerpInv(
+                t.fadeInStart.toFloat(), t.fadeInEnd.toFloat(),
+                overridePos.toFloat()
+            )
+            val scaleOutProgress = if (it.line == null) 1f else lerpInv(
+                t.fadeOutStart.toFloat(),
+                t.fadeOutEnd.toFloat(),
+                overridePos.toFloat()
+            )
+            val hlScaleFactor = if (it.line == null) 1f else {
+                // lerp() argument order is swapped because we divide by this factor
+                if (scaleOutProgress in 0f..1f && t.fadeTime > 0f)
+                    lerp(
+                        smallSizeFactor,
+                        1f,
+                        scaleColorEasing.transform(scaleOutProgress)
+                    )
+                else if (scaleInProgress in 0f..1f && t.fadeTime > 0f)
+                    lerp(
+                        1f,
+                        smallSizeFactor,
+                        scaleColorEasing.transform(scaleInProgress)
+                    )
+                else if (highlight)
+                    smallSizeFactor
+                else 1f
+            }
+            val node = if (useRenderNodes) {
+                val node = cachedNodes!![i]
+                if (node == null) {
+                    val newNode = RenderNode("LyricsLine_$i")
+                    cachedNodes[i] = newNode
+                    newNode
+                } else node
+            } else null
+            var hasValidCachedNode = if (useRenderNodes) node!!.hasDisplayList() else false
+            val isRtl = it.layout.getParagraphDirection(0) == Layout.DIR_RIGHT_TO_LEFT
+            val alignmentNormal = if (isRtl) it.layout.alignment == Layout.Alignment.ALIGN_OPPOSITE
+            else it.layout.alignment == Layout.Alignment.ALIGN_NORMAL
+            if (((scaleInProgress >= -.1f && scaleInProgress <= 1f) ||
+                        (scaleOutProgress >= -.1f && scaleOutProgress <= 1f)) &&
+                t.fadeTime > 0f && it.line != null && isPlaying
+            )
+                animating = true
+            if (it.line?.isTranslated != true && it.speaker?.isBackground != true) {
+                if (determineTimeUntilNext) {
+                    determineTimeUntilNext = false
+                    timeUntilNext = max(0uL, (it.line?.start ?: 0uL) - posForRender)
+                }
+                heightSoFarWithoutTranslated = heightSoFar
+            }
+            if (scrollTarget && firstScrollTarget == null) {
+                firstScrollTarget = heightSoFarWithoutTranslated.toInt()
+                firstScrollTargetIdx = i
+                determineTimeUntilNext = true
+            }
+            if (posForRender >= t.fadeInStart && it.line?.isTranslated != true
+                && it.speaker?.isBackground != true
+            ) {
+                lastScrollTarget = heightSoFar.toInt()
+                lastScrollTargetIdx = i
+                if (firstScrollTarget == null)
+                    determineTimeUntilNext = true
+            }
+            heightSoFar += it.paddingTop.toFloat()
+            val lineOffset = scrollWaveOffset(i, cat, waveLineCounts)
+            drawnLineOffsets[i] = lineOffset
+            val culledDown = heightSoFar + lineOffset > scrollY + height
+            canvas.translate(0f, it.paddingTop.toFloat() + lineOffset -
+                    (it.layout.height.toFloat() / hlScaleFactor - it.layout.height.toFloat()) / 2)
+            val culled = culledDown || scrollY - padding.top > heightSoFar + lineOffset +
+                    it.layout.height.toFloat() + it.paddingBottom
+            if (!culled) {
+                if (highlight) {
+                    canvas.save()
+                    canvas.scale(1f / hlScaleFactor, 1f / hlScaleFactor)
+                    if (it.theWords != null) {
+                        wordIdx = it.theWords.indexOfLast { it.timeRange.first <= posForRender }
+                        if (wordIdx == -1) wordIdx = null
+                        if (wordIdx != null) {
+                            val word = it.theWords[wordIdx]
+                            spanEnd = word.charRange.last + 1 // get exclusive end
+                            val gradientEndTime = min(
+                                t.fadeOutStart.toFloat(),
+                                word.timeRange.last.toFloat()
+                            )
+                            val gradientStartTime = min(
+                                max(
+                                    word.timeRange.first.toFloat(),
+                                    t.start.toFloat()
+                                ), gradientEndTime - 1f
+                            )
+                            gradientProgress = lerpInv(
+                                gradientStartTime, gradientEndTime,
+                                posForRender.toFloat()
+                            )
+                            val wordEndLine = it.layout.getLineForOffset(word.charRange.last)
+                            val lastCharOnEndLineExcl = it.layout.getLineEnd(wordEndLine)
+                            val lastWordOnLine = spanEnd >= lastCharOnEndLineExcl
+                            // if we're here, this is the last active word on this line, but it may
+                            // not be the last word on this line. if it isn't, keep rendering the
+                            // gradient at 100% even after it ended (but only until next word is
+                            // the last active word) to avoid kerning jumps due to switching to
+                            // color span for parts of a line that should be in the same span.
+                            if (gradientProgress >= 0f && (gradientProgress <= 1f || !lastWordOnLine)) {
+                                spanStartGradient = word.charRange.first
+                                // be greedy and eat as much as the line as can be eaten (text that is
+                                // same line + is in same text direction). improves font rendering for
+                                // Japanese if font rendering processes whole text in one pass
+                                val wordStartLine = it.layout.getLineForOffset(word.charRange.first)
+                                val firstCharOnStartLine = it.layout.getLineStart(wordStartLine)
+                                realGradientStart = it.theWords.lastOrNull {
+                                    it.charRange.last >= firstCharOnStartLine && it.charRange.last <
+                                            word.charRange.first && it.isRtl != word.isRtl
+                                }?.charRange?.last?.plus(1) ?: firstCharOnStartLine
+                                realGradientEnd = it.theWords.firstOrNull {
+                                    it.charRange.first > word.charRange.last && it.charRange.first <
+                                            lastCharOnEndLineExcl && it.isRtl != word.isRtl
+                                }?.charRange?.first ?: lastCharOnEndLineExcl
+                            }
+                        }
+                    } else {
+                        spanEnd = it.text.length
+                    }
+                }
+                if (!alignmentNormal) {
+                    if (!highlight)
+                        canvas.save()
+                    if (it.layout.alignment != Layout.Alignment.ALIGN_CENTER)
+                        canvas.translate(lineWidth * (1 - smallSizeFactor / hlScaleFactor), 0f)
+                    else // Layout.Alignment.ALIGN_CENTER
+                        canvas.translate(lineWidth * ((1 - smallSizeFactor / hlScaleFactor) / 2), 0f)
+                }
+                if (gradientProgress >= -.1f && gradientProgress <= 1f && isPlaying)
+                    animating = true
+            }
+            val spanEndWithoutGradient = if (realGradientStart == -1) spanEnd else realGradientStart
+            val inColorAnim = ((scaleInProgress in 0f..1f && gradientProgress ==
+                    Float.NEGATIVE_INFINITY) || scaleOutProgress in 0f..1f) &&
+                    t.fadeTime > 0f
+            var colorSpan = it.text.getSpans<MyForegroundColorSpan>().firstOrNull()
+            val cachedEnd = colorSpan?.let { j -> it.text.getSpanEnd(j) } ?: -1
+            val wordActiveSpanForLine = if (it.line?.isTranslated == true)
+                wordActiveTlSpan else wordActiveSpan
+            val col = if (!culled) {
+                val highlightColorForLine = if (it.line?.isTranslated == true)
+                    highlightTlTextColor else highlightTextColor
+                if (inColorAnim) ColorUtils.blendARGB(
+                    if (scaleOutProgress in 0f..1f) highlightColorForLine else
+                        defaultTextColor,
+                    if (scaleInProgress in 0f..1f && gradientProgress == Float
+                            .NEGATIVE_INFINITY
+                    ) highlightColorForLine
+                    else defaultTextColor,
+                    scaleColorEasing.transform(
+                        if (scaleOutProgress in 0f..1f
+                        ) scaleOutProgress else scaleInProgress
+                    )
+                ) else Color.GREEN
+            } else Color.RED
+            if (cachedEnd != spanEndWithoutGradient || inColorAnim != (colorSpan != wordActiveSpanForLine)) {
+                if (cachedEnd != -1) {
+                    it.text.removeSpan(colorSpan!!)
+                    if (colorSpan != wordActiveSpanForLine && (!inColorAnim || spanEndWithoutGradient == -1)) {
+                        if (colorSpanPool.size < 10)
+                            colorSpanPool.add(colorSpan)
+                        colorSpan = null
+                    } else if (inColorAnim && colorSpan == wordActiveSpanForLine)
+                        colorSpan = null
+                    hasValidCachedNode = false
+                }
+                if (spanEndWithoutGradient != -1) {
+                    if (inColorAnim && colorSpan == null)
+                        colorSpan = colorSpanPool.removeFirstOrNull()
+                            ?: @SuppressLint("DrawAllocation") MyForegroundColorSpan(col)
+                    else if (!inColorAnim)
+                        colorSpan = wordActiveSpanForLine
+                    it.text.setSpan(
+                        colorSpan, 0, spanEndWithoutGradient,
+                        Spanned.SPAN_INCLUSIVE_INCLUSIVE
+                    )
+                    hasValidCachedNode = false
+                }
+            }
+            if (inColorAnim && spanEndWithoutGradient != -1) {
+                if (colorSpan!! == wordActiveSpanForLine)
+                    throw IllegalStateException("colorSpan == wordActiveSpan")
+                if (colorSpan.color != col) {
+                    colorSpan.color = col
+                    hasValidCachedNode = false
+                }
+            }
+            var gradientSpan = it.text.getSpans<MyGradientSpan>().firstOrNull()
+            val gradientSpanStart = gradientSpan?.let { j -> it.text.getSpanStart(j) } ?: -1
+            val gradientSpanEnd = gradientSpan?.let { j -> it.text.getSpanEnd(j) } ?: -1
+            if (gradientSpanStart != realGradientStart || gradientSpanEnd != realGradientEnd) {
+                val gradientSpanPoolForLine = if (it.line?.isTranslated == true)
+                    gradientTlSpanPool else gradientSpanPool
+                if (gradientSpanStart != -1) {
+                    it.text.removeSpan(gradientSpan!!)
+                    if (realGradientStart == -1) {
+                        if (gradientSpanPoolForLine.size < 10)
+                            gradientSpanPoolForLine.add(gradientSpan)
+                        gradientSpan = null
+                    }
+                    hasValidCachedNode = false
+                }
+                if (realGradientStart != -1) {
+                    if (gradientSpan == null)
+                        gradientSpan = gradientSpanPoolForLine.removeFirstOrNull()
+                            ?: if (it.line?.isTranslated == true) makeGradientTlSpan()
+                            else makeGradientSpan()
+                    it.text.setSpan(
+                        gradientSpan, realGradientStart, realGradientEnd,
+                        Spanned.SPAN_INCLUSIVE_INCLUSIVE
+                    )
+                    hasValidCachedNode = false
+                }
+            }
+            if (!culled) {
+                if (gradientSpan != null) {
+                    gradientSpan.runCount = 0
+                    gradientSpan.lastLineCount = -1
+                    gradientSpan.lineOffsets = it.words!![wordIdx!!]
+                    gradientSpan.totalCharsForProgress = spanEnd - spanStartGradient
+                    // We get called once per run + one additional time per run if run direction isn't
+                    // same as paragraph direction.
+                    gradientSpan.runToLineMappings = it.rlm!!
+                    val newProgress = gradientProgress.coerceAtMost(1f)
+                    if (gradientSpan.progress != newProgress) {
+                        gradientSpan.progress = newProgress
+                        hasValidCachedNode = false
+                    }
+                }
+                if (useRenderNodes) {
+                    if (!hasValidCachedNode) {
+                        node!!.setPosition(0, 0, lineWidth.toInt(),
+                            it.layout.height)
+                        val nodeCanvas = node.beginRecording()
+                        it.layout.draw(nodeCanvas)
+                        node.endRecording()
+                    }
+                    canvas.drawRenderNode(node!!)
+                } else {
+                    it.layout.draw(canvas)
+                }
+                if (highlight || !alignmentNormal)
+                    canvas.restore()
+            } else if (!hasValidCachedNode) {
+                // The spans changed while the line is off screen: don't draw the old recording
+                // once it's back
+                if (hasRenderNodes()) node?.discardDisplayList()
+            }
+            canvas.translate(0f, (it.layout.height.toFloat()) / hlScaleFactor -
+                    (it.layout.height.toFloat() / hlScaleFactor - it.layout.height.toFloat()) / 2
+                    + it.paddingBottom.toFloat() - lineOffset)
+            heightSoFar += it.layout.height + it.paddingBottom
+        }
+        canvas.restore()
+        if (animating)
+            redraw()
+        val scrollTarget = max(0, (firstScrollTarget ?: lastScrollTarget ?: 0) - globalPaddingTop)
+        followPlayback(cat, measured, scrollTarget, firstScrollTargetIdx ?: lastScrollTargetIdx)
+        seekPending = false
+        snapPending = false
+    }
+
+    /**
+     * After a frame at [time]: scrolls to [target], which shows the line being sung ([targetIdx])
+     * where the first line starts. Not while the user scrolls or a user scroll holds the lyrics.
+     */
+    private fun followPlayback(
+        time: Double, measured: MeasuredLyrics, target: Int, targetIdx: Int?
+    ) {
+        if (isUserInteracting()) {
+            holdScroll()
+            if (measured.synced)
+                currentScrollTarget = null
+            // The user takes over: show the lyrics where they are
+            if (jumpFade?.jumped == false) jumpFade = null
+            return
+        }
+        if (scrollHeldUntil != null) return
+        val fade = jumpFade
+        if (fade != null && !fade.jumped) {
+            // Fading out for a jump: go wherever playback is by the time the lyrics are out
+            if (target != currentScrollTarget) {
+                currentScrollTarget = target
+                fade.delta = target.coerceIn(0, scrollRange) - scrollYf
+                fade.scrollTarget = target
+            }
+            if (fade.fadedOut(time)) {
+                fade.jumped = true
+                scrollWaves.clear()
+                scrollTo(fade.scrollTarget)
+                val slide = JUMP_FADE_SLIDE_FRACTION * viewportHeight
+                val delta = fade.delta.coerceIn(-slide, slide)
+                if (delta != 0f) scrollWaves.add(ScrollWave(time, delta, 0, staggered = false,
+                    duration = JUMP_FADE_SLIDE_DURATION_MS))
+            }
+            redraw()
+        } else if (target != currentScrollTarget) {
+            currentScrollTarget = target
+            if (lyricAnimTime == 0f || snapPending) {
+                scrollWaves.clear()
+                jumpFade = null
+                scrollTo(target)
+            } else {
+                val from = scrollYf
+                val delta = target.coerceIn(0, scrollRange) - from
+                if (seekPending && abs(delta) > JUMP_SCROLL_MAX_VIEWPORTS * viewportHeight) {
+                    // Too far to scroll through: fade out from however visible the lyrics are
+                    val alpha = fade?.alpha(time) ?: 1f
+                    jumpFade = JumpFade(time - (1f - alpha) * JUMP_FADE_OUT_MS, target, delta)
+                } else if (delta != 0f) {
+                    // Jump there, then let each line move from where it was on screen.
+                    scrollTo(target)
+                    scrollWaves.add(
+                        if (seekPending) ScrollWave(time, scrollYf - from, targetIdx ?: 0,
+                            staggered = false, duration = JUMP_SCROLL_DURATION_MS)
+                        else ScrollWave(time, scrollYf - from, targetIdx ?: 0)
+                    )
+                }
+                redraw()
+            }
+        }
+    }
+
+    /**
+     * When a line is sung and fades, as playback positions (ms). It scales and colours in over
+     * [fadeInStart]..[fadeInEnd] around its [start], and back out over [fadeOutStart]..[fadeOutEnd]
+     * around its [end] (or from it, if the end is explicit). [fadeTime] is half of each fade.
+     */
+    private class LineTiming(
+        val start: ULong,
+        val end: ULong,
+        val fadeTime: Float,
+        val fadeInStart: ULong,
+        val fadeInEnd: ULong,
+        val fadeOutStart: ULong,
+        val fadeOutEnd: ULong,
+    ) {
+        /** Whether the line is highlighted (fading in, sung or fading out) at [pos]. */
+        fun highlighted(pos: ULong) = pos in fadeInStart..fadeOutEnd
+
+        /** How far the line is faded in at [pos], from 0 (not highlighted) to 1. */
+        fun fadeProgress(pos: ULong): Float = when {
+            !highlighted(pos) -> 0f
+            pos >= fadeInEnd ->
+                min(1f, 1f - lerpInv(fadeOutStart.toFloat(), fadeOutEnd.toFloat(), pos.toFloat()))
+            else -> lerpInv(fadeInStart.toFloat(), fadeInEnd.toFloat(), pos.toFloat())
+        }
+    }
+
+    /**
+     * Timing of line [i] of [lines]. A line without words that ends less than [lyricAnimTime]
+     * away from the next start ends just before it instead, so it fades out as the next fades in.
+     */
+    private fun lineTiming(lines: List<SbItem>, i: Int): LineTiming {
+        val item = lines[i]
+        val line = item.line
+        val start = line?.start ?: ULong.MIN_VALUE
+        var end = min(line?.end ?: Int.MAX_VALUE.toULong(), Int.MAX_VALUE.toULong())
+        var endIsImplicit = line?.endIsImplicit != false
+        if (Flags.IGNORE_SMALL_ENDTIME_GAPS && line?.start != null && (!line.isTranslated
+                    && item.theWords == null || line.isTranslated && lines
+                .subList(0, i).find { l -> l.line?.start == line.start }?.theWords == null)) {
+            val j = lines.subList(i, lines.size).find { l ->
+                (l.line?.start ?: Int.MAX_VALUE.toULong()) > line.start }?.line?.start
+            val nextStartTime = min(j ?: Int.MAX_VALUE.toULong(), Int.MAX_VALUE.toULong())
+            if (j != null && abs(nextStartTime.toLong() - end.toLong()) < lyricAnimTime) {
+                end = nextStartTime - 1uL
+                endIsImplicit = true
+            }
+        }
+        if (Flags.NO_ANIM_GRADIENT_LAST_FRAME_MONKEY_FIX && lyricAnimTime == 0f &&
+            item.theWords != null
+        ) {
+            end += 17.toUInt() // the assumption is that display is at least 60hz
+        }
+        val fadeTime = min(
+            scaleInAnimTime, min(
+                lerp(
+                    start.toFloat(), end.toFloat(),
+                    0.5f
+                ) - start.toFloat(),
+                max(start.toFloat(), scaleInAnimTime)
+            )
+        )
+        val fadeInStart = max(start.toLong() - fadeTime.toLong(), 0L).toULong()
+        val fadeInEnd = start + fadeTime.toULong()
+        // If end is implicit, it's the start point of next line, so animate smoothly.
+        val fadeOutStart = if (!endIsImplicit) end
+        else end - fadeTime.toULong()
+        val fadeOutEnd = if (!endIsImplicit)
+            end + (fadeTime * 2).toULong()
+        else end + fadeTime.toULong()
+        return LineTiming(start, end, fadeTime, fadeInStart, fadeInEnd, fadeOutStart, fadeOutEnd)
+    }
+
+    private fun measureLines(
+        lyrics: SemanticLyrics?, width: Int, viewportHeight: Int
+    ): MeasuredLyrics {
+        val lines =
+            lyrics?.unsyncedText ?: listOf(context.getString(R.string.no_lyric_found) to null)
+        val syncedLines = (lyrics as? SemanticLyrics.SyncedLyrics?)?.text
+        var lastNonTranslated: SemanticLyrics.LyricLine? = null
+        val spLines = lines.mapIndexed { i, it ->
+            val syncedLine = syncedLines?.get(i)
+            if (syncedLine?.isTranslated != true)
+                lastNonTranslated = syncedLine
+            val words =
+                syncedLine?.words ?: if (autoWord &&
+                    syncedLine?.isTranslated == true && lastNonTranslated?.words != null
+                )
+                    listOf(
+                        SemanticLyrics.Word(
+                            lastNonTranslated.timeRange, 0..<syncedLine.text.length,
+                            findBidirectionalBarriers(syncedLine.text).firstOrNull()?.second == true
+                        )
+                    ) else null
+            val sb = SpannableStringBuilder(it.first)
+            val speaker = syncedLine?.speaker ?: it.second
+            val align =
+                if (center || speaker?.isGroup == true)
+                    Layout.Alignment.ALIGN_CENTER
+                else if (speaker?.isVoice2 == true)
+                    Layout.Alignment.ALIGN_OPPOSITE
+                else Layout.Alignment.ALIGN_NORMAL
+            val tl = syncedLine?.isTranslated == true
+            val bg = speaker?.isBackground == true
+            // TODO: width limiting to 85% if there is >1 singer
+            //val widthLimit = speaker?.isWidthLimited == true
+            val paddingTop = if (tl) paddingVerticalTl else paddingVerticalDefault
+            val paddingBottom = if (i + 1 < (syncedLines?.size ?: -1) &&
+                syncedLines?.get(i + 1)?.isTranslated == true
+            ) paddingVerticalTl else paddingVerticalDefault
+            val layout = StaticLayoutBuilderCompat.obtain(
+                sb, when {
+                    tl && bg -> translationBackgroundTextPaint
+                    tl || bg -> translationTextPaint
+                    else -> defaultTextPaint
+                }, (width * smallSizeFactor).toInt() - globalPaddingHorizontal.toInt() * 2
+            ).setAlignment(align).build()
+            val paragraphRtl = layout.getParagraphDirection(0) == Layout.DIR_RIGHT_TO_LEFT
+            val alignmentNormal = if (paragraphRtl) align == Layout.Alignment.ALIGN_OPPOSITE
+            else align == Layout.Alignment.ALIGN_NORMAL
+            var l: StaticLayout? = null
+            val lineOffsets = words?.map {
+                val ia = mutableListOf<Int>()
+                val firstLine = layout.getLineForOffset(it.charRange.first)
+                val lastLine = layout.getLineForOffset(it.charRange.last + 1)
+                for (line in firstLine..lastLine) {
+                    val lineStart = layout.getLineStart(line)
+                    var lineEnd = layout.getLineEnd(line)
+                    while (lineStart + 1 < lineEnd && (layout.text[lineEnd - 1] == '\n' || layout.text[lineEnd - 1] == '\r'))
+                        lineEnd--
+                    val firstInLine = max(it.charRange.first, lineStart)
+                    val lastInLineExcl = min(it.charRange.last + 1, lineEnd)
+                    val horizontalStart = if (paragraphRtl == it.isRtl)
+                        layout.getPrimaryHorizontal(firstInLine)
+                    else layout.getSecondaryHorizontal(firstInLine)
+                    // Recycle the layout if we have multiple words in one line.
+                    if (l == null || l.getLineStart(0) != lineStart
+                        || (l.getParagraphDirection(0) == Layout.DIR_RIGHT_TO_LEFT) != it.isRtl
+                    ) {
+                        // Use StaticLayout instead of Paint.measureText() for V+ useBoundsForWidth
+                        // TODO is this working since moving to getPrimaryHorizontal() again?
+                        /*
+                         * TODO replace this code with something that does not need a new layout whenever possible.
+                         * some ideas:
+                         * https://developer.android.com/reference/android/text/Layout#fillCharacterBounds(int,%20int,%20float[],%20int) (API >=34)
+                         * https://developer.android.com/reference/android/text/Layout#getSelectionPath(int,%20int,%20android.graphics.Path) (API >=26 or >=34 for path parsing)
+                         * https://developer.android.com/reference/android/graphics/Paint#getRunCharacterAdvance(char[],%20int,%20int,%20int,%20int,%20boolean,%20int,%20float[],%20int) (API >=34)
+                         * https://developer.android.com/reference/android/graphics/Paint#getRunAdvance(char[],%20int,%20int,%20int,%20int,%20boolean,%20int) (API >=23)
+                         */
+                        l = StaticLayoutBuilderCompat
+                            .obtain(layout.text, layout.paint, Int.MAX_VALUE)
+                            .setAlignment(
+                                if (it.isRtl) Layout.Alignment.ALIGN_OPPOSITE
+                                else Layout.Alignment.ALIGN_NORMAL
+                            )
+                            .setIsRtl(it.isRtl)
+                            .setStart(lineStart)
+                            .setEnd(lineEnd)
+                            .build()
+                    }
+                    val w = (l.getPrimaryHorizontal(if (it.isRtl) firstInLine else lastInLineExcl)
+                            - l.getPrimaryHorizontal(if (it.isRtl) lastInLineExcl else firstInLine)) +
+                            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+                                // just add a few pixels on top if RTL as approximation :D
+                                if (it.isRtl) 5 else 0
+                            } else 0
+                    val horizontalEnd = horizontalStart + w * if (it.isRtl) -1 else 1
+                    val horizontalLeft = min(horizontalStart, horizontalEnd)
+                    val horizontalRight = max(horizontalStart, horizontalEnd)
+                    ia.add(horizontalLeft.toInt()) // offset from left to start of word
+                    ia.add((horizontalRight - horizontalLeft).roundToInt()) // width of text in this line
+                    ia.add(firstInLine - it.charRange.first)
+                    ia.add(lastInLineExcl - it.charRange.first)
+                    ia.add(if (it.isRtl) -1 else 1)
+                }
+                return@map ia
+            }
+            SbItem(
+                layout, sb, paddingTop.dpToPx(context).toInt(),
+                paddingBottom.dpToPx(context).toInt(),
+                words, lineOffsets, lineOffsets?.let { _ ->
+                    (0..<layout.lineCount).map { line ->
+                        findBidirectionalBarriers(
+                            layout.text.subSequence(
+                                layout.getLineStart(line), layout.getLineEnd(line)
+                            )
+                        ).flatMap {
+                            if (it.second == alignmentNormal)
+                                listOf(line, line)
+                            else
+                                listOf(line)
+                        }
+                    }.flatten()
+                }, speaker, syncedLine
+            )
+        }
+        val heights = spLines.map { it.layout.height + it.paddingTop + it.paddingBottom }
+        val globalPaddingTop = if (lyrics is SemanticLyrics.SyncedLyrics) viewportHeight / 6 else
+            context.resources.getDimensionPixelSize(R.dimen.lyric_top_padding)
+        val lastIdx = spLines.indexOfLast { it.speaker?.isBackground != true &&
+                it.line?.isTranslated != true }.takeIf { it != -1 }
+        val globalPaddingBottom = if (lyrics is SemanticLyrics.SyncedLyrics) max(0,
+            (viewportHeight * (5f / 6f)).toInt() -
+                    (lastIdx?.let { heights.subList(it, heights.size).sum() } ?: 0))
+        else if (lyrics != null) context.resources.getDimensionPixelSize(R.dimen.lyric_bottom_padding) else 0
+        return MeasuredLyrics(
+            width = width,
+            contentHeight = heights.sum() + globalPaddingTop + globalPaddingBottom,
+            paddingTop = globalPaddingTop,
+            synced = lyrics is SemanticLyrics.SyncedLyrics,
+            viewportHeight = viewportHeight,
+            lines = spLines,
+        )
+    }
+
+    /**
+     * A tap at [y] (px from the top of the lyrics): seeks to the line under it, and lets the
+     * lyrics follow playback again right away.
+     */
+    fun seekToLineAt(y: Float) {
+        val measured = measured
+        if (measured == null) {
+            remeasure()
+            return
+        }
+        // Convert to content coordinates
+        val contentY = y + scrollY - padding.top
+        var foundItem: SemanticLyrics.LyricLine? = null
+        if (lyrics is SemanticLyrics.SyncedLyrics) {
+            var heightSoFar = measured.paddingTop
+            measured.lines.forEachIndexed { i, it ->
+                val myHeight = it.paddingTop + it.layout.height + it.paddingBottom
+                // Where the line is drawn, which a running scroll animation moves it away from
+                val top = heightSoFar + (drawnLineOffsets.getOrNull(i) ?: 0f)
+                if (contentY >= top && contentY <= top + myHeight && it.line!!.isClickable)
+                    foundItem = it.line
+                heightSoFar += myHeight
+            }
+        }
+        scrollHeldUntil = null
+        if (foundItem != null) {
+            // The next frame showing a new position carries the line fades over to it (see
+            // drawLines), even if it's too close to the old one to be told apart from playback
+            tapSeekPending = true
+            instance.seekTo(foundItem.start)
+            instance.setPlayWhenReady(true)
+        }
+        redraw()
+    }
+
+    /**
+     * A seek from [from] to [to]: each of [lines] whose fade differs between the two positions
+     * gets a [stateOverrides] entry, so it goes on fading from where it was.
+     */
+    private fun handleSeek(lines: List<SbItem>, from: ULong, to: ULong) {
+        lines.forEachIndexed { i, it ->
+            val t = lineTiming(lines, i)
+            val override = stateOverrides[i]
+            val overridePos = override?.let {
+                // if there's an old override we'll continue there
+                if (it >= 0f)
+                    it.toULong() + from - stateTime
+                else (-it).toULong() // negative signals freeze
+            } ?: from
+            val animPosNow = t.fadeProgress(overridePos)
+            val animPosAfterSeek = t.fadeProgress(to)
+            if (animPosNow != animPosAfterSeek && it.theWords == null)
+                stateOverrides[i] =
+                        // Now we have to decide what behavior towards infinity we wish to have...
+                    when {
+                        // If we are fading out or fully faded out at target, skip to fade out
+                        // at current animation point
+                        to !in t.fadeInStart..<t.fadeOutStart ->
+                            lerp(t.fadeOutStart.toFloat(), t.fadeOutEnd.toFloat(),
+                                1f - animPosNow)
+                        // If we're fading in at target and are already fully faded in here,
+                        // stay fully faded in and wait for target to finish fading in too.
+                        overridePos in t.fadeInEnd..<t.fadeOutStart ->
+                            -overridePos.toFloat() // negative signals freeze
+                        else -> lerp(t.fadeInStart.toFloat(), t.fadeInEnd.toFloat(),
+                            animPosNow)
+                    }
+            else if (override != null)
+                stateOverrides.remove(i)
+        }
+        stateTime = to
+    }
+
+    private data class SbItem(
+        val layout: StaticLayout, val text: SpannableStringBuilder,
+        val paddingTop: Int, val paddingBottom: Int, val theWords: List<SemanticLyrics.Word>?,
+        val words: List<List<Int>>?, val rlm: List<Int>?, val speaker: SpeakerEntity?,
+        val line: SemanticLyrics.LyricLine?
+    )
+
+    /**
+     * [lines] laid out [width] px wide, for a viewport [viewportHeight] px tall. The content is
+     * [contentHeight] px tall and starts with [paddingTop] px above the first line: for [synced]
+     * lyrics, a sixth of the viewport, where the line being sung is scrolled to.
+     */
+    private class MeasuredLyrics(
+        val width: Int,
+        val contentHeight: Int,
+        val paddingTop: Int,
+        val synced: Boolean,
+        val viewportHeight: Int,
+        val lines: List<SbItem>,
+    )
+}
