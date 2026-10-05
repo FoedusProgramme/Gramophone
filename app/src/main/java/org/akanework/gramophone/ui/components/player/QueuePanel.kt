@@ -29,9 +29,7 @@ import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.DeleteSweep
@@ -44,12 +42,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -57,10 +51,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import androidx.media3.common.MediaItem
-import androidx.media3.common.Player
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.defaultPrefs
 import org.akanework.gramophone.logic.getBooleanStrict
@@ -76,7 +67,8 @@ import org.akanework.gramophone.ui.components.home.EditableSongRow
 import org.akanework.gramophone.ui.components.home.LIBRARY_PLAYING_CORNER
 import org.akanework.gramophone.ui.components.home.LibraryFastScroller
 import org.akanework.gramophone.ui.components.home.nowPlayingRowColors
-import org.akanework.gramophone.ui.fragments.compose.QueueRoot
+import org.akanework.gramophone.ui.fragments.compose.MqContent
+import org.akanework.gramophone.ui.fragments.compose.MqState
 import org.akanework.gramophone.ui.fragments.compose.rememberMqState
 
 /*
@@ -104,64 +96,17 @@ interface QueueSheetHost {
     val context: Context
 
     /** The song the player is on, as a position in the queue's order, or null for none. */
-    var currentMediaItemIndex: Int?
+    var currentMediaItemIndex: Int
 
-    fun lockQueue(lock: Boolean)
     fun dismiss()
     fun scrollToPositionWithOffset(position: Int, offsetPx: Int)
     fun smoothScrollTo(position: Int)
     fun notifyListChanged()
-    fun updateTimer(totalMs: Long, baseRealtime: Long, running: Boolean)
 }
 
 @Stable
 private class QueueRow(val key: String, val item: MediaItem)
 
-private class QueueSheetState(
-    override val context: Context,
-    private val onDismissRequest: () -> Unit,
-) : QueueSheetHost, LifecycleOwner {
-    private val registry = LifecycleRegistry(this)
-    override val lifecycle: Lifecycle get() = registry
-
-    val listState = LazyListState()
-    override var currentMediaItemIndex: Int? by mutableStateOf(null)
-    var locked by mutableStateOf(false)
-        private set
-    var listVersion by mutableIntStateOf(0)
-        private set
-    var pendingScroll by mutableStateOf<Pair<Int, Int>?>(null)
-    var pendingSmoothScroll by mutableStateOf<Int?>(null)
-
-    fun onShow() {
-        registry.currentState = Lifecycle.State.RESUMED
-    }
-
-    fun onHide() {
-        registry.currentState = Lifecycle.State.DESTROYED
-    }
-
-    override fun lockQueue(lock: Boolean) {
-        locked = lock
-    }
-
-    override fun dismiss() = onDismissRequest()
-
-    override fun scrollToPositionWithOffset(position: Int, offsetPx: Int) {
-        pendingScroll = position to offsetPx
-    }
-
-    override fun smoothScrollTo(position: Int) {
-        pendingSmoothScroll = position
-    }
-
-    override fun notifyListChanged() {
-        listVersion++
-    }
-
-    // The queue doesn't show its time left
-    override fun updateTimer(totalMs: Long, baseRealtime: Long, running: Boolean) {}
-}
 
 /**
  * The queue of [controller]; [onDismiss] puts it away, as when it's cleared. The caller keeps it
@@ -175,64 +120,34 @@ fun QueuePanel(
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    val host = remember { QueueSheetState(context, onDismiss) }
-    DisposableEffect(host) {
-        host.onShow()
-        onDispose { host.onHide() }
-    }
-    val mqState = rememberMqState(scope, controller, host)
+    val mqState = rememberMqState(context,scope, controller, onDismiss)
     if (mqState == null) {
-        // Not connected to the player: nothing to show.
         LaunchedEffect(Unit) { onDismiss() }
         return
     }
-    val mqEnabled = remember { Flags.MQ_PREVIEW && context.defaultPrefs.getBooleanStrict("mq_preview", false) }
-    val pagerState = rememberPagerState(initialPage = if (Flags.MQ_PREVIEW) 0 else 1) { 2 }
+    DisposableEffect(mqState) {
+        mqState.onShow()
+        onDispose { mqState.onHide() }
+    }
+    val mqEnabled = remember { context.defaultPrefs.getBooleanStrict("mq_preview", false) }
+
     val instance = controller.get()
 
-    DisposableEffect(host, mqState) {
-        val listener = object : Player.Listener {
-            override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
-                if (mqState.isDetached()) return
-                val i = instance?.currentMediaItemIndex
-                host.currentMediaItemIndex = i?.let { mqState.playlist.first.indexOf(it) }
-            }
-
-            override fun onPositionDiscontinuity(
-                oldPosition: Player.PositionInfo, newPosition: Player.PositionInfo, reason: Int,
-            ) {
-                if (mqState.isDetached()) return
-                mqState.updateTimer()
-            }
-
-            override fun onIsPlayingChanged(isPlaying: Boolean) {
-                mqState.updateTimer()
-            }
-        }
-        controller.addRecreationalPlayerListener(host.lifecycle, listener) {
-            listener.onMediaItemTransition(
-                instance?.currentMediaItem, Player.MEDIA_ITEM_TRANSITION_REASON_PLAYLIST_CHANGED
-            )
-            listener.onIsPlayingChanged(instance?.isPlaying ?: false)
-        }
-        onDispose {}
-    }
-
-    val listState = host.listState
-    LaunchedEffect(host.pendingScroll) {
-        host.pendingScroll?.let { (position, offset) ->
+    val listState = mqState.listState
+    LaunchedEffect(mqState.pendingScroll) {
+        mqState.pendingScroll?.let { (position, offset) ->
             if (position >= 0) listState.scrollToItem(position, -offset)
-            host.pendingScroll = null
+            mqState.pendingScroll = null
         }
     }
-    LaunchedEffect(host.pendingSmoothScroll) {
-        host.pendingSmoothScroll?.let { position ->
+    LaunchedEffect(mqState.pendingSmoothScroll) {
+        mqState.pendingSmoothScroll?.let { position ->
             if (position >= 0) listState.animateScrollToItem(position)
-            host.pendingSmoothScroll = null
+            mqState.pendingSmoothScroll = null
         }
     }
 
-    val version = host.listVersion
+    val version = mqState.listVersion
     val rows = remember(version) {
         val (order, items) = mqState.playlist
         val seen = HashMap<String, Int>()
@@ -246,7 +161,7 @@ fun QueuePanel(
     val editable = !mqState.isDetached()
     val reorder = rememberReorderableListState(listState) { from, to -> mqState.moveRow(from, to) }
     val unknownArtist = stringResource(R.string.unknown_artist)
-    val currentArtwork = host.currentMediaItemIndex?.let { rows.getOrNull(it) }?.item?.mediaMetadata?.artworkUri
+    val currentArtwork = mqState.currentMediaItemIndex?.let { rows.getOrNull(it) }?.item?.mediaMetadata?.artworkUri
     val nowPlayingColors = nowPlayingColors(
         rememberArtworkColorScheme(currentArtwork), MaterialTheme.colorScheme.primary,
     )
@@ -258,13 +173,11 @@ fun QueuePanel(
                 .widthIn(max = if (mqEnabled) WIDE_QUEUE_MAX_WIDTH else QUEUE_MAX_WIDTH)
                 .fillMaxSize(),
         ) {
-            // The multi-queue head. Without it, there's nothing over the songs
-            if (Flags.MQ_PREVIEW) {
-                QueueRoot(
+            if (Flags.MQ_PREVIEW && mqEnabled) {
+                MqContent(
                     mqState = mqState,
-                    pagerState = pagerState,
-                    coroutineScope = scope,
                     mqEnabled = mqEnabled,
+                    landscape = false,
                     onDismiss = onDismiss,
                 )
             }
@@ -298,7 +211,7 @@ fun QueuePanel(
                                 handleModifier = if (editable) Modifier.reorderHandle(reorder, index) else Modifier,
                                 showControls = editable,
                                 colors = nowPlayingRowColors(
-                                    isCurrent = index == host.currentMediaItemIndex,
+                                    isCurrent = index == mqState.currentMediaItemIndex,
                                     colors = nowPlayingColors,
                                     containerShape = RoundedCornerShape(LIBRARY_PLAYING_CORNER),
                                 ),
@@ -323,7 +236,7 @@ fun QueuePanel(
             onScrollToPlaying = {
                 mqState.playlist.first.indexOfFirst { i ->
                     i == (instance?.currentMediaItemIndex ?: 0)
-                }.takeIf { it != -1 }?.let { host.smoothScrollTo(it) }
+                }.takeIf { it != -1 }?.let { mqState.smoothScrollTo(it) }
             },
             modifier = Modifier
                 .align(Alignment.BottomEnd)

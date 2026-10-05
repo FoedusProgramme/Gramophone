@@ -1,5 +1,6 @@
 package org.akanework.gramophone.ui.fragments.compose
 
+import android.content.Context
 import android.os.SystemClock
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
@@ -17,12 +18,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -36,16 +39,19 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.DragHandle
 import androidx.compose.material.icons.outlined.ExpandLess
 import androidx.compose.material.icons.outlined.ExpandMore
+import androidx.compose.material.icons.outlined.SkipNext
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -54,7 +60,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorProducer
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
@@ -66,6 +75,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
@@ -99,7 +111,9 @@ import org.akanework.gramophone.logic.utils.CalculationUtils.convertDurationToTi
 import org.akanework.gramophone.logic.utils.Flags
 import org.akanework.gramophone.ui.MediaControllerViewModel
 import org.akanework.gramophone.ui.components.compose.QueueDropdownMenu
+
 import org.akanework.gramophone.ui.components.player.QueueSheetHost
+import org.akanework.gramophone.ui.components.player.TintedIcon
 import java.util.LinkedList
 
 @Composable
@@ -353,7 +367,6 @@ fun QueueInfo(
 ) {
     val haptic = LocalHapticFeedback.current
 
-    val currentMediaItemIndex by mqState.currentMediaItemIndex.collectAsState()
     val mediaItemCount by mqState.mediaItemCount.collectAsState()
     val durationMs by mqState.durationMs.collectAsState()
 
@@ -435,7 +448,7 @@ fun QueueInfo(
             modifier = Modifier.padding(horizontal = 8.dp)
         ) {
             Text(
-                text = "${currentMediaItemIndex + 1} / $mediaItemCount",
+                text = "${mqState.currentMediaItemIndex + 1} / $mediaItemCount",
                 style = MaterialTheme.typography.bodyMedium
             )
             Text(
@@ -620,150 +633,50 @@ fun ActionBar(
 
 }
 
-@Composable
-fun QueueRoot(
-    mqState: MqState,
-    pagerState: PagerState,
-    coroutineScope: CoroutineScope,
-    mqEnabled: Boolean,
-    modifier: Modifier = Modifier,
-    onDismiss: (() -> Unit)? = null,
-) {
-    val context = LocalContext.current
-    val haptic = LocalHapticFeedback.current
-
-    val landscapeMode = false && context.supportsWideScreen()
-//        LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
-
-    @Composable
-    fun BoxScope.pager(
-        modifier: Modifier = Modifier,
-    ) {
-        HorizontalPager(
-            state = pagerState,
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(bottom = 20.dp),
-            beyondViewportPageCount = 1,
-            userScrollEnabled = Flags.MQ_PREVIEW && !mqState.expanded
-        ) { page ->
-            when (page) {
-                0 -> {
-                    if (!Flags.MQ_PREVIEW) return@HorizontalPager
-                    if (Flags.MQ_PREVIEW && landscapeMode) {
-                        QueueInfo(
-                            mqState = mqState,
-                            mqEnabled = mqEnabled,
-                            landscape = landscapeMode,
-                            onDismiss = onDismiss,
-                        )
-                    } else {
-                        MqContent(
-                            mqState = mqState,
-                            mqEnabled = mqEnabled,
-                            landscape = false,
-                            onDismiss = onDismiss,
-                        )
-                    }
-                }
-
-                // What was here, clearing the queue, scrolling to the song playing and the time
-                // left, floats over the songs, see QueuePanel
-                1 -> {}
-            }
-        }
-
-        if (!Flags.MQ_PREVIEW) return
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            modifier = Modifier
-                .wrapContentHeight()
-                .fillMaxWidth()
-                .padding(bottom = 8.dp)
-                .align(Alignment.BottomCenter)
-                .alpha(if (!mqState.expanded) 1f else 0.3f)
-                .animateContentSize()
-        ) {
-            repeat(pagerState.pageCount) { iteration ->
-                val color = if (pagerState.currentPage == iteration) {
-                    MaterialTheme.colorScheme.onSurface
-                } else {
-                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
-                }
-                Box(
-                    modifier = Modifier
-                        .padding(horizontal = 4.dp)
-                        .clip(CircleShape)
-                        .background(color)
-                        .size(8.dp)
-                        .clickable(
-                            enabled = !mqState.expanded,
-                            onClick = {
-                                coroutineScope.launch {
-                                    haptic.performHapticFeedback(HapticFeedbackType.ContextClick)
-                                    pagerState.animateScrollToPage(iteration)
-                                }
-                            }
-                        )
-                )
-            }
-        }
-    }
-
-    if (landscapeMode) {
-        Row(
-            modifier = modifier
-                .fillMaxWidth()
-        ) {
-            Column(
-                modifier = Modifier
-                    .weight(0.5f)
-            ) {
-                Box {
-                    pager()
-                }
-
-                ActionBar(
-                    mqState = mqState,
-                )
-
-                val lazyQueuesListState = rememberLazyListState()
-                MqList(
-                    mqState = mqState,
-                    lazyQueuesListState = lazyQueuesListState,
-                    modifier = Modifier
-                        .heightIn(Dp.Unspecified, Dp.Unspecified)
-                )
-            }
-        }
-    } else {
-        Column(
-            modifier = modifier
-                .fillMaxWidth()
-        ) {
-            Box {
-                pager()
-            }
-        }
-    }
-}
-
 
 /**
  * State object for Multiqueue.
  */
 class MqState(
+    override val context: Context,
     private val coroutineScope: CoroutineScope,
-    /** Where the queue's player and service listeners are registered. */
     private val controller: MediaControllerViewModel,
-    /**
-     * The connected controller the queue is opened for, see [rememberMqState], which everything
-     * else goes through. The queue closes when the activity stops and releases it; until then,
-     * a controller no longer connected reports an empty queue and ignores commands.
-     */
     private val instance: MediaBrowser,
-    private val host: QueueSheetHost,
-) {
+    private val onDismissRequest: () -> Unit,
+) : QueueSheetHost, LifecycleOwner {
+    private val registry = LifecycleRegistry(this)
+    override val lifecycle: Lifecycle get() = registry
+
+    val listState = LazyListState()
+    override var currentMediaItemIndex: Int by mutableStateOf(getShuffledIndex())
+    var locked by mutableStateOf(false)
+        private set
+    var listVersion by mutableIntStateOf(0)
+        private set
+    var pendingScroll by mutableStateOf<Pair<Int, Int>?>(null)
+    var pendingSmoothScroll by mutableStateOf<Int?>(null)
+
+    fun onShow() {
+        registry.currentState = Lifecycle.State.RESUMED
+    }
+
+    fun onHide() {
+        registry.currentState = Lifecycle.State.DESTROYED
+    }
+
+    override fun dismiss() = onDismissRequest()
+
+    override fun scrollToPositionWithOffset(position: Int, offsetPx: Int) {
+        pendingScroll = position to offsetPx
+    }
+
+    override fun smoothScrollTo(position: Int) {
+        pendingSmoothScroll = position
+    }
+
+    override fun notifyListChanged() {
+        listVersion++
+    }
 
     companion object {
         const val CLIENT_QB_REFRESH_ALL = "qb_refresh_all"
@@ -801,7 +714,6 @@ class MqState(
     val repeatMode = MutableStateFlow(instance.repeatMode)
 
     val mediaItemCount = MutableStateFlow(instance.mediaItemCount)
-    val currentMediaItemIndex = MutableStateFlow(getShuffledIndex())
     val durationMs = MutableStateFlow(getDurationMs())
 
     var expanded by mutableStateOf(false)
@@ -812,7 +724,6 @@ class MqState(
         get() = detachedQueueState.value
         private set(value) {
             detachedQueueState.value = value
-            host.lockQueue(value != null)
         }
 
     var activeQueue: Pair<MutableList<Int>, MultiQueueObject>? by mutableStateOf(null)
@@ -849,18 +760,28 @@ class MqState(
         ) {
             if (isDetached()) return
             this@MqState.mediaItemCount.value = instance.mediaItemCount
-            this@MqState.currentMediaItemIndex.value = getShuffledIndex()
+            this@MqState.currentMediaItemIndex = getShuffledIndex()
+        }
+
+        override fun onPositionDiscontinuity(
+            oldPosition: Player.PositionInfo, newPosition: Player.PositionInfo, reason: Int,
+        ) {
+            if (isDetached()) return
+            updateTimer()
+        }
+        override fun onIsPlayingChanged(isPlaying: Boolean) {
+            updateTimer()
         }
     }
 
     init {
         controller.addRecreationalPlayerListener(
-            host.lifecycle,
+            lifecycle,
             playerListener
         ) {
         }
 
-        controller.customCommandListeners.addCallback(host.lifecycle) { _, command, _ ->
+        controller.customCommandListeners.addCallback(lifecycle) { _, command, _ ->
             when (command.customAction) {
                 CLIENT_QB_REFRESH_ALL, CLIENT_QB_REFRESH_QUEUES, CLIENT_QB_REFRESH_ITEM,
                 CLIENT_QB_REFRESH_LIST, CLIENT_QB_REFRESH_CLEAR -> {
@@ -918,10 +839,10 @@ class MqState(
                 playlist.first.indexOfFirst { i ->
                     i == (instance.currentMediaItemIndex)
                 }.let { scrollPos ->
-                    host.scrollToPositionWithOffset(
+                    scrollToPositionWithOffset(
                         scrollPos,
                         // quick UX hack to show there's more songs above (well, if there is).
-                        if (scrollPos >= playlist.first.size - 2) 0 else (host.context
+                        if (scrollPos >= playlist.first.size - 2) 0 else (context
                             .resources.getDimensionPixelOffset(R.dimen.list_height) * 0.5f).toInt()
                     )
                 }
@@ -945,7 +866,7 @@ class MqState(
             val i = (instance.currentMediaItemIndex).let {
                 if (it == -1) 0 else it
             }
-            host.currentMediaItemIndex = playlist.first.indexOf(i)
+            currentMediaItemIndex = playlist.first.indexOf(i)
         }
         instance.getInactiveQueues().toMutableList().let {
             inactiveQueues.addAll(it)
@@ -994,7 +915,7 @@ class MqState(
         this.repeatMode.value = mq.repeatMode
         this.shuffleModeEnabled.value = mq.shuffleModeEnabled
         this.mediaItemCount.value = mq.getSize()
-        this.currentMediaItemIndex.value = getShuffledIndex(mq)
+        this.currentMediaItemIndex = getShuffledIndex(mq)
         this.durationMs.value = getDurationMs(mq)
         updateList(instance.getQueueForUi(mq.id))
     }
@@ -1007,7 +928,7 @@ class MqState(
         this.repeatMode.value = instance.repeatMode
         this.shuffleModeEnabled.value = instance.shuffleModeEnabled
         this.mediaItemCount.value = instance.mediaItemCount
-        this.currentMediaItemIndex.value = getShuffledIndex()
+        this.currentMediaItemIndex = getShuffledIndex()
         this.durationMs.value = getDurationMs()
         if (updateSongList) {
             updateList(mq = activeQueue)
@@ -1024,10 +945,6 @@ class MqState(
 
     fun removeQueue(queueId: Long? = activeQueue?.second?.id) {
         if (queueId == null) return
-        if (!Flags.MQ_PREVIEW) {
-            instance.clearMediaItems()
-            return
-        }
 
         instance.deleteQueue(queueId)
 
@@ -1046,7 +963,6 @@ class MqState(
         // do not use full resetHead(false) to avoid restoring the stats of old active queue right
         // before the new one is loaded
         detachedQueue = null
-        host.lockQueue(false)
 
         coroutineScope.launch {
             init()
@@ -1137,7 +1053,8 @@ class MqState(
         } ?: 0
         if (current < 0) return
         val elapsedCurrentMs = currentPosition ?: instance.currentPosition
-        host.updateTimer(
+        /*
+        updateTimer(
             totalMs = playlist.second.sumOf { it.mediaMetadata.durationMs ?: 0L },
             baseRealtime = SystemClock.elapsedRealtime() + playlist.first.subList(
                 current,
@@ -1146,6 +1063,7 @@ class MqState(
                     elapsedCurrentMs + 1000,
             running = instance.isPlaying,
         )
+         */
     }
 
     /** A tap on row [pos] of the queue: play it, or in a detached queue load that queue there. */
@@ -1168,15 +1086,15 @@ class MqState(
         playlist.first.add(to, to1)
         playlist.second.add(to1, movedItem)
         instance.moveMediaItem(from1, to1)
-        host.notifyListChanged()
-        val currentIndex = host.currentMediaItemIndex
+        notifyListChanged()
+        val currentIndex = currentMediaItemIndex
         if (currentIndex != null) {
             if (currentIndex == from)
-                host.currentMediaItemIndex = to
+                currentMediaItemIndex = to
             else if (from < to && from < currentIndex && currentIndex <= to)
-                host.currentMediaItemIndex = currentIndex - 1
+                currentMediaItemIndex = currentIndex - 1
             else if (from > to && to <= currentIndex && currentIndex < from)
-                host.currentMediaItemIndex = currentIndex + 1
+                currentMediaItemIndex = currentIndex + 1
         }
         updateTimer()
     }
@@ -1191,10 +1109,10 @@ class MqState(
         playlist.first.replaceAllSupport { if (it > idx) it - 1 else it }
         instance.removeMediaItem(idx)
         playlist.second.removeAt(idx)
-        host.notifyListChanged()
-        val currentIndex = host.currentMediaItemIndex
+        notifyListChanged()
+        val currentIndex = currentMediaItemIndex
         if (currentIndex != null && pos < currentIndex) {
-            host.currentMediaItemIndex = currentIndex - 1
+            currentMediaItemIndex = currentIndex - 1
         }
         updateTimer()
     }
@@ -1300,7 +1218,7 @@ class MqState(
             }
 
             RefreshLevel.CLEAR -> {
-                host.dismiss()
+                dismiss()
             }
         }
     }
@@ -1321,14 +1239,14 @@ class MqState(
             dumpPlaylist()
         }
         playlist = pl
-        host.notifyListChanged()
+        notifyListChanged()
 
         // update playing indicator, scroll to
         val i = (mq?.second?.startIndex ?: instance.currentMediaItemIndex).let {
             if (it == -1) 0 else it
         }
-        host.currentMediaItemIndex = playlist.first.indexOf(i)
-        host.smoothScrollTo(playlist.first.indexOf(i))
+        currentMediaItemIndex = playlist.first.indexOf(i)
+        smoothScrollTo(playlist.first.indexOf(i))
 
         updateTimer(mq?.second?.startIndex, mq?.second?.startPositionMs)
     }
@@ -1354,14 +1272,17 @@ class MqState(
     }
 }
 
-/** The queue's state, or null while the controller is not connected (the queue can't be shown). */
+/**
+ * Create a multiple queues state if a media controller is available.
+ */
 @Composable
 fun rememberMqState(
+    context: Context,
     coroutineScope: CoroutineScope,
     controller: MediaControllerViewModel,
-    host: QueueSheetHost,
+    onDismiss: (() -> Unit) = {}
 ): MqState? {
     return remember {
-        controller.get()?.let { MqState(coroutineScope, controller, it, host) }
+        controller.get()?.let { MqState(context, coroutineScope, controller, it, onDismiss) }
     } // TODO: rememberSaveable
 }
