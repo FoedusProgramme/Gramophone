@@ -16,7 +16,6 @@
  */
 package org.akanework.gramophone.ui.components.player
 
-import android.content.Context
 import android.os.SystemClock
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -57,7 +56,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.Lifecycle
 import androidx.media3.common.MediaItem
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
@@ -101,20 +99,6 @@ private val QUEUE_TIME_LEFT_BOTTOM_PADDING = 8.dp
 
 /** What the queue's end leaves for the FABs over it: a small FAB above a FAB, with margins. */
 private val QUEUE_FABS_ROOM = QUEUE_FAB_MARGIN * 2 + 40.dp + QUEUE_FAB_GAP + QUEUE_FAB_SIZE
-
-/** What the multi-queue state asks of the queue it shows in. */
-interface QueueSheetHost {
-    val lifecycle: Lifecycle
-    val context: Context
-
-    /** The song the player is on, as a position in the queue's order, or null for none. */
-    var currentMediaItemIndex: Int
-
-    fun dismiss()
-    fun scrollToPositionWithOffset(position: Int, offsetPx: Int)
-    fun smoothScrollTo(position: Int)
-    fun notifyListChanged()
-}
 
 @Stable
 private class QueueRow(val key: Long, val item: MediaItem)
@@ -175,7 +159,7 @@ fun QueuePanel(
     }
     val editable = !mqState.isDetached()
     val unknownArtist = stringResource(R.string.unknown_artist)
-    val currentArtwork = mqState.currentMediaItemIndex?.let { rows.getOrNull(it) }?.item?.mediaMetadata?.artworkUri
+    val currentArtwork = rows.getOrNull(mqState.currentMediaItemIndex)?.item?.mediaMetadata?.artworkUri
     val nowPlayingColors = nowPlayingColors(
         rememberArtworkColorScheme(currentArtwork), MaterialTheme.colorScheme.primary,
     )

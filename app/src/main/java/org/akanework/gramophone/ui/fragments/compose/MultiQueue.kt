@@ -122,7 +122,6 @@ import org.akanework.gramophone.logic.utils.Flags
 import org.akanework.gramophone.ui.MediaControllerViewModel
 import org.akanework.gramophone.ui.components.compose.QueueDropdownMenu
 
-import org.akanework.gramophone.ui.components.player.QueueSheetHost
 import org.akanework.gramophone.ui.components.player.TintedIcon
 import java.util.LinkedList
 
@@ -648,14 +647,14 @@ fun ActionBar(
  * State object for Multiqueue.
  */
 class MqState(
-    override val context: Context,
+    private val context: Context,
     private val coroutineScope: CoroutineScope,
     /** Where the queue's player and service listeners are registered. */
     private val controller: MediaControllerViewModel,
     /** The controller connected as the queue's made, the first [instance]. */
     connection: MediaBrowser,
     private val onDismissRequest: () -> Unit,
-) : QueueSheetHost, LifecycleOwner {
+) : LifecycleOwner {
     /**
      * The connected controller, see [rememberMqState], which everything else goes through. The
      * activity releases it when it stops: until it starts again and the next one takes its place,
@@ -669,7 +668,8 @@ class MqState(
     val listState = LazyListState()
 
     // -1 for none. Goes through the whole queue, worked out once it's loaded, see syncWithPlayer
-    override var currentMediaItemIndex: Int by mutableStateOf(-1)
+    var currentMediaItemIndex: Int by mutableStateOf(-1)
+        private set
     var locked by mutableStateOf(false)
         private set
     var listVersion by mutableIntStateOf(0)
@@ -700,17 +700,17 @@ class MqState(
         registry.currentState = Lifecycle.State.DESTROYED
     }
 
-    override fun dismiss() = onDismissRequest()
+    private fun dismiss() = onDismissRequest()
 
-    override fun scrollToPositionWithOffset(position: Int, offsetPx: Int) {
+    private fun scrollToPositionWithOffset(position: Int, offsetPx: Int) {
         pendingScroll = position to offsetPx
     }
 
-    override fun smoothScrollTo(position: Int) {
+    private fun smoothScrollTo(position: Int) {
         pendingSmoothScroll = position
     }
 
-    override fun notifyListChanged() {
+    private fun notifyListChanged() {
         listVersion++
     }
 
@@ -1193,14 +1193,12 @@ class MqState(
         if (!changed) instance.moveMediaItem(from1, to1)
         notifyListChanged()
         val currentIndex = currentMediaItemIndex
-        if (currentIndex != null) {
-            if (currentIndex == from)
-                currentMediaItemIndex = to
-            else if (from < to && from < currentIndex && currentIndex <= to)
-                currentMediaItemIndex = currentIndex - 1
-            else if (from > to && to <= currentIndex && currentIndex < from)
-                currentMediaItemIndex = currentIndex + 1
-        }
+        if (currentIndex == from)
+            currentMediaItemIndex = to
+        else if (from < to && from < currentIndex && currentIndex <= to)
+            currentMediaItemIndex = currentIndex - 1
+        else if (from > to && to <= currentIndex && currentIndex < from)
+            currentMediaItemIndex = currentIndex + 1
         updateTimer()
     }
 
@@ -1220,9 +1218,8 @@ class MqState(
         // Told after the songs shown changed, so the player's change matches them, see queueChanged
         instance.removeMediaItem(idx)
         notifyListChanged()
-        val currentIndex = currentMediaItemIndex
-        if (currentIndex != null && pos < currentIndex) {
-            currentMediaItemIndex = currentIndex - 1
+        if (pos < currentMediaItemIndex) {
+            currentMediaItemIndex--
         }
         updateTimer()
     }
