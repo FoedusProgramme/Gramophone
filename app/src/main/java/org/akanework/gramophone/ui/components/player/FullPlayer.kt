@@ -807,7 +807,7 @@ internal fun ActionBarRow(
     val favorite = player.isFavorite
     val plainTint = scheme.colorProducer { onSurface }
     val checkTint = { on: Boolean ->
-        scheme.colorProducer { if (on) onPrimaryContainer else outlineVariant }
+        scheme.colorProducer { if (on) onPrimaryContainer else onSurfaceVariant }
     }
     val container = scheme.color { surfaceBright }
     val checkedContainer = scheme.color { primaryContainer }
