@@ -75,6 +75,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.akanework.gramophone.R
+import org.akanework.gramophone.logic.ApplicationScope
 import org.akanework.gramophone.logic.playlistUri
 import org.akanework.gramophone.ui.components.compose.DismissibleRow
 import org.akanework.gramophone.ui.components.compose.rememberReorderableListState
@@ -110,7 +111,7 @@ private const val FOLDER_NAME = "Restored playlists"
 
 private enum class EditDialog { Restore, Empty, Discard }
 
-private class EditRow(val key: Long, val item: MediaItem)
+private class EditRow(val key: Int, val item: MediaItem)
 
 @Stable
 private class PlaylistEditState(
@@ -118,12 +119,17 @@ private class PlaylistEditState(
     private val reader: FlowReader,
     id: Long,
     private val scope: CoroutineScope,
+    /** For work that must finish after the screen is left. */
+    private val appScope: CoroutineScope,
     private val requestWrite: (IntentSenderRequest) -> Unit,
-    private val onBack: () -> Unit,
+    private val close: () -> Unit,
 ) {
     private val context: Context = context.applicationContext
     private val uri: Uri = playlistUri(id)
     var title by mutableStateOf("")
+        private set
+    /** Set once the screen asked to close, so a back during its close animation goes past it. */
+    var leaving by mutableStateOf(false)
         private set
     var loaded by mutableStateOf(false)
         private set
@@ -135,15 +141,19 @@ private class PlaylistEditState(
     private var tmpName = ""
     private var doneEditing = false
     private val entries = MutableStateFlow(0 to PlaylistSerializer.Playlist.create())
-    private var renderedEntries = mapOf<PlaylistSerializer.Entry, MediaItem>()
-    private var keys = listOf<Long>()
-    private var nextKey = 0L
+
+    /** The songs of the playlist as loaded, by their index in it. */
+    private var rendered = listOf<MediaItem>()
+
+    /**
+     * For each of [entries], in their order, its index in the playlist as loaded. Moved and
+     * removed along with them, so a row always shows its own entry, however a rescan changes the
+     * entries' tags. Also the row's key, since no entry is ever added.
+     */
+    private var origins = listOf<Int>()
 
     private fun refreshRows() {
-        val rendered = renderedEntries
-        val list = entries.value.second.entries
-        if (keys.size != list.size) keys = List(list.size) { nextKey++ }
-        rows = list.mapIndexedNotNull { i, entry -> rendered[entry]?.let { EditRow(keys[i], it) } }
+        rows = origins.map { EditRow(it, rendered[it]) }
     }
 
     private suspend fun toast(text: String) = withContext(Dispatchers.Main) {
@@ -151,6 +161,11 @@ private class PlaylistEditState(
     }
 
     private suspend fun toast(res: Int) = toast(context.getString(res))
+
+    private fun onBack() {
+        leaving = true
+        close()
+    }
 
     private suspend fun leave() = withContext(Dispatchers.Main) { onBack() }
 
@@ -236,12 +251,11 @@ private class PlaylistEditState(
             withContext(Dispatchers.Main) { dialog = EditDialog.Empty }
             return
         }
-        val rendered = hashMapOf<PlaylistSerializer.Entry, MediaItem>()
-        readback.entries.forEach { rendered[it] = it.resolveMediaItem(pathMap) ?: missingItem(it) }
-        val renderedFinal = rendered.toMap()
+        var renderedNow = readback.entries.map { it.resolveMediaItem(pathMap) ?: missingItem(it) }
         withContext(Dispatchers.Main) {
             entries.value = 1 to readback
-            renderedEntries = renderedFinal
+            rendered = renderedNow
+            origins = readback.entries.indices.toList()
             refreshRows()
             requestWriteIfNeeded()
             loaded = true
@@ -250,13 +264,12 @@ private class PlaylistEditState(
             reader.pathMapFlow.drop(1).collectLatest { pathMap ->
                 // Keep using the old readback set because it will be a superset of current
                 // entries, because there's no way to add new songs.
-                readback.entries.forEach {
-                    rendered[it] = it.resolveMediaItem(pathMap) ?: (
-                        if (rendered[it]!!.mediaId.startsWith("Missing:")) rendered[it]!!
-                        else missingItem(it)
-                    )
+                val previous = renderedNow
+                renderedNow = readback.entries.mapIndexed { i, entry ->
+                    entry.resolveMediaItem(pathMap)
+                        ?: previous[i].takeIf { it.mediaId.startsWith("Missing:") }
+                        ?: missingItem(entry)
                 }
-                val renderedNow = rendered.toMap()
                 while (true) {
                     val entriesTmp = entries.value
                     // Keep the same generation number as this isn't a user triggered edit.
@@ -266,7 +279,7 @@ private class PlaylistEditState(
                     val done = withContext(Dispatchers.Main) {
                         if (entries.value.first == entriesTmp.first) {
                             entries.value = newEntries
-                            renderedEntries = renderedNow
+                            rendered = renderedNow
                             refreshRows()
                             true
                         } else false // The user changed something and raced with us, try again.
@@ -312,7 +325,7 @@ private class PlaylistEditState(
                 it.add(to, it.removeAt(from))
             })
         }
-        keys = keys.toMutableList().also { it.add(to, it.removeAt(from)) }
+        origins = origins.toMutableList().also { it.add(to, it.removeAt(from)) }
         refreshRows()
     }
 
@@ -322,7 +335,7 @@ private class PlaylistEditState(
                 it.removeAt(pos)
             })
         }
-        keys = keys.toMutableList().also { it.removeAt(pos) }
+        origins = origins.toMutableList().also { it.removeAt(pos) }
         refreshRows()
     }
 
@@ -339,7 +352,8 @@ private class PlaylistEditState(
 
     fun discardAndLeave() {
         dialog = null
-        scope.launch(Dispatchers.Default) {
+        // Leaving cancels the screen's scope, and a draft left behind would be offered back.
+        appScope.launch {
             try {
                 discardChanges()
             } catch (e: Exception) {
@@ -441,21 +455,24 @@ private class PlaylistEditState(
 fun PlaylistEditScreen(playlistId: Long, onBack: () -> Unit, modifier: Modifier = Modifier) {
     val context = LocalContext.current
     val reader = koinInject<FlowReader>()
+    val appScope = koinInject<ApplicationScope>()
     val scope = rememberCoroutineScope()
     var stateHolder by remember { mutableStateOf<PlaylistEditState?>(null) }
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {
         stateHolder?.onWriteRequestResult(it.resultCode)
     }
     val state = remember(playlistId) {
-        PlaylistEditState(context, reader, playlistId, scope, requestWrite = { launcher.launch(it) }, onBack = onBack)
-            .also { stateHolder = it }
+        PlaylistEditState(
+            context, reader, playlistId, scope, appScope,
+            requestWrite = { launcher.launch(it) }, close = onBack,
+        ).also { stateHolder = it }
     }
     LaunchedEffect(state) { state.start() }
     LifecycleResumeEffect(state) {
         state.onResume()
         onPauseOrDispose {}
     }
-    BackHandler { state.maybeGoBack() }
+    BackHandler(enabled = !state.leaving) { state.maybeGoBack() }
 
     val listState = rememberLazyListState()
     val reorder = rememberReorderableListState(listState) { from, to -> state.move(from, to) }
