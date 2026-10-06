@@ -48,7 +48,19 @@ internal const val SHORTCUT_SHUFFLE_ALL = "shuffle_all"
 
 /** Item and header actions of the library lists. */
 object LibraryActions {
-    fun playSong(env: AppActionEnv, songs: List<MediaItem>, position: Int, title: String) {
+    /**
+     * Plays [songs] from [position]. A position outside the list, from a row whose list was
+     * replaced under it, plays nothing.
+     */
+    fun playSong(
+        env: AppActionEnv,
+        songs: List<MediaItem>,
+        position: Int,
+        title: String,
+        /** Whether tapping the song that is already playing opens the full player. */
+        openPlayerIfCurrent: Boolean = true,
+    ) {
+        if (position !in songs.indices) return
         val mediaController = env.player ?: return
         // If the currently playing song is also the clicked song, then we continue playing the
         // song and open full player, but we still replace the list. This is intended to copy
@@ -58,7 +70,7 @@ object LibraryActions {
         mediaController.setMediaItemsSeamlessly(songs, position, title)
         mediaController.prepare()
         mediaController.play()
-        if (currentItem?.mediaId == songs[position].mediaId) {
+        if (openPlayerIfCurrent && currentItem?.mediaId == songs[position].mediaId) {
             env.playerSheet.open()
         }
     }

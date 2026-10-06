@@ -101,8 +101,12 @@ fun <T : Any> LibraryTabScreen(
             }
         }
     } else null
-    LaunchedEffect(reselectTick) { if (reselectTick > 0) goToPlayingSong?.invoke() }
+    // Only a tap after this page was made counts. The home keeps each tab's count, and the pager
+    // makes a page it dropped again, which must not take the last tap for a new one.
+    val firstTick = remember { reselectTick }
+    LaunchedEffect(reselectTick) { if (reselectTick > firstTick) goToPlayingSong?.invoke() }
     var sortMenuOpen by remember { mutableStateOf(false) }
+    val keys = remember(items) { uniqueKeys(items, spec.helper::getId) }
     val gapPx = with(density) { LIBRARY_ITEM_GAP.roundToPx() }
     Box(modifier.fillMaxSize()) {
     LazyVerticalGrid(
@@ -151,9 +155,9 @@ fun <T : Any> LibraryTabScreen(
                 sortMenu = { LibrarySortMenu(state, sortMenuOpen, onDismiss = { sortMenuOpen = false }) },
             )
         }
-        itemsIndexed(items, key = { _, it -> spec.helper.getId(it) }) { index, item ->
+        itemsIndexed(items, key = { index, _ -> keys[index] }) { index, item ->
             LibraryItem(
-                state, item, nowPlaying, env, layoutType,
+                state, item, index, nowPlaying, env, layoutType,
                 Modifier.animateItem(),
                 cardShape = { libraryCellShape(index, items.size, columns, it) },
             )

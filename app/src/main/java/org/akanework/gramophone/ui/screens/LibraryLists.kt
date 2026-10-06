@@ -126,7 +126,7 @@ fun libraryColumns(layoutType: LayoutType?): Int {
 
 /**
  * Content padding of a list: horizontal system bar / cutout insets (see [LocalListSideInsets]),
- * and at the bottom whichever is larger of the navigation bar and the mini player.
+ * and at the bottom [libraryBottomPadding].
  */
 @Composable
 fun libraryContentPadding(
@@ -135,15 +135,41 @@ fun libraryContentPadding(
 ): PaddingValues {
     val insets = WindowInsets.systemBars.union(WindowInsets.displayCutout).asPaddingValues()
     val direction = LocalLayoutDirection.current
-    val playerPadding = with(LocalDensity.current) { LocalPlayerBottomPadding.current.toDp() }
     val sides = LocalListSideInsets.current
     return PaddingValues(
         top = top,
         start = if (sides) insets.calculateStartPadding(direction) else 0.dp,
         end = if (sides) insets.calculateEndPadding(direction) else 0.dp,
-        bottom = LocalListBottomPadding.current
-            ?: max(insets.calculateBottomPadding().value, playerPadding.value).dp,
+        bottom = libraryBottomPadding(),
     )
+}
+
+/**
+ * Bottom padding of a list: [LocalListBottomPadding] if set, else whichever is larger of the
+ * navigation bar and the mini player.
+ */
+@Composable
+fun libraryBottomPadding(): Dp {
+    val insets = WindowInsets.systemBars.union(WindowInsets.displayCutout).asPaddingValues()
+    val playerPadding = with(LocalDensity.current) { LocalPlayerBottomPadding.current.toDp() }
+    return LocalListBottomPadding.current
+        ?: max(insets.calculateBottomPadding().value, playerPadding.value).dp
+}
+
+/**
+ * Keys for the items of a lazy list, from their [id]s. A lazy list throws on a key used twice,
+ * and a list may hold the same entry more than once (a playlist can list a song twice), so each
+ * repeat gets its copy number added. The first copy keeps the plain id, so a resort still
+ * animates it as the same item.
+ */
+internal fun <T> uniqueKeys(items: List<T>, id: (T) -> String): List<String> {
+    val copies = HashMap<String, Int>()
+    return items.map {
+        val key = id(it)
+        val copy = (copies[key] ?: 0) + 1
+        copies[key] = copy
+        if (copy == 1) key else "$key#$copy"
+    }
 }
 
 /**
@@ -277,6 +303,8 @@ internal fun <T : Any> libraryItemSubtitle(state: LibraryTabState<T>, item: T): 
 internal fun <T : Any> LibraryItem(
     state: LibraryTabState<T>,
     item: T,
+    /** The item's index in the list shown, which tells copies of one song apart. */
+    index: Int,
     nowPlaying: NowPlayingState,
     env: AppActionEnv,
     layoutType: LayoutType,
@@ -297,10 +325,16 @@ internal fun <T : Any> LibraryItem(
     val defaultCover = spec.defaultCoverOf(item)
     val actions = spec.menuActions(item)
     var menuOpen by remember { mutableStateOf(false) }
+    // The item's place in the state's list, which the actions play from. A row still showing a
+    // list that was replaced since (a folder sliding out, a search being typed) looks the item up
+    // in the new one, and is -1 when it is gone there.
+    val position = {
+        if (state.items.getOrNull(index) == item) index else state.items.indexOf(item)
+    }
     val menu: @Composable () -> Unit = {
         // The sheet's play button is its header, not one of the listed actions.
         val onMenuAction = { action: LibraryMenuAction ->
-            spec.onMenuAction(env, state, item, state.items.indexOf(item), action)
+            spec.onMenuAction(env, state, item, position(), action)
         }
         LibraryItemSheet(
             expanded = menuOpen,
@@ -323,7 +357,7 @@ internal fun <T : Any> LibraryItem(
     // The playing song's card takes its own corners, see libraryItemShape.
     val rowModifier = if (cardShape == null) modifier
         else modifier.libraryItemCard(cardShape(colors.emphasis))
-    val onClick = { spec.onClick(env, state, item, state.items.indexOf(item)) }
+    val onClick = { spec.onClick(env, state, item, position()) }
     if (layoutType.isGrid) {
         val trackCount = if (helper.canGetSize()) {
             if (helper.canGetArtist()) {

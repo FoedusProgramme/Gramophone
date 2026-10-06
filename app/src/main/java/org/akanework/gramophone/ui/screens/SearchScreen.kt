@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
@@ -56,6 +57,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeSource
@@ -74,6 +76,7 @@ import org.akanework.gramophone.ui.components.home.textViewStyle
 import org.akanework.gramophone.ui.components.home.topEdgeBlur
 import org.akanework.gramophone.ui.library.Sorter
 import org.akanework.gramophone.ui.nav.LocalAppBarTopPadding
+import org.akanework.gramophone.ui.nav.LocalListBottomPadding
 import org.akanework.gramophone.ui.state.LibraryTabSpec
 import org.akanework.gramophone.ui.state.LibraryTabState
 import org.koin.compose.koinInject
@@ -120,10 +123,17 @@ fun SearchScreen(initialQuery: String?, onBack: () -> Unit, modifier: Modifier =
     val focusRequester = remember { FocusRequester() }
     val keyboard = LocalSoftwareKeyboardController.current
     LaunchedEffect(Unit) { focusRequester.requestFocus() }
+    // The window is drawn under the keyboard, so the results keep clear of it themselves.
+    val listBottom = max(
+        WindowInsets.ime.asPaddingValues().calculateBottomPadding(), libraryBottomPadding(),
+    )
 
     Box(modifier.fillMaxSize().background(background)) {
         Box(Modifier.fillMaxSize().hazeSource(hazeState).background(background)) {
-            CompositionLocalProvider(LocalAppBarTopPadding provides barTopPadding) {
+            CompositionLocalProvider(
+                LocalAppBarTopPadding provides barTopPadding,
+                LocalListBottomPadding provides listBottom,
+            ) {
                 LibraryTabScreen(
                     state = state,
                     nowPlaying = nowPlaying,

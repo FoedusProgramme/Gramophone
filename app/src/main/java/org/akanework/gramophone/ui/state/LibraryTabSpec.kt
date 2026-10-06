@@ -109,6 +109,12 @@ sealed class LibraryTabSpec<T : Any>(
         action: LibraryMenuAction,
     )
 
+    /**
+     * Whether playing the song that is already playing opens the full player. The search leaves
+     * it closed, so the results stay in view.
+     */
+    val opensPlayerIfCurrent: Boolean get() = adapterType != LibraryAdapterTypes.SEARCH
+
     /** Title of a queue created from this list, named the way [onClick] names it. */
     fun queueTitleOf(env: AppActionEnv, state: LibraryTabState<T>): String =
         state.queueTitleOverride ?: env.getString(queueTitle)
@@ -148,7 +154,8 @@ sealed class LibraryTabSpec<T : Any>(
         ) {
             when (action) {
                 LibraryMenuAction.Play -> LibraryActions.playSong(
-                    env, state.items, position, queueTitleOf(env, state)
+                    env, state.items, position, queueTitleOf(env, state),
+                    openPlayerIfCurrent = state.spec.opensPlayerIfCurrent,
                 )
                 LibraryMenuAction.PlayNext -> LibraryActions.playNext(env, listOf(item))
                 LibraryMenuAction.AddToQueue -> LibraryActions.addToQueue(env, listOf(item))
@@ -466,7 +473,10 @@ sealed class LibraryTabSpec<T : Any>(
         override fun onClick(
             env: AppActionEnv, state: LibraryTabState<MediaItem>, item: MediaItem, position: Int
         ) {
-            LibraryActions.playSong(env, state.items, position, state.queueTitleOverride ?: "")
+            LibraryActions.playSong(
+                env, state.items, position, state.queueTitleOverride ?: "",
+                openPlayerIfCurrent = opensPlayerIfCurrent,
+            )
         }
 
         override fun onMenuAction(

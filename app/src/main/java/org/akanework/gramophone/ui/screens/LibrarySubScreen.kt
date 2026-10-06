@@ -665,6 +665,9 @@ private fun LibrarySubList(
     // album title shared by several albums. Read from the songs' extras, so no IO.
     val numberedCovers = page.numberedCovers ||
         remember(songs.items) { songsSpanAlbums(songs.items) }
+    // A playlist may list a song more than once. The keys go with this very list.
+    val songItems = songs.items
+    val songKeys = remember(songItems) { uniqueKeys(songItems) { "song:" + it.mediaId } }
     val firstSongIndex = page.firstSongIndex
     Box(modifier) {
         LazyVerticalGrid(
@@ -716,7 +719,7 @@ private fun LibrarySubList(
                             end = if (albumIsGrid && last) GRID_CARD_SIDE_PADDING else 0.dp,
                         )
                     ) {
-                        LibraryItem(albums, item, nowPlaying, env, albums.layoutType)
+                        LibraryItem(albums, item, index, nowPlaying, env, albums.layoutType)
                     }
                 }
                 item(key = "songs-header", span = { GridItemSpan(maxLineSpan) }) {
@@ -729,15 +732,15 @@ private fun LibrarySubList(
                 }
             }
             itemsIndexed(
-                songs.items,
-                key = { _, it -> "song:" + it.mediaId },
+                songItems,
+                key = { index, _ -> songKeys[index] },
                 span = { _, _ -> GridItemSpan(columns / songColumns) },
             ) { index, item ->
                 // An album's songs go by their track numbers, other lists by their position.
                 val number = (if (page.trackNumbers) item.mediaMetadata.trackNumber
                     ?.takeIf { it > 0 } else null) ?: (index + 1)
                 LibraryItem(
-                    songs, item, nowPlaying, env, songLayout, Modifier.animateItem(),
+                    songs, item, index, nowPlaying, env, songLayout, Modifier.animateItem(),
                     leading = ListRowLeading.Number(number, withCover = numberedCovers),
                     // Each song's length.
                     trailing = item.mediaMetadata.durationMs

@@ -146,7 +146,11 @@ fun FolderTabScreen(
         val index = if (id != null) page.songs.indexOfFirst { it.mediaId == id } else -1
         if (index >= 0) scrollTo(gridStateFor(page.path), songsHeaderIndex(page) + 1 + index)
     }
-    LaunchedEffect(reselectTick) { if (reselectTick > 0) state.page?.let { goToPlayingSong(it) } }
+    // Only a tap after this page was made counts, as on LibraryTabScreen.
+    val firstTick = remember { reselectTick }
+    LaunchedEffect(reselectTick) {
+        if (reselectTick > firstTick) state.page?.let { goToPlayingSong(it) }
+    }
 
     AnimatedContent(
         targetState = page,
@@ -181,6 +185,7 @@ fun FolderTabScreen(
         val showParent = animatedPage.path.isNotEmpty()
         val folders = animatedPage.folders
         val items = animatedPage.songs
+        val keys = remember(items) { uniqueKeys(items) { "song:" + it.mediaId } }
         val songsHeaderIndex = songsHeaderIndex(animatedPage)
         Box(Modifier.fillMaxSize()) {
         LazyVerticalGrid(
@@ -242,9 +247,9 @@ fun FolderTabScreen(
                     },
                 )
             }
-            itemsIndexed(items, key = { _, it -> "song:" + it.mediaId }) { index, item: MediaItem ->
+            itemsIndexed(items, key = { index, _ -> keys[index] }) { index, item: MediaItem ->
                 LibraryItem(
-                    songs, item, nowPlaying, env, layoutType,
+                    songs, item, index, nowPlaying, env, layoutType,
                     Modifier.animateItem(),
                     cardShape = { libraryCellShape(index, items.size, columns, it) },
                 )
