@@ -68,7 +68,7 @@ class MainActivity : BaseActivity() {
         lifecycle.addObserver(controllerViewModel)
         playIntentViewModel.bind(controllerViewModel, navViewModel)
         // Taken once per view model: not again after rotation, and after process death only
-        // what had not run yet.
+        // what had not run yet. Relaunched from Recents, it only navigates (see the parser).
         playIntentViewModel.enqueueLaunchIntent(parsePlayIntent(intent))
         // TODO: should Activity.setMediaController() or Activity.setVolumeControlStream() be
         //  called? latter will probably not do particularly much, and former will

@@ -96,10 +96,16 @@ object PlayIntentParser {
     )
 
     /**
+     * An intent launched from Recents only keeps its navigation: on API 23-30 Back finishes the
+     * task's root activity, and reopening the task from Recents starts it again with the intent
+     * it was first launched with, which must not play, shuffle or (un)favorite a second time. The
+     * "autoplay" preference still applies, as to any launch.
+     *
      * @param autoplayPref the "autoplay" preference: start playback when nothing else in the
      *   intent does.
      */
     fun parse(intent: Intent, autoplayPref: Boolean): List<PlayIntentAction> {
+        val fromHistory = (intent.flags and Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) != 0
         val actions = listOfNotNull(
             playById(intent),
             markFavorite(intent),
@@ -107,9 +113,10 @@ object PlayIntentParser {
             openSearch(intent),
             mediaSearch(intent),
             shuffle(intent),
-        )
-        val autoplay = intent.getBooleanExtra(PlayIntents.PLAYBACK_AUTO_START_FOR_FGS, false)
-                || intent.getBooleanExtra(IntentCompat.EXTRA_START_PLAYBACK, false)
+        ).filter { !fromHistory || it.isNavigation }
+        val autoplay = !fromHistory &&
+                (intent.getBooleanExtra(PlayIntents.PLAYBACK_AUTO_START_FOR_FGS, false)
+                        || intent.getBooleanExtra(IntentCompat.EXTRA_START_PLAYBACK, false))
                 || autoplayPref
         return if (autoplay && actions.none { it.startsPlayback }) {
             actions + PlayIntentAction.Autoplay
@@ -119,6 +126,9 @@ object PlayIntentParser {
     private val PlayIntentAction.startsPlayback: Boolean
         get() = this is PlayIntentAction.PlayById || this is PlayIntentAction.PlayFromSearch
                 || this is PlayIntentAction.Shuffle
+
+    private val PlayIntentAction.isNavigation: Boolean
+        get() = this is PlayIntentAction.OpenPlaylist || this is PlayIntentAction.OpenSearch
 
     /** A song id from the extras, or else from a search suggestion's content uri. */
     private fun playById(intent: Intent): PlayIntentAction.PlayById? {

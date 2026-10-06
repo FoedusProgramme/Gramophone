@@ -300,6 +300,25 @@ class PlayIntentParserTest {
     }
 
     @Test
+    fun launchFromRecentsOnlyNavigates() {
+        fun Intent.fromHistory() = addFlags(Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY)
+        val entry = Entry(listOf(Uri.parse("file:///sdcard/Music/a.mp3")))
+        assertEquals(emptyList<PlayIntentAction>(), parse(Intent().putExtra("AutoStartId", "3")
+            .putExtra("FavoriteEntry", entry).putExtra("AutoStartFgs", true).fromHistory()))
+        assertEquals(emptyList<PlayIntentAction>(),
+            parse(playFromSearch(null, SearchManager.QUERY to "q").fromHistory()))
+        assertEquals(emptyList<PlayIntentAction>(),
+            parse(Intent("org.akanework.gramophone.action.SHUFFLE").fromHistory()))
+        assertEquals(listOf(OpenPlaylist(9L)),
+            parse(Intent(Intent.ACTION_VIEW).putExtra("playlist", "9").fromHistory()))
+        assertEquals(listOf(OpenSearch("abc")), parse(Intent(Intent.ACTION_SEARCH)
+            .putExtra(SearchManager.QUERY, "abc").fromHistory()))
+        // Play on launch applies to a launch from Recents too.
+        assertEquals(listOf(Autoplay), parse(Intent("org.akanework.gramophone.action.SHUFFLE")
+            .fromHistory(), autoplay = true))
+    }
+
+    @Test
     fun actionsComeInAFixedOrder() {
         val entry = Entry(listOf(Uri.parse("file:///sdcard/Music/a.mp3")))
         val intent = Intent(Intent.ACTION_VIEW)
