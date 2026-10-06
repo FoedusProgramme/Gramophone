@@ -58,7 +58,6 @@ import uk.akane.libphonograph.reader.FlowReader
 /* One song's tags and file facts, as a page of rows under its cover. */
 
 private val COVER_SIZE = 200.dp
-private val COVER_CORNER = 28.dp
 
 @Composable
 fun SongDetailScreen(mediaId: String, onBack: () -> Unit, modifier: Modifier = Modifier) {
@@ -86,7 +85,7 @@ fun SongDetailScreen(mediaId: String, onBack: () -> Unit, modifier: Modifier = M
             LibraryCover(
                 uri = metadata.artworkUri,
                 defaultCover = R.drawable.ic_default_cover,
-                cornerRadius = COVER_CORNER,
+                cornerRadius = 28.dp,
                 modifier = Modifier.size(COVER_SIZE),
             )
         }

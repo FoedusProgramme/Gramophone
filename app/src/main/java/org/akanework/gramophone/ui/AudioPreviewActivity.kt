@@ -118,7 +118,6 @@ import kotlin.time.Duration.Companion.milliseconds
 
 private const val TAG = "AudioPreviewActivity"
 private const val POSITION_POLL_MS = 100L
-private val DIALOG_CORNER = 28.dp
 private val COVER_SIZE = 50.dp
 
 /** What the dialog shows, fed by the player's callbacks. */
@@ -218,7 +217,7 @@ class AudioPreviewActivity : BaseActivity() {
             GramophoneTheme {
                 Dialog(onDismissRequest = { finish() }) {
                     Surface(
-                        shape = RoundedCornerShape(DIALOG_CORNER),
+                        shape = RoundedCornerShape(28.dp),
                         color = MaterialTheme.colorScheme.surfaceContainerHigh,
                     ) {
                         PreviewContent(

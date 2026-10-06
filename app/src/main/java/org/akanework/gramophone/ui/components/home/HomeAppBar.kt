@@ -84,10 +84,8 @@ import kotlin.math.sin
 
 val TAB_ROW_HEIGHT = 48.dp
 private val TAB_CONTENT_PADDING = 24.dp
-private val TAB_PADDING = 12.dp
 /** How far the chip indicator sits inside the tab row, top and bottom. */
 val TAB_INDICATOR_INSET = 6.dp
-private val TAB_INDICATOR_RADIUS = 12.dp
 
 // The connected app-bar actions (search, the optional sort, overflow): filled buttons, rounded
 // 24dp on the group's outer edges and 4dp where they face each other, with a 4dp gap between them.
@@ -95,7 +93,6 @@ private val ACTION_BUTTON_WIDTH = 42.dp
 val ACTION_BUTTON_HEIGHT = 44.dp
 private val ACTION_OUTER_CORNER = 24.dp
 private val ACTION_INNER_CORNER = 4.dp
-private val ACTION_BUTTON_GAP = 4.dp
 private val ACTION_ICON_INNER_OFFSET = 2.dp
 private val SEARCH_BUTTON_SHAPE = RoundedCornerShape(
     topStart = ACTION_OUTER_CORNER, bottomStart = ACTION_OUTER_CORNER,
@@ -105,15 +102,6 @@ private val OVERFLOW_BUTTON_SHAPE = RoundedCornerShape(
     topStart = ACTION_INNER_CORNER, bottomStart = ACTION_INNER_CORNER,
     topEnd = ACTION_OUTER_CORNER, bottomEnd = ACTION_OUTER_CORNER,
 )
-
-/**
- * The home's glass toolbar: the app name, fading in as the page's large title slides under it,
- * with the search and overflow actions. [scrolled] is the page's travel from rest, see
- * [largeTitleScroll]. The tab row is not part of it: it scrolls with the content, see
- * [HomeTabRow].
- */
-private val BAR_PADDING_START = 24.dp
-private val BAR_PADDING_END = 16.dp
 
 /** The home's bar: the app's mark at the start, the search and overflow actions at the end. */
 @Composable
@@ -128,7 +116,7 @@ fun HomeAppBar(
             .fillMaxWidth()
             .windowInsetsPadding(insets.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal))
             .height(GLASS_BAR_HEIGHT)
-            .padding(start = BAR_PADDING_START, end = BAR_PADDING_END),
+            .padding(start = 24.dp, end = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
@@ -151,11 +139,10 @@ fun HomeAppBar(
                 stringResource(R.string.search),
             )
         }
-        Spacer(Modifier.width(ACTION_BUTTON_GAP))
+        Spacer(Modifier.width(4.dp))
         HomeOverflowMenu(onMenuAction)
     }
 }
-
 
 /** The overflow button with the `home_menu` entries. */
 @Composable
@@ -240,7 +227,7 @@ fun LabelTabRow(
     val selectedColor = MaterialTheme.colorScheme.onSecondaryContainer
     val unselectedColor = MaterialTheme.colorScheme.onSurfaceVariant
     val inset = with(density) { TAB_INDICATOR_INSET.toPx().toInt().toFloat() }
-    val radius = with(density) { TAB_INDICATOR_RADIUS.toPx() }
+    val radius = with(density) { 12.dp.toPx() }
 
     // Keep the selected tab centred, like TabLayout.calculateScrollXForTab.
     LaunchedEffect(selectedTab, rowWidth) {
@@ -296,7 +283,7 @@ fun LabelTabRow(
                     .onGloballyPositioned { coords ->
                         tabBounds[index] = coords.positionInParent().x to coords.size.width.toFloat()
                     }
-                    .padding(horizontal = TAB_PADDING),
+                    .padding(horizontal = 12.dp),
                 contentAlignment = Alignment.Center,
             ) {
                 val selected = index == selectedTab

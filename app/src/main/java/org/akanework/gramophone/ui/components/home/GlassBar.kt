@@ -62,16 +62,6 @@ import org.akanework.gramophone.ui.components.compose.BackButton
 
 /** Height of the toolbar row, below the status bar. */
 val GLASS_BAR_HEIGHT = 64.dp
-private val TOOLBAR_PADDING_START = 24.dp
-private val TOOLBAR_PADDING_END = 8.dp
-private val BAR_TITLE_SIZE = 22.sp // textAppearanceTitleLarge
-
-/**
- * With a [BackButton], the bar's own 4dp plus 6dp puts the arrow's strokes on the 24dp text
- * margin. The bar's title follows the button at 4dp.
- */
-private val BACK_BUTTON_INSET = 4.dp + 6.dp
-private val BACK_TITLE_INSET = 4.dp
 
 /**
  * Blur only, no flat tint: a tint would read as a solid band laid across the blurred content.
@@ -150,8 +140,8 @@ fun GlassTitleBar(
     title: String,
     scrolled: () -> Float,
     modifier: Modifier = Modifier,
-    toolbarPaddingStart: Dp = TOOLBAR_PADDING_START,
-    toolbarPaddingEnd: Dp = TOOLBAR_PADDING_END,
+    toolbarPaddingStart: Dp = 24.dp,
+    toolbarPaddingEnd: Dp = 8.dp,
     titlePaddingStart: Dp = 0.dp,
     /** Room after the title, for buttons laid over the bar rather than passed as [actions]. */
     titlePaddingEnd: Dp = 8.dp,
@@ -188,7 +178,7 @@ fun GlassTitleBar(
             BasicText(
                 text = title,
                 style = textViewStyle(
-                    BAR_TITLE_SIZE, 400, MaterialTheme.colorScheme.onSurface,
+                    22.sp, 400, MaterialTheme.colorScheme.onSurface, // textAppearanceTitleLarge
                     includeFontPadding = false,
                 ),
                 maxLines = 1,
@@ -222,8 +212,9 @@ fun GlassTitleBar(
     title = title,
     scrolled = scrolled,
     modifier = modifier,
-    toolbarPaddingStart = BACK_BUTTON_INSET,
-    titlePaddingStart = BACK_TITLE_INSET,
+    // The bar's own 4dp plus 6dp puts the arrow's strokes on the 24dp text margin
+    toolbarPaddingStart = 4.dp + 6.dp,
+    titlePaddingStart = 4.dp,
     navigationIcon = { BackButton(onBack) },
     actions = actions,
     titleTopGap = titleTopGap,

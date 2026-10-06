@@ -169,21 +169,13 @@ private const val ALBUMS_HEADER_INDEX = SHEET_TOP_INDEX + 1
 
 /** The rounded top of the sheet, above its first row. */
 private val SHEET_TOP_HEIGHT = 16.dp
-private val SHEET_CORNER = 28.dp
-
-/** Title size, smaller than the library's large title to fit next to the buttons. */
-private val TITLE_SIZE = 28.sp
 
 /** Gap between the title and the carousel above and the sheet below. */
 private val TITLE_GAP = 24.dp
 
 /** The play and shuffle buttons after the title. */
 private val TITLE_BUTTON_SIZE = 56.dp
-private val TITLE_BUTTON_GAP = 12.dp
 private val TITLE_BUTTON_ICON_SIZE = 26.dp
-
-/** Inset of the playing song's rounded container from the sheet's sides. */
-private val PLAYING_ROW_INSET = 8.dp
 
 /** The data behind a detail page: a title, its songs and, for artists, its albums. */
 private class LibrarySubPage(
@@ -514,7 +506,8 @@ fun LibrarySubScreen(key: LibrarySubKey, onBack: () -> Unit, modifier: Modifier 
     // Scroll offset of the carousel from rest. Drives the carousel buttons
     // and the toolbar blur.
     val pageScroll = { (scrolled() + carouselHeightPx) }
-    val frostSpanPx = with(density) { CAROUSEL_FROST_SPAN.toPx() }
+    // How far the page scrolls while the toolbar's blur fades in
+    val frostSpanPx = with(density) { 24.dp.toPx() }
     val rowHeightPx = with(density) { LIST_HEIGHT.roundToPx() }
     // The content scrolls under the toolbar, so jumps land below it.
     val toolbarPx = with(density) { (GLASS_BAR_HEIGHT - CAROUSEL_TOP_GAP).roundToPx() }
@@ -671,7 +664,7 @@ private fun LibrarySubList(
                 .fillMaxSize()
                 // Drawn around the sheet too, so it stretches with the songs on it
                 .overscroll(overscroll)
-                .drawBehind { drawListSheet(gridState, sheet.value, SHEET_CORNER.toPx()) },
+                .drawBehind { drawListSheet(gridState, sheet.value, 28.dp.toPx()) },
             contentPadding = libraryContentPadding(top = contentTop),
             overscrollEffect = overscroll?.withoutVisualEffect(),
         ) {
@@ -739,7 +732,7 @@ private fun LibrarySubList(
                     trailing = item.mediaMetadata.durationMs
                         ?.let { convertDurationToTimeStamp(it) },
                     // The playing song's container keeps clear of the sheet's edges.
-                    containerInset = PLAYING_ROW_INSET,
+                    containerInset = 8.dp,
                 )
             }
             if (songs.items.isNotEmpty()) {
@@ -802,7 +795,8 @@ private fun SubPageTitle(
         title, state, scrolled,
         subtitle = subtitle, marquee = true,
         style = textViewStyle(
-            TITLE_SIZE, 400, MaterialTheme.colorScheme.onSurface, includeFontPadding = false,
+            // Smaller than the library's large title, to fit next to the buttons
+            28.sp, 400, MaterialTheme.colorScheme.onSurface, includeFontPadding = false,
         ),
         contentKey = contentKey,
         // Centred between the carousel cards and the sheet. The carousel's bottom padding is part
@@ -917,7 +911,7 @@ private fun TitleButtons(onPlay: () -> Unit, onShuffle: () -> Unit) {
     val onTertiary by animated(colors.onTertiary)
     Row(
         Modifier.padding(start = 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(TITLE_BUTTON_GAP),
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         IconTileButton(
             Icons.Outlined.PlayArrow, stringResource(R.string.play), { onPrimary }, onPlay,

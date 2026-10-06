@@ -30,9 +30,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import org.akanework.gramophone.R
 import org.akanework.gramophone.ui.components.settings.NavigationPreferenceRow
-import org.akanework.gramophone.ui.components.settings.PREFERENCE_GROUP_GAP
 import org.akanework.gramophone.ui.components.settings.PreferenceGroup
 import org.akanework.gramophone.ui.components.settings.PreferenceScreen
 import org.akanework.gramophone.ui.components.settings.SECTION_HEADER_TOP_GAP
@@ -79,7 +79,7 @@ fun MainSettingsScreen(
         // No headers here: keep their gap so the first row sits where a header's text would.
         Spacer(Modifier.height(SECTION_HEADER_TOP_GAP))
         PAGE_GROUPS.forEachIndexed { index, pages ->
-            if (index > 0) Spacer(Modifier.height(PREFERENCE_GROUP_GAP))
+            if (index > 0) Spacer(Modifier.height(16.dp))
             PreferenceGroup(pages) { page, shape ->
                 NavigationPreferenceRow(
                     shape,

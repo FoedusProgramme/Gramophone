@@ -82,9 +82,6 @@ val LIST_HEIGHT = 60.dp
 private val LIST_ROW_PADDING = 6.dp
 private val LIST_COVER_START = 18.dp
 
-/** Width of the track number shown instead of the cover. */
-private val LIST_NUMBER_WIDTH = 28.dp
-
 /** Between the screen's (inset) edge and the home's sheet of items. */
 val LIBRARY_SIDE_MARGIN = 12.dp
 
@@ -96,7 +93,6 @@ val LIBRARY_COVER_START = LIBRARY_SIDE_MARGIN + LIST_ROW_PADDING + LIST_COVER_ST
 val EDITABLE_ROW_HEIGHT = 75.dp
 val FOLDER_CARD_HEIGHT = 75.dp
 val LIST_ROUND_CORNER_SIZE = 6.dp
-val GRID_ROUND_CORNER_SIZE = 10.dp
 val GRID_CARD_SIDE_PADDING = 12.dp
 val GRID_CARD_MARGIN_TOP = 8.dp
 /** Above and below the label block, about as much as the cover keeps at its sides. */
@@ -109,9 +105,6 @@ val DECOR_HEIGHT = 48.dp
 
 /** Between the home's items, where the sheet's surface-container-low shows through. */
 val LIBRARY_ITEM_GAP = 2.dp
-
-/** The corners the home's items turn to that gap. */
-val LIBRARY_ITEM_CORNER = 2.dp
 
 /** The corners of the sheet the home's items sit in, and of the items at its two ends. */
 val LIBRARY_GROUP_CORNER = 28.dp
@@ -132,7 +125,7 @@ fun libraryItemShape(
     emphasis: Float = 0f,
 ): Shape {
     fun corner(groupEnd: Boolean) =
-        lerp(if (groupEnd) LIBRARY_GROUP_CORNER else LIBRARY_ITEM_CORNER, LIBRARY_PLAYING_CORNER, emphasis)
+        lerp(if (groupEnd) LIBRARY_GROUP_CORNER else 2.dp, LIBRARY_PLAYING_CORNER, emphasis)
     return RoundedCornerShape(
         topStart = corner(topStart),
         topEnd = corner(topEnd),
@@ -270,7 +263,7 @@ fun LibraryListRow(
         if (leading is ListRowLeading.Number) {
             Box(
                 // Aligns with the 24dp start margin of the page title.
-                Modifier.padding(start = LIST_COVER_START).width(LIST_NUMBER_WIDTH),
+                Modifier.padding(start = LIST_COVER_START).width(28.dp),
                 contentAlignment = Alignment.CenterStart,
             ) {
                 SingleLineText(leading.number.toString(), 15.sp, 500, colors.subtitle)
@@ -350,7 +343,7 @@ fun LibraryGridCard(
         LibraryCover(
             uri = cover,
             defaultCover = defaultCover,
-            cornerRadius = GRID_ROUND_CORNER_SIZE,
+            cornerRadius = 10.dp,
             modifier = Modifier
                 .padding(start = GRID_CARD_SIDE_PADDING, end = GRID_CARD_SIDE_PADDING, top = GRID_CARD_MARGIN_TOP)
                 .fillMaxWidth()

@@ -88,21 +88,11 @@ import org.akanework.gramophone.ui.components.player.PlayerUtilities.expandedCon
  * above the handle.
  */
 
-/** The preview's cover, as big as the songs', and between it, the title and the buttons. */
-private val PREVIEW_ART_SIZE = 50.dp
-private val PREVIEW_TEXT_MARGIN = 18.dp
-
 /** The preview's play and next buttons: tall tiles side by side, rounded off at the end. */
 private val PREVIEW_BUTTON_HEIGHT = 48.dp
-private val PREVIEW_PLAY_WIDTH = 34.dp
-private val PREVIEW_NEXT_WIDTH = 30.dp
-private val PREVIEW_BUTTON_GAP = 3.dp
 private val PREVIEW_BUTTON_CORNER = 6.dp
 private val PREVIEW_BUTTON_END_CORNER = 20.dp
 private val PREVIEW_ICON_SIZE = 22.dp
-
-/** The queue's top corners. */
-private val QUEUE_SHAPE = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
 
 /** How far up the queue is when the bottom row has faded out, and the queue starts to fade in. */
 private const val ROW_FADE_END = 0.3f
@@ -175,7 +165,7 @@ internal fun QueueDrawer(
                 Modifier
                     .absoluteUnbounded { geometry.queuePanelBounds }
                     .then(sheetShift)
-                    .clip(QUEUE_SHAPE)
+                    .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
                     .drawBehind {
                         val down = scheme.color { surfaceContainerLow }
                         drawRect(lerp(down, scheme.color { surfaceContainer }, queue.progress))
@@ -317,13 +307,13 @@ private fun QueuePreview(
                 error = defaultCover,
                 fallback = defaultCover,
                 modifier = Modifier
-                    .size(PREVIEW_ART_SIZE)
+                    .size(50.dp)
                     .clip(RoundedCornerShape(LIST_ROUND_CORNER_SIZE)),
             )
             Column(
                 Modifier
                     .weight(1f)
-                    .padding(horizontal = PREVIEW_TEXT_MARGIN),
+                    .padding(horizontal = 18.dp),
             ) {
                 SingleLineText(
                     player.title?.toString().orEmpty(), 17.sp, 500, scheme.color { onSurface },
@@ -337,7 +327,7 @@ private fun QueuePreview(
             }
             TileButton(
                 onClick = actions.playPause,
-                modifier = Modifier.size(PREVIEW_PLAY_WIDTH, PREVIEW_BUTTON_HEIGHT),
+                modifier = Modifier.size(34.dp, PREVIEW_BUTTON_HEIGHT),
                 shape = RoundedCornerShape(PREVIEW_BUTTON_CORNER),
                 container = scheme.colorProducer { primaryContainer },
             ) {
@@ -348,11 +338,11 @@ private fun QueuePreview(
                     contentDescription = stringResource(R.string.play),
                 )
             }
-            Spacer(Modifier.width(PREVIEW_BUTTON_GAP))
+            Spacer(Modifier.width(3.dp))
             // Rounded off at the end of the pair
             TileButton(
                 onClick = actions.next,
-                modifier = Modifier.size(PREVIEW_NEXT_WIDTH, PREVIEW_BUTTON_HEIGHT),
+                modifier = Modifier.size(30.dp, PREVIEW_BUTTON_HEIGHT),
                 shape = RoundedCornerShape(
                     topStart = PREVIEW_BUTTON_CORNER,
                     topEnd = PREVIEW_BUTTON_END_CORNER,

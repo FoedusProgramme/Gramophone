@@ -77,20 +77,7 @@ import org.akanework.gramophone.ui.theme.LocalCardSurface
 private val GROUP_MARGIN = 16.dp
 private val GROUP_CORNER = 24.dp
 private val ROW_CORNER = 4.dp
-private val ROW_GAP = 4.dp
 private val ROW_PADDING = 16.dp
-
-/*
- * The header: the page title starts [PAGE_TITLE_TOP_GAP] under the bar and the first section
- * [TITLE_TO_CONTENT_GAP] under the title.
- */
-/** Under the title, before the first section header or group. */
-private val TITLE_TO_CONTENT_GAP = 4.dp
-
-/** The top-level pages' marks: a tinted disc, then the text. */
-private val ICON_CONTAINER_SIZE = 40.dp
-private val ICON_SIZE = 24.dp
-private val ICON_GAP = 16.dp
 
 /** Material's disabled content alpha. */
 const val PREFERENCE_DISABLED_ALPHA = 0.38f
@@ -146,7 +133,7 @@ fun PreferenceScreen(
                     maxLines = 2,
                     style = PageTitleStyle,
                     topGap = PAGE_TITLE_TOP_GAP,
-                    bottomGap = TITLE_TO_CONTENT_GAP,
+                    bottomGap = 4.dp,
                 )
                 content()
             }
@@ -161,9 +148,6 @@ fun PreferenceScreen(
         )
     }
 }
-
-/** Between two groups with no header between them. */
-val PREFERENCE_GROUP_GAP = 16.dp
 
 /**
  * What a section header keeps above itself. A page whose first group has no header puts the
@@ -203,7 +187,7 @@ fun PreferenceGroup(count: Int, row: @Composable (index: Int, shape: Shape) -> U
     if (count <= 0) return
     Column(
         modifier = Modifier.padding(horizontal = GROUP_MARGIN),
-        verticalArrangement = Arrangement.spacedBy(ROW_GAP),
+        verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         repeat(count) { index -> row(index, preferenceRowShape(index, count)) }
     }
@@ -277,7 +261,7 @@ fun PreferenceLabels(title: String, modifier: Modifier = Modifier, subtitle: Str
 fun PreferenceIcon(icon: ImageVector) {
     Box(
         modifier = Modifier
-            .size(ICON_CONTAINER_SIZE)
+            .size(40.dp)
             .clip(CircleShape)
             .background(MaterialTheme.colorScheme.primaryContainer),
         contentAlignment = Alignment.Center,
@@ -285,9 +269,9 @@ fun PreferenceIcon(icon: ImageVector) {
         Icon(
             imageVector = icon,
             contentDescription = null,
-            modifier = Modifier.size(ICON_SIZE),
+            modifier = Modifier.size(24.dp),
             tint = MaterialTheme.colorScheme.primary,
         )
     }
-    Spacer(Modifier.width(ICON_GAP))
+    Spacer(Modifier.width(16.dp))
 }

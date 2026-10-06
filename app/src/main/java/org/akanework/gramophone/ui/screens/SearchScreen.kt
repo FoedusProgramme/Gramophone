@@ -86,8 +86,6 @@ import uk.akane.libphonograph.reader.FlowReader
  * is typed, matching on title, album and artist.
  */
 
-private val FIELD_TEXT_SIZE = 18.sp
-
 @Composable
 fun SearchScreen(initialQuery: String?, onBack: () -> Unit, modifier: Modifier = Modifier) {
     val reader = koinInject<FlowReader>()
@@ -156,7 +154,7 @@ fun SearchScreen(initialQuery: String?, onBack: () -> Unit, modifier: Modifier =
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 BackButton(onBack)
-                val textStyle = textViewStyle(FIELD_TEXT_SIZE, 400, MaterialTheme.colorScheme.onSurface)
+                val textStyle = textViewStyle(18.sp, 400, MaterialTheme.colorScheme.onSurface)
                 BasicTextField(
                     value = query,
                     onValueChange = { query = it },

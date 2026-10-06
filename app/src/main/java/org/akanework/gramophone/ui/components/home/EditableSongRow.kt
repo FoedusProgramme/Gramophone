@@ -48,14 +48,10 @@ private val ROW_PADDING = 6.dp
 private val HANDLE_SLOT = 40.dp
 private val ROW_ICON_SIZE = 24.dp
 private val COVER_SIZE = 50.dp
-private val TEXT_MARGIN = 18.dp
-
-/** The remove button's, a LibraryIconButton's, slot. */
-private val REMOVE_SLOT = 48.dp
 
 /** How far in from the row's start its drag handle's icon is, and from its end the remove icon. */
 val EDITABLE_ROW_ICON_START = ROW_PADDING + (HANDLE_SLOT - ROW_ICON_SIZE) / 2
-val EDITABLE_ROW_ICON_END = ROW_PADDING + (REMOVE_SLOT - ROW_ICON_SIZE) / 2
+val EDITABLE_ROW_ICON_END = ROW_PADDING + (48.dp - ROW_ICON_SIZE) / 2
 
 @Composable
 fun EditableSongRow(
@@ -102,7 +98,7 @@ fun EditableSongRow(
             cornerRadius = LIST_ROUND_CORNER_SIZE,
             modifier = Modifier.padding(start = if (showControls) 0.dp else 18.dp).size(COVER_SIZE),
         )
-        Column(Modifier.weight(1f).padding(start = TEXT_MARGIN)) {
+        Column(Modifier.weight(1f).padding(start = 18.dp)) {
             SingleLineText(
                 title, 17.sp, 400, colors.title,
                 Modifier.fillMaxWidth(),

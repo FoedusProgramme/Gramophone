@@ -84,8 +84,6 @@ import uk.akane.libphonograph.reader.FlowReader
 
 /** Card height as a fraction of the screen height. */
 private const val CAROUSEL_CARD_HEIGHT_SHARE = 0.30f
-private val CAROUSEL_CARD_HEIGHT_MIN = 140.dp
-private val CAROUSEL_CARD_HEIGHT_MAX = 280.dp
 
 /** Card aspect ratio (width / height). */
 private const val CAROUSEL_CARD_ASPECT = 1.4f
@@ -102,10 +100,8 @@ private val CAROUSEL_ITEM_CORNER = 28.dp
 private val CAROUSEL_START_PADDING = 24.dp
 private val CAROUSEL_END_PADDING = 24.dp
 
-/** Gap between the status bar and the cards, and the scroll distance over which the toolbar
- *  blur fades in. */
+/** Gap between the status bar and the cards. */
 internal val CAROUSEL_TOP_GAP = 4.dp
-internal val CAROUSEL_FROST_SPAN = 24.dp
 
 /** Inset of the buttons from the focused card's corners, and their size. */
 private val CAROUSEL_BUTTON_INSET = 16.dp
@@ -124,9 +120,6 @@ private val TOOLBAR_TITLE_GAP = 8.dp
  */
 internal val TOOLBAR_TITLE_PADDING = CAROUSEL_BUTTON_SIZE + TOOLBAR_TITLE_GAP
 
-/** Gap between two buttons at the card's corner. Docked in the toolbar they touch. */
-private val CAROUSEL_BUTTON_GAP = 8.dp
-
 /**
  * End padding of the toolbar title within the toolbar's own padding, leaving room for [count]
  * buttons docked at the end.
@@ -138,7 +131,7 @@ internal fun toolbarTitlePaddingEnd(count: Int): Dp =
 @Composable
 private fun carouselCardHeight(): Dp =
     (LocalWindowInfo.current.containerSize.height.dp * CAROUSEL_CARD_HEIGHT_SHARE)
-        .coerceIn(CAROUSEL_CARD_HEIGHT_MIN, CAROUSEL_CARD_HEIGHT_MAX)
+        .coerceIn(140.dp, 280.dp)
 
 /**
  * Width of the focused card: its height times [CAROUSEL_CARD_ASPECT], capped so the collapsed
@@ -249,7 +242,7 @@ internal fun CarouselButtons(
         )
         // The end buttons, counted from the end: sort, then edit before it.
         fun endRestX(slot: Int) = cardStart.value + cardWidth - CAROUSEL_BUTTON_INSET -
-                CAROUSEL_BUTTON_SIZE - (CAROUSEL_BUTTON_SIZE + CAROUSEL_BUTTON_GAP) * slot
+                CAROUSEL_BUTTON_SIZE - (CAROUSEL_BUTTON_SIZE + 8.dp) * slot
         fun endDockX(slot: Int) = windowWidth - insetEnd - TOOLBAR_BUTTON_PADDING_END -
                 CAROUSEL_BUTTON_SIZE * (slot + 1)
         var slot = 0

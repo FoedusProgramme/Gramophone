@@ -79,9 +79,6 @@ private const val WEBLATE_URL = "https://hosted.weblate.org/engage/gramophone/"
 /** Margin between the logo and the safe area's sides. */
 private val MARK_MARGIN = 24.dp
 
-/** Room under the names, above the navigation bar. */
-private val MARK_BOTTOM_GAP = 24.dp
-
 /** Seed of the shuffle the names are shown in, so the logo always looks the same. */
 private const val NAME_SHUFFLE_SEED = 1712
 
@@ -160,7 +157,7 @@ private fun NameMark(names: List<String>, description: String, modifier: Modifie
     val padRight = with(density) { (safe.calculateRightPadding(direction) + MARK_MARGIN).roundToPx() }
     // Under the glass bar at the top, and a gap above the navigation bar at the bottom.
     val padTop = with(density) { (safe.calculateTopPadding() + GLASS_BAR_HEIGHT).roundToPx() }
-    val padBottom = with(density) { (safe.calculateBottomPadding() + MARK_BOTTOM_GAP).roundToPx() }
+    val padBottom = with(density) { (safe.calculateBottomPadding() + 24.dp).roundToPx() }
     BoxWithConstraints(
         modifier
             .fillMaxSize()

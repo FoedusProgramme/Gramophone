@@ -82,11 +82,6 @@ private val UnevenCorners = RoundedCornerShape(
     topStart = 4.dp, bottomStart = 4.dp, topEnd = 20.dp, bottomEnd = 20.dp,
 )
 
-private val SAMPLE_SIZE = 48.dp
-
-/** Above and below a menu's items. */
-private val MENU_PADDING = 8.dp
-
 /** Once per process, like the code it runs and the shaders it compiles. */
 private var warmedUp = false
 
@@ -141,7 +136,7 @@ fun DrawWarmUp(page: @Composable () -> Unit) {
                 shadowElevation = MenuDefaults.ShadowElevation,
             ) {
                 // Clear of the menu's corners, like its items
-                PressedRipple(RectangleShape, Modifier.padding(vertical = MENU_PADDING))
+                PressedRipple(RectangleShape, Modifier.padding(vertical = 8.dp))
             }
             PressedRipple(UnevenCorners)
         }
@@ -157,5 +152,5 @@ private fun PressedRipple(shape: Shape, modifier: Modifier = Modifier) {
         withFrameNanos { }
         interactions.emit(PressInteraction.Press(Offset.Zero))
     }
-    Box(modifier.size(SAMPLE_SIZE).clip(shape).indication(interactions, ripple()))
+    Box(modifier.size(48.dp).clip(shape).indication(interactions, ripple()))
 }

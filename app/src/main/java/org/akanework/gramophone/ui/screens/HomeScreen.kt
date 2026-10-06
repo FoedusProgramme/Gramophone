@@ -98,7 +98,6 @@ private val HEADER_GAP = 20.dp
 private val BUTTON_TO_BAR_BOTTOM = (GLASS_BAR_HEIGHT - ACTION_BUTTON_HEIGHT) / 2
 private val TABS_OVERLAP_BAR = BUTTON_TO_BAR_BOTTOM + TAB_INDICATOR_INSET - HEADER_GAP
 private val TABS_TO_SHEET_GAP = HEADER_GAP - TAB_INDICATOR_INSET
-private val BAR_TO_SHEET_GAP = 16.dp
 
 /**
  * Between the sheet and what is under it: the mini player, or else the navigation bar. The same
@@ -162,7 +161,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
             )
             Spacer(Modifier.height(TABS_TO_SHEET_GAP))
         } else {
-            Spacer(Modifier.height(BAR_TO_SHEET_GAP))
+            Spacer(Modifier.height(16.dp))
         }
         // The sheet. The pages scroll inside it, clipped by its corners, their items on its
         // surface with its colour showing between them. It keeps nothing clear at its top or

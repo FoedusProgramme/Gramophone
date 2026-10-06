@@ -326,9 +326,6 @@ private fun LibraryItemSheetHeader(
  */
 private val SHEET_MARGIN = 24.dp
 
-/** Between an action card's edge and its icon. */
-private val ACTION_CARD_PADDING = 24.dp
-
 /** One action of the per-item sheet: its icon and its title, a card of the sheet's group. */
 @Composable
 private fun LibraryItemSheetAction(
@@ -343,7 +340,7 @@ private fun LibraryItemSheetAction(
             .libraryItemCard(shape)
             .clickable(onClick = onClick)
             .heightIn(min = 56.dp)
-            .padding(horizontal = ACTION_CARD_PADDING),
+            .padding(horizontal = 24.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
@@ -378,7 +375,7 @@ private fun LibrarySheetDragHandle() {
 /**
  * The per-item menu, as a bottom sheet: the item's header over its actions, each one an icon
  * and a title. The actions make up one group with the home library's corners: its ends turn
- * [LIBRARY_GROUP_CORNER], what meets another card [LIBRARY_ITEM_CORNER], and the sheet shows
+ * [LIBRARY_GROUP_CORNER], what meets another card 2dp, and the sheet shows
  * through the [LIBRARY_ITEM_GAP]s between them.
  */
 @OptIn(ExperimentalMaterial3Api::class)

@@ -435,11 +435,7 @@ private fun Modifier.topButtonSlot(): Modifier =
 /** How long the title and artist take to fade out, and then in, when the song changes. */
 private const val TEXT_FADE_MS = 300
 
-/** How far in from each end the scrolling title and artist fade out. */
-private val MARQUEE_FADE_EDGE = 16.dp
-
-/** How fast a line too long to fit scrolls, per second, and the pause before each round. */
-private val MARQUEE_VELOCITY = 30.dp
+/** The pause before each round of a line too long to fit, as the View marquee's. */
 private const val MARQUEE_DELAY_MS = 1200L
 
 @Composable
@@ -508,7 +504,8 @@ private fun FadingMarqueeText(
         label = "player text fade",
     ) { shown ->
         val marquee = remember { MarqueeState() }
-        val velocity = with(LocalDensity.current) { MARQUEE_VELOCITY.toPx() }
+        // A second's scroll, as the View marquee's
+        val velocity = with(LocalDensity.current) { 30.dp.toPx() }
         LaunchedEffect(marquee, velocity) { marquee.run(velocity) }
         BasicText(
             text = shown,
@@ -590,7 +587,7 @@ private fun Modifier.marquee(state: MarqueeState): Modifier = this
                 translate(left = if (rtl) -distance else distance) { this@drawWithContent.drawContent() }
             }
         }
-        val edge = MARQUEE_FADE_EDGE.toPx().coerceAtMost(size.width / 2f)
+        val edge = 16.dp.toPx().coerceAtMost(size.width / 2f)
         // In as the line leaves its start, and out again as the next copy comes in to it
         val startFade = (min(offset, distance - offset) / edge).coerceIn(0f, 1f)
         fadeEnd(left = true, strength = if (rtl) 1f else startFade, edge = edge)
@@ -703,11 +700,11 @@ private fun ProgressSection(
                     .clip(CircleShape)
                     .then(showChain)
                     .drawBehind { drawRect(scheme.color { secondaryContainer }) }
-                    .padding(horizontal = QUALITY_PADDING),
+                    .padding(horizontal = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 player.qualityIcon?.let {
-                    TintedIcon(painterResource(it), qualityColor, Modifier.size(QUALITY_ICON_SIZE))
+                    TintedIcon(painterResource(it), qualityColor, Modifier.size(16.dp))
                     Spacer(Modifier.width(4.dp))
                 }
                 TimeText(quality, qualityColor, 12.sp)
@@ -717,10 +714,6 @@ private fun ProgressSection(
         TimeText(CalculationUtils.convertDurationToTimeStamp(durationMs), timeColor, 14.sp)
     }
 }
-
-/** Either side of the audio quality, inside its pill, and its icon. */
-private val QUALITY_PADDING = 8.dp
-private val QUALITY_ICON_SIZE = 16.dp
 
 /** A line of the time row, in [color] read in the draw phase. */
 @Composable

@@ -83,26 +83,12 @@ import org.akanework.gramophone.ui.fragments.compose.rememberMqState
  * them.
  */
 
-/** As wide as the queue gets on large screens, wider with the multi-queue preview. */
-private val QUEUE_MAX_WIDTH = 640.dp
-private val WIDE_QUEUE_MAX_WIDTH = 900.dp
-
 /** Around the FABs, and between them. */
 private val QUEUE_FAB_MARGIN = 16.dp
 private val QUEUE_FAB_GAP = 12.dp
 
-/** A FAB's size. */
-private val QUEUE_FAB_SIZE = 56.dp
-
-/** Between the time left and the songs under it. */
-private val QUEUE_TIME_LEFT_BOTTOM_PADDING = 8.dp
-
-/** What the queue's end leaves for the FABs over it: a small FAB above a FAB, with margins. */
-private val QUEUE_FABS_ROOM = QUEUE_FAB_MARGIN * 2 + 40.dp + QUEUE_FAB_GAP + QUEUE_FAB_SIZE
-
 @Stable
 private class QueueRow(val key: Long, val item: MediaItem)
-
 
 /**
  * The queue of [controller], brought up and put away (as when it's cleared) by [reveal]. The
@@ -167,7 +153,7 @@ fun QueuePanel(
     Box(modifier, contentAlignment = Alignment.TopCenter) {
         Column(
             Modifier
-                .widthIn(max = if (mqEnabled) WIDE_QUEUE_MAX_WIDTH else QUEUE_MAX_WIDTH)
+                .widthIn(max = if (mqEnabled) 900.dp else 640.dp)
                 .fillMaxSize(),
         ) {
             if (Flags.MQ_PREVIEW && mqEnabled) {
@@ -184,7 +170,7 @@ fun QueuePanel(
                 Modifier
                     .fillMaxWidth()
                     .padding(horizontal = QUEUE_FAB_MARGIN)
-                    .padding(bottom = QUEUE_TIME_LEFT_BOTTOM_PADDING),
+                    .padding(bottom = 8.dp),
             )
             Box(
                 Modifier
@@ -194,8 +180,10 @@ fun QueuePanel(
                 LazyColumn(
                     state = listState,
                     modifier = Modifier.fillMaxSize(),
-                    // The last songs scroll up clear of the FABs
-                    contentPadding = PaddingValues(bottom = navigationBar + QUEUE_FABS_ROOM),
+                    // The last songs scroll up clear of the FABs: a small one over a regular one
+                    contentPadding = PaddingValues(
+                        bottom = navigationBar + QUEUE_FAB_MARGIN * 2 + 40.dp + QUEUE_FAB_GAP + 56.dp,
+                    ),
                 ) {
                     itemsIndexed(rows, key = { _, row -> row.key }) { index, row ->
                         val item = row.item

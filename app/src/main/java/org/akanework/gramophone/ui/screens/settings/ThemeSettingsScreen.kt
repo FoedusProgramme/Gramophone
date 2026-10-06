@@ -94,24 +94,10 @@ import org.akanework.gramophone.ui.theme.rememberThemeSettings
 import org.akanework.gramophone.ui.theme.supportsWallpaperColor
 import org.akanework.gramophone.ui.theme.themeModeOf
 
-private val PAGE_MARGIN = 16.dp
-private val SWATCH_SIZE = 40.dp
-private val SWATCH_GAP = 12.dp
-private val SWATCH_CHECK_SIZE = 20.dp
-private val SWATCHES_TOP_GAP = 12.dp
-private val HUE_TRACK_HEIGHT = 16.dp
 /** The custom seed's chroma and tone, in the hue picked. */
 private val SEED = ChromaTone(chroma = 48.0, tone = 40.0)
 private const val HUE_STOPS = 12
 private const val HUE_MAX = 360f
-private val STYLE_CARD_WIDTH = 84.dp
-private val STYLE_BAND_HEIGHT = 34.dp
-private val STYLE_BAND_GAP = 2.dp
-private val STYLE_CARD_CORNER = 16.dp
-private val STYLE_CARD_BORDER = 3.dp
-private val STYLE_CARD_GAP = 12.dp
-private val STYLE_LABEL_GAP = 8.dp
-private val STYLE_ROW_BOTTOM_GAP = 24.dp
 
 @Composable
 fun ThemeSettingsScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
@@ -182,7 +168,7 @@ fun ThemeSettingsScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
             selected = settings.style,
             onSelect = { paletteStyle.set(it.name) },
         )
-        Spacer(Modifier.height(STYLE_ROW_BOTTOM_GAP))
+        Spacer(Modifier.height(24.dp))
     }
 }
 
@@ -195,10 +181,10 @@ private fun SeedColorRow(shape: Shape, enabled: Boolean, selected: Color, onSele
                 stringResource(R.string.settings_theme_custom_color),
                 subtitle = stringResource(R.string.settings_theme_custom_color_summary),
             )
-            Spacer(Modifier.height(SWATCHES_TOP_GAP))
+            Spacer(Modifier.height(12.dp))
             Row(
                 Modifier.horizontalScroll(rememberScrollState()),
-                horizontalArrangement = Arrangement.spacedBy(SWATCH_GAP),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 PRESET_SEED_COLORS.forEach { color ->
                     ColorSwatch(color, selected = color == selected, enabled = enabled) { onSelect(color) }
@@ -219,7 +205,7 @@ private fun SeedColorRow(shape: Shape, enabled: Boolean, selected: Color, onSele
 private fun ColorSwatch(color: Color, selected: Boolean, enabled: Boolean, onClick: () -> Unit) {
     Box(
         Modifier
-            .size(SWATCH_SIZE)
+            .size(40.dp)
             .clip(CircleShape)
             .background(color)
             .clickable(enabled = enabled, onClick = onClick),
@@ -230,7 +216,7 @@ private fun ColorSwatch(color: Color, selected: Boolean, enabled: Boolean, onCli
                 Icons.Outlined.Check,
                 contentDescription = null,
                 tint = Color.White,
-                modifier = Modifier.size(SWATCH_CHECK_SIZE),
+                modifier = Modifier.size(20.dp),
             )
         }
     }
@@ -258,7 +244,7 @@ private fun HueSlider(
             Box(
                 Modifier
                     .fillMaxWidth()
-                    .height(HUE_TRACK_HEIGHT)
+                    .height(16.dp)
                     .clip(CircleShape)
                     .background(brush)
             )
@@ -276,8 +262,8 @@ private fun PaletteStyleRow(seed: Color, dark: Boolean, selected: PaletteStyle, 
         Modifier
             .fillMaxWidth()
             .horizontalScroll(rememberScrollState())
-            .padding(horizontal = PAGE_MARGIN),
-        horizontalArrangement = Arrangement.spacedBy(STYLE_CARD_GAP),
+            .padding(horizontal = 16.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         PaletteStyle.entries.forEach { style ->
             PaletteStyleCard(style, schemes.getValue(style), selected = style == selected) { onSelect(style) }
@@ -288,14 +274,14 @@ private fun PaletteStyleRow(seed: Color, dark: Boolean, selected: PaletteStyle, 
 @Composable
 private fun PaletteStyleCard(style: PaletteStyle, scheme: ColorScheme, selected: Boolean, onClick: () -> Unit) {
     val accent = MaterialTheme.colorScheme.primary
-    val shape = RoundedCornerShape(STYLE_CARD_CORNER)
+    val shape = RoundedCornerShape(16.dp)
     val border by animateColorAsState(if (selected) accent else Color.Transparent, tween(THEME_ANIMATION_MS))
     val label by animateColorAsState(
         if (selected) accent else MaterialTheme.colorScheme.onSurface, tween(THEME_ANIMATION_MS),
     )
     Column(
         Modifier
-            .width(STYLE_CARD_WIDTH)
+            .width(84.dp)
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,
@@ -304,18 +290,18 @@ private fun PaletteStyleCard(style: PaletteStyle, scheme: ColorScheme, selected:
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Column(
-            Modifier.border(STYLE_CARD_BORDER, border, shape).clip(shape),
-            verticalArrangement = Arrangement.spacedBy(STYLE_BAND_GAP),
+            Modifier.border(3.dp, border, shape).clip(shape),
+            verticalArrangement = Arrangement.spacedBy(2.dp),
         ) {
             listOf(
                 scheme.primary, scheme.secondary, scheme.tertiary,
                 scheme.primaryContainer, scheme.secondaryContainer, scheme.tertiaryContainer,
             ).forEach { band ->
                 val color by animateColorAsState(band, tween(THEME_ANIMATION_MS))
-                Box(Modifier.fillMaxWidth().height(STYLE_BAND_HEIGHT).background(color))
+                Box(Modifier.fillMaxWidth().height(34.dp).background(color))
             }
         }
-        Spacer(Modifier.height(STYLE_LABEL_GAP))
+        Spacer(Modifier.height(8.dp))
         Text(
             style.name,
             style = MaterialTheme.typography.bodyMedium,

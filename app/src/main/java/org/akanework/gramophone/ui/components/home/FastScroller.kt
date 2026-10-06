@@ -65,14 +65,11 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
-/** Size of the drawn thumb. The touch target is larger, see [THUMB_TOUCH_WIDTH]. */
-private val THUMB_WIDTH = 4.dp
+/** The drawn thumb's height. Its touch target is larger, see [THUMB_TOUCH_HEIGHT]. */
 private val THUMB_HEIGHT = 40.dp
 
-/** Touch target of the thumb, larger than the drawn thumb. */
-private val THUMB_TOUCH_WIDTH = 28.dp
+/** The height of the thumb's touch target, larger than the drawn thumb. */
 private val THUMB_TOUCH_HEIGHT = 64.dp
-private val THUMB_MARGIN_END = 4.dp
 private val POPUP_SIZE = 88.dp
 private const val AUTO_HIDE_DELAY_MS = 1500L
 
@@ -401,8 +398,8 @@ private fun FastScroller(
                     Modifier
                         .align(Alignment.TopEnd)
                         .offset { IntOffset(0, thumbTop() - touchOverhang) }
-                        .padding(end = THUMB_MARGIN_END)
-                        .width(THUMB_TOUCH_WIDTH)
+                        .padding(end = 4.dp)
+                        .width(28.dp)
                         .height(THUMB_TOUCH_HEIGHT)
                         .pointerInput(trackHeight, model) {
                             detectDragGestures(
@@ -429,7 +426,7 @@ private fun FastScroller(
                 ) {
                     Box(
                         Modifier
-                            .width(THUMB_WIDTH)
+                            .width(4.dp)
                             .height(THUMB_HEIGHT)
                             .clip(RoundedCornerShape(2.dp))
                             .background(MaterialTheme.colorScheme.outlineVariant),
