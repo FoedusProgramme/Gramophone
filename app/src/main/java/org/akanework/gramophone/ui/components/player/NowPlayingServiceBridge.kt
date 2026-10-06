@@ -22,6 +22,7 @@ import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import androidx.lifecycle.Lifecycle
+import androidx.media3.session.MediaController
 import androidx.media3.session.SessionError
 import androidx.media3.session.SessionResult
 import com.google.common.util.concurrent.Futures
@@ -30,6 +31,7 @@ import org.akanework.gramophone.logic.GramophonePlaybackService
 import org.akanework.gramophone.logic.getAudioFormat
 import org.akanework.gramophone.logic.getBooleanStrict
 import org.akanework.gramophone.logic.getLyrics
+import org.akanework.gramophone.logic.getTimer
 import org.akanework.gramophone.logic.utils.AudioFormatDetector
 import org.akanework.gramophone.logic.utils.AudioFormatDetector.AudioFormatInfo
 import org.akanework.gramophone.logic.utils.AudioFormatDetector.AudioQuality
@@ -38,15 +40,17 @@ import org.akanework.gramophone.logic.utils.SemanticLyrics
 import org.akanework.gramophone.ui.MediaControllerViewModel
 
 /**
- * What the service tells the player sheet besides the playback state: the lyrics, pulled on each
- * connection and then pushed when they change, and the audio format, shown as a quality badge
- * while the setting is on. [release] it with the sheet.
+ * What the service tells the player sheet besides the playback state: the lyrics and whether a
+ * sleep timer is set, pulled on each connection and then pushed when they change, and the audio
+ * format, shown as a quality badge while the setting is on. [release] it with the sheet.
  */
 internal class NowPlayingServiceBridge(
     private val controller: MediaControllerViewModel,
     lifecycle: Lifecycle,
     private val prefs: SharedPreferences,
     private val updateLyrics: (SemanticLyrics?) -> Unit,
+    private val onTimerChanged: (active: Boolean) -> Unit,
+    private val onFormatChanged: (AudioFormatDetector.AudioFormats?) -> Unit,
     private val onQualityChanged: (iconRes: Int?, text: String?) -> Unit,
 ) : SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -62,13 +66,14 @@ internal class NowPlayingServiceBridge(
         prefs.registerOnSharedPreferenceChangeListener(this)
         controller.customCommandListeners.addCallback(lifecycle) { _, command, _ ->
             when (command.customAction) {
-                GramophonePlaybackService.SERVICE_TIMER_CHANGED -> { /* timer state is polled */ }
+                GramophonePlaybackService.SERVICE_TIMER_CHANGED -> updateTimer(instance)
 
                 GramophonePlaybackService.SERVICE_GET_LYRICS ->
                     updateLyrics(instance?.getLyrics())
 
                 GramophonePlaybackService.SERVICE_GET_AUDIO_FORMAT -> {
                     currentFormat = instance?.getAudioFormat()
+                    onFormatChanged(currentFormat)
                     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q ||
                         !handler.hasCallbacks(formatUpdateRunnable)
                     ) {
@@ -84,7 +89,15 @@ internal class NowPlayingServiceBridge(
         }
         controller.addControllerCallback(lifecycle) { instance, _ ->
             updateLyrics(instance.getLyrics())
+            updateTimer(instance)
         }
+    }
+
+    // A blocking call to the service: made on connecting and when the service says the timer
+    // changed, never polled.
+    private fun updateTimer(player: MediaController?) {
+        val timer = player?.getTimer()
+        onTimerChanged(timer?.first != null || timer?.second == true)
     }
 
     fun release() {

@@ -118,6 +118,7 @@ import androidx.compose.ui.unit.sp
 import androidx.media3.common.Player
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.utils.CalculationUtils
+import org.akanework.gramophone.logic.utils.Flags
 import org.akanework.gramophone.ui.components.compose.AppDropdownMenu
 import org.akanework.gramophone.ui.components.compose.rememberBooleanPreference
 import org.akanework.gramophone.ui.components.lyrics.LyricsOverlay
@@ -209,12 +210,12 @@ private fun FullPlayerScaffold(
     queue: QueueRevealState,
 ) {
     val density = LocalDensity.current
-    // Clear of the system bars and cutouts
+    // Clear of the system bars and cutouts, on their own sides whatever the layout direction
     val insets = with(density) {
-        PaddingValues(
-            start = geometry.leftInset.toDp(),
+        PaddingValues.Absolute(
+            left = geometry.leftInset.toDp(),
             top = geometry.statusTop.toDp(),
-            end = geometry.rightInset.toDp(),
+            right = geometry.rightInset.toDp(),
             bottom = geometry.bottomInset.toDp(),
         )
     }
@@ -239,7 +240,9 @@ private fun FullPlayerScaffold(
                     .fadingOverQueue(queue),
                 contentAlignment = Alignment.Center,
             ) {
-                PlayerControls(player, actions, scheme, PORTRAIT_MARGIN, Modifier.fillMaxWidth())
+                PlayerControls(
+                    player, actions, scheme, onOpenDialog, PORTRAIT_MARGIN, Modifier.fillMaxWidth(),
+                )
             }
             // The bottom row's place: the row is on top of the queue, see QueueDrawer
             Spacer(Modifier.height(EXPANDED_ACTION_BAR))
@@ -276,7 +279,7 @@ private fun LandscapeScaffold(
                     .padding(top = 10.dp, end = TOP_BUTTON_SIZE),
             ) {
                 PlayerControls(
-                    player, actions, scheme, LANDSCAPE_MARGIN,
+                    player, actions, scheme, onOpenDialog, LANDSCAPE_MARGIN,
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxWidth()
@@ -310,6 +313,7 @@ private fun PlayerControls(
     player: PlayerSheetPlayerState,
     actions: FullPlayerActions,
     scheme: AnimatedColorScheme,
+    onOpenDialog: (PlayerDialog) -> Unit,
     horizontalMargin: Dp,
     modifier: Modifier = Modifier,
     verticalArrangement: Arrangement.Vertical = Arrangement.Top,
@@ -317,7 +321,7 @@ private fun PlayerControls(
     Column(modifier, verticalArrangement = verticalArrangement) {
         TitleArtist(player, actions, scheme, horizontalMargin)
         Spacer(Modifier.height(ARTIST_PROGRESS_GAP))
-        ProgressSection(player, actions, scheme, horizontalMargin)
+        ProgressSection(player, actions, scheme, onOpenDialog, horizontalMargin)
         Spacer(Modifier.height(TIME_TRANSPORT_GAP))
         TransportRow(player, actions, scheme)
     }
@@ -573,6 +577,7 @@ private fun ProgressSection(
     player: PlayerSheetPlayerState,
     actions: FullPlayerActions,
     scheme: AnimatedColorScheme,
+    onOpenDialog: (PlayerDialog) -> Unit,
     horizontalMargin: Dp,
 ) {
     val positionMs = player.positionMs
@@ -632,11 +637,20 @@ private fun ProgressSection(
         Spacer(Modifier.weight(1f))
         val quality = player.qualityText
         if (!quality.isNullOrEmpty()) {
-            // On a pill of the secondary container, as tall as the times beside it
+            // On a pill of the secondary container, as tall as the times beside it. Tapped, it
+            // shows the whole signal chain.
             val qualityColor = scheme.colorProducer { onSecondaryContainer }
+            val showChain = if (Flags.FORMAT_INFO_DIALOG) {
+                Modifier.clickable(onClickLabel = stringResource(R.string.audio_signal_chain)) {
+                    onOpenDialog(PlayerDialog.SignalChain)
+                }
+            } else {
+                Modifier
+            }
             Row(
                 Modifier
                     .clip(CircleShape)
+                    .then(showChain)
                     .drawBehind { drawRect(scheme.color { secondaryContainer }) }
                     .padding(horizontal = QUALITY_PADDING),
                 verticalAlignment = Alignment.CenterVertically,
@@ -729,7 +743,8 @@ private fun TransportRow(
                 playing = showPause,
                 tint = scheme.colorProducer { onSecondaryContainer },
                 modifier = Modifier.size(42.dp),
-                contentDescription = stringResource(R.string.play),
+                contentDescription =
+                    stringResource(if (showPause) R.string.pause else R.string.play),
             )
         }
         Spacer(Modifier.width(8.dp))

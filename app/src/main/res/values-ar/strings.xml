@@ -429,4 +429,6 @@
     <string name="settings_notification_lyrics_summary">عرض الكلمات كعنوان الإشعار والفنان - العنوان كعنوان فرعي</string>
     <string name="settings_always_skip_previous">التخطى دائمًا إلى الأغنية السابقة‌</string>
     <string name="settings_always_skip_previous_summary">الانتقال مباشرة إلى الأغنية السابقة عند الضغط على زر السابق بدلاً من الذهاب إلى البداية</string>
+    <string name="audio_signal_chain">سلسلة الإشارات الصوتية</string>
+    <string name="audio_not_initialized">لم يتم تهيئة نظام تشغيل الصوت. جرب التشغيل على شيء ما!</string>
 </resources>

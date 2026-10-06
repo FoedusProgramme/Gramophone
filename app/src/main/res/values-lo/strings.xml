@@ -484,4 +484,6 @@
     <string name="shuffled">%s (ສຸ່ມ)</string>
     <string name="loading_playlists">ກຳລັງໂຫຼດລາຍການຫຼິ້ນ...</string>
     <string name="edit_mode">ເຂົ້າສູ່ໂໝດແກ້ໄຂ</string>
+    <string name="audio_signal_chain">ເສັ້ນທາງສັນຍານສຽງ</string>
+    <string name="audio_not_initialized">ລະບົບການຫຼິ້ນສຽງຍັງບໍ່ເລີ່ມເຮັດວຽກ. ລອງຫຼິ້ນບາງຢ່າງເບິ່ງ!</string>
 </resources>

@@ -446,4 +446,6 @@
     <string name="actions_query_start_random_music">увімкнути випадкову музику</string>
     <string name="actions_query_start_random_songs">запускати випадкові пісні</string>
     <string name="actions_query_shuffle_specific">перетасувати $item_name</string>
+    <string name="audio_signal_chain">Ланцюг звукового сигналу</string>
+    <string name="audio_not_initialized">Система відтворення аудіо не ініціалізована. Спробуй щось зіграти!</string>
 </resources>

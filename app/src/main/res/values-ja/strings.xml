@@ -431,4 +431,6 @@
     <string name="actions_query_start_random_music">音楽をランダムで開始</string>
     <string name="actions_query_start_random_songs">曲をランダムで開始</string>
     <string name="actions_query_shuffle_specific">$item_name をシャッフル</string>
+    <string name="audio_signal_chain">オーディオ信号チェーン</string>
+    <string name="audio_not_initialized">オーディオ再生システムが初期化されていません。何か音楽を再生してください！</string>
 </resources>

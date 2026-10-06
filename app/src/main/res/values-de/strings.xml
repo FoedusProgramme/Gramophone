@@ -457,4 +457,6 @@
     <string name="settings_mq_enabled">Mehrere Warteschlangen</string>
     <string name="settings_replaygain_drc_desc">Kompressor benutzen, um Übersteuerung zu vermeiden (empfohlen). Ist diese Funktion deaktiviert, wird stattdessen die Lautstärke reduziert, was den Normalisierungseffekt zunichtemacht.</string>
     <string name="search_query">Suchen: %s</string>
+    <string name="audio_signal_chain">Weg des Audiosignals</string>
+    <string name="audio_not_initialized">Das Audiowiedergabesystem ist noch nicht initialisiert. Versuch mal, etwas abzuspielen!</string>
 </resources>

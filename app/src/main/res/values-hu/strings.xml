@@ -353,4 +353,6 @@
     <string name="settings_open_source_licenses">Nyílt forráskódú licencek</string>
     <string name="oh_no">Jaj ne!</string>
     <string name="send_email">E-mail küldése</string>
+    <string name="audio_signal_chain">Hang jellánc</string>
+    <string name="audio_not_initialized">A hang visszajátszás rendszer nincs inicializálva. Próbáljon lejátszani valamit!</string>
     </resources>

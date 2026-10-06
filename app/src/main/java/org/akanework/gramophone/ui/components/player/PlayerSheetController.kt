@@ -57,7 +57,9 @@ import androidx.media3.session.MediaController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.job
+import kotlinx.coroutines.launch
 import org.akanework.gramophone.logic.defaultPrefs
 import org.akanework.gramophone.logic.getBooleanStrict
 import org.akanework.gramophone.logic.getTimer
@@ -93,11 +95,16 @@ data class PlayerSheetSavedState(
     val expanded: Boolean,
     val positionMs: Long,
     val durationMs: Long,
+    val lyricsVisible: Boolean,
 ) {
     companion object {
         val Saver: Saver<PlayerSheetSavedState, Any> = listSaver(
-            save = { listOf(it.expanded, it.positionMs, it.durationMs) },
-            restore = { PlayerSheetSavedState(it[0] as Boolean, it[1] as Long, it[2] as Long) },
+            save = { listOf(it.expanded, it.positionMs, it.durationMs, it.lyricsVisible) },
+            restore = {
+                PlayerSheetSavedState(
+                    it[0] as Boolean, it[1] as Long, it[2] as Long, it.getOrNull(3) as? Boolean ?: false,
+                )
+            },
         )
     }
 }
@@ -154,6 +161,9 @@ class PlayerSheetController internal constructor(
 ) : PlayerSheetHandle {
 
     companion object {
+        /** How long a restored expanded state waits for the service to restore the queue. */
+        private const val PENDING_EXPANDED_TIMEOUT_MS = 5000L
+
         /** Saves the sheet state, and restores it into a controller made by [create]. */
         fun saver(
             create: (PlayerSheetSavedState?) -> PlayerSheetController,
@@ -209,16 +219,21 @@ class PlayerSheetController internal constructor(
     /** Whether the sheet shows: [visible], with something to play. */
     private var shown by mutableStateOf(false)
 
-    /** Expanded before the recreation: expanded again once it shows. */
+    /**
+     * Expanded before the recreation: expanded again if it shows when the player first connects
+     * on a page that wants it.
+     */
     private var pendingExpanded = false
+    private var pendingExpandedTimeout: Job? = null
     private val instance: MediaController?
         get() = mediaController.get()
     private val service: NowPlayingServiceBridge
 
     init {
-        // Restore the expanded state and playback position after activity recreation.
+        // Restore the expanded state, the lyrics and playback position after activity recreation.
         restored?.let { state ->
             pendingExpanded = state.expanded
+            lyrics.restore(state.lyricsVisible)
             clock.restore(state.positionMs, state.durationMs)
         }
         service = NowPlayingServiceBridge(
@@ -226,6 +241,8 @@ class PlayerSheetController internal constructor(
             lifecycle = lifecycle,
             prefs = context.defaultPrefs,
             updateLyrics = { lyrics.lyrics = it },
+            onTimerChanged = { playerState.timerActive = it },
+            onFormatChanged = { playerState.audioFormat = it },
             onQualityChanged = { icon, text ->
                 playerState.qualityIcon = icon
                 playerState.qualityText = text
@@ -283,7 +300,7 @@ class PlayerSheetController internal constructor(
         },
     )
 
-    /** What the timer and speed dialogs read and set, on the MediaController and in the prefs. */
+    /** What the player's dialogs read and set, on the MediaController and in the prefs. */
     internal val dialogCallbacks = context.defaultPrefs.let { prefs ->
         PlayerDialogCallbacks(
             currentSpeed = { instance?.playbackParameters?.speed ?: 1f },
@@ -294,6 +311,7 @@ class PlayerSheetController internal constructor(
             setTimer = { d, eos -> instance?.setTimer(d, eos) },
             getBool = { key, def -> prefs.getBooleanStrict(key, def) },
             putBool = { key, value -> prefs.edit { putBoolean(key, value) } },
+            audioFormat = { playerState.audioFormat },
         )
     }
 
@@ -304,21 +322,38 @@ class PlayerSheetController internal constructor(
     }
 
     private fun savedState() = PlayerSheetSavedState(
-        expanded = sheetState.expandedTarget,
+        // Still to be expanded again if saved before the restored sheet has shown
+        expanded = sheetState.expandedTarget || pendingExpanded,
         positionMs = clock.positionMs,
         durationMs = clock.durationMs,
+        lyricsVisible = lyrics.visible,
     )
 
     /** Shows the sheet on a page that wants it while there's something to play, or hides it. */
     private fun refreshVisibility() {
-        val show = visible && (instance?.mediaItemCount ?: 0) > 0
+        val player = instance
+        val show = visible && (player?.mediaItemCount ?: 0) > 0
+        val expand = show && pendingExpanded
+        // Settled once the player is connected on a page that wants the sheet. With nothing to
+        // play yet, the service may still be restoring the queue after process death: given a
+        // moment to land, after which the next song played must not open the sheet full screen.
+        if (visible && player != null) {
+            if (show) {
+                pendingExpanded = false
+                pendingExpandedTimeout?.cancel()
+            } else if (pendingExpanded && pendingExpandedTimeout == null) {
+                pendingExpandedTimeout = sheetScope.launch {
+                    delay(PENDING_EXPANDED_TIMEOUT_MS)
+                    pendingExpanded = false
+                }
+            }
+        }
         if (shown == show) return
         shown = show
         sheetState.slide(show)
         if (!show) {
             sheetState.snapToCollapsed()
-        } else if (pendingExpanded) {
-            pendingExpanded = false
+        } else if (expand) {
             sheetState.snapToExpanded()
         }
     }

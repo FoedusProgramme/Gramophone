@@ -496,4 +496,6 @@
     <string name="settings_always_skip_previous">Salta sempre a la pista anterior</string>
     <string name="settings_always_skip_previous_summary">Canvia directament a la pista anterior en prémer el botó anterior en lloc d\'anar a l\'inici</string>
     <string name="reverse_order">Ordre invers</string>
+    <string name="audio_signal_chain">Cadena del senyal d\'àudio</string>
+    <string name="audio_not_initialized">El sistema de reproducció d\'àudio no està inicialitzat. Intenteu reproduir alguna cosa!</string>
 </resources>

@@ -356,6 +356,8 @@
     <string name="shuffle_all">Shuffle all</string>
     <!-- Tooltip for play button in full player -->
     <string name="play">Play</string>
+    <!-- Tooltip for the play button in the player while it pauses the music -->
+    <string name="pause">Pause</string>
     <!-- Tooltip for three dots button opening context menu -->
     <string name="more">More</string>
     <!-- Tooltip for skip to next button in full player -->
@@ -707,6 +709,10 @@
     <string name="send_email_manually">Please send log to nift4@posteo.net - can\'t find mail app</string>
     <!-- Error message if lyrics were found but are corrupted or in unsupported format -->
     <string name="failed_to_parse_lyric">Failed to parse lyrics</string>
+    <!-- Title of dialog which shows playback path (formats, sample rates, devices, changes in those). -->
+    <string name="audio_signal_chain">Audio signal chain</string>
+    <!-- Error message of dialog which shows playback path if no data is available -->
+    <string name="audio_not_initialized">The audio playback system is not initialized. Try playing something!</string>
     <!-- This is one of the output settings supported by Android. It's used to display playback path
     of active playback. These are technical terms so it may not be directly translatable. -->
     <string name="mix_port_flag_none">None</string>

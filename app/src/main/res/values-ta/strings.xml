@@ -436,4 +436,6 @@
     <string name="actions_query_start_random_music">சீரற்ற இசையைத் தொடங்குங்கள்</string>
     <string name="actions_query_start_random_songs">சீரற்ற பாடல்களைத் தொடங்குங்கள்</string>
     <string name="actions_query_shuffle_specific">$item_name ஐ கலக்கவும்</string>
+    <string name="audio_signal_chain">ஆடியோ சிக்னல் சங்கிலி</string>
+    <string name="audio_not_initialized">ஆடியோ பிளேபேக் அமைப்பு துவக்கப்படவில்லை. ஏதாவது விளையாட முயற்சிக்கவும்!</string>
 </resources>

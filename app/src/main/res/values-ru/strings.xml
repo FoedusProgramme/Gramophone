@@ -504,4 +504,6 @@
     <string name="settings_always_skip_previous">Всегда переключать на предыдущий трек</string>
     <string name="settings_always_skip_previous_summary">Мгновенное переключение на предыдущий трек вместо перемотки в начало при нажатии кнопки «Назад»</string>
     <string name="reverse_order">Инвертировать порядок</string>
+    <string name="audio_signal_chain">Звуковой тракт</string>
+    <string name="audio_not_initialized">Система аудио воспроизведение не запущена. Попробуйте воспроизвести что-нибудь!</string>
 </resources>

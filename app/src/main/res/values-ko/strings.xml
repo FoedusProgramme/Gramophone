@@ -484,4 +484,6 @@
     <string name="shuffled">%s (셔플됨)</string>
     <string name="loading_playlists">재생 목록 불러오는 중...</string>
     <string name="edit_mode">편집 모드로 전환</string>
+    <string name="audio_signal_chain">오디오 신호 흐름</string>
+    <string name="audio_not_initialized">오디오 재생 시스템이 초기화되지 않았습니다. 아무거나 재생해 보세요!</string>
 </resources>

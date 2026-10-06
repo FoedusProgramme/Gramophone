@@ -471,4 +471,6 @@
     <string name="settings_replaygain_no_rg_amp">Attenuation (no RG)</string>
     <string name="settings_replaygain_boost">Boost</string>
     <string name="d_db">%d dB</string>
+    <string name="audio_signal_chain">Chuỗi tín hiệu âm thanh</string>
+    <string name="audio_not_initialized">Hệ thống phát âm thanh chưa được chạy. Hãy thử phát cái gì đó!</string>
 </resources>

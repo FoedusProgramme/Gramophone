@@ -496,4 +496,6 @@
     <string name="unfavorite">Ukloni iz favorita</string>
     <string name="edit_mode">Uđi u modus uređivanja</string>
     <string name="whitelist_and_blacklist">Ako u Bijeloj listi nije odabrana nijedna mapa, sve će mape biti dopuštene.\n\nBijela lista i Crna lista se primjenjuju zajedno, pri čemu Crna lista ima prioritet. Na primjer, možeš dopustiti mapu u Bijeloj listi, a isključiti jednu od njezinih podmapa u Crnoj listi.</string>
+    <string name="audio_signal_chain">Lanac audio signala</string>
+    <string name="audio_not_initialized">Sustav za reprodukciju zvuka nije inicijaliziran. Pokušaj nešto reproducirati!</string>
 </resources>

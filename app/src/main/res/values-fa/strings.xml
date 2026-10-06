@@ -480,4 +480,6 @@
     <string name="mq_pin_queue">سنجاق کردن صف</string>
     <string name="shuffled">%s (به‌هم ریخته)</string>
     <string name="whitelist_and_blacklist">اگر هیچ پوشه‌ای در فهرست سفید انتخاب نشده بود، همه پوشه‌ها مجاز خواهند بود.\n\nفهرست سفید و فهرست سیاه با هم اعمال می‌شوند و فهرست سیاه اولویت دارد. برای نمونه می‌توانید پوشه‌ای را در فهرست سفید مجاز کنید و یکی از زیرپوشه‌های آن را در فهرست سیاه رد کنید.</string>
+    <string name="audio_signal_chain">زنجیرۀ سیگنال صدا</string>
+    <string name="audio_not_initialized">سامانۀ پخش صدا مقداردهی نشده است. پخش کردن چیزی را امتحان کنید!</string>
 </resources>

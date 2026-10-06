@@ -490,4 +490,6 @@
     <string name="settings_notification_lyrics_summary">Mostra as letras como título da notificación e artista - título como subtítulo</string>
     <string name="settings_always_skip_previous">Volver sempre á canción anterior</string>
     <string name="settings_always_skip_previous_summary">Cambia directamente á canción anterior cando se preme o botón anterior no lugar de volver ao inicio da canción</string>
+    <string name="audio_signal_chain">Cadea do sinal de audio</string>
+    <string name="audio_not_initialized">O sistema de reprodución de audio non está iniciado. Intenta reproducir algo!</string>
 </resources>

@@ -164,14 +164,14 @@ object PlayerUtilities {
     ): Float = lerp(progress, easing.transform(progress), ARC_STRENGTH)
 
     /**
-     * Lays the content out at [bounds] (px, in the parent's coordinates, mirrored in RTL like an
-     * offset), within the parent's constraints and in its own layer, so moving it doesn't redraw
-     * the parent. [bounds] is read in the layout phase, so a moving sheet lays out again without
-     * recomposing.
+     * Lays the content out at [bounds] (px, in the parent's coordinates from its left, never
+     * mirrored: right to left, [SheetGeometry] places things itself), within the parent's
+     * constraints and in its own layer, so moving it doesn't redraw the parent. [bounds] is read
+     * in the layout phase, so a moving sheet lays out again without recomposing.
      */
     fun Modifier.absolute(bounds: () -> Rect): Modifier = placeAt(bounded = true, bounds)
 
-    /** Like [absolute], but at its full size even past the parent, and never mirrored. */
+    /** Like [absolute], but at its full size even past the parent. */
     fun Modifier.absoluteUnbounded(bounds: () -> Rect): Modifier = placeAt(bounded = false, bounds)
 
     // The modifier takes the whole parent. An offset would leave its own box, the size of the
@@ -190,7 +190,7 @@ object PlayerUtilities {
             layout(width, height) {
                 val x = b.left.roundToInt()
                 val y = b.top.roundToInt()
-                if (bounded) placeable.placeRelativeWithLayer(x, y) else placeable.place(x, y)
+                if (bounded) placeable.placeWithLayer(x, y) else placeable.place(x, y)
             }
         }
 }

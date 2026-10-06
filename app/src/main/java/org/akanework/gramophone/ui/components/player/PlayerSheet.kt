@@ -66,6 +66,7 @@ import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.integerResource
 import androidx.compose.ui.res.stringResource
@@ -78,6 +79,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.media3.common.Player
 import coil3.compose.AsyncImage
@@ -88,6 +90,7 @@ import coil3.size.Precision
 import kotlinx.coroutines.launch
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.showsPause
+import org.akanework.gramophone.logic.utils.AudioFormatDetector
 import org.akanework.gramophone.ui.components.compose.rememberBooleanPreference
 import org.akanework.gramophone.ui.components.compose.rememberIntPreference
 import org.akanework.gramophone.ui.components.home.rememberDefaultCoverPainter
@@ -148,6 +151,9 @@ class PlayerSheetPlayerState(
     var timerActive by mutableStateOf(false)
     var qualityIcon by mutableStateOf<Int?>(null)
     var qualityText by mutableStateOf<String?>(null)
+
+    /** The playback path the service last reported, shown in the audio signal chain dialog. */
+    var audioFormat by mutableStateOf<AudioFormatDetector.AudioFormats?>(null)
 }
 
 /** Actions the mini bar and the full player trigger on the MediaController / host. */
@@ -234,8 +240,9 @@ fun PlayerSheet(
         val rootH = constraints.maxHeight.toFloat()
         val isWideLandscape = maxWidth >= WIDE_LANDSCAPE_MIN_WIDTH.dp && maxWidth > maxHeight
         val pageCorner = deviceScreenCornerRadius()
+        val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
         val geometry = remember(
-            rootW, rootH, insets, isWideLandscape, pageCorner, density, expandedArtCorner,
+            rootW, rootH, insets, isWideLandscape, isRtl, pageCorner, density, expandedArtCorner,
         ) {
             SheetGeometry(
                 rootWidth = rootW,
@@ -245,6 +252,7 @@ fun PlayerSheet(
                 leftInset = insets.left.toFloat(),
                 rightInset = insets.right.toFloat(),
                 isWideLandscape = isWideLandscape,
+                isRtl = isRtl,
                 pageCorner = pageCorner,
                 expandedArtCorner = expandedArtCorner,
                 density = density,
@@ -390,11 +398,16 @@ private fun SheetInteraction(
 
             Row(
                 Modifier
-                    // The mini bar's height across the sheet, leaving room for the cover slot
+                    // The mini bar's height across the sheet, leaving room for the cover slot.
+                    // The cover is at the sheet's start, the right one right to left.
                     .layout { measurable, constraints ->
-                        val sheetLeft = frame().sheetBounds.left
-                        val start = (geometry.collapsedArtLeft - sheetLeft +
-                            geometry.collapsedArtSize + MINI_ART_TO_TEXT_GAP.toPx()).roundToInt()
+                        val sheet = frame().sheetBounds
+                        val coverEnd = if (layoutDirection == LayoutDirection.Rtl) {
+                            sheet.right - geometry.collapsedArtLeft
+                        } else {
+                            geometry.collapsedArtLeft - sheet.left + geometry.collapsedArtSize
+                        }
+                        val start = (coverEnd + MINI_ART_TO_TEXT_GAP.toPx()).roundToInt()
                         val width =
                             (constraints.maxWidth - start - 8.dp.roundToPx()).coerceAtLeast(0)
                         val height = geometry.collapsedHeight.roundToInt()
@@ -439,12 +452,15 @@ private fun SheetInteraction(
                         playing = player.showPause,
                         tint = playButtonContent,
                         modifier = Modifier.size(MINI_ICON_SIZE),
+                        contentDescription = stringResource(
+                            if (player.showPause) R.string.pause else R.string.play
+                        ),
                     )
                 }
                 IconButton(onClick = actions.next, modifier = Modifier.size(MINI_BUTTON_SIZE)) {
                     Icon(
                         imageVector = Icons.Outlined.SkipNext,
-                        contentDescription = null,
+                        contentDescription = stringResource(R.string.skip_next),
                         tint = contentColor,
                         modifier = Modifier.size(MINI_ICON_SIZE),
                     )

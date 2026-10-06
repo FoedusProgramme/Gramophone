@@ -484,4 +484,6 @@
     <string name="unfavorite">Hapus dari favorit</string>
     <string name="loading_playlists">Memuat playlist...</string>
     <string name="edit_mode">Masuk ke mode edit</string>
+    <string name="audio_signal_chain">Rantai sinyal audio</string>
+    <string name="audio_not_initialized">Sistem pemutaran audio belum diinisialisasi. Coba putar sesuatu!</string>
 </resources>

@@ -491,4 +491,6 @@
     <string name="shuffled">%s (aléatoire)</string>
     <string name="loading_playlists">Chargement des listes de lecture…</string>
     <string name="edit_mode">Passer en mode édition</string>
+    <string name="audio_signal_chain">Chaîne son spatial</string>
+    <string name="audio_not_initialized">Le système de lecture audio n\'a pas été initialisé. Essaye de jouer quelque chose !</string>
 </resources>

@@ -71,6 +71,9 @@ fun collapsedFootprint(bottomInset: Float, density: Density): Float =
  * What doesn't move with the sheet (px, in the root): the screen and its insets, and both ends of
  * the morph, the floating mini bar and the full screen player. The composition may read it.
  * [frameAt] gives the sheet at a progress.
+ *
+ * Everything is measured from the left, as the insets are, and placed without mirroring: right to
+ * left ([isRtl]), the covers are put at the right here, where the mirrored rows have their start.
  */
 @Suppress("LongParameterList")
 class SheetGeometry(
@@ -81,6 +84,7 @@ class SheetGeometry(
     val leftInset: Float,
     val rightInset: Float,
     val isWideLandscape: Boolean,
+    private val isRtl: Boolean,
     /** The device screen's corner, which the rising sheet rounds its corners up to. */
     private val pageCorner: Dp,
     private val expandedArtCorner: Dp,
@@ -101,7 +105,10 @@ class SheetGeometry(
 
     // The mini bar's cover, lined up with the covers of the home's list rows
     val collapsedArtSize = with(density) { MINI_ARTWORK.toPx() }
-    val collapsedArtLeft = leftInset + with(density) { LIBRARY_COVER_START.toPx() }
+    val collapsedArtLeft = with(density) {
+        if (isRtl) rootWidth - rightInset - LIBRARY_COVER_START.toPx() - collapsedArtSize
+        else leftInset + LIBRARY_COVER_START.toPx()
+    }
     private val collapsedArtTop = collapsedTop + (collapsedHeight - collapsedArtSize) / 2f
 
     // The full player's cover
@@ -132,7 +139,9 @@ class SheetGeometry(
             expandedArtSize =
                 (rootHeight - statusTop - bottomInset - LAND_ART_TOP.px() - LAND_ART_BOTTOM.px())
                     .coerceAtLeast(0f)
-            expandedArtLeft = leftInset + LAND_ART_START.px()
+            expandedArtLeft =
+                if (isRtl) rootWidth - rightInset - LAND_ART_START.px() - expandedArtSize
+                else leftInset + LAND_ART_START.px()
         } else {
             expandedArtTop = statusTop + EXPANDED_ART_TOP_OFFSET.px()
             // Whatever height the controls below the cover leave over, so short screens shrink
@@ -150,10 +159,18 @@ class SheetGeometry(
             // Full width it lines up with the top buttons, smaller it is centered.
             expandedArtLeft = leftInset + (safeWidth - expandedArtSize) / 2f
         }
-        // Across the screen, or the controls' column beside the landscape cover
-        val queueLeft = if (isWideLandscape) expandedArtLeft + expandedArtSize else 0f
-        val queueRight =
-            if (isWideLandscape) rootWidth - rightInset - TOP_BUTTON_SIZE.px() else rootWidth
+        // Across the screen, or the controls' column between the landscape cover and the top
+        // buttons
+        val queueLeft = when {
+            !isWideLandscape -> 0f
+            isRtl -> leftInset + TOP_BUTTON_SIZE.px()
+            else -> expandedArtLeft + expandedArtSize
+        }
+        val queueRight = when {
+            !isWideLandscape -> rootWidth
+            isRtl -> expandedArtLeft
+            else -> rootWidth - rightInset - TOP_BUTTON_SIZE.px()
+        }
         val rowHeight = EXPANDED_ACTION_BAR.px()
         val rowTop = rootHeight - bottomInset - rowHeight
         // In landscape the cover stays beside the queue, which comes up to the top: no preview

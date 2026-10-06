@@ -490,4 +490,6 @@
     <string name="settings_always_skip_previous">Tagasikerimisel alati hüppa eelmise loo juurde</string>
     <string name="settings_always_skip_previous_summary">Tagasikerimise lalati hüppa otse eelmise loo juurde, mitte esitamisel oleva loo algusesse</string>
     <string name="reverse_order">Tagurpidi järjestus</string>
+    <string name="audio_signal_chain">Helisignaali ahel</string>
+    <string name="audio_not_initialized">Heli taasesituse süsteem pole algolekusse viidud. Proovi midagi kuulata!</string>
 </resources>

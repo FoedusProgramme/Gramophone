@@ -152,7 +152,10 @@ internal fun QueueDrawer(
         if (geometry.isWideLandscape) {
             PaddingValues(0.dp)
         } else {
-            PaddingValues(start = geometry.leftInset.toDp(), end = geometry.rightInset.toDp())
+            PaddingValues.Absolute(
+                left = geometry.leftInset.toDp(),
+                right = geometry.rightInset.toDp(),
+            )
         }
     }
     Box(Modifier.onSheet(frame)) {

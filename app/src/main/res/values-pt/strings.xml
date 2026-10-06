@@ -416,4 +416,6 @@
     <string name="clear_queue">Limpar fila</string>
     <string name="favorite">Favorito</string>
     <string name="settings_whitelist">Lista branca</string>
+    <string name="audio_signal_chain">Cadeia de sinal</string>
+    <string name="audio_not_initialized">O sistema de reprodução de áudio não foi inicializado. Tente reproduzir algo!</string>
 </resources>

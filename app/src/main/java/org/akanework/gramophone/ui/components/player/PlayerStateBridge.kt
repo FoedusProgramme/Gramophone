@@ -29,7 +29,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import org.akanework.gramophone.R
-import org.akanework.gramophone.logic.getTimer
 import org.akanework.gramophone.logic.showsPause
 import org.akanework.gramophone.ui.MediaControllerViewModel
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.FULL_POLL_MS
@@ -37,9 +36,9 @@ import org.akanework.gramophone.ui.components.player.PlayerUtilities.POSITION_PO
 
 /**
  * Bridges the MediaController into [state]: the song, the play state and the modes from the
- * player's callbacks, and the timer and [clock]'s position from the one poll on [scope], which
- * runs while [polling] and the screen is started, faster while [expanded]. [onMediaChanged] is
- * called on each connection and song change, once [state] is up to date.
+ * player's callbacks, and [clock]'s position from the one poll on [scope], which runs while
+ * [polling] and the screen is started, faster while [expanded]. [onMediaChanged] is called on
+ * each connection and song change, once [state] is up to date.
  */
 internal class PlayerStateBridge(
     private val context: Context,
@@ -65,16 +64,12 @@ internal class PlayerStateBridge(
         }
         scope.launch {
             while (isActive) {
-                if (polling() && lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) poll()
+                if (polling() && lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
+                    clock.sample()
+                }
                 delay(if (expanded()) FULL_POLL_MS else POSITION_POLL_MS)
             }
         }
-    }
-
-    private fun poll() {
-        clock.sample()
-        val timer = instance?.getTimer()
-        state.timerActive = timer?.first != null || timer?.second == true
     }
 
     private fun sync() {

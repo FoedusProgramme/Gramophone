@@ -73,6 +73,11 @@ class LyricsOverlayState(
     private var fadeJob: Job? = null
     private var scaleJob: Job? = null
 
+    /** Shows the overlay as it was before a recreation, at once rather than fading it in. */
+    fun restore(visible: Boolean) {
+        this.visible = visible
+    }
+
     /** Fades the overlay in from transparent over [durationMs]. */
     fun fadeIn(durationMs: Int = PlayerUtilities.LYRIC_COVER_FADE_MS) {
         fadeJob?.cancel()

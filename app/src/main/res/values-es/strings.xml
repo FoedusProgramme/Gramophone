@@ -488,4 +488,6 @@
     <string name="d_db">%d dB</string>
     <string name="loading_playlists">Cargando listas de reproducción...</string>
     <string name="edit_mode">Entrar en modo de edición</string>
+    <string name="audio_signal_chain">Cadena de audio</string>
+    <string name="audio_not_initialized">El sistema de reproducción de audio no está inicializado. ¡Intenta reproducir algo!</string>
 </resources>
