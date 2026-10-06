@@ -149,7 +149,7 @@ class EndedWorkaroundPlayer(
         }
         // Without an artist, systems show nothing, or on some ROMs the word "null": name it the
         // way the app does. Only what the session shows changes, not the song in the library.
-        if (superState.playlist.isNotEmpty() && superState.currentMetadata.artist == null) {
+        if (!superState.timeline.isEmpty && superState.currentMetadata.artist == null) {
             superState = superState.buildUpon()
                 .setPlaylist(
                     superState.timeline, superState.currentTracks,
