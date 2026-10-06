@@ -43,8 +43,8 @@ class MediaConsentRequesterTest {
     fun requestsMadeWithoutAHostWaitInOrder() = runTest {
         val first = testIntentSender(1)
         val second = testIntentSender(2)
-        requester.request(first, PendingWrite.Delete)
-        requester.request(second, PendingWrite.Delete)
+        requester.request(first, PendingWrite.Delete())
+        requester.request(second, PendingWrite.Delete())
 
         assertSame(first, next().sender)
         assertSame(second, next().sender)
@@ -53,12 +53,12 @@ class MediaConsentRequesterTest {
 
     @Test
     fun requestHandedToCancelledHostIsQueuedAgain() = runTest {
-        // The host waits for a request, gets one, and is cancelled (the activity is recreated)
-        // before it resumes to take it.
+        // The host waits for a request, gets one, and is cancelled (the activity pauses or is
+        // recreated) before it resumes to take it.
         val host = launch { requester.next() }
         runCurrent()
         val consent = testIntentSender(5)
-        requester.request(consent, PendingWrite.Delete)
+        requester.request(consent, PendingWrite.Delete())
         host.cancel()
         runCurrent()
 
@@ -71,8 +71,8 @@ class MediaConsentRequesterTest {
         runCurrent()
         val handed = testIntentSender(1)
         val later = testIntentSender(2)
-        requester.request(handed, PendingWrite.Delete)
-        requester.request(later, PendingWrite.Delete)
+        requester.request(handed, PendingWrite.Delete())
+        requester.request(later, PendingWrite.Delete())
         host.cancel()
         runCurrent()
 

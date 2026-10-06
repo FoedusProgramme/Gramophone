@@ -58,6 +58,7 @@ class LibraryWriteRepositoryTest {
 
     private val song = Entry(locations = listOf(Uri.parse("file:///music/a.flac")))
     private val favorites = Uri.parse("content://media/external/audio/playlists/7")
+    private val deleteFavorite = PendingWrite.Delete(unfavorite = song.locations)
 
     /** The next queued consent request; fails instead of hanging if there is none. */
     private suspend fun nextRequest(): ConsentRequest = withTimeout(1000) { requester.next() }
@@ -83,15 +84,21 @@ class LibraryWriteRepositoryTest {
     }
 
     @Test
-    fun deleteResultOnlyReportsErrors() {
-        // The system dialog already deleted on OK; cancel is the user's choice.
-        repository.onConsentResult(PendingWrite.Delete, Activity.RESULT_OK, null)
-        repository.onConsentResult(PendingWrite.Delete, Activity.RESULT_CANCELED, null)
+    fun deleteResultUnfavoritesOnlyWhatWasDeleted() {
+        // Cancel is the user's choice: nothing was deleted, so nothing leaves the favorites.
+        repository.onConsentResult(deleteFavorite, Activity.RESULT_CANCELED, null)
         assertTrue(writes.performed.isEmpty())
         assertTrue(writes.failed.isEmpty())
 
-        repository.onConsentResult(PendingWrite.Delete, Activity.RESULT_FIRST_USER, null)
-        assertEquals(listOf(PendingWrite.Delete to Activity.RESULT_FIRST_USER), writes.failed)
+        // The system dialog already deleted on OK; only the favorites are left to update.
+        repository.onConsentResult(deleteFavorite, Activity.RESULT_OK, null)
+        assertEquals(listOf<PendingWrite>(deleteFavorite), writes.performed)
+        assertTrue(writes.failed.isEmpty())
+
+        writes.performed.clear()
+        repository.onConsentResult(deleteFavorite, Activity.RESULT_FIRST_USER, null)
+        assertTrue(writes.performed.isEmpty())
+        assertEquals(listOf(deleteFavorite to Activity.RESULT_FIRST_USER), writes.failed)
     }
 
     @Test
@@ -161,29 +168,34 @@ class LibraryWriteRepositoryTest {
     @Test
     fun deleteWithoutConsentWaitsForConfirmation() = runBlocking {
         var deleted = 0
-        val result = ItemManipulator.deleteResult(consent = null) { deleted++ }
+        val result = ItemManipulator.deleteResult(null, deleteFavorite) { deleted++ }
         assertTrue(result is DeleteResult.ConfirmThenRun)
         writes.deleteResult = result
 
         val returned = repository.deleteSongs(listOf(File("/music/a.flac") to 1L))
         assertSame(result, returned)
         assertEquals(0, deleted)
+        // Still a favorite, should the user cancel.
+        assertTrue(writes.performed.isEmpty())
 
         repository.runConfirmed(returned as DeleteResult.ConfirmThenRun)
         assertEquals(1, deleted)
+        assertEquals(listOf<PendingWrite>(deleteFavorite), writes.performed)
     }
 
     @Test
     fun deleteNeedingConsentIsQueued() = runBlocking {
         var deleted = 0
         val consent = testIntentSender(4)
-        writes.deleteResult = ItemManipulator.deleteResult(consent) { deleted++ }
+        writes.deleteResult = ItemManipulator.deleteResult(consent, deleteFavorite) { deleted++ }
 
-        val returned = repository.deletePlaylist(7L)
+        val returned = repository.deleteSongs(listOf(File("/music/a.flac") to 1L))
         assertTrue(returned is DeleteResult.NeedsConsent)
         val request = nextRequest()
         assertSame(consent, request.sender)
-        assertEquals(PendingWrite.Delete, request.payload)
+        // The favorites are updated from the payload once the result comes back.
+        assertEquals(deleteFavorite, request.payload)
         assertEquals(0, deleted)
+        assertTrue(writes.performed.isEmpty())
     }
 }

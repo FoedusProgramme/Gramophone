@@ -45,9 +45,12 @@ sealed interface PendingWrite : Parcelable {
     @Parcelize
     data class Favorite(val songs: List<Entry>, val uri: Uri?, val favorite: Boolean) : PendingWrite
 
-    /** The system delete dialog already deletes; only errors are left to report. */
+    /**
+     * The system delete dialog deletes by itself; once the files are gone, the songs at
+     * [unfavorite] (file uris) are taken off the favorites.
+     */
     @Parcelize
-    data object Delete : PendingWrite
+    data class Delete(val unfavorite: List<Uri> = emptyList()) : PendingWrite
 
     /** Move the playlist with MediaStore [id] to [path]. */
     @Parcelize
@@ -59,8 +62,15 @@ sealed interface DeleteResult {
     /** The system has to ask the user; [sender] shows its dialog. */
     class NeedsConsent(val sender: IntentSender, val payload: PendingWrite) : DeleteResult
 
-    /** No system dialog needed: ask in the app first, and call [run] once the user confirmed. */
-    class ConfirmThenRun(val run: suspend () -> Unit) : DeleteResult
+    /**
+     * No system dialog needed: ask in the app first, and pass this to
+     * [LibraryWriteRepository.runConfirmed] once the user confirmed. [run] deletes, then
+     * [payload] is performed like a consented delete.
+     */
+    class ConfirmThenRun(
+        val payload: PendingWrite.Delete,
+        val run: suspend () -> Unit,
+    ) : DeleteResult
 
     class Failed(val error: Throwable) : DeleteResult
 }

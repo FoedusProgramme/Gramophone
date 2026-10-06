@@ -53,27 +53,13 @@ object ItemManipulator {
     const val DEFAULT_FORMAT = "m3u"
 
     suspend fun deleteSongs(context: Context, reader: FlowReader, list: List<Pair<File, Long>>): DeleteResult {
+        // Only listed here: they leave the favorites once they are deleted, not if the user
+        // cancels.
         val faves = reader.playlistListFlow.map { it.find { p ->
             p is Favorite } }.first()
-        val songsToUnfave = faves?.let { _ -> list.filter { faves.songList.find { song ->
-            song.getFile() == it.first } != null }.map { it.first.toUriCompat() } }
-        if (faves?.id != null && !songsToUnfave.isNullOrEmpty()) {
-            val uri = ContentUris.withAppendedId(
-                    @Suppress("deprecation")
-                    MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, faves.id!!
-                )
-            val token = MediaStoreCompat.needRequestBytesWrite(context, uri)
-            if (token == null) {
-                try {
-                    val readback = readbackPlaylist(context, reader, uri)
-                    val newSongs = readback.copy(entries = readback.entries.filter {
-                        it.locations.find { songsToUnfave.contains(it) } == null })
-                    setPlaylistContent(context, uri, newSongs, false)
-                } catch (e: Exception) {
-                    Log.e(TAG, "failed to set unfavorite $songsToUnfave", e)
-                }
-            }
-        }
+        val songsToUnfave = if (faves?.id == null) emptyList<Uri>() else list.filter {
+            faves.songList.find { song -> song.getFile() == it.first } != null
+        }.map { it.first.toUriCompat() }
         val uris = list.flatMap {
             val id = it.second
             val file = it.first
@@ -117,17 +103,21 @@ object ItemManipulator {
                 urisToDelete
             }
         }
-        return delete(context, uris)
+        return delete(context, uris, PendingWrite.Delete(songsToUnfave))
     }
 
     fun deletePlaylist(context: Context, id: Long): DeleteResult {
         val uri = ContentUris.withAppendedId(
             @Suppress("deprecation") MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, id
         )
-        return delete(context, setOf(uri))
+        return delete(context, setOf(uri), PendingWrite.Delete())
     }
 
-    private fun delete(context: Context, uris: Collection<Uri>): DeleteResult {
+    private fun delete(
+        context: Context,
+        uris: Collection<Uri>,
+        payload: PendingWrite.Delete,
+    ): DeleteResult {
         val consent = try {
             if (uris.any { MediaStoreCompat.needRequestDelete(context, it) != null })
                 MediaStoreCompat.createDeleteRequest(context, uris.toList()).intentSender
@@ -136,7 +126,7 @@ object ItemManipulator {
             Log.e(TAG, "failed to prepare deleting $uris", e)
             return DeleteResult.Failed(e)
         }
-        return deleteResult(consent) {
+        return deleteResult(consent, payload) {
             withContext(Dispatchers.IO) {
                 val notOk = uris.mapNotNull {
                     try {
@@ -160,11 +150,15 @@ object ItemManipulator {
 
     /**
      * With a [consent] dialog, the system deletes once the user agrees; without one, [deleteNow]
-     * waits for the caller's own confirmation.
+     * waits for the caller's own confirmation. Either way [payload] is performed after.
      */
-    internal fun deleteResult(consent: IntentSender?, deleteNow: suspend () -> Unit): DeleteResult =
-        if (consent != null) DeleteResult.NeedsConsent(consent, PendingWrite.Delete)
-        else DeleteResult.ConfirmThenRun(deleteNow)
+    internal fun deleteResult(
+        consent: IntentSender?,
+        payload: PendingWrite.Delete = PendingWrite.Delete(),
+        deleteNow: suspend () -> Unit,
+    ): DeleteResult =
+        if (consent != null) DeleteResult.NeedsConsent(consent, payload)
+        else DeleteResult.ConfirmThenRun(payload, deleteNow)
 
     fun createPlaylist(context: Context, out: File): Uri {
         if (out.exists())

@@ -97,6 +97,7 @@ class LibraryWriteRepository internal constructor(
     /**
      * Prepares deleting songs. A [DeleteResult.NeedsConsent] is already queued for the system
      * dialog; a [DeleteResult.ConfirmThenRun] deletes nothing until passed to [runConfirmed].
+     * Either way, the songs leave the favorites only once they are deleted.
      */
     suspend fun deleteSongs(list: List<Pair<File, Long>>): DeleteResult =
         writes.deleteSongs(list).also(::queueIfNeeded)
@@ -107,7 +108,12 @@ class LibraryWriteRepository internal constructor(
 
     /** Runs a delete the user confirmed in the app. */
     fun runConfirmed(result: DeleteResult.ConfirmThenRun) {
-        scope.launch { result.run() }
+        scope.launch {
+            result.run()
+            // Quiet here and after the system dialog: "delete failed" would be wrong when only
+            // the favorites could not be updated.
+            writes.perform(result.payload, quiet = true)
+        }
     }
 
     /**
@@ -122,9 +128,10 @@ class LibraryWriteRepository internal constructor(
         scope.launch {
             when {
                 // The system dialog deletes by itself; cancelling is the user's choice.
-                write is PendingWrite.Delete -> if (resultCode != Activity.RESULT_OK &&
-                    resultCode != Activity.RESULT_CANCELED) {
-                    writes.reportFailure(write, resultCode, data)
+                write is PendingWrite.Delete -> when (resultCode) {
+                    Activity.RESULT_OK -> writes.perform(write, quiet = true)
+                    Activity.RESULT_CANCELED -> Unit
+                    else -> writes.reportFailure(write, resultCode, data)
                 }
                 resultCode == Activity.RESULT_OK -> writes.perform(write)
                 else -> writes.reportFailure(write, resultCode, data)
@@ -159,7 +166,8 @@ internal interface LibraryWrites {
 
     /**
      * Runs [write] and returns whether it worked. A failure is logged, and unless [quiet] also
-     * shown to the user.
+     * shown to the user. For a [PendingWrite.Delete], whose files are already deleted, it takes
+     * the songs off the favorites.
      */
     suspend fun perform(write: PendingWrite, quiet: Boolean = false): Boolean
     suspend fun reportFailure(write: PendingWrite, resultCode: Int, data: Intent?)
@@ -195,7 +203,7 @@ private class MediaStoreLibraryWrites(
                 context, playlistUri(write.id), File(write.path).parent ?: ""
             )
             // Deletes ask through ItemManipulator's delete request instead.
-            PendingWrite.Delete -> null
+            is PendingWrite.Delete -> null
         }
         token?.let { MediaStoreCompat.createWriteRequest(context, listOf(it)).intentSender }
     }
@@ -208,7 +216,7 @@ private class MediaStoreLibraryWrites(
                 is PendingWrite.Favorite -> markFavorite(write)
                 is PendingWrite.Rename ->
                     MediaStoreCompat.efficientMove(context, playlistUri(write.id), write.path)
-                PendingWrite.Delete -> Unit
+                is PendingWrite.Delete -> unfavorite(write.unfavorite)
             }
             true
         } catch (e: Exception) {
@@ -274,12 +282,31 @@ private class MediaStoreLibraryWrites(
             ItemManipulator.readbackPlaylist(context, reader, uri)
         } else PlaylistSerializer.Playlist.create()
         val entries = if (write.favorite) {
-            readback.entries + write.songs
+            // Favoriting twice (a repeated intent, two quick taps) must not list a song twice.
+            readback.entries + write.songs.filter { song ->
+                readback.entries.none { song.fuzzyEquals(it) }
+            }
         } else {
             readback.entries.filter { write.songs.none { candidate -> candidate.fuzzyEquals(it) } }
         }
         ItemManipulator.setPlaylistContent(context, uri, readback.copy(entries = entries),
             uriIn == null)
+    }
+
+    /** Takes the songs at [songs] (file uris) off the favorites. */
+    private suspend fun unfavorite(deleted: List<Uri>) {
+        // A song the delete failed on is still there, and stays a favorite
+        val songs = deleted.filterNot { uri -> uri.path?.let { File(it).exists() } == true }
+        if (songs.isEmpty()) return
+        val uri = favoritesUri() ?: return
+        // Not worth a consent dialog of its own after the delete; the songs then stay listed.
+        if (MediaStoreCompat.needRequestBytesWrite(context, uri) != null) {
+            Log.w(TAG, "not allowed to take deleted songs off the favorites")
+            return
+        }
+        val readback = ItemManipulator.readbackPlaylist(context, reader, uri)
+        val entries = readback.entries.filter { it.locations.none(songs::contains) }
+        ItemManipulator.setPlaylistContent(context, uri, readback.copy(entries = entries), false)
     }
 
     @StringRes
@@ -288,7 +315,7 @@ private class MediaStoreLibraryWrites(
         is PendingWrite.AddToNewPlaylist -> R.string.create_failed_playlist
         is PendingWrite.Favorite -> R.string.edit_favorites_failed
         is PendingWrite.Rename -> R.string.rename_failed_playlist
-        PendingWrite.Delete -> R.string.delete_failed
+        is PendingWrite.Delete -> R.string.delete_failed
     }
 
     private suspend fun toast(@StringRes message: Int, arg: String) = withContext(Dispatchers.Main) {
