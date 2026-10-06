@@ -63,6 +63,7 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -327,6 +328,9 @@ fun LabelTabRow(
                 contentAlignment = Alignment.Center,
             ) {
                 val selected = index == selectedTab
+                // As wide as the label selected either way: in Latin scripts the heavier weight
+                // is wider, and the tabs and the indicator would shift as the selection moves
+                SingleLineText(label, 15.sp, 600, Color.Transparent)
                 SingleLineText(
                     label, 15.sp, if (selected) 600 else 500,
                     if (selected) selectedColor else unselectedColor,
