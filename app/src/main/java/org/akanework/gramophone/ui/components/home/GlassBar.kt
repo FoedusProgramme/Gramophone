@@ -33,8 +33,6 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.text.BasicText
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -54,6 +52,7 @@ import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
 import dev.chrisbanes.haze.hazeEffect
+import org.akanework.gramophone.ui.components.compose.BackButton
 
 /*
  * A transparent bar of
@@ -230,14 +229,3 @@ fun GlassTitleBar(
     titleTopGap = titleTopGap,
 )
 
-/** The back arrow at the start of a page's bar. */
-@Composable
-fun BackButton(onBack: () -> Unit, modifier: Modifier = Modifier) {
-    LibraryIconButton(
-        icon = Icons.AutoMirrored.Outlined.ArrowBack,
-        iconSize = 24.dp,
-        tint = MaterialTheme.colorScheme.onSurface,
-        onClick = onBack,
-        modifier = modifier,
-    )
-}

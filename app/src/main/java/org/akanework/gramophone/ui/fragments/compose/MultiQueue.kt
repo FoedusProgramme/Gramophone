@@ -121,8 +121,7 @@ import org.akanework.gramophone.logic.utils.CalculationUtils.convertDurationToTi
 import org.akanework.gramophone.logic.utils.Flags
 import org.akanework.gramophone.ui.MediaControllerViewModel
 import org.akanework.gramophone.ui.components.compose.QueueDropdownMenu
-
-import org.akanework.gramophone.ui.components.player.TintedIcon
+import org.akanework.gramophone.ui.components.compose.TintedIcon
 import java.util.LinkedList
 
 @Composable

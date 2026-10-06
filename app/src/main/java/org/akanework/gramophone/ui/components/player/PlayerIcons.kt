@@ -21,55 +21,12 @@ import androidx.compose.animation.graphics.ExperimentalAnimationGraphicsApi
 import androidx.compose.animation.graphics.res.animatedVectorResource
 import androidx.compose.animation.graphics.res.rememberAnimatedVectorPainter
 import androidx.compose.animation.graphics.vector.AnimatedImageVector
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ColorProducer
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.role
-import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.unit.dp
 import org.akanework.gramophone.R
-
-/** An icon's size unless its modifier gives it one, like Icon's. */
-private val DEFAULT_ICON_SIZE = 24.dp
-
-/** An icon whose [tint] is read in the draw phase. 24dp unless [modifier] sizes it. */
-@Composable
-internal fun TintedIcon(
-    painter: Painter,
-    tint: ColorProducer,
-    modifier: Modifier = Modifier,
-    contentDescription: String? = null,
-) {
-    val semantics = if (contentDescription == null) Modifier else Modifier.semantics {
-        this.contentDescription = contentDescription
-        role = Role.Image
-    }
-    Spacer(
-        modifier
-            .size(DEFAULT_ICON_SIZE)
-            .then(semantics)
-            .drawBehind { with(painter) { draw(size, colorFilter = ColorFilter.tint(tint())) } },
-    )
-}
-
-/** An icon whose [tint] is read in the draw phase. 24dp unless [modifier] sizes it. */
-@Composable
-internal fun TintedIcon(
-    image: ImageVector,
-    tint: ColorProducer,
-    modifier: Modifier = Modifier,
-    contentDescription: String? = null,
-) = TintedIcon(rememberVectorPainter(image), tint, modifier, contentDescription)
+import org.akanework.gramophone.ui.components.compose.TintedIcon
 
 /** The play button's icon, which morphs from play to pause while [playing]. */
 @Composable

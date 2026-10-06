@@ -36,7 +36,6 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.union
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
@@ -54,8 +53,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -67,9 +64,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import org.akanework.gramophone.ui.components.compose.LibraryIconButton
 import org.akanework.gramophone.ui.components.home.GLASS_BAR_HEIGHT
 import org.akanework.gramophone.ui.components.home.LibraryCover
-import org.akanework.gramophone.ui.components.home.LibraryIconButton
 import org.akanework.gramophone.ui.nav.AlbumKey
 import org.akanework.gramophone.ui.nav.ArtistKey
 import org.akanework.gramophone.ui.nav.DateKey
@@ -191,14 +188,13 @@ private fun CarouselButton(
                     y = with(density) { (restY - ridden.toDp()).roundToPx() },
                 )
             }
-            .clip(CircleShape)
-            .drawBehind { drawCircle(color = surface.copy(alpha = 1f - fraction())) },
     ) {
         LibraryIconButton(
             icon = icon,
             iconSize = 24.dp,
             tint = MaterialTheme.colorScheme.onSurface,
             onClick = onClick,
+            container = { surface.copy(alpha = 1f - fraction()) },
         )
         content()
     }

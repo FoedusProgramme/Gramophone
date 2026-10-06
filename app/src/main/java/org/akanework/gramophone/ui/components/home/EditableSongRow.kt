@@ -37,6 +37,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.akanework.gramophone.ui.components.compose.LibraryIconButton
 
 /*
  * A song row that can be dragged by its handle and removed by its button: the playlist editor's

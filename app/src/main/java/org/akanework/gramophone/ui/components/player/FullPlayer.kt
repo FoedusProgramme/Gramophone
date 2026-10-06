@@ -26,16 +26,12 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -63,10 +59,7 @@ import androidx.compose.material.icons.outlined.Shuffle
 import androidx.compose.material.icons.outlined.SkipNext
 import androidx.compose.material.icons.outlined.SkipPrevious
 import androidx.compose.material.icons.outlined.Speed
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonGroupDefaults
-import androidx.compose.material3.ButtonShapes
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
@@ -76,9 +69,6 @@ import androidx.compose.material3.MotionScheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.ToggleButton
-import androidx.compose.material3.ToggleButtonDefaults
-import androidx.compose.material3.ToggleButtonShapes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
@@ -134,6 +124,10 @@ import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.utils.CalculationUtils
 import org.akanework.gramophone.logic.utils.Flags
 import org.akanework.gramophone.ui.components.compose.AppDropdownMenu
+import org.akanework.gramophone.ui.components.compose.GroupButton
+import org.akanework.gramophone.ui.components.compose.GroupToggleButton
+import org.akanework.gramophone.ui.components.compose.IconTileButton
+import org.akanework.gramophone.ui.components.compose.TintedIcon
 import org.akanework.gramophone.ui.components.compose.rememberBooleanPreference
 import org.akanework.gramophone.ui.components.lyrics.LyricsOverlay
 import org.akanework.gramophone.ui.components.lyrics.LyricsOverlayState
@@ -386,10 +380,10 @@ private fun MinimizeButton(
     onClick: () -> Unit,
     filled: Boolean = true,
 ) {
-    IconSlot(
-        Icons.Outlined.ExpandMore, R.string.expand_less, scheme.colorProducer { onSurface },
-        if (filled) scheme.colorProducer { surfaceBright } else null, icon = 28.dp,
-        onClick = onClick,
+    IconTileButton(
+        Icons.Outlined.ExpandMore, stringResource(R.string.expand_less),
+        scheme.colorProducer { onSurface }, onClick, Modifier.topButtonSlot(), iconSize = 28.dp,
+        container = if (filled) scheme.colorProducer { surfaceBright } else null,
     )
 }
 
@@ -407,10 +401,10 @@ private fun OverflowButton(
         onOpenDialog(dialog)
     }
     Box {
-        IconSlot(
-            Icons.Outlined.MoreVert, R.string.more, scheme.colorProducer { onSurface },
-            if (filled) scheme.colorProducer { surfaceBright } else null, icon = 24.dp,
-            onClick = { menuOpen = true },
+        IconTileButton(
+            Icons.Outlined.MoreVert, stringResource(R.string.more),
+            scheme.colorProducer { onSurface }, { menuOpen = true }, Modifier.topButtonSlot(),
+            container = if (filled) scheme.colorProducer { surfaceBright } else null,
         )
         MaterialTheme(colorScheme = scheme.target) {
             AppDropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
@@ -434,32 +428,9 @@ private fun OverflowItem(image: ImageVector, @StringRes title: Int, onClick: () 
     )
 }
 
-/**
- * A top button: its icon on a circle of [background], or bare without one, as tall as the bottom
- * row's buttons, in a [TOP_BUTTON_SIZE] slot. The colours are read where they're drawn, as the
- * cover's scheme changes.
- */
-@Composable
-private fun IconSlot(
-    image: ImageVector,
-    @StringRes description: Int,
-    tint: ColorProducer,
-    background: ColorProducer?,
-    icon: Dp,
-    onClick: () -> Unit,
-) {
-    Box(
-        Modifier
-            .size(TOP_BUTTON_SIZE)
-            .padding((TOP_BUTTON_SIZE - ACTION_BUTTON_SIZE) / 2)
-            .clip(CircleShape)
-            .drawBehind { background?.let { drawRect(it()) } }
-            .clickable(onClick = onClick),
-        contentAlignment = Alignment.Center,
-    ) {
-        TintedIcon(image, tint, Modifier.size(icon), stringResource(description))
-    }
-}
+/** A top button's slot: [TOP_BUTTON_SIZE], the button in it as tall as the bottom row's. */
+private fun Modifier.topButtonSlot(): Modifier =
+    size(TOP_BUTTON_SIZE).padding((TOP_BUTTON_SIZE - ACTION_BUTTON_SIZE) / 2)
 
 /** How long the title and artist take to fade out, and then in, when the song changes. */
 private const val TEXT_FADE_MS = 300
@@ -787,10 +758,10 @@ private fun TransportRow(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        TransportButton(
-            image = Icons.Outlined.SkipPrevious, description = R.string.skip_previous,
-            tint = scheme.colorProducer { onSurface }, icon = 38.dp,
-            onClick = actions.previous, onLongClick = actions.seekBack,
+        IconTileButton(
+            Icons.Outlined.SkipPrevious, stringResource(R.string.skip_previous),
+            scheme.colorProducer { onSurface }, actions.previous, Modifier.transportSlot(),
+            iconSize = 38.dp, indication = null, onLongClick = actions.seekBack,
         )
         Spacer(Modifier.width(8.dp))
         // Read in the draw phase, so the morph doesn't recompose the row every frame
@@ -828,10 +799,10 @@ private fun TransportRow(
             )
         }
         Spacer(Modifier.width(8.dp))
-        TransportButton(
-            image = Icons.Outlined.SkipNext, description = R.string.skip_next,
-            tint = scheme.colorProducer { onSurface }, icon = 38.dp,
-            onClick = actions.next, onLongClick = actions.seekForward,
+        IconTileButton(
+            Icons.Outlined.SkipNext, stringResource(R.string.skip_next),
+            scheme.colorProducer { onSurface }, actions.next, Modifier.transportSlot(),
+            iconSize = 38.dp, indication = null, onLongClick = actions.seekForward,
         )
     }
 }
@@ -840,32 +811,6 @@ private fun TransportRow(
 private fun Modifier.transportSlot(): Modifier =
     sizeIn(maxWidth = TRANSPORT_BUTTON_SIZE, maxHeight = TRANSPORT_BUTTON_SIZE)
         .aspectRatio(1f, matchHeightConstraintsFirst = true)
-
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-private fun TransportButton(
-    image: ImageVector,
-    @StringRes description: Int,
-    tint: ColorProducer,
-    icon: Dp,
-    onClick: () -> Unit,
-    onLongClick: () -> Unit,
-) {
-    Box(
-        Modifier
-            .transportSlot()
-            .clip(CircleShape)
-            .combinedClickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null,
-                onClick = onClick,
-                onLongClick = onLongClick,
-            ),
-        contentAlignment = Alignment.Center,
-    ) {
-        TintedIcon(image, tint, Modifier.size(icon), stringResource(description))
-    }
-}
 
 /**
  * The bottom row: Material 3 expressive's connected button group, on the brightest surface, as
@@ -906,33 +851,33 @@ internal fun ActionBarRow(
         horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        ActionButton(
-            Icons.AutoMirrored.Outlined.Article, R.string.dialog_lyrics, plainTint, leading, container,
-            actions.showLyrics,
+        val slot = Modifier.weight(1f).height(ACTION_BUTTON_SIZE)
+        GroupButton(
+            Icons.AutoMirrored.Outlined.Article, stringResource(R.string.dialog_lyrics), plainTint,
+            leading, container, actions.showLyrics, slot,
         )
-        ActionToggle(
-            image = if (repeatMode == Player.REPEAT_MODE_ONE) {
+        GroupToggleButton(
+            icon = if (repeatMode == Player.REPEAT_MODE_ONE) {
                 Icons.Outlined.RepeatOne
             } else {
                 Icons.Outlined.Repeat
             },
-            description = R.string.repeat_mode,
+            contentDescription = stringResource(R.string.repeat_mode),
             tint = checkTint(repeatMode != Player.REPEAT_MODE_OFF),
             shapes = middle,
             container = container,
             checkedContainer = checkedContainer,
             checked = repeatMode != Player.REPEAT_MODE_OFF,
             onClick = actions.cycleRepeat,
+            modifier = slot,
         )
-        ActionToggle(
-            Icons.Outlined.Shuffle, R.string.shuffle, checkTint(shuffle), middle,
-            container, checkedContainer, shuffle,
-        ) {
-            actions.toggleShuffle(!shuffle)
-        }
-        ActionToggle(
-            image = if (favorite) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
-            description = R.string.playlist_favourite,
+        GroupToggleButton(
+            Icons.Outlined.Shuffle, stringResource(R.string.shuffle), checkTint(shuffle), middle,
+            container, checkedContainer, shuffle, { actions.toggleShuffle(!shuffle) }, slot,
+        )
+        GroupToggleButton(
+            icon = if (favorite) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
+            contentDescription = stringResource(R.string.playlist_favourite),
             // The favourite on the tertiary colours rather than the primary ones
             tint = scheme.colorProducer { if (favorite) onTertiaryContainer else onSurface },
             shapes = trailing,
@@ -940,58 +885,8 @@ internal fun ActionBarRow(
             checkedContainer = scheme.color { tertiaryContainer },
             checked = favorite,
             onClick = { actions.toggleFavorite(!favorite) },
+            modifier = slot,
         )
     }
 }
 
-/** A button of the bottom row, of the group's [shapes] and [container] colour. */
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
-@Composable
-private fun RowScope.ActionButton(
-    image: ImageVector,
-    @StringRes description: Int,
-    tint: ColorProducer,
-    shapes: ToggleButtonShapes,
-    container: Color,
-    onClick: () -> Unit,
-) {
-    Button(
-        onClick = onClick,
-        shapes = ButtonShapes(shapes.shape, shapes.pressedShape),
-        modifier = Modifier.weight(1f).height(ACTION_BUTTON_SIZE),
-        colors = ButtonDefaults.buttonColors(containerColor = container),
-        elevation = null,
-        contentPadding = PaddingValues(0.dp),
-    ) {
-        TintedIcon(image, tint, Modifier.size(24.dp), stringResource(description))
-    }
-}
-
-/** A toggle of the bottom row, on [container], or [checkedContainer] while [checked]. */
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
-@Composable
-private fun RowScope.ActionToggle(
-    image: ImageVector,
-    @StringRes description: Int,
-    tint: ColorProducer,
-    shapes: ToggleButtonShapes,
-    container: Color,
-    checkedContainer: Color,
-    checked: Boolean,
-    onClick: () -> Unit,
-) {
-    ToggleButton(
-        checked = checked,
-        onCheckedChange = { onClick() },
-        modifier = Modifier.weight(1f).height(ACTION_BUTTON_SIZE),
-        shapes = shapes,
-        colors = ToggleButtonDefaults.toggleButtonColors(
-            containerColor = container,
-            checkedContainerColor = checkedContainer,
-        ),
-        elevation = null,
-        contentPadding = PaddingValues(0.dp),
-    ) {
-        TintedIcon(image, tint, Modifier.size(24.dp), stringResource(description))
-    }
-}

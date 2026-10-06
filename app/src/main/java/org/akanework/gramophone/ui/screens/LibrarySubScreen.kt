@@ -26,10 +26,6 @@ import android.net.Uri
 import android.os.Build
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.overscroll
-import androidx.compose.foundation.rememberOverscrollEffect
-import androidx.compose.foundation.withoutVisualEffect
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -50,12 +46,14 @@ import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.overscroll
+import androidx.compose.foundation.rememberOverscrollEffect
+import androidx.compose.foundation.withoutVisualEffect
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material.icons.outlined.Shuffle
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
@@ -75,18 +73,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.RoundRect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.luminance
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLocale
@@ -113,6 +107,7 @@ import org.akanework.gramophone.ui.LibraryAdapterTypes
 import org.akanework.gramophone.ui.actions.AppActionEnv
 import org.akanework.gramophone.ui.actions.LibraryActions
 import org.akanework.gramophone.ui.actions.rememberAppActionEnv
+import org.akanework.gramophone.ui.components.compose.IconTileButton
 import org.akanework.gramophone.ui.components.compose.rememberDefaultPreferences
 import org.akanework.gramophone.ui.components.home.DECOR_HEIGHT
 import org.akanework.gramophone.ui.components.home.GLASS_BAR_HEIGHT
@@ -913,53 +908,26 @@ private fun formatTotalDuration(ms: Long, locale: Locale): String {
 @Composable
 private fun TitleButtons(onPlay: () -> Unit, onShuffle: () -> Unit) {
     val colors = MaterialTheme.colorScheme
+    // Eased into the cover's colours with the rest of the page
+    @Composable
+    fun animated(color: Color) = animateColorAsState(color, tween(THEME_ANIMATION_MS), label = "button")
+    val primary by animated(colors.primary)
+    val onPrimary by animated(colors.onPrimary)
+    val tertiary by animated(colors.tertiary)
+    val onTertiary by animated(colors.onTertiary)
     Row(
         Modifier.padding(start = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(TITLE_BUTTON_GAP),
     ) {
-        TitleButton(
-            icon = Icons.Outlined.PlayArrow,
-            description = stringResource(R.string.play),
-            shape = MaterialShapes.Cookie9Sided.toShape(),
-            container = colors.primary,
-            content = colors.onPrimary,
-            onClick = onPlay,
+        IconTileButton(
+            Icons.Outlined.PlayArrow, stringResource(R.string.play), { onPrimary }, onPlay,
+            Modifier.size(TITLE_BUTTON_SIZE), iconSize = TITLE_BUTTON_ICON_SIZE,
+            shape = MaterialShapes.Cookie9Sided.toShape(), container = { primary },
         )
-        TitleButton(
-            icon = Icons.Outlined.Shuffle,
-            description = stringResource(R.string.shuffle),
-            shape = MaterialShapes.Cookie4Sided.toShape(),
-            container = colors.tertiary,
-            content = colors.onTertiary,
-            onClick = onShuffle,
-        )
-    }
-}
-
-@Composable
-private fun TitleButton(
-    icon: ImageVector,
-    description: String,
-    shape: Shape,
-    container: Color,
-    content: Color,
-    onClick: () -> Unit,
-) {
-    val fill by animateColorAsState(container, tween(THEME_ANIMATION_MS), label = "button")
-    val tint by animateColorAsState(content, tween(THEME_ANIMATION_MS), label = "button icon")
-    Box(
-        Modifier
-            .size(TITLE_BUTTON_SIZE)
-            .clip(shape)
-            .drawBehind { drawRect(fill) }
-            .clickable(onClick = onClick),
-        contentAlignment = Alignment.Center,
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = description,
-            tint = tint,
-            modifier = Modifier.size(TITLE_BUTTON_ICON_SIZE),
+        IconTileButton(
+            Icons.Outlined.Shuffle, stringResource(R.string.shuffle), { onTertiary }, onShuffle,
+            Modifier.size(TITLE_BUTTON_SIZE), iconSize = TITLE_BUTTON_ICON_SIZE,
+            shape = MaterialShapes.Cookie4Sided.toShape(), container = { tertiary },
         )
     }
 }

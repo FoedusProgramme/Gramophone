@@ -39,6 +39,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.akanework.gramophone.ui.components.compose.LibraryIconButton
 
 /**
  * `general_decor`: the 48dp row above every list with the item counter on the left and the

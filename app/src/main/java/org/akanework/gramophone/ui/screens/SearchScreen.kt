@@ -65,10 +65,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import org.akanework.gramophone.R
 import org.akanework.gramophone.ui.LibraryAdapterTypes
+import org.akanework.gramophone.ui.components.compose.BackButton
+import org.akanework.gramophone.ui.components.compose.LibraryIconButton
 import org.akanework.gramophone.ui.components.compose.rememberDefaultPreferences
-import org.akanework.gramophone.ui.components.home.BackButton
 import org.akanework.gramophone.ui.components.home.GLASS_BAR_HEIGHT
-import org.akanework.gramophone.ui.components.home.LibraryIconButton
 import org.akanework.gramophone.ui.components.home.glassHazeStyle
 import org.akanework.gramophone.ui.components.home.rememberNowPlayingState
 import org.akanework.gramophone.ui.components.home.textViewStyle

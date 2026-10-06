@@ -84,7 +84,7 @@ import org.akanework.gramophone.BuildConfig
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.allowDiskAccessInStrictMode
 import org.akanework.gramophone.logic.hasOsClipboardDialog
-import org.akanework.gramophone.ui.components.home.BackButton
+import org.akanework.gramophone.ui.components.compose.BackButton
 import org.akanework.gramophone.ui.components.home.GLASS_BAR_HEIGHT
 import org.akanework.gramophone.ui.components.home.GlassTitleBar
 import org.akanework.gramophone.ui.theme.GramophoneTheme

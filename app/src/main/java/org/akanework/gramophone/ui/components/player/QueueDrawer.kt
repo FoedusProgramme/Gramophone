@@ -46,8 +46,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.graphics.ColorProducer
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.layout.ContentScale
@@ -56,11 +54,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import org.akanework.gramophone.R
+import org.akanework.gramophone.ui.components.compose.TileButton
+import org.akanework.gramophone.ui.components.compose.TintedIcon
 import org.akanework.gramophone.ui.components.home.EDITABLE_ROW_ICON_END
 import org.akanework.gramophone.ui.components.home.EDITABLE_ROW_ICON_START
 import org.akanework.gramophone.ui.components.home.FloorCenterVertically
@@ -336,11 +335,11 @@ private fun QueuePreview(
                     Modifier.fillMaxWidth(),
                 )
             }
-            PreviewButton(
-                shape = RoundedCornerShape(PREVIEW_BUTTON_CORNER),
-                width = PREVIEW_PLAY_WIDTH,
-                container = scheme.colorProducer { primaryContainer },
+            TileButton(
                 onClick = actions.playPause,
+                modifier = Modifier.size(PREVIEW_PLAY_WIDTH, PREVIEW_BUTTON_HEIGHT),
+                shape = RoundedCornerShape(PREVIEW_BUTTON_CORNER),
+                container = scheme.colorProducer { primaryContainer },
             ) {
                 PlayPauseIcon(
                     playing = player.showPause,
@@ -351,16 +350,16 @@ private fun QueuePreview(
             }
             Spacer(Modifier.width(PREVIEW_BUTTON_GAP))
             // Rounded off at the end of the pair
-            PreviewButton(
+            TileButton(
+                onClick = actions.next,
+                modifier = Modifier.size(PREVIEW_NEXT_WIDTH, PREVIEW_BUTTON_HEIGHT),
                 shape = RoundedCornerShape(
                     topStart = PREVIEW_BUTTON_CORNER,
                     topEnd = PREVIEW_BUTTON_END_CORNER,
                     bottomEnd = PREVIEW_BUTTON_END_CORNER,
                     bottomStart = PREVIEW_BUTTON_CORNER,
                 ),
-                width = PREVIEW_NEXT_WIDTH,
                 container = scheme.colorProducer { tertiaryContainer },
-                onClick = actions.next,
             ) {
                 TintedIcon(
                     Icons.Outlined.SkipNext,
@@ -379,26 +378,5 @@ private fun QueuePreview(
             trackColor = scheme.color { secondaryContainer },
         )
         Spacer(Modifier.height(QUEUE_PREVIEW_BOTTOM_PADDING))
-    }
-}
-
-/** One of the preview's two buttons: a tall tile of [container] colour, read where it's drawn. */
-@Composable
-private fun PreviewButton(
-    shape: Shape,
-    width: Dp,
-    container: ColorProducer,
-    onClick: () -> Unit,
-    content: @Composable () -> Unit,
-) {
-    Box(
-        Modifier
-            .size(width, PREVIEW_BUTTON_HEIGHT)
-            .clip(shape)
-            .drawBehind { drawRect(container()) }
-            .clickable(onClick = onClick),
-        contentAlignment = Alignment.Center,
-    ) {
-        content()
     }
 }

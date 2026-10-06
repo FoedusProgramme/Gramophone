@@ -52,7 +52,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.drawOutline
 import androidx.compose.ui.graphics.drawscope.translate
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
@@ -64,6 +63,7 @@ import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import org.akanework.gramophone.ui.components.compose.LibraryIconButton
 import org.akanework.gramophone.ui.theme.LocalCardSurface
 
 /** Centre like the View framework does: integer division, i.e. the odd pixel goes to the end. */
@@ -164,36 +164,6 @@ fun libraryCellShape(
 @Composable
 fun Modifier.libraryItemCard(shape: Shape = libraryItemShape()): Modifier =
     clip(shape).background(LocalCardSurface.current)
-
-/** `rp_buttons`: a borderless 24dp ripple, used by every 48dp icon button in the lists. */
-@Composable
-fun Modifier.iconButtonRipple(onClick: () -> Unit): Modifier = clickable(
-    interactionSource = remember { MutableInteractionSource() },
-    indication = ripple(bounded = false, radius = 24.dp, color = Color(0xFFAAAAAA)),
-    onClick = onClick,
-)
-
-/** A 48dp `MaterialButton` with only an icon (insets 0, `rp_buttons` background). */
-@Composable
-fun LibraryIconButton(
-    icon: ImageVector,
-    iconSize: Dp,
-    tint: Color,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Box(
-        modifier.size(48.dp).iconButtonRipple(onClick),
-        contentAlignment = IconCenter,
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            tint = tint,
-            modifier = Modifier.size(iconSize),
-        )
-    }
-}
 
 /**
  * The cover `ImageView` inside its filled `MaterialCardView`: `colorSurfaceContainer` behind a

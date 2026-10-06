@@ -18,7 +18,6 @@
 package org.akanework.gramophone.ui.components.home
 
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -47,7 +46,6 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -58,27 +56,25 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.akanework.gramophone.R
 import org.akanework.gramophone.ui.HomeTab
 import org.akanework.gramophone.ui.actions.HomeMenuAction
 import org.akanework.gramophone.ui.components.compose.AppDropdownMenu
+import org.akanework.gramophone.ui.components.compose.TileButton
+import org.akanework.gramophone.ui.components.compose.TintedIcon
 import org.akanework.gramophone.ui.theme.LocalCardSurface
 import kotlin.math.PI
 import kotlin.math.abs
@@ -141,68 +137,44 @@ fun HomeAppBar(
             tint = MaterialTheme.colorScheme.onSurface,
         )
         Spacer(Modifier.weight(1f))
-        HomeActionButton(
-            icon = Icons.Outlined.Search,
-            description = stringResource(R.string.search),
-            iconSize = 24.dp,
-            shape = SEARCH_BUTTON_SHAPE,
-            iconOffsetX = ACTION_ICON_INNER_OFFSET, // nudge toward the inner edge
+        val cardSurface = LocalCardSurface.current
+        val onSurface = MaterialTheme.colorScheme.onSurface
+        TileButton(
             onClick = onSearch,
-        )
+            modifier = Modifier.size(ACTION_BUTTON_WIDTH, ACTION_BUTTON_HEIGHT),
+            shape = SEARCH_BUTTON_SHAPE,
+            container = { cardSurface },
+        ) {
+            // Nudged toward the inner edge, for optical balance
+            TintedIcon(
+                Icons.Outlined.Search, { onSurface }, Modifier.offset(x = ACTION_ICON_INNER_OFFSET),
+                stringResource(R.string.search),
+            )
+        }
         Spacer(Modifier.width(ACTION_BUTTON_GAP))
         HomeOverflowMenu(onMenuAction)
     }
 }
 
-/**
- * One of the connected app-bar actions: a filled [ACTION_BUTTON_WIDTH]×[ACTION_BUTTON_HEIGHT]
- * button rounded 24dp on its outer edge and 4dp on the edge facing its neighbour, with the icon
- * nudged [iconOffsetX] toward the inner edge for optical balance.
- */
-@Composable
-private fun HomeActionButton(
-    icon: ImageVector,
-    description: String,
-    iconSize: Dp,
-    shape: Shape,
-    iconOffsetX: Dp,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Box(
-        modifier
-            .size(width = ACTION_BUTTON_WIDTH, height = ACTION_BUTTON_HEIGHT)
-            .clip(shape)
-            .background(LocalCardSurface.current)
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = ripple(),
-                onClick = onClick,
-            ),
-        contentAlignment = Alignment.Center,
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = description,
-            tint = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.offset(x = iconOffsetX).size(iconSize),
-        )
-    }
-}
 
 /** The overflow button with the `home_menu` entries. */
 @Composable
 private fun HomeOverflowMenu(onMenuAction: (HomeMenuAction) -> Unit) {
     var menuOpen by remember { mutableStateOf(false) }
     Box {
-        HomeActionButton(
-            icon = Icons.Outlined.MoreVert,
-            description = stringResource(R.string.more),
-            iconSize = 24.dp,
-            shape = OVERFLOW_BUTTON_SHAPE,
-            iconOffsetX = -ACTION_ICON_INNER_OFFSET, // nudge toward the inner edge
+        val cardSurface = LocalCardSurface.current
+        val onSurface = MaterialTheme.colorScheme.onSurface
+        TileButton(
             onClick = { menuOpen = true },
-        )
+            modifier = Modifier.size(ACTION_BUTTON_WIDTH, ACTION_BUTTON_HEIGHT),
+            shape = OVERFLOW_BUTTON_SHAPE,
+            container = { cardSurface },
+        ) {
+            TintedIcon(
+                Icons.Outlined.MoreVert, { onSurface }, Modifier.offset(x = -ACTION_ICON_INNER_OFFSET),
+                stringResource(R.string.more),
+            )
+        }
         AppDropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
             HomeMenuAction.entries.forEach { action ->
                 DropdownMenuItem(
