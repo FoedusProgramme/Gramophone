@@ -19,13 +19,14 @@ package org.akanework.gramophone.ui.components.player
 
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -79,14 +80,18 @@ import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.ToggleButtonDefaults
 import androidx.compose.material3.ToggleButtonShapes
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.MotionDurationScale
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.drawWithContent
@@ -98,8 +103,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorProducer
 import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.drawOutline
+import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.clipRect
+import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -110,12 +119,17 @@ import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.constrainWidth
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.media3.common.Player
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.withContext
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.utils.CalculationUtils
 import org.akanework.gramophone.logic.utils.Flags
@@ -146,6 +160,8 @@ import org.akanework.gramophone.ui.components.player.PlayerUtilities.TOP_BUTTON_
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.TRANSPORT_BUTTON_SIZE
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.expandedContentAlpha
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.noRippleClickable
+import kotlin.math.min
+import kotlin.math.roundToInt
 
 @Composable
 internal fun FullPlayerContent(
@@ -451,6 +467,10 @@ private const val TEXT_FADE_MS = 300
 /** How far in from each end the scrolling title and artist fade out. */
 private val MARQUEE_FADE_EDGE = 16.dp
 
+/** How fast a line too long to fit scrolls, per second, and the pause before each round. */
+private val MARQUEE_VELOCITY = 30.dp
+private const val MARQUEE_DELAY_MS = 1200L
+
 @Composable
 private fun TitleArtist(
     player: PlayerSheetPlayerState,
@@ -491,9 +511,9 @@ private fun TitleArtist(
 
 /**
  * A single scrolling line, which fades out and the new text in when it changes (like the View
- * player's setTextAnimation) and fades its ends while the text is too long to fit.
+ * player's setTextAnimation), and scrolls round while the text is too long to fit, as the View
+ * player's marquee did.
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun FadingMarqueeText(
     text: String,
@@ -516,13 +536,13 @@ private fun FadingMarqueeText(
         },
         label = "player text fade",
     ) { shown ->
-        // Width of the laid out line: wider than the slot only when it overflows and scrolls
-        var lineWidth by remember { mutableIntStateOf(0) }
+        val marquee = remember { MarqueeState() }
+        val velocity = with(LocalDensity.current) { MARQUEE_VELOCITY.toPx() }
+        LaunchedEffect(marquee, velocity) { marquee.run(velocity) }
         BasicText(
             text = shown,
             color = color,
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
             style = LocalTextStyle.current.copy(
                 fontSize = fontSize,
                 fontWeight = fontWeight,
@@ -533,44 +553,104 @@ private fun FadingMarqueeText(
                 ),
                 platformStyle = PlatformTextStyle(includeFontPadding = false),
             ),
-            onTextLayout = { lineWidth = it.size.width },
             modifier = Modifier
                 .fillMaxWidth()
-                .marqueeFadingEdges { lineWidth }
-                .basicMarquee(iterations = Int.MAX_VALUE)
-                .noRippleClickable(onClick),
+                .noRippleClickable(onClick)
+                .marquee(marquee),
         )
     }
 }
 
-/** Fades both ends of a [basicMarquee] line out while its text ([lineWidth]) overflows. */
-private fun Modifier.marqueeFadingEdges(lineWidth: () -> Int): Modifier =
-    graphicsLayer {
-        val overflows = lineWidth() > size.width
+/** How far a [marquee] line has scrolled, and how long it is for the room it has. */
+@Stable
+private class MarqueeState {
+    // Set as the line is measured
+    var lineWidth by mutableIntStateOf(0)
+    var slotWidth by mutableIntStateOf(0)
+    val offset = Animatable(0f)
+
+    val overflows: Boolean get() = lineWidth > slotWidth
+
+    /** A round: the line and the gap to its next copy, a third of the room as the View's. */
+    val distance: Float get() = lineWidth + slotWidth / 3f
+
+    /** Scrolls a round at [velocity] px a second after each pause, while the line overflows. */
+    suspend fun run(velocity: Float) = withContext(FixedMotionDurationScale) {
+        snapshotFlow { if (overflows) distance else null }.collectLatest { distance ->
+            offset.snapTo(0f)
+            if (distance == null) return@collectLatest
+            val round = tween<Float>((distance / velocity * 1000).roundToInt(), easing = LinearEasing)
+            while (true) {
+                delay(MARQUEE_DELAY_MS)
+                offset.animateTo(distance, round)
+                offset.snapTo(0f)
+            }
+        }
+    }
+}
+
+// Like basicMarquee's, the marquee keeps its pace with animations scaled or turned off
+private object FixedMotionDurationScale : MotionDurationScale {
+    override val scaleFactor: Float get() = 1f
+}
+
+/**
+ * Lays the line out as long as it is and scrolls it round by [state], with its ends faded while
+ * it overflows: its end all along, its start only once it has moved off it, as the View marquee
+ * did, so a line at rest shows its start in full.
+ */
+private fun Modifier.marquee(state: MarqueeState): Modifier = this
+    .graphicsLayer {
         compositingStrategy =
-            if (overflows) CompositingStrategy.Offscreen else CompositingStrategy.Auto
-    }.drawWithContent {
-        drawContent()
-        if (lineWidth() <= size.width) return@drawWithContent
+            if (state.overflows) CompositingStrategy.Offscreen else CompositingStrategy.Auto
+    }
+    .drawWithContent {
+        if (!state.overflows) {
+            drawContent()
+            return@drawWithContent
+        }
+        val offset = state.offset.value
+        val distance = state.distance
+        // A right-to-left line starts at the right, and scrolls the other way
+        val rtl = layoutDirection == LayoutDirection.Rtl
+        clipRect {
+            translate(left = if (rtl) size.width - state.lineWidth + offset else -offset) {
+                this@drawWithContent.drawContent()
+                translate(left = if (rtl) -distance else distance) { this@drawWithContent.drawContent() }
+            }
+        }
         val edge = MARQUEE_FADE_EDGE.toPx().coerceAtMost(size.width / 2f)
-        drawRect(
-            brush = Brush.horizontalGradient(
-                listOf(Color.Transparent, Color.Black), startX = 0f, endX = edge,
-            ),
-            size = Size(edge, size.height),
-            blendMode = BlendMode.DstIn,
-        )
-        drawRect(
-            brush = Brush.horizontalGradient(
-                listOf(Color.Black, Color.Transparent),
-                startX = size.width - edge,
-                endX = size.width,
-            ),
-            topLeft = Offset(size.width - edge, 0f),
-            size = Size(edge, size.height),
-            blendMode = BlendMode.DstIn,
+        // In as the line leaves its start, and out again as the next copy comes in to it
+        val startFade = (min(offset, distance - offset) / edge).coerceIn(0f, 1f)
+        fadeEnd(left = true, strength = if (rtl) 1f else startFade, edge = edge)
+        fadeEnd(left = false, strength = if (rtl) startFade else 1f, edge = edge)
+    }
+    .layout { measurable, constraints ->
+        val placeable = measurable.measure(constraints.copy(maxWidth = Constraints.Infinity))
+        val width = constraints.constrainWidth(placeable.width)
+        state.lineWidth = placeable.width
+        state.slotWidth = width
+        layout(width, placeable.height) { placeable.placeWithLayer(0, 0) }
+    }
+
+/** Fades out [edge] px at the left or right end of what's drawn, fully at [strength] 1. */
+private fun DrawScope.fadeEnd(left: Boolean, strength: Float, edge: Float) {
+    if (strength <= 0f) return
+    val faded = Color.Black.copy(alpha = 1f - strength)
+    val brush = if (left) {
+        Brush.horizontalGradient(listOf(faded, Color.Black), startX = 0f, endX = edge)
+    } else {
+        Brush.horizontalGradient(
+            listOf(Color.Black, faded), startX = size.width - edge, endX = size.width,
         )
     }
+    drawRect(
+        brush = brush,
+        topLeft = Offset(if (left) 0f else size.width - edge, 0f),
+        size = Size(edge, size.height),
+        blendMode = BlendMode.DstIn,
+    )
+}
 
 @Composable
 private fun ProgressSection(
