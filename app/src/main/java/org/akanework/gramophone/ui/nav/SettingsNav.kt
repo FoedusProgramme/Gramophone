@@ -20,7 +20,11 @@ package org.akanework.gramophone.ui.nav
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
-/** A settings page. Plain classes like the library keys, so nav3 never conflates two pushes. */
+/**
+ * A settings page. Unlike the keys with arguments these carry no `uid` (see [AppNavKey]): the
+ * settings are only opened from the home, and each page only from its parent, so none can be on
+ * the back stack twice. [NavViewModel.navigateTo] drops a second push of the top one.
+ */
 sealed interface SettingsKey : AppNavKey {
     override val wantsPlayer: Boolean get() = false
 }

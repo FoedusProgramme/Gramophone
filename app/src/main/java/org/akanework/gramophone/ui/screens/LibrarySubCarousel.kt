@@ -404,8 +404,9 @@ internal class SiblingEntries<T : Any>(
 }
 
 /**
- * A key as a list: its kind's tag, then its fields. Saved as is by [LibrarySubKeySaver] and
- * joined into [entryToken]. [keyFromFields] turns it back into a key.
+ * A key as a list: its kind's tag, then the fields that name the entry, without the `uid` of the
+ * push. Saved as is by [LibrarySubKeySaver] and joined into [entryToken]. [keyFromFields] turns it
+ * back into a key.
  */
 private fun keyFields(key: LibrarySubKey): List<Any?> = when (key) {
     is AlbumKey -> listOf("album", key.id)
@@ -431,8 +432,8 @@ private fun keyFromFields(fields: List<Any?>): LibrarySubKey {
 internal fun entryToken(key: LibrarySubKey): String = keyFields(key).joinToString(":")
 
 /**
- * True when two keys refer to the same entry. The key classes are not data classes, so the same
- * page can be on the back stack twice. This compares their contents instead.
+ * True when two keys refer to the same entry. Keys that are equal are also the same push of a
+ * page (see [org.akanework.gramophone.ui.nav.AppNavKey]); this compares only the entry.
  */
 internal fun sameEntry(a: LibrarySubKey, b: LibrarySubKey): Boolean = entryToken(a) == entryToken(b)
 

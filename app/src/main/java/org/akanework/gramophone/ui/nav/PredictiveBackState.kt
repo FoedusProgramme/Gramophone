@@ -44,6 +44,7 @@ import kotlin.math.min
 internal class AndroidPredictiveBackState {
     private var settleJob: Job? = null
     private var flingJob: Job? = null
+    private var queuedBack: (() -> Unit)? = null
     private var lastFrameTimeMillis = 0L
     private var lastGestureProgress = 0f
     private var gestureVelocity = 0f
@@ -101,6 +102,10 @@ internal class AndroidPredictiveBackState {
     }
 
     fun cancel(scope: CoroutineScope) {
+        // Idle: a flick too small to show the preview has nothing to spring back, and switching
+        // to the preview for it would flash it for a frame. Committing: the gesture is decided,
+        // and stopping its settle would skip the pop and bring the page back.
+        if (phase == PredictiveBackPhase.Idle || phase == PredictiveBackPhase.Committing) return
         settleJob?.cancel()
         flingJob?.cancel()
         phase = PredictiveBackPhase.Canceling
@@ -148,10 +153,23 @@ internal class AndroidPredictiveBackState {
         }
     }
 
+    /**
+     * Runs [back], a back that came in while a commit was settling, once that commit has popped
+     * and NavDisplay plays its own close transition again. One back waits at most; another one in
+     * that window is dropped.
+     */
+    fun queueBack(back: () -> Unit) {
+        if (queuedBack == null) queuedBack = back
+    }
+
     fun isActive(): Boolean = phase != PredictiveBackPhase.Idle
 
     fun clearPopTransitionSuppression() {
         suppressNextPopTransition = false
+        val back = queuedBack ?: return
+        queuedBack = null
+        // Unless a new gesture has started meanwhile, which takes over.
+        if (phase == PredictiveBackPhase.Idle) back()
     }
 
     private fun updateGestureVelocity(progress: Float, frameTimeMillis: Long) {
@@ -200,11 +218,14 @@ internal data class AndroidPredictiveBackNavDisplayState<T : Any>(
  * handed to NavDisplay never reports a gesture, so NavDisplay only plays its plain push and pop
  * transitions: a flick too short for the preview pops like a button press, and a pop right after
  * the preview is silenced through [AndroidPredictiveBackState.suppressNextPopTransition].
+ *
+ * [onPop] closes the page of a key if that page is still on top. A back closes the pages it
+ * found on top, even when it only pops once the preview has settled.
  */
 @Composable
 internal fun <T : Any> rememberAndroidPredictiveBackNavDisplayState(
     backStack: List<T>,
-    onBack: () -> Unit,
+    onPop: (key: T) -> Unit,
     entryProvider: (key: T) -> NavEntry<T>,
     entryDecorators: List<NavEntryDecorator<T>>,
 ): AndroidPredictiveBackNavDisplayState<T> {
@@ -217,7 +238,7 @@ internal fun <T : Any> rememberAndroidPredictiveBackNavDisplayState(
     val sceneState = rememberSceneState(
         entries = entries,
         sceneStrategies = listOf(SinglePaneSceneStrategy()),
-        onBack = onBack,
+        onBack = { backStack.lastOrNull()?.let(onPop) },
     )
     val scene = sceneState.currentScene
     val gestureEventState = rememberNavigationEventState(
@@ -237,26 +258,40 @@ internal fun <T : Any> rememberAndroidPredictiveBackNavDisplayState(
             Idle -> visualState.recoverDanglingGesture(coroutineScope)
         }
     }
+    // The scene a settling commit lands on, and whether it can go back itself.
+    val revealedScene = sceneState.previousScenes.lastOrNull()
+    val committing = visualState.phase == PredictiveBackPhase.Committing
     NavigationBackHandler(
         state = gestureEventState,
-        isBackEnabled = scene.previousEntries.isNotEmpty(),
+        // While a commit lands on the root, a second back is the activity's, not a pop.
+        isBackEnabled = scene.previousEntries.isNotEmpty() &&
+            (!committing || revealedScene?.previousEntries?.isNotEmpty() == true),
         onBackCancelled = { visualState.cancel(coroutineScope) },
         onBackCompleted = {
             val popCount = (entries.size - scene.previousEntries.size).coerceAtLeast(0)
+            // The pages this back closes, top first, taken now: when the pop only runs once the
+            // preview has settled, a page opened meanwhile must stay.
+            val closing = backStack.takeLast(popCount).asReversed()
             when (visualState.phase) {
                 // A predictive preview is on screen: finish it with the post-commit fling and
                 // suppress NavDisplay's own pop transition (the preview already animated the swap).
                 PredictiveBackPhase.Dragging -> visualState.commit(coroutineScope) {
-                    repeat(popCount) { onBack() }
+                    closing.forEach(onPop)
                 }
-                // The previous gesture is still settling and will pop when it lands. A second
-                // back arriving in that window must not pop twice.
-                PredictiveBackPhase.Committing -> Unit
+                // The previous gesture is still settling and will pop when it lands. This back
+                // closes the pages that reveals, after that.
+                PredictiveBackPhase.Committing -> {
+                    val nextPopCount = (scene.previousEntries.size -
+                        (revealedScene?.previousEntries?.size ?: scene.previousEntries.size))
+                        .coerceAtLeast(0)
+                    val closingNext = backStack.dropLast(popCount).takeLast(nextPopCount)
+                        .asReversed()
+                    visualState.queueBack { closingNext.forEach(onPop) }
+                }
                 // No preview was shown (button back, a flick below MIN_PREVIEW_PROGRESS, or a
                 // cancel still springing back): pop directly so NavDisplay plays its normal
                 // close transition.
-                PredictiveBackPhase.Idle, PredictiveBackPhase.Canceling ->
-                    repeat(popCount) { onBack() }
+                PredictiveBackPhase.Idle, PredictiveBackPhase.Canceling -> closing.forEach(onPop)
             }
         },
     )

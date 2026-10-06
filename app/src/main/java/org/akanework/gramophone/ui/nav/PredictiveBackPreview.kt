@@ -29,6 +29,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.scene.SceneState
 import androidx.navigationevent.NavigationEvent
 import org.akanework.gramophone.ui.theme.LocalDarkTheme
@@ -52,18 +53,26 @@ internal fun <T : Any> AndroidPredictiveBackPreview(
     sceneState: SceneState<T>,
     modifier: Modifier = Modifier,
 ) {
-    val previousEntry = sceneState.previousScenes
-        .lastOrNull()
-        ?.entries
-        ?.lastOrNull()
-    val currentEntry = sceneState.currentScene.entries.lastOrNull()
-    if (previousEntry == null || currentEntry == null) return
+    val (previousEntry, currentEntry) = sceneState.previewEntries() ?: return
 
     Box(modifier.background(MaterialTheme.colorScheme.surfaceContainer)) {
         AndroidPredictiveBackEntry(state, PredictiveBackRole.Previous, previousEntry::Content)
         AndroidPredictiveBackScrim(state)
         AndroidPredictiveBackEntry(state, PredictiveBackRole.Current, currentEntry::Content)
     }
+}
+
+/** Whether [AndroidPredictiveBackPreview] has two entries to show for this scene state. */
+internal fun <T : Any> SceneState<T>.canShowPredictivePreview(): Boolean = previewEntries() != null
+
+/**
+ * The previous and the current entry, or null unless there are two distinct ones. Two entries
+ * with one content key share their saved state, which can't be composed twice at once.
+ */
+private fun <T : Any> SceneState<T>.previewEntries(): Pair<NavEntry<T>, NavEntry<T>>? {
+    val previous = previousScenes.lastOrNull()?.entries?.lastOrNull() ?: return null
+    val current = currentScene.entries.lastOrNull() ?: return null
+    return if (previous.contentKey != current.contentKey) previous to current else null
 }
 
 @Composable

@@ -485,6 +485,8 @@ fun LibrarySubScreen(key: LibrarySubKey, onBack: () -> Unit, modifier: Modifier 
     val gridState = rememberLazyGridState()
     val restore = remember { ScrollRestore(gridState) }
     val shown = rememberShownEntry(key, siblings, gridState, restore)
+    // So opening the entry it shows (from the player, say) doesn't stack the same page again.
+    SideEffect { navViewModel.setShownDestination(key, shown.key) }
     val shownToken = entryToken(shown.key)
     val page = remember(shownToken) {
         LibrarySubPage.create(shown.key, context, reader, prefs, scope)
