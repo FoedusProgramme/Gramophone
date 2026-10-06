@@ -30,10 +30,8 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
@@ -385,8 +383,6 @@ fun PlayerSheetHost(controller: PlayerSheetController, modifier: Modifier = Modi
             if (!it) controller.queueReveal.hide()
         }
     }
-    // The queue shows the MediaController, which the activity releases when it stops.
-    val connection by controller.mediaController.connection.collectAsState()
     PlayerSheet(
         state = controller.sheetState,
         player = controller.playerState,
@@ -398,15 +394,13 @@ fun PlayerSheetHost(controller: PlayerSheetController, modifier: Modifier = Modi
         dialogCallbacks = controller.dialogCallbacks,
         modifier = modifier,
     ) { queueModifier ->
-        key(connection) {
-            if (connection != null) {
-                QueuePanel(
-                    controller.mediaController,
-                    onDismiss = controller.queueReveal::hide,
-                    modifier = queueModifier,
-                )
-            }
-        }
+        // The queue shows the MediaController, which the activity releases when it stops. It
+        // isn't started over for the next one: it carries on with it, scrolled where it was.
+        QueuePanel(
+            controller.mediaController,
+            reveal = controller.queueReveal,
+            modifier = queueModifier,
+        )
     }
 }
 

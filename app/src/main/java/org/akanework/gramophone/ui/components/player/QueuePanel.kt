@@ -17,6 +17,7 @@
 package org.akanework.gramophone.ui.components.player
 
 import android.content.Context
+import android.os.SystemClock
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,20 +39,27 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallFloatingActionButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.media3.common.MediaItem
+import kotlinx.coroutines.delay
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.defaultPrefs
 import org.akanework.gramophone.logic.getBooleanStrict
@@ -69,11 +77,13 @@ import org.akanework.gramophone.ui.components.home.LibraryFastScroller
 import org.akanework.gramophone.ui.components.home.nowPlayingRowColors
 import org.akanework.gramophone.ui.fragments.compose.MqContent
 import org.akanework.gramophone.ui.fragments.compose.MqState
+import org.akanework.gramophone.ui.fragments.compose.QueueTimer
 import org.akanework.gramophone.ui.fragments.compose.rememberMqState
 
 /*
- * The queue, under the full player: the queue head (the multi-queue pages, the actions and the
- * time left) over the songs, which can be dragged into another order or swiped away.
+ * The queue, under the full player: the queue head (the multi-queue preview and the time left)
+ * over the songs, which can be dragged into another order or swiped away, and the actions over
+ * them.
  */
 
 /** As wide as the queue gets on large screens, wider with the multi-queue preview. */
@@ -86,6 +96,9 @@ private val QUEUE_FAB_GAP = 12.dp
 
 /** A FAB's size. */
 private val QUEUE_FAB_SIZE = 56.dp
+
+/** Between the time left and the songs under it. */
+private val QUEUE_TIME_LEFT_BOTTOM_PADDING = 8.dp
 
 /** What the queue's end leaves for the FABs over it: a small FAB above a FAB, with margins. */
 private val QUEUE_FABS_ROOM = QUEUE_FAB_MARGIN * 2 + 40.dp + QUEUE_FAB_GAP + QUEUE_FAB_SIZE
@@ -105,35 +118,40 @@ interface QueueSheetHost {
 }
 
 @Stable
-private class QueueRow(val key: String, val item: MediaItem)
+private class QueueRow(val key: Long, val item: MediaItem)
 
 
 /**
- * The queue of [controller]; [onDismiss] puts it away, as when it's cleared. The caller keeps it
- * clear of the cutouts and side navigation bars, it pads its songs for the bottom one.
+ * The queue of [controller], brought up and put away (as when it's cleared) by [reveal]. The
+ * caller keeps it clear of the cutouts and side navigation bars, it pads its songs for the bottom
+ * one. It carries on across the controller going away as the activity stops and a new one
+ * connecting as it starts again.
  */
 @Composable
 fun QueuePanel(
     controller: MediaControllerViewModel,
-    onDismiss: () -> Unit,
+    reveal: QueueRevealState,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    val mqState = rememberMqState(context,scope, controller, onDismiss)
-    if (mqState == null) {
-        LaunchedEffect(Unit) { onDismiss() }
-        return
-    }
+    // Not connected to the player yet: nothing to show
+    val mqState = rememberMqState(context, scope, controller, reveal::hide) ?: return
     DisposableEffect(mqState) {
         mqState.onShow()
         onDispose { mqState.onHide() }
     }
     val mqEnabled = remember { context.defaultPrefs.getBooleanStrict("mq_preview", false) }
 
-    val instance = controller.get()
-
     val listState = mqState.listState
+    val reorder = rememberReorderableListState(listState) { from, to -> mqState.moveRow(from, to) }
+    // Loaded, brought up to date and scrolled to the song playing each time it comes up
+    LaunchedEffect(mqState) {
+        snapshotFlow { reveal.shown }.collect { mqState.shown = it }
+    }
+    LaunchedEffect(mqState, reorder) {
+        snapshotFlow { reorder.draggingIndex != null }.collect { mqState.dragging = it }
+    }
     LaunchedEffect(mqState.pendingScroll) {
         mqState.pendingScroll?.let { (position, offset) ->
             if (position >= 0) listState.scrollToItem(position, -offset)
@@ -148,18 +166,11 @@ fun QueuePanel(
     }
 
     val version = mqState.listVersion
-    val rows = remember(version) {
+    val rows = remember(mqState, version) {
         val (order, items) = mqState.playlist
-        val seen = HashMap<String, Int>()
-        order.map { i ->
-            val item = items[i]
-            val nth = (seen[item.mediaId] ?: 0) + 1
-            seen[item.mediaId] = nth
-            QueueRow(item.mediaId + "#" + nth, item)
-        }
+        order.map { i -> QueueRow(mqState.songKey(i), items[i]) }
     }
     val editable = !mqState.isDetached()
-    val reorder = rememberReorderableListState(listState) { from, to -> mqState.moveRow(from, to) }
     val unknownArtist = stringResource(R.string.unknown_artist)
     val currentArtwork = mqState.currentMediaItemIndex?.let { rows.getOrNull(it) }?.item?.mediaMetadata?.artworkUri
     val nowPlayingColors = nowPlayingColors(
@@ -178,9 +189,17 @@ fun QueuePanel(
                     mqState = mqState,
                     mqEnabled = mqEnabled,
                     landscape = false,
-                    onDismiss = onDismiss,
+                    onDismiss = reveal::hide,
                 )
             }
+            QueueTimeLeft(
+                mqState.timer,
+                ticking = reveal.shown,
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = QUEUE_FAB_MARGIN)
+                    .padding(bottom = QUEUE_TIME_LEFT_BOTTOM_PADDING),
+            )
             Box(
                 Modifier
                     .fillMaxWidth()
@@ -195,7 +214,8 @@ fun QueuePanel(
                     itemsIndexed(rows, key = { _, row -> row.key }) { index, row ->
                         val item = row.item
                         DismissibleRow(
-                            onDismissed = { mqState.removeRow(index) },
+                            // By key: the row may have moved by the time it's settled off screen
+                            onDismissed = { mqState.removeEntry(row.key) },
                             modifier = Modifier.reorderableRow(this, reorder, index),
                             enabled = editable,
                         ) {
@@ -230,20 +250,57 @@ fun QueuePanel(
         }
         QueueFabs(
             onClear = {
-                onDismiss()
+                reveal.hide()
                 mqState.removeQueue()
             },
-            onScrollToPlaying = {
-                mqState.playlist.first.indexOfFirst { i ->
-                    i == (instance?.currentMediaItemIndex ?: 0)
-                }.takeIf { it != -1 }?.let { mqState.smoothScrollTo(it) }
-            },
+            onScrollToPlaying = mqState::smoothScrollToCurrent,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(bottom = navigationBar)
                 .padding(QUEUE_FAB_MARGIN),
         )
     }
+}
+
+/**
+ * The time left in the queue, ticking down on the second while it plays, and how long it is: as
+ * the old queue sheet's chronometer had it. Empty, but as tall, until the queue's loaded. Ticks
+ * only while [ticking]: with the queue down, its timer isn't kept up to date anyway.
+ */
+@Composable
+private fun QueueTimeLeft(timer: QueueTimer?, ticking: Boolean, modifier: Modifier = Modifier) {
+    val now by produceState(SystemClock.elapsedRealtime(), timer, ticking) {
+        value = SystemClock.elapsedRealtime()
+        if (timer == null || !timer.running || !ticking) return@produceState
+        while (true) {
+            val left = timer.remainingMs - (value - timer.atRealtime)
+            if (left <= 0) break
+            // Up to the next whole second, when what's shown changes
+            delay(left % 1000 + 1)
+            value = SystemClock.elapsedRealtime()
+        }
+    }
+    val text = if (timer == null) {
+        ""
+    } else {
+        val left = if (timer.running) timer.remainingMs - (now - timer.atRealtime) else timer.remainingMs
+        // Rounded up, to read 0:00 only once it's over
+        val leftSeconds = (left.coerceAtLeast(0) + 999) / 1000
+        stringResource(
+            R.string.duration_queue,
+            (leftSeconds * 1000).convertDurationToTimeStamp(true),
+            timer.totalMs.convertDurationToTimeStamp(true),
+        )
+    }
+    Text(
+        text,
+        modifier = modifier,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        textAlign = TextAlign.Center,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+        style = MaterialTheme.typography.labelLarge,
+    )
 }
 
 /** Over the end of the queue: clearing it, small, and back to the song playing. */

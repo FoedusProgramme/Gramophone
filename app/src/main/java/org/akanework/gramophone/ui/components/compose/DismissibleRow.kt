@@ -18,8 +18,13 @@ package org.akanework.gramophone.ui.components.compose
 
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.SwipeToDismissBox
-import androidx.compose.material3.rememberSwipeToDismissBoxState
+import androidx.compose.material3.SwipeToDismissBoxDefaults
+import androidx.compose.material3.SwipeToDismissBoxState
+import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 
 /**
@@ -34,13 +39,23 @@ fun DismissibleRow(
     enabled: Boolean = true,
     content: @Composable RowScope.() -> Unit,
 ) {
+    // Not saved: brought back already swiped away (scrolled back into view, say), the row would
+    // be removed again without anyone swiping it
+    val positionalThreshold = SwipeToDismissBoxDefaults.positionalThreshold
+    val state = remember {
+        SwipeToDismissBoxState(SwipeToDismissBoxValue.Settled, positionalThreshold)
+    }
+    // Always the same callback, calling the latest: the box dismisses again whenever it changes,
+    // and it does as the row moves up or down the list
+    val currentOnDismissed by rememberUpdatedState(onDismissed)
+    val onDismiss = remember { { _: SwipeToDismissBoxValue -> currentOnDismissed() } }
     SwipeToDismissBox(
-        state = rememberSwipeToDismissBoxState(),
+        state = state,
         backgroundContent = {},
         modifier = modifier,
         enableDismissFromStartToEnd = enabled,
         enableDismissFromEndToStart = enabled,
-        onDismiss = { onDismissed() },
+        onDismiss = onDismiss,
         content = content,
     )
 }
