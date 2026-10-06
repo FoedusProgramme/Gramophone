@@ -59,7 +59,7 @@ import uk.akane.libphonograph.items.Album
 
 /**
  * One of the simple library tabs: the header with the item count, the play, shuffle and sort
- * buttons, then the list / grid of items, scrolling with iOS physics.
+ * buttons, then the list / grid of items.
  */
 @Composable
 fun <T : Any> LibraryTabScreen(

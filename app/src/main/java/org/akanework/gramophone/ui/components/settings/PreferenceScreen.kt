@@ -70,8 +70,8 @@ import org.akanework.gramophone.ui.theme.LocalCardSurface
 /*
  * A page of grouped settings,
  * each group is one rounded block of rows, with the block's own big corners at its two ends and
- * small ones where the rows meet, under the same glass bar, large title and iOS scroll physics as
- * the rest of the app.
+ * small ones where the rows meet, under the same glass bar and large title as the rest of the
+ * app.
  */
 
 private val GROUP_MARGIN = 16.dp
@@ -96,8 +96,8 @@ private val ICON_GAP = 16.dp
 const val PREFERENCE_DISABLED_ALPHA = 0.38f
 
 /**
- * A page of grouped settings: the large title the bar takes over as it scrolls under, iOS scroll
- * physics, and the same frosted bar as the rest of the app. [content] emits into the scrolling
+ * A page of grouped settings: the large title the bar takes over as it scrolls under, and the
+ * same frosted bar as the rest of the app. [content] emits into the scrolling
  * column, usually [PreferenceSectionHeader]s and [PreferenceGroup]s.
  */
 @Composable
