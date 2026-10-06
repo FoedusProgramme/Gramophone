@@ -59,6 +59,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.media3.common.MediaItem
+import sh.calvin.reorderable.ReorderableItem
+import sh.calvin.reorderable.rememberReorderableLazyListState
 import kotlinx.coroutines.delay
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.defaultPrefs
@@ -67,9 +69,6 @@ import org.akanework.gramophone.logic.utils.Flags
 import org.akanework.gramophone.logic.utils.convertDurationToTimeStamp
 import org.akanework.gramophone.ui.MediaControllerViewModel
 import org.akanework.gramophone.ui.components.compose.DismissibleRow
-import org.akanework.gramophone.ui.components.compose.rememberReorderableListState
-import org.akanework.gramophone.ui.components.compose.reorderHandle
-import org.akanework.gramophone.ui.components.compose.reorderableRow
 import org.akanework.gramophone.ui.components.home.EDITABLE_ROW_HEIGHT
 import org.akanework.gramophone.ui.components.home.EditableSongRow
 import org.akanework.gramophone.ui.components.home.LIBRARY_PLAYING_CORNER
@@ -144,13 +143,17 @@ fun QueuePanel(
     val mqEnabled = remember { context.defaultPrefs.getBooleanStrict("mq_preview", false) }
 
     val listState = mqState.listState
-    val reorder = rememberReorderableListState(listState) { from, to -> mqState.moveRow(from, to) }
+    val navigationBar = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+    // Scrolls as a dragged row nears the top of the list, or the navigation bar at its end
+    val reorder = rememberReorderableLazyListState(
+        listState, PaddingValues(bottom = navigationBar),
+    ) { from, to -> mqState.moveRow(from.index, to.index) }
     // Loaded, brought up to date and scrolled to the song playing each time it comes up
     LaunchedEffect(mqState) {
         snapshotFlow { reveal.shown }.collect { mqState.shown = it }
     }
     LaunchedEffect(mqState, reorder) {
-        snapshotFlow { reorder.draggingIndex != null }.collect { mqState.dragging = it }
+        snapshotFlow { reorder.isAnyItemDragging }.collect { mqState.dragging = it }
     }
     LaunchedEffect(mqState.pendingScroll) {
         mqState.pendingScroll?.let { (position, offset) ->
@@ -177,7 +180,6 @@ fun QueuePanel(
         rememberArtworkColorScheme(currentArtwork), MaterialTheme.colorScheme.primary,
     )
 
-    val navigationBar = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
     Box(modifier, contentAlignment = Alignment.TopCenter) {
         Column(
             Modifier
@@ -213,29 +215,30 @@ fun QueuePanel(
                 ) {
                     itemsIndexed(rows, key = { _, row -> row.key }) { index, row ->
                         val item = row.item
-                        DismissibleRow(
-                            // By key: the row may have moved by the time it's settled off screen
-                            onDismissed = { mqState.removeEntry(row.key) },
-                            modifier = Modifier.reorderableRow(this, reorder, index),
-                            enabled = editable,
-                        ) {
-                            val duration = item.mediaMetadata.durationMs?.convertDurationToTimeStamp()
-                            val artist = item.mediaMetadata.artist?.toString() ?: unknownArtist
-                            EditableSongRow(
-                                title = item.mediaMetadata.title?.toString().orEmpty(),
-                                subtitle = stringResource(R.string.artist_time, duration ?: "", artist),
-                                cover = item.mediaMetadata.artworkUri,
-                                defaultCover = R.drawable.ic_default_cover,
-                                onClick = { mqState.clickRow(index) },
-                                onRemove = { mqState.removeRow(index) },
-                                handleModifier = if (editable) Modifier.reorderHandle(reorder, index) else Modifier,
-                                showControls = editable,
-                                colors = nowPlayingRowColors(
-                                    isCurrent = index == mqState.currentMediaItemIndex,
-                                    colors = nowPlayingColors,
-                                    containerShape = RoundedCornerShape(LIBRARY_PLAYING_CORNER),
-                                ),
-                            )
+                        ReorderableItem(reorder, key = row.key, enabled = editable) {
+                            DismissibleRow(
+                                // By key: the row may have moved by the time it's settled off screen
+                                onDismissed = { mqState.removeEntry(row.key) },
+                                enabled = editable,
+                            ) {
+                                val duration = item.mediaMetadata.durationMs?.convertDurationToTimeStamp()
+                                val artist = item.mediaMetadata.artist?.toString() ?: unknownArtist
+                                EditableSongRow(
+                                    title = item.mediaMetadata.title?.toString().orEmpty(),
+                                    subtitle = stringResource(R.string.artist_time, duration ?: "", artist),
+                                    cover = item.mediaMetadata.artworkUri,
+                                    defaultCover = R.drawable.ic_default_cover,
+                                    onClick = { mqState.clickRow(index) },
+                                    onRemove = { mqState.removeRow(index) },
+                                    handleModifier = if (editable) Modifier.draggableHandle() else Modifier,
+                                    showControls = editable,
+                                    colors = nowPlayingRowColors(
+                                        isCurrent = index == mqState.currentMediaItemIndex,
+                                        colors = nowPlayingColors,
+                                        containerShape = RoundedCornerShape(LIBRARY_PLAYING_CORNER),
+                                    ),
+                                )
+                            }
                         }
                     }
                 }

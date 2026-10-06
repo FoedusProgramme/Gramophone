@@ -37,6 +37,8 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import sh.calvin.reorderable.ReorderableItem
+import sh.calvin.reorderable.rememberReorderableLazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Check
@@ -78,9 +80,6 @@ import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.ApplicationScope
 import org.akanework.gramophone.logic.playlistUri
 import org.akanework.gramophone.ui.components.compose.DismissibleRow
-import org.akanework.gramophone.ui.components.compose.rememberReorderableListState
-import org.akanework.gramophone.ui.components.compose.reorderHandle
-import org.akanework.gramophone.ui.components.compose.reorderableRow
 import org.akanework.gramophone.ui.components.home.EditableSongRow
 import org.akanework.gramophone.ui.components.home.GLASS_BAR_HEIGHT
 import org.akanework.gramophone.ui.components.home.GlassTitleBar
@@ -475,10 +474,14 @@ fun PlaylistEditScreen(playlistId: Long, onBack: () -> Unit, modifier: Modifier 
     BackHandler(enabled = !state.leaving) { state.maybeGoBack() }
 
     val listState = rememberLazyListState()
-    val reorder = rememberReorderableListState(listState) { from, to -> state.move(from, to) }
     val hazeState = remember { HazeState() }
     val insets = WindowInsets.systemBars.union(WindowInsets.displayCutout).asPaddingValues()
     val barTopPadding = insets.calculateTopPadding() + GLASS_BAR_HEIGHT
+    val contentPadding = libraryContentPadding(top = barTopPadding)
+    // Scrolls as a dragged row nears the bar over the list, or its end
+    val reorder = rememberReorderableLazyListState(listState, contentPadding) { from, to ->
+        state.move(from.index, to.index)
+    }
     val background = MaterialTheme.colorScheme.surfaceContainerLow
     val rows = state.rows
     val unknownArtist = stringResource(R.string.unknown_artist)
@@ -488,25 +491,24 @@ fun PlaylistEditScreen(playlistId: Long, onBack: () -> Unit, modifier: Modifier 
             LazyColumn(
                 state = listState,
                 modifier = Modifier.fillMaxSize(),
-                contentPadding = libraryContentPadding(top = barTopPadding),
+                contentPadding = contentPadding,
             ) {
                 itemsIndexed(rows, key = { _, row -> row.key }) { index, row ->
                     val item = row.item
-                    DismissibleRow(
-                        onDismissed = { state.remove(index) },
-                        modifier = Modifier.reorderableRow(this, reorder, index),
-                    ) {
-                        EditableSongRow(
-                            title = item.mediaMetadata.title?.toString().orEmpty(),
-                            subtitle = item.mediaMetadata.artist?.toString() ?: unknownArtist,
-                            cover = item.mediaMetadata.artworkUri,
-                            defaultCover = if (item.mediaId.startsWith("Missing:")) R.drawable.ic_default_cover_error
-                                else R.drawable.ic_default_cover,
-                            onClick = {},
-                            onRemove = { state.remove(index) },
-                            handleModifier = Modifier.reorderHandle(reorder, index),
-                            modifier = Modifier.libraryItemCard(libraryCellShape(index, rows.size, 1)),
-                        )
+                    ReorderableItem(reorder, key = row.key) {
+                        DismissibleRow(onDismissed = { state.remove(index) }) {
+                            EditableSongRow(
+                                title = item.mediaMetadata.title?.toString().orEmpty(),
+                                subtitle = item.mediaMetadata.artist?.toString() ?: unknownArtist,
+                                cover = item.mediaMetadata.artworkUri,
+                                defaultCover = if (item.mediaId.startsWith("Missing:")) R.drawable.ic_default_cover_error
+                                    else R.drawable.ic_default_cover,
+                                onClick = {},
+                                onRemove = { state.remove(index) },
+                                handleModifier = Modifier.draggableHandle(),
+                                modifier = Modifier.libraryItemCard(libraryCellShape(index, rows.size, 1)),
+                            )
+                        }
                     }
                 }
             }
