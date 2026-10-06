@@ -19,6 +19,7 @@ package org.akanework.gramophone.ui.state
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import org.akanework.gramophone.logic.defaultPrefs
 import org.akanework.gramophone.ui.HomeTab
@@ -28,6 +29,8 @@ import uk.akane.libphonograph.reader.FlowReader
 class HomeViewModel(
     application: Application,
     private val reader: FlowReader,
+    /** Keeps the folder tabs' current folders across process death. */
+    private val savedState: SavedStateHandle,
 ) : AndroidViewModel(application) {
     private val prefs = application.defaultPrefs
     private val states = HashMap<HomeTab, LibraryTabState<*>>()
@@ -42,6 +45,6 @@ class HomeViewModel(
 
     fun folderState(isDetailed: Boolean): FolderTabState =
         folderStates.getOrPut(isDetailed) {
-            FolderTabState(isDetailed, prefs, reader, viewModelScope)
+            FolderTabState(isDetailed, prefs, reader, viewModelScope, savedState)
         }
 }

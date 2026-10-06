@@ -23,6 +23,7 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.media3.common.MediaItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -65,14 +66,19 @@ class FolderTabState(
     prefs: SharedPreferences,
     reader: FlowReader,
     scope: CoroutineScope,
+    /** Where the folder shown is saved, so it survives process death. */
+    private val savedState: SavedStateHandle,
 ) {
+    private val pathKey = if (isDetailed) "folder_path_detailed" else "folder_path_shallow"
+
     val sort = SortPrefState(
         if (isDetailed) LibraryAdapterTypes.FOLDERS_DETAILED else LibraryAdapterTypes.FOLDERS_SHALLOW,
         prefs, SORT_TYPES, Sorter.Type.ByFilePathAscending,
     )
 
-    /** `null` until the default location was chosen. */
-    private val fileNodePath = MutableStateFlow<List<String>?>(null)
+    /** `null` until the default location was chosen, unless one was saved. */
+    private val fileNodePath =
+        MutableStateFlow<List<String>?>(savedState.get<ArrayList<String>>(pathKey))
 
     private val liveData = if (isDetailed) reader.folderStructureFlow else reader.shallowFolderFlow
 
@@ -134,6 +140,8 @@ class FolderTabState(
         songs.items = page.songs
         songs.loaded = true
         songs.queueTitleOverride = page.title
+        // A copy, since the path may be a sublist, which a saved state cannot hold.
+        savedState[pathKey] = ArrayList(page.path)
     }
 
     private fun sortFolders(item: FileNode, sortType: Sorter.Type): List<FileNode> =
