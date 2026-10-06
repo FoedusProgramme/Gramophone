@@ -34,6 +34,7 @@ import org.akanework.gramophone.logic.toMediaStoreId
 import org.akanework.gramophone.ui.actions.SHORTCUT_SHUFFLE_ALL
 import org.akanework.gramophone.ui.nav.PlaylistKey
 import org.akanework.gramophone.ui.nav.SearchKey
+import uk.akane.libphonograph.items.Playlist
 import uk.akane.libphonograph.reader.FlowReader
 
 /** Runs play intent actions against the loaded library, the controller and navigation. */
@@ -41,13 +42,15 @@ class DefaultPlayIntentExecutor internal constructor(
     private val context: Context,
     /** The library's songs by id; [FlowReader.idMapFlow] outside tests. */
     private val idMapFlow: Flow<Map<Long, MediaItem>>,
+    /** The library's playlists; [FlowReader.playlistListFlow] outside tests. */
+    private val playlistsFlow: Flow<List<Playlist>>,
     private val libraryWrites: LibraryWriteRepository,
 ) : PlayIntentExecutor {
     constructor(
         context: Context,
         reader: FlowReader,
         libraryWrites: LibraryWriteRepository,
-    ) : this(context, reader.idMapFlow, libraryWrites)
+    ) : this(context, reader.idMapFlow, reader.playlistListFlow, libraryWrites)
 
     override suspend fun execute(action: PlayIntentAction, host: PlayIntentHost) {
         // Only the kind: the payload can hold search queries and playlist entries.
@@ -63,7 +66,8 @@ class DefaultPlayIntentExecutor internal constructor(
             }
             is PlayIntentAction.MarkFavorite ->
                 libraryWrites.markFavorite(listOf(action.entry), action.favorite)
-            is PlayIntentAction.OpenPlaylist -> host.navigateTo(PlaylistKey(action.id, null))
+            is PlayIntentAction.OpenPlaylist ->
+                host.navigateTo(PlaylistKey(action.id, playlistClassName(action.id)))
             is PlayIntentAction.OpenSearch -> host.navigateTo(SearchKey(action.query))
             is PlayIntentAction.PlayFromSearch -> host.play {
                 setMediaItem(searchItem(action.query, action.extras)) // query may be empty
@@ -90,6 +94,15 @@ class DefaultPlayIntentExecutor internal constructor(
             Log.e(TAG, "can't find file with ID $id in library with ${col?.size} items")
         }
         item
+    }
+
+    /**
+     * Class of the library's playlist with [id], which its page's key carries like when opened
+     * from the library: the page's carousel finds the playlist's card by it, and only a plain
+     * playlist can be edited. Null if there is none.
+     */
+    private suspend fun playlistClassName(id: Long): String? = withContext(Dispatchers.Default) {
+        playlistsFlow.firstOrNull()?.find { it.id == id }?.javaClass?.name
     }
 
     /** Waits for the controller, lets [load] set it up, then prepares and plays. */

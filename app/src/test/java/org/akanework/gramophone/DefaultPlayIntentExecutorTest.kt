@@ -38,6 +38,7 @@ import org.akanework.gramophone.ui.intent.DefaultPlayIntentExecutor
 import org.akanework.gramophone.ui.intent.PlayIntentAction
 import org.akanework.gramophone.ui.intent.PlayIntentHost
 import org.akanework.gramophone.ui.nav.AppNavKey
+import org.akanework.gramophone.ui.nav.PlaylistKey
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertSame
@@ -47,13 +48,14 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.shadows.ShadowToast
+import uk.akane.libphonograph.items.Playlist
 import uk.akane.libphonograph.manipulator.PlaylistSerializer.Entry
 
 /**
  * What [DefaultPlayIntentExecutor] asks of the controller and the library writes for each action,
  * and how it resolves the ids it is handed: a bare MediaStore id (audio preview) or the library's
  * "MediaStore:<id>" (search suggestions). The controller is a recording player and the library a
- * fixed id map.
+ * fixed id map and playlist list.
  */
 @RunWith(RobolectricTestRunner::class)
 class DefaultPlayIntentExecutorTest {
@@ -99,21 +101,26 @@ class DefaultPlayIntentExecutorTest {
     private class FakeHost : PlayIntentHost {
         val player = RecordingPlayer()
         var controllerRequests = 0
+        val opened = mutableListOf<AppNavKey>()
 
         override suspend fun awaitController(): Player {
             controllerRequests++
             return player
         }
 
-        override fun navigateTo(key: AppNavKey) = error("unused")
+        override fun navigateTo(key: AppNavKey) {
+            opened += key
+        }
     }
 
     private val song = MediaItem.Builder().setMediaId("42").build()
+    private val playlist = Playlist(5L, "Mix", null, null, null, null, listOf(song))
     private val writes = FakeLibraryWrites()
     private val host = FakeHost()
     private val executor = DefaultPlayIntentExecutor(
         RuntimeEnvironment.getApplication(),
         flowOf(mapOf(42L to song)),
+        flowOf(listOf(playlist)),
         LibraryWriteRepository(
             CoroutineScope(Dispatchers.Unconfined), MediaConsentRequester(), writes
         ),
@@ -210,6 +217,20 @@ class DefaultPlayIntentExecutorTest {
         // An empty query means every song.
         assertEquals("", searchQuery())
         assertNull(host.player.loadedItems.single().requestMetadata.extras)
+    }
+
+    @Test
+    fun openPlaylistKeysThePageByThePlaylistsClass() {
+        execute(PlayIntentAction.OpenPlaylist(5L))
+        execute(PlayIntentAction.OpenPlaylist(7L))
+
+        val (found, missing) = host.opened.map { it as PlaylistKey }
+        assertEquals(5L, found.id)
+        // Like a playlist opened from the library, so its page can find its card and edit it.
+        assertEquals(Playlist::class.java.name, found.className)
+        assertEquals(7L, missing.id)
+        assertNull(missing.className)
+        assertEquals(0, host.controllerRequests)
     }
 
     @Test
