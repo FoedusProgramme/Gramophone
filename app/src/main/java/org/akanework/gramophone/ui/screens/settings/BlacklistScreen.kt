@@ -29,8 +29,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.edit
 import org.akanework.gramophone.R
-import org.akanework.gramophone.ui.components.compose.rememberStringSetPreference
+import org.akanework.gramophone.logic.settings.LibraryFilterSettings
+import org.akanework.gramophone.ui.components.compose.rememberDefaultPreferences
 import org.akanework.gramophone.ui.components.home.LabelTabRow
 import org.akanework.gramophone.ui.components.settings.CheckboxPreferenceRow
 import org.akanework.gramophone.ui.components.settings.InfoPreferenceRow
@@ -43,15 +45,25 @@ import uk.akane.libphonograph.reader.FlowReader
  * The folder filters: which folders the library leaves out (the blacklist), and, on its own tab,
  * which ones it is limited to (the whitelist). Each is a set of paths in the preferences, which
  * LibraryFilterSettings turns into the flows the library reader filters by.
+ *
+ * Shows and edits the sets of those flows rather than the raw preferences: until the user sets a
+ * blacklist, the library leaves out the default folders, so they show checked and stay left out
+ * when another folder is checked.
  */
 @Composable
 fun BlacklistScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
     val reader = koinInject<FlowReader>()
+    val filterSettings = koinInject<LibraryFilterSettings>()
+    val prefs = rememberDefaultPreferences()
     var selectedTab by rememberSaveable { mutableIntStateOf(0) }
     val isWhitelist = selectedTab == 1
-    val blacklist = rememberStringSetPreference("folderFilter")
-    val whitelist = rememberStringSetPreference("folderAllow")
+    // Null only until the settings first load, right after the process started.
+    val blacklist by filterSettings.blackListSetFlow
+        .collectAsState(filterSettings.blackListSetFlow.replayCache.lastOrNull())
+    val whitelist by filterSettings.whiteListSetFlow
+        .collectAsState(filterSettings.whiteListSetFlow.replayCache.lastOrNull())
     val filter = if (isWhitelist) whitelist else blacklist
+    val filterKey = if (isWhitelist) "folderAllow" else "folderFilter"
     val folders by remember(reader, isWhitelist) {
         if (isWhitelist) reader.foldersForWhitelistFlow else reader.foldersFlow
     }.collectAsState(emptySet())
@@ -78,9 +90,13 @@ fun BlacklistScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
             CheckboxPreferenceRow(
                 shape,
                 title = folder,
-                checked = folder in filter.value,
+                checked = folder in filter.orEmpty(),
                 onCheckedChange = { checked ->
-                    filter.set(if (checked) filter.value + folder else filter.value - folder)
+                    filter?.let { current ->
+                        prefs.edit {
+                            putStringSet(filterKey, if (checked) current + folder else current - folder)
+                        }
+                    }
                 },
             )
         }
