@@ -184,8 +184,7 @@ private fun CarouselButton(
         Modifier
             // Read in the layout and draw phases to avoid recomposing on every scroll frame.
             .offset {
-                // Follows the card, including overscroll. Only upward scrolling moves it towards
-                // the toolbar position.
+                // Follows the card. Only upward scrolling moves it towards the toolbar position.
                 val ridden = scrolled().coerceAtMost(travelPx)
                 IntOffset(
                     x = with(density) { lerp(restX(), dockX, fraction()).roundToPx() },
@@ -206,10 +205,10 @@ private fun CarouselButton(
 }
 
 /**
- * The back, edit and sort buttons. At rest they sit on the corners of the focused card and follow it
- * when overscrolled. As the card scrolls under the toolbar they move to the toolbar button
- * positions and their background fades out. [scrolled] is the card's scroll offset from rest in
- * px (negative when overscrolled) and [topInset] the status bar height. [atLastEntry] tells
+ * The back, edit and sort buttons. At rest they sit on the corners of the focused card. As the
+ * card scrolls under the toolbar they move to the toolbar button positions and their background
+ * fades out. [scrolled] is the card's scroll offset from rest in px and [topInset] the status bar
+ * height. [atLastEntry] tells
  * whether the carousel is on its last entry, where the focused card sits at the end of the row
  * instead of the start.
  */

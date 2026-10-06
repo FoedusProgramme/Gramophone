@@ -116,14 +116,13 @@ fun Density.barTitleAlpha(scrolled: Float, titleTopGap: Dp = LARGE_TITLE_TOP_GAP
 
 /**
  * Scroll offset of the grid's [LargeTitle] item relative to the bottom of the toolbar, in px.
- * Positive once the title is under the toolbar, negative while it is below it or overscrolled.
+ * Positive once the title is under the toolbar, negative while it is below it.
  * The offset is only known while the title or the item above it is visible. Otherwise the capped
  * value is returned, so the result stays continuous. [titleIndex] is the title's index in the
  * grid and [leadingPx] the height of the content above it.
  */
 fun largeTitleScroll(
     grid: LazyGridState,
-    overscroll: IosOverscrollState,
     state: LargeTitleState,
     contentTopPx: Float,
     titleIndex: Int = 0,
@@ -135,7 +134,7 @@ fun largeTitleScroll(
         titleIndex - 1 -> grid.firstVisibleItemScrollOffset.toFloat() - leadingPx
         else -> limit
     }
-    return (scrolled - overscroll.offset).coerceAtMost(limit)
+    return scrolled.coerceAtMost(limit)
 }
 
 /**

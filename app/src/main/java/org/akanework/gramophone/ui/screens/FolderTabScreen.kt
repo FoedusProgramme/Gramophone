@@ -57,7 +57,6 @@ import org.akanework.gramophone.ui.actions.LibraryActions
 import org.akanework.gramophone.ui.actions.rememberAppActionEnv
 import org.akanework.gramophone.ui.components.home.DECOR_HEIGHT
 import org.akanework.gramophone.ui.components.home.FOLDER_CARD_HEIGHT
-import org.akanework.gramophone.ui.components.home.IosOverscrollState
 import org.akanework.gramophone.ui.components.home.LIBRARY_GROUP_CORNER
 import org.akanework.gramophone.ui.components.home.LIBRARY_ITEM_GAP
 import org.akanework.gramophone.ui.components.home.LIST_HEIGHT
@@ -66,11 +65,9 @@ import org.akanework.gramophone.ui.components.home.LibraryFolderRow
 import org.akanework.gramophone.ui.components.home.LibraryHeader
 import org.akanework.gramophone.ui.components.home.NowPlayingState
 import org.akanework.gramophone.ui.components.home.SortMenu
-import org.akanework.gramophone.ui.components.home.iosOverscroll
 import org.akanework.gramophone.ui.components.home.libraryCellShape
 import org.akanework.gramophone.ui.components.home.libraryItemCard
 import org.akanework.gramophone.ui.components.home.libraryItemShape
-import org.akanework.gramophone.ui.components.home.rememberIosFlingBehavior
 import org.akanework.gramophone.ui.library.isGrid
 import org.akanework.gramophone.ui.state.FolderPage
 import org.akanework.gramophone.ui.state.FolderTabState
@@ -103,7 +100,6 @@ fun FolderTabScreen(
     state: FolderTabState,
     nowPlaying: NowPlayingState,
     reselectTick: Int,
-    overscroll: IosOverscrollState,
     modifier: Modifier = Modifier,
 ) {
     val env = rememberAppActionEnv()
@@ -191,12 +187,10 @@ fun FolderTabScreen(
         LazyVerticalGrid(
             columns = GridCells.Fixed(columns),
             state = gridState,
-            modifier = Modifier.fillMaxSize().iosOverscroll(overscroll),
+            modifier = Modifier.fillMaxSize(),
             contentPadding = libraryContentPadding(),
             verticalArrangement = Arrangement.spacedBy(LIBRARY_ITEM_GAP),
             horizontalArrangement = if (isGrid) Arrangement.spacedBy(LIBRARY_ITEM_GAP) else Arrangement.Start,
-            flingBehavior = rememberIosFlingBehavior(gridState),
-            overscrollEffect = null,
         ) {
             item(key = "folders-header", span = { GridItemSpan(maxLineSpan) }) {
                 val count = folders.size

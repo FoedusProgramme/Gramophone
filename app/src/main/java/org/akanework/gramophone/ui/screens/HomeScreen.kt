@@ -65,7 +65,6 @@ import org.akanework.gramophone.ui.components.home.ACTION_BUTTON_HEIGHT
 import org.akanework.gramophone.ui.components.home.GLASS_BAR_HEIGHT
 import org.akanework.gramophone.ui.components.home.HomeAppBar
 import org.akanework.gramophone.ui.components.home.HomeTabRow
-import org.akanework.gramophone.ui.components.home.IosOverscrollState
 import org.akanework.gramophone.ui.components.home.LIBRARY_GROUP_CORNER
 import org.akanework.gramophone.ui.components.home.LIBRARY_SIDE_MARGIN
 import org.akanework.gramophone.ui.components.home.TAB_INDICATOR_INSET
@@ -125,8 +124,6 @@ fun HomeScreen(modifier: Modifier = Modifier) {
     // Height (px) from the screen bottom to the collapsed mini player's top, 0 when it is hidden.
     val playerBottomPadding = LocalPlayerBottomPadding.current
     val insets = WindowInsets.systemBars.union(WindowInsets.displayCutout)
-    val overscrolls = remember { HashMap<HomeTab, IosOverscrollState>() }
-    fun overscrollOf(tab: HomeTab) = overscrolls.getOrPut(tab) { IosOverscrollState() }
     // The sheet ends above the mini player. The mini player animates with the page transition,
     // so the inset uses the same curve. Otherwise the sheet's bottom edge would jump when
     // navigating away from or back to home. Read in the layout phase, so the animation doesn't
@@ -208,7 +205,6 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                             state = viewModel.tabState(spec),
                             nowPlaying = nowPlaying,
                             reselectTick = reselectTicks[tab] ?: 0,
-                            overscroll = overscrollOf(tab),
                             modifier = Modifier.fillMaxSize(),
                         )
                     } else {
@@ -216,7 +212,6 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                             state = viewModel.folderState(isDetailed = tab == HomeTab.FileSystem),
                             nowPlaying = nowPlaying,
                             reselectTick = reselectTicks[tab] ?: 0,
-                            overscroll = overscrollOf(tab),
                             modifier = Modifier.fillMaxSize(),
                         )
                     }

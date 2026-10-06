@@ -70,7 +70,6 @@ import org.akanework.gramophone.ui.components.home.BackButton
 import org.akanework.gramophone.ui.components.home.GLASS_BAR_HEIGHT
 import org.akanework.gramophone.ui.components.home.LibraryIconButton
 import org.akanework.gramophone.ui.components.home.glassHazeStyle
-import org.akanework.gramophone.ui.components.home.rememberIosOverscrollState
 import org.akanework.gramophone.ui.components.home.rememberNowPlayingState
 import org.akanework.gramophone.ui.components.home.textViewStyle
 import org.akanework.gramophone.ui.components.home.topEdgeBlur
@@ -114,7 +113,6 @@ fun SearchScreen(initialQuery: String?, onBack: () -> Unit, modifier: Modifier =
     val queueTitle = stringResource(R.string.search_query, query)
     LaunchedEffect(queueTitle) { state.queueTitleOverride = queueTitle }
     val nowPlaying = rememberNowPlayingState()
-    val overscroll = rememberIosOverscrollState()
     val hazeState = remember { HazeState() }
     val insets = WindowInsets.systemBars.union(WindowInsets.displayCutout)
     val topInset = insets.asPaddingValues().calculateTopPadding()
@@ -138,7 +136,6 @@ fun SearchScreen(initialQuery: String?, onBack: () -> Unit, modifier: Modifier =
                     state = state,
                     nowPlaying = nowPlaying,
                     reselectTick = 0,
-                    overscroll = overscroll,
                     modifier = Modifier.fillMaxSize(),
                 )
             }

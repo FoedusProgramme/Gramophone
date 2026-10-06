@@ -48,11 +48,8 @@ import org.akanework.gramophone.ui.components.home.LIBRARY_ITEM_GAP
 import org.akanework.gramophone.ui.components.home.LIST_HEIGHT
 import org.akanework.gramophone.ui.components.home.LibraryFastScroller
 import org.akanework.gramophone.ui.components.home.LibraryListRow
-import org.akanework.gramophone.ui.components.home.iosOverscroll
 import org.akanework.gramophone.ui.components.home.libraryItemCard
 import org.akanework.gramophone.ui.components.home.libraryItemShape
-import org.akanework.gramophone.ui.components.home.rememberIosFlingBehavior
-import org.akanework.gramophone.ui.components.home.rememberIosOverscrollState
 
 /** One thing to pick, as the picker activities list it. */
 class PickerEntry<T : Any>(
@@ -77,7 +74,6 @@ fun <T : Any> PickerScreen(
 ) {
     val hazeState = remember { HazeState() }
     val gridState = rememberLazyGridState()
-    val overscroll = rememberIosOverscrollState()
     val insets = WindowInsets.systemBars.union(WindowInsets.displayCutout).asPaddingValues()
     val barTopPadding = insets.calculateTopPadding() + GLASS_BAR_HEIGHT
     val density = LocalDensity.current
@@ -89,11 +85,9 @@ fun <T : Any> PickerScreen(
             LazyVerticalGrid(
                 columns = GridCells.Fixed(1),
                 state = gridState,
-                modifier = Modifier.fillMaxSize().iosOverscroll(overscroll),
+                modifier = Modifier.fillMaxSize(),
                 contentPadding = libraryContentPadding(top = barTopPadding),
                 verticalArrangement = Arrangement.spacedBy(LIBRARY_ITEM_GAP),
-                flingBehavior = rememberIosFlingBehavior(gridState),
-                overscrollEffect = null,
             ) {
                 itemsIndexed(entries) { index, entry ->
                     LibraryListRow(

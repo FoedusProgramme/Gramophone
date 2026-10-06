@@ -27,6 +27,9 @@ import android.os.Build
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.overscroll
+import androidx.compose.foundation.rememberOverscrollEffect
+import androidx.compose.foundation.withoutVisualEffect
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -115,7 +118,6 @@ import org.akanework.gramophone.ui.components.home.DECOR_HEIGHT
 import org.akanework.gramophone.ui.components.home.GLASS_BAR_HEIGHT
 import org.akanework.gramophone.ui.components.home.GRID_CARD_SIDE_PADDING
 import org.akanework.gramophone.ui.components.home.GlassTitleBar
-import org.akanework.gramophone.ui.components.home.IosOverscrollState
 import org.akanework.gramophone.ui.components.home.LIST_HEIGHT
 import org.akanework.gramophone.ui.components.home.LargeTitle
 import org.akanework.gramophone.ui.components.home.LargeTitleState
@@ -125,10 +127,7 @@ import org.akanework.gramophone.ui.components.home.ListRowLeading
 import org.akanework.gramophone.ui.components.home.NowPlayingState
 import org.akanework.gramophone.ui.components.home.SingleLineText
 import org.akanework.gramophone.ui.components.home.SortMenuChooser
-import org.akanework.gramophone.ui.components.home.iosOverscroll
 import org.akanework.gramophone.ui.components.home.largeTitleScroll
-import org.akanework.gramophone.ui.components.home.rememberIosFlingBehavior
-import org.akanework.gramophone.ui.components.home.rememberIosOverscrollState
 import org.akanework.gramophone.ui.components.home.rememberLargeTitleState
 import org.akanework.gramophone.ui.components.home.rememberNowPlayingState
 import org.akanework.gramophone.ui.components.home.textViewStyle
@@ -509,16 +508,15 @@ fun LibrarySubScreen(key: LibrarySubKey, onBack: () -> Unit, modifier: Modifier 
     val contentTopPx = with(density) { contentTop.toPx() }
     val carouselHeightPx = with(density) { subCarouselHeight().toPx() }
     val titleState = rememberLargeTitleState()
-    val overscroll = rememberIosOverscrollState()
     // The carousel is the item before the title, so the title only starts to scroll under the
     // toolbar after the carousel has.
     val scrolled = {
         largeTitleScroll(
-            gridState, overscroll, titleState, contentTopPx,
+            gridState, titleState, contentTopPx,
             titleIndex = TITLE_INDEX, leadingPx = carouselHeightPx,
         )
     }
-    // Scroll offset of the carousel from rest, overscroll included. Drives the carousel buttons
+    // Scroll offset of the carousel from rest. Drives the carousel buttons
     // and the toolbar blur.
     val pageScroll = { (scrolled() + carouselHeightPx) }
     val frostSpanPx = with(density) { CAROUSEL_FROST_SPAN.toPx() }
@@ -549,7 +547,6 @@ fun LibrarySubScreen(key: LibrarySubKey, onBack: () -> Unit, modifier: Modifier 
                 LibrarySubList(
                     page = page,
                     gridState = gridState,
-                    overscroll = overscroll,
                     nowPlaying = nowPlaying,
                     env = env,
                     queueTitle = title.value,
@@ -638,7 +635,6 @@ fun LibrarySubScreen(key: LibrarySubKey, onBack: () -> Unit, modifier: Modifier 
 private fun LibrarySubList(
     page: LibrarySubPage,
     gridState: LazyGridState,
-    overscroll: IosOverscrollState,
     nowPlaying: NowPlayingState,
     env: AppActionEnv,
     /** Title of the queues played from the headers. */
@@ -671,18 +667,18 @@ private fun LibrarySubList(
     val songItems = songs.items
     val songKeys = remember(songItems) { uniqueKeys(songItems) { "song:" + it.mediaId } }
     val firstSongIndex = page.firstSongIndex
+    val overscroll = rememberOverscrollEffect()
     Box(modifier) {
         LazyVerticalGrid(
             columns = GridCells.Fixed(columns),
             state = gridState,
             modifier = Modifier
                 .fillMaxSize()
-                .iosOverscroll(overscroll)
-                // After iosOverscroll, so the sheet is offset by the overscroll too.
+                // Drawn around the sheet too, so it stretches with the songs on it
+                .overscroll(overscroll)
                 .drawBehind { drawListSheet(gridState, sheet.value, SHEET_CORNER.toPx()) },
             contentPadding = libraryContentPadding(top = contentTop),
-            flingBehavior = rememberIosFlingBehavior(gridState),
-            overscrollEffect = null,
+            overscrollEffect = overscroll?.withoutVisualEffect(),
         ) {
             // At CAROUSEL_INDEX, TITLE_INDEX and SHEET_TOP_INDEX.
             item(key = "carousel", span = { GridItemSpan(maxLineSpan) }) { carousel() }

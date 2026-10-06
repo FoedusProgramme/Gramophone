@@ -64,9 +64,6 @@ import org.akanework.gramophone.ui.components.home.GlassTitleBar
 import org.akanework.gramophone.ui.components.home.LargeTitle
 import org.akanework.gramophone.ui.components.home.PAGE_TITLE_TOP_GAP
 import org.akanework.gramophone.ui.components.home.PageTitleStyle
-import org.akanework.gramophone.ui.components.home.iosOverscroll
-import org.akanework.gramophone.ui.components.home.rememberIosFlingBehavior
-import org.akanework.gramophone.ui.components.home.rememberIosOverscrollState
 import org.akanework.gramophone.ui.components.home.rememberLargeTitleState
 import org.akanework.gramophone.ui.theme.LocalCardSurface
 
@@ -113,12 +110,11 @@ fun PreferenceScreen(
 ) {
     val hazeState = remember { HazeState() }
     val scrollState = rememberScrollState()
-    val overscroll = rememberIosOverscrollState()
     val titleState = rememberLargeTitleState()
     val insets = WindowInsets.systemBars.union(WindowInsets.displayCutout).asPaddingValues()
     val layoutDirection = LocalLayoutDirection.current
-    // How far the content has moved from rest, following the rubber band like the library pages.
-    val scrolled = { scrollState.value.toFloat() - overscroll.offset }
+    // How far the content has moved from rest.
+    val scrolled = { scrollState.value.toFloat() }
     // The same ground as the home, with the same cards on it.
     val background = MaterialTheme.colorScheme.surfaceContainerLow
     Box(
@@ -137,13 +133,7 @@ fun PreferenceScreen(
             Column(
                 Modifier
                     .fillMaxSize()
-                    // Before verticalScroll so this sits above it in the nested scroll chain.
-                    .iosOverscroll(overscroll)
-                    .verticalScroll(
-                        state = scrollState,
-                        flingBehavior = rememberIosFlingBehavior(scrollState),
-                        overscrollEffect = null,
-                    )
+                    .verticalScroll(scrollState)
                     .padding(
                         start = insets.calculateStartPadding(layoutDirection),
                         top = insets.calculateTopPadding() + GLASS_BAR_HEIGHT,
