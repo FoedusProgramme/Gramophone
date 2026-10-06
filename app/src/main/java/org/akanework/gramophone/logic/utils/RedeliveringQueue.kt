@@ -23,8 +23,8 @@ import kotlinx.coroutines.channels.Channel
 /**
  * An unbounded queue with a single consumer that may go away at any time. Anything may [post],
  * from any thread, whether or not a consumer is waiting; elements posted meanwhile are kept. An
- * element handed to a consumer that is cancelled before it resumes (a recreated activity) is not
- * lost but posted again, to the back of the queue.
+ * element handed to a consumer that is cancelled before it resumes (a paused or recreated
+ * activity) is not lost but posted again, to the back of the queue, and never also delivered.
  *
  * @param tag log tag for an element that could not be queued.
  */

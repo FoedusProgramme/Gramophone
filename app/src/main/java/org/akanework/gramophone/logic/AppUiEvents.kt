@@ -27,9 +27,9 @@ sealed interface AppUiEvent {
 
 /**
  * Hands [AppUiEvent]s from work on [ApplicationScope] to the root composition of whichever
- * MainActivity is up, so that work never holds on to the screen that started it. Events posted
- * while no activity is up wait for the next one; one taken by a root composition that is
- * cancelled before it shows it is queued again.
+ * MainActivity is resumed, so that work never holds on to the screen that started it. Events
+ * posted while none is resumed wait for the next one; one taken by a root composition that is
+ * cancelled before it shows it (its activity paused or recreated) is queued again.
  */
 class AppUiEvents {
     private val events = RedeliveringQueue<AppUiEvent>(TAG)
@@ -37,7 +37,7 @@ class AppUiEvents {
     /** Callable from any thread. */
     fun post(event: AppUiEvent) = events.post(event)
 
-    /** Waits for the next event. Only the root composition should call this. */
+    /** Waits for the next event. Only a resumed activity's root composition should call this. */
     suspend fun next(): AppUiEvent = events.next()
 
     private companion object {

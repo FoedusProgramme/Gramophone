@@ -28,9 +28,10 @@ class ConsentRequest(val sender: IntentSender, val payload: PendingWrite)
 
 /**
  * Queue of MediaStore consent prompts. Anything may [request], from any thread, before any UI
- * exists; the root MediaConsentHost takes the requests one at a time with [next] and shows them.
- * Requests made while no host is waiting are kept, and one handed to a host that is gone before
- * it resumes (its activity recreated) is queued again, at the back.
+ * exists; the root MediaConsentHost of the resumed MainActivity takes the requests one at a time
+ * with [next] and shows them. Requests made while no host is waiting are kept, and one handed to
+ * a host that is gone before it resumes (its activity paused or recreated) is queued again, at
+ * the back.
  */
 class MediaConsentRequester {
     private val requests = RedeliveringQueue<ConsentRequest>(TAG)

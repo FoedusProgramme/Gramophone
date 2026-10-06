@@ -29,6 +29,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.media3.common.util.Log
 import kotlinx.coroutines.flow.first
 import org.akanework.gramophone.logic.library.LibraryWriteRepository
@@ -43,11 +46,15 @@ private const val TAG = "MediaConsentHost"
  * each result to [LibraryWriteRepository]. Must sit at an always-composed spot of the root: the
  * pending write is saved with the composition so the result is still handled after the activity
  * or the process was recreated while the system dialog was up.
+ *
+ * Takes requests only while its activity is resumed. The queue is shared by every MainActivity
+ * instance, and one in another task, stopped, must not show the dialog from the background.
  */
 @Composable
 fun MediaConsentHost() {
     val requester = koinInject<MediaConsentRequester>()
     val repository = koinInject<LibraryWriteRepository>()
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
     var pending by rememberSaveable { mutableStateOf<PendingWrite?>(null) }
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.StartIntentSenderForResult()
@@ -57,18 +64,21 @@ fun MediaConsentHost() {
         repository.onConsentResult(write, result.resultCode, result.data)
     }
     // Runs after the launcher is registered, so launch() below cannot hit an unregistered one.
-    LaunchedEffect(requester) {
-        while (true) {
-            // A write restored from saved state is still waiting for its result.
-            snapshotFlow { pending }.first { it == null }
-            val request = requester.next()
-            pending = request.payload
-            try {
-                launcher.launch(IntentSenderRequest.Builder(request.sender).build())
-            } catch (e: ActivityNotFoundException) {
-                Log.e(TAG, "error launching consent dialog", e)
-                pending = null
-                repository.onConsentResult(request.payload, Activity.RESULT_FIRST_USER, null)
+    LaunchedEffect(requester, lifecycle) {
+        // A request handed over just as the activity pauses goes back to the queue.
+        lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            while (true) {
+                // A write restored from saved state is still waiting for its result.
+                snapshotFlow { pending }.first { it == null }
+                val request = requester.next()
+                pending = request.payload
+                try {
+                    launcher.launch(IntentSenderRequest.Builder(request.sender).build())
+                } catch (e: ActivityNotFoundException) {
+                    Log.e(TAG, "error launching consent dialog", e)
+                    pending = null
+                    repository.onConsentResult(request.payload, Activity.RESULT_FIRST_USER, null)
+                }
             }
         }
     }

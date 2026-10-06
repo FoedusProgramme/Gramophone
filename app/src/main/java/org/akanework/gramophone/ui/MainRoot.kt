@@ -24,7 +24,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.LocalResources
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.akanework.gramophone.BuildConfig
 import org.akanework.gramophone.R
@@ -80,19 +84,32 @@ internal fun MainRoot(
     }
 }
 
-/** Shows what work on the application scope reports, on this activity's [dialogs]. */
+/**
+ * Shows what work on the application scope reports, on this activity's [dialogs]. Takes events
+ * only while the activity is resumed: another MainActivity instance, stopped in its own task,
+ * must not take one nobody would see.
+ */
 @Composable
 private fun AppUiEventsHost(dialogs: AppDialogHostState) {
     // Read when an event comes, so the strings follow a configuration change
     val resources by rememberUpdatedState(LocalResources.current)
     val events = koinInject<AppUiEvents>()
-    LaunchedEffect(events, dialogs) {
-        while (true) {
-            when (val event = events.next()) {
-                is AppUiEvent.LibraryRefreshed -> dialogs.snackbar(
-                    resources.getString(R.string.refreshed_songs, event.songCount),
-                    resources.getString(R.string.dismiss),
-                )
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    LaunchedEffect(events, dialogs, lifecycle) {
+        val shown = this
+        lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            while (true) {
+                val event = events.next()
+                // Shown outside the resumed window: the event is already taken, so a pause while
+                // the snackbar is up (Recents, a consent dialog) must not take it down for good
+                shown.launch {
+                    when (event) {
+                        is AppUiEvent.LibraryRefreshed -> dialogs.snackbar(
+                            resources.getString(R.string.refreshed_songs, event.songCount),
+                            resources.getString(R.string.dismiss),
+                        )
+                    }
+                }
             }
         }
     }
