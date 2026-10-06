@@ -56,7 +56,9 @@ import org.akanework.gramophone.ui.components.player.PlayerUtilities.ARTWORK_QUA
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.ARTWORK_SEED_SIZE
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.ARTWORK_SEED_SIZE_ACCURATE
 import org.akanework.gramophone.ui.theme.ChromaTone
+import org.akanework.gramophone.ui.theme.PREF_PURE_DARK
 import org.akanework.gramophone.ui.theme.harmonizeBy
+import org.akanework.gramophone.ui.theme.pureDark
 import org.akanework.gramophone.ui.theme.tonal
 import org.koin.compose.koinInject
 
@@ -77,8 +79,13 @@ private fun rememberArtworkColorScheme(artworkUri: Uri?, accurate: Boolean): Col
     val seed = rememberArtworkSeed(artworkUri, accurate)
     // Match the applied theme's light/dark rather than the raw system setting.
     val isDark = theme.surface.luminance() < 0.5f
-    return if (seed == null) theme
-    else rememberDynamicColorScheme(seedColor = seed, isDark = isDark, style = PaletteStyle.TonalSpot)
+    val pureDarkOn = rememberBooleanPreference(PREF_PURE_DARK, false).value
+    if (seed == null) return theme
+    val scheme = rememberDynamicColorScheme(
+        seedColor = seed, isDark = isDark, style = PaletteStyle.TonalSpot,
+    )
+    // The cover only tints the accents under pure dark; the surfaces stay black like the app's.
+    return if (isDark && pureDarkOn) remember(scheme) { scheme.pureDark() } else scheme
 }
 
 /**

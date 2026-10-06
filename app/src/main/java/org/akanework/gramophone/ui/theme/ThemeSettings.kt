@@ -164,7 +164,8 @@ fun themeColorScheme(context: Context, settings: ThemeSettings, dark: Boolean): 
     return if (dark && settings.pureDark) scheme.pureDark() else scheme
 }
 
-private fun ColorScheme.pureDark(): ColorScheme = copy(
+/** This dark scheme with its background and surfaces black, as the pure dark setting paints it. */
+internal fun ColorScheme.pureDark(): ColorScheme = copy(
     background = Color.Black,
     surface = Color.Black,
     surfaceVariant = Color.Black,
