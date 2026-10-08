@@ -32,6 +32,8 @@ import androidx.media3.common.HeartRating
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.util.Log
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 import org.akanework.gramophone.logic.GramophoneAlbumArtProvider
@@ -613,6 +615,214 @@ internal object Reader {
             folders,
             foldersForWhitelist
         )
+    }
+
+    fun readSongsFromMediaStore(
+        context: Context,
+    ): PersistentList<MediaItem> {
+        if (!context.hasAudioPermission()) {
+            throw SecurityException("Audio permission is not granted")
+        }
+
+        val songs = mutableListOf<MediaItem>()
+        val hasVolume = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            MediaStore.getExternalVolumeNames(context).contains(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+        } else true
+        val sortOrder = MediaStore.Audio.Media.TITLE + " COLLATE UNICODE ASC"
+        val cursor = if (hasVolume) {
+            // TODO: convert coroutine cancellation to cancellationSignal
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val queryArgs = Bundle()
+                queryArgs.putString(ContentResolver.QUERY_ARG_SQL_SORT_ORDER, sortOrder)
+                // TODO: maybe we can use QUERY_ARG_INCLUDE_RECENTLY_UNMOUNTED_VOLUMES?
+                context.contentResolver.query(
+                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                    projection,
+                    queryArgs,
+                    null
+                )
+            } else {
+                context.contentResolver.query(
+                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                    projection,
+                    null,
+                    null,
+                    sortOrder,
+                    null
+                )
+            }
+        } else null
+        val defaultZone by lazy {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                ZoneId.systemDefault()
+            } else null
+        }
+
+        cursor?.use {
+            // Get columns from mediaStore.
+            val idColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
+            val titleColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE)
+            val artistColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST)
+            val albumColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM)
+            val albumArtistColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ARTIST)
+            val pathColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)
+            val yearColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media.YEAR)
+            val albumIdColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID)
+            val artistIdColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST_ID)
+            val mimeTypeColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media.MIME_TYPE)
+            val discNumberColumn = it.getColumnIndexOrNull(MediaStore.Audio.Media.DISC_NUMBER)
+            val trackNumberColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media.TRACK)
+            val genreColumn = if (hasImprovedMediaStore())
+                it.getColumnIndexOrThrow(MediaStore.Audio.Media.GENRE) else null
+            val cdTrackNumberColumn = if (hasImprovedMediaStore())
+                it.getColumnIndexOrThrow(MediaStore.Audio.Media.CD_TRACK_NUMBER) else null
+            val compilationColumn = if (hasImprovedMediaStore())
+                it.getColumnIndexOrThrow(MediaStore.Audio.Media.COMPILATION) else null
+            val dateTakenColumn = if (hasImprovedMediaStore())
+                it.getColumnIndexOrThrow(MediaStore.Audio.Media.DATE_TAKEN) else null
+            val composerColumn = if (hasImprovedMediaStore())
+                it.getColumnIndexOrThrow(MediaStore.Audio.Media.COMPOSER) else null
+            val writerColumn = if (hasImprovedMediaStore())
+                it.getColumnIndexOrThrow(MediaStore.Audio.Media.WRITER) else null
+            val authorColumn = if (hasImprovedMediaStore())
+                it.getColumnIndexOrThrow(MediaStore.Audio.Media.AUTHOR) else null
+            val durationColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)
+            val addDateColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media.DATE_ADDED)
+            val modifiedDateColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media.DATE_MODIFIED)
+
+            while (it.moveToNext()) {
+                val path = it.getString(pathColumn)!!
+                val duration =
+                    it.getLongOrNullIfThrow(durationColumn)?.let { if (it >= 0) it else null }
+                val pathFile = File(path)
+                val id = it.getLong(idColumn)
+                val title = it.getString(titleColumn) ?: path
+                val artist: String?
+                val hasNoMetadata: Boolean
+                it.getStringOrNullIfThrow(artistColumn).let {
+                    hasNoMetadata = it == MediaStore.UNKNOWN_STRING || it == null
+                    artist = if (hasNoMetadata) null else it
+                }
+                val album = it.getStringOrNullIfThrow(albumColumn)
+                val albumArtist = it.getStringOrNullIfThrow(albumArtistColumn)
+                val year = it.getIntOrNullIfThrow(yearColumn).let { v -> if (v == 0) null else v }
+                val albumId = it.getLongOrNullIfThrow(albumIdColumn)
+                val artistId = it.getLongOrNullIfThrow(artistIdColumn)
+                val mimeType = it.getStringOrNull(mimeTypeColumn) // is null for directories
+                var discNumber = discNumberColumn?.let { col -> it.getIntOrNullIfThrow(col) }
+                var trackNumber = it.getIntOrNullIfThrow(trackNumberColumn)
+                var cdTrackNumber =
+                    cdTrackNumberColumn?.let { col -> it.getStringOrNullIfThrow(col) }
+                val compilation = compilationColumn?.let { col -> it.getStringOrNullIfThrow(col) }
+                val dateTaken = dateTakenColumn?.let { col -> it.getStringOrNullIfThrow(col) }
+                val composer = composerColumn?.let { col -> it.getStringOrNullIfThrow(col) }
+                val writer = writerColumn?.let { col -> it.getStringOrNullIfThrow(col) }
+                val author = authorColumn?.let { col -> it.getStringOrNullIfThrow(col) }
+                val genre = genreColumn?.let { col -> it.getStringOrNullIfThrow(col) }
+                val addDate = it.getLongOrNullIfThrow(addDateColumn)
+                val modifiedDate = it.getLongOrNullIfThrow(modifiedDateColumn)
+                val dateTakenParsed = if (hasImprovedMediaStore()) {
+                    // the column exists since R, so we can always use these APIs
+                    dateTaken?.toLongOrNull()?.let { it1 -> Instant.ofEpochMilli(it1) }
+                        ?.atZone(defaultZone)
+                } else null
+                val dateTakenYear = if (hasImprovedMediaStore()) {
+                    dateTakenParsed?.year
+                } else null
+                val dateTakenMonth = if (hasImprovedMediaStore()) {
+                    dateTakenParsed?.monthValue
+                } else null
+                val dateTakenDay = if (hasImprovedMediaStore()) {
+                    dateTakenParsed?.dayOfMonth
+                } else null
+                val imgUri = GramophoneAlbumArtProvider.buildSongUri(id, pathFile)
+                if (cdTrackNumber != null && trackNumber == null) {
+                    cdTrackNumber.toIntOrNull()?.let {
+                        trackNumber = it
+                        cdTrackNumber = null
+                    }
+                }
+                // If there is no track number metadata set by now, and the file name is something
+                // along the lines of "04.Englishman in New York.mp3" or "04. La isla bonita.flac",
+                // AND either:
+                // - there is no valid track metadata (this means the title is the filename without
+                //   extension)
+                // - there is valid track metadata, and the title doesn't begin with that number
+                // we can assume this is referring to the track number.
+                if (trackNumber == null) {
+                    val match = trackNumberRegex.matchEntire(pathFile.name)
+                    if (match != null && match.groups.size > 1
+                        && (hasNoMetadata || !title.startsWith(match.groups[1]!!.value))
+                    ) {
+                        trackNumber = match.groups[1]!!.value.toIntOrNull()
+                    }
+                }
+                // Process track numbers that have disc number added on.
+                // e.g. 1001 - Disc 01, Track 01
+                // MediaStore encodes info this way even if the file does not
+                if (trackNumber != null &&
+                    (discNumber == null || discNumber == 0 || discNumber == trackNumber / 1000) &&
+                    trackNumber >= 1000
+                ) {
+                    discNumber = trackNumber / 1000
+                    trackNumber %= 1000
+                }
+
+                // Build our mediaItem.
+                val song = MediaItem.Builder()
+                    .setUri(ContentUris.withAppendedId(
+                        MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, id))
+                    .setMediaId("MediaStore:$id")
+                    .setMimeType(mimeType)
+                    .setMediaMetadata(
+                        MediaMetadata
+                            .Builder()
+                            .setIsBrowsable(false)
+                            .setIsPlayable(true)
+                            .setMediaType(MediaMetadata.MEDIA_TYPE_MUSIC)
+                            .setDurationMs(duration)
+                            .setTitle(title)
+                            .setWriter(writer)
+                            .setAuthor(author)
+                            .setCompilation(compilation)
+                            .setComposer(composer)
+                            .setArtist(artist)
+                            .setAlbumTitle(album)
+                            .setAlbumArtist(albumArtist)
+                            .setArtworkUri(imgUri)
+                            .setTrackNumber(trackNumber)
+                            .setDiscNumber(discNumber)
+                            .setGenre(genre)
+                            .setRecordingDay(dateTakenDay)
+                            .setRecordingMonth(dateTakenMonth)
+                            .setRecordingYear(dateTakenYear)
+                            .setReleaseYear(year)
+                            .setUserRating(HeartRating(false))
+                            .setExtras(Bundle().apply {
+                                if (artistId != null) {
+                                    putLong(EXTRA_ARTIST_ID, artistId)
+                                }
+                                if (albumId != null) {
+                                    putLong(EXTRA_ALBUM_ID, albumId)
+                                }
+                                if (addDate != null) {
+                                    putLong(EXTRA_ADD_DATE, addDate)
+                                }
+                                if (modifiedDate != null) {
+                                    putLong(EXTRA_MODIFIED_DATE, modifiedDate)
+                                }
+                                putString(EXTRA_CD_TRACK_NUMBER, cdTrackNumber)
+                                putParcelable(EXTRA_HD_ARTWORK_URI, imgUri.buildUpon()
+                                    .appendQueryParameter("hd", "1").build())
+                                putString(EXTRA_FILE, path)
+                            })
+                            .build(),
+                    ).build()
+                songs.add(song)
+            }
+        }
+
+        return songs.toPersistentList()
     }
 
     private fun getPathForId(context: Context, id: Long): String? {

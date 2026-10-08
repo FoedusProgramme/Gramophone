@@ -270,6 +270,7 @@ kotlin {
             "-Xno-receiver-assertions",
             "-Xannotation-default-target=param-property", // can remove later
         )
+        optIn.add("kotlin.uuid.ExperimentalUuidApi") // can remove later
     }
 }
 

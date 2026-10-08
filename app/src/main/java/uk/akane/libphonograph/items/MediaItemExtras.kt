@@ -20,28 +20,33 @@ package uk.akane.libphonograph.items
 import android.net.Uri
 import androidx.core.os.BundleCompat
 import androidx.media3.common.MediaMetadata
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
-const val EXTRA_AUTHOR = "Author"
 const val EXTRA_ARTIST_ID = "ArtistId"
 const val EXTRA_ALBUM_ID = "AlbumId"
-const val EXTRA_ALBUM_YEAR = "AlbumYear"
 const val EXTRA_ADD_DATE = "AddDate"
 const val EXTRA_MODIFIED_DATE = "ModifiedDate"
 const val EXTRA_CD_TRACK_NUMBER = "CdTrackNumber"
 const val EXTRA_HD_ARTWORK_URI = "HdArtworkUri"
 const val EXTRA_FILE = "File"
 
-val MediaMetadata.author: String?
-    get() = extras?.getString(EXTRA_AUTHOR)
-
+// TODO(Reader2) remove fully
 val MediaMetadata.artistId: Long?
     get() = extras?.getLong(EXTRA_ARTIST_ID, -1).let { if (it == -1L) null else it }
 
+// TODO(Reader2) remove fully
 val MediaMetadata.albumId: Long?
     get() = extras?.getLong(EXTRA_ALBUM_ID, -1).let { if (it == -1L) null else it }
 
-val MediaMetadata.albumYear: Long?
-    get() = extras?.getLong(EXTRA_ALBUM_YEAR, -1).let { if (it == -1L) null else it }
+val MediaMetadata.artistMusicbrainzId: Uuid?
+    get() = extras?.getString("todo123", null)?.let { Uuid.parse(it) } // TODO(Reader2)
+
+val MediaMetadata.albumArtistMusicbrainzId: Uuid?
+    get() = extras?.getString("todo123", null)?.let { Uuid.parse(it) } // TODO(Reader2)
+
+val MediaMetadata.albumMusicbrainzId: Uuid?
+    get() = extras?.getString("todo123", null)?.let { Uuid.parse(it) } // TODO(Reader2)
 
 val MediaMetadata.addDate: Long?
     get() = extras?.getLong(EXTRA_ADD_DATE, -1).let { if (it == -1L) null else it }

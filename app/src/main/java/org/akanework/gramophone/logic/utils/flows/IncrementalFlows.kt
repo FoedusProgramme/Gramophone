@@ -17,6 +17,8 @@
 
 package org.akanework.gramophone.logic.utils.flows
 
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListUpdateCallback
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.persistentListOf
@@ -30,7 +32,9 @@ import kotlinx.coroutines.channels.ProducerScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -42,12 +46,21 @@ import kotlin.math.min
 
 sealed class IncrementalList<T> {
     abstract val after: PersistentList<T>
+    inline fun <R> mapNonCached(transform: (T) -> R): IncrementalList<R> {
+        return when (this) {
+            is Begin<T> -> Begin(after.map(transform).toPersistentList())
+            is Insert<T> -> Insert(pos, count, after.map(transform).toPersistentList())
+            is Remove<T> -> Remove(pos, count, after.map(transform).toPersistentList())
+            is Move<T> -> Move(pos, count, outPos, after.map(transform).toPersistentList())
+            is Update<T> -> Update(pos, count, after.map(transform).toPersistentList())
+        }
+    }
     data class Begin<T>(override val after: PersistentList<T>) : IncrementalList<T>()
 
     data class Insert<T>(val pos: Int, val count: Int, override val after: PersistentList<T>) :
         IncrementalList<T>()
 
-    data class Remove<T>(val pos: Int, val count: Int, override val after: PersistentList<T>) :IncrementalList<T>()
+    data class Remove<T>(val pos: Int, val count: Int, override val after: PersistentList<T>) : IncrementalList<T>()
 
     data class Move<T>(val pos: Int, val count: Int, val outPos: Int, override val after: PersistentList<T>) :
         IncrementalList<T>()
@@ -58,12 +71,23 @@ sealed class IncrementalList<T> {
 
 sealed class IncrementalMap<T, R> {
     abstract val after: PersistentMap<T, R>
+    inline fun <S> mapNonCached(transform: (T, R) -> S): IncrementalMap<T, S> {
+        return when (this) {
+            is Begin<T, R> -> Begin(after.mapValues { (key, value) -> transform(key, value) }.toPersistentMap())
+            is Insert<T, R> -> Insert(key, after.mapValues { (key, value) -> transform(key, value) }.toPersistentMap())
+            is Remove<T, R> -> Remove(key, after.mapValues { (key, value) -> transform(key, value) }.toPersistentMap())
+            is Move<T, R> -> Move(key, outKey, after.mapValues { (key, value) -> transform(key, value) }.toPersistentMap())
+            is Update<T, R> -> Update(key, after.mapValues { (key, value) -> transform(key, value) }.toPersistentMap())
+        }
+    }
     data class Begin<T, R>(override val after: PersistentMap<T, R>) : IncrementalMap<T, R>()
     data class Insert<T, R>(val key: T, override val after: PersistentMap<T, R>) : IncrementalMap<T, R>()
     data class Remove<T, R>(val key: T, override val after: PersistentMap<T, R>) : IncrementalMap<T, R>()
     data class Move<T, R>(val key: T, val outKey: T, override val after: PersistentMap<T, R>) : IncrementalMap<T, R>()
     data class Update<T, R>(val key: T, override val after: PersistentMap<T, R>) : IncrementalMap<T, R>()
 }
+
+typealias IncrementalSet<T> = IncrementalMap<T, Unit>
 
 fun <T> Flow<IncrementalList<T>?>.defeatNullable() =
     map { it ?: IncrementalList.Begin(persistentListOf()) }
@@ -157,14 +181,20 @@ inline fun <T, R> Flow<IncrementalList<T>>.flatMapConcatIncremental(
                     }
                     val baseSize = min(added, removed)
                     val offsetStart = baseStart + baseSize
-                    var offsetCount = abs(added - removed)
+                    val offsetCount = abs(added - removed)
                     newFlat = new.flatten().toPersistentList()
-                    // in insert/remove cases we technically spoiler updates to the list but it doesn't matter
-                    // TODO: maybe we shouldnt after all ...?
                     if (removed > added) {
-                        emit(IncrementalList.Remove(offsetStart, offsetCount, newFlat))
+                        val tempAfter = lastFlat!!.builder()
+                        repeat(offsetCount) {
+                            tempAfter.removeAt(offsetStart)
+                        }
+                        emit(IncrementalList.Remove(offsetStart, offsetCount, tempAfter.toPersistentList()))
                     } else if (removed < added) {
-                        emit(IncrementalList.Insert(offsetStart, offsetCount, newFlat))
+                        val tempAfter = lastFlat!!.builder()
+                        for (i in offsetStart ..< offsetStart + offsetCount) {
+                            tempAfter.add(i, newFlat[i])
+                        }
+                        emit(IncrementalList.Insert(offsetStart, offsetCount, tempAfter.toPersistentList()))
                     }
                     if (removed != 0 && added != 0) {
                         emit(IncrementalList.Update(baseStart, baseSize, newFlat))
@@ -188,6 +218,12 @@ inline fun <T> Flow<IncrementalList<T>>.filterIncremental(
 ): Flow<IncrementalList<T>> = flatMapConcatIncremental {
     if (predicate(it)) listOf(it) else emptyList()
 }
+
+inline fun <T> Flow<IncrementalList<T>>.filterLatestIncremental(
+    crossinline predicate: (T) -> Flow<Boolean>
+): Flow<IncrementalList<T>> = flatMapLatestIncremental { a ->
+    predicate(a).map { a to it }
+}.filterIncremental { it.second }.mapNonCachedIncremental { it.first }
 
 @Suppress("UNCHECKED_CAST")
 fun <T : Any> Flow<IncrementalList<T?>>.filterNotNullIncremental(): Flow<IncrementalList<T>> =
@@ -258,6 +294,10 @@ inline fun <T, R> Flow<IncrementalList<T>>.mapIncremental(
     }
 }
 
+inline fun <T, R> Flow<IncrementalList<T>>.mapNonCachedIncremental(
+    crossinline predicate: (T) -> R
+): Flow<IncrementalList<R>> = map { it.mapNonCached(predicate) }
+
 inline fun <T, K> Iterable<T>.groupByIndexed(keySelector: (Int, T) -> K): Map<K, List<T>> {
     val destination = LinkedHashMap<K, ArrayList<T>>()
     forEachIndexed { index, element ->
@@ -312,7 +352,7 @@ inline fun <T, R> Flow<IncrementalList<T>>.groupByIncremental(
             }
 
             it is IncrementalList.Move -> {
-                var keys = mutableListOf<R>()
+                val keys = mutableListOf<R>()
                 repeat(it.count) { _ ->
                     keys.add(keyCache.removeAt(it.pos))
                 }
@@ -426,86 +466,84 @@ inline fun <T, R> Flow<IncrementalList<T>>.groupByIncremental(
 
 @Suppress("NOTHING_TO_INLINE")
 private suspend inline fun <T, R> ProducerScope<IncrementalMap<T, R>>.mergeCollector(
-    lock: Mutex, state: HashMap<T, R>,
+    state: HashMap<T, R>,
     otherState: HashMap<T, R>,
     otherWinsConflict: Boolean,
     it: IncrementalMap<T, R>
 ) {
-    lock.withLock {
-        when (it) {
-            is IncrementalMap.Begin -> {
-                state.clear()
-                state.putAll(it.after)
-                send(IncrementalMap.Begin((if (otherWinsConflict) state + otherState else otherState + state).toPersistentMap()))
-            }
+    when (it) {
+        is IncrementalMap.Begin -> {
+            state.clear()
+            state.putAll(it.after)
+            send(IncrementalMap.Begin((if (otherWinsConflict) state + otherState else otherState + state).toPersistentMap()))
+        }
 
-            is IncrementalMap.Insert -> {
-                state[it.key] = @Suppress("UNCHECKED_CAST") (it.after[it.key] as R)
+        is IncrementalMap.Insert -> {
+            state[it.key] = @Suppress("UNCHECKED_CAST") (it.after[it.key] as R)
+            if (otherState.contains(it.key)) {
+                if (!otherWinsConflict) {
+                    send(IncrementalMap.Update(it.key, (otherState + state).toPersistentMap()))
+                }
+            } else {
+                send(
+                    IncrementalMap.Insert(
+                        it.key, (if (otherWinsConflict) state + otherState else
+                            otherState + state).toPersistentMap()
+                    )
+                )
+            }
+        }
+
+        is IncrementalMap.Move -> {
+            state[it.outKey] = @Suppress("UNCHECKED_CAST") (state.remove(it.key) as R)
+            if (otherWinsConflict) {
+                val containsOld = otherState.contains(it.key)
+                val containsNew = otherState.contains(it.outKey)
+                if (containsOld != containsNew) {
+                    if (containsOld) {
+                        send(IncrementalMap.Insert(it.outKey, (state + otherState).toPersistentMap()))
+                    } else {
+                        send(IncrementalMap.Remove(it.key, (state + otherState).toPersistentMap()))
+                    }
+                } else if (!containsOld /* && !containsNew */) {
+                    send(IncrementalMap.Move(it.key, it.outKey, (state + otherState).toPersistentMap()))
+                }
+            } else {
+                if (otherState.contains(it.outKey)) {
+                    send(IncrementalMap.Remove(it.outKey, (otherState + state).toPersistentMap()))
+                }
+                send(IncrementalMap.Move(it.key, it.outKey, (otherState + state).toPersistentMap()))
                 if (otherState.contains(it.key)) {
-                    if (!otherWinsConflict) {
-                        send(IncrementalMap.Update(it.key, (otherState + state).toPersistentMap()))
-                    }
-                } else {
-                    send(
-                        IncrementalMap.Insert(
-                            it.key, (if (otherWinsConflict) state + otherState else
-                                otherState + state).toPersistentMap()
-                        )
-                    )
+                    send(IncrementalMap.Insert(it.key, (otherState + state).toPersistentMap()))
                 }
             }
+        }
 
-            is IncrementalMap.Move -> {
-                state[it.outKey] = @Suppress("UNCHECKED_CAST") (state.remove(it.key) as R)
-                if (otherWinsConflict) {
-                    val containsOld = otherState.contains(it.key)
-                    val containsNew = otherState.contains(it.outKey)
-                    if (containsOld != containsNew) {
-                        if (containsOld) {
-                            send(IncrementalMap.Insert(it.outKey, (state + otherState).toPersistentMap()))
-                        } else {
-                            send(IncrementalMap.Remove(it.key, (state + otherState).toPersistentMap()))
-                        }
-                    } else if (!containsOld /* && !containsNew */) {
-                        send(IncrementalMap.Move(it.key, it.outKey, (state + otherState).toPersistentMap()))
-                    }
-                } else {
-                    if (otherState.contains(it.outKey)) {
-                        send(IncrementalMap.Remove(it.outKey, (otherState + state).toPersistentMap()))
-                    }
-                    send(IncrementalMap.Move(it.key, it.outKey, (otherState + state).toPersistentMap()))
-                    if (otherState.contains(it.key)) {
-                        send(IncrementalMap.Insert(it.key, (otherState + state).toPersistentMap()))
-                    }
+        is IncrementalMap.Remove -> {
+            state.remove(it.key)
+            if (otherState.contains(it.key)) {
+                if (!otherWinsConflict) {
+                    send(IncrementalMap.Update(it.key, (otherState + state).toPersistentMap()))
                 }
-            }
-
-            is IncrementalMap.Remove -> {
-                state.remove(it.key)
-                if (otherState.contains(it.key)) {
-                    if (!otherWinsConflict) {
-                        send(IncrementalMap.Update(it.key, (otherState + state).toPersistentMap()))
-                    }
-                } else {
-                    send(
-                        IncrementalMap.Remove(
-                            it.key, (if (otherWinsConflict) state + otherState else
-                                otherState + state).toPersistentMap()
-                        )
+            } else {
+                send(
+                    IncrementalMap.Remove(
+                        it.key, (if (otherWinsConflict) state + otherState else
+                            otherState + state).toPersistentMap()
                     )
-                }
+                )
             }
+        }
 
-            is IncrementalMap.Update -> {
-                state[it.key] = @Suppress("UNCHECKED_CAST") (it.after[it.key] as R)
-                if (!otherWinsConflict || !otherState.contains(it.key)) {
-                    send(
-                        IncrementalMap.Update(
-                            it.key, (if (otherWinsConflict) state + otherState else
-                                otherState + state).toPersistentMap()
-                        )
+        is IncrementalMap.Update -> {
+            state[it.key] = @Suppress("UNCHECKED_CAST") (it.after[it.key] as R)
+            if (!otherWinsConflict || !otherState.contains(it.key)) {
+                send(
+                    IncrementalMap.Update(
+                        it.key, (if (otherWinsConflict) state + otherState else
+                            otherState + state).toPersistentMap()
                     )
-                }
+                )
             }
         }
     }
@@ -521,27 +559,31 @@ fun <T, R> Flow<IncrementalMap<T, R>>.mergeWithIncremental(
         var state2: HashMap<T, R>? = null
         val job1 = launch {
             this@mergeWithIncremental.collect {
-                if (state1 == null) {
-                    state1 = HashMap()
-                    if (state2 != null) {
-                        val cmd = IncrementalMap.Begin(it.after)
-                        mergeCollector(lock, state1, state2!!, otherWinsConflict, cmd)
+                lock.withLock {
+                    if (state1 == null) {
+                        state1 = HashMap()
+                        if (state2 != null) {
+                            val cmd = IncrementalMap.Begin(it.after)
+                            mergeCollector(state1, state2!!, otherWinsConflict, cmd)
+                        }
+                    } else if (state2 != null) {
+                        mergeCollector(state1, state2!!, otherWinsConflict, it)
                     }
-                } else if (state2 != null) {
-                    mergeCollector(lock, state1, state2!!, otherWinsConflict, it)
                 }
             }
         }
         val job2 = launch {
             other.collect {
-                if (state2 == null) {
-                    state2 = HashMap()
-                    if (state1 != null) {
-                        val cmd = IncrementalMap.Begin(it.after)
-                        mergeCollector(lock, state2, state1, !otherWinsConflict, cmd)
+                lock.withLock {
+                    if (state2 == null) {
+                        state2 = HashMap()
+                        if (state1 != null) {
+                            val cmd = IncrementalMap.Begin(it.after)
+                            mergeCollector(state2, state1, !otherWinsConflict, cmd)
+                        }
+                    } else if (state1 != null) {
+                        mergeCollector(state2, state1, !otherWinsConflict, it)
                     }
-                } else if (state1 != null) {
-                    mergeCollector(lock, state2, state1, !otherWinsConflict, it)
                 }
             }
         }
@@ -549,6 +591,141 @@ fun <T, R> Flow<IncrementalMap<T, R>>.mergeWithIncremental(
         job2.join()
     }
 }.drop(1) // drop the first Begin and wait for the second
+
+@Suppress("NOTHING_TO_INLINE")
+private inline fun <T> concatCollector(
+    command: IncrementalList<T>, prefix: List<T>, suffix: List<T>
+): IncrementalList<T> {
+    val new = (prefix + command.after + suffix).toPersistentList()
+    return when (command) {
+        is IncrementalList.Begin<T> -> IncrementalList.Begin(new)
+        is IncrementalList.Insert<T> -> IncrementalList.Insert(
+            prefix.size + command.pos + suffix.size, command.count, new
+        )
+        is IncrementalList.Move<T> -> IncrementalList.Move(
+            prefix.size + command.pos + suffix.size, command.count,
+            prefix.size + command.outPos + suffix.size, new
+        )
+        is IncrementalList.Update<T> -> IncrementalList.Update(
+            prefix.size + command.pos + suffix.size, command.count, new
+        )
+        is IncrementalList.Remove<T> -> IncrementalList.Remove(
+            prefix.size + command.pos + suffix.size, command.count, new
+        )
+    }
+}
+
+fun <T> Flow<IncrementalList<T>>.concatIncremental(
+    other: Flow<IncrementalList<T>>
+): Flow<IncrementalList<T>> = channelFlow {
+    coroutineScope {
+        val lock = Mutex()
+        var state1: PersistentList<T>? = null
+        var state2: PersistentList<T>? = null
+        val job1 = launch {
+            this@concatIncremental.collect {
+                lock.withLock {
+                    state1 = it.after
+                    if (state2 != null) {
+                        send(concatCollector(it, emptyList(), state2!!))
+                    }
+                }
+            }
+        }
+        val job2 = launch {
+            other.collect {
+                lock.withLock {
+                    state2 = it.after
+                    if (state1 != null) {
+                        send(concatCollector(it, state1, emptyList()))
+                    }
+                }
+            }
+        }
+        job1.join()
+        job2.join()
+    }
+}
+
+fun <T> Flow<IncrementalList<IncrementalList<T>>>.flattenConcatIncremental(): Flow<IncrementalList<T>> = flow {
+    var last: PersistentList<PersistentList<T>>? = null
+    collect { command ->
+        var new: List<PersistentList<T>>
+        when {
+            command is IncrementalList.Begin || last == null -> {
+                new = command.after.map { it.after }.toPersistentList()
+                emit(IncrementalList.Begin(new.flatten().toPersistentList()))
+            }
+
+            command is IncrementalList.Insert -> {
+                new = last!!.builder()
+                var addedSize = 0
+                for (i in command.pos..<command.pos + command.count) {
+                    val added = command.after[i]
+                    new.add(i, added.after)
+                    addedSize += added.after.size
+                }
+                new = new.toPersistentList()
+                if (addedSize > 0) {
+                    emit(IncrementalList.Insert(new.subList(0, command.pos)
+                        .sumOf { it.size }, addedSize,
+                        new.flatten().toPersistentList()))
+                }
+            }
+
+            command is IncrementalList.Move -> {
+                new = last!!.builder()
+                var movedSize = 0
+                repeat(command.count) { _ ->
+                    movedSize += new.removeAt(command.pos).size
+                }
+                val outPosFlattened = new.subList(0, command.outPos).sumOf { it.size }
+                for (i in command.outPos..<command.outPos + command.count) {
+                    new.add(i, last!![i - command.outPos + command.pos])
+                }
+                new = new.toPersistentList()
+                if (movedSize > 0) {
+                    emit(IncrementalList.Move(last!!.subList(0, command.pos)
+                        .sumOf { it.size }, movedSize, outPosFlattened,
+                        new.flatten().toPersistentList()))
+                }
+            }
+
+            command is IncrementalList.Remove -> {
+                new = last!!.builder()
+                var removedSize = 0
+                repeat(command.count) { _ ->
+                    removedSize += new.removeAt(command.pos).size
+                }
+                new = new.toPersistentList()
+                if (removedSize > 0) {
+                    emit(IncrementalList.Remove(new.subList(0, command.pos)
+                        .sumOf { it.size }, removedSize,
+                        new.flatten().toPersistentList()))
+                }
+            }
+
+            command is IncrementalList.Update -> {
+                new = last!!.builder()
+                for (i in command.pos..<command.pos + command.count) {
+                    val updated = command.after[i]
+                    new[i] = updated.after
+                    emit(concatCollector(updated, new.subList(0, i)
+                        .flatten(), if (i + 1 < new.size) new.subList(i + 1, new.size)
+                            .flatten() else emptyList()))
+                }
+                new = new.toPersistentList()
+            }
+
+            else -> throw IllegalArgumentException("code bug, IncrementalCommand case exhausted")
+        }
+        last = new
+    }
+}
+
+inline fun <T> Flow<IncrementalSet<T>>.filterIncremental(
+    crossinline predicate: (T) -> Boolean
+): Flow<IncrementalSet<T>> = filterIncremental { it, _ -> predicate(it) }
 
 inline fun <T, R> Flow<IncrementalMap<T, R>>.filterIncremental(
     crossinline predicate: (T, R) -> Boolean
@@ -632,6 +809,14 @@ inline fun <T, R> Flow<IncrementalMap<T, R>>.filterIncremental(
 @Suppress("UNCHECKED_CAST")
 fun <T : Any, R> Flow<IncrementalMap<T?, R>>.filterKeyNotNullIncremental(): Flow<IncrementalMap<T, R>> =
     filterIncremental { t, _ -> t != null } as Flow<IncrementalMap<T, R>>
+
+@Suppress("UNCHECKED_CAST")
+fun <T, R : Any> Flow<IncrementalMap<T, R?>>.filterValueNotNullIncremental(): Flow<IncrementalMap<T, R>> =
+    filterIncremental { _, t -> t != null } as Flow<IncrementalMap<T, R>>
+
+inline fun <T, R> Flow<IncrementalSet<T>>.mapNonCachedIncremental(
+    crossinline fastPredicate: (T) -> R
+): Flow<IncrementalMap<T, R>> = mapNonCachedIncremental { it, _ -> fastPredicate(it) }
 
 inline fun <T, R, S> Flow<IncrementalMap<T, R>>.mapNonCachedIncremental(
     crossinline fastPredicate: (T, R) -> S
@@ -731,6 +916,28 @@ fun <T, R> Flow<IncrementalMap<T, R>>.keySetAsSortedIncrementalList(
     }
 }
 
+@Suppress("NOTHING_TO_INLINE")
+inline fun <T, R> Flow<IncrementalMap<T, R>>.isEmptyIncremental(): Flow<Boolean> =
+    map { it.after.isEmpty() }.distinctUntilChanged()
+
+@Suppress("NOTHING_TO_INLINE")
+inline fun <T> Flow<IncrementalList<T>>.isEmptyIncremental(): Flow<Boolean> =
+    map { it.after.isEmpty() }.distinctUntilChanged()
+
+@Suppress("NOTHING_TO_INLINE")
+inline fun <T, R> Flow<IncrementalMap<T, R>>.withoutValuesIncremental(): Flow<IncrementalSet<T>> = flow {
+    collect {
+        when {
+            it is IncrementalMap.Update -> {}
+            else -> emit(it.mapNonCached { _, _ -> Unit })
+        }
+    }
+}
+
+inline fun <T, R> Flow<IncrementalSet<T>>.mapIncremental(
+    crossinline predicate: (T) -> R
+): Flow<IncrementalMap<T, R>> = mapIncremental { it, _ -> predicate(it) }
+
 inline fun <T, R, S> Flow<IncrementalMap<T, R>>.mapIncremental(
     crossinline predicate: (T, R) -> S
 ): Flow<IncrementalMap<T, S>> = flow {
@@ -788,14 +995,28 @@ inline fun <T, R, S> Flow<IncrementalMap<T, R>>.mapIncremental(
     }
 }
 
+inline fun <T, R, S> Flow<IncrementalMap<T, R>>.flatMapLatestWithInputAsFlowIncremental(
+    crossinline operator: (T, Flow<R>) -> Flow<S>
+): Flow<IncrementalMap<T, S>> =
+    withoutValuesIncremental()
+        .flatMapLatestIncremental { key, _ -> operator(key, forKey(key).filterNotNull()) }
+
+inline fun <T, R> Flow<IncrementalSet<T>>.flatMapLatestIncremental(
+    crossinline predicate: (T) -> Flow<R>
+): Flow<IncrementalMap<T, R>> = flatMapLatestIncremental { it, _ -> predicate(it) }
+
 inline fun <T, R, S> Flow<IncrementalMap<T, R>>.flatMapLatestIncremental(
     crossinline predicate: (T, R) -> Flow<S>
 ): Flow<IncrementalMap<T, S>> = mapIncremental(predicate).flattenLastestIncremental()
 
+inline fun <T> Flow<IncrementalSet<T>>.filterLatestIncremental(
+    crossinline predicate: (T) -> Flow<Boolean>
+): Flow<IncrementalSet<T>> = filterLatestIncremental { it, _ -> predicate(it) }
+
 inline fun <T, R> Flow<IncrementalMap<T, R>>.filterLatestIncremental(
     crossinline predicate: (T, R) -> Flow<Boolean>
 ): Flow<IncrementalMap<T, R>> = flatMapLatestIncremental { a, b ->
-    predicate(a, b).map { b to it }
+    predicate(a, b).distinctUntilChanged().map { b to it }
 }.filterIncremental { _, b -> b.second }.mapNonCachedIncremental { _, b -> b.first }
 
 @PublishedApi
@@ -1051,7 +1272,7 @@ inline fun <T, R> Flow<IncrementalMap<T, Flow<R>>>.flattenLastestIncremental(): 
 
 @Suppress("NOTHING_TO_INLINE")
 inline fun <T, R> Flow<IncrementalMap<T, R>>.toIncrementalList(
-    noinline fastComparator: (T, T) -> Int
+    fastComparator: Comparator<T>
 ): Flow<IncrementalList<R>> = flow {
     var keys: ArrayList<T>? = null
     val values = ArrayList<R>()
@@ -1119,6 +1340,22 @@ inline fun <T, R> Flow<IncrementalMap<T, R>>.toIncrementalList(
 }
 
 @Suppress("NOTHING_TO_INLINE")
+inline fun <T, R> Flow<IncrementalMap<T, R>>.hasKey(
+    key: T
+): Flow<Boolean> = flow {
+    collect {
+        when (it) {
+            is IncrementalMap.Begin -> emit(it.after.containsKey(key))
+            is IncrementalMap.Insert -> if (it.key == key) emit(true)
+            is IncrementalMap.Move -> if (it.outKey == key) emit(true) else
+                if (it.key == key) emit(false)
+            is IncrementalMap.Remove -> if (it.key == key) emit(false)
+            is IncrementalMap.Update -> {}
+        }
+    }
+}
+
+@Suppress("NOTHING_TO_INLINE")
 inline fun <T, R> Flow<IncrementalMap<T, R>>.forKey(
     key: T
 ): Flow<R?> = flow {
@@ -1135,5 +1372,98 @@ inline fun <T, R> Flow<IncrementalMap<T, R>>.forKey(
             emit(it.after[key])
     }
 }
+
+inline fun <T> Flow<PersistentList<T>>.listFlowToIncrementalList(
+    crossinline areItemsTheSame: (T, T) -> Boolean,
+    crossinline areContentsTheSame: (T, T) -> Boolean
+): Flow<IncrementalList<T>> =
+    channelFlow {
+        var lastValue: PersistentList<T>? = null
+        collect {
+            val lastValueCache = lastValue
+            if (lastValueCache == null) {
+                send(IncrementalList.Begin(it))
+            } else {
+                val diff = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
+                    override fun getOldListSize(): Int {
+                        return lastValueCache.size
+                    }
+
+                    override fun getNewListSize(): Int {
+                        return it.size
+                    }
+
+                    override fun areItemsTheSame(
+                        oldItemPosition: Int,
+                        newItemPosition: Int
+                    ): Boolean {
+                        return areItemsTheSame(lastValueCache[oldItemPosition],
+                            it[newItemPosition])
+                    }
+
+                    override fun areContentsTheSame(
+                        oldItemPosition: Int,
+                        newItemPosition: Int
+                    ): Boolean {
+                        return areContentsTheSame(lastValueCache[oldItemPosition],
+                            it[newItemPosition])
+                    }
+                }, true)
+                val newListScratch = lastValueCache.builder()
+                diff.dispatchUpdatesTo(object : ListUpdateCallback {
+                    override fun onInserted(position: Int, count: Int) {
+                        for (i in position..<position + count) {
+                            newListScratch.add(i, it[i]) // TODO is i both old&new pos
+                        }
+                        trySend(
+                            IncrementalList.Insert(
+                                position, count, newListScratch.build()
+                                    .also { lastValue = it })
+                        )
+                    }
+
+                    override fun onRemoved(position: Int, count: Int) {
+                        repeat(count) {
+                            newListScratch.removeAt(position)
+                        }
+                        trySend(
+                            IncrementalList.Remove(
+                                position,
+                                count, newListScratch.build()
+                                    .also { lastValue = it })
+                        )
+                    }
+
+                    override fun onMoved(
+                        fromPosition: Int,
+                        toPosition: Int
+                    ) {
+                        newListScratch.add(toPosition, newListScratch.removeAt(fromPosition))
+                        trySend(
+                            IncrementalList.Move(
+                                fromPosition,
+                                1, toPosition, newListScratch.build()
+                                    .also { lastValue = it })
+                        )
+                    }
+
+                    override fun onChanged(
+                        position: Int,
+                        count: Int,
+                        payload: Any?
+                    ) {
+                        for (i in position..<position + count) {
+                            newListScratch[i] = it[i] // TODO is i both old&new pos
+                        }
+                        trySend(
+                            IncrementalList.Update(
+                                position, count, newListScratch.build()
+                                    .also { lastValue = it })
+                        )
+                    }
+                })
+            }
+        }
+    }
 
 // TODO unit tests
