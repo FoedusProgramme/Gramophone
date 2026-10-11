@@ -72,7 +72,7 @@ import org.akanework.gramophone.ui.components.home.EditableSongRow
 import org.akanework.gramophone.ui.components.home.LIBRARY_PLAYING_CORNER
 import org.akanework.gramophone.ui.components.home.LibraryFastScroller
 import org.akanework.gramophone.ui.components.home.nowPlayingRowColors
-import org.akanework.gramophone.ui.fragments.compose.MqContent
+import org.akanework.gramophone.ui.fragments.compose.MqState
 import org.akanework.gramophone.ui.fragments.compose.QueueTimer
 import org.akanework.gramophone.ui.fragments.compose.rememberMqState
 
@@ -97,18 +97,11 @@ private class QueueRow(val key: Long, val item: MediaItem)
  */
 @Composable
 fun QueueBody(
-    controller: MediaControllerViewModel,
+    mqState: MqState,
     reveal: QueueRevealState,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
-    // Not connected to the player yet: nothing to show
-    val mqState = rememberMqState(context, scope, controller, reveal::hide) ?: return
-    DisposableEffect(mqState) {
-        mqState.onShow()
-        onDispose { mqState.onHide() }
-    }
     val mqEnabled = remember { context.defaultPrefs.getBooleanStrict("mq_preview", false) }
 
     val listState = mqState.listState
@@ -155,14 +148,6 @@ fun QueueBody(
                 .widthIn(max = if (mqEnabled) 900.dp else 640.dp)
                 .fillMaxSize(),
         ) {
-            if (Flags.MQ_PREVIEW && mqEnabled) {
-                MqContent(
-                    mqState = mqState,
-                    mqEnabled = mqEnabled,
-                    landscape = false,
-                    onDismiss = reveal::hide,
-                )
-            }
             QueueTimeLeft(
                 mqState.timer,
                 ticking = reveal.shown,

@@ -65,6 +65,7 @@ import org.akanework.gramophone.logic.playOrPause
 import org.akanework.gramophone.logic.setTimer
 import org.akanework.gramophone.ui.MediaControllerViewModel
 import org.akanework.gramophone.ui.components.lyrics.LyricsOverlayState
+import org.akanework.gramophone.ui.fragments.compose.rememberMqState
 import org.akanework.gramophone.ui.nav.AlbumKey
 import org.akanework.gramophone.ui.nav.ArtistKey
 import org.akanework.gramophone.ui.nav.NavViewModel
@@ -383,8 +384,10 @@ fun PlayerSheetHost(controller: PlayerSheetController, modifier: Modifier = Modi
             if (!it) controller.queueReveal.hide()
         }
     }
+
     PlayerSheet(
         state = controller.sheetState,
+        mediaController = controller.mediaController,
         player = controller.playerState,
         insets = insets,
         pageTinted = controller.pageTinted,
@@ -393,15 +396,7 @@ fun PlayerSheetHost(controller: PlayerSheetController, modifier: Modifier = Modi
         actions = controller.actions,
         dialogCallbacks = controller.dialogCallbacks,
         modifier = modifier,
-    ) { queueModifier ->
-        // The queue shows the MediaController, which the activity releases when it stops. It
-        // isn't started over for the next one: it carries on with it, scrolled where it was.
-        QueueBody(
-            controller.mediaController,
-            reveal = controller.queueReveal,
-            modifier = queueModifier,
-        )
-    }
+    )
 }
 
 /** What a back gesture puts away, see [PlayerSheetBackHandler]. */

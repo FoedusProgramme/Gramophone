@@ -576,7 +576,7 @@ operator fun PaddingValues.plus(other: PaddingValues): PaddingValues = PaddingVa
  * If no title is given, no changes are made..
  */
 fun queueWithTitle(mediaItems: List<MediaItem>, mqTitle: String?): List<MediaItem> {
-    if (!Flags.MQ_PREVIEW || mediaItems.isEmpty() || mqTitle == null) return mediaItems
+    if (mediaItems.isEmpty() || mqTitle == null) return mediaItems
     val firstMediaItem = mediaItems.first()
 //    if (firstMediaItem.mediaId.startsWith("mq_title")) {
 //        Log.d("queueWithTitle", "we have a title already, id: ${firstMediaItem.mediaId}")

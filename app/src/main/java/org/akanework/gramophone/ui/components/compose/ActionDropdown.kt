@@ -55,8 +55,6 @@ fun ActionDropdown(
                 imageVector = Icons.Outlined.MoreVert,
                 contentDescription = null,
                 tint = LocalContentColor.current.copy(if (enabled) 1f else 0.5f),
-                modifier = modifier
-                    .padding(4.dp),
             )
         } else {
             extraContent()

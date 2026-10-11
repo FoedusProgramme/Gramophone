@@ -44,6 +44,7 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.Stable
@@ -65,6 +66,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layout
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalView
@@ -90,6 +92,7 @@ import kotlinx.coroutines.launch
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.showsPause
 import org.akanework.gramophone.logic.utils.AudioFormatDetector
+import org.akanework.gramophone.ui.MediaControllerViewModel
 import org.akanework.gramophone.ui.components.compose.rememberBooleanPreference
 import org.akanework.gramophone.ui.components.compose.rememberIntPreference
 import org.akanework.gramophone.ui.components.home.rememberDefaultCoverPainter
@@ -106,6 +109,8 @@ import org.akanework.gramophone.ui.components.player.PlayerUtilities.TAP_EXPAND_
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.WIDE_LANDSCAPE_MIN_WIDTH
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.absolute
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.miniContentAlpha
+import org.akanework.gramophone.ui.fragments.compose.MqState
+import org.akanework.gramophone.ui.fragments.compose.rememberMqState
 import org.akanework.gramophone.ui.nav.NAV_TRANSITION_MS
 import org.akanework.gramophone.ui.nav.NavAxisEasing
 import org.akanework.gramophone.ui.theme.harmonizeBy
@@ -182,6 +187,7 @@ class FullPlayerActions(
 @Composable
 fun PlayerSheet(
     state: NowPlayingSheetState,
+    mediaController: MediaControllerViewModel,
     player: PlayerSheetPlayerState,
     insets: SheetInsets,
     /** Whether the current page is themed from a cover, where the bar isn't harmonized. */
@@ -191,7 +197,6 @@ fun PlayerSheet(
     actions: FullPlayerActions,
     dialogCallbacks: PlayerDialogCallbacks,
     modifier: Modifier = Modifier,
-    queueContent: @Composable (Modifier) -> Unit,
 ) {
     val density = LocalDensity.current
     val cookieCover = rememberBooleanPreference("cookie_cover", false).value
@@ -308,8 +313,9 @@ fun PlayerSheet(
                 fadesOverQueue = !geometry.isWideLandscape,
                 onClick = actions.openSongDetails,
             )
+
             QueueSheet(
-                state, frame, geometry, player, actions, coverScheme, lyrics, queue, queueContent,
+                state, mediaController, frame, geometry, player, actions, coverScheme, lyrics, queue,
             )
         }
     }

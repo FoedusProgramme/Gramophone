@@ -79,6 +79,7 @@ fun TileButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     shape: Shape = CircleShape,
+    enabled: Boolean = true,
     container: ColorProducer? = null,
     indication: Indication? = ripple(),
     onLongClick: (() -> Unit)? = null,
@@ -92,6 +93,7 @@ fun TileButton(
             .combinedClickable(
                 interactionSource = null,
                 indication = indication,
+                enabled = enabled,
                 role = Role.Button,
                 onLongClick = onLongClick,
                 onClick = onClick,
@@ -109,12 +111,13 @@ fun IconTileButton(
     tint: ColorProducer,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     iconSize: Dp = AppButtonDefaults.IconSize,
     shape: Shape = CircleShape,
     container: ColorProducer? = null,
     indication: Indication? = ripple(),
     onLongClick: (() -> Unit)? = null,
-) = TileButton(onClick, modifier, shape, container, indication, onLongClick) {
+) = TileButton(onClick, modifier, shape, enabled, container, indication, onLongClick) {
     TintedIcon(icon, tint, Modifier.size(iconSize), contentDescription)
 }
 

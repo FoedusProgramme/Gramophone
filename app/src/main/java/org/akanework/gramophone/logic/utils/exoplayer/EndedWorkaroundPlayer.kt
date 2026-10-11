@@ -333,7 +333,7 @@ class EndedWorkaroundPlayer(
         if (nextTitle == currentTitle && (currentIsOriginal && nextIsOriginal)) return // active queue update, not for queueboard
         if (currentQueueId == null && !exoPlayer.currentTimeline.isEmpty)
             throw IllegalStateException("have media items but current title is null, logic bug")
-        else if (currentQueueId != null && Flags.MQ_PREVIEW) {
+        else if (currentQueueId != null) {
             queueBoard.addQueue(
                 currentQueueId!!,
                 currentTitle!!,

@@ -89,7 +89,7 @@ fun ExperimentalSettingsScreen(onBack: () -> Unit, modifier: Modifier = Modifier
                 onValueChange = { offload.set(it) },
             )
         }
-        if (Flags.MQ_PREVIEW) add { shape ->
+        add { shape ->
             SwitchPreferenceRow(
                 shape,
                 title = stringResource(R.string.settings_mq_enabled),
