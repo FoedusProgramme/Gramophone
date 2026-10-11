@@ -108,7 +108,7 @@ private fun queueAlpha(progress: Float) =
 private const val HANDLE_ALPHA = 0.4f
 
 @Composable
-internal fun QueueDrawer(
+internal fun QueueSheet(
     state: NowPlayingSheetState,
     /** The sheet at the current progress, read in the layout and draw phases. */
     frame: () -> SheetFrame,

@@ -85,7 +85,6 @@ import androidx.media3.common.Player
 import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
-import coil3.request.error
 import coil3.size.Precision
 import kotlinx.coroutines.launch
 import org.akanework.gramophone.R
@@ -309,7 +308,7 @@ fun PlayerSheet(
                 fadesOverQueue = !geometry.isWideLandscape,
                 onClick = actions.openSongDetails,
             )
-            QueueDrawer(
+            QueueSheet(
                 state, frame, geometry, player, actions, coverScheme, lyrics, queue, queueContent,
             )
         }

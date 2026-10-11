@@ -396,7 +396,7 @@ fun PlayerSheetHost(controller: PlayerSheetController, modifier: Modifier = Modi
     ) { queueModifier ->
         // The queue shows the MediaController, which the activity releases when it stops. It
         // isn't started over for the next one: it carries on with it, scrolled where it was.
-        QueuePanel(
+        QueueBody(
             controller.mediaController,
             reveal = controller.queueReveal,
             modifier = queueModifier,

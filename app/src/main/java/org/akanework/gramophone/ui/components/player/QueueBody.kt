@@ -73,7 +73,6 @@ import org.akanework.gramophone.ui.components.home.LIBRARY_PLAYING_CORNER
 import org.akanework.gramophone.ui.components.home.LibraryFastScroller
 import org.akanework.gramophone.ui.components.home.nowPlayingRowColors
 import org.akanework.gramophone.ui.fragments.compose.MqContent
-import org.akanework.gramophone.ui.fragments.compose.MqState
 import org.akanework.gramophone.ui.fragments.compose.QueueTimer
 import org.akanework.gramophone.ui.fragments.compose.rememberMqState
 
@@ -97,7 +96,7 @@ private class QueueRow(val key: Long, val item: MediaItem)
  * connecting as it starts again.
  */
 @Composable
-fun QueuePanel(
+fun QueueBody(
     controller: MediaControllerViewModel,
     reveal: QueueRevealState,
     modifier: Modifier = Modifier,
