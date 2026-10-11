@@ -98,12 +98,14 @@ import org.akanework.gramophone.ui.components.player.PlayerUtilities.QUEUE_HANDL
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.QUEUE_HANDLE_WIDTH
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.QUEUE_PREVIEW_BOTTOM_PADDING
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.QUEUE_PREVIEW_PROGRESS_HEIGHT
+import org.akanework.gramophone.ui.components.player.PlayerUtilities.absolute
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.absoluteUnbounded
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.expandedContentAlpha
 import org.akanework.gramophone.ui.fragments.compose.MqList
 import org.akanework.gramophone.ui.fragments.compose.MqState
 import org.akanework.gramophone.ui.fragments.compose.QueueInfo
 import org.akanework.gramophone.ui.fragments.compose.rememberMqState
+import kotlin.math.pow
 
 /*
  * The queue, its handle over its songs, under the full player's bottom row and below the screen.
@@ -201,7 +203,11 @@ internal fun QueueSheet(
                     .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
                     .drawBehind {
                         val down = scheme.color { surfaceContainerLow }
-                        drawRect(lerp(down, scheme.color { surfaceContainer }, queue.progress))
+                        val alpha = (queue.progress.toDouble().pow((1f/3f).toDouble()) * 1.5).toFloat()
+                            .coerceAtMost(1f)
+                        drawRect(lerp(down, scheme.color { surfaceContainer }, queue.progress),
+                            alpha = alpha
+                        )
                     },
             ) {
                 QueueHandle(
@@ -248,7 +254,6 @@ internal fun QueueSheet(
             if (queue.shown && !geometry.isWideLandscape) {
                 QueueHeader(
                     player, mqState, actions, scheme, queue, drag, geometry, sides,
-//                    Modifier.absolute { geometry.queuePreviewBounds },
                 )
             }
         }

@@ -101,7 +101,7 @@ object PlayerUtilities {
     val QUEUE_HANDLE_TOP_PADDING = 8.dp
     val QUEUE_HANDLE_BOTTOM_PADDING = 20.dp
     /** The song playing at the top over the queue: a row like the songs', over its progress. */
-    val QUEUE_PREVIEW_ROW_HEIGHT = EDITABLE_ROW_HEIGHT
+    val QUEUE_PREVIEW_ROW_HEIGHT = 128.dp
     val QUEUE_PREVIEW_PROGRESS_HEIGHT = 4.dp
     val QUEUE_PREVIEW_BOTTOM_PADDING = 12.dp
     val QUEUE_PREVIEW_HEIGHT =
