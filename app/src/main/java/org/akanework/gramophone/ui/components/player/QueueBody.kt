@@ -24,7 +24,6 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -44,13 +43,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -65,11 +62,9 @@ import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 import kotlinx.coroutines.delay
 import org.akanework.gramophone.R
-import org.akanework.gramophone.logic.defaultPrefs
-import org.akanework.gramophone.logic.getBooleanStrict
-import org.akanework.gramophone.logic.utils.Flags
+import org.akanework.gramophone.logic.isTablet
+import org.akanework.gramophone.logic.supportsWideScreen
 import org.akanework.gramophone.logic.utils.convertDurationToTimeStamp
-import org.akanework.gramophone.ui.MediaControllerViewModel
 import org.akanework.gramophone.ui.components.compose.DismissibleRow
 import org.akanework.gramophone.ui.components.home.EDITABLE_ROW_HEIGHT
 import org.akanework.gramophone.ui.components.home.EditableSongRow
@@ -79,7 +74,6 @@ import org.akanework.gramophone.ui.components.home.nowPlayingRowColors
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.WIDE_LANDSCAPE_MIN_WIDTH
 import org.akanework.gramophone.ui.fragments.compose.MqState
 import org.akanework.gramophone.ui.fragments.compose.QueueTimer
-import org.akanework.gramophone.ui.fragments.compose.rememberMqState
 
 /*
  * The queue, under the full player: the queue head (the multi-queue preview and the time left)
@@ -104,9 +98,12 @@ private class QueueRow(val key: Long, val item: MediaItem)
 fun QueueBody(
     mqState: MqState,
     reveal: QueueRevealState,
+    geometry: SheetGeometry,
     modifier: Modifier = Modifier,
-    queueHeader: @Composable BoxScope.(Boolean) -> Unit,
+    queueHeader: @Composable (Boolean) -> Unit,
 ) {
+    val context = LocalContext.current
+
     val listState = mqState.listState
     val navigationBar = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
     // Scrolls as a dragged row nears the top of the list, or the navigation bar at its end
@@ -144,16 +141,16 @@ fun QueueBody(
     val nowPlayingColors = nowPlayingColors(
         rememberArtworkColorScheme(currentArtwork), MaterialTheme.colorScheme.primary,
     )
+    val isDualPaneMq = geometry.isDualPaneMq
 
-    BoxWithConstraints(modifier, contentAlignment = Alignment.TopCenter) {
-        val isWideLandscape = maxWidth >= WIDE_LANDSCAPE_MIN_WIDTH.dp && maxWidth > maxHeight
+    Box(modifier, contentAlignment = Alignment.TopCenter) {
         Row() {
-            if (isWideLandscape) {
+            if (isDualPaneMq) {
                 Box(Modifier
                     .weight(0.45f, false)
                     .widthIn(max = 400.dp)
                 ) {
-                    queueHeader(isWideLandscape)
+                    queueHeader(isDualPaneMq)
                 }
             }
 
@@ -161,6 +158,9 @@ fun QueueBody(
                 Modifier
                     .weight(0.55f),
             ) {
+                if (context.isTablet()) {
+                    queueHeader(isDualPaneMq)
+                }
                 QueueTimeLeft(
                     mqState.timer,
                     ticking = reveal.shown,

@@ -44,7 +44,6 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.Stable
@@ -92,7 +91,9 @@ import kotlinx.coroutines.launch
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.defaultPrefs
 import org.akanework.gramophone.logic.getBooleanStrict
+import org.akanework.gramophone.logic.isTablet
 import org.akanework.gramophone.logic.showsPause
+import org.akanework.gramophone.logic.supportsWideScreen
 import org.akanework.gramophone.logic.utils.AudioFormatDetector
 import org.akanework.gramophone.ui.MediaControllerViewModel
 import org.akanework.gramophone.ui.components.compose.rememberBooleanPreference
@@ -108,11 +109,8 @@ import org.akanework.gramophone.ui.components.player.PlayerUtilities.MINI_ICON_S
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.SCRIM_MAX_ALPHA
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.SETTLED_EPS
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.TAP_EXPAND_LIMIT
-import org.akanework.gramophone.ui.components.player.PlayerUtilities.WIDE_LANDSCAPE_MIN_WIDTH
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.absolute
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.miniContentAlpha
-import org.akanework.gramophone.ui.fragments.compose.MqState
-import org.akanework.gramophone.ui.fragments.compose.rememberMqState
 import org.akanework.gramophone.ui.nav.NAV_TRANSITION_MS
 import org.akanework.gramophone.ui.nav.NavAxisEasing
 import org.akanework.gramophone.ui.theme.harmonizeBy
@@ -245,7 +243,7 @@ fun PlayerSheet(
     BoxWithConstraints(modifier.fillMaxSize()) {
         val rootW = constraints.maxWidth.toFloat()
         val rootH = constraints.maxHeight.toFloat()
-        val isWideLandscape = maxWidth >= WIDE_LANDSCAPE_MIN_WIDTH.dp && maxWidth > maxHeight
+        val isWideLandscape = context.supportsWideScreen(maxWidth) && maxWidth > maxHeight
         val pageCorner = deviceScreenCornerRadius()
         val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
         val mqEnabled = remember { context.defaultPrefs.getBooleanStrict("mq_preview", false) }
@@ -259,6 +257,7 @@ fun PlayerSheet(
                 bottomInset = insets.bottom.toFloat(),
                 leftInset = insets.left.toFloat(),
                 rightInset = insets.right.toFloat(),
+                isTablet = context.isTablet(),
                 isWideLandscape = isWideLandscape,
                 isRtl = isRtl,
                 pageCorner = pageCorner,

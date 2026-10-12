@@ -53,7 +53,6 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -79,8 +78,7 @@ import androidx.media3.common.Player
 import androidx.media3.common.Player.REPEAT_MODE_OFF
 import coil3.compose.AsyncImage
 import org.akanework.gramophone.R
-import org.akanework.gramophone.logic.defaultPrefs
-import org.akanework.gramophone.logic.getBooleanStrict
+import org.akanework.gramophone.logic.isTablet
 import org.akanework.gramophone.ui.MediaControllerViewModel
 import org.akanework.gramophone.ui.components.compose.TileButton
 import org.akanework.gramophone.ui.components.compose.TintedIcon
@@ -100,7 +98,6 @@ import org.akanework.gramophone.ui.components.player.PlayerUtilities.QUEUE_HANDL
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.QUEUE_HANDLE_WIDTH
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.QUEUE_PREVIEW_BOTTOM_PADDING
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.QUEUE_PREVIEW_PROGRESS_HEIGHT
-import org.akanework.gramophone.ui.components.player.PlayerUtilities.absolute
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.absoluteUnbounded
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.expandedContentAlpha
 import org.akanework.gramophone.ui.fragments.compose.MqList
@@ -178,7 +175,7 @@ internal fun QueueSheet(
 
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    val mqState = rememberMqState(context, scope, mediaController, geometry.isWideLandscape, queue::hide) ?: return
+    val mqState = rememberMqState(context, scope, mediaController, geometry.isDualPaneMq, queue::hide) ?: return
     DisposableEffect(mqState) {
         mqState.onShow()
         onDispose { mqState.onHide() }
@@ -229,6 +226,7 @@ internal fun QueueSheet(
                             QueueBody(
                                 mqState,
                                 reveal = queue,
+                                geometry = geometry,
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .padding(sides)
@@ -261,7 +259,7 @@ internal fun QueueSheet(
                         .graphicsLayer { alpha = rowAlpha(queue.progress) },
                 )
             }
-            if (queue.shown && !geometry.isWideLandscape) {
+            if (queue.shown && (!geometry.isWideLandscape && !context.isTablet()) ) {
                 QueueHeader(
                     player, mqState, actions, scheme, queue, drag, geometry, sides,
                 )
@@ -325,20 +323,21 @@ private fun QueueHeader(
     sides: PaddingValues,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
     val mqEnabled = geometry.mqEnabled
 
     val statusTop = with(LocalDensity.current) { geometry.statusTop.toDp() }
     val defaultCover = rememberDefaultCoverPainter(R.drawable.ic_default_cover)
 
-    val isWideLandscape = geometry.isWideLandscape
+    val isDualPaneMq = geometry.isDualPaneMq
 
     Column(
-        verticalArrangement = if (isWideLandscape) Arrangement.SpaceBetween else Arrangement.Top,
+        verticalArrangement = if (isDualPaneMq) Arrangement.SpaceBetween else Arrangement.Top,
         modifier = modifier
             // Faded in as one, the status bar's part with it
             .graphicsLayer { alpha = queue.progress }
             .drawBehind {
-                if (!isWideLandscape) {
+                if (!isDualPaneMq && !context.isTablet()) {
                     drawRect(scheme.color { surface })
                 }
             }
@@ -354,7 +353,7 @@ private fun QueueHeader(
             // In line with the songs' drag handles and remove buttons under it
             .padding(start = EDITABLE_ROW_ICON_START, end = EDITABLE_ROW_ICON_END)
             .then(
-                if (isWideLandscape) {
+                if (isDualPaneMq) {
                     Modifier.fillMaxHeight()
                 } else {
                     Modifier
@@ -364,7 +363,7 @@ private fun QueueHeader(
         BackHandler(mqState.expanded || mqState.isDetached()) {
             if (mqState.isDetached()) {
                 mqState.resetHead()
-            } else if (!isWideLandscape && mqState.expanded) {
+            } else if (!isDualPaneMq && mqState.expanded) {
                 mqState.toggleExpand()
             }
         }
@@ -376,7 +375,7 @@ private fun QueueHeader(
             QueueInfo(
                 mqState = mqState,
                 mqEnabled = mqEnabled,
-                landscape = isWideLandscape,
+                landscape = isDualPaneMq,
                 onDismiss = queue::hide,
             )
 
@@ -390,7 +389,7 @@ private fun QueueHeader(
                     mqState = mqState,
                     lazyQueuesListState = lazyQueuesListState,
                     modifier = Modifier
-                        .heightIn(Dp.Unspecified, if (!isWideLandscape) 300.dp else Dp.Unspecified)
+                        .heightIn(Dp.Unspecified, if (!isDualPaneMq) 300.dp else Dp.Unspecified)
                 )
             }
         }

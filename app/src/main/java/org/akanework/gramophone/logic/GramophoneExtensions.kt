@@ -46,7 +46,9 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.os.BundleCompat
 import androidx.media3.common.C
@@ -84,6 +86,7 @@ import org.akanework.gramophone.logic.utils.Flags
 import org.akanework.gramophone.logic.utils.MediaItemList
 import org.akanework.gramophone.logic.utils.ReplayGainUtil
 import org.akanework.gramophone.logic.utils.SemanticLyrics
+import org.akanework.gramophone.ui.components.player.PlayerUtilities.WIDE_LANDSCAPE_MIN_WIDTH
 import org.jetbrains.annotations.Contract
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserException
@@ -417,10 +420,34 @@ fun ComponentActivity.enableEdgeToEdgeProperly(dark: Boolean) {
     }
 }
 
-fun Context.supportsWideScreen() : Boolean {
+/**
+ * If the current screen size can support wide ui features
+ */
+fun Context.supportsWideScreen(maxWidth: Dp?) : Boolean {
     val config = resources.configuration
-    return config.screenWidthDp >= 780
+    return (maxWidth ?: config.screenWidthDp.dp) >= WIDE_LANDSCAPE_MIN_WIDTH.dp
 }
+
+/**
+ * If the device has a tablet class display size
+ */
+fun Context.isTablet() : Boolean {
+    val config = resources.configuration
+    return config.smallestScreenWidthDp >= 600
+}
+
+// TODO: tablet ui
+/*
+/**
+ * If screen is large enough to support tablet UI mode.
+ * Current screen must be at least 600dp.
+ */
+fun Context.tabMode(): Boolean {
+    val config = resources.configuration
+    val isTablet = config.smallestScreenWidthDp >= 600
+    return config.screenWidthDp >= 600
+}
+ */
 
 /** The app's default SharedPreferences: `<package>_preferences`, PreferenceManager's default file. */
 val Context.defaultPrefs: SharedPreferences
