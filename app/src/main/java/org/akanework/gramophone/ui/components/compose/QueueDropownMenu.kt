@@ -21,6 +21,8 @@ import kotlinx.coroutines.flow.debounce
 import org.akanework.gramophone.BuildConfig
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.MultiQueueObject
+import org.akanework.gramophone.ui.actions.PlaylistDialogs
+import org.akanework.gramophone.ui.actions.rememberAppActionEnv
 import org.akanework.gramophone.ui.fragments.compose.MqState
 
 
@@ -93,6 +95,7 @@ fun QueueDropdownMenu(
             }
         )
     }
+    val env = rememberAppActionEnv()
 
     ActionDropdown(
         enabled = enabled,
@@ -111,18 +114,20 @@ fun QueueDropdownMenu(
                     mqState.playNext(if (mq == mqState.activeQueue?.second) -1 else id)
                 },
             ),
-//            DropdownItem(
-//                title = stringResource(R.string.add_to_playlist),
-//                leadingIcon = null,
-//                action = {
-//                    mqState.addToPlaylist(index)
-//                },
-//            ),
             DropdownItem(
                 title = stringResource(R.string.add_to_queue),
                 leadingIcon = null,
                 action = {
-                    mqState.addToQueue(id)
+                    mqState.addToQueue(if (mq == mqState.activeQueue?.second) -1 else id)
+                },
+            ),
+            DropdownItem(
+                title = stringResource(R.string.add_to_playlist),
+                leadingIcon = null,
+                action = {
+                    mqState.addToPlaylist(if (mq == mqState.activeQueue?.second) -1 else id)?.let { items ->
+                        PlaylistDialogs.addToPlaylist(env, items)
+                    }
                 },
             ),
             DropdownItem(

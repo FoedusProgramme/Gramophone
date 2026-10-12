@@ -70,16 +70,19 @@ object PlaylistDialogs {
         }
     }
 
+
+    fun addToPlaylist(env: AppActionEnv, item: MediaItem) = addToPlaylist(env, listOf(item))
+
     /**
      * Asks which playlist [item] goes to, or a name for a new one. Shows a progress dialog if the
      * playlists take more than 300 ms to load.
      */
-    fun addToPlaylist(env: AppActionEnv, item: MediaItem) {
-        val song = Entry.ofMediaItem(item)
-        if (song == null) {
+    fun addToPlaylist(env: AppActionEnv, items: List<MediaItem>) {
+        val songs = items.mapNotNull { Entry.ofMediaItem(it) }
+        if (songs.isEmpty()) {
             Toast.makeText(
                 env.context,
-                env.getString(R.string.edit_playlist_failed, "song == null"),
+                env.getString(R.string.edit_playlist_failed, "song(s) is empty"),
                 Toast.LENGTH_LONG
             ).show()
             return
@@ -122,11 +125,11 @@ object PlaylistDialogs {
                     if (playlists.size == chosen) {
                         playlistNameDialog(env, R.string.create_playlist, "",
                             { ItemManipulator.getDefaultPlaylistFile(it) }) { file ->
-                            env.writes.addToNewPlaylist(file, listOf(song))
+                            env.writes.addToNewPlaylist(file, songs)
                         }
                         return@Choice
                     }
-                    env.writes.addToPlaylist(playlists[chosen].id!!, listOf(song))
+                    env.writes.addToPlaylist(playlists[chosen].id!!, songs)
                 })
             }
         }
