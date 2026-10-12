@@ -325,8 +325,7 @@ private fun QueueHeader(
     sides: PaddingValues,
     modifier: Modifier = Modifier,
 ) {
-    val context = LocalContext.current
-    val mqEnabled = remember { context.defaultPrefs.getBooleanStrict("mq_preview", false) }
+    val mqEnabled = geometry.mqEnabled
 
     val statusTop = with(LocalDensity.current) { geometry.statusTop.toDp() }
     val defaultCover = rememberDefaultCoverPainter(R.drawable.ic_default_cover)

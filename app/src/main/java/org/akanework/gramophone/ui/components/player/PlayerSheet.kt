@@ -90,6 +90,8 @@ import coil3.request.ImageRequest
 import coil3.size.Precision
 import kotlinx.coroutines.launch
 import org.akanework.gramophone.R
+import org.akanework.gramophone.logic.defaultPrefs
+import org.akanework.gramophone.logic.getBooleanStrict
 import org.akanework.gramophone.logic.showsPause
 import org.akanework.gramophone.logic.utils.AudioFormatDetector
 import org.akanework.gramophone.ui.MediaControllerViewModel
@@ -198,6 +200,7 @@ fun PlayerSheet(
     dialogCallbacks: PlayerDialogCallbacks,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
     val density = LocalDensity.current
     val cookieCover = rememberBooleanPreference("cookie_cover", false).value
     val expandedArtCorner = rememberIntPreference(
@@ -245,8 +248,9 @@ fun PlayerSheet(
         val isWideLandscape = maxWidth >= WIDE_LANDSCAPE_MIN_WIDTH.dp && maxWidth > maxHeight
         val pageCorner = deviceScreenCornerRadius()
         val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
+        val mqEnabled = remember { context.defaultPrefs.getBooleanStrict("mq_preview", false) }
         val geometry = remember(
-            rootW, rootH, insets, isWideLandscape, isRtl, pageCorner, density, expandedArtCorner,
+            rootW, rootH, insets, isWideLandscape, isRtl, pageCorner, density, expandedArtCorner, mqEnabled,
         ) {
             SheetGeometry(
                 rootWidth = rootW,
@@ -260,6 +264,7 @@ fun PlayerSheet(
                 pageCorner = pageCorner,
                 expandedArtCorner = expandedArtCorner,
                 density = density,
+                mqEnabled = mqEnabled
             )
         }
         // The sheet at the current progress. Only read in the layout and draw phases, so a moving
