@@ -60,6 +60,14 @@ class LegacyLyricsAdapter(
     private val sizeFactor = 1f
     private val defaultSizeFactor = .97f
 
+    var isCompactMode: Boolean = false
+        set(value) {
+            if (field != value) {
+                field = value
+                notifyDataSetChanged()
+            }
+        }
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -102,10 +110,12 @@ class LegacyLyricsAdapter(
             gravity = if (isLyricCentered) Gravity.CENTER else Gravity.START
             translationY = 0f
 
-            val textSize = if (lyric.isTranslation) 20f else 34.25f
-            val paddingTop = if (lyric.isTranslation) 2 else 18
+            val textSizeScale = if (isCompactMode) CompactLyricMetrics.TEXT_SIZE_SCALE else 1f
+            val spacingScale = if (isCompactMode) CompactLyricMetrics.VERTICAL_SPACING_SCALE else 1f
+            val textSize = (if (lyric.isTranslation) 20f else 34.25f) * textSizeScale
+            val paddingTop = ((if (lyric.isTranslation) 2 else 18) * spacingScale).toInt()
             val paddingBottom =
-                if (position + 1 < lyricList.size && lyricList[position + 1].isTranslation) 2 else 18
+                ((if (position + 1 < lyricList.size && lyricList[position + 1].isTranslation) 2 else 18) * spacingScale).toInt()
 
             if (isBoldEnabled) {
                 this.typeface = TypefaceCompat.create(context, null, 700, false)
