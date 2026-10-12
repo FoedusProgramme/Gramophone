@@ -462,6 +462,8 @@ fun ActionBar(
     val repeatMode by mqState.repeatMode.collectAsState()
     val shuffleModeEnabled by mqState.shuffleModeEnabled.collectAsState()
 
+    val isDetached = mqState.isDetached()
+
     BackHandler(mqState.isEditAllowed) {
         mqState.isEditAllowed = false
     }
@@ -478,11 +480,11 @@ fun ActionBar(
             modifier = Modifier
         ) {
             TileButton(
-                enabled = !mqState.isDetached(),
+                enabled = !isDetached,
                 onClick = actions.cycleRepeat,
                 modifier = Modifier.size(30.dp, PREVIEW_BUTTON_HEIGHT),
                 shape = StartShape,
-                container = scheme.colorProducer { secondaryContainer },
+                container = scheme.colorProducer { if (isDetached) this.surfaceContainerLow else secondaryContainer },
             ) {
                 TintedIcon(
                     if (repeatMode == Player.REPEAT_MODE_ONE) {
@@ -497,13 +499,13 @@ fun ActionBar(
             }
             Spacer(Modifier.width(3.dp))
             TileButton(
-                enabled = !mqState.isDetached(),
+                enabled = !isDetached,
                 onClick = {
                     actions.toggleShuffle(!shuffleModeEnabled)
                 },
                 modifier = Modifier.size(34.dp, PREVIEW_BUTTON_HEIGHT),
                 shape = EndShape,
-                container = scheme.colorProducer { secondaryContainer },
+                container = scheme.colorProducer { if (isDetached) this.surfaceContainerLow else secondaryContainer },
             ) {
                 TintedIcon(
                     Icons.Outlined.Shuffle,
@@ -531,11 +533,11 @@ fun ActionBar(
             modifier = Modifier
         ) {
             TileButton(
-                enabled = !mqState.isDetached(),
+                enabled = !isDetached,
                 onClick = actions.previous,
                 modifier = Modifier.size(30.dp, PREVIEW_BUTTON_HEIGHT),
                 shape = StartShape,
-                container = scheme.colorProducer { tertiaryContainer },
+                container = scheme.colorProducer { if (isDetached) this.surfaceContainerLow else tertiaryContainer },
             ) {
                 TintedIcon(
                     Icons.Outlined.SkipPrevious,
@@ -547,7 +549,7 @@ fun ActionBar(
             Spacer(Modifier.width(3.dp))
             TileButton(
                 onClick = {
-                    if (mqState.isDetached()) {
+                    if (isDetached) {
                         mqState.loadDetached()
                     } else {
                         actions.playPause()
@@ -558,7 +560,7 @@ fun ActionBar(
                 container = scheme.colorProducer { primaryContainer },
             ) {
                 PlayPauseIcon(
-                    playing = player.showPause,
+                    playing = !isDetached && player.showPause,
                     tint = scheme.colorProducer { onPrimaryContainer },
                     modifier = Modifier.size(PREVIEW_ICON_SIZE),
                     contentDescription = stringResource(R.string.play),
@@ -567,11 +569,11 @@ fun ActionBar(
             Spacer(Modifier.width(3.dp))
             // Rounded off at the end of the pair
             TileButton(
-                enabled = !mqState.isDetached(),
+                enabled = !isDetached,
                 onClick = actions.next,
                 modifier = Modifier.size(30.dp, PREVIEW_BUTTON_HEIGHT),
                 shape = EndShape,
-                container = scheme.colorProducer { tertiaryContainer },
+                container = scheme.colorProducer { if (isDetached) this.surfaceContainerLow else tertiaryContainer },
             ) {
                 TintedIcon(
                     Icons.Outlined.SkipNext,

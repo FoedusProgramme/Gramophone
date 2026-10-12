@@ -98,10 +98,10 @@ fun QueueDropdownMenu(
         enabled = enabled,
         actions = listOf(
             DropdownItem(
-                title = stringResource(R.string.add_to_queue),
+                title = stringResource(R.string.play),
                 leadingIcon = null,
                 action = {
-                    mqState.addToQueue(id)
+                    mqState.loadQueue(mq.id, mq.startIndex)
                 },
             ),
             DropdownItem(
@@ -118,6 +118,13 @@ fun QueueDropdownMenu(
 //                    mqState.addToPlaylist(index)
 //                },
 //            ),
+            DropdownItem(
+                title = stringResource(R.string.add_to_queue),
+                leadingIcon = null,
+                action = {
+                    mqState.addToQueue(id)
+                },
+            ),
             DropdownItem(
                 title = stringResource(R.string.rename),
                 leadingIcon = null,

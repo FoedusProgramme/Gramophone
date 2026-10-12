@@ -883,6 +883,10 @@ class MqState(
         }
     }
 
+    fun loadQueue(queueId: Long, startIndex: Int = C.INDEX_UNSET) {
+        instance.loadQueue(queueId, startIndex)
+    }
+
     fun loadDetached(startIndex: Int = C.INDEX_UNSET) {
         if (detachedQueue == null) return
         instance.loadQueue(detachedQueue!!.id, startIndex)
