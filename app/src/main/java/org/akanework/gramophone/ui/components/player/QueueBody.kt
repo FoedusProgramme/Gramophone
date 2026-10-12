@@ -19,8 +19,12 @@ package org.akanework.gramophone.ui.components.player
 import android.os.SystemClock
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -72,6 +76,7 @@ import org.akanework.gramophone.ui.components.home.EditableSongRow
 import org.akanework.gramophone.ui.components.home.LIBRARY_PLAYING_CORNER
 import org.akanework.gramophone.ui.components.home.LibraryFastScroller
 import org.akanework.gramophone.ui.components.home.nowPlayingRowColors
+import org.akanework.gramophone.ui.components.player.PlayerUtilities.WIDE_LANDSCAPE_MIN_WIDTH
 import org.akanework.gramophone.ui.fragments.compose.MqState
 import org.akanework.gramophone.ui.fragments.compose.QueueTimer
 import org.akanework.gramophone.ui.fragments.compose.rememberMqState
@@ -100,10 +105,8 @@ fun QueueBody(
     mqState: MqState,
     reveal: QueueRevealState,
     modifier: Modifier = Modifier,
+    queueHeader: @Composable BoxScope.(Boolean) -> Unit,
 ) {
-    val context = LocalContext.current
-    val mqEnabled = remember { context.defaultPrefs.getBooleanStrict("mq_preview", false) }
-
     val listState = mqState.listState
     val navigationBar = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
     // Scrolls as a dragged row nears the top of the list, or the navigation bar at its end
@@ -142,69 +145,88 @@ fun QueueBody(
         rememberArtworkColorScheme(currentArtwork), MaterialTheme.colorScheme.primary,
     )
 
-    Box(modifier, contentAlignment = Alignment.TopCenter) {
-        Column(
-            Modifier
-                .widthIn(max = if (mqEnabled) 900.dp else 640.dp)
-                .fillMaxSize(),
-        ) {
-            QueueTimeLeft(
-                mqState.timer,
-                ticking = reveal.shown,
-                Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = QUEUE_FAB_MARGIN)
-                    .padding(bottom = 8.dp),
-            )
-            Box(
-                Modifier
-                    .fillMaxWidth()
-                    .weight(1f),
-            ) {
-                LazyColumn(
-                    state = listState,
-                    modifier = Modifier.fillMaxSize(),
-                    // The last songs scroll up clear of the FABs: a small one over a regular one
-                    contentPadding = PaddingValues(
-                        bottom = navigationBar + QUEUE_FAB_MARGIN * 2 + 40.dp + QUEUE_FAB_GAP + 56.dp,
-                    ),
+    BoxWithConstraints(modifier, contentAlignment = Alignment.TopCenter) {
+        val isWideLandscape = maxWidth >= WIDE_LANDSCAPE_MIN_WIDTH.dp && maxWidth > maxHeight
+        Row() {
+            if (isWideLandscape) {
+                Box(Modifier
+                    .weight(0.45f, false)
+                    .widthIn(max = 400.dp)
                 ) {
-                    itemsIndexed(rows, key = { _, row -> row.key }) { index, row ->
-                        val item = row.item
-                        ReorderableItem(reorder, key = row.key, enabled = editable) {
-                            DismissibleRow(
-                                // By key: the row may have moved by the time it's settled off screen
-                                onDismissed = { mqState.removeEntry(row.key) },
-                                enabled = editable,
-                            ) {
-                                val duration = item.mediaMetadata.durationMs?.convertDurationToTimeStamp()
-                                val artist = item.mediaMetadata.artist?.toString() ?: unknownArtist
-                                EditableSongRow(
-                                    title = item.mediaMetadata.title?.toString().orEmpty(),
-                                    subtitle = stringResource(R.string.artist_time, duration ?: "", artist),
-                                    cover = item.mediaMetadata.artworkUri,
-                                    defaultCover = R.drawable.ic_default_cover,
-                                    onClick = { mqState.clickRow(index) },
-                                    onRemove = { mqState.removeRow(index) },
-                                    handleModifier = if (editable) Modifier.draggableHandle() else Modifier,
-                                    showControls = editable,
-                                    colors = nowPlayingRowColors(
-                                        isCurrent = index == mqState.currentMediaItemIndex,
-                                        colors = nowPlayingColors,
-                                        containerShape = RoundedCornerShape(LIBRARY_PLAYING_CORNER),
-                                    ),
-                                )
+                    queueHeader(isWideLandscape)
+                }
+            }
+
+            Column(
+                Modifier
+                    .weight(0.55f),
+            ) {
+                QueueTimeLeft(
+                    mqState.timer,
+                    ticking = reveal.shown,
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = QUEUE_FAB_MARGIN)
+                        .padding(bottom = 8.dp),
+                )
+                Box(
+                    Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
+                ) {
+                    LazyColumn(
+                        state = listState,
+                        modifier = Modifier.fillMaxSize(),
+                        // The last songs scroll up clear of the FABs: a small one over a regular one
+                        contentPadding = PaddingValues(
+                            bottom = navigationBar + QUEUE_FAB_MARGIN * 2 + 40.dp + QUEUE_FAB_GAP + 56.dp,
+                        ),
+                    ) {
+                        itemsIndexed(rows, key = { _, row -> row.key }) { index, row ->
+                            val item = row.item
+                            ReorderableItem(reorder, key = row.key, enabled = editable) {
+                                DismissibleRow(
+                                    // By key: the row may have moved by the time it's settled off screen
+                                    onDismissed = { mqState.removeEntry(row.key) },
+                                    enabled = editable,
+                                ) {
+                                    val duration =
+                                        item.mediaMetadata.durationMs?.convertDurationToTimeStamp()
+                                    val artist =
+                                        item.mediaMetadata.artist?.toString() ?: unknownArtist
+                                    EditableSongRow(
+                                        title = item.mediaMetadata.title?.toString().orEmpty(),
+                                        subtitle = stringResource(
+                                            R.string.artist_time,
+                                            duration ?: "",
+                                            artist
+                                        ),
+                                        cover = item.mediaMetadata.artworkUri,
+                                        defaultCover = R.drawable.ic_default_cover,
+                                        onClick = { mqState.clickRow(index) },
+                                        onRemove = { mqState.removeRow(index) },
+                                        handleModifier = if (editable) Modifier.draggableHandle() else Modifier,
+                                        showControls = editable,
+                                        colors = nowPlayingRowColors(
+                                            isCurrent = index == mqState.currentMediaItemIndex,
+                                            colors = nowPlayingColors,
+                                            containerShape = RoundedCornerShape(
+                                                LIBRARY_PLAYING_CORNER
+                                            ),
+                                        ),
+                                    )
+                                }
                             }
                         }
                     }
+                    LibraryFastScroller(
+                        listState = listState,
+                        itemCount = rows.size,
+                        rowHeightPx = with(LocalDensity.current) { EDITABLE_ROW_HEIGHT.roundToPx() },
+                        // Where in the queue: its order is the user's, there's nothing else to go by
+                        hintFor = { i -> (i + 1).toString() },
+                    )
                 }
-                LibraryFastScroller(
-                    listState = listState,
-                    itemCount = rows.size,
-                    rowHeightPx = with(LocalDensity.current) { EDITABLE_ROW_HEIGHT.roundToPx() },
-                    // Where in the queue: its order is the user's, there's nothing else to go by
-                    hintFor = { i -> (i + 1).toString() },
-                )
             }
         }
         QueueFabs(

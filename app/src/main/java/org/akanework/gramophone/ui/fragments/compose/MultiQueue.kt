@@ -493,6 +493,7 @@ class MqState(
     private val controller: MediaControllerViewModel,
     /** The controller connected as the queue's made, the first [instance]. */
     connection: MediaBrowser,
+    expanded: Boolean = false,
     private val onDismissRequest: () -> Unit,
 ) : LifecycleOwner {
 
@@ -588,7 +589,7 @@ class MqState(
     // Goes through the whole queue, worked out once it's loaded, see syncWithPlayer
     val durationMs = MutableStateFlow(0L)
 
-    var expanded by mutableStateOf(false)
+    var expanded by mutableStateOf(expanded)
         private set
 
     private val detachedQueueState = mutableStateOf<MultiQueueObject?>(null)
@@ -1303,12 +1304,13 @@ fun rememberMqState(
     context: Context,
     coroutineScope: CoroutineScope,
     mediaController: MediaControllerViewModel,
+    expanded: Boolean,
     onDismiss: (() -> Unit) = {}
 ): MqState? {
     val connection by mediaController.connection.collectAsState()
     val holder = remember { MqStateHolder() }
     return holder.state ?: connection?.let { instance ->
-        MqState(context, coroutineScope, mediaController, instance, onDismiss).also { holder.state = it }
+        MqState(context, coroutineScope, mediaController, instance, expanded,onDismiss).also { holder.state = it }
     } // TODO: rememberSaveable
 }
 

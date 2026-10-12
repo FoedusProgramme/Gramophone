@@ -32,6 +32,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -52,6 +53,7 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -176,7 +178,7 @@ internal fun QueueSheet(
 
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    val mqState = rememberMqState(context, scope, mediaController, queue::hide) ?: return
+    val mqState = rememberMqState(context, scope, mediaController, geometry.isWideLandscape, queue::hide) ?: return
     DisposableEffect(mqState) {
         mqState.onShow()
         onDispose { mqState.onHide() }
@@ -203,9 +205,11 @@ internal fun QueueSheet(
                     .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
                     .drawBehind {
                         val down = scheme.color { surfaceContainerLow }
-                        val alpha = (queue.progress.toDouble().pow((1f/3f).toDouble()) * 1.5).toFloat()
-                            .coerceAtMost(1f)
-                        drawRect(lerp(down, scheme.color { surfaceContainer }, queue.progress),
+                        val alpha =
+                            (queue.progress.toDouble().pow((1f / 3f).toDouble()) * 1.5).toFloat()
+                                .coerceAtMost(1f)
+                        drawRect(
+                            lerp(down, scheme.color { surfaceContainer }, queue.progress),
                             alpha = alpha
                         )
                     },
@@ -229,7 +233,13 @@ internal fun QueueSheet(
                                     .fillMaxSize()
                                     .padding(sides)
                                     .graphicsLayer { alpha = queueAlpha(queue.progress) },
-                            )
+                            ) {
+                                if (queue.shown && geometry.isWideLandscape) {
+                                    QueueHeader(
+                                        player, mqState, actions, scheme, queue, drag, geometry, sides
+                                    )
+                                }
+                            }
                         }
                     }
                 }
@@ -320,11 +330,19 @@ private fun QueueHeader(
 
     val statusTop = with(LocalDensity.current) { geometry.statusTop.toDp() }
     val defaultCover = rememberDefaultCoverPainter(R.drawable.ic_default_cover)
+
+    val isWideLandscape = geometry.isWideLandscape
+
     Column(
-        modifier
+        verticalArrangement = if (isWideLandscape) Arrangement.SpaceBetween else Arrangement.Top,
+        modifier = modifier
             // Faded in as one, the status bar's part with it
             .graphicsLayer { alpha = queue.progress }
-            .drawBehind { drawRect(scheme.color { surface }) }
+            .drawBehind {
+                if (!isWideLandscape) {
+                    drawRect(scheme.color { surface })
+                }
+            }
             .padding(top = statusTop)
             .bottomRowDrag(drag)
             .clickable(
@@ -335,87 +353,99 @@ private fun QueueHeader(
             )
             .padding(sides)
             // In line with the songs' drag handles and remove buttons under it
-            .padding(start = EDITABLE_ROW_ICON_START, end = EDITABLE_ROW_ICON_END),
-    ) {
-
-            BackHandler(mqState.expanded || mqState.isDetached()) {
-                if (mqState.isDetached()) {
-                    mqState.resetHead()
-                } else if (mqState.expanded) {
-                    mqState.toggleExpand()
-                }
-            }
-
-            val landscape = false
-            Column(
-                modifier = modifier
-                    .fillMaxWidth(),
-            ) {
-                QueueInfo(
-                    mqState = mqState,
-                    mqEnabled = mqEnabled,
-                    landscape = landscape,
-                    onDismiss = queue::hide,
-                )
-
-                val lazyQueuesListState = rememberLazyListState()
-                AnimatedVisibility(
-                    visible = mqState.expanded,
-                    enter = expandVertically(),
-                    exit = shrinkVertically()
-                ) {
-                    MqList(
-                        mqState = mqState,
-                        lazyQueuesListState = lazyQueuesListState,
-                        modifier = Modifier
-                            .heightIn(Dp.Unspecified, if (!landscape) 300.dp else Dp.Unspecified)
-                    )
-                }
-            }
-
-        Row(
-            Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            verticalAlignment = FloorCenterVertically,
-        ) {
-            ActionBar(mqState, scheme, actions, player) {
-                AsyncImage(
-                    model = player.artworkUri,
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    error = defaultCover,
-                    fallback = defaultCover,
-                    modifier = Modifier
-                        .size(50.dp)
-                        .clip(RoundedCornerShape(LIST_ROUND_CORNER_SIZE)),
-                )
-                Column(
+            .padding(start = EDITABLE_ROW_ICON_START, end = EDITABLE_ROW_ICON_END)
+            .then(
+                if (isWideLandscape) {
+                    Modifier.fillMaxHeight()
+                } else {
                     Modifier
-                        .weight(1f)
-                        .padding(horizontal = 18.dp),
-                ) {
-                    SingleLineText(
-                        player.title?.toString().orEmpty(), 17.sp, 500, scheme.color { onSurface },
-                        Modifier.fillMaxWidth(),
-                    )
-                    SingleLineText(
-                        player.artist?.toString().orEmpty(), 14.sp, 400,
-                        scheme.color { onSurfaceVariant },
-                        Modifier.fillMaxWidth(),
-                    )
-                }
+                },
+            ),
+    ) {
+        BackHandler(mqState.expanded || mqState.isDetached()) {
+            if (mqState.isDetached()) {
+                mqState.resetHead()
+            } else if (!isWideLandscape && mqState.expanded) {
+                mqState.toggleExpand()
             }
         }
-        LinearProgressIndicator(
-            progress = { player.positionFraction },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(QUEUE_PREVIEW_PROGRESS_HEIGHT),
-            color = scheme.color { primary },
-            trackColor = scheme.color { secondaryContainer },
-        )
-        Spacer(Modifier.height(QUEUE_PREVIEW_BOTTOM_PADDING))
+
+        Column(
+            modifier = modifier
+                .fillMaxWidth(),
+        ) {
+            QueueInfo(
+                mqState = mqState,
+                mqEnabled = mqEnabled,
+                landscape = isWideLandscape,
+                onDismiss = queue::hide,
+            )
+
+            val lazyQueuesListState = rememberLazyListState()
+            AnimatedVisibility(
+                visible = mqState.expanded,
+                enter = expandVertically(),
+                exit = shrinkVertically()
+            ) {
+                MqList(
+                    mqState = mqState,
+                    lazyQueuesListState = lazyQueuesListState,
+                    modifier = Modifier
+                        .heightIn(Dp.Unspecified, if (!isWideLandscape) 300.dp else Dp.Unspecified)
+                )
+            }
+        }
+
+        Column(
+
+        ) {
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                verticalAlignment = FloorCenterVertically,
+            ) {
+                ActionBar(mqState, scheme, actions, player) {
+                    AsyncImage(
+                        model = player.artworkUri,
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        error = defaultCover,
+                        fallback = defaultCover,
+                        modifier = Modifier
+                            .size(50.dp)
+                            .clip(RoundedCornerShape(LIST_ROUND_CORNER_SIZE)),
+                    )
+                    Column(
+                        Modifier
+                            .weight(1f)
+                            .padding(horizontal = 18.dp),
+                    ) {
+                        SingleLineText(
+                            player.title?.toString().orEmpty(),
+                            17.sp,
+                            500,
+                            scheme.color { onSurface },
+                            Modifier.fillMaxWidth(),
+                        )
+                        SingleLineText(
+                            player.artist?.toString().orEmpty(), 14.sp, 400,
+                            scheme.color { onSurfaceVariant },
+                            Modifier.fillMaxWidth(),
+                        )
+                    }
+                }
+            }
+            LinearProgressIndicator(
+                progress = { player.positionFraction },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(QUEUE_PREVIEW_PROGRESS_HEIGHT),
+                color = scheme.color { primary },
+                trackColor = scheme.color { secondaryContainer },
+            )
+            Spacer(Modifier.height(QUEUE_PREVIEW_BOTTOM_PADDING))
+        }
     }
 }
 
