@@ -44,7 +44,7 @@
                 android:id="@android:id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="?attr/colorOnSurface"
+                android:textColor="@color/sl_preference_title"
                 android:textSize="19sp"
                 tools:text="Title" />
 
@@ -53,7 +53,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="1dp"
-                android:textColor="?attr/colorOnSurfaceVariant"
+                android:textColor="@color/sl_preference_summary"
                 android:textSize="15sp"
                 tools:text="Summary" />
 

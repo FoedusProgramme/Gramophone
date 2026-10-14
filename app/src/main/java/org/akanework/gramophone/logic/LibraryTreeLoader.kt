@@ -133,7 +133,11 @@ class LibraryTreeLoader(
             }
             parentId.startsWith("artist_") -> {
                 val name = parentId.removePrefix("artist_")
-                Triple(app.reader.songListFlow.first().filter { it.mediaMetadata.artist?.toString() == name }, LibraryAdapterTypes.ARTIST_SONGS, false)
+                val songs = app.reader.artistListFlow.first().findArtist(name = name)?.songList
+                    ?: app.reader.songListFlow.first().filter {
+                        it.mediaMetadata.artistNames.contains(name)
+                    }
+                Triple(songs, LibraryAdapterTypes.ARTIST_SONGS, false)
             }
             parentId.startsWith("genre_") -> {
                 val id = parentId.removePrefix("genre_").toLongOrNull()
@@ -246,7 +250,7 @@ class LibraryTreeLoader(
                     }
                     mediaId.startsWith("artist_") -> {
                         val name = mediaId.removePrefix("artist_")
-                        app.reader.artistListFlow.first().find { it.title == name }?.let { mapDomainItemToMediaItem(it) }
+                        app.reader.artistListFlow.first().findArtist(name = name)?.let { mapDomainItemToMediaItem(it) }
                     }
                     mediaId.startsWith("genre_") -> {
                         val id = mediaId.removePrefix("genre_").toLongOrNull()
@@ -318,15 +322,7 @@ class LibraryTreeLoader(
         val sortedList = sortList(list, LibraryAdapterTypes.SEARCH, Sorter(SongAdapter.MediaItemHelper, null))
         // TODO support focus and sub queries (see MainActivity)
         if (text == "") return sortedList
-        return sortedList.filter {
-            // TODO sort results by match quality? (using raw=natural order)
-            // TODO this is copied directly from SearchFragment, which should probably call into
-            //  here for its search needs instead in the future
-            val isMatchingTitle = it.mediaMetadata.title?.contains(text, true) == true
-            val isMatchingAlbum = it.mediaMetadata.albumTitle?.contains(text, true) == true
-            val isMatchingArtist = it.mediaMetadata.artist?.contains(text, true) == true
-            isMatchingTitle || isMatchingAlbum || isMatchingArtist
-        }
+        return sortedList.filter { it.matchesSearch(text) }
     }
 
     fun addMediaItems(

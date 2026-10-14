@@ -327,6 +327,10 @@
             android:name=".ui.fragments.settings.OssLicensesSettingsActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".ui.fragments.settings.SplitTagSettingsActivity"
+            android:exported="false" />
+
         <!-- allow multi-resume for some Android 9 devices in multi-window -->
         <meta-data android:name="android.allow_multiple_resumed_activities" android:value="true" />
     </application>
