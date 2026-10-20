@@ -538,4 +538,285 @@ class LrcUtilsTest {
         assertEquals(11000uL..11999uL, lrc[1].words!![0].timeRange)
         assertEquals(12999uL, lrc[1].end)
     }
+
+    @Test
+    fun testBracketWordSync() {
+        val lrcStr = "[00:17.12]走[00:17.30]廊[00:17.47]灯[00:17.64]关[00:17.85]上 [00:18.25]书[00:18.46]包[00:18.66]放[00:19.19]"
+        val parsed = LrcUtils.parseLyrics(
+            lrcStr,
+            audioMimeType = null,
+            parserOptions = LrcUtils.LrcParserOptions(
+                trim = true,
+                multiLine = true,
+                errorText = null,
+                bracketWordSync = true
+            ),
+            format = LrcUtils.LyricFormat.LRC
+        ) as? SemanticLyrics.SyncedLyrics
+        assertNotNull(parsed)
+        assertEquals(1, parsed!!.text.size)
+        val line = parsed.text[0]
+        assertEquals("走廊灯关上 书包放", line.text)
+        assertEquals(17120uL, line.start)
+        assertNotNull(line.words)
+        val words = line.words!!
+        assertEquals(8, words.size)
+        assertEquals("走", line.text.substring(words[0].charRange))
+        assertEquals(17120uL..17299uL, words[0].timeRange)
+        assertEquals("廊", line.text.substring(words[1].charRange))
+        assertEquals(17300uL..17469uL, words[1].timeRange)
+        assertEquals("放", line.text.substring(words[7].charRange))
+        assertEquals(18660uL..19189uL, words[7].timeRange)
+        assertEquals(19189uL, line.end)
+    }
+
+    @Test
+    fun testBracketWordSyncDisabled() {
+        val lrcStr = "[00:17.12]走[00:17.30]廊[00:17.47]灯[00:17.64]关[00:17.85]上 [00:18.25]书[00:18.46]包[00:18.66]放[00:19.19]"
+        val parsed = LrcUtils.parseLyrics(
+            lrcStr,
+            audioMimeType = null,
+            parserOptions = LrcUtils.LrcParserOptions(
+                trim = true,
+                multiLine = true,
+                errorText = null,
+                bracketWordSync = false
+            ),
+            format = LrcUtils.LyricFormat.LRC
+        ) as? SemanticLyrics.SyncedLyrics
+        assertNotNull(parsed)
+        assertEquals(9, parsed!!.text.size)
+        assertEquals("走", parsed.text[0].text)
+        assertEquals(17120uL, parsed.text[0].start)
+    }
+
+    @Test
+    fun testLineLevelClosedWithTimestamp() {
+        val lrcStr = "[00:01.10]Hello World[00:06.13]"
+        val parsed = LrcUtils.parseLyrics(
+            lrcStr,
+            audioMimeType = null,
+            parserOptions = LrcUtils.LrcParserOptions(
+                trim = true,
+                multiLine = true,
+                errorText = null,
+                bracketWordSync = true
+            ),
+            format = LrcUtils.LyricFormat.LRC
+        ) as? SemanticLyrics.SyncedLyrics
+        assertNotNull(parsed)
+        assertEquals(1, parsed!!.text.size)
+        val line = parsed.text[0]
+        assertEquals("Hello World", line.text)
+        assertEquals(1100uL, line.start)
+        assertEquals(6130uL, line.end)
+        assertFalse(line.endIsImplicit)
+        assertNull(line.words)
+    }
+
+    @Test
+    fun testProducerLineNoWords() {
+        val lrcStr = "[00:04.28]词：周杰伦"
+        val parsed = LrcUtils.parseLyrics(
+            lrcStr,
+            audioMimeType = null,
+            parserOptions = LrcUtils.LrcParserOptions(
+                trim = true,
+                multiLine = true,
+                errorText = null,
+                bracketWordSync = true
+            ),
+            format = LrcUtils.LyricFormat.LRC
+        ) as? SemanticLyrics.SyncedLyrics
+        assertNotNull(parsed)
+        assertEquals(1, parsed!!.text.size)
+        val line = parsed.text[0]
+        assertEquals("词：周杰伦", line.text)
+        assertEquals(4280uL, line.start)
+        assertNull(line.words)
+    }
+
+    @Test
+    fun testBilingualLineEndSync() {
+        val lrcStr = "[00:10.00]Hello world[00:15.00]\n[00:10.00]你好世界[00:15.00]"
+        val parsed = LrcUtils.parseLyrics(
+            lrcStr,
+            audioMimeType = null,
+            parserOptions = LrcUtils.LrcParserOptions(
+                trim = true,
+                multiLine = true,
+                errorText = null,
+                bracketWordSync = true
+            ),
+            format = LrcUtils.LyricFormat.LRC
+        ) as? SemanticLyrics.SyncedLyrics
+        assertNotNull(parsed)
+        assertEquals(2, parsed!!.text.size)
+        val line1 = parsed.text[0]
+        val line2 = parsed.text[1]
+        assertEquals("Hello world", line1.text)
+        assertEquals(10000uL, line1.start)
+        assertEquals(15000uL, line1.end)
+        assertFalse(line1.isTranslated)
+        assertNull(line1.words)
+
+        assertEquals("你好世界", line2.text)
+        assertEquals(10000uL, line2.start)
+        assertEquals(15000uL, line2.end)
+        assertTrue(line2.isTranslated)
+        assertNull(line2.words)
+    }
+
+    @Test
+    fun testNormalSingleTag() {
+        val lrcStr = "[00:01.00]First line\n[00:05.00]Second line"
+        val parsed = LrcUtils.parseLyrics(
+            lrcStr,
+            audioMimeType = null,
+            parserOptions = LrcUtils.LrcParserOptions(
+                trim = true,
+                multiLine = true,
+                errorText = null,
+                bracketWordSync = true
+            ),
+            format = LrcUtils.LyricFormat.LRC
+        ) as? SemanticLyrics.SyncedLyrics
+        assertNotNull(parsed)
+        assertEquals(2, parsed!!.text.size)
+        assertEquals("First line", parsed.text[0].text)
+        assertEquals(1000uL, parsed.text[0].start)
+        assertNull(parsed.text[0].words)
+        assertTrue(parsed.text[0].endIsImplicit)
+
+        assertEquals("Second line", parsed.text[1].text)
+        assertEquals(5000uL, parsed.text[1].start)
+        assertNull(parsed.text[1].words)
+        assertTrue(parsed.text[1].endIsImplicit)
+    }
+
+    @Test
+    fun testLineLevelClosedWithTrailingWhitespace() {
+        val lrcStr = "[00:04.28]词：周杰伦[00:06.13]   \n[00:08.56]下一句"
+        val parsed = LrcUtils.parseLyrics(
+            lrcStr,
+            audioMimeType = null,
+            parserOptions = LrcUtils.LrcParserOptions(
+                trim = true,
+                multiLine = true,
+                errorText = null,
+                bracketWordSync = true
+            ),
+            format = LrcUtils.LyricFormat.LRC
+        ) as? SemanticLyrics.SyncedLyrics
+        assertNotNull(parsed)
+        assertEquals(2, parsed!!.text.size)
+        val line1 = parsed.text[0]
+        assertEquals("词：周杰伦", line1.text)
+        assertEquals(4280uL, line1.start)
+        assertEquals(6130uL, line1.end)
+        // Ensure words is strictly null and NOT an empty list
+        assertNull(line1.words)
+    }
+
+    @Test
+    fun testDegenerateZeroDurationLine() {
+        val lrcStr = "[00:00.00]A[00:00.00]\n[00:01.00]Valid line[00:03.00]"
+        val parsed = LrcUtils.parseLyrics(
+            lrcStr,
+            audioMimeType = null,
+            parserOptions = LrcUtils.LrcParserOptions(
+                trim = true,
+                multiLine = true,
+                errorText = null,
+                bracketWordSync = true
+            ),
+            format = LrcUtils.LyricFormat.LRC
+        ) as? SemanticLyrics.SyncedLyrics
+        assertNotNull(parsed)
+        assertEquals(2, parsed!!.text.size)
+        assertEquals("A", parsed.text[0].text)
+        assertEquals(0uL, parsed.text[0].start)
+        assertEquals("Valid line", parsed.text[1].text)
+        assertEquals(1000uL, parsed.text[1].start)
+        assertEquals(3000uL, parsed.text[1].end)
+    }
+
+    @Test
+    fun testCompressedMultiLineClosed() {
+        val lrcStr = "[00:01.00][00:03.00]Hello[00:06.00]"
+        val parsed = LrcUtils.parseLyrics(
+            lrcStr,
+            audioMimeType = null,
+            parserOptions = LrcUtils.LrcParserOptions(
+                trim = true,
+                multiLine = true,
+                errorText = null,
+                bracketWordSync = true
+            ),
+            format = LrcUtils.LyricFormat.LRC
+        ) as? SemanticLyrics.SyncedLyrics
+        assertNotNull(parsed)
+        assertEquals(2, parsed!!.text.size)
+        assertEquals(1000uL, parsed.text[0].start)
+        assertEquals(6000uL, parsed.text[0].end)
+        assertEquals("Hello", parsed.text[0].text)
+        assertEquals(3000uL, parsed.text[1].start)
+        assertEquals(8000uL, parsed.text[1].end)
+        assertEquals("Hello", parsed.text[1].text)
+    }
+
+    @Test
+    fun testWordSyncLastWordNoEndTag() {
+        val lrcStr = "[00:01.00]A[00:02.00]B[00:03.00]C"
+        val parsed = LrcUtils.parseLyrics(
+            lrcStr,
+            audioMimeType = null,
+            parserOptions = LrcUtils.LrcParserOptions(
+                trim = true,
+                multiLine = true,
+                errorText = null,
+                bracketWordSync = true
+            ),
+            format = LrcUtils.LyricFormat.LRC
+        ) as? SemanticLyrics.SyncedLyrics
+        assertNotNull(parsed)
+        assertEquals(1, parsed!!.text.size)
+        val line = parsed.text[0]
+        assertEquals("ABC", line.text)
+        assertNotNull(line.words)
+        val words = line.words!!
+        assertEquals(3, words.size)
+        assertEquals("A", line.text.substring(words[0].charRange))
+        assertEquals(1000uL, words[0].begin)
+        assertEquals(1999uL, words[0].endInclusive)
+        assertEquals("B", line.text.substring(words[1].charRange))
+        assertEquals(2000uL, words[1].begin)
+        assertEquals(2999uL, words[1].endInclusive)
+        assertEquals("C", line.text.substring(words[2].charRange))
+        assertEquals(3000uL, words[2].begin)
+    }
+
+    @Test
+    fun testTrilingualSameTimestampBlock() {
+        val lrcStr = "[00:10.00]Hello[00:15.00]\n[00:10.00]你好[00:15.00]\n[00:10.00]Konnichiwa[00:15.00]"
+        val parsed = LrcUtils.parseLyrics(
+            lrcStr,
+            audioMimeType = null,
+            parserOptions = LrcUtils.LrcParserOptions(
+                trim = true,
+                multiLine = true,
+                errorText = null,
+                bracketWordSync = true
+            ),
+            format = LrcUtils.LyricFormat.LRC
+        ) as? SemanticLyrics.SyncedLyrics
+        assertNotNull(parsed)
+        assertEquals(3, parsed!!.text.size)
+        assertEquals("Hello", parsed.text[0].text)
+        assertFalse(parsed.text[0].isTranslated)
+        assertEquals("你好", parsed.text[1].text)
+        assertTrue(parsed.text[1].isTranslated)
+        assertEquals("Konnichiwa", parsed.text[2].text)
+        assertTrue(parsed.text[2].isTranslated)
+    }
 }

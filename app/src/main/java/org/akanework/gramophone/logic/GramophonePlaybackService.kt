@@ -106,6 +106,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.first
@@ -242,6 +243,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
     private val scope = CoroutineScope(Dispatchers.Main)
     private val lastPlaylistLoaded = CompletableDeferred<Unit>()
     private val lyricsFetcher = CoroutineScope(Dispatchers.IO.limitedParallelism(1))
+    private var lyricsJob: Job? = null
     private val bitrateFetcher = CoroutineScope(Dispatchers.IO.limitedParallelism(1))
 
     private fun getRepeatCommand() =
@@ -914,6 +916,9 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
             scheduleSendingLyrics(false)
             endedWorkaroundPlayer?.updateLyricNow()
         }
+        if (key == "lrc_bracket_word_sync" || key == "trim_lyrics") {
+            reloadLyrics()
+        }
         if (key == null || key == "rg_mode") {
             rgMode = prefs.getStringStrict("rg_mode", "0")!!.toInt()
             restart = !computeRgMode(true)
@@ -1415,18 +1420,17 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
     }
 
 
-    override fun onTracksChanged(tracks: Tracks) {
-        if (!tracks.isEmpty && !tracks.isTypeSelected(C.TRACK_TYPE_AUDIO)) {
-            Log.e(TAG, "No audio track selected: $tracks")
-            controller!!.stop()
-        }
-
+    private fun reloadLyrics(tracks: Tracks? = controller?.currentTracks) {
+        lyricsJob?.cancel()
+        if (tracks == null) return
         val mediaItem = controller?.currentMediaItem
-        lyricsFetcher.launch {
+        lyricsJob = lyricsFetcher.launch {
             val trim = prefs.getBoolean("trim_lyrics", true)
+            val bracketWordSync = prefs.getBooleanStrict("lrc_bracket_word_sync", false)
             val options = LrcParserOptions(
                 trim = trim, multiLine = true,
-                errorText = getString(R.string.failed_to_parse_lyric)
+                errorText = getString(R.string.failed_to_parse_lyric),
+                bracketWordSync = bracketWordSync
             )
             // TODO: allow multiple lyric files/tags combining them for translations...maybe?
             val format = tracks.getFirstSelectedTrackFormatByType(C.TRACK_TYPE_AUDIO)
@@ -1460,6 +1464,14 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
                 }
             }
         }
+    }
+
+    override fun onTracksChanged(tracks: Tracks) {
+        if (!tracks.isEmpty && !tracks.isTypeSelected(C.TRACK_TYPE_AUDIO)) {
+            Log.e(TAG, "No audio track selected: $tracks")
+            controller!!.stop()
+        }
+        reloadLyrics(tracks)
     }
 
     override fun onAudioTrackInitialized(
@@ -1795,8 +1807,7 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
             it.start <= cPos && !it.isTranslated
         }
         val currentLine = lines?.maxByOrNull { it.start } ?: return null
-        if (currentLine.text.isBlank()) return null
-        return currentLine.text
+        return currentLine.text.ifBlank { " " }
     }
 
     private fun scheduleSendingLyrics(new: Boolean) {
@@ -1861,18 +1872,17 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
     }
 
     fun getCurrentLyricIndex(withTranslation: Boolean): Int? {
-        val lines = syncedLyrics?.text?.mapIndexed { i, it -> i to it }?.filter {
+        val allLines = syncedLyrics?.text?.mapIndexed { i, it -> i to it }?.filter {
             it.second.start <= (controller?.currentPosition ?: 0).toULong()
-                    && (!it.second.isTranslated || withTranslation)
-        }
-        // return first non-blank line if there are are multiple lines, else the first blank like
-        val max = lines?.maxByOrNull { it.second.start }
-        if (max == null) {
-            return null
-        }
+        } ?: return null
+        val lines = if (withTranslation) allLines else allLines.filter { !it.second.isTranslated }
+        val max = lines.maxByOrNull { it.second.start } ?: return null
         val maxLines =
             lines.filter { it.second.start == max.second.start && it.second.text.isNotBlank() }
-        return maxLines.firstOrNull()?.first ?: max.first
+        if (maxLines.isNotEmpty()) {
+            return maxLines.first().first
+        }
+        return max.first
     }
 
     override fun onForegroundServiceStartNotAllowedException() {
