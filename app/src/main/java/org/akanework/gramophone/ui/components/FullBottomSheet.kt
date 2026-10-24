@@ -17,6 +17,7 @@
 
 package org.akanework.gramophone.ui.components
 
+import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
@@ -36,14 +37,18 @@ import android.util.AttributeSet
 import android.view.AbsSavedState
 import android.view.Gravity
 import android.view.KeyEvent
+import android.view.MotionEvent
 import android.view.View
+import android.view.ViewConfiguration
 import android.view.ViewGroup
 import android.view.ViewPropertyAnimator
 import android.view.WindowInsets
+import android.view.animation.LinearInterpolator
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.SeekBar
@@ -140,6 +145,7 @@ import uk.akane.libphonograph.items.artistId
 import uk.akane.libphonograph.manipulator.PlaylistSerializer.Entry
 import java.text.NumberFormat
 import java.text.ParseException
+import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
@@ -170,6 +176,10 @@ class FullBottomSheet
 
     private val prefs = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
     private var currentFormat: AudioFormatDetector.AudioFormats? = null
+    private var rotateCookieButton = false
+    private var shouldRotateCookieButton = false
+    private var swipeToSwitchTrackEnabled = false
+    private var cookieRotationAnimator: ObjectAnimator? = null
 
     companion object {
         const val SLIDER_UPDATE_INTERVAL: Long = 100
@@ -177,6 +187,7 @@ class FullBottomSheet
         const val FOREGROUND_COLOR_TRANSITION_SEC: Long = 150
         const val LYRIC_FADE_TRANSITION_SEC: Long = 125
         private const val TAG = "FullBottomSheet"
+        private const val SWIPE_THRESHOLD_DP = 50
     }
 
     private val touchListener =
@@ -252,6 +263,7 @@ class FullBottomSheet
     private val bottomSheetFullTitle: TextView
     private val bottomSheetFullSubtitle: TextView
     private val bottomSheetFullControllerButton: MaterialButton
+    private val bottomSheetFullControllerButtonBg: ImageView
     private val bottomSheetFullNextButton: MaterialButton
     private val bottomSheetFullPreviousButton: MaterialButton
     private val bottomSheetFullDuration: TextView
@@ -280,6 +292,7 @@ class FullBottomSheet
         bottomSheetFullSubtitle = findViewById(R.id.full_song_artist)
         bottomSheetFullPreviousButton = findViewById(R.id.sheet_previous_song)
         bottomSheetFullControllerButton = findViewById(R.id.sheet_mid_button)
+        bottomSheetFullControllerButtonBg = findViewById(R.id.sheet_mid_button_bg)
         bottomSheetFullNextButton = findViewById(R.id.sheet_next_song)
         bottomSheetFullPosition = findViewById(R.id.position)
         bottomSheetFullDuration = findViewById(R.id.duration)
@@ -353,6 +366,52 @@ class FullBottomSheet
         bottomSheetFullCover.setOnClickListener {
             activity.startFragment(DetailDialogFragment()) {
                 putString("Id", instance?.currentMediaItem?.mediaId)
+            }
+        }
+
+        var startX = 0f
+        var startY = 0f
+        val touchSlop = ViewConfiguration.get(context).scaledTouchSlop
+        val swipeThresholdPx = SWIPE_THRESHOLD_DP.dpToPx(context)
+        bottomSheetFullCover.setOnTouchListener { v, event ->
+            if (!swipeToSwitchTrackEnabled) return@setOnTouchListener false
+            when (event.actionMasked) {
+                MotionEvent.ACTION_DOWN -> {
+                    startX = event.x
+                    startY = event.y
+                    true
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    val dx = event.x - startX
+                    val dy = event.y - startY
+                    if (abs(dx) > touchSlop && abs(dx) > abs(dy)) {
+                        v.parent?.requestDisallowInterceptTouchEvent(true)
+                    }
+                    true
+                }
+                MotionEvent.ACTION_UP -> {
+                    v.parent?.requestDisallowInterceptTouchEvent(false)
+                    val dx = event.x - startX
+                    val dy = event.y - startY
+                    val absDx = abs(dx)
+                    val absDy = abs(dy)
+                    if (absDx > absDy && absDx > swipeThresholdPx) {
+                        ViewCompat.performHapticFeedback(v, HapticFeedbackConstantsCompat.CONTEXT_CLICK)
+                        if (dx < 0) {
+                            instance?.seekToNext()
+                        } else {
+                            instance?.seekToPrevious()
+                        }
+                    } else {
+                        v.performClick()
+                    }
+                    true
+                }
+                MotionEvent.ACTION_CANCEL -> {
+                    v.parent?.requestDisallowInterceptTouchEvent(false)
+                    true
+                }
+                else -> true
             }
         }
 
@@ -623,6 +682,42 @@ class FullBottomSheet
             ),
         )
         bottomSheetFullSeekBar.progressTintList = ColorStateList.valueOf(colorPrimary)
+        shouldRotateCookieButton = instance?.isPlaying == true
+        syncButtonRotation()
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        // Cancel animator on detach; shouldRotateCookieButton is preserved so
+        // re-attach via onAttachedToWindow can resume correctly.
+        cookieRotationAnimator?.cancel()
+        cookieRotationAnimator = null
+    }
+
+    // Single authority for button rotation state.
+    // Callers only set shouldRotateCookieButton and call syncButtonRotation();
+    // rotateCookieButton (the pref) is checked exactly once, here.
+    private fun syncButtonRotation(reset: Boolean = false) {
+        if (rotateCookieButton && shouldRotateCookieButton) {
+            if (cookieRotationAnimator == null) {
+                val currentRotation = bottomSheetFullControllerButtonBg.rotation % 360f
+                cookieRotationAnimator = ObjectAnimator.ofFloat(
+                    bottomSheetFullControllerButtonBg,
+                    View.ROTATION,
+                    currentRotation,
+                    currentRotation + 360f
+                ).apply {
+                    duration = 40000L   // ~40 s/rev, aligned with TransformableImageView cover speed
+                    repeatCount = ValueAnimator.INFINITE
+                    interpolator = LinearInterpolator()
+                    start()
+                }
+            }
+        } else {
+            cookieRotationAnimator?.cancel()
+            cookieRotationAnimator = null
+            if (reset) bottomSheetFullControllerButtonBg.rotation = 0f
+        }
     }
 
     override fun onSaveInstanceState(): Parcelable {
@@ -710,6 +805,13 @@ class FullBottomSheet
         }
         if (key == null || key == "cookie_cover") {
             bottomSheetFullCover.setClip(prefs.getBooleanStrict("cookie_cover", false))
+        }
+        if (key == null || key == "rotate_cookie_button") {
+            rotateCookieButton = prefs.getBooleanStrict("rotate_cookie_button", false)
+            syncButtonRotation(reset = !rotateCookieButton)
+        }
+        if (key == null || key == "swipe_to_switch_track") {
+            swipeToSwitchTrackEnabled = prefs.getBooleanStrict("swipe_to_switch_track", false)
         }
     }
 
@@ -1139,7 +1241,8 @@ class FullBottomSheet
             )
 
             val secondaryContainerTransition = ValueAnimator.ofArgb(
-                bottomSheetFullControllerButton.backgroundTintList!!.defaultColor,
+                bottomSheetFullControllerButtonBg.imageTintList?.defaultColor
+                    ?: colorSecondaryContainer,
                 colorSecondaryContainer
             )
 
@@ -1226,7 +1329,7 @@ class FullBottomSheet
             secondaryContainerTransition.apply {
                 addUpdateListener { animation ->
                     val progressColor = animation.animatedValue as Int
-                    bottomSheetFullControllerButton.backgroundTintList =
+                    bottomSheetFullControllerButtonBg.imageTintList =
                         ColorStateList.valueOf(progressColor)
                 }
                 duration = BACKGROUND_COLOR_TRANSITION_SEC
@@ -1350,7 +1453,7 @@ class FullBottomSheet
             bottomSheetFullSubtitle.setTextColor(
                 colorSecondary
             )
-            bottomSheetFullControllerButton.backgroundTintList =
+            bottomSheetFullControllerButtonBg.imageTintList =
                 ColorStateList.valueOf(colorSecondaryContainer)
             bottomSheetFullControllerButton.iconTint =
                 ColorStateList.valueOf(colorOnSecondaryContainer)
@@ -1537,10 +1640,11 @@ class FullBottomSheet
                         wrappedContext ?: context,
                         R.drawable.play_anim
                     )
-                bottomSheetFullControllerButton.background =
+                bottomSheetFullControllerButtonBg.setImageDrawable(
                     AppCompatResources.getDrawable(context, R.drawable.bg_play_anim)
+                )
                 bottomSheetFullControllerButton.icon.startAnimation()
-                bottomSheetFullControllerButton.background.startAnimation()
+                bottomSheetFullControllerButtonBg.drawable?.startAnimation()
                 bottomSheetFullControllerButton.setTag(R.id.play_next, 1)
             }
             if (!isUserTracking) {
@@ -1551,19 +1655,24 @@ class FullBottomSheet
                 handler.postDelayed(positionRunnable, SLIDER_UPDATE_INTERVAL)
             }
             bottomSheetFullCover.startRotation()
+            shouldRotateCookieButton = true
+            syncButtonRotation()
         } else if (playbackState != Player.STATE_BUFFERING) {
+            bottomSheetFullCover.stopRotation()
+            shouldRotateCookieButton = false
+            syncButtonRotation()
             if (bottomSheetFullControllerButton.getTag(R.id.play_next) as Int? != 2) {
                 bottomSheetFullControllerButton.icon =
                     AppCompatResources.getDrawable(
                         wrappedContext ?: context,
                         R.drawable.pause_anim
                     )
-                bottomSheetFullControllerButton.background =
+                bottomSheetFullControllerButtonBg.setImageDrawable(
                     AppCompatResources.getDrawable(context, R.drawable.bg_pause_anim)
+                )
                 bottomSheetFullControllerButton.icon.startAnimation()
-                bottomSheetFullControllerButton.background.startAnimation()
+                bottomSheetFullControllerButtonBg.drawable?.startAnimation()
                 bottomSheetFullControllerButton.setTag(R.id.play_next, 2)
-                bottomSheetFullCover.stopRotation()
             }
             if (!isUserTracking) {
                 progressDrawable.animate = false
