@@ -450,7 +450,7 @@ class EndedWorkaroundPlayer(
     fun getActiveQueue(): MultiQueueObject {
         return MultiQueueObject(
             id = currentQueueId?: -1, // TODO: fix crash but should return nullable MultiQueueObject
-            index = 0,
+            index = -1,
             title = currentTitle ?: context.getString(R.string.unknown_playlist),
             expiry = if (currentIsPinned) null else 0L,
             queue = ArrayList<MediaItem>(exoPlayer.mediaItemCount).apply {

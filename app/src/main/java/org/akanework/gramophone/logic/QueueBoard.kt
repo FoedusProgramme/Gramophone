@@ -26,6 +26,7 @@ import android.os.Parcel
 import android.util.Log
 import androidx.compose.ui.util.fastFirstOrNull
 import androidx.core.os.BundleCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.BundleListRetriever
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
@@ -58,6 +59,9 @@ class QueueBoard(
     private val QUEUE_DEBUG = true // TODO: disable when done
     private val TAG = QueueBoard::class.simpleName.toString()
 
+    /**
+     * List of queues. Sorted newest first.
+     */
     val masterQueues: MutableList<MultiQueueObject> = mutableListOf()
 
     init {
@@ -143,10 +147,11 @@ class QueueBoard(
         }
         masterQueues.clear()
         masterQueues.addAll(newQueueList)
+
         /*
-        val queues = (masterQueues + player.endedWorkaroundPlayer!!.getActiveQueue()).map { it.id }
-        CoroutineScope(Dispatchers.IO).launch {
-            player.database.syncQueues(queues)
+        val activeQueue = player.endedWorkaroundPlayer!!.getActiveQueue()
+        player.lifecycleScope.launch(Dispatchers.IO) {
+            player.database.updateMqs(masterQueues.toList(), activeQueue)
         }
          */
     }
@@ -268,6 +273,9 @@ class QueueBoard(
         } else {
             masterQueues.add(toIndex, masterQueues.removeAt(fromIndex))
         }
+        masterQueues.forEachIndexed { index, mq ->
+            mq.index = index
+        }
     }
 
     /**
@@ -380,7 +388,7 @@ class QueueBoard(
  */
 private fun MutableList<MultiQueueObject>.bubbleUp(mq: MultiQueueObject) {
     remove(mq)
-    add(mq)
+    add(0, mq)
     forEachIndexed { index, mq ->
         mq.index = index
     }
@@ -390,7 +398,8 @@ private fun MutableList<MultiQueueObject>.bubbleUp(mq: MultiQueueObject) {
 /**
  * A representation of a queue
  *
- * @param
+ * @param id
+ * @param index Suggested order of queues. The index of the active queue is -1.
  * @param title Queue title (and UID)
  * @param queue List of media items
  */
@@ -425,8 +434,7 @@ data class MultiQueueObject(
     private var fakeQueueLength: Long? = null
 ) {
     override fun toString() =
-        "$title ($id) startIndex=$startIndex, startPositionMs=$startPositionMs, repeatMode=$repeatMode, shuffleModeEnabled=$shuffleModeEnabled, ended=$ended, mediaItems_size=${queue.size}, expiry=$expiry"
-
+        "$title ($id), index=$index, startIndex=$startIndex, startPositionMs=$startPositionMs, repeatMode=$repeatMode, shuffleModeEnabled=$shuffleModeEnabled, ended=$ended, isOriginal=$isOriginal, expiry=$expiry, mediaItems_size=${queue.size}"
     val shuffleModeEnabled
         get() = shuffleOrder != null
 
