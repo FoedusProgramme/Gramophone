@@ -3,20 +3,12 @@ package org.akanework.gramophone.ui.fragments.compose
 import android.content.Context
 import android.os.Bundle
 import android.os.SystemClock
-import androidx.activity.compose.BackHandler
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -27,28 +19,17 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.PagerState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
-import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.DragHandle
 import androidx.compose.material.icons.outlined.ExpandLess
 import androidx.compose.material.icons.outlined.ExpandMore
-import androidx.compose.material.icons.outlined.SkipNext
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -62,19 +43,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorProducer
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -85,9 +60,6 @@ import androidx.lifecycle.LifecycleRegistry
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
-import androidx.media3.common.Player.REPEAT_MODE_ALL
-import androidx.media3.common.Player.REPEAT_MODE_OFF
-import androidx.media3.common.Player.REPEAT_MODE_ONE
 import androidx.media3.common.Timeline
 import androidx.media3.session.MediaBrowser
 import androidx.media3.session.MediaController
@@ -113,18 +85,13 @@ import org.akanework.gramophone.logic.getInactiveQueues
 import org.akanework.gramophone.logic.getQueueForUi
 import org.akanework.gramophone.logic.loadQueue
 import org.akanework.gramophone.logic.pinQueue
-import org.akanework.gramophone.logic.playOrPause
 import org.akanework.gramophone.logic.renameQueue
 import org.akanework.gramophone.logic.replaceAllSupport
-import org.akanework.gramophone.logic.showsPause
-import org.akanework.gramophone.logic.supportsWideScreen
 import org.akanework.gramophone.logic.unpinQueue
 import org.akanework.gramophone.logic.utils.CalculationUtils.convertDurationToTimeStamp
 import org.akanework.gramophone.logic.utils.Flags
 import org.akanework.gramophone.ui.MediaControllerViewModel
 import org.akanework.gramophone.ui.components.compose.QueueDropdownMenu
-import org.akanework.gramophone.ui.components.compose.TintedIcon
-import org.akanework.gramophone.ui.components.player.PlayerSheetController
 import java.util.LinkedList
 
 @Composable
@@ -139,6 +106,7 @@ fun MqListItem(
     isActiveQueue: Boolean = false,
     isHighlightedQueue: Boolean = false,
     isEditAllowed: Boolean = false,
+    mqEnabled: Boolean = true,
     onClick: () -> Unit = {},
     onLongClick: () -> Unit = {},
 ) {
@@ -159,7 +127,7 @@ fun MqListItem(
                 }
             )
             .combinedClickable(
-//                    enabled = !inSelectMode,
+                enabled = mqEnabled,
                 onClick = onClick,
                 onLongClick = onLongClick
             )
@@ -177,7 +145,7 @@ fun MqListItem(
                 modifier = Modifier
                     .weight(1f, false)
             ) {
-                if (isEditAllowed) {
+                if (mqEnabled && isEditAllowed) {
                     if (isPinned) {
                         IconButton(
                             onClick = {
@@ -204,7 +172,10 @@ fun MqListItem(
                         }
                     }
                 }
-                if (isActiveQueue && !isEditAllowed) {
+                if (!mqEnabled) {
+                    Spacer(Modifier.width(8.dp))
+                }
+                if (mqEnabled && isActiveQueue && !isEditAllowed) {
                     IconButton(
                         onClick = {
                             mqState.togglePin(pinId)
@@ -261,14 +232,14 @@ fun MqListItem(
                                 .padding(horizontal = 16.dp)
                                 .fillMaxWidth()
                         ) {
-                            if (!isPinned && !isActiveQueue && isEditAllowed) {
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                if (!isPinned && !isActiveQueue) {
                                     val remainingTimeMs = (expiry!! - System.currentTimeMillis())
                                     Icon(
                                         painter = painterResource(
-                                            if (!isActiveQueue && remainingTimeMs < 1800000) {
+                                            if (remainingTimeMs < 1800000) {
                                                 R.drawable.ic_warning
                                             } else {
                                                 R.drawable.ic_keep
@@ -282,11 +253,7 @@ fun MqListItem(
                                             }),
                                     )
                                     Text(
-                                        text = if (isActiveQueue) {
-                                            "∞"
-                                        } else {
-                                            convertDurationToTimeStamp(remainingTimeMs)
-                                        },
+                                        text = convertDurationToTimeStamp(remainingTimeMs),
                                         color = MaterialTheme.colorScheme.onSurface.copy(0.7f),
                                         fontSize = 10.sp,
                                         maxLines = 1,
@@ -320,6 +287,7 @@ fun MqListItem(
                         mqState = mqState,
                         mq = mq,
                         isPinned = isPinned,
+                        isActiveQueue = isActiveQueue,
                     )
                 }
 
@@ -389,6 +357,7 @@ fun QueueInfo(
                     isActiveQueue = true,
                     isEditAllowed = mqState.isEditAllowed,
                     isHighlightedQueue = mqState.expanded && !mqState.isDetached(),
+                    mqEnabled = mqEnabled,
                     onClick = {
                         if (mqState.isDetached()) {
                             mqState.resetHead()
@@ -405,11 +374,11 @@ fun QueueInfo(
             IconButton(
                 enabled = mqState.isEditAllowed || (mqEnabled && !mqState.inactiveQueues.isEmpty() && !landscape),
                 onClick = {
-                     if (mqState.isEditAllowed) {
-                         mqState.isEditAllowed = false
-                     } else {
-                         mqState.toggleExpand()
-                     }
+                    if (mqState.isEditAllowed) {
+                        mqState.isEditAllowed = false
+                    } else {
+                        mqState.toggleExpand()
+                    }
                     haptic.performHapticFeedback(HapticFeedbackType.ContextClick)
                 },
             ) {
@@ -505,8 +474,6 @@ class MqState(
 
     // -1 for none. Goes through the whole queue, worked out once it's loaded, see syncWithPlayer
     var currentMediaItemIndex: Int by mutableStateOf(-1)
-        private set
-    var locked by mutableStateOf(false)
         private set
     var listVersion by mutableIntStateOf(0)
         private set
@@ -899,25 +866,6 @@ class MqState(
         }
     }
 
-
-    fun togglePlayPause() = instance.playOrPause()
-    fun seekPrev() = instance.seekToPrevious()
-    fun seekNext() = instance.seekToNext()
-
-    fun toggleRepeatMode() {
-        instance.repeatMode = when (instance.repeatMode) {
-            REPEAT_MODE_OFF -> REPEAT_MODE_ALL
-            REPEAT_MODE_ALL -> REPEAT_MODE_ONE
-            REPEAT_MODE_ONE -> REPEAT_MODE_OFF
-            else -> REPEAT_MODE_OFF
-        }
-    }
-
-    fun toggleShuffleMode() {
-        // The songs are shown in the new order as the player tells, see playerListener
-        instance.shuffleModeEnabled = !instance.shuffleModeEnabled
-    }
-
     fun playNext(queueId: Long) {
         instance.getQueueForUi(queueId)?.let { mq ->
             instance.addMediaItems(
@@ -945,8 +893,8 @@ class MqState(
     }
 
     fun addToPlaylist(queueId: Long) = instance.getQueueForUi(queueId)?.let { mq ->
-           mq.first.zip(mq.second.queue).sortedBy { it.first }.map { it.second }
-        }
+        mq.first.zip(mq.second.queue).sortedBy { it.first }.map { it.second }
+    }
 
     fun renameQueue(queueId: Long, title: String, dryRun: Boolean): Boolean {
         val ret = instance.renameQueue(queueId, title, dryRun)
