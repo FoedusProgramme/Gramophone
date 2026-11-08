@@ -934,6 +934,15 @@ class GramophonePlaybackService : MediaLibraryService(), MediaSessionService.Lis
             val boostGain = prefs.getIntStrict("rg_boost_gain", 0)
             restart = !rgAp.setBoostGain(boostGain) || restart
         }
+        if (key != null && key.startsWith("L")) {
+            for (tabCount in 1..8) {
+                mediaSession?.notifyChildrenChanged("root_$tabCount", Int.MAX_VALUE, null)
+            }
+            val categoryIds = listOf("songs", "albums", "artists", "genres", "dates", "folders", "playlists")
+            for (cat in categoryIds) {
+                mediaSession?.notifyChildrenChanged(cat, Int.MAX_VALUE, null)
+            }
+        }
         if (restart) {
             controller?.stop()
             controller?.prepare()

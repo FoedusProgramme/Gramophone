@@ -34,6 +34,8 @@ import org.akanework.gramophone.ui.MainActivity
 import org.akanework.gramophone.ui.fragments.GeneralSubFragment
 import uk.akane.libphonograph.items.Album
 import uk.akane.libphonograph.manipulator.ItemManipulator
+import java.text.DateFormat
+import java.util.Date
 import java.util.GregorianCalendar
 
 class AlbumAdapter(
@@ -63,6 +65,21 @@ class AlbumAdapter(
 
     override fun virtualTitleOf(item: Album): String {
         return context.getString(R.string.unknown_album)
+    }
+
+    override fun detailsOf(item: Album): String? {
+        val parts = mutableListOf<String>()
+        val addDate = item.albumAddDate
+        if (addDate != null && addDate > 0) {
+            val dateFormatted = DateFormat.getDateInstance(DateFormat.MEDIUM).format(Date(addDate * 1000))
+            parts.add(context.getString(R.string.date_added_format, dateFormatted))
+        }
+        if (item.albumYear != null && item.albumYear != 0) {
+            parts.add(item.albumYear.toString())
+        }
+        val count = item.songList.size
+        parts.add(context.resources.getQuantityString(R.plurals.songs, count, count))
+        return if (parts.isNotEmpty()) parts.joinToString(" • ") else null
     }
 
     override fun onClick(item: Album, position: Int) {

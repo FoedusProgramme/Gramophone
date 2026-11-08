@@ -82,6 +82,25 @@
             tools:visibility="visible" />
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/layout_toggle"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/rp_buttons"
+            android:contentDescription="@string/layout"
+            android:insetLeft="0dp"
+            android:insetTop="0dp"
+            android:insetRight="0dp"
+            android:insetBottom="0dp"
+            android:visibility="gone"
+            app:icon="@drawable/ic_layout_list"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            app:iconSize="24dp"
+            app:iconTint="?attr/colorPrimary"
+            app:tooltipText="@string/layout"
+            tools:visibility="visible" />
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/sort"
             android:layout_width="48dp"
             android:layout_height="48dp"
