@@ -1068,6 +1068,10 @@
     <string name="edit_favorites_failed">Editing favorites failed: %s</string>
     <!-- Context menu item to add song to playlist -->
     <string name="add_to_playlist">Add to playlist</string>
+    <!-- Context menu and toolbar item to save or duplicate playlist as a new custom playlist -->
+    <string name="save_as_playlist">Save as playlist…</string>
+    <!-- Default name for saving newly added songs as a playlist with date -->
+    <string name="recently_added_dated">New additions %s</string>
     <!-- Error if no internet browser is installed but user clicks a link -->
     <string name="no_app_found">No app found that can do this</string>
     <!-- Shown below the lead developer's nickname in about screen -->

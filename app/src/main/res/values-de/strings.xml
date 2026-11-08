@@ -451,6 +451,8 @@
     <string name="playlist_empty">Wiedergabeliste ist leer</string>
     <string name="picker_activity">Musiktitel auswählen</string>
     <string name="playlist_picker_activity">Wiedergabeliste auswählen</string>
+    <string name="save_as_playlist">Als Playlist speichern…</string>
+    <string name="recently_added_dated">Neuzugänge %s</string>
     <string name="settings_replaygain_drc">DRC aktivieren</string>
     <plurals name="minutes">
         <item quantity="one">%d Minute</item>

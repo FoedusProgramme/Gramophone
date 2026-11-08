@@ -18,6 +18,7 @@
 package org.akanework.gramophone.ui.fragments
 
 import android.os.Bundle
+import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,6 +31,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
@@ -39,11 +41,15 @@ import org.akanework.gramophone.logic.enableEdgeToEdgePaddingListener
 import org.akanework.gramophone.logic.ui.MyRecyclerView
 import org.akanework.gramophone.logic.utils.flows.PauseManagingSharedFlow.Companion.sharePauseableIn
 import org.akanework.gramophone.logic.utils.flows.provideReplayCacheInvalidationManager
+import org.akanework.gramophone.ui.adapters.PlaylistAdapter
 import org.akanework.gramophone.ui.adapters.SongAdapter
 import org.akanework.gramophone.ui.adapters.Sorter
 import uk.akane.libphonograph.dynamicitem.Favorite
 import uk.akane.libphonograph.dynamicitem.RecentlyAdded
 import uk.akane.libphonograph.items.Playlist
+import uk.akane.libphonograph.manipulator.ItemManipulator
+import uk.akane.libphonograph.manipulator.PlaylistSerializer
+import java.util.Date
 
 /**
  * GeneralSubFragment:
@@ -140,13 +146,40 @@ class GeneralSubFragment : BaseFragment(true) {
                 }
                 itemList = item.map { it?.songList }
                 rawOrderExposed = Sorter.Type.NaturalOrder
-                if (clazz == Playlist::class.java.name) {
+                if (clazz == Playlist::class.java.name || clazz == RecentlyAdded::class.java.name || clazz == Favorite::class.java.name) {
                     topAppBar.inflateMenu(R.menu.playlist_subfragment_menu)
+                    topAppBar.menu.findItem(R.id.edit)?.isVisible = (clazz == Playlist::class.java.name)
                     topAppBar.setOnMenuItemClickListener {
                         when (it.itemId) {
                             R.id.edit -> {
                                 mainActivity.startFragment(PlaylistEditFragment()) {
                                     putString("Id", id?.toString())
+                                }
+                                true
+                            }
+
+                            R.id.save_as_playlist -> {
+                                lifecycleScope.launch(Dispatchers.Default) {
+                                    val currentPlaylist = item.first() ?: return@launch
+                                    val songs = currentPlaylist.songList.mapNotNull { PlaylistSerializer.Entry.ofMediaItem(it) }
+                                    if (songs.isEmpty()) return@launch
+                                    withContext(Dispatchers.Main) {
+                                        val rawDate = DateFormat.getDateFormat(requireContext()).format(Date())
+                                        val dateStr = rawDate.replace('/', '.').replace('\\', '.').replace(':', '-')
+                                        val defaultName = when (currentPlaylist) {
+                                            is RecentlyAdded -> requireContext().getString(R.string.recently_added_dated, dateStr)
+                                            is Favorite -> requireContext().getString(R.string.playlist_favourite)
+                                            else -> currentPlaylist.title ?: ""
+                                        }
+                                        PlaylistAdapter.playlistNameDialog(
+                                            requireContext(),
+                                            R.string.save_as_playlist,
+                                            defaultName,
+                                            { ItemManipulator.getDefaultPlaylistFile(it) }
+                                        ) { path ->
+                                            mainActivity.addToPlaylist(null, path, songs)
+                                        }
+                                    }
                                 }
                                 true
                             }
