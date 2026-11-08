@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?><!-- Full Player Layout -->
+<!--
+    NOTE: This layout variant is matched by all landscape smartphones and tablets with available width >= 600dp.
+    Any ID or hierarchy changes must be kept in strict sync with layout/full_player.xml.
+-->
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -92,6 +96,32 @@
             app:srcCompat="@drawable/ic_default_cover" />
 
     </com.google.android.material.card.MaterialCardView>
+
+    <FrameLayout
+        android:id="@+id/inline_lyric_frame"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="16dp"
+        android:alpha="0"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/controls"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible">
+
+        <org.akanework.gramophone.ui.components.LyricsView
+            android:id="@+id/inline_lyric_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:keepScreenOn="true"
+            tools:listitem="@layout/lyrics" />
+
+    </FrameLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/controls"
@@ -200,7 +230,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="28dp"
-            app:layout_constraintBottom_toTopOf="@id/sheet_mid_button"
+            app:layout_constraintBottom_toTopOf="@id/sheet_mid_button_frame"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/slider"
@@ -210,7 +240,6 @@
                 android:id="@+id/position"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="start"
                 android:fontFamily="sans-serif"
                 android:text="@string/default_time"
                 android:textColor="?colorOnSurfaceVariant"
@@ -223,12 +252,12 @@
                 android:id="@+id/quality_details"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:drawablePadding="4dp"
                 android:fontFamily="sans-serif"
                 android:gravity="center"
                 android:textColor="?attr/colorOnSurfaceVariant"
                 android:textSize="12sp"
+                app:drawableTint="?attr/colorOnSurfaceVariant"
                 app:layout_constrainedWidth="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/duration"
@@ -242,7 +271,6 @@
                 android:id="@+id/duration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
                 android:fontFamily="sans-serif"
                 android:text="@string/default_time"
                 android:textColor="?colorOnSurfaceVariant"
@@ -253,37 +281,22 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/sheet_mid_button"
+        <include
+            android:id="@+id/sheet_mid_button_frame"
+            layout="@layout/sheet_cookie_button"
             android:layout_width="90dp"
             android:layout_height="90dp"
-            android:layout_centerHorizontal="true"
             android:layout_marginTop="18dp"
-            android:background="@drawable/bg_play_anim"
-            android:contentDescription="@string/play"
-            android:insetLeft="0dp"
-            android:insetTop="0dp"
-            android:insetRight="0dp"
-            android:insetBottom="0dp"
-            app:backgroundTint="?attr/colorSecondaryContainer"
-            app:icon="@drawable/play_anim"
-            app:iconGravity="textStart"
-            app:iconPadding="0dp"
-            app:iconSize="42dp"
-            app:iconTint="?attr/colorOnSecondaryContainer"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/duration_frame"
-            app:tooltipText="@string/play" />
+            app:layout_constraintTop_toBottomOf="@id/duration_frame" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/sheet_previous_song"
             android:layout_width="90dp"
             android:layout_height="90dp"
-            android:layout_gravity="center"
             android:layout_marginEnd="8dp"
-            android:layout_toStartOf="@id/sheet_mid_button"
             android:background="@drawable/rp_buttons_dynamic"
             android:contentDescription="@string/skip_previous"
             android:insetLeft="0dp"
@@ -295,20 +308,18 @@
             app:iconPadding="0dp"
             app:iconSize="38sp"
             app:iconTint="?attr/colorOnSurface"
-            app:layout_constraintBottom_toBottomOf="@id/sheet_mid_button"
-            app:layout_constraintEnd_toStartOf="@id/sheet_mid_button"
+            app:layout_constraintBottom_toBottomOf="@id/sheet_mid_button_frame"
+            app:layout_constraintEnd_toStartOf="@id/sheet_mid_button_frame"
             app:layout_constraintHorizontal_bias="0.80"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/sheet_mid_button"
+            app:layout_constraintTop_toTopOf="@id/sheet_mid_button_frame"
             app:tooltipText="@string/skip_previous" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/sheet_next_song"
             android:layout_width="90dp"
             android:layout_height="90dp"
-            android:layout_gravity="center"
             android:layout_marginStart="8dp"
-            android:layout_toEndOf="@id/sheet_mid_button"
             android:background="@drawable/rp_buttons_dynamic"
             android:contentDescription="@string/skip_next"
             android:insetLeft="0dp"
@@ -320,11 +331,11 @@
             app:iconPadding="0dp"
             app:iconSize="38sp"
             app:iconTint="?attr/colorOnSurface"
-            app:layout_constraintBottom_toBottomOf="@id/sheet_mid_button"
+            app:layout_constraintBottom_toBottomOf="@id/sheet_mid_button_frame"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.20"
-            app:layout_constraintStart_toEndOf="@id/sheet_mid_button"
-            app:layout_constraintTop_toTopOf="@id/sheet_mid_button"
+            app:layout_constraintStart_toEndOf="@id/sheet_mid_button_frame"
+            app:layout_constraintTop_toTopOf="@id/sheet_mid_button_frame"
             app:tooltipText="@string/skip_next" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -360,6 +371,7 @@
             app:iconPadding="0dp"
             app:iconSize="24sp"
             app:iconTint="?attr/colorOnSurface"
+            app:toggleCheckedStateOnClick="false"
             app:tooltipText="@string/dialog_lyrics" />
 
         <com.google.android.material.button.MaterialButton

@@ -132,11 +132,18 @@ private sealed class SyntacticLrc {
             return minute * 60u * 1000u + milliseconds
         }
 
-        fun parseLrc(text: String, multiLineEnabled: Boolean): List<SyntacticLrc>? {
+        fun parseLrc(
+            text: String,
+            multiLineEnabled: Boolean,
+            bracketWordSync: Boolean = false
+        ): List<SyntacticLrc>? {
             if (text.isBlank()) return null
             var pos = 0
             val out = mutableListOf<SyntacticLrc>()
             var isBgSpeaker = false
+            var hasLyricInLine = false
+            var hadWordSyncInLine = false
+            var hasSyncPointInLine = false
             while (pos < text.length) {
                 var pendingBgNewLine = false
                 if (isBgSpeaker && text[pos] == ']') {
@@ -152,31 +159,83 @@ private sealed class SyntacticLrc {
                     )
                 ) {
                     out.add(NewLine())
+                    hasLyricInLine = false
+                    hadWordSyncInLine = false
+                    hasSyncPointInLine = false
                     pos += 2
                     continue
                 }
                 if (pos < text.length && (text[pos] == '\n' || text[pos] == '\r')) {
                     out.add(NewLine())
+                    hasLyricInLine = false
+                    hadWordSyncInLine = false
+                    hasSyncPointInLine = false
                     pos++
                     continue
                 }
                 if (pendingBgNewLine) {
                     out.add(NewLine.SyntheticNewLine())
+                    hasLyricInLine = false
+                    hadWordSyncInLine = false
+                    hasSyncPointInLine = false
                     continue
                 }
                 val tmMatch = timeMarksRegex.matchAt(text, pos)
                 if (tmMatch != null) {
+                    if (hasLyricInLine) {
+                        var checkPos = pos + tmMatch.value.length
+                        var isLineEnd = true
+                        while (checkPos < text.length) {
+                            val c = text[checkPos]
+                            if (c == '\r' || c == '\n') {
+                                break
+                            }
+                            if (!c.isWhitespace()) {
+                                isLineEnd = false
+                                break
+                            }
+                            checkPos++
+                        }
+                        val hasAnyPhysicalNewline = text.contains('\n') || text.contains('\r')
+                        val isSyntheticStream = !hasAnyPhysicalNewline && out.any { it is NewLine.SyntheticNewLine }
+
+                        if (isLineEnd && !hadWordSyncInLine && !isSyntheticStream) {
+                            // Line-level closed line (e.g. [00:01.10]Text[00:06.13]\n or producer lines).
+                            // This is a line end timestamp, NOT a word sync point.
+                            // Emitting LineEndSyncPoint provides explicit line end without creating fake 1-word sync points.
+                            // Note (P3-②): A single word closed line like [00:17.12]好[00:19.19] is syntactically indistinguishable
+                            // from a line-level line, and will also be closed with LineEndSyncPoint.
+                            out.add(LineEndSyncPoint(parseTime(tmMatch, false)))
+                            pos += tmMatch.value.length
+                            continue
+                        } else if (bracketWordSync) {
+                            // Either it's word-by-word line end ([start]w[ts]w[end]) or inline word sync point ([start]w[ts]w).
+                            // Note (P3-①): Intra-line multi-segments (e.g. [00:01.10]Alpha[00:06.13]Beta[00:10.00])
+                            // will be parsed as word sync points when bracketWordSync is true.
+                            out.add(WordSyncPoint(parseTime(tmMatch, false)))
+                            hadWordSyncInLine = true
+                            hasSyncPointInLine = true
+                            pos += tmMatch.value.length
+                            continue
+                        }
+                    }
+
+                    val lastOrNull = out.lastOrNull()
                     // Insert synthetic newlines at places where we'd expect one. This won't ever
                     // work with word lyrics without normal sync points at all for obvious reasons,
                     // but hey, we tried. Can't do much about it.
                     // If you want to write something that looks like a timestamp into your lyrics,
                     // you'll probably have to delete the following three lines.
-                    val lastOrNull = out.lastOrNull()
                     if (!(lastOrNull is NewLine? || lastOrNull is SyncPoint
                                 || lastOrNull is LineEndSyncPoint
-                                || (lastOrNull is SpeakerTag && lastOrNull.speaker.isBackground)))
+                                || (lastOrNull is SpeakerTag && lastOrNull.speaker.isBackground))) {
                         out.add(NewLine.SyntheticNewLine())
+                        hasLyricInLine = false
+                        hadWordSyncInLine = false
+                        hasSyncPointInLine = false
+                    }
                     out.add(SyncPoint(parseTime(tmMatch, false)))
+                    hasSyncPointInLine = true
                     if (tmMatch.groupValues[4].isNotEmpty()) { // [00:01.02-00:03.03] duration ext
                         out.add(LineEndSyncPoint(parseTime(tmMatch, true)))
                     }
@@ -266,6 +325,8 @@ private sealed class SyntacticLrc {
                 val wmMatch = timeWordMarksRegex.matchAt(text, pos)
                 if (wmMatch != null) {
                     out.add(WordSyncPoint(parseTime(wmMatch, false)))
+                    hadWordSyncInLine = true
+                    hasSyncPointInLine = true
                     pos += wmMatch.value.length
                     continue
                 }
@@ -279,13 +340,13 @@ private sealed class SyntacticLrc {
                 val last = out.lastOrNull()
                 // Only count lyric text as lyric text if there is at least one kind of timestamp
                 // associated.
-                if (out.indexOfLast { it is NewLine } <
-                    out.indexOfLast { it is SyncPoint || it is WordSyncPoint }) {
+                if (hasSyncPointInLine) {
                     if (last is LyricText) {
                         out[out.size - 1] = LyricText(last.text + subText)
                     } else {
                         out.add(LyricText(subText))
                     }
+                    hasLyricInLine = true
                 } else {
                     if (last is InvalidText) {
                         out[out.size - 1] = InvalidText(last.text + subText)
@@ -521,8 +582,13 @@ sealed class SemanticLyrics : Parcelable {
     }
 }
 
-fun parseLrc(lyricText: String, trimEnabled: Boolean, multiLineEnabled: Boolean): SemanticLyrics? {
-    val lyricSyntax = SyntacticLrc.parseLrc(lyricText, multiLineEnabled)
+fun parseLrc(
+    lyricText: String,
+    trimEnabled: Boolean,
+    multiLineEnabled: Boolean,
+    bracketWordSync: Boolean = false
+): SemanticLyrics? {
+    val lyricSyntax = SyntacticLrc.parseLrc(lyricText, multiLineEnabled, bracketWordSync)
         ?: return null
     if (lyricSyntax.find { it is SyntacticLrc.SyncPoint || it is SyntacticLrc.WordSyncPoint } == null) {
         val out = mutableListOf<Pair<String?, SpeakerEntity?>>()
@@ -709,7 +775,7 @@ fun parseLrc(lyricText: String, trimEnabled: Boolean, multiLineEnabled: Boolean)
                                 )
                             )
                     }
-                    wout
+                    wout.takeIf { it.isNotEmpty() }
                 } else null
                 var text = currentLine.joinToString("") { it.second ?: "" }
                 if (text.isNotBlank() || !emptyIsEnd &&

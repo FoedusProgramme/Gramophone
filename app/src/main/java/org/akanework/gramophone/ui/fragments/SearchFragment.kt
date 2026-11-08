@@ -39,6 +39,7 @@ import org.akanework.gramophone.logic.showKeyboard
 import org.akanework.gramophone.logic.ui.MyRecyclerView
 import org.akanework.gramophone.ui.adapters.SongAdapter
 import org.akanework.gramophone.ui.adapters.Sorter
+import uk.akane.libphonograph.items.matchesSearch
 
 /**
  * SearchFragment:
@@ -70,16 +71,7 @@ class SearchFragment : BaseFragment(true) {
                 this, qTitle, mainActivity.reader.songListFlow.combine(searchTextFlow.map {
                     it.trim()
                 }) { list, text ->
-                    list.filter {
-                        // TODO sort results by match quality? (using raw=natural order)
-                        val isMatchingTitle =
-                            it.mediaMetadata.title?.contains(text, true) == true
-                        val isMatchingAlbum =
-                            it.mediaMetadata.albumTitle?.contains(text, true) == true
-                        val isMatchingArtist =
-                            it.mediaMetadata.artist?.contains(text, true) == true
-                        isMatchingTitle || isMatchingAlbum || isMatchingArtist
-                    }
+                    list.filter { it.matchesSearch(text) }
                 },
                 isSubFragment = R.id.search, allowDiffUtils = true,
                 rawOrderExposed = Sorter.Type.ByTitleAscending

@@ -32,6 +32,8 @@
     <string name="category_playlists">Playlists</string>
     <!-- Used in place of the artist name if the artist can't be found unexpectedly -->
     <string name="unknown_artist">Unknown artist</string>
+    <!-- Dialog title when clicking the artist of a track that has multiple artists, prompting the user to select which artist to navigate to -->
+    <string name="select_artist">Select artist</string>
     <!-- Tab on home screen showing a list of years (2002, 2003, etc.) -->
     <string name="category_dates">Dates</string>
     <!-- Counting how many songs are in a song list -->
@@ -261,6 +263,10 @@
     <string name="settings_lyrics_configuration">Lyrics configuration</string>
     <!-- Settings subcategory in player UI settings about the lyrics feature. Subtext -->
     <string name="settings_lyrics_configuration_summary">Configure lyrics appearance</string>
+    <!-- Toggle in lyrics settings to display lyrics in fullscreen mode. Title -->
+    <string name="settings_lyrics_fullscreen">Fullscreen lyrics</string>
+    <!-- Toggle in lyrics settings to display lyrics in fullscreen mode. Subtext -->
+    <string name="settings_lyrics_fullscreen_summary">Display lyrics panel in fullscreen mode</string>
     <!-- Toggle in lyrics settings to make all lyrics bold. Title -->
     <string name="settings_lyrics_bold">Bold lyrics</string>
     <!-- Toggle in lyrics settings to make all lyrics bold. Subtext -->
@@ -390,6 +396,10 @@
     <string name="settings_lyrics_ui">Enable new lyric UI</string>
     <!-- Settings toggle to enable newer lyrics rendering code. Subtext -->
     <string name="settings_lyrics_ui_summary">Experimental UI to display word-by-word lyric with advanced features</string>
+    <!-- Settings toggle to enable inline bracket word-by-word LRC parsing. Title -->
+    <string name="settings_lrc_bracket_word_sync_title">Word-by-word LRC lyrics</string>
+    <!-- Settings toggle to enable inline bracket word-by-word LRC parsing. Subtext -->
+    <string name="settings_lrc_bracket_word_sync_summary">Enable support for word-by-word LRC format with inline bracket timestamps; falls back to line-level lyrics when disabled</string>
     <!-- Settings toggle to enable showing lyrics in status bar (requires meizu phone). Title -->
     <string name="settings_status_bar_lyrics_title">Status bar lyrics</string>
     <!-- Settings toggle to enable showing lyrics in status bar (requires meizu phone). Subtext -->
@@ -400,10 +410,23 @@
     <string name="settings_notification_lyrics_summary">Display lyrics as the notification title and artist - title as subtitle</string>
     <!-- Description shown about lyric widget in Android launcher / home screen's widget selector on Android 12+ -->
     <string name="lyric_widget_description">Widget that shows lyrics of currently playing media</string>
+    <string name="card_widget_title">Card widget</string>
+    <string name="card_widget_description">Widget that provides music playback controls and track details</string>
+    <string name="circle_widget_title">Circle &amp; pill widget</string>
+    <string name="circle_widget_description">Compact circular and pill-shaped widget with playback controls</string>
+    <string name="pause">Pause</string>
     <!-- Settings toggle in behavior settings to always skip to previous track on previous button press. Title -->
     <string name="settings_always_skip_previous">Always skip to previous track</string>
     <!-- Settings toggle in behavior settings to always skip to previous track on previous button press. Subtext -->
     <string name="settings_always_skip_previous_summary">Directly switch to previous track when pressing previous button instead of seeking to start</string>
+    <!-- Settings toggle in player settings to enable subtle rotation of cookie-styled play button. Title -->
+    <string name="settings_rotate_cookie_button">Rotate play button</string>
+    <!-- Settings toggle in player settings to enable subtle rotation of cookie-styled play button. Subtext -->
+    <string name="settings_rotate_cookie_button_summary">Subtly rotate the cookie-style play/pause button while playing</string>
+    <!-- Settings toggle in player settings to enable swipe gestures on album cover to switch tracks. Title -->
+    <string name="settings_swipe_to_switch_track">Swipe to switch track</string>
+    <!-- Settings toggle in player settings to enable swipe gestures on album cover to switch tracks. Subtext -->
+    <string name="settings_swipe_to_switch_track_summary">Swipe left or right on the album cover to switch tracks</string>
     <!-- Context menu item to delete song/album/playlist -->
     <string name="delete">Delete</string>
     <!-- Dialog text to confirm user wants to delete a specific song or playlist with user defined name -->
@@ -1305,4 +1328,58 @@ supporting local search. This string is displayed in the search bar when using G
     <string name="loading_playlists">Loading playlists...</string>
     <!-- Option to enable reordering mode for items in a list -->
     <string name="edit_mode">Enter edit mode</string>
+    <string name="settings_preference_category_desktop_widgets">Desktop widgets</string>
+    <string name="settings_widget_theme">Widget theme</string>
+    <string name="widget_theme_wallpaper_follow_system">Wallpaper · Follow system</string>
+    <string name="widget_theme_wallpaper_dark">Wallpaper · Dark</string>
+    <string name="widget_theme_wallpaper_light">Wallpaper · Light</string>
+    <string name="widget_theme_album_art_follow_system">Album art · Follow system</string>
+    <string name="widget_theme_album_art_dark">Album art · Dark</string>
+    <string name="widget_theme_album_art_light">Album art · Light</string>
+    <!-- Preference title in behavior settings to enable multi-artist detection and indexing -->
+    <string name="settings_multi_artist">Multi-artist support</string>
+    <!-- Preference summary in behavior settings explaining multi-artist support -->
+    <string name="settings_multi_artist_summary">Detect and index multiple artists from track metadata</string>
+    <!-- Preference title in behavior settings to enable multi-genre detection and indexing -->
+    <string name="settings_multi_genre">Multi-genre support</string>
+    <!-- Preference summary in behavior settings explaining multi-genre support -->
+    <string name="settings_multi_genre_summary">Detect and index multiple genres from track metadata</string>
+    <!-- Preference title to open configuration screen for artist split symbols and words -->
+    <string name="settings_split_artists">Artist split delimiters</string>
+    <!-- Preference summary explaining artist split delimiter configuration -->
+    <string name="settings_split_artists_summary">Configure symbols and words used to split multiple artists</string>
+    <!-- Preference title to open configuration screen for genre split symbols -->
+    <string name="settings_split_genres">Genre split delimiters</string>
+    <!-- Preference summary explaining genre split delimiter configuration -->
+    <string name="settings_split_genres_summary">Configure symbols used to split multiple genres</string>
+    <!-- Section title in delimiter settings screen grouping punctuation/symbol chips (e.g. commas, slashes) -->
+    <string name="split_symbols_title">Symbols</string>
+    <!-- Section title in delimiter settings screen grouping word chips (e.g. feat., ft.) -->
+    <string name="split_words_title">Words</string>
+    <!-- Button text to add a new symbol delimiter in split tag settings -->
+    <string name="split_add_symbol">Add symbol</string>
+    <!-- Button text to add a new word delimiter in split tag settings -->
+    <string name="split_add_word">Add word</string>
+    <!-- Informational hint at the bottom of the split settings screen explaining how to prevent unwanted splitting using a backslash -->
+    <string name="split_escape_hint">Tip: If an artist or genre name in audio metadata contains a symbol that should not be split, you can edit it manually to escape the symbol with a backslash (e.g. AC\\/DC)</string>
+    <!-- Menu item in split settings screen to restore delimiters to factory defaults -->
+    <string name="reset_to_default">Reset to default</string>
+    <!-- Example placeholder hint shown in the input field when adding a word delimiter (e.g. feat., ft.) -->
+    <string name="split_add_word_hint">feat., ft., etc.</string>
+    <!-- Example placeholder hint shown in the input field when adding a symbol delimiter (e.g. comma, slash, semicolon) -->
+    <string name="split_add_symbol_hint">, / ; etc.</string>
+    <!-- Category title in behavior settings grouping multi-artist and multi-genre tag splitting preferences -->
+    <string name="settings_category_tag_splitting">Tag Splitting</string>
+    <!-- Validation error message shown when a symbol is longer than a single character -->
+    <string name="split_symbol_single_char_only">Symbols must be a single character</string>
+    <!-- Validation error message shown when attempting to add backslash as a delimiter -->
+    <string name="split_backslash_not_allowed">Backslash cannot be used as a delimiter</string>
+    <!-- Validation error message shown when attempting to add a letter or digit as a symbol delimiter -->
+    <string name="split_symbol_no_letter_or_digit">Symbols cannot be letters or digits</string>
+    <!-- Validation error message shown when a delimiter already exists in configuration -->
+    <string name="split_delimiter_already_exists">Delimiter already exists</string>
+    <!-- Validation error message shown when a word delimiter contains whitespace -->
+    <string name="split_word_no_whitespace">Words cannot contain whitespace</string>
+    <!-- Accessibility content description for chip remove button -->
+    <string name="split_remove_delimiter">Remove %s</string>
 </resources>

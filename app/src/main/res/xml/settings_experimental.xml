@@ -54,6 +54,15 @@
             android:widgetLayout="@layout/preference_switch_widget"
             app:iconSpaceReserved="false" />
 
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="lrc_bracket_word_sync"
+            android:layout="@layout/preference_switch"
+            android:summary="@string/settings_lrc_bracket_word_sync_summary"
+            android:title="@string/settings_lrc_bracket_word_sync_title"
+            android:widgetLayout="@layout/preference_switch_widget"
+            app:iconSpaceReserved="false" />
+
         <ListPreference
             android:defaultValue="0"
             android:entries="@array/offload_switch"

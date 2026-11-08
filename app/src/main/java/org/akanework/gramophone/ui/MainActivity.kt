@@ -94,11 +94,14 @@ import org.akanework.gramophone.logic.postAtFrontOfQueueAsync
 import org.akanework.gramophone.logic.ui.BaseActivity
 import org.akanework.gramophone.ui.adapters.PlaylistAdapter
 import org.akanework.gramophone.ui.components.PlayerBottomSheet
+import org.akanework.gramophone.ui.fragments.ArtistSubFragment
 import org.akanework.gramophone.ui.fragments.BaseFragment
 import org.akanework.gramophone.ui.fragments.GeneralSubFragment
 import org.akanework.gramophone.ui.fragments.SearchFragment
 import org.akanework.gramophone.ui.fragments.ViewPagerFragment
 import org.nift4.mediastorecompat.MediaStoreCompat
+import uk.akane.libphonograph.items.artistId
+import uk.akane.libphonograph.items.artistNames
 import uk.akane.libphonograph.dynamicitem.Favorite
 import uk.akane.libphonograph.manipulator.ItemManipulator
 import uk.akane.libphonograph.manipulator.PlaylistSerializer
@@ -330,6 +333,38 @@ class MainActivity : BaseActivity() {
                     .show()
             }
         }
+    }
+
+    fun navigateToArtistDialog(item: MediaItem, itemType: Int = R.id.artist) {
+        val artists = item.mediaMetadata.artistNames
+        if (artists.isEmpty()) {
+            startFragment(ArtistSubFragment()) {
+                item.mediaMetadata.artistId?.let { putString("Id", it.toString()) }
+                item.mediaMetadata.artist?.toString()?.let { putString("Name", it) }
+                putInt("Item", itemType)
+            }
+            return
+        }
+        if (artists.size == 1) {
+            startFragment(ArtistSubFragment()) {
+                item.mediaMetadata.artistId?.let { putString("Id", it.toString()) }
+                putString("Name", artists.first())
+                putInt("Item", itemType)
+            }
+            return
+        }
+        val items = artists.toTypedArray()
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.select_artist)
+            .setItems(items) { _, which ->
+                val chosen = items[which]
+                startFragment(ArtistSubFragment()) {
+                    putString("Name", chosen)
+                    putInt("Item", itemType)
+                }
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
     }
 
     fun addToPlaylist(uri: Uri?, name: File?, songs: List<Entry>) {
