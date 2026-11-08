@@ -26,6 +26,8 @@ import androidx.recyclerview.widget.ConcatAdapter
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.MaterialToolbar
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -102,6 +104,24 @@ class ArtistSubFragment : BaseFragment(true), PopupTextProvider {
 
         topAppBar.setNavigationOnClickListener {
             requireActivity().supportFragmentManager.popBackStack()
+        }
+        topAppBar.inflateMenu(R.menu.subfragment_menu)
+        topAppBar.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.add_to_playlist -> {
+                    lifecycleScope.launch(Dispatchers.Default) {
+                        val songs = item.map { it?.songList }.filterNotNull().first()
+                        if (songs.isNotEmpty()) {
+                            withContext(Dispatchers.Main) {
+                                mainActivity.addToPlaylistDialog(songs)
+                            }
+                        }
+                    }
+                    true
+                }
+
+                else -> false
+            }
         }
         lifecycleScope.launch(Dispatchers.Default) {
             title.collect {

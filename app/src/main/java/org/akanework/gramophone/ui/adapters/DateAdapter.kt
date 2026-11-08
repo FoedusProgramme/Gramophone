@@ -18,6 +18,7 @@
 package org.akanework.gramophone.ui.adapters
 
 import androidx.appcompat.widget.PopupMenu
+import androidx.core.view.iterator
 import androidx.fragment.app.Fragment
 import org.akanework.gramophone.R
 import org.akanework.gramophone.ui.MainActivity
@@ -58,7 +59,11 @@ class DateAdapter(
     }
 
     override fun onMenu(item: Date, popupMenu: PopupMenu) {
-        popupMenu.inflate(R.menu.more_menu_less)
+        popupMenu.inflate(R.menu.more_menu)
+        popupMenu.menu.iterator().forEach {
+            it.isVisible = it.itemId == R.id.play_next || it.itemId == R.id.add_to_queue
+                    || it.itemId == R.id.add_to_playlist
+        }
 
         popupMenu.setOnMenuItemClickListener { it1 ->
             when (it1.itemId) {
@@ -79,15 +84,11 @@ class DateAdapter(
                     true
                 }
 
-                /*
-				R.id.share -> {
-					val builder = ShareCompat.IntentBuilder(mainActivity)
-					val mimeTypes = mutableSetOf<String>()
-					builder.addStream(viewModel.fileUriList.value?.get(songList[holder.bindingAdapterPosition].mediaId.toLong())!!)
-					mimeTypes.add(viewModel.mimeTypeList.value?.get(songList[holder.bindingAdapterPosition].mediaId.toLong())!!)
-					builder.setType(mimeTypes.singleOrNull() ?: "audio/*").startChooser()
-				 } */
-				 */
+                R.id.add_to_playlist -> {
+                    mainActivity.addToPlaylistDialog(item.songList)
+                    true
+                }
+
                 else -> false
             }
         }
