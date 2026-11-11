@@ -200,7 +200,7 @@
     <string name="spk_encoding_ac4">AC-4</string>
     <string name="spk_encoding_dts">DTS</string>
     <string name="open_in_gramophone">Ouvrir dans Gramophone</string>
-    <string name="delete_really">Voulez-vous réellement supprimer \"%s\" ? Cette action est irréversible.</string>
+    <string name="delete_really">Voulez-vous réellement supprimer « %s » ? Cette action est irréversible.</string>
     <string name="spk_channel_out_mono">Mono</string>
     <string name="spk_channel_out_stereo">Stéréo</string>
     <string name="spk_channel_out_quad">Quadriphonique</string>
@@ -238,7 +238,7 @@
     <string name="settings_trim_lyrics_summary">Les espaces avant la première lettre ou après la fin d’une ligne de paroles peuvent avoir une valeur artistique. Si vous n’êtes pas de cet avis, activez cette option pour les supprimer automatiquement.</string>
     <string name="device_type_dock">Station d\'accueil</string>
     <string name="settings_contributors_click">%S (cliquez pour en savoir plus!)</string>
-    <string name="dialog_bitrate">Bitrate</string>
+    <string name="dialog_bitrate">Débit binaire</string>
     <string name="device_type_bluetooth_a2dp">Bluetooth A2DP</string>
     <string name="device_type_builtin_speaker">Haut-parleur intégré</string>
     <string name="device_type_wired_headphones">Casque audio filaire</string>
@@ -277,12 +277,12 @@
     <string name="spk_encoding_pcm_8bit">PCM 8-bit</string>
     <string name="spk_encoding_pcm_32bit">PCM 32-bit (entier)</string>
     <string name="spk_encoding_e_ac3_joc">E-AC-3-JOC</string>
-    <string name="bitrate_format">%1$d kbps</string>
-    <string name="bitrate_unknown">Bitrate inconnu</string>
-    <string name="settings_open_source_licenses">Licenses open source</string>
+    <string name="bitrate_format">%1$d kb/s</string>
+    <string name="bitrate_unknown">Débit binaire inconnu</string>
+    <string name="settings_open_source_licenses">Licences à code ouvert</string>
     <string name="oh_no">Oh non !</string>
-    <string name="send_email">Envoyer un email</string>
-    <string name="send_email_manually">Veuillez envoyer le journal à nift4@posteo.net : aucune application de messagerie n’a été trouvée.</string>
+    <string name="send_email">Envoyer un courriel</string>
+    <string name="send_email_manually">Veuillez envoyer le journal à nift4@posteo.net : aucune application de messagerie n’a été trouvée</string>
     <string name="mix_port_flag_none">Aucun</string>
     <string name="audio_not_initialized">Le système de lecture audio n\'a pas été initialisé. Essaye de jouer quelque chose !</string>
     <string name="mix_port_flag_spatializer">Son spatial</string>
@@ -397,7 +397,7 @@
     <string name="spk_encoding_unknown_d">Format inconnu %d</string>
     <string name="crash_report">Rapport de plantage</string>
     <string name="what_were_you_doing">Que faisiez-vous dans Gramophone lorsque ce plantage s’est produit ? Ajoutez autant de détails que possible afin d’augmenter les chances que je puisse corriger le problème.\n\nVeuillez noter que l’anglais est préférable pour les rapports de bug, mais j’essaierai d’utiliser la traduction automatique si vous envoyez un rapport dans une autre langue.</string>
-    <string name="email_clipboard">Adresse e-mail et texte copiés dans le presse-papiers</string>
+    <string name="email_clipboard">Adresse courriel et texte copiés dans le presse-papiers</string>
     <string name="settings_export_logs">Exporter les journaux de l’application</string>
     <string name="settings_audio_quality_info">Informations sur la qualité audio</string>
     <string name="settings_audio_quality_info_summary">Afficher les informations sur la qualité et le format audio dans l’écran du lecteur</string>
@@ -407,7 +407,7 @@
     <string name="settings_translation_auto_word_summary">Appliquer un dégradé linéaire aux lignes traduites lors de la lecture de paroles synchronisées mot par mot si les traductions ne disposent pas de métadonnées de synchronisation des mots</string>
     <string name="cannot_find_file">Impossible de trouver ce fichier</string>
     <string name="enter_msg_for_dev_here">Saisissez ici un message pour le développeur</string>
-    <string name="do_not_enter_email_enter_msg">Saisissez un message, pas une adresse e-mail</string>
+    <string name="do_not_enter_email_enter_msg">Saisissez un message, pas une adresse courriel</string>
     <string name="log_will_auto_send">Les journaux seront envoyés automatiquement ; décrivez plutôt le problème</string>
     <string name="log_attachment">Les journaux seront automatiquement envoyés en pièce jointe</string>
     <string name="create_playlist">Créer une liste de lecture…</string>
@@ -528,4 +528,9 @@
     <string name="shuffled">%s (aléatoire)</string>
     <string name="loading_playlists">Chargement des listes de lecture…</string>
     <string name="edit_mode">Passer en mode édition</string>
+    <string name="reverse_order">Inverser l\'ordre</string>
+    <string name="settings_notification_lyrics_title">Paroles en notification</string>
+    <string name="settings_notification_lyrics_summary">Afficher les paroles en tant que titre de notification et artiste - titre en sous-titre</string>
+    <string name="settings_always_skip_previous">Toujours sauter à la piste précédente</string>
+    <string name="settings_always_skip_previous_summary">Passer directement à la piste précédente en appuyant sur le bouton précédent au lieu de chercher à démarrer</string>
 </resources>
