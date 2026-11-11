@@ -10,15 +10,15 @@
     <string name="settings_player_options">Audio</string>
     <string name="settings_title_bold">Titolo in grassetto</string>
     <plurals name="songs">
-        <item quantity="one">%d Brano</item>
-        <item quantity="many">%d Brani</item>
-        <item quantity="other">%d Brani</item>
+        <item quantity="one">%d brano</item>
+        <item quantity="many">%d brani</item>
+        <item quantity="other">%d brani</item>
     </plurals>
     <string name="dialog_year">Anno</string>
     <plurals name="albums">
-        <item quantity="one">%d Album</item>
-        <item quantity="many">%d Album</item>
-        <item quantity="other">%d Album</item>
+        <item quantity="one">%d album</item>
+        <item quantity="many">%d album</item>
+        <item quantity="other">%d album</item>
     </plurals>
     <string name="dialog_path">Percorso</string>
     <string name="unknown_album">Album sconosciuto</string>
@@ -49,9 +49,9 @@
     <string name="settings_preference_category_application">Applicazione</string>
     <string name="settings_play_on_launch_summary">Esegui musica all\'avvio</string>
     <plurals name="items">
-        <item quantity="one">%d Elemento</item>
-        <item quantity="many">%d di Elementi</item>
-        <item quantity="other">%d Elementi</item>
+        <item quantity="one">%d elemento</item>
+        <item quantity="many">%d di elementi</item>
+        <item quantity="other">%d elementi</item>
     </plurals>
     <string name="settings_blacklist_folder_summary">Filtra brani da alcune cartelle</string>
     <string name="settings_category_basic_info">Info di base</string>
@@ -70,9 +70,9 @@
     <string name="shuffle">Casuale</string>
     <string name="dialog_album_artist">Artista album</string>
     <plurals name="artists">
-        <item quantity="one">%d Artista</item>
-        <item quantity="many">%d Artisti</item>
-        <item quantity="other">%d Artisti</item>
+        <item quantity="one">%d artista</item>
+        <item quantity="many">%d artisti</item>
+        <item quantity="other">%d artisti</item>
     </plurals>
     <string name="go_to_artist">Vai a artista</string>
     <string name="details">Dettagli</string>
@@ -86,10 +86,10 @@
     <string name="dialog_duration">Durata</string>
     <string name="settings_title_center">Titolo centrato</string>
     <string name="settings_about_gramophone">Riguardo all\'applicazione</string>
-    <string name="settings_library">Libreria</string>
+    <string name="settings_library">Raccolta</string>
     <string name="deny_images"><![CDATA[Per favore, nega l\'accesso a \"Foto e video\"]]></string>
     <string name="settings_player_ui_summary">UI player intero, testi</string>
-    <string name="settings_library_summary">Gestisci libreria media</string>
+    <string name="settings_library_summary">Gestisci la raccolta media</string>
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>
     <string name="dialog_edit_metadata">Modifica</string>
     <string name="album_cover">Copertina album</string>
@@ -214,7 +214,7 @@
     <string name="open_in_gramophone">Apri in Gramophone</string>
     <string name="dialog_bitrate">Bitrate</string>
     <string name="bitrate_unknown">Bitrate sconosciuto</string>
-    <string name="bitrate_format">%1$d kbps</string>
+    <string name="bitrate_format">%1$d kb/s</string>
     <string name="spk_channel_invalid">Non valido</string>
     <string name="device_type_builtin_speaker">Altoparlante integrato</string>
     <string name="device_type_unknown">Sconosciuto</string>
@@ -245,13 +245,14 @@
     <string name="spk_channel_out_9point1point4">9.1.4</string>
     <string name="spk_channel_out_9point1point6">9.1.6</string>
     <string name="device_type_usb_accessory">Accessorio USB</string>
-    <string name="settings_open_source_licenses">Licenze open source</string>
-    <string name="send_email">Invia email</string>
+    <string name="settings_open_source_licenses">Licenze codice aperto</string>
+    <string name="send_email">Invia un\'e-mail</string>
     <string name="device_type_hdmi">HDMI</string>
     <string name="oh_no">Oh no!</string>
     <plurals name="folders_plural">
-        <item quantity="one">% Cartella</item>
-        <item quantity="many">% Cartelle</item>
+        <item quantity="one">% cartella</item>
+        <item quantity="many">% cartelle</item>
+        <item quantity="other">% cartelle</item>
     </plurals>
     <string name="playback_speed">Velocità riproduzione</string>
     <string name="app_name">Gramophone</string>
@@ -264,4 +265,8 @@
     <string name="tempo_pitch_value">%s: %.2fx</string>
     <string name="lock_tempo_pitch">Blocca velocità e altezza</string>
     <string name="reset">Reimposta</string>
+    <string name="send_email_manually">Si prega di inviare il registro a nift4@posteo.net - app e-mail non trovata</string>
+    <string name="failed_to_parse_lyric">Impossibile analizzare il testo</string>
+    <string name="email_clipboard">Indirizzo e-mail e testo copiati negli appunti</string>
+    <string name="do_not_enter_email_enter_msg">Inserisci un messaggio, non un indirizzo e-mail</string>
 </resources>
