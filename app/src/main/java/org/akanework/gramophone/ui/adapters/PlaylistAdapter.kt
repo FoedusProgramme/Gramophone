@@ -149,6 +149,7 @@ class PlaylistAdapter(
         val canDelete = item.id != null
         popupMenu.menu.iterator().forEach {
             it.isVisible = it.itemId == R.id.play_next || it.itemId == R.id.add_to_queue
+                    || it.itemId == R.id.add_to_playlist
                     || (canRename && it.itemId == R.id.rename)
                     || (canDelete && it.itemId == R.id.delete)
         }
@@ -167,6 +168,10 @@ class PlaylistAdapter(
                     mediaController?.addMediaItems(
                         item.songList,
                     )
+                }
+
+                R.id.add_to_playlist -> {
+                    mainActivity.addToPlaylistDialog(item.songList)
                 }
 
                 R.id.delete -> {
