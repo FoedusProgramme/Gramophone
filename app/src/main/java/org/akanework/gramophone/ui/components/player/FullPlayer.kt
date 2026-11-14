@@ -52,6 +52,7 @@ import androidx.compose.material.icons.outlined.AlarmOn
 import androidx.compose.material.icons.outlined.ExpandMore
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material.icons.outlined.KeyboardArrowUp
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Repeat
 import androidx.compose.material.icons.outlined.RepeatOne
@@ -63,6 +64,7 @@ import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MotionScheme
@@ -811,10 +813,10 @@ private fun Modifier.transportSlot(): Modifier =
  * favourite on the tertiary one).
  * It sits on top of the queue, which comes up with it when dragged up (see QueueDrawer).
  */
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 internal fun ActionBarRow(
     player: PlayerSheetPlayerState,
+    queue: QueueRevealState,
     actions: FullPlayerActions,
     scheme: AnimatedColorScheme,
     horizontalMargin: Dp,
@@ -832,54 +834,69 @@ internal fun ActionBarRow(
     val leading = ButtonGroupDefaults.connectedLeadingButtonShapes()
     val middle = ButtonGroupDefaults.connectedMiddleButtonShapes()
     val trailing = ButtonGroupDefaults.connectedTrailingButtonShapes()
-    Row(
-        modifier
-            .fillMaxWidth()
-            .padding(
-                start = horizontalMargin,
-                top = ACTION_BAR_VERTICAL_PADDING,
-                end = horizontalMargin,
-                bottom = ACTION_BAR_VERTICAL_PADDING,
-            ),
-        horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
-        verticalAlignment = Alignment.CenterVertically,
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        val slot = Modifier.weight(1f).height(ACTION_BUTTON_SIZE)
-        GroupButton(
-            Icons.AutoMirrored.Outlined.Article, stringResource(R.string.dialog_lyrics), plainTint,
-            leading, container, actions.showLyrics, slot,
-        )
-        GroupToggleButton(
-            icon = if (repeatMode == Player.REPEAT_MODE_ONE) {
-                Icons.Outlined.RepeatOne
-            } else {
-                Icons.Outlined.Repeat
-            },
-            contentDescription = stringResource(R.string.repeat_mode),
-            tint = checkTint(repeatMode != Player.REPEAT_MODE_OFF),
-            shapes = middle,
-            container = container,
-            checkedContainer = checkedContainer,
-            checked = repeatMode != Player.REPEAT_MODE_OFF,
-            onClick = actions.cycleRepeat,
-            modifier = slot,
-        )
-        GroupToggleButton(
-            Icons.Outlined.Shuffle, stringResource(R.string.shuffle), checkTint(shuffle), middle,
-            container, checkedContainer, shuffle, { actions.toggleShuffle(!shuffle) }, slot,
-        )
-        GroupToggleButton(
-            icon = if (favorite) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
-            contentDescription = stringResource(R.string.playlist_favourite),
-            // The favourite on the tertiary colours rather than the primary ones
-            tint = scheme.colorProducer { if (favorite) onTertiaryContainer else onSurface },
-            shapes = trailing,
-            container = container,
-            checkedContainer = scheme.color { tertiaryContainer },
-            checked = favorite,
-            onClick = { actions.toggleFavorite(!favorite) },
-            modifier = slot,
-        )
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .padding(
+                    start = horizontalMargin,
+                    top = ACTION_BAR_VERTICAL_PADDING,
+                    end = horizontalMargin,
+                    bottom = ACTION_BAR_VERTICAL_PADDING,
+                ),
+            horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            val slot = Modifier.weight(1f).height(ACTION_BUTTON_SIZE)
+            GroupButton(
+                Icons.AutoMirrored.Outlined.Article, stringResource(R.string.dialog_lyrics), plainTint,
+                leading, container, actions.showLyrics, slot,
+            )
+            GroupToggleButton(
+                icon = if (repeatMode == Player.REPEAT_MODE_ONE) {
+                    Icons.Outlined.RepeatOne
+                } else {
+                    Icons.Outlined.Repeat
+                },
+                contentDescription = stringResource(R.string.repeat_mode),
+                tint = checkTint(repeatMode != Player.REPEAT_MODE_OFF),
+                shapes = middle,
+                container = container,
+                checkedContainer = checkedContainer,
+                checked = repeatMode != Player.REPEAT_MODE_OFF,
+                onClick = actions.cycleRepeat,
+                modifier = slot,
+            )
+            GroupToggleButton(
+                Icons.Outlined.Shuffle, stringResource(R.string.shuffle), checkTint(shuffle), middle,
+                container, checkedContainer, shuffle, { actions.toggleShuffle(!shuffle) }, slot,
+            )
+            GroupToggleButton(
+                icon = if (favorite) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
+                contentDescription = stringResource(R.string.playlist_favourite),
+                // The favourite on the tertiary colours rather than the primary ones
+                tint = scheme.colorProducer { if (favorite) onTertiaryContainer else onSurface },
+                shapes = trailing,
+                container = container,
+                checkedContainer = scheme.color { tertiaryContainer },
+                checked = favorite,
+                onClick = { actions.toggleFavorite(!favorite) },
+                modifier = slot,
+            )
+        }
+
+        IconButton(
+            onClick = queue::reveal,
+            modifier = Modifier
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.KeyboardArrowUp,
+                contentDescription = null,
+            )
+        }
     }
 }
 

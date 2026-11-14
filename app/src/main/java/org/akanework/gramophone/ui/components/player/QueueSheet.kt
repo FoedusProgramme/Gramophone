@@ -44,11 +44,14 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.KeyboardArrowUp
 import androidx.compose.material.icons.outlined.Repeat
 import androidx.compose.material.icons.outlined.RepeatOne
 import androidx.compose.material.icons.outlined.Shuffle
 import androidx.compose.material.icons.outlined.SkipNext
 import androidx.compose.material.icons.outlined.SkipPrevious
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -247,7 +250,7 @@ internal fun QueueSheet(
             // Gone once faded out, so it doesn't take the touches of the queue under it
             if (!queue.revealed) {
                 ActionBarRow(
-                    player, actions, scheme,
+                    player, queue, actions, scheme,
                     horizontalMargin = if (geometry.isWideLandscape) {
                         LANDSCAPE_MARGIN
                     } else {

@@ -92,7 +92,8 @@ object PlayerUtilities {
     // Converted to px one by one, as the text does: with non-linear font scaling (Android 14)
     // their sum in sp would grow less than the lines themselves.
     val EXPANDED_CONTROLS_LINES = listOf(TITLE_LINE_HEIGHT, ARTIST_LINE_HEIGHT, TIME_LINE_HEIGHT)
-    val EXPANDED_ACTION_BAR =
+    val QUEUE_HINT_HEIGHT = 38.dp
+    val EXPANDED_ACTION_BAR = QUEUE_HINT_HEIGHT +
         ACTION_BUTTON_SIZE + ACTION_BAR_VERTICAL_PADDING * 2
     /** The queue's drag handle, above the bottom row. */
     val QUEUE_HANDLE_WIDTH = 32.dp
