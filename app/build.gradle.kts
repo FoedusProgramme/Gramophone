@@ -315,7 +315,8 @@ dependencies {
     // material3 that materialkolor and aboutlibraries depend on.
     implementation("androidx.compose.material3:material3:1.5.0-alpha22")
     implementation("androidx.compose.animation:animation-graphics")
-    implementation("dev.chrisbanes.haze:haze:1.7.3")
+    implementation("dev.chrisbanes.haze:haze:2.1.0")
+    implementation("dev.chrisbanes.haze:haze-blur:2.1.0")
     implementation("sh.calvin.reorderable:reorderable:3.1.0")
     implementation("androidx.compose.ui:ui-tooling-preview")
     debugImplementation("androidx.compose.ui:ui-tooling")

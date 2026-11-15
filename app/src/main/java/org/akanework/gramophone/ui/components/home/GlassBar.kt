@@ -45,13 +45,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dev.chrisbanes.haze.ExperimentalHazeApi
-import dev.chrisbanes.haze.HazeInputScale
+import dev.chrisbanes.haze.HazeInput
+import dev.chrisbanes.haze.HazePerformanceMode
 import dev.chrisbanes.haze.HazeProgressive
 import dev.chrisbanes.haze.HazeState
-import dev.chrisbanes.haze.HazeStyle
-import dev.chrisbanes.haze.HazeTint
-import dev.chrisbanes.haze.hazeEffect
+import dev.chrisbanes.haze.blur.HazeBlurStyle
+import dev.chrisbanes.haze.blur.HazeColorEffect
+import dev.chrisbanes.haze.blur.hazeBlur
 import org.akanework.gramophone.ui.components.compose.BackButton
 
 /*
@@ -68,15 +68,18 @@ val GLASS_BAR_HEIGHT = 64.dp
  * The colour over the blur is a gradient instead, see [topEdgeBlur].
  */
 @Composable
-fun glassHazeStyle(): HazeStyle = HazeStyle(
-    backgroundColor = Color.Transparent,
-    tints = emptyList(),
-    blurRadius = 32.dp,
-    noiseFactor = 0f,
-    // Below API 31 there is no RenderEffect blur. Degrade to a near-opaque surface so the title
-    // stays readable instead of floating over sharp content.
-    fallbackTint = HazeTint(MaterialTheme.colorScheme.surfaceContainerLow.copy(alpha = 0.95f)),
-)
+fun glassHazeStyle(): HazeBlurStyle  {
+    val fallbackTint = MaterialTheme.colorScheme.surfaceContainerLow.copy(alpha = 0.95f)
+    return HazeBlurStyle {
+        backgroundColor(Color.Transparent)
+        colorEffects(emptyList())
+        blurRadius(32.dp)
+        noiseFactor(0f)
+        // Below API 31 there is no RenderEffect blur. Degrade to a near-opaque surface so the title
+        // stays readable instead of floating over sharp content.
+        fallbackColorEffect(HazeColorEffect.tint(fallbackTint))
+    }
+}
 
 /**
  * Full blur against the top edge of the screen, gone by the bottom of the bar. The easing matters
@@ -91,7 +94,6 @@ private val TopEdgeProgressive = HazeProgressive.verticalGradient(
     startIntensity = 1f,
     endY = Float.POSITIVE_INFINITY,
     endIntensity = 0f,
-    preferPerformance = false,
 )
 
 /** How much of the page's colour covers the blur against the top edge of the screen. */
@@ -112,8 +114,7 @@ private val TopEdgeScrimStops: List<Pair<Float, Float>> = (0..8).map { i ->
  * half resolution copy of the content whatever the intensity, so the node must be exactly the
  * bar and never extend over content that should stay sharp.
  */
-@OptIn(ExperimentalHazeApi::class)
-fun Modifier.topEdgeBlur(hazeState: HazeState, style: HazeStyle, scrim: Color): Modifier =
+fun Modifier.topEdgeBlur(hazeState: HazeState, style: HazeBlurStyle, scrim: Color): Modifier =
     drawWithCache {
         val brush = Brush.verticalGradient(
             *TopEdgeScrimStops.map { (y, a) -> y to scrim.copy(alpha = scrim.alpha * a) }
@@ -123,10 +124,11 @@ fun Modifier.topEdgeBlur(hazeState: HazeState, style: HazeStyle, scrim: Color): 
             drawContent()
             drawRect(brush)
         }
-    }.hazeEffect(hazeState, style) {
-        inputScale = HazeInputScale.Fixed(0.5f)
-        progressive = TopEdgeProgressive
-    }
+    }.hazeBlur(
+        input = HazeInput.Sources(hazeState),
+        style = style.then { progressive(TopEdgeProgressive) },
+        performanceMode = HazePerformanceMode.Fixed(0.5f),
+    )
 
 /**
  * The glass toolbar over a page's content: [navigationIcon], the small [title], then [actions].
