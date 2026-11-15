@@ -477,6 +477,5 @@
     <string name="spk_encoding_mpegh_sub_bl_l4">MPEG-H Baseline Profile L4</string>
     <string name="spk_encoding_mpegh_sub_lc_l3">MPEG-H منخفض التعقيد L3</string>
     <string name="spk_encoding_mpegh_sub_lc_l4">MPEG-H منخفض التعقيد L4</string>
-    <string name="contributors_lambada10">توفير عينات كلمات و SongSync</string>
     <string name="spk_encoding_pcm_20bit">20-bit PCM</string>
 </resources>
