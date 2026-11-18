@@ -75,6 +75,7 @@
     <string name="settings_default_progress_bar_summary">マテリアルスタイルのプログレスバーを有効化します</string>
     <string name="now_playing">再生中</string>
     <string name="settings_content_based_color">コンテンツベースのカラー生成</string>
+    <string name="playlist_favourite">お気に入り</string>
     <string name="settings_content_based_color_summary">アルバムアートをベースとしたカラー生成を有効化します</string>
     <string name="settings_package_type">パッケージのタイプ</string>
     <string name="no_lyric_found">歌詞がありません</string>
@@ -271,6 +272,7 @@
     <string name="bitrate_unknown">不明なビットレート</string>
     <string name="settings_contributors_click">%s (タップで詳細を表示します！)</string>
     <string name="settings_open_source_licenses">オープンソースライセンス</string>
+    <string name="send_email_manually">こちらにログを送信 nift4@posteo.net - メールアプリがありません</string>
     <string name="oh_no">オーノー！</string>
     <string name="send_email">メールを送信</string>
     <string name="package_type_explainer">Gramophone はオープンソースです。誰でも Gramophone の APK を作成できます。APK の入手先を残すために Gramophone はパッケージのタイプを提供しています。\n\n最も一般的なタイプは Release で F-Droid、Google Play、GitHub または IzzyOnDroid から取得されます。\nCI パッケージタイプは GitHub のすべてのコミットに対して作成される自動ビルドを指します。これらのビルドは不安定な場合があります。\nOther パッケージタイプの場合、名前から APK の入手先がわかるはずです。</string>
@@ -424,6 +426,7 @@
     </plurals>
     <string name="settings_cookie_summary">アルバムカバーをクッキー型にします</string>
     <string name="settings_cookie_info">クッキーカバー</string>
+    <string name="settings_pure_dark">ピュアブラックのダークテーマ</string>
     <string name="settings_pure_dark_summary">アプリ内のすべての表面をピュアブラックテーマにします (OLED ディスプレイでは黒つぶれが発生する可能性があります)</string>
     <string name="settings_stop_on_dismiss">閉じて停止</string>
     <string name="settings_stop_on_dismiss_summary">最近使ったアプリからアプリタスクが消去されたときに再生を停止します</string>
@@ -466,4 +469,52 @@
     <string name="actions_query_start_random_music">音楽をランダムで開始</string>
     <string name="actions_query_start_random_songs">曲をランダムで開始</string>
     <string name="actions_query_shuffle_specific">$item_name をシャッフル</string>
+    <string name="search_query">検索: %s</string>
+    <string name="reverse_order">逆順</string>
+    <string name="settings_notification_lyrics_title">通知の歌詞</string>
+    <string name="settings_notification_lyrics_summary">通知タイトルに歌詞の表示、サブタイトルにアーティスト名を表示します</string>
+    <string name="settings_always_skip_previous">常に前のトラックへスキップ</string>
+    <string name="settings_always_skip_previous_summary">前のトラックボタンを押下後に、開始位置を探さずに前のトラックに直接切り替えます</string>
+    <string name="delete_really_artist">「%s」のすべての楽曲を削除しますか？この操作は元に戻せません。</string>
+    <string name="edit_favorites_failed">お気に入りの編集に失敗しました: %s</string>
+    <string name="contributors_banksio">Android Auto</string>
+    <string name="favorite">お気に入り</string>
+    <string name="unfavorite">お気に入りを解除</string>
+    <string name="favorite_failed_title">曲のお気に入り状態を変更できませんでした</string>
+    <string name="favorite_failed_text">お気に入りのプレイリストファイルへのアクセス許可を与えることで変更を適用するには、ここをタップしてください</string>
+    <string name="error_in_bg">バックグラウンドでエラーが発生しています</string>
+    <string name="settings_whitelist">ホワイトリスト</string>
+    <string name="save">保存</string>
+    <string name="discard">破棄</string>
+    <string name="apply">適用</string>
+    <string name="restore_edits">変更を復元しますか？</string>
+    <string name="restore">復元</string>
+    <string name="mount_storage">この機能を使用するには、SD カードを挿入してください</string>
+    <string name="failed_to_restore">設定の復元に失敗しました: %s</string>
+    <string name="playlist_empty">プレイリストは空です</string>
+    <string name="search_desc">アーティスト、アルバムとトラック</string>
+    <string name="search_hint">曲とアーティストを検索</string>
+    <string name="picker_activity">音楽のトラックを選択</string>
+    <string name="playlist_picker_activity">プレイリストを選択</string>
+    <string name="settings_preference_category_folders_filesystem"><![CDATA[フォルダとファイルシステムタブ]]></string>
+    <string name="show_file_names">ファイル名を表示する</string>
+    <string name="show_file_names_summary">フォルダタブとファイルシステムタブで、曲名の代わりにファイル名を表示します</string>
+    <string name="another_with_name">名前はすでに使用されています</string>
+    <string name="settings_font_size">フォントサイズ</string>
+    <string name="set">設定</string>
+    <string name="timer_eos">曲が終わるまで待機</string>
+    <string name="timer_end_of_this_song">この曲の終わり</string>
+    <string name="other">カスタム</string>
+    <string name="unset">未設定</string>
+    <string name="timer_hint">音楽を一時停止する時間…</string>
+    <plurals name="minutes">
+        <item quantity="other">%d 分</item>
+    </plurals>
+    <string name="settings_mq_enabled">複数のキュー</string>
+    <string name="shuffled">%s (シャッフル)</string>
+    <string name="loading_playlists">プレイリストを読み込み中...</string>
+    <string name="edit_mode">編集モードにする</string>
+    <string name="discard_changes_title">変更を破棄しますか？</string>
+    <string name="mq_unpin_queue">キューのピン留めを解除</string>
+    <string name="mq_pin_queue">キューをピン留め</string>
 </resources>
