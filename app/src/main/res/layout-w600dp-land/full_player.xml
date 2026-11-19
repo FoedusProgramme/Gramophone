@@ -93,6 +93,32 @@
 
     </com.google.android.material.card.MaterialCardView>
 
+    <FrameLayout
+        android:id="@+id/inline_lyric_frame"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="16dp"
+        android:alpha="0"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/controls"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible">
+
+        <org.akanework.gramophone.ui.components.LyricsView
+            android:id="@+id/inline_lyric_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:keepScreenOn="true"
+            tools:listitem="@layout/lyrics" />
+
+    </FrameLayout>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/controls"
         android:layout_width="0dp"
@@ -360,6 +386,7 @@
             app:iconPadding="0dp"
             app:iconSize="24sp"
             app:iconTint="?attr/colorOnSurface"
+            app:toggleCheckedStateOnClick="false"
             app:tooltipText="@string/dialog_lyrics" />
 
         <com.google.android.material.button.MaterialButton
