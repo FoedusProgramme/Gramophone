@@ -25,6 +25,7 @@ import android.content.DialogInterface
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.format.DateFormat
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -60,6 +61,7 @@ import uk.akane.libphonograph.manipulator.ItemManipulator
 import uk.akane.libphonograph.manipulator.PlaylistSerializer
 import uk.akane.libphonograph.toUriCompat
 import java.io.File
+import java.util.Date
 
 /**
  * [PlaylistAdapter] is an adapter for displaying playlists.
@@ -147,10 +149,12 @@ class PlaylistAdapter(
         popupMenu.inflate(R.menu.more_menu)
         val canRename = item.title != null
         val canDelete = item.id != null
+        val canSaveAs = item.songList.isNotEmpty()
         popupMenu.menu.iterator().forEach {
             it.isVisible = it.itemId == R.id.play_next || it.itemId == R.id.add_to_queue
                     || (canRename && it.itemId == R.id.rename)
                     || (canDelete && it.itemId == R.id.delete)
+                    || (canSaveAs && it.itemId == R.id.save_as_playlist)
         }
         popupMenu.setOnMenuItemClickListener { it1 ->
             when (it1.itemId) {
@@ -245,6 +249,31 @@ class PlaylistAdapter(
                                 }
                             }
                         }
+                    }
+                }
+
+                R.id.save_as_playlist -> {
+                    val rawDate = DateFormat.getDateFormat(context).format(Date())
+                    val dateStr = rawDate.replace('/', '.').replace('\\', '.').replace(':', '-')
+                    val defaultName = when (item) {
+                        is RecentlyAdded -> {
+                            context.getString(R.string.recently_added_dated, dateStr)
+                        }
+                        is Favorite -> {
+                            context.getString(R.string.playlist_favourite)
+                        }
+                        else -> {
+                            item.title ?: ""
+                        }
+                    }
+                    playlistNameDialog(
+                        context,
+                        R.string.save_as_playlist,
+                        defaultName,
+                        { ItemManipulator.getDefaultPlaylistFile(it) }
+                    ) { path ->
+                        val songs = item.songList.mapNotNull { PlaylistSerializer.Entry.ofMediaItem(it) }
+                        mainActivity.addToPlaylist(null, path, songs)
                     }
                 }
 

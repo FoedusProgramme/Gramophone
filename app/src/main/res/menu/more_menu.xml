@@ -20,6 +20,10 @@
         android:id="@+id/add_to_playlist"
         android:title="@string/add_to_playlist" />
     <item
+        android:id="@+id/save_as_playlist"
+        android:title="@string/save_as_playlist"
+        android:visible="false" />
+    <item
         android:id="@+id/details"
         android:title="@string/details" />
     <item
