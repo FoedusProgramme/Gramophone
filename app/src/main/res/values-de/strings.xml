@@ -134,6 +134,7 @@
     <string name="settings_trim_lyrics">Leerzeichen um Liedtexte entfernen</string>
     <string name="settings_title_center">Zentrierter Titel</string>
     <string name="sort_by_add_date">Erstelldatum</string>
+    <string name="date_added_format">Hinzugefügt: %s</string>
     <string name="settings_title_center_summary">Zentrierte Titel für den Vollbildmodus verwenden</string>
     <string name="settings_album_round_corner">Runde Ecken für Albumcover</string>
     <string name="settings_crash_application_summary">Crash-O-Matic 3000</string>

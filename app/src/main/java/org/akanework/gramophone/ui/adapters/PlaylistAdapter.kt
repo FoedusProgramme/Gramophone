@@ -53,6 +53,8 @@ import org.akanework.gramophone.ui.PlaylistPickerActivity
 import org.akanework.gramophone.ui.fragments.AdapterFragment
 import org.akanework.gramophone.ui.fragments.GeneralSubFragment
 import org.nift4.mediastorecompat.MediaStoreCompat
+import java.text.DateFormat
+import java.util.Date
 import uk.akane.libphonograph.dynamicitem.Favorite
 import uk.akane.libphonograph.dynamicitem.RecentlyAdded
 import uk.akane.libphonograph.items.Playlist
@@ -104,6 +106,18 @@ class PlaylistAdapter(
                 context.getString(R.string.unknown_playlist) + " (${item.id} - ${item.path})"
             }
         }
+    }
+
+    override fun detailsOf(item: Playlist): String? {
+        val parts = mutableListOf<String>()
+        val addDate = item.dateAdded
+        if (addDate != null && addDate > 0) {
+            val dateFormatted = DateFormat.getDateInstance(DateFormat.MEDIUM).format(Date(addDate * 1000))
+            parts.add(context.getString(R.string.date_added_format, dateFormatted))
+        }
+        val count = item.songList.size
+        parts.add(context.resources.getQuantityString(R.plurals.songs, count, count))
+        return if (parts.isNotEmpty()) parts.joinToString(" • ") else null
     }
 
     override fun getPinnedOrder(item: Playlist): Int {

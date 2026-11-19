@@ -253,6 +253,8 @@
     <string name="settings_color_accuracy">Color accuracy</string>
     <!-- Sort songs by date created (of file) -->
     <string name="sort_by_add_date">Add date</string>
+    <!-- Format for displaying date added in detailed list view -->
+    <string name="date_added_format">Added: %s</string>
     <!-- Sort songs by date modified (of file) -->
     <string name="sort_by_modified_date">Modified date</string>
     <!-- Window title of settings subcategory in player UI settings about the lyrics feature -->

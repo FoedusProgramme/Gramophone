@@ -6,7 +6,6 @@
     android:layout_height="@dimen/larger_list_height"
     android:clickable="true"
     android:focusable="true"
-    android:orientation="horizontal"
     android:paddingStart="6dp"
     android:paddingEnd="6dp"
     tools:ignore="RtlSymmetry">
@@ -14,8 +13,8 @@
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/coverCardView"
         style="?materialCardViewFilledStyle"
-        android:layout_width="54dp"
-        android:layout_height="54dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_marginStart="18dp"
         app:cardCornerRadius="@dimen/list_round_corner_size"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -24,8 +23,8 @@
 
         <ImageView
             android:id="@+id/cover"
-            android:layout_width="54dp"
-            android:layout_height="54dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_gravity="center_vertical"
             android:background="?attr/colorSurfaceContainer"
             android:importantForAccessibility="no"
@@ -38,11 +37,11 @@
         android:id="@+id/title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="18dp"
         android:fontFamily="sans-serif"
         android:singleLine="true"
         android:textColor="?attr/colorOnSurface"
-        android:textSize="17sp"
+        android:textSize="16sp"
         app:layout_constrainedHeight="true"
         app:layout_constraintBottom_toTopOf="@id/artist"
         app:layout_constraintEnd_toStartOf="@id/now_playing"
@@ -56,18 +55,55 @@
         android:id="@+id/artist"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="18dp"
         android:fontFamily="sans-serif"
         android:singleLine="true"
         android:textColor="?attr/colorOnSurfaceVariant"
-        android:textSize="15sp"
+        android:textSize="14sp"
         app:layout_constrainedHeight="true"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/details_container"
         app:layout_constraintEnd_toStartOf="@id/now_playing"
         app:layout_constraintStart_toEndOf="@id/coverCardView"
         app:layout_constraintTop_toBottomOf="@id/title"
         app:textFontWeight="400"
         tools:text="Example Artist" />
+
+    <LinearLayout
+        android:id="@+id/details_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="18dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constrainedHeight="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/now_playing"
+        app:layout_constraintStart_toEndOf="@id/coverCardView"
+        app:layout_constraintTop_toBottomOf="@id/artist">
+
+        <ImageView
+            android:id="@+id/favorite_icon"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_marginEnd="5dp"
+            android:contentDescription="@string/playlist_favourite"
+            android:importantForAccessibility="no"
+            android:visibility="gone"
+            app:srcCompat="@drawable/ic_favorite_filled"
+            app:tint="?attr/colorError" />
+
+        <TextView
+            android:id="@+id/details_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:singleLine="true"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            android:textSize="12sp"
+            app:textFontWeight="400"
+            tools:text="Hinzugefügt: 08.11.2026 • 3:45" />
+
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/now_playing"

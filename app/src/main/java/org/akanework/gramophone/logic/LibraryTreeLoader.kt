@@ -21,6 +21,7 @@ import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.comparators.SupportComparator
 import org.akanework.gramophone.ui.adapters.AlbumAdapter
 import org.akanework.gramophone.ui.adapters.ArtistAdapter
+import org.akanework.gramophone.ui.adapters.BaseAdapter
 import org.akanework.gramophone.ui.adapters.DateAdapter
 import org.akanework.gramophone.ui.adapters.GenreAdapter
 import org.akanework.gramophone.ui.adapters.PlaylistAdapter
@@ -57,21 +58,42 @@ class LibraryTreeLoader(
             .filter { it != ViewPager2Adapter.Companion.Tab.FileSystem }
     }
 
-    private fun getCategoryItem(id: String): MediaItem? {
-        val gridExtras = Bundle().apply {
-            putInt(MediaConstants.EXTRAS_KEY_CONTENT_STYLE_BROWSABLE, MediaConstants.EXTRAS_VALUE_CONTENT_STYLE_GRID_ITEM)
-            putInt(MediaConstants.EXTRAS_KEY_CONTENT_STYLE_PLAYABLE, MediaConstants.EXTRAS_VALUE_CONTENT_STYLE_GRID_ITEM)
+    private fun getContentStyleExtras(adapterType: Int, defaultLayout: BaseAdapter.LayoutType): Bundle {
+        val layoutStr = prefs.getString("L$adapterType", null)
+        val layout = if (layoutStr != null) {
+            try {
+                BaseAdapter.LayoutType.valueOf(layoutStr)
+            } catch (_: IllegalArgumentException) {
+                defaultLayout
+            }
+        } else {
+            defaultLayout
         }
+
+        val isGrid = (layout == BaseAdapter.LayoutType.GRID || layout == BaseAdapter.LayoutType.COMPACT_GRID)
+        val styleValue = if (isGrid) {
+            MediaConstants.EXTRAS_VALUE_CONTENT_STYLE_GRID_ITEM
+        } else {
+            MediaConstants.EXTRAS_VALUE_CONTENT_STYLE_LIST_ITEM
+        }
+
+        return Bundle().apply {
+            putInt(MediaConstants.EXTRAS_KEY_CONTENT_STYLE_BROWSABLE, styleValue)
+            putInt(MediaConstants.EXTRAS_KEY_CONTENT_STYLE_PLAYABLE, styleValue)
+        }
+    }
+
+    private fun getCategoryItem(id: String): MediaItem? {
         return when (id) {
             else if id.startsWith("root_") -> createFolderItem(id, "", MediaMetadata.MEDIA_TYPE_FOLDER_MIXED)
             else if id.startsWith("more_") -> createFolderItem(id, context.getString(R.string.more), MediaMetadata.MEDIA_TYPE_FOLDER_MIXED)
-            "songs" -> createFolderItem("songs", context.getString(R.string.category_songs), MediaMetadata.MEDIA_TYPE_FOLDER_MIXED)
-            "albums" -> createFolderItem("albums", context.getString(R.string.category_albums), MediaMetadata.MEDIA_TYPE_FOLDER_ALBUMS, extras = gridExtras)
-            "artists" -> createFolderItem("artists", context.getString(R.string.category_artists), MediaMetadata.MEDIA_TYPE_FOLDER_ARTISTS, extras = gridExtras)
-            "genres" -> createFolderItem("genres", context.getString(R.string.category_genres), MediaMetadata.MEDIA_TYPE_FOLDER_GENRES)
-            "dates" -> createFolderItem("dates", context.getString(R.string.category_dates), MediaMetadata.MEDIA_TYPE_FOLDER_MIXED)
-            "folders" -> createFolderItem("folders", context.getString(R.string.folders), MediaMetadata.MEDIA_TYPE_FOLDER_MIXED)
-            "playlists" -> createFolderItem("playlists", context.getString(R.string.category_playlists), MediaMetadata.MEDIA_TYPE_FOLDER_PLAYLISTS)
+            "songs" -> createFolderItem("songs", context.getString(R.string.category_songs), MediaMetadata.MEDIA_TYPE_FOLDER_MIXED, extras = getContentStyleExtras(LibraryAdapterTypes.SONG, BaseAdapter.LayoutType.COMPACT_LIST))
+            "albums" -> createFolderItem("albums", context.getString(R.string.category_albums), MediaMetadata.MEDIA_TYPE_FOLDER_ALBUMS, extras = getContentStyleExtras(LibraryAdapterTypes.ALBUM, BaseAdapter.LayoutType.GRID))
+            "artists" -> createFolderItem("artists", context.getString(R.string.category_artists), MediaMetadata.MEDIA_TYPE_FOLDER_ARTISTS, extras = getContentStyleExtras(LibraryAdapterTypes.ARTIST, BaseAdapter.LayoutType.LIST))
+            "genres" -> createFolderItem("genres", context.getString(R.string.category_genres), MediaMetadata.MEDIA_TYPE_FOLDER_GENRES, extras = getContentStyleExtras(LibraryAdapterTypes.GENRE, BaseAdapter.LayoutType.LIST))
+            "dates" -> createFolderItem("dates", context.getString(R.string.category_dates), MediaMetadata.MEDIA_TYPE_FOLDER_MIXED, extras = getContentStyleExtras(LibraryAdapterTypes.DATE, BaseAdapter.LayoutType.LIST))
+            "folders" -> createFolderItem("folders", context.getString(R.string.folders), MediaMetadata.MEDIA_TYPE_FOLDER_MIXED, extras = getContentStyleExtras(LibraryAdapterTypes.FOLDER, BaseAdapter.LayoutType.LIST))
+            "playlists" -> createFolderItem("playlists", context.getString(R.string.category_playlists), MediaMetadata.MEDIA_TYPE_FOLDER_PLAYLISTS, extras = getContentStyleExtras(LibraryAdapterTypes.PLAYLIST, BaseAdapter.LayoutType.LIST))
             else -> null
         }
     }
@@ -106,21 +128,33 @@ class LibraryTreeLoader(
                 }
                 createFolderItem("mq_title:${title}:$id", title, MediaMetadata.MEDIA_TYPE_PLAYLIST, artworkUri = icon, isPlayable = item.songList.isNotEmpty(), isBrowsable = false)
             }
-            is Genre -> createFolderItem(
-                "mq_title:${item.title}:genre_${item.id}", item.title ?: context.getString(R.string.unknown_genre), MediaMetadata.MEDIA_TYPE_GENRE,
-                subtitle = context.resources.getQuantityString(R.plurals.songs, item.songList.size, item.songList.size),
-                isPlayable = item.songList.isNotEmpty(), isBrowsable = false, artworkUri = null
-            )
-            is Date -> createFolderItem(
-                "mq_title:${item.title}:date_${item.id}", item.title ?: context.getString(R.string.unknown_year), MediaMetadata.MEDIA_TYPE_YEAR,
-                subtitle = context.resources.getQuantityString(R.plurals.songs, item.songList.size, item.songList.size),
-                isPlayable = item.songList.isNotEmpty(), isBrowsable = false, artworkUri = null
-            )
-            is FileNode -> createFolderItem(
-                "mq_title:${item.folderName}:folder_${item.folderName}", item.folderName, MediaMetadata.MEDIA_TYPE_FOLDER_MIXED,
-                subtitle = context.resources.getQuantityString(R.plurals.items, item.folderList.size + item.songList.size, item.folderList.size + item.songList.size),
-                isPlayable = item.songList.isNotEmpty() || item.folderList.isNotEmpty(), isBrowsable = false
-            )
+            is Genre -> {
+                val icon = item.songList.firstOrNull()?.mediaMetadata?.artworkUri
+                    ?: "android.resource://${context.packageName}/${R.drawable.ic_default_cover_genre}".toUri()
+                createFolderItem(
+                    "mq_title:${item.title}:genre_${item.id}", item.title ?: context.getString(R.string.unknown_genre), MediaMetadata.MEDIA_TYPE_GENRE,
+                    subtitle = context.resources.getQuantityString(R.plurals.songs, item.songList.size, item.songList.size),
+                    artworkUri = icon, isPlayable = item.songList.isNotEmpty(), isBrowsable = false
+                )
+            }
+            is Date -> {
+                val icon = item.songList.firstOrNull()?.mediaMetadata?.artworkUri
+                    ?: "android.resource://${context.packageName}/${R.drawable.ic_default_cover_date}".toUri()
+                createFolderItem(
+                    "mq_title:${item.title}:date_${item.id}", item.title ?: context.getString(R.string.unknown_year), MediaMetadata.MEDIA_TYPE_YEAR,
+                    subtitle = context.resources.getQuantityString(R.plurals.songs, item.songList.size, item.songList.size),
+                    artworkUri = icon, isPlayable = item.songList.isNotEmpty(), isBrowsable = false
+                )
+            }
+            is FileNode -> {
+                val icon = item.songList.firstOrNull()?.mediaMetadata?.artworkUri
+                    ?: "android.resource://${context.packageName}/${R.drawable.ic_default_cover}".toUri()
+                createFolderItem(
+                    "mq_title:${item.folderName}:folder_${item.folderName}", item.folderName, MediaMetadata.MEDIA_TYPE_FOLDER_MIXED,
+                    subtitle = context.resources.getQuantityString(R.plurals.items, item.folderList.size + item.songList.size, item.folderList.size + item.songList.size),
+                    artworkUri = icon, isPlayable = item.songList.isNotEmpty() || item.folderList.isNotEmpty(), isBrowsable = false
+                )
+            }
             else -> null
         }
     }

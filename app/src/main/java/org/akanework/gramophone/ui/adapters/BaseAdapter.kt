@@ -289,7 +289,13 @@ abstract class BaseAdapter<T : Any>(
         val subTitle: TextView = view.findViewById(R.id.artist)
         val trackCount: TextView? = view.findViewById(R.id.track_count)
         val moreButton: MaterialButton? = view.findViewById(R.id.more)
+        val favoriteIcon: ImageView? = view.findViewById(R.id.favorite_icon)
+        val detailsText: TextView? = view.findViewById(R.id.details_text)
     }
+
+    open fun detailsOf(item: T): String? = null
+
+    open fun isFavorite(item: T): Boolean = false
 
     override fun onAttachedToRecyclerView(recyclerView: MyRecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
@@ -360,6 +366,14 @@ abstract class BaseAdapter<T : Any>(
         }
         holder.title.text = titleOf(item) ?: virtualTitleOf(item)
         holder.subTitle.text = subTitleOf(item)
+        holder.favoriteIcon?.visibility = if (isFavorite(item)) View.VISIBLE else View.GONE
+        val details = detailsOf(item)
+        if (details != null) {
+            holder.detailsText?.text = details
+            holder.detailsText?.visibility = View.VISIBLE
+        } else {
+            holder.detailsText?.visibility = View.GONE
+        }
         holder.songCover.load(coverOf(item)) {
             placeholderScaleToFit(defaultCover)
             crossfade(true)

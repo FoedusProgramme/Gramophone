@@ -27,6 +27,7 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.core.app.ShareCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -44,6 +45,8 @@ import org.akanework.gramophone.logic.gramophoneApplication
 import org.akanework.gramophone.logic.requireMediaStoreId
 import org.akanework.gramophone.logic.setMediaItemsSeamlessly
 import org.akanework.gramophone.logic.ui.MyRecyclerView
+import org.akanework.gramophone.logic.utils.CalculationUtils
+import org.akanework.gramophone.ui.MainActivity
 import org.akanework.gramophone.ui.MediaControllerViewModel
 import org.akanework.gramophone.ui.SongPickerActivity
 import org.akanework.gramophone.ui.components.NowPlayingDrawable
@@ -51,12 +54,15 @@ import org.akanework.gramophone.ui.fragments.ArtistSubFragment
 import org.akanework.gramophone.ui.fragments.DetailDialogFragment
 import org.akanework.gramophone.ui.fragments.GeneralSubFragment
 import org.akanework.gramophone.ui.fragments.SearchFragment
+import uk.akane.libphonograph.dynamicitem.Favorite
 import uk.akane.libphonograph.items.addDate
 import uk.akane.libphonograph.items.albumId
 import uk.akane.libphonograph.items.artistId
 import uk.akane.libphonograph.items.modifiedDate
 import uk.akane.libphonograph.manipulator.ItemManipulator
 import java.io.File
+import java.text.DateFormat
+import java.util.Date
 import java.util.GregorianCalendar
 
 /**
@@ -136,9 +142,25 @@ class SongAdapter(
                 }
             }
         }
+    private var favoriteIds: Set<String> = emptySet()
 
     init {
         if (fragment != null) {
+            val mainAct = fragment.activity as? MainActivity
+            if (mainAct != null) {
+                fragment.lifecycleScope.launch {
+                    mainAct.reader.playlistListFlow.collect { playlists ->
+                        val faves = playlists.find { it is Favorite }
+                            ?.songList?.map { it.mediaId }?.toSet() ?: emptySet()
+                        if (faves != favoriteIds) {
+                            favoriteIds = faves
+                            if (layoutType == LayoutType.LIST) {
+                                notifyDataSetChanged()
+                            }
+                        }
+                    }
+                }
+            }
             val mediaControllerViewModel: MediaControllerViewModel by fragment.activityViewModels()
             mediaControllerViewModel.addRecreationalPlayerListener(
                 fragment.viewLifecycleOwner.lifecycle,
@@ -211,6 +233,24 @@ class SongAdapter(
 
     override fun titleOf(item: MediaItem): String? {
         return if (showFileNames) item.getFile()?.name else super.titleOf(item)
+    }
+
+    override fun isFavorite(item: MediaItem): Boolean {
+        return favoriteIds.contains(item.mediaId)
+    }
+
+    override fun detailsOf(item: MediaItem): String? {
+        val parts = mutableListOf<String>()
+        val addDate = item.mediaMetadata.addDate
+        if (addDate != null && addDate > 0) {
+            val dateFormatted = DateFormat.getDateInstance(DateFormat.MEDIUM).format(Date(addDate * 1000))
+            parts.add(context.getString(R.string.date_added_format, dateFormatted))
+        }
+        val duration = item.mediaMetadata.durationMs
+        if (duration != null && duration > 0) {
+            parts.add(CalculationUtils.convertDurationToTimeStamp(duration))
+        }
+        return if (parts.isNotEmpty()) parts.joinToString(" • ") else null
     }
 
     override fun onClick(item: MediaItem, position: Int) {

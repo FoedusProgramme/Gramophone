@@ -74,8 +74,32 @@ open class BaseDecorAdapter<T : AdapterFragment.BaseInterface<*>>(
                 goToPlayingSong()
             }
         }
+        holder.layoutToggle.visibility =
+            if (adapter.canChangeLayout) View.VISIBLE else View.GONE
+        if (adapter.canChangeLayout) {
+            updateLayoutToggle(holder.layoutToggle, adapter.layoutType)
+            holder.layoutToggle.setOnClickListener {
+                val availableLayouts = listOf(
+                    BaseAdapter.LayoutType.COMPACT_LIST,
+                    BaseAdapter.LayoutType.LIST,
+                    BaseAdapter.LayoutType.COMPACT_GRID,
+                    BaseAdapter.LayoutType.GRID
+                )
+                val currentIndex = availableLayouts.indexOf(adapter.layoutType)
+                val nextIndex = if (currentIndex != -1) (currentIndex + 1) % availableLayouts.size else 0
+                val nextLayout = availableLayouts[nextIndex]
+                adapter.layoutType = nextLayout
+                prefs.edit {
+                    putString(
+                        "L" + getAdapterType(adapter).toString(),
+                        nextLayout.toString()
+                    )
+                }
+                updateLayoutToggle(holder.layoutToggle, nextLayout)
+            }
+        }
         holder.sortButton.visibility =
-            if (adapter.sortType.value != Sorter.Type.None || adapter.canChangeLayout) View.VISIBLE else View.GONE
+            if (adapter.sortType.value != Sorter.Type.None) View.VISIBLE else View.GONE
         holder.sortButton.setOnClickListener { view ->
             val popupMenu = PopupMenu(context, view)
             popupMenu.inflate(R.menu.sort_menu)
@@ -162,14 +186,16 @@ open class BaseDecorAdapter<T : AdapterFragment.BaseInterface<*>>(
 
                     in layoutMap.keys -> {
                         if (!menuItem.isChecked) {
-                            adapter.layoutType = layoutMap[menuItem.itemId]!!
+                            val newLayout = layoutMap[menuItem.itemId]!!
+                            adapter.layoutType = newLayout
                             menuItem.isChecked = true
                             prefs.edit {
                                 putString(
                                     "L" + getAdapterType(adapter).toString(),
-                                    layoutMap[menuItem.itemId].toString()
+                                    newLayout.toString()
                                 )
                             }
+                            updateLayoutToggle(holder.layoutToggle, newLayout)
                         }
                         true
                     }
@@ -284,6 +310,7 @@ open class BaseDecorAdapter<T : AdapterFragment.BaseInterface<*>>(
     }
 
     override fun onViewRecycled(holder: ViewHolder) {
+        holder.layoutToggle.setOnClickListener(null)
         holder.sortButton.setOnClickListener(null)
         holder.playAll.setOnClickListener(null)
         holder.shuffleAll.setOnClickListener(null)
@@ -328,6 +355,20 @@ open class BaseDecorAdapter<T : AdapterFragment.BaseInterface<*>>(
         recyclerView?.startSmoothScrollCompat(smoothScroller)
     }
 
+    private fun updateLayoutToggle(button: MaterialButton, layoutType: BaseAdapter.LayoutType?) {
+        val (iconRes, titleRes) = when (layoutType) {
+            BaseAdapter.LayoutType.COMPACT_LIST -> Pair(R.drawable.ic_layout_list, R.string.compact_list)
+            BaseAdapter.LayoutType.LIST, null -> Pair(R.drawable.ic_layout_compact_list, R.string.list)
+            BaseAdapter.LayoutType.COMPACT_GRID -> Pair(R.drawable.ic_layout_compact_grid, R.string.compact_grid)
+            BaseAdapter.LayoutType.GRID -> Pair(R.drawable.ic_layout_grid, R.string.grid)
+            else -> Pair(R.drawable.ic_layout_compact_list, R.string.layout)
+        }
+        button.setIconResource(iconRes)
+        val text = context.getString(titleRes)
+        button.contentDescription = text
+        androidx.appcompat.widget.TooltipCompat.setTooltipText(button, text)
+    }
+
     protected open fun onSortButtonPressed(popupMenu: PopupMenu) {}
     protected open fun onExtraMenuButtonPressed(menuItem: MenuItem): Boolean = false
 
@@ -337,6 +378,7 @@ open class BaseDecorAdapter<T : AdapterFragment.BaseInterface<*>>(
     class ViewHolder(
         view: View,
     ) : RecyclerView.ViewHolder(view) {
+        val layoutToggle: MaterialButton = view.findViewById(R.id.layout_toggle)
         val sortButton: MaterialButton = view.findViewById(R.id.sort)
         val createPlaylist: MaterialButton = view.findViewById(R.id.create_playlist)
         val playAll: MaterialButton = view.findViewById(R.id.play_all)
