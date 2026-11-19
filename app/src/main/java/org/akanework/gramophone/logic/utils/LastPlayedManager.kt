@@ -41,23 +41,32 @@ import kotlinx.coroutines.withContext
 import org.akanework.gramophone.BuildConfig
 import org.akanework.gramophone.logic.getFile
 import org.akanework.gramophone.logic.utils.exoplayer.EndedWorkaroundPlayer
+import org.json.JSONArray
 import uk.akane.libphonograph.items.EXTRA_ADD_DATE
 import uk.akane.libphonograph.items.EXTRA_ALBUM_ID
 import uk.akane.libphonograph.items.EXTRA_ARTIST_ID
+import uk.akane.libphonograph.items.EXTRA_ARTIST_NAMES
 import uk.akane.libphonograph.items.EXTRA_CD_TRACK_NUMBER
 import uk.akane.libphonograph.items.EXTRA_FILE
+import uk.akane.libphonograph.items.EXTRA_GENRE_NAMES
 import uk.akane.libphonograph.items.EXTRA_HD_ARTWORK_URI
 import uk.akane.libphonograph.items.EXTRA_MODIFIED_DATE
+import uk.akane.libphonograph.items.EXTRA_RAW_ARTIST
 import uk.akane.libphonograph.items.addDate
+import uk.akane.libphonograph.items.artistNames
+import uk.akane.libphonograph.items.genreNames
+import uk.akane.libphonograph.items.rawArtist
 import uk.akane.libphonograph.items.albumId
 import uk.akane.libphonograph.items.artistId
 import uk.akane.libphonograph.items.cdTrackNumber
 import uk.akane.libphonograph.items.hdArtworkUri
 import uk.akane.libphonograph.items.modifiedDate
+import uk.akane.libphonograph.utils.TagSplitter
+import androidx.preference.PreferenceManager
 import java.nio.charset.StandardCharsets
 
 class LastPlayedManager(
-    context: Context,
+    private val context: Context,
     private val controller: EndedWorkaroundPlayer
 ) {
 
@@ -113,7 +122,7 @@ class LastPlayedManager(
                 data.mediaItems.map {
                     val b = SafeDelimitedStringConcat(":")
                     // add new entries at the bottom and remember they are null for upgrade path
-                    b.writeStringUnsafe("ver_" + 3)
+                    b.writeStringUnsafe("ver_" + 4)
                     b.writeStringSafe(it.mediaId)
                     b.writeUri(it.localConfiguration?.uri)
                     b.writeStringSafe(it.localConfiguration?.mimeType)
@@ -143,6 +152,9 @@ class LastPlayedManager(
                     b.writeStringSafe(it.mediaMetadata.cdTrackNumber)
                     b.writeUri(it.mediaMetadata.hdArtworkUri)
                     b.writeStringSafe(it.getFile()?.path)
+                    b.writeStringSafe(it.mediaMetadata.rawArtist)
+                    b.writeStringListSafe(it.mediaMetadata.artistNames)
+                    b.writeStringListSafe(it.mediaMetadata.genreNames)
                     b.toString()
                 })
             prefs.edit {
@@ -199,6 +211,8 @@ class LastPlayedManager(
                     prefs.getFloat("speed", 1f),
                     prefs.getFloat("pitch", 1f)
                 )
+                val defaultPrefs = PreferenceManager.getDefaultSharedPreferences(context)
+                val tagSplitConfig = TagSplitter.getTagSplitConfig(defaultPrefs)
                 val data = MediaItemsWithStartPosition(
                     PrefsListUtils.parse(lastPlayedLst, lastPlayedGrp)
                         .map {
@@ -260,6 +274,9 @@ class LastPlayedManager(
                                     mediaId!!.substring("MediaStore:".length).toLong())
                                 it!!.toFile().path
                             }
+                            val rawArtist = if (version >= 4) b.readStringSafe() else null
+                            val artistNames = if (version >= 4) b.readStringListSafe() else null
+                            val genreNames = if (version >= 4) b.readStringListSafe() else null
                             MediaItem.Builder()
                                 .setUri(uri)
                                 .setMediaId(mediaId!!)
@@ -305,6 +322,24 @@ class LastPlayedManager(
                                             }
                                             if (file != null) {
                                                 putString(EXTRA_FILE, file)
+                                            }
+                                            if (rawArtist != null) {
+                                                putString(EXTRA_RAW_ARTIST, rawArtist)
+                                            }
+                                            if (artistNames != null && artistNames.isNotEmpty()) {
+                                                putStringArrayList(EXTRA_ARTIST_NAMES, ArrayList(artistNames))
+                                            } else if (rawArtist != null || artist != null) {
+                                                val fallbackArtist = rawArtist ?: artist
+                                                val split = if (tagSplitConfig.isMultiArtistEnabled) {
+                                                    TagSplitter.splitArtists(fallbackArtist, tagSplitConfig)
+                                                } else emptyList()
+                                                val finalArtistList = if (split.isNotEmpty()) split else listOfNotNull(fallbackArtist)
+                                                putStringArrayList(EXTRA_ARTIST_NAMES, ArrayList(finalArtistList))
+                                            }
+                                            if (genreNames != null && genreNames.isNotEmpty()) {
+                                                putStringArrayList(EXTRA_GENRE_NAMES, ArrayList(genreNames))
+                                            } else if (genre != null) {
+                                                putStringArrayList(EXTRA_GENRE_NAMES, ArrayList(listOfNotNull(genre)))
                                             }
                                         })
                                         .build()
@@ -369,6 +404,15 @@ private class SafeDelimitedStringConcat(private val delimiter: String) {
     fun writeLong(i: Long?) = append(i?.toString())
     fun writeBool(b: Boolean?) = append(b?.toString())
     fun writeUri(u: Uri?) = writeStringSafe(u?.toString())
+    fun writeStringListSafe(list: List<String>?) {
+        if (list == null) {
+            writeStringSafe(null)
+        } else {
+            val arr = JSONArray()
+            for (item in list) arr.put(item)
+            writeStringSafe(arr.toString())
+        }
+    }
     fun skip() = append(null)
 }
 
@@ -384,6 +428,15 @@ private class SafeDelimitedStringDecat(delimiter: String, str: String) {
     fun readStringUnsafe(): String? = read()
     fun readBase64(): ByteArray? = read()?.let { Base64.decode(it, Base64.DEFAULT) }
     fun readStringSafe(): String? = readBase64()?.toString(StandardCharsets.UTF_8)
+    fun readStringListSafe(): List<String>? {
+        val json = readStringSafe() ?: return null
+        return try {
+            val arr = JSONArray(json)
+            (0 until arr.length()).map { arr.getString(it) }
+        } catch (_: Exception) {
+            null
+        }
+    }
     fun readInt(): Int? = read()?.toInt()
     fun readLong(): Long? = read()?.toLong()
     fun readBool(): Boolean? = read()?.toBooleanStrict()

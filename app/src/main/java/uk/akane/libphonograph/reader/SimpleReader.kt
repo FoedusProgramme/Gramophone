@@ -22,6 +22,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import uk.akane.libphonograph.dynamicitem.RecentlyAdded
+import uk.akane.libphonograph.utils.TagSplitter
 
 object SimpleReader {
     fun readFromMediaStore(
@@ -31,6 +32,7 @@ object SimpleReader {
         whiteListSet: Set<String> = setOf(),
         shouldUseEnhancedCoverReading: Boolean? = false, // null means load if permission is granted
         recentlyAddedFilterSecond: Long? = 1_209_600, // null means don't generate recently added
+        tagSplitConfig: TagSplitter.TagSplitConfig = TagSplitter.TagSplitConfig()
     ): SimpleReaderResult {
         val (playlists, foundPlaylistContent) = Reader.fetchPlaylists(context)
         val result = runBlocking {
@@ -39,7 +41,8 @@ object SimpleReader {
                     context, minSongLengthSeconds, blackListSet, whiteListSet,
                     shouldUseEnhancedCoverReading,
                     shouldLoadIdMap = false,
-                    shouldLoadPathMap = foundPlaylistContent
+                    shouldLoadPathMap = foundPlaylistContent,
+                    tagSplitConfig = tagSplitConfig
                 )
             }
         }

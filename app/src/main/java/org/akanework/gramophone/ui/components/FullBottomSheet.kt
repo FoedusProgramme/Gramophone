@@ -132,11 +132,9 @@ import org.akanework.gramophone.logic.utils.CalculationUtils
 import org.akanework.gramophone.logic.utils.ColorUtils
 import org.akanework.gramophone.logic.utils.Flags
 import org.akanework.gramophone.ui.MainActivity
-import org.akanework.gramophone.ui.fragments.ArtistSubFragment
 import org.akanework.gramophone.ui.fragments.DetailDialogFragment
 import org.akanework.gramophone.ui.fragments.GeneralSubFragment
 import uk.akane.libphonograph.items.albumId
-import uk.akane.libphonograph.items.artistId
 import uk.akane.libphonograph.manipulator.PlaylistSerializer.Entry
 import java.text.NumberFormat
 import java.text.ParseException
@@ -378,11 +376,9 @@ class FullBottomSheet
         }
 
         bottomSheetFullSubtitle.setOnClickListener {
+            val mediaItem = instance?.currentMediaItem ?: return@setOnClickListener
             minimize?.invoke()
-            activity.startFragment(ArtistSubFragment()) {
-                putString("Id", instance?.currentMediaItem?.mediaMetadata?.artistId?.toString())
-                putInt("Item", R.id.artist)
-            }
+            activity.navigateToArtistDialog(mediaItem)
         }
 
         bottomSheetTimerButton.setOnClickListener {
