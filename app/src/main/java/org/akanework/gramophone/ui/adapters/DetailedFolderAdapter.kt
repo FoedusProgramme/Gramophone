@@ -25,7 +25,9 @@ import android.view.animation.AnimationUtils
 import android.widget.TextView
 import androidx.activity.BackEventCompat
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.doOnLayout
+import androidx.core.view.iterator
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.ConcatAdapter
@@ -58,6 +60,7 @@ import org.akanework.gramophone.ui.MainActivity
 import org.akanework.gramophone.ui.fragments.AdapterFragment
 import org.akanework.gramophone.ui.getAdapterType
 import uk.akane.libphonograph.items.FileNode
+import uk.akane.libphonograph.items.getAllSongs
 import java.util.concurrent.atomic.AtomicInteger
 
 class DetailedFolderAdapter(
@@ -485,6 +488,48 @@ class DetailedFolderAdapter(
             holder.itemView.setOnClickListener {
                 folderFragment.enter(item.folderName)
             }
+            holder.more?.visibility = View.VISIBLE
+            holder.more?.setOnClickListener { view ->
+                val popupMenu = PopupMenu(activity, view)
+                popupMenu.inflate(R.menu.more_menu)
+                popupMenu.menu.iterator().forEach {
+                    it.isVisible = it.itemId == R.id.play_next || it.itemId == R.id.add_to_queue
+                            || it.itemId == R.id.add_to_playlist
+                }
+                popupMenu.setOnMenuItemClickListener { it1 ->
+                    val allSongs = item.getAllSongs()
+                    when (it1.itemId) {
+                        R.id.play_next -> {
+                            val mediaController = activity.getPlayer()
+                            mediaController?.addMediaItems(
+                                mediaController.currentMediaItemIndex + 1,
+                                allSongs,
+                            )
+                            true
+                        }
+
+                        R.id.add_to_queue -> {
+                            val mediaController = activity.getPlayer()
+                            mediaController?.addMediaItems(
+                                allSongs,
+                            )
+                            true
+                        }
+
+                        R.id.add_to_playlist -> {
+                            activity.addToPlaylistDialog(allSongs)
+                            true
+                        }
+
+                        else -> false
+                    }
+                }
+                popupMenu.show()
+            }
+            holder.itemView.setOnLongClickListener {
+                holder.more?.performClick()
+                true
+            }
         }
 
         override fun getPopupText(view: View, position: Int): CharSequence {
@@ -506,6 +551,9 @@ class DetailedFolderAdapter(
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             holder.folderName.text = frag.mainActivity.getString(R.string.upper_folder)
             holder.folderSubtitle.text = ""
+            holder.more?.visibility = View.GONE
+            holder.more?.setOnClickListener(null)
+            holder.itemView.setOnLongClickListener(null)
             holder.itemView.setOnClickListener {
                 folderFragment.enter(null)
             }
@@ -538,6 +586,8 @@ class DetailedFolderAdapter(
 
         override fun onViewRecycled(holder: ViewHolder) {
             holder.itemView.setOnClickListener(null)
+            holder.itemView.setOnLongClickListener(null)
+            holder.more?.setOnClickListener(null)
             super.onViewRecycled(holder)
         }
 
@@ -552,6 +602,7 @@ class DetailedFolderAdapter(
         ) : RecyclerView.ViewHolder(view) {
             val folderName: TextView = view.findViewById(R.id.title)
             val folderSubtitle: TextView = view.findViewById(R.id.subtitle)
+            val more: View? = view.findViewById(R.id.more)
         }
     }
 }

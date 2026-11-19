@@ -47,3 +47,11 @@ object EmptyFileNode : FileNode {
     override val songList = listOf<MediaItem>()
     override val albumId = null
 }
+
+fun FileNode.getAllSongs(): List<MediaItem> {
+    val result = ArrayList<MediaItem>(songList)
+    for (child in folderList.values) {
+        result.addAll(child.getAllSongs())
+    }
+    return result
+}

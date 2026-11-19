@@ -30,6 +30,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
@@ -140,24 +142,39 @@ class GeneralSubFragment : BaseFragment(true) {
                 }
                 itemList = item.map { it?.songList }
                 rawOrderExposed = Sorter.Type.NaturalOrder
-                if (clazz == Playlist::class.java.name) {
-                    topAppBar.inflateMenu(R.menu.playlist_subfragment_menu)
-                    topAppBar.setOnMenuItemClickListener {
-                        when (it.itemId) {
-                            R.id.edit -> {
-                                mainActivity.startFragment(PlaylistEditFragment()) {
-                                    putString("Id", id?.toString())
-                                }
-                                true
-                            }
-
-                            else -> false
-                        }
-                    }
-                }
             }
 
             else -> throw IllegalArgumentException()
+        }
+
+        topAppBar.inflateMenu(R.menu.subfragment_menu)
+        val clazz = arguments?.getString("Class")
+        if (clazz == Playlist::class.java.name) {
+            topAppBar.menu.findItem(R.id.edit)?.isVisible = true
+        }
+        topAppBar.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.edit -> {
+                    mainActivity.startFragment(PlaylistEditFragment()) {
+                        putString("Id", id?.toString())
+                    }
+                    true
+                }
+
+                R.id.add_to_playlist -> {
+                    lifecycleScope.launch(Dispatchers.Default) {
+                        val songs = itemList.filterNotNull().first()
+                        if (songs.isNotEmpty()) {
+                            withContext(Dispatchers.Main) {
+                                mainActivity.addToPlaylistDialog(songs)
+                            }
+                        }
+                    }
+                    true
+                }
+
+                else -> false
+            }
         }
 
         val sharedTitle = title.sharePauseableIn(lifecycleScope + Dispatchers.Default,

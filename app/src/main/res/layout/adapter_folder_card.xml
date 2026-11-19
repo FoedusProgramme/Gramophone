@@ -8,7 +8,7 @@
     android:focusable="true"
     android:orientation="horizontal"
     android:paddingStart="24dp"
-    android:paddingEnd="54dp"
+    android:paddingEnd="12dp"
     tools:ignore="RtlSymmetry">
 
     <com.google.android.material.card.MaterialCardView
@@ -62,5 +62,23 @@
             tools:text="Example Artist" />
 
     </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/more"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/rp_buttons"
+        android:contentDescription="@string/more"
+        android:insetLeft="0dp"
+        android:insetTop="0dp"
+        android:insetRight="0dp"
+        android:insetBottom="0dp"
+        app:icon="@drawable/ic_more_vert_alt"
+        app:iconGravity="textStart"
+        app:iconPadding="0dp"
+        app:iconSize="24dp"
+        app:iconTint="?attr/colorOnSurface"
+        app:tooltipText="@string/more" />
 
 </LinearLayout>

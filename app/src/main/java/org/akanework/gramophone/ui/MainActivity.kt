@@ -260,20 +260,24 @@ class MainActivity : BaseActivity() {
             handler.post { maybeReportFullyDrawn() }
     }
 
-    @OptIn(FlowPreview::class, InternalCoroutinesApi::class)
     fun addToPlaylistDialog(item: MediaItem) {
-        val song = Entry.ofMediaItem(item)
-        if (song == null) {
+        addToPlaylistDialog(listOf(item))
+    }
+
+    @OptIn(FlowPreview::class, InternalCoroutinesApi::class)
+    fun addToPlaylistDialog(items: List<MediaItem>) {
+        val songs = items.mapNotNull { Entry.ofMediaItem(it) }
+        if (songs.isEmpty()) {
             Toast.makeText(
                 this@MainActivity,
-                getString(R.string.edit_playlist_failed, "song == null"),
+                getString(R.string.edit_playlist_failed, "songs.isEmpty()"),
                 Toast.LENGTH_LONG
             ).show()
             return
         }
         lifecycleScope.launch(Dispatchers.Default) {
             val job = async(start = CoroutineStart.UNDISPATCHED) {
-                reader.playlistListFlow.first().filter { it.title != null }
+                reader.playlistListFlow.first().filter { it.title != null || it is Favorite }
             }
             val maybeValue = withTimeoutOrNull(300.milliseconds) {
                 job.await()
@@ -314,17 +318,21 @@ class MainActivity : BaseActivity() {
                             PlaylistAdapter.playlistNameDialog(this@MainActivity,
                                 R.string.create_playlist, "",
                                 { ItemManipulator.getDefaultPlaylistFile(it) }) { name ->
-                                addToPlaylist(null, name, listOf(song))
+                                addToPlaylist(null, name, songs)
                             }
                             return@setItems
                         }
                         val pl = playlists[item]
-                        addToPlaylist(
-                            ContentUris.withAppendedId(
-                                @Suppress("deprecation") MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI,
-                                pl.id!!
-                            ), null, listOf(song)
-                        )
+                        if (pl is Favorite) {
+                            markIsFavoriteStatus(songs, true)
+                        } else {
+                            addToPlaylist(
+                                ContentUris.withAppendedId(
+                                    @Suppress("deprecation") MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI,
+                                    pl.id!!
+                                ), null, songs
+                            )
+                        }
                     }
                     .setNegativeButton(android.R.string.cancel) { _, _ -> }
                     .show()
@@ -424,7 +432,8 @@ class MainActivity : BaseActivity() {
                 val readback = if (uriIn != null) ItemManipulator.readbackPlaylist(this,
                     uri) else PlaylistSerializer.Playlist.create()
                 val newSongs = readback.copy(entries = if (favorite) {
-                    readback.entries + songs
+                    val toAdd = songs.filter { s -> readback.entries.none { it.fuzzyEquals(s) } }
+                    readback.entries + toAdd
                 } else {
                     readback.entries.filter { songs.find { candidate -> candidate.fuzzyEquals(it) } == null }
                 })

@@ -86,7 +86,7 @@ class ArtistAdapter(
         popupMenu.inflate(R.menu.more_menu)
         popupMenu.menu.iterator().forEach {
             it.isVisible = it.itemId == R.id.play_next || it.itemId == R.id.add_to_queue
-                    || it.itemId == R.id.delete
+                    || it.itemId == R.id.add_to_playlist || it.itemId == R.id.delete
         }
 
         popupMenu.setOnMenuItemClickListener { it1 ->
@@ -105,6 +105,11 @@ class ArtistAdapter(
                     mediaController?.addMediaItems(
                         item.songList,
                     )
+                    true
+                }
+
+                R.id.add_to_playlist -> {
+                    mainActivity.addToPlaylistDialog(item.songList)
                     true
                 }
 
