@@ -57,6 +57,10 @@ class BehaviorSettingsFragment : BasePreferenceFragment() {
     override fun onPreferenceTreeClick(preference: Preference): Boolean {
         if (preference.key == "blacklist") {
             startActivity(BlacklistSettingsActivity::class.java)
+        } else if (preference.key == "split_artists_config") {
+            startActivity(SplitTagSettingsActivity.createIntent(requireContext(), SplitTagSettingsActivity.TYPE_ARTIST))
+        } else if (preference.key == "split_genres_config") {
+            startActivity(SplitTagSettingsActivity.createIntent(requireContext(), SplitTagSettingsActivity.TYPE_GENRE))
         }
         // Prior to Android 13, this changes a setting which changes MediaStoreUtils behaviour
         // Android 13 and later, this displays state of images permission granted/denied

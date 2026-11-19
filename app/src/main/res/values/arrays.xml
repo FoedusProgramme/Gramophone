@@ -48,4 +48,22 @@
         <item>@string/actions_query_start_random_music</item>
         <item>@string/actions_query_start_random_songs</item>
     </string-array>
+
+    <string-array name="widget_theme" translatable="false">
+        <item>@string/widget_theme_wallpaper_follow_system</item>
+        <item>@string/widget_theme_wallpaper_dark</item>
+        <item>@string/widget_theme_wallpaper_light</item>
+        <item>@string/widget_theme_album_art_follow_system</item>
+        <item>@string/widget_theme_album_art_dark</item>
+        <item>@string/widget_theme_album_art_light</item>
+    </string-array>
+
+    <string-array name="widget_theme_val" translatable="false">
+        <item>wallpaper_follow_system</item>
+        <item>wallpaper_dark</item>
+        <item>wallpaper_light</item>
+        <item>album_art_follow_system</item>
+        <item>album_art_dark</item>
+        <item>album_art_light</item>
+    </string-array>
 </resources>

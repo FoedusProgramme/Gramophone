@@ -45,6 +45,22 @@
 
     <PreferenceCategory
         android:layout="@layout/preference_category_md"
+        android:title="@string/settings_preference_category_desktop_widgets">
+
+        <DropDownPreference
+            android:defaultValue="wallpaper_follow_system"
+            android:entries="@array/widget_theme"
+            android:entryValues="@array/widget_theme_val"
+            android:key="widget_theme"
+            android:layout="@layout/preference_dropdown_md"
+            android:title="@string/settings_widget_theme"
+            app:iconSpaceReserved="false"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:layout="@layout/preference_category_md"
         android:title="@string/settings_preference_category_home">
 
         <org.akanework.gramophone.ui.components.TabOrderPreference

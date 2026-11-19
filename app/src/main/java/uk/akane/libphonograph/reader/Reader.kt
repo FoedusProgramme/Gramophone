@@ -56,22 +56,29 @@ import uk.akane.libphonograph.items.Date
 import uk.akane.libphonograph.items.EXTRA_ADD_DATE
 import uk.akane.libphonograph.items.EXTRA_ALBUM_ID
 import uk.akane.libphonograph.items.EXTRA_ARTIST_ID
+import uk.akane.libphonograph.items.EXTRA_ARTIST_NAMES
 import uk.akane.libphonograph.items.EXTRA_CD_TRACK_NUMBER
 import uk.akane.libphonograph.items.EXTRA_FILE
+import uk.akane.libphonograph.items.EXTRA_GENRE_NAMES
 import uk.akane.libphonograph.items.EXTRA_HD_ARTWORK_URI
 import uk.akane.libphonograph.items.EXTRA_MODIFIED_DATE
+import uk.akane.libphonograph.items.EXTRA_RAW_ARTIST
 import uk.akane.libphonograph.items.FileNode
 import uk.akane.libphonograph.items.Genre
 import uk.akane.libphonograph.items.RawPlaylist
 import uk.akane.libphonograph.items.addDate
+import uk.akane.libphonograph.items.artistId
+import uk.akane.libphonograph.items.artistNames
+import uk.akane.libphonograph.items.genreNames
 import uk.akane.libphonograph.items.modifiedDate
+import uk.akane.libphonograph.items.rawArtist
 import uk.akane.libphonograph.manipulator.PlaylistSerializer
 import uk.akane.libphonograph.putIfAbsentSupport
 import uk.akane.libphonograph.toUriCompat
 import uk.akane.libphonograph.utils.MiscUtils
-import uk.akane.libphonograph.utils.MiscUtils.findBestAlbumArtist
 import uk.akane.libphonograph.utils.MiscUtils.handleMediaFolder
 import uk.akane.libphonograph.utils.MiscUtils.handleShallowMediaItem
+import uk.akane.libphonograph.utils.TagSplitter
 import java.io.File
 import java.time.Instant
 import java.time.ZoneId
@@ -151,7 +158,8 @@ internal object Reader {
         shouldLoadFolders: Boolean = true,
         shouldLoadFilesystem: Boolean = true,
         shouldLoadIdMap: Boolean = true,
-        shouldLoadPathMap: Boolean = true
+        shouldLoadPathMap: Boolean = true,
+        tagSplitConfig: TagSplitter.TagSplitConfig
     ): ReaderResult {
         if (!shouldLoadFilesystem && shouldUseEnhancedCoverReading != false) {
             throw IllegalArgumentException("Enhanced cover loading requires loading filesystem")
@@ -195,7 +203,7 @@ internal object Reader {
         val songs = mutableListOf<MediaItem>()
         val albumMap = if (shouldLoadAlbums) hashMapOf<Long?, MiscUtils.AlbumImpl>() else null
         val artistMap = if (shouldLoadArtists) hashMapOf<Long?, Artist>() else null
-        val artistCacheMap = if (shouldLoadAlbums) hashMapOf<String?, Long?>() else null
+        val artistCacheMap = if (shouldLoadArtists || shouldLoadAlbums) hashMapOf<String, Long>() else null
         val albumArtistMap = if (shouldLoadAlbums) hashMapOf<Long?, Artist>() else null
         // Note: it has been observed on a user's Pixel(!) that MediaStore assigned 3 different IDs
         // for "Unknown genre" (null genre tag), and genres are simple - like dates - same name
@@ -398,6 +406,32 @@ internal object Reader {
                     trackNumber %= 1000
                 }
 
+                // Determine artist values
+                val trimmedArtist = artist?.trim()?.takeIf { it.isNotEmpty() }
+                val songArtistNames: ArrayList<String>
+                val displayArtist: String?
+                if (tagSplitConfig.isMultiArtistEnabled) {
+                    val parseResult = TagSplitter.splitAndFormatArtists(trimmedArtist, tagSplitConfig.artistSymbols, tagSplitConfig.artistWords)
+                    songArtistNames = if (parseResult.artistNames.isNotEmpty()) ArrayList(parseResult.artistNames) else ArrayList(listOfNotNull(trimmedArtist))
+                    displayArtist = if (trimmedArtist != null) parseResult.displayArtist.ifEmpty { trimmedArtist } else null
+                } else {
+                    songArtistNames = ArrayList(listOfNotNull(trimmedArtist))
+                    displayArtist = trimmedArtist
+                }
+
+                // Determine genre values
+                val trimmedGenre = genre?.trim()?.takeIf { it.isNotEmpty() }
+                val songGenreNames: ArrayList<String>
+                val displayGenre: String?
+                if (tagSplitConfig.isMultiGenreEnabled) {
+                    val parseResult = TagSplitter.splitAndFormatGenres(trimmedGenre, tagSplitConfig.genreSymbols)
+                    songGenreNames = if (parseResult.genreNames.isNotEmpty()) ArrayList(parseResult.genreNames) else ArrayList(listOfNotNull(trimmedGenre))
+                    displayGenre = if (trimmedGenre != null) parseResult.displayGenre.ifEmpty { trimmedGenre } else null
+                } else {
+                    songGenreNames = ArrayList(listOfNotNull(trimmedGenre))
+                    displayGenre = trimmedGenre
+                }
+
                 // Build our mediaItem.
                 val song = MediaItem.Builder()
                     .setUri(ContentUris.withAppendedId(
@@ -416,13 +450,13 @@ internal object Reader {
                             .setAuthor(author)
                             .setCompilation(compilation)
                             .setComposer(composer)
-                            .setArtist(artist)
+                            .setArtist(displayArtist)
                             .setAlbumTitle(album)
                             .setAlbumArtist(albumArtist)
                             .setArtworkUri(imgUri)
                             .setTrackNumber(trackNumber)
                             .setDiscNumber(discNumber)
-                            .setGenre(genre)
+                            .setGenre(displayGenre)
                             .setRecordingDay(dateTakenDay)
                             .setRecordingMonth(dateTakenMonth)
                             .setRecordingYear(dateTakenYear)
@@ -445,6 +479,11 @@ internal object Reader {
                                 putParcelable(EXTRA_HD_ARTWORK_URI, imgUri.buildUpon()
                                     .appendQueryParameter("hd", "1").build())
                                 putString(EXTRA_FILE, path)
+                                if (artist != null) {
+                                    putString(EXTRA_RAW_ARTIST, artist)
+                                }
+                                putStringArrayList(EXTRA_ARTIST_NAMES, songArtistNames)
+                                putStringArrayList(EXTRA_GENRE_NAMES, songGenreNames)
                             })
                             .build(),
                     ).build()
@@ -454,10 +493,12 @@ internal object Reader {
                 // Now that the song can be found by playlists, do NOT register other metadata.
                 if (skip) continue
                 songs.add(song)
-                (artistMap?.getOrPut(artistId) {
-                    Artist(artistId, artist, mutableListOf(), mutableListOf())
-                }?.songList as MutableList?)?.add(song)
-                artistCacheMap?.putIfAbsentSupport(artist, artistId)
+                if (trimmedArtist != null && artistId != null) {
+                    val canonicalKey = MiscUtils.canonicalArtistKey(trimmedArtist)
+                    if (canonicalKey != null) {
+                        artistCacheMap?.putIfAbsentSupport(canonicalKey, artistId)
+                    }
+                }
                 albumMap?.getOrPut(albumId) {
                     // in enhanced cover loading case, cover uri is changed later using coverCache
                     MiscUtils.AlbumImpl(
@@ -472,14 +513,25 @@ internal object Reader {
                         mutableListOf()
                     )
                 }?.songList?.add(song)
-                (genreMap?.getOrPut(genre) {
-                    Genre(
-                        genre.hashCode().toLong(),
-                        genre,
-                        mutableListOf()
-                    )
-                }?.songList
-                        as MutableList?)?.add(song)
+                if (tagSplitConfig.isMultiGenreEnabled && songGenreNames.isNotEmpty()) {
+                    for (singleGenre in songGenreNames) {
+                        (genreMap?.getOrPut(singleGenre) {
+                            Genre(
+                                singleGenre.hashCode().toLong(),
+                                singleGenre,
+                                mutableListOf()
+                            )
+                        }?.songList as MutableList?)?.add(song)
+                    }
+                } else {
+                    (genreMap?.getOrPut(genre) {
+                        Genre(
+                            genre?.hashCode()?.toLong() ?: 0L,
+                            genre,
+                            mutableListOf()
+                        )
+                    }?.songList as MutableList?)?.add(song)
+                }
                 (dateMap?.getOrPut(year) {
                     Date(
                         year?.toLong() ?: 0,
@@ -509,24 +561,63 @@ internal object Reader {
             }
         }
 
+        // Deterministically build artistMap from songs and collected MediaStore artist IDs
+        if (artistMap != null) {
+            MiscUtils.aggregateArtistsInto(artistMap, songs, artistCacheMap, tagSplitConfig)
+        }
+
         // Parse all the lists.
         val albumList = albumMap?.values?.onEach {
             if (it.albumArtistId != null || it.albumArtist != null)
                 throw IllegalStateException("code bug? failed: it.albumArtistId != null || it.albumArtist != null")
-            val artistFound = findBestAlbumArtist(it.songList)
-            it.albumArtist = artistFound?.first
-            it.albumArtistId = artistFound?.second ?: artistCacheMap?.get(it.albumArtist)
-                    ?: "nonMediaStoreArtist:${it.albumArtist}".hashCode().toLong()
-            it.albumYear = it.songList.mapNotNull { it.mediaMetadata.releaseYear }.maxOrNull()
-            it.albumAddDate = it.songList.mapNotNull { it.mediaMetadata.addDate }.minOrNull()
-            it.albumModifiedDate =
-                it.songList.mapNotNull { it.mediaMetadata.modifiedDate }.maxOrNull()
-            val albumArtist = albumArtistMap?.getOrPut(it.albumArtistId) {
-                Artist(it.albumArtistId, it.albumArtist, mutableListOf(), mutableListOf())
+            val resolved = MiscUtils.resolveAlbumArtist(it.songList, tagSplitConfig)
+            if (resolved != null) {
+                val rawAlbumArtist = resolved.albumArtist
+                val primaryAlbumArtists = resolved.primaryAlbumArtists
+                val primaryAlbumArtistId = if (primaryAlbumArtists.size > 1) {
+                    MiscUtils.resolveArtistId(artistCacheMap, rawAlbumArtist)
+                } else {
+                    val firstArtist = primaryAlbumArtists.firstOrNull() ?: rawAlbumArtist
+                    MiscUtils.resolveArtistId(artistCacheMap, firstArtist)
+                }
+
+                it.albumArtist = if (tagSplitConfig.isMultiArtistEnabled && primaryAlbumArtists.isNotEmpty()) {
+                    TagSplitter.formatArtists(primaryAlbumArtists, tagSplitConfig)
+                } else {
+                    rawAlbumArtist
+                }
+                it.albumArtistId = primaryAlbumArtistId
+
+                for (singleAlbumArtist in primaryAlbumArtists) {
+                    val singleAlbumArtistId = MiscUtils.resolveArtistId(artistCacheMap, singleAlbumArtist)
+
+                    val albumArtistObj = albumArtistMap?.getOrPut(singleAlbumArtistId) {
+                        Artist(singleAlbumArtistId, singleAlbumArtist, mutableListOf(), mutableListOf())
+                    }
+                    (albumArtistObj?.albumList as MutableList?)?.let { list ->
+                        if (!list.contains(it)) list.add(it)
+                    }
+                    (albumArtistObj?.songList as MutableList?)?.addAll(it.songList)
+
+                    (artistMap?.get(singleAlbumArtistId)?.albumList as MutableList?)?.let { list ->
+                        if (!list.contains(it)) list.add(it)
+                    }
+                }
+            } else {
+                it.albumArtist = null
+                val unknownAlbumArtistId = MiscUtils.syntheticArtistId(null)
+                it.albumArtistId = unknownAlbumArtistId
+                val albumArtistObj = albumArtistMap?.getOrPut(unknownAlbumArtistId) {
+                    Artist(unknownAlbumArtistId, null, mutableListOf(), mutableListOf())
+                }
+                (albumArtistObj?.albumList as MutableList?)?.let { list ->
+                    if (!list.contains(it)) list.add(it)
+                }
+                (albumArtistObj?.songList as MutableList?)?.addAll(it.songList)
             }
-            (albumArtist?.albumList as MutableList?)?.add(it)
-            (albumArtist?.songList as MutableList?)?.addAll(it.songList)
-            (artistMap?.get(it.albumArtistId)?.albumList as MutableList?)?.add(it)
+            it.albumYear = it.songList.mapNotNull { song -> song.mediaMetadata.releaseYear }.maxOrNull()
+            it.albumAddDate = it.songList.mapNotNull { song -> song.mediaMetadata.addDate }.minOrNull()
+            it.albumModifiedDate = it.songList.mapNotNull { song -> song.mediaMetadata.modifiedDate }.maxOrNull()
             // coverCache == null if !useEnhancedCoverReading
             coverCache?.get(it.id)?.let { p ->
                 // if this is false, folder contains >1 albums
