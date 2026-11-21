@@ -41,4 +41,7 @@ object Flags {
 
     // Multiple queues
     const val MQ_ALWAYS_SHOW_QUEUE_ID = false
+
+    // mikooo's player rewrite
+    const val PLAYER_REWRITE = true
 }

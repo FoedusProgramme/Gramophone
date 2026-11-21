@@ -53,6 +53,7 @@ fun ExperimentalSettingsScreen(onBack: () -> Unit, modifier: Modifier = Modifier
     val colorAccuracy = rememberBooleanPreference("color_accuracy", false)
     val offload = rememberStringPreference("offload", "0")
     val mqPreview = rememberBooleanPreference("mq_preview", false)
+    val playerRw = rememberBooleanPreference("player_rw", false)
 
     val rows = buildList<@Composable (Shape) -> Unit> {
         add { shape ->
@@ -95,6 +96,14 @@ fun ExperimentalSettingsScreen(onBack: () -> Unit, modifier: Modifier = Modifier
                 title = stringResource(R.string.settings_mq_enabled),
                 checked = mqPreview.value,
                 onCheckedChange = { mqPreview.set(it) },
+            )
+        }
+        add { shape ->
+            SwitchPreferenceRow(
+                shape,
+                title = "Player Rewrite",
+                checked = playerRw.value,
+                onCheckedChange = { playerRw.set(it) },
             )
         }
     }

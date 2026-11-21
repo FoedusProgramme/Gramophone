@@ -47,9 +47,11 @@ import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import androidx.navigation3.ui.NavDisplay
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
+import org.akanework.gramophone.logic.utils.Flags
 import org.akanework.gramophone.ui.components.compose.AppDialogHost
 import org.akanework.gramophone.ui.components.compose.AppDialogHostState
 import org.akanework.gramophone.ui.components.compose.LocalAppDialogs
+import org.akanework.gramophone.ui.components.compose.rememberBooleanPreference
 import org.akanework.gramophone.ui.components.player.LocalPlayerSheet
 import org.akanework.gramophone.ui.components.player.PlayerSheetController
 import org.akanework.gramophone.ui.components.player.PlayerSheetHost
@@ -264,7 +266,7 @@ fun AppRoot(
         top?.let { playerSheet.visible = it.wantsPlayer }
     }
     val playerBottomPadding = playerSheet.bottomPadding
-    Box(Modifier.fillMaxSize()) {
+    BoxWithConstraints(Modifier.fillMaxSize()) {
         CompositionLocalProvider(
             LocalAppDialogs provides dialogs,
             LocalPlayerSheet provides playerSheet,
@@ -299,9 +301,15 @@ fun AppRoot(
                     .padding(start = 16.dp),
             )
         }
-        // Drawn above the pages, dialogs and snackbar. Composed after the pages so its back
-        // callback takes priority over theirs.
-        PlayerSheetHost(playerSheet)
+
+        val playerRw = rememberBooleanPreference("player_rw", false).value
+
+        if (Flags.PLAYER_REWRITE && playerRw) {
+        } else {
+            // Drawn above the pages, dialogs and snackbar. Composed after the pages so its back
+            // callback takes priority over theirs.
+            PlayerSheetHost(playerSheet)
+        }
     }
 }
 
