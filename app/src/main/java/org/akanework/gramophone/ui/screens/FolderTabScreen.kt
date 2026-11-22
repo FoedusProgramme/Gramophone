@@ -17,6 +17,7 @@
 
 package org.akanework.gramophone.ui.screens
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
@@ -101,6 +102,7 @@ fun FolderTabScreen(
     nowPlaying: NowPlayingState,
     reselectTick: Int,
     modifier: Modifier = Modifier,
+    isFocused: Boolean,
 ) {
     val env = rememberAppActionEnv()
     val scope = rememberCoroutineScope()
@@ -183,6 +185,11 @@ fun FolderTabScreen(
         val items = animatedPage.songs
         val keys = remember(items) { uniqueKeys(items) { "song:" + it.mediaId } }
         val songsHeaderIndex = songsHeaderIndex(animatedPage)
+
+        BackHandler(isFocused && showParent) {
+            state.enter(null)
+        }
+
         Box(Modifier.fillMaxSize()) {
         LazyVerticalGrid(
             columns = GridCells.Fixed(columns),

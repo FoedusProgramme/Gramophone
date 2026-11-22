@@ -211,6 +211,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                             state = viewModel.folderState(isDetailed = tab == HomeTab.FileSystem),
                             nowPlaying = nowPlaying,
                             reselectTick = reselectTicks[tab] ?: 0,
+                            isFocused = pagerState.currentPage == page,
                             modifier = Modifier.fillMaxSize(),
                         )
                     }
