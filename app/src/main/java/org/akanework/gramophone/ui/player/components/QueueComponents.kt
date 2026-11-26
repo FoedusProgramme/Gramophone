@@ -305,7 +305,8 @@ fun QueueHeader(
 
         Column(
             modifier = modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .weight(1f, false),
         ) {
             QueueInfo(
                 mqState = mqState,
