@@ -24,7 +24,6 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -44,17 +43,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -65,11 +61,7 @@ import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 import kotlinx.coroutines.delay
 import org.akanework.gramophone.R
-import org.akanework.gramophone.logic.defaultPrefs
-import org.akanework.gramophone.logic.getBooleanStrict
-import org.akanework.gramophone.logic.utils.Flags
 import org.akanework.gramophone.logic.utils.convertDurationToTimeStamp
-import org.akanework.gramophone.ui.MediaControllerViewModel
 import org.akanework.gramophone.ui.components.compose.DismissibleRow
 import org.akanework.gramophone.ui.components.home.EDITABLE_ROW_HEIGHT
 import org.akanework.gramophone.ui.components.home.EditableSongRow
@@ -77,9 +69,8 @@ import org.akanework.gramophone.ui.components.home.LIBRARY_PLAYING_CORNER
 import org.akanework.gramophone.ui.components.home.LibraryFastScroller
 import org.akanework.gramophone.ui.components.home.nowPlayingRowColors
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.WIDE_LANDSCAPE_MIN_WIDTH
-import org.akanework.gramophone.ui.fragments.compose.MqState
-import org.akanework.gramophone.ui.fragments.compose.QueueTimer
-import org.akanework.gramophone.ui.fragments.compose.rememberMqState
+import org.akanework.gramophone.ui.player.components.MqState
+import org.akanework.gramophone.ui.player.components.QueueTimer
 
 /*
  * The queue, under the full player: the queue head (the multi-queue preview and the time left)

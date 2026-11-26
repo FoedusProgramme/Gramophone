@@ -38,7 +38,6 @@ import android.os.HandlerThread
 import android.os.Looper
 import android.os.Process
 import android.os.SystemClock
-import android.provider.MediaStore
 import androidx.concurrent.futures.CallbackToFutureAdapter
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
@@ -137,11 +136,11 @@ import org.akanework.gramophone.logic.utils.exoplayer.GramophoneRenderFactory
 import org.akanework.gramophone.ui.AudioPreviewActivity
 import org.akanework.gramophone.ui.LyricWidgetProvider
 import org.akanework.gramophone.ui.MainActivity
-import org.akanework.gramophone.ui.fragments.compose.MqState.Companion.CLIENT_QB_REFRESH_ALL
-import org.akanework.gramophone.ui.fragments.compose.MqState.Companion.CLIENT_QB_REFRESH_CLEAR
-import org.akanework.gramophone.ui.fragments.compose.MqState.Companion.CLIENT_QB_REFRESH_ITEM
-import org.akanework.gramophone.ui.fragments.compose.MqState.Companion.CLIENT_QB_REFRESH_LIST
-import org.akanework.gramophone.ui.fragments.compose.MqState.Companion.CLIENT_QB_REFRESH_QUEUES
+import org.akanework.gramophone.ui.player.components.MqState.Companion.CLIENT_QB_REFRESH_ALL
+import org.akanework.gramophone.ui.player.components.MqState.Companion.CLIENT_QB_REFRESH_CLEAR
+import org.akanework.gramophone.ui.player.components.MqState.Companion.CLIENT_QB_REFRESH_ITEM
+import org.akanework.gramophone.ui.player.components.MqState.Companion.CLIENT_QB_REFRESH_LIST
+import org.akanework.gramophone.ui.player.components.MqState.Companion.CLIENT_QB_REFRESH_QUEUES
 import org.akanework.gramophone.ui.intent.PlayIntents
 import org.koin.android.ext.android.inject
 import uk.akane.libphonograph.dynamicitem.Favorite

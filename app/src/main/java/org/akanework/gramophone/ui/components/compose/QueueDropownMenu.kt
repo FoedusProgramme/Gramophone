@@ -22,7 +22,7 @@ import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.MultiQueueObject
 import org.akanework.gramophone.ui.actions.PlaylistDialogs
 import org.akanework.gramophone.ui.actions.rememberAppActionEnv
-import org.akanework.gramophone.ui.fragments.compose.MqState
+import org.akanework.gramophone.ui.player.components.MqState
 
 
 @OptIn(FlowPreview::class)

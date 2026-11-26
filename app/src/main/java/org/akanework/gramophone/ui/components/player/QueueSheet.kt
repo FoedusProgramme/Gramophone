@@ -99,10 +99,10 @@ import org.akanework.gramophone.ui.components.player.PlayerUtilities.QUEUE_PREVI
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.QUEUE_PREVIEW_PROGRESS_HEIGHT
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.absoluteUnbounded
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.expandedContentAlpha
-import org.akanework.gramophone.ui.fragments.compose.MqList
-import org.akanework.gramophone.ui.fragments.compose.MqState
-import org.akanework.gramophone.ui.fragments.compose.QueueInfo
-import org.akanework.gramophone.ui.fragments.compose.rememberMqState
+import org.akanework.gramophone.ui.player.components.MqList
+import org.akanework.gramophone.ui.player.components.MqState
+import org.akanework.gramophone.ui.player.components.QueueInfo
+import org.akanework.gramophone.ui.player.components.rememberMqState
 import kotlin.math.pow
 
 /*

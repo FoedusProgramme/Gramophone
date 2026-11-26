@@ -91,9 +91,6 @@ import org.akanework.gramophone.ui.components.player.QueueRow
 import org.akanework.gramophone.ui.components.player.QueueTimeLeft
 import org.akanework.gramophone.ui.components.player.nowPlayingColors
 import org.akanework.gramophone.ui.components.player.rememberArtworkColorScheme
-import org.akanework.gramophone.ui.fragments.compose.MqList
-import org.akanework.gramophone.ui.fragments.compose.MqState
-import org.akanework.gramophone.ui.fragments.compose.QueueInfo
 import org.akanework.gramophone.ui.player.INSETS_N
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState

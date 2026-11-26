@@ -65,7 +65,7 @@ import org.akanework.gramophone.ui.components.player.PlayerUtilities.QUEUE_HANDL
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.QUEUE_PREVIEW_HEIGHT
 import org.akanework.gramophone.ui.components.player.queueAlpha
 import org.akanework.gramophone.ui.components.player.rowAlpha
-import org.akanework.gramophone.ui.fragments.compose.rememberMqState
+import org.akanework.gramophone.ui.player.components.rememberMqState
 import org.akanework.gramophone.ui.player.components.ActionBarRow
 import org.akanework.gramophone.ui.player.components.QueueBody
 import org.akanework.gramophone.ui.player.components.QueueHeader

@@ -65,7 +65,6 @@ import org.akanework.gramophone.logic.playOrPause
 import org.akanework.gramophone.logic.setTimer
 import org.akanework.gramophone.ui.MediaControllerViewModel
 import org.akanework.gramophone.ui.components.lyrics.LyricsOverlayState
-import org.akanework.gramophone.ui.fragments.compose.rememberMqState
 import org.akanework.gramophone.ui.nav.AlbumKey
 import org.akanework.gramophone.ui.nav.ArtistKey
 import org.akanework.gramophone.ui.nav.NavViewModel
