@@ -23,6 +23,7 @@ class TransformableImageView @JvmOverloads constructor(
     private var shouldClip = false
     private var rotationAngle = 0f
     private var isAnimating = false
+    private var isWindowVisible = false
 
     private var vw = 0f
     private var vh = 0f
@@ -51,30 +52,32 @@ class TransformableImageView @JvmOverloads constructor(
     }
 
     fun startRotation() {
-        if (!isAnimating) {
-            isAnimating = true
-            Choreographer.getInstance().postFrameCallback(this)
-        }
+        isAnimating = true
+        updateFrameCallback()
     }
 
     fun stopRotation() {
-        if (isAnimating) {
-            isAnimating = false
-            Choreographer.getInstance().removeFrameCallback(this)
-        }
+        isAnimating = false
+        updateFrameCallback()
     }
 
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-        if (isAnimating) {
-            Choreographer.getInstance().postFrameCallback(this)
-        }
+    override fun onWindowVisibilityChanged(visibility: Int) {
+        super.onWindowVisibilityChanged(visibility)
+        isWindowVisible = visibility == VISIBLE
+        updateFrameCallback()
     }
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        if (isAnimating) {
-            Choreographer.getInstance().removeFrameCallback(this)
+        isWindowVisible = false
+        updateFrameCallback()
+    }
+
+    private fun updateFrameCallback() {
+        val choreographer = Choreographer.getInstance()
+        choreographer.removeFrameCallback(this)
+        if (isAnimating && isWindowVisible) {
+            choreographer.postFrameCallback(this)
         }
     }
 
