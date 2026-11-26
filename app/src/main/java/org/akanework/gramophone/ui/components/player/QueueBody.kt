@@ -92,7 +92,7 @@ private val QUEUE_FAB_MARGIN = 16.dp
 private val QUEUE_FAB_GAP = 12.dp
 
 @Stable
-private class QueueRow(val key: Long, val item: MediaItem)
+class QueueRow(val key: Long, val item: MediaItem)
 
 /**
  * The queue of [controller], brought up and put away (as when it's cleared) by [reveal]. The
@@ -249,7 +249,7 @@ fun QueueBody(
  * only while [ticking]: with the queue down, its timer isn't kept up to date anyway.
  */
 @Composable
-private fun QueueTimeLeft(timer: QueueTimer?, ticking: Boolean, modifier: Modifier = Modifier) {
+fun QueueTimeLeft(timer: QueueTimer?, ticking: Boolean, modifier: Modifier = Modifier) {
     val now by produceState(SystemClock.elapsedRealtime(), timer, ticking) {
         value = SystemClock.elapsedRealtime()
         if (timer == null || !timer.running || !ticking) return@produceState
@@ -286,7 +286,7 @@ private fun QueueTimeLeft(timer: QueueTimer?, ticking: Boolean, modifier: Modifi
 
 /** Over the end of the queue: clearing it, small, and back to the song playing. */
 @Composable
-private fun QueueFabs(
+fun QueueFabs(
     onClear: () -> Unit,
     onScrollToPlaying: () -> Unit,
     modifier: Modifier = Modifier,

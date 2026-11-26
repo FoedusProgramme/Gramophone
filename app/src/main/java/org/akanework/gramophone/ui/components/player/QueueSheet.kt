@@ -44,19 +44,15 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.KeyboardArrowUp
 import androidx.compose.material.icons.outlined.Repeat
 import androidx.compose.material.icons.outlined.RepeatOne
 import androidx.compose.material.icons.outlined.Shuffle
 import androidx.compose.material.icons.outlined.SkipNext
 import androidx.compose.material.icons.outlined.SkipPrevious
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -82,8 +78,6 @@ import androidx.media3.common.Player
 import androidx.media3.common.Player.REPEAT_MODE_OFF
 import coil3.compose.AsyncImage
 import org.akanework.gramophone.R
-import org.akanework.gramophone.logic.defaultPrefs
-import org.akanework.gramophone.logic.getBooleanStrict
 import org.akanework.gramophone.ui.MediaControllerViewModel
 import org.akanework.gramophone.ui.components.compose.TileButton
 import org.akanework.gramophone.ui.components.compose.TintedIcon
@@ -103,7 +97,6 @@ import org.akanework.gramophone.ui.components.player.PlayerUtilities.QUEUE_HANDL
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.QUEUE_HANDLE_WIDTH
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.QUEUE_PREVIEW_BOTTOM_PADDING
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.QUEUE_PREVIEW_PROGRESS_HEIGHT
-import org.akanework.gramophone.ui.components.player.PlayerUtilities.absolute
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.absoluteUnbounded
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.expandedContentAlpha
 import org.akanework.gramophone.ui.fragments.compose.MqList
@@ -129,14 +122,14 @@ private val PREVIEW_ICON_SIZE = 22.dp
 private const val ROW_FADE_END = 0.3f
 
 /** The bottom row's opacity with the queue [progress] of the way up. */
-private fun rowAlpha(progress: Float) = (1f - progress / ROW_FADE_END).coerceIn(0f, 1f)
+fun rowAlpha(progress: Float) = (1f - progress / ROW_FADE_END).coerceIn(0f, 1f)
 
 /** The queue's, its handle's and songs', opacity with it [progress] of the way up. */
-private fun queueAlpha(progress: Float) =
+fun queueAlpha(progress: Float) =
     ((progress - ROW_FADE_END) / (1f - ROW_FADE_END)).coerceIn(0f, 1f)
 
 /** The drag handle's colour's opacity, as Material's. */
-private const val HANDLE_ALPHA = 0.4f
+const val HANDLE_ALPHA = 0.4f
 
 @Composable
 internal fun QueueSheet(
@@ -379,7 +372,7 @@ private fun QueueHeader(
             QueueInfo(
                 mqState = mqState,
                 mqEnabled = mqEnabled,
-                landscape = isWideLandscape,
+                dualPane = isWideLandscape,
                 onDismiss = queue::hide,
             )
 

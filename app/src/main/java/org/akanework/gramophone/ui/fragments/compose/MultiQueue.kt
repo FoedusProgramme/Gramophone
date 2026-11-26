@@ -282,7 +282,7 @@ fun MqListItem(
             Row(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                if (isEditAllowed || !isActiveQueue || mqState.expanded) {
+                if (isEditAllowed || isActiveQueue || mqState.expanded) {
                     QueueDropdownMenu(
                         mqState = mqState,
                         mq = mq,
@@ -309,7 +309,7 @@ fun MqListItem(
 fun QueueInfo(
     mqState: MqState,
     mqEnabled: Boolean,
-    landscape: Boolean,
+    dualPane: Boolean,
     modifier: Modifier = Modifier,
     onDismiss: (() -> Unit)? = null,
 ) {
@@ -342,7 +342,7 @@ fun QueueInfo(
                 .padding(2.dp)
                 .weight(1f)
                 .height(IntrinsicSize.Min)
-                .clickable(enabled = mqEnabled && !landscape) {
+                .clickable(enabled = mqEnabled && !dualPane) {
                     mqState.toggleExpand()
                     haptic.performHapticFeedback(HapticFeedbackType.ContextClick)
                 }
@@ -372,7 +372,7 @@ fun QueueInfo(
                 )
             }
             IconButton(
-                enabled = mqState.isEditAllowed || (mqEnabled && !mqState.inactiveQueues.isEmpty() && !landscape),
+                enabled = mqState.isEditAllowed || (mqEnabled && !mqState.inactiveQueues.isEmpty() && !dualPane),
                 onClick = {
                     if (mqState.isEditAllowed) {
                         mqState.isEditAllowed = false

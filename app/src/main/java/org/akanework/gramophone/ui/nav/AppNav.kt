@@ -6,11 +6,17 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.add
 import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.union
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHost
@@ -31,8 +37,10 @@ import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.res.integerResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -47,14 +55,24 @@ import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import androidx.navigation3.ui.NavDisplay
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
+import org.akanework.gramophone.R
+import org.akanework.gramophone.logic.getPlayerUiCapabilities
 import org.akanework.gramophone.logic.utils.Flags
 import org.akanework.gramophone.ui.components.compose.AppDialogHost
 import org.akanework.gramophone.ui.components.compose.AppDialogHostState
+import org.akanework.gramophone.ui.components.compose.BottomSheetState
 import org.akanework.gramophone.ui.components.compose.LocalAppDialogs
 import org.akanework.gramophone.ui.components.compose.rememberBooleanPreference
+import org.akanework.gramophone.ui.components.compose.rememberBottomSheetState
+import org.akanework.gramophone.ui.components.compose.rememberIntPreference
 import org.akanework.gramophone.ui.components.player.LocalPlayerSheet
 import org.akanework.gramophone.ui.components.player.PlayerSheetController
 import org.akanework.gramophone.ui.components.player.PlayerSheetHost
+import org.akanework.gramophone.ui.player.BottomSheetPlayer
+import org.akanework.gramophone.ui.player.INSETS_C
+import org.akanework.gramophone.ui.player.MiniPlayerHeight
+import org.akanework.gramophone.ui.player.PlayerLayout
+import org.akanework.gramophone.ui.player.QueueHeight
 import org.akanework.gramophone.ui.screens.HomeScreen
 import org.akanework.gramophone.ui.screens.LibrarySubScreen
 import org.akanework.gramophone.ui.screens.PlaylistEditScreen
@@ -305,6 +323,54 @@ fun AppRoot(
         val playerRw = rememberBooleanPreference("player_rw", false).value
 
         if (Flags.PLAYER_REWRITE && playerRw) {
+            val context = LocalContext.current
+            val density = LocalDensity.current
+            val windowInsets = WindowInsets.systemBars.union(WindowInsets.displayCutout)
+            val (canSupportDualPane, canSupportFullHeight) = context.getPlayerUiCapabilities(maxWidth, maxHeight)
+
+            val mqEnable = rememberBooleanPreference("mq_preview", false).value
+            val cookieCover = rememberBooleanPreference("cookie_cover", false).value
+            val expandedArtCorner = rememberIntPreference(
+                "album_round_corner", integerResource(R.integer.round_corner_radius)
+            ).value.dp
+
+            // player sheet has 2 modes, whole screen (landscape), or with queue sheet inset (portrait)
+            val playerInsets = if (canSupportDualPane) {
+                windowInsets
+            } else {
+                windowInsets.add(WindowInsets(bottom = QueueHeight))
+            }
+            // queue sheet has 2 modes, whole screen (mq + landscape), or right side sheet (not mq + landscape)
+            val queueInsets = if (mqEnable) {
+                windowInsets
+            } else {
+                windowInsets.only(INSETS_C)
+            }
+
+            val playerLayout = PlayerLayout(
+                playerInsets, queueInsets, canSupportDualPane, canSupportFullHeight, mqEnable, cookieCover,
+                MiniPlayerHeight + with(density) { windowInsets.getBottom(density).toDp() },
+                QueueHeight + with(density) { windowInsets.getBottom(density).toDp() }, expandedArtCorner
+            )
+
+            playerSheet.collapsedFootprint = with(density) { playerLayout.miniPlayerHeight.toPx().toInt() }
+
+            val playerSheetState = rememberBottomSheetState(
+                dismissedBound = 0.dp,
+                collapsedBound = playerLayout.miniPlayerHeight,
+                expandedBound = maxHeight,
+                initialAnchor = BottomSheetState.DISMISSED_ANCHOR
+            )
+            // TODO: this insanity brings up the queue sheet because i forgot how to workaround the initialAnchor = DISMISSED_ANCHOR breakage quirk
+            if (playerSheet.visible && (playerSheet.mediaController.get()?.mediaItemCount ?: 0) > 0 ) {
+                playerSheetState.collapseSoft()
+            }
+            BottomSheetPlayer(
+                playerSheetState = playerSheetState,
+                sheetController = playerSheet,
+                playerLayout = playerLayout
+            )
+
         } else {
             // Drawn above the pages, dialogs and snackbar. Composed after the pages so its back
             // callback takes priority over theirs.

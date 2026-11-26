@@ -46,7 +46,9 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.os.BundleCompat
 import androidx.media3.common.C
@@ -60,7 +62,6 @@ import androidx.media3.session.MediaController
 import androidx.media3.session.SessionCommand
 import kotlinx.coroutines.flow.MutableSharedFlow
 import org.akanework.gramophone.BuildConfig
-import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_GET_AUDIO_FORMAT
 import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_GET_LYRICS
 import org.akanework.gramophone.logic.GramophonePlaybackService.Companion.SERVICE_QB_AGE
@@ -80,7 +81,6 @@ import org.akanework.gramophone.logic.utils.AfFormatInfo
 import org.akanework.gramophone.logic.utils.AudioFormatDetector
 import org.akanework.gramophone.logic.utils.AudioTrackInfo
 import org.akanework.gramophone.logic.utils.BtCodecInfo
-import org.akanework.gramophone.logic.utils.Flags
 import org.akanework.gramophone.logic.utils.MediaItemList
 import org.akanework.gramophone.logic.utils.ReplayGainUtil
 import org.akanework.gramophone.logic.utils.SemanticLyrics
@@ -650,4 +650,15 @@ tailrec fun Context.findActivity(): ComponentActivity? = when (this) {
     is ComponentActivity -> this
     is ContextWrapper -> baseContext.findActivity()
     else -> null
+}
+
+fun Context.getPlayerUiCapabilities(maxWidth: Dp?, maxHeight: Dp?): Pair<Boolean, Boolean> {
+    val config = resources.configuration
+    val w = maxWidth?: config.screenWidthDp.dp
+    val h = maxHeight?: config.screenHeightDp.dp
+
+    val canSupportDualPane = w >= 600.dp
+    val canSupportFullHeight = h > 600.dp
+
+    return Pair(canSupportDualPane, canSupportFullHeight)
 }

@@ -321,7 +321,7 @@ private fun Modifier.fadingOverQueue(queue: QueueRevealState): Modifier =
 
 /** The title and artist, the progress bar and times, and the transport row. */
 @Composable
-private fun PlayerControls(
+internal fun PlayerControls(
     player: PlayerSheetPlayerState,
     actions: FullPlayerActions,
     scheme: AnimatedColorScheme,
@@ -340,7 +340,7 @@ private fun PlayerControls(
 }
 
 @Composable
-private fun TopButtonColumn(
+fun TopButtonColumn(
     player: PlayerSheetPlayerState,
     actions: FullPlayerActions,
     scheme: AnimatedColorScheme,
@@ -355,7 +355,7 @@ private fun TopButtonColumn(
 }
 
 @Composable
-private fun TopButtonRow(
+fun TopButtonRow(
     player: PlayerSheetPlayerState,
     actions: FullPlayerActions,
     scheme: AnimatedColorScheme,

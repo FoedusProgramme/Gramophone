@@ -44,7 +44,6 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.Stable
@@ -111,8 +110,6 @@ import org.akanework.gramophone.ui.components.player.PlayerUtilities.TAP_EXPAND_
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.WIDE_LANDSCAPE_MIN_WIDTH
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.absolute
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.miniContentAlpha
-import org.akanework.gramophone.ui.fragments.compose.MqState
-import org.akanework.gramophone.ui.fragments.compose.rememberMqState
 import org.akanework.gramophone.ui.nav.NAV_TRANSITION_MS
 import org.akanework.gramophone.ui.nav.NavAxisEasing
 import org.akanework.gramophone.ui.theme.harmonizeBy
@@ -328,7 +325,7 @@ fun PlayerSheet(
 
 /** Mini bar text and play button colors. */
 @Immutable
-private data class MiniBarColors(
+data class MiniBarColors(
     val content: Color,
     val playButton: Color,
     val onPlayButton: Color,
@@ -558,7 +555,7 @@ private const val ART_CROSSFADE_MS = 300
  * View player's loadNoPlaceholder) and then fades the new one in over it.
  */
 @Composable
-private fun CrossfadeArtwork(request: ImageRequest, modifier: Modifier) {
+fun CrossfadeArtwork(request: ImageRequest, modifier: Modifier) {
     val scope = rememberCoroutineScope()
     // Drawn with its glyph at DEFAULT_COVER_GLYPH_SHARE, like every other default cover.
     val defaultCover = rememberDefaultCoverPainter(R.drawable.ic_default_cover)

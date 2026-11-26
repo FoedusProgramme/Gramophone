@@ -17,6 +17,7 @@
 
 package org.akanework.gramophone.ui.components.lyrics
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -81,6 +82,11 @@ fun LyricsOverlay(
     DisposableEffect(view, visible) {
         if (visible) view.keepScreenOn = true
         onDispose { if (visible) view.keepScreenOn = false }
+    }
+
+    // TODO: predictive back...
+    BackHandler() {
+        state.onBackPressed()
     }
 
     Box(
