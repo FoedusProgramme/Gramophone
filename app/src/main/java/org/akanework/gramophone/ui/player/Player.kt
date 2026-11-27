@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -48,6 +49,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.akanework.gramophone.ui.MediaControllerViewModel
@@ -189,6 +191,7 @@ fun PortraitPlayer(
     scheme: AnimatedColorScheme,
     onOpenDialog: (PlayerDialog) -> Unit,
 ) {
+    val layoutDirection = LocalLayoutDirection.current
     val (playerInsets, queueInsets, dualPane, fullHeight, mqEnabled, cookieCover, miniPlayerHeight, queueHeight,
         expandedArtCorner) = playerLayout
     val lyricsCovering by remember(lyrics) { derivedStateOf { lyrics.covering } }
@@ -250,10 +253,16 @@ fun PortraitPlayer(
     )
 
     if (lyricsCovering) {
+        val paddingValues = playerInsets.asPaddingValues()
         LyricsOverlay(
             state = lyrics,
             scheme = scheme,
-            padding = LyricsPadding(0, 0, 0, 0),
+            padding = LyricsPadding(
+                left = paddingValues.calculateLeftPadding(layoutDirection).value.toInt(),
+                top = paddingValues.calculateTopPadding().value.toInt(),
+                right = paddingValues.calculateRightPadding(layoutDirection).value.toInt(),
+                bottom = paddingValues.calculateBottomPadding().value.toInt(),
+            ),
         )
     }
 }
@@ -270,6 +279,7 @@ fun LandscapePlayer(
     scheme: AnimatedColorScheme,
     onOpenDialog: (PlayerDialog) -> Unit,
 ) {
+    val layoutDirection = LocalLayoutDirection.current
     val (playerInsets, queueInsets, dualPane, fullHeight, mqEnabled, cookieCover, miniPlayerHeight, queueHeight,
         expandedArtCorner) = playerLayout
     val dualPaneQueue = dualPane && playerLayout.mqEnabled
@@ -360,10 +370,16 @@ fun LandscapePlayer(
     }
 
     if (lyricsCovering) {
+        val paddingValues = playerInsets.asPaddingValues()
         LyricsOverlay(
             state = lyrics,
             scheme = scheme,
-            padding = LyricsPadding(0, 0, 0, 0),
+            padding = LyricsPadding(
+                left = paddingValues.calculateLeftPadding(layoutDirection).value.toInt(),
+                top = paddingValues.calculateTopPadding().value.toInt(),
+                right = paddingValues.calculateRightPadding(layoutDirection).value.toInt(),
+                bottom = paddingValues.calculateBottomPadding().value.toInt(),
+            ),
         )
     }
 }
