@@ -19,6 +19,7 @@ package org.akanework.gramophone.ui.components.player
 
 import android.content.Context
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.media3.common.HeartRating
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
@@ -26,7 +27,6 @@ import androidx.media3.common.Player
 import androidx.media3.session.MediaController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import org.akanework.gramophone.R
 import org.akanework.gramophone.logic.showsPause
@@ -63,11 +63,11 @@ internal class PlayerStateBridge(
             onMediaChanged()
         }
         scope.launch {
-            while (isActive) {
-                if (polling() && lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
-                    clock.sample()
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                while (true) {
+                    if (polling()) clock.sample()
+                    delay(if (expanded()) FULL_POLL_MS else POSITION_POLL_MS)
                 }
-                delay(if (expanded()) FULL_POLL_MS else POSITION_POLL_MS)
             }
         }
     }

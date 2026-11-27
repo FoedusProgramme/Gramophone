@@ -64,6 +64,9 @@ import androidx.compose.ui.window.Dialog
 import androidx.core.app.ActivityCompat
 import androidx.core.net.toFile
 import androidx.core.net.toUri
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
@@ -81,7 +84,6 @@ import coil3.compose.AsyncImage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.akanework.gramophone.R
@@ -435,10 +437,13 @@ private fun PreviewContent(
     poll: () -> Unit,
 ) {
     val defaultProgressBar = rememberBooleanPreference("default_progress_bar", false).value
-    LaunchedEffect(Unit) {
-        while (isActive) {
-            poll()
-            delay(POSITION_POLL_MS.milliseconds)
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    LaunchedEffect(lifecycle) {
+        lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            while (true) {
+                poll()
+                delay(POSITION_POLL_MS.milliseconds)
+            }
         }
     }
     var scrub by remember { mutableStateOf<Float?>(null) }
