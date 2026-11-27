@@ -58,17 +58,15 @@ import org.akanework.gramophone.ui.components.player.FullPlayerActions
 import org.akanework.gramophone.ui.components.player.HANDLE_ALPHA
 import org.akanework.gramophone.ui.components.player.PlayerSheetPlayerState
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.MINI_CORNER
-import org.akanework.gramophone.ui.components.player.PlayerUtilities.QUEUE_HANDLE_BOTTOM_PADDING
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.QUEUE_HANDLE_THICKNESS
-import org.akanework.gramophone.ui.components.player.PlayerUtilities.QUEUE_HANDLE_TOP_PADDING
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.QUEUE_HANDLE_WIDTH
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.QUEUE_PREVIEW_HEIGHT
 import org.akanework.gramophone.ui.components.player.queueAlpha
 import org.akanework.gramophone.ui.components.player.rowAlpha
-import org.akanework.gramophone.ui.player.components.rememberMqState
 import org.akanework.gramophone.ui.player.components.ActionBarRow
 import org.akanework.gramophone.ui.player.components.QueueBody
 import org.akanework.gramophone.ui.player.components.QueueHeader
+import org.akanework.gramophone.ui.player.components.rememberMqState
 import kotlin.math.pow
 
 @Composable
@@ -135,18 +133,8 @@ fun BottomSheetQueue(
         Column(
             Modifier
                 .windowInsetsPadding(queueInsets.only(INSETS_U))
-                .padding(top = with(density) { queueInsets.getTop(density).toDp() })
+                .padding(top = if (showQueueHeader) with(density) { queueInsets.getTop(density).toDp() } else 0.dp)
                 .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
-                .drawBehind {
-                    val down = scheme.color { surfaceContainerLow }
-                    val alpha =
-                        (queueSheetState.progress.toDouble().pow((1f / 3f).toDouble()) * 1.5).toFloat()
-                            .coerceAtMost(1f)
-                    drawRect(
-                        lerp(down, scheme.color { surfaceContainer }, queueSheetState.progress),
-                        alpha = alpha
-                    )
-                },
         ) {
             // queue drag handle
             val description = stringResource(R.string.current_playlist)
@@ -161,7 +149,7 @@ fun BottomSheetQueue(
                         onClick = { if (queueSheetState.isExpanded) queueSheetState.collapseSoft() else queueSheetState.expandSoft() },
                     )
                     .semantics { contentDescription = description }
-                    .padding(top = QUEUE_HANDLE_TOP_PADDING, bottom = QUEUE_HANDLE_BOTTOM_PADDING),
+                    .padding(top = 8.dp, bottom = 20.dp),
                 contentAlignment = Alignment.TopCenter,
             ) {
                 Box(
