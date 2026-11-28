@@ -31,6 +31,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.BoxWithConstraintsScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -79,10 +80,10 @@ fun BottomSheet(
     collapsedWidth: Float = 1f,
     collapsedContent: @Composable BoxScope.() -> Unit,
     contentShape: RoundedCornerShape? = RoundedCornerShape(
-        topStart = lerp(16.dp, 0.dp, state.progress),
-        topEnd = lerp(16.dp, 0.dp, state.progress)
+        topStart = lerp(16.dp, 0.dp, state.progress.coerceIn(0f, 1f)),
+        topEnd = lerp(16.dp, 0.dp, state.progress.coerceIn(0f, 1f))
     ),
-    content: @Composable BoxScope.() -> Unit,
+    content: @Composable BoxWithConstraintsScope.() -> Unit,
 ) {
     /* performant blur background fade
     Box(

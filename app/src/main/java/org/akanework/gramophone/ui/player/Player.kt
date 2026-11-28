@@ -37,6 +37,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.rememberBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -49,6 +50,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -68,7 +70,7 @@ import org.akanework.gramophone.ui.components.player.PlayerDialogs
 import org.akanework.gramophone.ui.components.player.PlayerSheetController
 import org.akanework.gramophone.ui.components.player.PlayerSheetPlayerState
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.ART_TOP_GAP
-import org.akanework.gramophone.ui.components.player.PlayerUtilities.QUEUE_PREVIEW_HEIGHT
+import org.akanework.gramophone.ui.components.player.PlayerUtilities.QUEUE_HEADER_HEIGHT
 import org.akanework.gramophone.ui.components.player.TopButtonColumn
 import org.akanework.gramophone.ui.components.player.TopButtonRow
 import org.akanework.gramophone.ui.components.player.nowPlayingColors
@@ -191,6 +193,7 @@ fun PortraitPlayer(
     scheme: AnimatedColorScheme,
     onOpenDialog: (PlayerDialog) -> Unit,
 ) {
+    val density = LocalDensity.current
     val layoutDirection = LocalLayoutDirection.current
     val (playerInsets, queueInsets, dualPane, fullHeight, mqEnabled, cookieCover, miniPlayerHeight, queueHeight,
         expandedArtCorner) = playerLayout
@@ -201,7 +204,8 @@ fun PortraitPlayer(
             .fillMaxSize()
             .graphicsLayer {
                 alpha = if (lyricsCovering) 0f else 1f
-            }
+            },
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         TopButtonRow(playerState, actions, scheme, onOpenDialog)
         Spacer(Modifier.height(ART_TOP_GAP))
@@ -236,10 +240,11 @@ fun PortraitPlayer(
         }
     }
 
+    val qHeaderTopOffset = with(density) { queueInsets.getTop(density).toDp() }
     val queueSheetState = rememberBottomSheetState(
         dismissedBound = 0.dp,
         collapsedBound = queueHeight,
-        expandedBound = sheetState.expandedBound - if (fullHeight) QUEUE_PREVIEW_HEIGHT else 0.dp,
+        expandedBound = sheetState.expandedBound - if (fullHeight) (QUEUE_HEADER_HEIGHT + qHeaderTopOffset) else 0.dp,
         initialAnchor = BottomSheetState.COLLAPSED_ANCHOR,
     )
     BottomSheetQueue(
@@ -279,19 +284,25 @@ fun LandscapePlayer(
     scheme: AnimatedColorScheme,
     onOpenDialog: (PlayerDialog) -> Unit,
 ) {
+    val density = LocalDensity.current
     val layoutDirection = LocalLayoutDirection.current
     val (playerInsets, queueInsets, dualPane, fullHeight, mqEnabled, cookieCover, miniPlayerHeight, queueHeight,
         expandedArtCorner) = playerLayout
-    val dualPaneQueue = dualPane && playerLayout.mqEnabled
+    val dualPaneQueue = dualPane && !fullHeight && playerLayout.mqEnabled
     val lyricsCovering by remember(lyrics) { derivedStateOf { lyrics.covering } }
 
+    val qHeaderTopOffset = with(density) { queueInsets.getTop(density).toDp() }
 
     @Composable
     fun queueSheet() {
+        // Tablet nonsense.
+        val nestedSheetHax = dualPane && !dualPaneQueue && fullHeight
         val queueSheetState = rememberBottomSheetState(
             dismissedBound = 0.dp,
-            collapsedBound = queueHeight,
-            expandedBound = sheetState.expandedBound - if (fullHeight) QUEUE_PREVIEW_HEIGHT else 0.dp,
+            collapsedBound = queueHeight + if (nestedSheetHax) 12.dp + with(density) {
+                queueInsets.getTop(density).toDp()
+            } else 0.dp,
+            expandedBound = sheetState.expandedBound - if (fullHeight) (QUEUE_HEADER_HEIGHT + qHeaderTopOffset) else 0.dp,
             initialAnchor = BottomSheetState.COLLAPSED_ANCHOR,
         )
         BottomSheetQueue(
@@ -302,6 +313,7 @@ fun LandscapePlayer(
             scheme = scheme,
             actions = actions,
             onClearQueue = sheetState::forceDismiss,
+            nestedSheetHax = nestedSheetHax,
         )
     }
 
@@ -401,5 +413,5 @@ val QueueHeight = 120.dp
 
 val INSETS_U = WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom
 val INSETS_N = WindowInsetsSides.Horizontal + WindowInsetsSides.Top
-val INSETS_C = WindowInsetsSides.Vertical + WindowInsetsSides.End
-val INSETS_E = WindowInsetsSides.Vertical + WindowInsetsSides.Start
+val INSETS_3 = WindowInsetsSides.Vertical + WindowInsetsSides.End
+val INSETS_C = WindowInsetsSides.Vertical + WindowInsetsSides.Start

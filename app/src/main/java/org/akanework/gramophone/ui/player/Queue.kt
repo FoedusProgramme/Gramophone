@@ -21,12 +21,14 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -60,7 +62,7 @@ import org.akanework.gramophone.ui.components.player.PlayerSheetPlayerState
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.MINI_CORNER
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.QUEUE_HANDLE_THICKNESS
 import org.akanework.gramophone.ui.components.player.PlayerUtilities.QUEUE_HANDLE_WIDTH
-import org.akanework.gramophone.ui.components.player.PlayerUtilities.QUEUE_PREVIEW_HEIGHT
+import org.akanework.gramophone.ui.components.player.PlayerUtilities.QUEUE_HEADER_HEIGHT
 import org.akanework.gramophone.ui.components.player.queueAlpha
 import org.akanework.gramophone.ui.components.player.rowAlpha
 import org.akanework.gramophone.ui.player.components.ActionBarRow
@@ -78,6 +80,7 @@ fun BottomSheetQueue(
     actions: FullPlayerActions,
     scheme: AnimatedColorScheme,
     onClearQueue: () -> Unit,
+    nestedSheetHax: Boolean = false,
 ) {
     val context = LocalContext.current
     val density = LocalDensity.current
@@ -122,6 +125,7 @@ fun BottomSheetQueue(
         contentShape = if (!showQueueHeader) {
             RoundedCornerShape(lerp(MINI_CORNER, 0.dp, queueSheetState.progress))
         } else null,
+        modifier = Modifier.offset(y = if (nestedSheetHax) 12.dp + with(density) { queueInsets.getTop(density).toDp() } else 0.dp)
     ) {
         val mqState = rememberMqState(context, scope, mediaController, dualPane, onClearQueue)
             ?: return@BottomSheet
@@ -132,8 +136,7 @@ fun BottomSheetQueue(
 
         Column(
             Modifier
-                .windowInsetsPadding(queueInsets.only(INSETS_U))
-                .padding(top = if (showQueueHeader) with(density) { queueInsets.getTop(density).toDp() } else 0.dp)
+                .padding((if (!dualPane) queueInsets.only(WindowInsetsSides.Horizontal)else queueInsets.only(INSETS_N)).asPaddingValues())
                 .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
         ) {
             // queue drag handle
@@ -149,7 +152,9 @@ fun BottomSheetQueue(
                         onClick = { if (queueSheetState.isExpanded) queueSheetState.collapseSoft() else queueSheetState.expandSoft() },
                     )
                     .semantics { contentDescription = description }
-                    .padding(top = 8.dp, bottom = 20.dp),
+                    .padding(top = 8.dp + if (!fullHeight && !dualPane) with(density) {
+                        queueInsets.getTop(density).toDp()
+                    } else 0.dp, bottom = 20.dp),
                 contentAlignment = Alignment.TopCenter,
             ) {
                 Box(
@@ -191,14 +196,18 @@ fun BottomSheetQueue(
 
         // queue header
         if (showQueueHeader && !queueSheetState.isCollapsed) {
+            val qHeaderTopOffset = with(density) { queueInsets.getTop(density).toDp() }
             Box(
                 Modifier
                     .graphicsLayer {
                         compositingStrategy = CompositingStrategy.ModulateAlpha
                         val p = queueSheetState.progress.coerceIn(0f, 1f)
                         translationY =
-                            -(queueSheetState.expandedBound - queueSheetState.value + (QUEUE_PREVIEW_HEIGHT - 2.dp)).roundToPx() - size.height * (1f - p)
+                            -(queueSheetState.expandedBound - queueSheetState.value + QUEUE_HEADER_HEIGHT + qHeaderTopOffset).roundToPx() - size.height * (1f - p)
                         alpha = p
+                    }
+                    .drawBehind {
+                        drawRect(scheme.color { surface })
                     }
             ) {
                 QueueHeader(

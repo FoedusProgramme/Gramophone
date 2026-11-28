@@ -69,7 +69,7 @@ import org.akanework.gramophone.ui.components.player.LocalPlayerSheet
 import org.akanework.gramophone.ui.components.player.PlayerSheetController
 import org.akanework.gramophone.ui.components.player.PlayerSheetHost
 import org.akanework.gramophone.ui.player.BottomSheetPlayer
-import org.akanework.gramophone.ui.player.INSETS_C
+import org.akanework.gramophone.ui.player.INSETS_3
 import org.akanework.gramophone.ui.player.MiniPlayerHeight
 import org.akanework.gramophone.ui.player.PlayerLayout
 import org.akanework.gramophone.ui.player.QueueHeight
@@ -344,7 +344,7 @@ fun AppRoot(
             val queueInsets = if (mqEnable) {
                 windowInsets
             } else {
-                windowInsets.only(INSETS_C)
+                windowInsets.only(INSETS_3)
             }
 
             val playerLayout = PlayerLayout(

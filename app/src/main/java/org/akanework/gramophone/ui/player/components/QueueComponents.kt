@@ -31,6 +31,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -157,9 +158,9 @@ fun QueueBody(
     Box(modifier, contentAlignment = Alignment.TopCenter) {
         Row() {
             if (dualPane) {
-                Box(Modifier
-                    .weight(0.45f, false)
-                    .widthIn(max = 400.dp)
+                Box(
+                    Modifier
+                        .weight(0.45f, false)
                 ) {
                     queueHeader(dualPane)
                 }
@@ -266,19 +267,14 @@ fun QueueHeader(
     mqEnabled: Boolean,
     modifier: Modifier = Modifier,
 ) {
+    val density = LocalDensity.current
     val defaultCover = rememberDefaultCoverPainter(R.drawable.ic_default_cover)
 
     Column(
         verticalArrangement = if (dualPane) Arrangement.SpaceBetween else Arrangement.Top,
         modifier = modifier
-            .windowInsetsPadding(insets.only(INSETS_N))
+            .padding(if (!dualPane) insets.only(INSETS_N).asPaddingValues() else PaddingValues(0.dp))
             // Faded in as one, the status bar's part with it
-            .graphicsLayer { alpha = queueSheetState.progress }
-            .drawBehind {
-                if (!dualPane) {
-                    drawRect(scheme.color { surface })
-                }
-            }
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,
@@ -286,10 +282,12 @@ fun QueueHeader(
                 onClick = queueSheetState::collapseSoft,
             )
             // In line with the songs' drag handles and remove buttons under it
-            .padding(start = EDITABLE_ROW_ICON_START, end = EDITABLE_ROW_ICON_END)
+            .padding(start = EDITABLE_ROW_ICON_START, top = 2.dp, end = EDITABLE_ROW_ICON_END)
             .then(
                 if (dualPane) {
-                    Modifier.fillMaxHeight()
+                    Modifier
+                        .windowInsetsPadding(insets.only(WindowInsetsSides.Bottom))
+                        .fillMaxHeight()
                 } else {
                     Modifier
                 },
@@ -330,7 +328,7 @@ fun QueueHeader(
             }
         }
 
-        Column{
+        Column {
             Row(
                 Modifier
                     .fillMaxWidth()
