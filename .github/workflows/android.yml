@@ -61,6 +61,12 @@ jobs:
           echo "AKANE_RELEASE_KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> ~/.gradle/gradle.properties
           echo "AKANE_RELEASE_KEY_PASSWORD=${{ secrets.KEY_PWD }}" >> ~/.gradle/gradle.properties
 
+      - name: Create version override
+        if: github.event_name != 'pull_request'
+        run: |
+          echo "appIdOverride=org.akanework.gramophone.v2_beta" >> ~/.gradle/gradle.properties
+          echo "versionNameSuffixOverride=-compose_rw_beta" >> ~/.gradle/gradle.properties
+
       - name: Build with Gradle
         if: github.event_name != 'pull_request'
         run: ./gradlew :app:assembleRelease
