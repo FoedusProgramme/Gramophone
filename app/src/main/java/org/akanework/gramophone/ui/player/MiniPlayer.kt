@@ -115,22 +115,22 @@ fun MiniPlayer(
                 )
             },
     ) {
-        /* TODO: i kind like the old progress bar :(
         LinearProgressIndicator(
-            progress = { playerSheetPlayerState.positionFraction.coerceIn(0f, 1f) },
+            progress = { playerState.positionFraction.coerceIn(0f, 1f) },
             drawStopIndicator = { },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(2.dp)
                 .align(Alignment.BottomCenter),
         )
-         */
+        /* background progress bar
         Box(
             Modifier
                 .fillMaxHeight()
                 .fillMaxWidth(playerState.positionFraction.coerceIn(0f, 1f))
                 .drawBehind { drawRect(lerp(barColours.fill, expanded, sheetState.progress.coerceIn(0f, 1f))) },
         )
+         */
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
